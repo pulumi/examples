@@ -3,9 +3,7 @@ import * as cache from "./cache";
 
 let app = new cloud.HttpEndpoint("urlshortener");
 
-app.staticFile("/", "index.html", "text/html");
-app.staticFile("/favicon.png", "favicon.png", "image/png");
-app.staticFile("/bootstrap.min.css", "bootstrap.min.css", "text/css");
+app.static("/", "www"); // serve all files in the "site-content" directory to the root
 
 let urls = new cloud.Table("urls", "name");
 
