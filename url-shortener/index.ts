@@ -8,7 +8,7 @@ app.static("/", "www"); // serve all files in the "site-content" directory to th
 let urls = new cloud.Table("urls", "name");
 
 // uncomment to use Redis cache
-let urlCache = new cache.Cache("urlcache");
+// let urlCache = new cache.Cache("urlcache");
 
 // GET all URLs
 app.get("/urls", async (req, res) => {
@@ -28,26 +28,24 @@ app.get("/urls/{name}", async (req, res) => {
     console.log(`GET /urls/${name}`);
 
     // Uncomment to use Redis cache
-    let urlResult = await urlCache.get(name);
+    // let urlResult = await urlCache.get(name);
     
-    if (urlResult) {
-        console.log(`Retrieved value from redis: ${JSON.stringify(urlResult)}`);
-        res.setHeader("X-Powered-By", "redis");
-    } 
-    else {
-        let tableValue = await urls.get({name});
-        let urlResult = tableValue ? tableValue.url : null;
-    }
-    
+    // if (urlResult) {
+    //     console.log(`Retrieved value from redis: ${JSON.stringify(urlResult)}`);
+    //     res.setHeader("X-Powered-By", "redis");
+    // } 
+    // else {
+    //     let tableValue = await urls.get({name});
+    //     let urlResult = tableValue ? tableValue.url : null;
+    // }
 
-    // use table only
-    // let tableValue = await urls.get({name});
-    // let urlResult = tableValue ? tableValue.url : null;
+    let tableValue = await urls.get({name});
+    let urlResult = tableValue ? tableValue.url : null;
 
     if (urlResult) {
         console.log(`GET /${name} => ${urlResult}`)
         // uncomment if using Redis cache
-        urlCache.set(name, urlResult); 
+        // urlCache.set(name, urlResult); 
 
         res.setHeader("Location", urlResult);
         res.status(301);
@@ -70,4 +68,4 @@ app.post("/urls", async (req, res) => {
     res.json({shortenedURLName: name});
 });
 
-app.publish().url.then(url => console.log(`Serving at: ${url}/stage`));
+app.publish().url.then(url => console.log(`Serving at: ${url}stage`));
