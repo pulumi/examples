@@ -29,12 +29,12 @@ let frontend = new cloud.Service("voting-app-frontend", {
             environment: { 
                 // pass in the created container info in environment variables
                 "REDIS": redisCache.getEndpoint("redis", redisPort).then(e => e.hostname),
-                "REDIS_PORT": redisPort.toString(),
-                "FOO": redisPort.toString(),
+                "REDIS_PORT": redisCache.getEndpoint("redis", redisPort).then(e => e.port).then(port => port.toString()),
                 "REDIS_PWD": redisPassword
             }
         },
     },
 });
 
-frontend.getEndpoint().then(e => e.hostname).then(hostname =>  console.log(`URL: ${hostname}`));
+frontend.getEndpoint().then(e => e.hostname).then(hostname => console.log(`URL: ${hostname}`));
+frontend.getEndpoint().then(e => e.port).then(port => console.log(`PORT: ${port}`));

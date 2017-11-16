@@ -20,7 +20,7 @@ div#logo {
     width: 500px;
     text-align: center;
     font-size:30px;
-    font-family:Helvetica;  
+    font-family: 'PT Sans', sans-serif;    
     /*border-bottom: 1px solid black;*/   
 }
 
@@ -33,7 +33,7 @@ div#form {
     width: 500px;
     text-align: center;
     font-size:30px;
-    font-family:Helvetica;  
+    font-family: 'PT Sans', sans-serif;    
     border-bottom: 1px solid black;
     border-top: 1px solid black;
 }
@@ -44,7 +44,7 @@ div#results {
     width: 500px;
     text-align: center;
     font-size:30px;
-    font-family:Helvetica;  
+    font-family: 'PT Sans', sans-serif;    
 }
 
 .button {
