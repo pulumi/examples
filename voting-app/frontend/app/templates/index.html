@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='default.css') }}">
+    <title>{{title}}</title>
+
+    <script language="JavaScript">
+        function send(form){
+        }
+    </script>
+
+</head>
+<body>
+    <div id="container">
+        <form id="form" name="form" action="/"" method="post"><center>
+        <div id="logo">{{title}}</div>
+        <div id="space"></div>
+        <div id="form">
+        <button name="vote" value="{{button1}}" onclick="send()" class="button button1">{{button1}}</button>
+        <button name="vote" value="{{button2}}" onclick="send()" class="button button2">{{button2}}</button>
+        <button name="vote" value="reset" onclick="send()" class="button button3">Reset</button>
+        <div id="space"></div>
+        <div id="space"></div>
+        <div id="results"> {{button1}} - {{ value1 }} | {{button2}} - {{ value2 }} </div> 
+        </form>        
+        </div>
+    </div>     
+</body>
+</html>
