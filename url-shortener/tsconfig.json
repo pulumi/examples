@@ -17,6 +17,7 @@
     },
     "files": [
         "index.ts",
-        "redis-client.ts"
+        "cache.ts",
+        "config.ts"
     ]
 }

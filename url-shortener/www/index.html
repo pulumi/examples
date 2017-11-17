@@ -40,12 +40,12 @@
             <tbody>
                 <script type="text/javascript">
                     function refreshList() {
-                        $.getJSON('/stage/urls', data => {
+                        $.getJSON('/stage/url', data => {
                             $("#urltable tbody tr").remove();
                             data.forEach(item =>
                                 $("#urltable").append(
                                     `<tr>
-                                        <td><a href=\"/stage/urls/${item.name}\">${item.name}</a></td>
+                                        <td><a href=\"/stage/url/${item.name}\">${item.name}</a></td>
                                         <td>${item.url}</td>
                                     </tr>`
                                 )
@@ -59,7 +59,7 @@
                             let name = document.getElementById("input-name").value;
                             let url = document.getElementById("input-url").value;
 
-                            $.post('/stage/urls/?name=' + name + "&url=" + url, {}, data => {
+                            $.post('/stage/url/?name=' + name + "&url=" + url, {}, data => {
                                 console.log(data);
                                 refreshList();
                                 document.getElementById("add").reset();

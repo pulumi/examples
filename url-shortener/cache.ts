@@ -1,56 +1,57 @@
+// Copyright 2016-2017, Pulumi Corporation.  All rights reserved.
+
 import * as cloud from "@pulumi/cloud";
+import * as config from "./config";
 
-// TODO[pulumi/pulumi#397] Would be nice if this was a Secret<T> and closure
-// serialization knew to pass it in encrypted env vars.
-let redisPassword = "SECRETPASSWORD";
-
+// A simple cache abstraction that wraps Redis.
 export class Cache {
-    get: (key: string) => Promise<string>;
-    set: (key: string, value: string) => Promise<void>;
+    public readonly get: (key: string) => Promise<string>;
+    public readonly set: (key: string, value: string) => Promise<void>;
+
+    private readonly redis: cloud.Service;
 
     constructor(name: string, memory: number = 128) {
-        let redis = new cloud.Service(name, {
+        let pw = config.redisPassword;
+        this.redis = new cloud.Service(name, {
             containers: {
                 redis: {
                     image: "redis:alpine",
-                        memory: memory,
+                    memory: memory,
                     ports: [{ port: 6379 }],
-                    command: ["redis-server", "--requirepass", redisPassword],
+                    command: ["redis-server", "--requirepass", pw],
                 },
             },
         });
-        this.get = (key: string) => {
-            
-            return redis.getEndpoint("redis", 6379).then(endpoint => {
-                
-                console.log(`Endpoint: ${JSON.stringify(endpoint)}`);
-                let client = require("./bin/redis-client").redisClient(endpoint, redisPassword);
 
-                return new Promise<string>((resolve, reject) => {
-                    client.get(key, (err: any, v: any) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(v);
-                        }
-                    });
+        let endpoint = this.redis.getEndpoint();
+        this.get = async (key: string) => {
+            let ep = await endpoint;
+            console.log(`Getting key '${key}' on Redis@${JSON.stringify(ep)}`);
+
+            let client = require("redis").createClient(ep.port, ep.hostname, { password: pw });
+            return new Promise<string>((resolve, reject) => {
+                client.get(key, (err: any, v: any) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(v);
+                    }
                 });
             });
         };
 
-        this.set = (key: string, value: string) => {
-            return redis.getEndpoint("redis", 6379).then(endpoint => {
-                console.log(`Endpoint: ${JSON.stringify(endpoint)}`);
-                let client = require("./bin/redis-client").redisClient(endpoint, redisPassword);
-                
-                return new Promise<void>((resolve, reject) => {
-                    client.set(key, value, (err: any, v: any) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve();
-                        }
-                    });
+        this.set = async (key: string, value: string) => {
+            let ep = await endpoint;
+            console.log(`Setting key '${key}' to '${value}' on Redis@${JSON.stringify(ep)}`);
+
+            let client = require("redis").createClient(ep.port, ep.hostname, { password: pw });
+            return new Promise<void>((resolve, reject) => {
+                client.set(key, value, (err: any, v: any) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
                 });
             });
         };
