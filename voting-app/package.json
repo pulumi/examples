@@ -12,10 +12,5 @@
     },
     "peerDependencies": {
         "@pulumi/cloud": "*"
-    },
-    "dependencies": {
-        "@types/node-fetch": "^1.6.7",
-        "node-fetch": "^1.7.3",
-        "redis": "^2.8.0"
     }
 }

@@ -36,5 +36,4 @@ let frontend = new cloud.Service("voting-app-frontend", {
     },
 });
 
-frontend.getEndpoint().then(e => e.hostname).then(hostname => console.log(`URL: ${hostname}`));
-frontend.getEndpoint().then(e => e.port).then(port => console.log(`PORT: ${port}`));
+frontend.getEndpoint().then(e => console.log(`http://${e.hostname}:${e.port}`));
