@@ -4,36 +4,41 @@ import * as cloud from "@pulumi/cloud";
 
 // To simplify this example, we have defined the password directly in code
 // In a real app, would add the secret via `pulumi config secret <key> <value>` and
-// access via config APIs
+// access via pulumi.Config APIs
 let redisPassword = "SECRETPASSWORD"; 
 
-let redisPort = 6379;
-
+// The data layer for the application
+// Use the 'image' property to point to a pre-built Docker image.
 let redisCache = new cloud.Service("voting-app-cache", {
     containers: {
         redis: {
             image: "redis:alpine",
             memory: 128,
-            ports: [{ port: redisPort }],
+            ports: [{ port: 6379 }],
             command: ["redis-server", "--requirepass", redisPassword],
         },
     },
 });
 
+// A custom container for the frontend, which is a Python Flask app
+// Use the 'build' property to specify a folder that contains a Dockerfile.
+// Pulumi builds the container for you and pushes to an ECR registry
 let frontend = new cloud.Service("voting-app-frontend", {
     containers: {
         votingAppFrontend: {
-            build: "./frontend",
+            build: "./frontend",   // path to the folder containing the Dockerfile
             memory: 128,
             ports: [{ port: 80 }],            
             environment: { 
-                // pass in the created container info in environment variables
-                "REDIS": redisCache.getEndpoint("redis", redisPort).then(e => e.hostname),
-                "REDIS_PORT": redisCache.getEndpoint("redis", redisPort).then(e => e.port).then(port => port.toString()),
+                // pass the Redis container info in environment variables
+                // (the use of promises will be improved in the future)
+                "REDIS": redisCache.getEndpoint().then(e => e.hostname),
+                "REDIS_PORT": redisCache.getEndpoint().then(e => e.port.toString()),
                 "REDIS_PWD": redisPassword
             }
         },
     },
 });
 
-frontend.getEndpoint().then(e => console.log(`http://${e.hostname}:${e.port}`));
+// Export a variable that will be displayed during 'pulumi update'
+export let frontendURL = frontend.getEndpoint().then(e => `http://${e.hostname}:${e.port}`);

@@ -1,8 +1,5 @@
 import * as aws from "@pulumi/aws";
 
-// the type InstanceType contains friendly names for AWS instance sizes
-let size: aws.ec2.InstanceType = "t2.micro"; 
-
 // create a new security group for port 80
 let group = new aws.ec2.SecurityGroup("web-secgrp", { 
     description: "Enable HTTP access",
@@ -19,12 +16,16 @@ let userData =
     curl http://169.254.169.254/latest/meta-data/placement/availability-zone >> index.html
     nohup python -m SimpleHTTPServer 80 &`;
 
-let server = new aws.ec2.Instance("web-server-www", {
-    tags: { "Name": "web-server-www" },
-    instanceType: size,
-    securityGroups: [ group.name ],     // reference the group object above
-    ami: aws.ec2.getLinuxAMI(size),     // call built-in function (can also be custom)
-    userData: userData                  // set up a simple web server    
-});
+export function createInstance(name: string, size: aws.ec2.InstanceType): aws.ec2.Instance {
+    let result = new aws.ec2.Instance(name, {
+        tags: { "Name": name },             // use the `name` parameter
+        instanceType: size,                 // use function argument for size
+        securityGroups: [ group.name ],     // reference the group object above
+        ami: aws.ec2.getLinuxAMI(size),     // call built-in function (can also be custom)
+        userData: userData                  // set up a simple web server    
+    });
 
-server.publicDns.then(dns => console.log(`Server URL: http://${dns}`));
+    result.publicDns.then(url => console.log(`Server URL: http://${url}`));
+
+    return result;
+}
