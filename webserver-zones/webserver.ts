@@ -1,7 +1,5 @@
 import * as aws from "@pulumi/aws";
 
-export let size: aws.ec2.InstanceType = "t2.micro"; // the type InstanceType contains friendly names for AWS instance sizes
-
 // create a new security group for port 80
 let group = new aws.ec2.SecurityGroup("web-secgrp", { 
     description: "Enable HTTP access",
@@ -10,15 +8,8 @@ let group = new aws.ec2.SecurityGroup("web-secgrp", {
     ],
 });
 
-// a function to find the Amazon Linux AMI for the current region
-async function getLinuxAmi() {
-    let result = await aws.getAmi({
-        owners: ["amazon"],
-        filter: [{ name: "name", values: ["amzn-ami-2017.03.g-amazon-ecs-optimized"] }]
-    });
-    return result.imageId;
-}
-
+// (optional) create a simple web server using the startup script for the instance
+// use the AWS metadata service to get the availability zone for the instance
 let userData = 
     `#!/bin/bash
     echo "Hello, World!\nInstance metadata:" > index.html
@@ -28,10 +19,10 @@ let userData =
 export function createInstance(name: string, size: aws.ec2.InstanceType, zone: string): aws.ec2.Instance {
     let result = new aws.ec2.Instance(name, {
         availabilityZone: zone,
+        tags: { "Name": name },
         instanceType: size,                 // use function argument for size
         securityGroups: [ group.name ],     // reference the group object above
-        ami: getLinuxAmi(),                 // call custom function
-        tags: { "Name": name },
+        ami: aws.ec2.getLinuxAMI(size),     // call built-in function (can also be custom)
         userData: userData                  // set up a simple web server    
     });
 
