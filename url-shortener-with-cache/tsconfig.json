@@ -4,7 +4,7 @@
         "target": "es6",
         "lib": [
             "es6"
-        ],        
+        ], 
         "module": "commonjs",
         "moduleResolution": "node",
         "declaration": true,
@@ -19,6 +19,8 @@
         "strictNullChecks": true
     },
     "files": [
-        "index.ts"
+        "index.ts",
+        "cache.ts",
+        "config.ts"
     ]
 }
