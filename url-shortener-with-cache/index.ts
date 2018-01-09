@@ -9,7 +9,7 @@ let endpoint = new cloud.HttpEndpoint("urlshortener");
 // Create a table `urls`, with `name` as primary key.
 let urlTable = new cloud.Table("urls", "name"); 
 
-// Create a cache of frequently accessed urls
+// Create a cache of frequently accessed urls.
 let urlCache = new cache.Cache("urlcache");
 
 // Serve all files in the www directory to the root.

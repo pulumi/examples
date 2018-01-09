@@ -1,3 +1,7 @@
 name: url-shortener
 runtime: nodejs
 description: URL shortener sample
+config:
+  url-shortener:config:redisPassword: SecretPassw0rd
+  aws:config:region: us-west-2
+  cloud-aws:config:ecsAutoCluster: true
