@@ -1,0 +1,24 @@
+{
+    "name": "alexa-fortune",
+    "version": "1.0",
+    "main": "bin/index.js",
+    "typings": "bin/index.d.ts",
+    "scripts": {
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "@types/alexa-sdk": "^1.0.11",
+        "@types/node": "^8.0.27",
+		"@types/tmp": "^0.0.33",
+        "typescript": "^2.1.4"
+    },
+    "dependencies": {
+        "alexa-sdk": "^1.0.25",
+		"sleep": "^5.1.1",
+		"tmp": "^0.0.33"
+    },
+    "peerDependencies": {
+        "@pulumi/aws": "*",
+        "@pulumi/cloud": "*"
+    }
+}

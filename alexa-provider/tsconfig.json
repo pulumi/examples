@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "outDir": "bin",
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node"
+    },
+    "files": [
+        "index.ts",
+		"alexa.ts"
+    ]
+}
