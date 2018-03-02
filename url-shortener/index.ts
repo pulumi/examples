@@ -1,6 +1,7 @@
 // Copyright 2016-2017, Pulumi Corporation.  All rights reserved.
 
 import * as cloud from "@pulumi/cloud";
+import { Output } from "@pulumi/pulumi"; // for output property
 
 // Create a web server.
 let endpoint = new cloud.HttpEndpoint("urlshortener");

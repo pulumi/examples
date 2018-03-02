@@ -1,4 +1,5 @@
 import * as aws from "@pulumi/aws";
+import { Output } from "@pulumi/pulumi";
 
 // the type InstanceType contains friendly names for AWS instance sizes
 let size: aws.ec2.InstanceType = "t2.micro"; 
@@ -27,4 +28,5 @@ let server = new aws.ec2.Instance("web-server-www", {
     userData: userData                  // set up a simple web server    
 });
 
-server.publicDns.then(dns => console.log(`Server URL: http://${dns}`));
+export let publicIp = server.publicIp;
+export let publicDns = server.publicDns;
