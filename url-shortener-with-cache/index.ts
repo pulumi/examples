@@ -1,13 +1,16 @@
 // Copyright 2016-2017, Pulumi Corporation.  All rights reserved.
 
 import * as cloud from "@pulumi/cloud";
-import { Output } from "@pulumi/pulumi"; // for output property
+import * as cache from "./cache";
 
 // Create a web server.
 let endpoint = new cloud.HttpEndpoint("urlshortener");
 
 // Create a table `urls`, with `name` as primary key.
-let urlTable = new cloud.Table("urls", "name");
+let urlTable = new cloud.Table("urls", "name"); 
+
+// Create a cache of frequently accessed urls.
+let urlCache = new cache.Cache("urlcache");
 
 // Serve all files in the www directory to the root.
 endpoint.static("/", "www");
@@ -28,8 +31,20 @@ endpoint.get("/url", async (req, res) => {
 endpoint.get("/url/{name}", async (req, res) => {
     let name = req.params["name"];
     try {
-        let value = await urlTable.get({name});
-        let url = value && value.url;
+        // First try the Redis cache.
+        let url = await urlCache.get(name);
+        if (url) {
+            console.log(`Retrieved value from Redis: ${url}`);
+            res.setHeader("X-Powered-By", "redis");
+        }
+        else {
+            // If we didn't find it in the cache, consult the table.
+            let value = await urlTable.get({name});
+            url = value && value.url;
+            if (url) {
+                urlCache.set(name, url); // cache it for next time.
+            }
+        }
 
         // If we found an entry, 301 redirect to it; else, 404.
         if (url) {

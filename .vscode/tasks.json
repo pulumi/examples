@@ -1,10 +1,8 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Voting app",            
+            "label": "voting app",            
             "type": "typescript",
             "tsconfig": "voting-app/tsconfig.json",
             "option": "watch",
@@ -29,6 +27,19 @@
                 "isDefault": true
             }
         },
+        {
+            "label": "url shortener with cache",               
+            "type": "typescript",
+            "tsconfig": "url-shortener-with-cache/tsconfig.json",
+            "option": "watch",
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },        
         {
             "label": "webserver",            
             "type": "typescript",
