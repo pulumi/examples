@@ -25,7 +25,5 @@ export function createInstance(name: string, size: aws.ec2.InstanceType): aws.ec
         userData: userData                  // set up a simple web server    
     });
 
-    result.publicDns.then(url => console.log(`Server URL: http://${url}`));
-
     return result;
 }
