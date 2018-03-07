@@ -1,6 +1,6 @@
 {
     "name": "pulumi-voting-app",
-    "version": "0.1",
+    "version": "0.1.0",
     "main": "bin/index.js",
     "typings": "bin/index.d.ts",
     "scripts": {
@@ -10,7 +10,8 @@
         "@types/node": "^8.0.27",
         "typescript": "^2.1.4"
     },
-    "peerDependencies": {
-        "@pulumi/cloud": "*"
+    "dependencies": {
+        "@pulumi/cloud": "^0.10.0",
+        "@pulumi/cloud-aws": "^0.10.0"
     }
 }

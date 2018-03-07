@@ -19,14 +19,12 @@ let userData =
 export function createInstance(name: string, size: aws.ec2.InstanceType, zone: string): aws.ec2.Instance {
     let result = new aws.ec2.Instance(name, {
         availabilityZone: zone,
-        tags: { "Name": name },
+        tags: { "Name": name },             // use the `name` parameter
         instanceType: size,                 // use function argument for size
         securityGroups: [ group.name ],     // reference the group object above
         ami: aws.ec2.getLinuxAMI(size),     // call built-in function (can also be custom)
         userData: userData                  // set up a simple web server    
     });
-
-    result.publicDns.then(url => console.log(`Server URL: http://${url}`));
 
     return result;
 }
