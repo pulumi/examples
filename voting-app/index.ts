@@ -1,11 +1,11 @@
 // Copyright 2017, Pulumi Corporation.  All rights reserved.
 
+import * as pulumi from "@pulumi/pulumi";
 import * as cloud from "@pulumi/cloud";
 
-// To simplify this example, we have defined the password directly in code
-// In a real app, would add the secret via `pulumi config secret <key> <value>` and
-// access via pulumi.Config APIs
-let redisPassword = "SECRETPASSWORD"; 
+// Get the password to use for Redis from config.
+let config = new pulumi.Config("voting-app");
+let redisPassword = config.require("redisPassword"); 
 
 // The data layer for the application
 // Use the 'image' property to point to a pre-built Docker image.
