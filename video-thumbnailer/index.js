@@ -1,21 +1,23 @@
-let cloud = require("@pulumi/cloud-aws");
+// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+
+const cloud = require("@pulumi/cloud-aws");
 
 // A task which runs a containerized FFMPEG job to extract a thumbnail image.
-let ffmpegThumbnailTask = new cloud.Task("ffmpegThumbTask", {
+const ffmpegThumbnailTask = new cloud.Task("ffmpegThumbTask", {
     build: "./docker-ffmpeg-thumb",
     memoryReservation: 128,
 });
 
 // A bucket to store videos and thumbnails.
-let bucket = new cloud.Bucket("bucket");
-let bucketName = bucket.bucket.id;
+const bucket = new cloud.Bucket("bucket");
+const bucketName = bucket.bucket.id;
 
 // When a new video is uploaded, run the FFMPEG job on the video file.
 bucket.onPut("onNewVideo", bucketArgs => {
     console.log(`A new ${bucketArgs.size}B video was uploaded to ${bucketArgs.key} at ${bucketArgs.eventTime}.`);
-    let key = bucketArgs.key;
-    let thumbnailFile = key.substring(0, key.indexOf('_')) + '.png';
-    let framePos = key.substring(key.indexOf('_')+1, key.indexOf('.')).replace('-',':');
+    const key = bucketArgs.key;
+    const thumbnailFile = key.substring(0, key.indexOf('_')) + '.png';
+    const framePos = key.substring(key.indexOf('_')+1, key.indexOf('.')).replace('-',':');
     return ffmpegThumbnailTask.run({
         environment: {
             "S3_BUCKET": bucketName.get(),
