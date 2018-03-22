@@ -1,0 +1,3 @@
+name: serverless
+runtime: nodejs
+description: Basic example of a serverless AWS application.
