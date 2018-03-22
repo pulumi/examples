@@ -16,7 +16,7 @@ $ pulumi stack init testing
 $ pulumi config set aws:region us-east-2
 
 # Install dependencies
-$ yarn install
+$ npm install
 
 # Build the C# app
 $ cd ./app
