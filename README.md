@@ -5,3 +5,4 @@
 - [Web server](webserver/)
 - [Web server with a function](webserver-component/)
 - [Web server in multiple availability zones](webserver-zones/)
+- [Video thumbnailer](video-thumbnailer/)

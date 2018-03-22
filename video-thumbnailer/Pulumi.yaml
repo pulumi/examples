@@ -1,0 +1,3 @@
+name: video-thumbnailer
+runtime: nodejs
+description: A video thumbnail extractor using serverless functions and containers.
