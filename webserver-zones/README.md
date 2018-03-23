@@ -1,3 +1,3 @@
-# Pulumi web server
+# Pulumi web server with availability zones
 
-Starting point for building the Pulumi web server sample.
+Pulumi example that deploys multiple EC2 instances, one in each availability zone for the region.

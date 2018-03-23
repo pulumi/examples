@@ -1,17 +1,9 @@
 {
     "name": "webserver",
     "version": "0.1.0",
-    "main": "bin/index.js",
-    "typings": "bin/index.d.ts",
-    "scripts": {
-        "build": "tsc"
-    },
-    "devDependencies": {
-        "typescript": "^2.5.3",
-        "@types/node": "^8.0.26"
-    },
+    "main": "index.js",
     "dependencies": {
-        "@pulumi/pulumi": "^0.10.0",
-        "@pulumi/aws": "^0.10.0"
+        "@pulumi/pulumi": "^0.11.0",
+        "@pulumi/aws": "^0.11.0"
     }
 }

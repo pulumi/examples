@@ -1,4 +1,5 @@
 import * as aws from "@pulumi/aws";
+import { getLinuxAMI } from "./linuxAmi";
 
 // create a new security group for port 80
 let group = new aws.ec2.SecurityGroup("web-secgrp", { 
@@ -22,7 +23,7 @@ export function createInstance(name: string, size: aws.ec2.InstanceType, zone: s
         tags: { "Name": name },             // use the `name` parameter
         instanceType: size,                 // use function argument for size
         securityGroups: [ group.name ],     // reference the group object above
-        ami: aws.ec2.getLinuxAMI(size),     // call built-in function (can also be custom)
+        ami: getLinuxAMI(size),             // call custom lookup function
         userData: userData                  // set up a simple web server    
     });
 
