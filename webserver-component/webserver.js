@@ -19,7 +19,8 @@ let group = new aws.ec2.SecurityGroup("web-secgrp", {
 // (optional) create a simple web server using the startup script for the instance
 let userData = 
 `#!/bin/bash
-service httpd start`;
+echo "Hello, World!" > index.html
+nohup python -m SimpleHTTPServer 80 &`;
 
 exports.createInstance = function (name, size) {
     return new aws.ec2.Instance(name, {
