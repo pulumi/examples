@@ -11,7 +11,9 @@ $ pulumi stack init --local
 Enter a stack name: testing
 ```
 
-Configure the app deployment:
+Configure the app deployment.  The username and password here will be used to configure the Virtual Machine.  The
+password must adhere to the [Azure restrictions on VM
+passwords](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq#what-are-the-password-requirements-when-creating-a-vm).
 
 ```
 $ pulumi config set azure:environment public
@@ -23,6 +25,12 @@ Login to Azure CLI (you will be prompted to do this during deployment if you for
 
 ```
 $ az login
+```
+
+Restore NPM dependencies:
+
+```
+$ npm install
 ```
 
 Preview the deployment of the application:
