@@ -1,0 +1,9 @@
+if: branch = master
+sudo: true # give us 7.5GB and >2 bursted cores.
+before_install:
+    # Install the AWS CLI, which is required by upload-examples.sh
+    - pip install --upgrade --user awscli
+script:
+    - ./upload-examples.sh
+notifications:
+    webhooks: https://ufci1w66n3.execute-api.us-west-2.amazonaws.com/stage/travis
