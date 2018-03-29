@@ -38,7 +38,7 @@ Preview the deployment of the application:
 ``` 
 $ pulumi preview
 Previewing changes:
-[76 lines elided...]
+[...details omitted...]
 info: 7 changes previewed:
     + 7 resources to create
 ```
@@ -48,7 +48,7 @@ Perform the deployment:
 ```
 $ pulumi update
 Performing changes:
-[135 lines elided...]
+[...details omitted...]
 info: 7 changes performed:
     + 7 resources created
 Update duration: 2m38.391208237s

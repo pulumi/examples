@@ -26,7 +26,7 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
 
     ```
     $ pulumi preview
-    [many lines elided...]
+    [...details omitted...]
     ---outputs:---
     endpointUrl: computed<string>
     info: 48 changes previewed:
@@ -37,7 +37,7 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
 
     ```
     $ pulumi update
-    [many lines elided...]
+    [...details omitted...]
     ---outputs:---
     endpointUrl: "https://gs8t66u634.execute-api.us-east-1.amazonaws.com/stage/"
     info: 48 changes performed:

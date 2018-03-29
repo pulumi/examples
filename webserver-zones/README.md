@@ -28,7 +28,7 @@ This example shows how to use dynamic data when deploying infrastructure.
 
     ```
     $ pulumi preview
-    [... many lines elided ...]
+    [...details omitted...]
     ---outputs:---
     serverUrls: [
         [0]: computed<string>
@@ -43,7 +43,7 @@ This example shows how to use dynamic data when deploying infrastructure.
 
     ```
     $ pulumi update
-    [... many lines elided ...]
+    [...details omitted...]
     ---outputs:---
     serverUrls: [
         [0]: "http://ec2-54-148-246-71.us-west-2.compute.amazonaws.com"
