@@ -8,49 +8,49 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
 
 1. Create a new stack:
 
-  ```
-  $ pulumi stack init
-  Enter a stack name: url-shortener-test
-  ```
+    ```
+    $ pulumi stack init
+    Enter a stack name: url-shortener-test
+    ```
 
 1. Set the provider and region:
 
-  ```
-  $ pulumi config set cloud:provider aws
-  $ pulumi config set aws:region us-west-2
-  ```
+    ```
+    $ pulumi config set cloud:provider aws
+    $ pulumi config set aws:region us-west-2
+    ```
 
 1. Compile the program via `tsc` or `npm run build`.
 
 1. Preview the program deployment:
 
-  ```
-  $ pulumi preview
-  [many lines elided...]
-  ---outputs:---
-  endpointUrl: computed<string>
-  info: 48 changes previewed:
-      + 48 resources to create
-  ```
+    ```
+    $ pulumi preview
+    [many lines elided...]
+    ---outputs:---
+    endpointUrl: computed<string>
+    info: 48 changes previewed:
+        + 48 resources to create
+    ```
 
 1. Perform the deployment:
 
-  ```
-  $ pulumi update
-  [many lines elided...]
-  ---outputs:---
-  endpointUrl: "https://gs8t66u634.execute-api.us-east-1.amazonaws.com/stage/"
-  info: 48 changes performed:
-      + 48 resources created
-  Update duration: 4m7.023449447s
-  ```
+    ```
+    $ pulumi update
+    [many lines elided...]
+    ---outputs:---
+    endpointUrl: "https://gs8t66u634.execute-api.us-east-1.amazonaws.com/stage/"
+    info: 48 changes performed:
+        + 48 resources created
+    Update duration: 4m7.023449447s
+    ```
 
 1. The API endpoint will be shown as the value for `endpointUrl` in the CLI output. You can always get this value by running `pulumi stack output`:
 
-  ```
-  $ pulumi stack output endpointUrl
-  https://gs8t66u634.execute-api.us-east-1.amazonaws.com/stage/
-  ```
+    ```
+    $ pulumi stack output endpointUrl
+    https://gs8t66u634.execute-api.us-east-1.amazonaws.com/stage/
+    ```
 
 1. Open this page in a browser and you'll see a single page app for creating and viewing short URLs.
 
