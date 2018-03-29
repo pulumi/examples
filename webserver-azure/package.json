@@ -1,0 +1,9 @@
+{
+    "name": "webserver-azure",
+    "version": "0.1.0",
+    "main": "index.js",
+    "dependencies": {
+        "@pulumi/pulumi": "^0.11.0",
+        "@pulumi/azure": "^0.11.0"
+    }
+}

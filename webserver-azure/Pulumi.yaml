@@ -1,0 +1,3 @@
+name: webserver-azure
+runtime: nodejs
+description: Basic example of an Azure web server accessible over HTTP.
