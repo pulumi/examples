@@ -1,4 +1,6 @@
-import * as pulumi from "pulumi";
+// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+
+import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 
 // First, create a config object and read the following user-provided values:

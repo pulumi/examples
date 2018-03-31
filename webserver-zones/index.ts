@@ -1,3 +1,5 @@
+// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
 import * as webserver from "./webserver"; // use the new custom component
 import * as pulumi from "@pulumi/pulumi";
@@ -14,4 +16,3 @@ export let serverUrls = (async () => {
 
     return urls;
 })();    
-
