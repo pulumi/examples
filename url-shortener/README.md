@@ -20,6 +20,8 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
     $ pulumi config set aws:region us-west-2
     ```
 
+1. Restore NPM modules via `npm install`.
+
 1. Compile the program via `tsc` or `npm run build`.
 
 1. Preview the program deployment:
