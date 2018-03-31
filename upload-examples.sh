@@ -4,7 +4,7 @@
 set -o nounset -o errexit -o pipefail
 
 ROOT=$(dirname $0)
-EXAMPLES_FILENAME="pulumi.examples.zip"
+EXAMPLES_FILENAME="pulumi-examples.zip"
 EXAMPLES_PATH="${ROOT}/${EXAMPLES_FILENAME}"
 
 echo -e "Downloading ${EXAMPLES_PATH} to publish to S3"
