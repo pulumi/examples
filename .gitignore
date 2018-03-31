@@ -1,3 +1,4 @@
-.pulumi
-Pulumi.*.yaml
+.pulumi/
 node_modules/
+Pulumi.*.yaml
+*.pyc
