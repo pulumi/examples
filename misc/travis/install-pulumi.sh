@@ -30,7 +30,7 @@ trap on_exit EXIT
 
 curl -H "Authorization: token ${PULUMI_ACCESS_TOKEN}" ${RELEASE_URL} | tar -C ${WORK_DIR} -zxf -
 
-# If Pulumi's install.sh, it will print an error message to the console, but it won't
+# In Pulumi's install.sh, it will print an error message to the console, but it won't
 # dump the install log by default. So let's print out the install log in this case.
 if ! ${WORK_DIR}/pulumi/install.sh; then
     cat ${WORK_DIR}/pulumi/install.log
