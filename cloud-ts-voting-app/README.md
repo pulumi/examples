@@ -16,29 +16,36 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 ### Configure the deployment  
 
-1. Run `pulumi init`. (Note: this command will not be required in a future SDK release.)
+1.  Run `pulumi init`. (Note: this command will not be required in a future SDK release.)
 
-1. Create a new stack:
+1.  Login via `pulumi login`:
+
+    ```bash
+    $ pulumi login
+    Enter your Pulumi access token (located at https://pulumi.com/account): 7hisis4r34llys3cr374cc3ss70k3ns0d0n7l34ki7=
+    ```
+
+1.  Create a new stack:
 
     ```
     $ pulumi stack init
     Enter a stack name: testing
     ```
 
-1. Set the provider and region:
+1.  Set AWS as the provider:
 
     ```
     $ pulumi config set cloud:provider aws
-    $ pulumi config set aws:region us-west-2
     ```
 
-1. Configure Pulumi to create a new ECS cluster. (Note: This configuration provisions a number of resources, but the experience will be **substantially** improved in a later version of `@pulumi/cloud`.)
+1.  Configure Pulumi to use AWS Fargate, which is currently only available in `us-east-1`:
 
     ```
-    $ pulumi config set cloud-aws:ecsAutoCluster true
+    $ pulumi config set aws:region us-east-1
+    $ pulumi config set cloud-aws:useFargate true
     ```
 
-1. Set a value for the Redis password. The value can be an encrypted secret, specified with the `--secret` flag. If this flag is not provided, the value will be saved as plaintext in `Pulumi.testing.yaml` (since `testing` is the current stack name).
+1.  Set a value for the Redis password. The value can be an encrypted secret, specified with the `--secret` flag. If this flag is not provided, the value will be saved as plaintext in `Pulumi.testing.yaml` (since `testing` is the current stack name).
 
     ```
     $ pulumi config set --secret redisPassword S3cr37Password
@@ -46,31 +53,32 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 ### Compile the TypeScript program
 
-1. Restore NPM modules via `npm install`.
+1.  Restore NPM modules via `npm install`.
 
-1. Compile the program via `tsc` or `npm run build`.
+1.  Compile the program via `tsc` or `npm run build`.
 
 ### Preview and deploy
 
-1. Ensure the Docker daemon is running on your machine, then preview changes via `pulumi preview`. This step will create the Docker container but will not provision resources. If you encrypted the value for the `redisPassword` key, you'll be prompted for your password before each `preview` and `update` operation.
+1.  Ensure the Docker daemon is running on your machine, then preview changes via `pulumi preview`. This step will create the Docker container but will not provision resources. If you encrypted the value for the `redisPassword` key, you'll be prompted for your password before each `preview` and `update` operation.
 
     ```
     $ pulumi preview --summary
     [...details omitted...]
-    info: 50 changes previewed:
-        + 50 resources to create
+    info: 34 changes previewed:
+        + 34 resources to create
     ```
 
-1. Deploy the changes with `pulumi update`. Since this actually deploys a number of resources, it will take about 20-30 minutes to complete. (An upcoming improvement in `@pulumi/cloud` will substantially reduce the deployment time.) Note the stack output property `frontendUrl`, which shows the URL and port of the deployed app:
+1.  Deploy the changes with `pulumi update`. Since this actually deploys a number of resources, it will take about 15 minutes to complete. Note the stack output property `frontendUrl`, which shows the URL and port of the deployed app:
 
     ```bash
     $ pulumi update
     [...details omitted...]
     ---outputs:---
     frontendURL: "http://pulumi-vo-ne2-d7f97ef-7c5e2c22a22ec44a.elb.us-west-2.amazonaws.com:34567"
+    Permalink: https://pulumi.com/pulumi/examples/voting-app/testing/updates/1
     ```
 
-1. In a browser, navigate to the URL for `frontendURL`. You should see the voting app webpage.
+1.  In a browser, navigate to the URL for `frontendURL`. You should see the voting app webpage.
 
    ![Voting app screenshot](./voting-app-webpage.png)
 
