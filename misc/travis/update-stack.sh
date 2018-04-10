@@ -3,7 +3,7 @@
 set -o nounset -o errexit -o pipefail
 
 # NOTE: You need to configure Travis to set the following environment variables:
-#     PULUMI_ACCESS_TOKEN       Your Pulumi access token, from https://beta.pulumi.com/account.
+#     PULUMI_ACCESS_TOKEN       Your Pulumi access token, from https://pulumi.com/account.
 if [ -z "${PULUMI_ACCESS_TOKEN}" ]; then
     >&2 echo "error: Missing PULUMI_ACCCESS_TOKEN; required to log into Pulumi.com"
 fi
