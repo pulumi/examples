@@ -1,0 +1,9 @@
+name: alexa-fortune
+runtime: nodejs
+description: A fortune teller for Alexa.
+stacks:
+  fortune:
+    config:
+      alexa-fortune:config:fortunes: ./showerthoughts.txt
+      alexa-fortune:config:skillName: alexa-fortune
+      aws:config:region: us-west-2
