@@ -104,9 +104,9 @@ let frontendService = new kubernetes.Service("frontend", {
         labels: [frontendLabels],
     },
     spec: {
-        // If your cluster supports it, uncomment the following to automatically create
-        // an external load-balanced IP for the frontend service.
-        // type: LoadBalancer
+        // If your cluster does not support `LoadBalancer` (such as on minikube), comment out the it, uncomment the
+        // following to automatically create an external load-balanced IP for the frontend service.
+        type: "LoadBalancer",
         ports: [{ port: 80 }],
         selector: [frontendLabels],
     },

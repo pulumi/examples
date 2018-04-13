@@ -19,7 +19,7 @@ This example is available in multiple flavors:
 * [AWS EC2 instance in JavaScript](aws-js-webserver)
 * [AWS EC2 instance in Python](aws-py-webserver)
 * [Azure Virtual Machine in JavaScript](azure-js-webserver)
-* [Kubernetes Nginx in TypeScript](kubernetes-ts-webserver)
+* [Kubernetes Nginx in Python](kubernetes-py-nginx)
 
 An [extension of this example](aws-js-webserver-component/) demonstrates creating a minimal component that encapsulates
 creating EC2 instances, highlighting one of the benefits of using general purpose languages for managing infrastructure.
@@ -50,3 +50,9 @@ to accomplish all of the same things this higher-level package offers.
 
 The deployed Lambda function is a simple C# application, highlighting the ability to manage existing application code
 in a Pulumi application, even if your Pulumi code is written in a different language like JavaScript or Python.
+
+### [Kubernetes Guestbook](kubernetes-ts-guestbook/)
+
+This examples shows a version of the [Kubernetes
+Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/) app using Pulumi and
+`@pulumi/kubernetes`.

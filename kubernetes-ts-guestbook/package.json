@@ -10,9 +10,9 @@
     "@types/node": "^9.3.0",
     "typescript": "^2.5.3"
   },
-  "peerDependencies": {
-    "@pulumi/kubernetes": "latest",
-    "@pulumi/pulumi": "^0.11.0-dev-65-g7aedf80f"
+  "dependencies": {
+    "@pulumi/kubernetes": "^0.11.3-rc1",
+    "@pulumi/pulumi": "^0.11.3-rc2"
   },
   "license": "MIT"
 }
