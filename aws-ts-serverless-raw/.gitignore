@@ -1,7 +1,0 @@
-/bin/
-/node_modules/
-/yarn.lock
-/package-lock.json
-
-/app/**/obj
-/app/**/bin
