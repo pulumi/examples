@@ -35,7 +35,7 @@ An [extension of this example](cloud-ts-url-shortener-cache/) adds a reusable ca
 using `cloud.Service` to run a containerized Redis image.  This shows that you can create your own `cloud.*`-like
 abstractions for your own use, your team's, or to share with the community using your language's package manager.
 
-### [AWS Video Thumbnailer](cloud-js-video-thumbnailer/)
+### [AWS Video Thumbnailer](cloud-js-thumbnailer/)
 
 This example features an end-to-end pipeline for generating keyframe thumbnails from videos uploaded to a bucket using
 containerized [FFmpeg](https://www.ffmpeg.org/).  It combines containers, serverless functions, and cloud storage into
