@@ -31,7 +31,7 @@ This example demonstrates a complete URL shortener web application using high-le
 cloud-agnostic, programming model of `@pulumi/cloud`.  Although we only support AWS today in this framework, our plan
 is to offer an implementation of this on all major clouds, and so any code targeting this can truly run anywhere.
 
-An [extension of this example](url-shortener-with-cache/) adds a reusable cache component to the URL shortener
+An [extension of this example](cloud-ts-url-shortener-cache/) adds a reusable cache component to the URL shortener
 using `cloud.Service` to run a containerized Redis image.  This shows that you can create your own `cloud.*`-like
 abstractions for your own use, your team's, or to share with the community using your language's package manager.
 
