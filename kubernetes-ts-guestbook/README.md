@@ -8,14 +8,14 @@ Pulumi and `@pulumi/kubernetes`.
 Follow the steps in [Pulumi Installation and Setup](https://docs.pulumi.com/install/) and [Configuring Pulumi
 Kubernetes](https://docs.pulumi.com/reference/kubernetes.html#configuration) to get setup with Pulumi and Kubernetes.
 
-> NOTE: For this walkthrough, we'll assume you are deploying to a cluster that supports the
-[`LoadBalancer`](https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer) service type.  This
-includes most cloud providers as well as [Docker for Mac Edge w/
-Kubernetes](https://docs.docker.com/docker-for-mac/kubernetes/). If not (for example if you are targeting `minikube`),
-you may need to replace `type: "LoadBalancer"` with another option for exposing the service in `index.ts`.  See the
-Kubernetes [Services
-docs](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types) for more
-details.
+> *Note*: The code in this repo assumes you are deploying to a cluster that supports the
+> [`LoadBalancer`](https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer) service type.
+> This includes most cloud providers as well as [Docker for Mac Edge w/
+> Kubernetes](https://docs.docker.com/docker-for-mac/kubernetes/). If not (for example if you are targeting `minikube`
+> or your own custom Kubernetes cluster), replace `type: "LoadBalancer"` with `type: "ClusterIP"` in `index.ts`.  See
+> the Kubernetes [Services
+> docs](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types) for more
+> details.
 
 Install dependencies:
 
@@ -79,7 +79,15 @@ redis-master   ClusterIP      10.99.238.82     <none>        6379/TCP       51m
 redis-slave    ClusterIP      10.111.117.113   <none>        6379/TCP       51m
 ```
 
-And finally - `curl` the exposed `frontend` service (or open in a broswer) to see the running application.
+And finally - open the application in your browser to see the running application.
+
+> *Note*: If you are deploying to a cluster that does not support `type: "LoadBalancer"`, and deployed the example using
+> `type: "ClusterIP"` instead, run `kubectl port-forward svc/frontend 8080:80` to forward the cluster port to the local
+> machine and access the service via `localhost:8080`.
+
+![Guestbook in browser](./imgs/guestbook.png)
+
+Or `curl` it from your CLI:
 
 ```
 $ curl localhost:80
@@ -109,3 +117,4 @@ $ curl localhost:80
   </body>
 </html>
 ```
+
