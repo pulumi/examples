@@ -6,7 +6,7 @@ Each example has a two-part prefix, `<cloud>-<language>`, to indicate which `<cl
 The cloud is one of `aws` (for [Amazon Web Services](https://github.com/pulumi/pulumi-aws)), `azure` (for [Microsoft
 Azure](https://github.com/pulumi/pulumi-azure)), `gcp` (for [Google Cloud
 Platform](https://github.com/pulumi/pulumi-gcp)), `kubernetes` (for
-[Kubernetes](https://github.com/pulumi/pulumi-kubernetes))), or `cloud` (for
+[Kubernetes](https://github.com/pulumi/pulumi-kubernetes)), or `cloud` (for
 [Pulumi's cross-cloud programming framework](https://github.com/pulumi/pulumi-cloud)).
 
 See the [Pulumi documentation](https://docs.pulumi.com) for more details on getting started with Pulumi.
@@ -41,7 +41,7 @@ This example features an end-to-end pipeline for generating keyframe thumbnails 
 containerized [FFmpeg](https://www.ffmpeg.org/).  It combines containers, serverless functions, and cloud storage into
 a single 40-line application using `@pulumi/cloud-aws`.
 
-### [Raw AWS Serverless](aws-js-serverless-raw/)
+### [Raw AWS Serverless](aws-ts-serverless-raw/)
 
 This example deploys a complete serverless C# application using raw `aws.apigateway.RestAPI`, `aws.lambda.Function` and
 `aws.dynamodb.Table` resources from `@pulumi/aws`.  Although this doesn't feature any of the higher-level abstractions
@@ -56,3 +56,7 @@ in a Pulumi application, even if your Pulumi code is written in a different lang
 This examples shows a version of the [Kubernetes
 Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/) app using Pulumi and
 `@pulumi/kubernetes`.
+
+### [Static Website on AWS S3](aws-js-s3-folder/)
+
+This example deploys a static website to AWS S3, demonstrating how to combine infrastructure code and content in the same application.
