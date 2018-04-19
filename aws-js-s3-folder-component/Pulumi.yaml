@@ -1,0 +1,3 @@
+name: aws-js-s3-folder-component
+runtime: nodejs
+description: A static website hosted on AWS S3
