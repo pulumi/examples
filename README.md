@@ -19,7 +19,7 @@ This example is available in multiple flavors:
 * [AWS EC2 instance in JavaScript](aws-js-webserver)
 * [AWS EC2 instance in Python](aws-py-webserver)
 * [Azure Virtual Machine in JavaScript](azure-js-webserver)
-* [Kubernetes Nginx in TypeScript](kubernetes-ts-webserver)
+* [Kubernetes Nginx in Python](kubernetes-py-nginx)
 
 An [extension of this example](aws-js-webserver-component/) demonstrates creating a minimal component that encapsulates
 creating EC2 instances, highlighting one of the benefits of using general purpose languages for managing infrastructure.
@@ -31,11 +31,11 @@ This example demonstrates a complete URL shortener web application using high-le
 cloud-agnostic, programming model of `@pulumi/cloud`.  Although we only support AWS today in this framework, our plan
 is to offer an implementation of this on all major clouds, and so any code targeting this can truly run anywhere.
 
-An [extension of this example](url-shortener-with-cache/) adds a reusable cache component to the URL shortener
+An [extension of this example](cloud-ts-url-shortener-cache/) adds a reusable cache component to the URL shortener
 using `cloud.Service` to run a containerized Redis image.  This shows that you can create your own `cloud.*`-like
 abstractions for your own use, your team's, or to share with the community using your language's package manager.
 
-## [AWS Video Thumbnailer](aws-js-video-thumbnailer/)
+### [AWS Video Thumbnailer](cloud-js-thumbnailer/)
 
 This example features an end-to-end pipeline for generating keyframe thumbnails from videos uploaded to a bucket using
 containerized [FFmpeg](https://www.ffmpeg.org/).  It combines containers, serverless functions, and cloud storage into
@@ -50,6 +50,12 @@ to accomplish all of the same things this higher-level package offers.
 
 The deployed Lambda function is a simple C# application, highlighting the ability to manage existing application code
 in a Pulumi application, even if your Pulumi code is written in a different language like JavaScript or Python.
+
+### [Kubernetes Guestbook](kubernetes-ts-guestbook/)
+
+This examples shows a version of the [Kubernetes
+Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/) app using Pulumi and
+`@pulumi/kubernetes`.
 
 ### [Static Website on AWS S3](aws-js-s3-folder/)
 

@@ -1,4 +1,7 @@
 .pulumi/
 node_modules/
-Pulumi.*.yaml
+bin/
+yarn.lock
+package-lock.json
 *.pyc
+Pulumi.*.yaml
