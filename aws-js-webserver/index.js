@@ -12,8 +12,8 @@ let ami  = "ami-7172b611" // AMI for Amazon Linux in us-west-2 (Oregon)
 
 // create a new security group for port 80
 let group = new aws.ec2.SecurityGroup("web-secgrp", { 
-    description: "Enable HTTP access",
     ingress: [
+        { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: ["0.0.0.0/0"] },
         { protocol: "tcp", fromPort: 80, toPort: 80, cidrBlocks: ["0.0.0.0/0"] },
     ],
 });
@@ -33,4 +33,4 @@ let server = new aws.ec2.Instance("web-server-www", {
 });
 
 exports.publicIp = server.publicIp;
-exports.publicDns = server.publicDns;
+exports.publicHostName = server.publicDns;
