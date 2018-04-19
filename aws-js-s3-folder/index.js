@@ -4,32 +4,30 @@ const aws = require("@pulumi/aws");
 const pulumi = require("@pulumi/pulumi");
 const mime = require("mime");
 
+// Create a bucket and expose a website index document
 let siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     websites: [{
         indexDocument: "index.html",
     }],
 });
 
-let siteDir = "www";
+let siteDir = "www"; // directory for content files
 
+// For each file in the directory, create an S3 object stored in `siteBucket`
 for (let item of require("fs").readdirSync(siteDir)) {
     let filePath = require("path").join(siteDir, item);
-
     let object = new aws.s3.BucketObject(item, { 
-        bucket: siteBucket,
-        source: new pulumi.asset.FileAsset(filePath),
-        contentType: mime.getType(filePath) || undefined
+        bucket: siteBucket,                               // reference the s3.Bucket object
+        source: new pulumi.asset.FileAsset(filePath),     // use FileAsset to point to a file
+        contentType: mime.getType(filePath) || undefined, // set the MIME type of the file
     });
 }
 
-exports.websiteUrl = siteBucket.websiteEndpoint;
-
-// Function for adding a bucket policy
-function createS3PublicReadPolicy(bucketName) {
+// Create an S3 Bucket Policy to allow public read of all objects in bucket
+function publicReadPolicyForBucket(bucketName) {
     return JSON.stringify({
         Version: "2012-10-17",
         Statement: [{
-            Sid: "PublicReadGetObject",
             Effect: "Allow",
             Principal: "*",
             Action: [
@@ -42,7 +40,12 @@ function createS3PublicReadPolicy(bucketName) {
     })
 }
 
+// Set the access policy for the bucket so all objects are readable
 let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
-    bucket: siteBucket.bucket,
-    policy: siteBucket.bucket.apply(createS3PublicReadPolicy) // use output property `siteBucket.bucket`
+    bucket: siteBucket.bucket, // refer to the bucket created earlier
+    policy: siteBucket.bucket.apply(publicReadPolicyForBucket) // use output property `siteBucket.bucket`
 });
+
+// Stack exports
+exports.bucketName = siteBucket.bucket;
+exports.websiteUrl = siteBucket.websiteEndpoint; 
