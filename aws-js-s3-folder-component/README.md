@@ -1,6 +1,6 @@
 # Static Website Hosted on AWS S3
 
-A static website that uses [S3's website support](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html). For a detailed walkthrough of this example, see [Part 2 of the Pulumi quickstart](https://docs.pulumi.com/quickstart/part2.html).
+The component version of [aws-js-s3-folder](../aws-js-s3-folder). For a detailed walkthrough of this example, see [Part 2 of the Pulumi quickstart](https://docs.pulumi.com/quickstart/part2.html).
 
 ## Deploying and running the program
 
@@ -24,39 +24,26 @@ A static website that uses [S3's website support](https://docs.aws.amazon.com/Am
 
 1.  Restore NPM modules via `npm install`.
 
-1.  Run `pulumi preview` to see what AWS resources will be created:
-
-    ```bash
-    $ pulumi preview
-    Previewing stack 'testing' in the Pulumi Cloud ☁️
-    Previewing changes:
-
-    pulumi:Stack("aws-js-s3-folder-testing"): Completed
-    aws:Bucket("s3-website-bucket"):          + Would create
-    aws:BucketPolicy("bucketPolicy"):         + Would create
-    aws:BucketObject("favicon.png"):          + Would create
-    aws:BucketObject("index.html"):           + Would create
-    info: 5 changes previewed:
-        + 5 resources to create    
-    ```
+1.  Run `pulumi preview` to see what AWS resources will be created.
 
 1.  Now, provision resources via `pulumi update`:
 
     ```bash
     $ pulumi update
-    Updating stack 'testing' in the Pulumi Cloud ☁️
+    Updating stack 's3foldercomponent-testing' in the Pulumi Cloud ☁️
     Performing changes:
 
-    pulumi:Stack("aws-js-s3-folder-testing"): Completed
-    aws:Bucket("s3-website-bucket"):          + Created
-    aws:BucketPolicy("bucketPolicy"):         + Created
-    aws:BucketObject("favicon.png"):          + Created
-    aws:BucketObject("index.html"):           + Created
-    info: 5 changes performed:
-        + 5 resources created
-    Update duration: 7.083525991s
+    pulumi:Stack("aws-js-s3-folder-component-s3foldercomponent-testing"): Completed
+    examples:S3Folder("pulumi-static-site"):                              + Created
+    aws:Bucket("pulumi-static-site"):                                     + Created
+    aws:BucketPolicy("bucketPolicy"):                                     + Created
+    aws:BucketObject("favicon.png"):                                      + Created
+    aws:BucketObject("index.html"):                                       + Created
+    info: 6 changes performed:
+        + 6 resources created
+    Update duration: 6.952010989s
 
-    Permalink: https://pulumi.com/lindydonna/examples/aws-js-s3-folder/testing/updates/9
+    Permalink: https://pulumi.com/lindydonna/examples/aws-js-s3-folder-component/s3foldercomponent-testing/updates/3
     ```
 
 1.  To see the resources that were created, run `pulumi stack output`:
@@ -83,8 +70,5 @@ A static website that uses [S3's website support](https://docs.aws.amazon.com/Am
     $ pulumi stack output websiteUrl
     s3-website-bucket-8533d8b.s3-website-us-west-2.amazonaws.com
     ```
-
-    ![Hello S3 example](images/part2-website.png)
-
 
 
