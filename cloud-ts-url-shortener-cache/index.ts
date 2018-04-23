@@ -50,7 +50,7 @@ endpoint.get("/url/{name}", async (req, res) => {
         // If we found an entry, 301 redirect to it; else, 404.
         if (url) {
             res.setHeader("Location", url);
-            res.status(301);
+            res.status(302);
             res.end("");
             console.log(`GET /url/${name} => ${url}`)
         }
@@ -67,10 +67,11 @@ endpoint.get("/url/{name}", async (req, res) => {
 
 // POST /url registers a new URL with a given short-name.
 endpoint.post("/url", async (req, res) => {
-    let url = req.query["url"];
-    let name = req.query["name"];
+    let url = <string>req.query["url"];
+    let name = <string>req.query["name"];
     try {
         await urlTable.insert({ name, url });
+        await urlCache.set(name, url);
         res.json({ shortenedURLName: name });
         console.log(`POST /url/${name} => ${url}`);
     } catch (err) {
