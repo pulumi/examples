@@ -1,3 +1,3 @@
-name: url-shortener
+name: url-shortener-cache
 runtime: nodejs
-description: URL shortener sample
+description: URL shortener with cache
