@@ -42,8 +42,6 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
 
     ```
     $ pulumi config set --secret redisPassword S3cr37Password
-    Enter your passphrase to protect config/secrets: 
-    Re-enter your passphrase to confirm:     
     ```
 
 ### Compile the TypeScript program

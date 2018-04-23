@@ -4,7 +4,11 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
 
 ## Deploying and running the program
 
-1. Run `pulumi init`. (Note: this command will not be required in a future SDK release.)
+1.  Initialize a Pulumi repository with pulumi init, using your GitHub username. (Note: this step will be removed in the future.)
+
+    ```
+    $ pulumi init --owner githubUsername
+    ```
 
 1. Create a new stack:
 
