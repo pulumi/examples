@@ -23,10 +23,10 @@ export class Cache {
             },
         });
 
-        let endpoint = this.redis.getEndpoint();
+        let endpoint = this.redis.endpoints.apply(endpoints => endpoints.redis[6379]);
         this.get = async (key: string) => {
-            let ep = await endpoint;
-            console.log(`Getting key '${key}' on Redis@${JSON.stringify(ep)}`);
+            let ep = (await endpoint).get();
+            console.log(`Getting key '${key}' on Redis@${ep.hostname}:${ep.port}`);
 
             let client = require("redis").createClient(ep.port, ep.hostname, { password: pw });
             return new Promise<string>((resolve, reject) => {
@@ -41,8 +41,8 @@ export class Cache {
         };
 
         this.set = async (key: string, value: string) => {
-            let ep = await endpoint;
-            console.log(`Setting key '${key}' to '${value}' on Redis@${JSON.stringify(ep)}`);
+            let ep = (await endpoint).get();
+            console.log(`Setting key '${key}' to '${value}' on Redis@${ep.hostname}:${ep.port}`);
 
             let client = require("redis").createClient(ep.port, ep.hostname, { password: pw });
             return new Promise<void>((resolve, reject) => {
@@ -50,6 +50,7 @@ export class Cache {
                     if (err) {
                         reject(err);
                     } else {
+                        console.log("Set succeeed: " + JSON.stringify(v))
                         resolve();
                     }
                 });
