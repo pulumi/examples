@@ -16,20 +16,18 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 ### Configure the deployment  
 
-1.  Run `pulumi init`. (Note: this command will not be required in a future SDK release.)
+1.  Initialize a Pulumi repository with pulumi init, using your GitHub username. (Note: this step will be removed in the future.)
 
-1.  Login via `pulumi login`:
-
-    ```bash
-    $ pulumi login
-    Enter your Pulumi access token (located at https://pulumi.com/account): 7hisis4r34llys3cr374cc3ss70k3ns0d0n7l34ki7=
     ```
+    $ pulumi init --owner githubUsername
+    ```
+
+1.  Login via `pulumi login`.
 
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init
-    Enter a stack name: testing
+    $ pulumi stack init testing
     ```
 
 1.  Set AWS as the provider:
@@ -59,16 +57,79 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 ### Preview and deploy
 
-1.  Ensure the Docker daemon is running on your machine, then preview changes via `pulumi preview`. This step will create the Docker container but will not provision resources. If you encrypted the value for the `redisPassword` key, you'll be prompted for your password before each `preview` and `update` operation.
+1.  Ensure the Docker daemon is running on your machine, then preview changes via `pulumi preview`. This step will create the Docker container but will not provision resources. 
 
     ```
-    $ pulumi preview --summary
-    [...details omitted...]
-    info: 34 changes previewed:
-        + 34 resources to create
+    $ pulumi preview
+    Previewing stack 'testing' in the Pulumi Cloud ☁️
+    Previewing changes:
+
+    global:                                               * Would not change, 1 info message(s). info: Building container image 'pulum-df6d90cb-container': context=./frontend
+    pulumi:Stack("voting-app-testing"):                   Running, 11 info message(s). info: Successfully tagged pulum-df6d90cb-container:latest
+    aws:Cluster("pulumi-testing-global"):                 + Would create
+    cloud:infrastructure("global-infrastructure"):        + Would create
+    pulumi:Stack("voting-app-testing"):                   Running, 11 info message(s). info: Successfully tagged pulum-df6d90cb-container:latest
+    cloud:infrastructure("global-infrastructure"):            + Would create
+    aws:Role("pulumi-testing-task"):                          + Would create
+    aws:Role("pulumi-testing-execution"):                     + Would create
+    pulumi:Stack("voting-app-testing"):                       Completed, 11 info message(s). info: Successfully tagged pulum-df6d90cb-container:latest
+    aws:LogGroup("voting-app-cache"):                         + Would create
+    aws:RolePolicyAttachment("pulumi-tes-task-32be53a2"):     + Would create
+    aws:RolePolicyAttachment("pulumi-tes-task-fd1a00e5"):     + Would create
+    aws:RolePolicyAttachment("pulumi-testing-execution"):     + Would create
+    aws:Function("pulumi-testing"):                           + Would create
+    aws:Role("pulumi-testing"):                               + Would create
+    aws:Function("pulumi-testing")-1:                         + Would create
+    aws:RolePolicyAttachment("pulumi-testing-32be53a2"):      + Would create
+    aws:TargetGroup("22582cb2"):                              + Would create
+    aws:SecurityGroup("pulumi-testing-global"):               + Would create
+    aws:LoadBalancer("22582cb2"):                             + Would create
+    aws:Permission("pulumi-testing"):                         + Would create
+    aws:LogSubscriptionFilter("voting-app-cache"):            + Would create
+    aws:Listener("voting-app-cache-redis-6379"):              + Would create
+    cloud:Service("voting-app-frontend"):                     + Would create
+    aws:TaskDefinition("voting-app-cache"):                   + Would create
+    aws:LogGroup("voting-app-frontend"):                      + Would create
+    aws:TargetGroup("8f351c44"):                              + Would create
+    aws:LoadBalancer("8f351c44"):                             + Would create
+    aws:Service("voting-app-cache"):                          + Would create
+    aws:LogSubscriptionFilter("voting-app-frontend"):         + Would create
+    aws:Listener("voting-app-frontend-votingAppFrontend-80"): + Would create
+    aws:TaskDefinition("voting-app-frontend"):                + Would create
+    aws:Service("voting-app-frontend"):                       + Would create
+
+    global: Diagnostics
+      info: Building container image 'pulum-df6d90cb-container': context=./frontend
+
+
+    pulumi:Stack("voting-app-testing"): Diagnostics
+      info: Sending build context to Docker daemon  12.29kB
+
+      info: Step 1/3 : FROM tiangolo/uwsgi-nginx-flask:python3.6
+
+      info:  ---> d3f7d9a2f84d
+
+      info: Step 2/3 : RUN  pip install redis
+
+      info:  ---> Using cache
+
+      info:  ---> 6af54244c127
+
+      info: Step 3/3 : COPY /app /app
+
+      info:  ---> Using cache
+
+      info:  ---> 7588d8b2e4c9
+
+      info: Successfully built 7588d8b2e4c9
+
+      info: Successfully tagged pulum-df6d90cb-container:latest
+
+    info: 32 changes previewed:
+        + 32 resources to create
     ```
 
-1.  Deploy the changes with `pulumi update`. Since this actually deploys a number of resources, it will take about 15 minutes to complete. Note the stack output property `frontendUrl`, which shows the URL and port of the deployed app:
+1.  Deploy the changes with `pulumi update`. Since this deploys a number of resources, it will take about 15 minutes to complete. 
 
     ```bash
     $ pulumi update
@@ -76,6 +137,15 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
     ---outputs:---
     frontendURL: "http://pulumi-vo-ne2-d7f97ef-7c5e2c22a22ec44a.elb.us-west-2.amazonaws.com:34567"
     Permalink: https://pulumi.com/pulumi/examples/voting-app/testing/updates/1
+    ```
+
+1.  View the stack output properties via `pulumi stack output`. The stack output property `frontendUrl` is the URL and port of the deployed app:
+
+    ```bash
+    $ pulumi stack output
+    Current stack outputs (1):
+        OUTPUT                                           VALUE
+        frontendURL                                      http://pulumi-vo-ne2-d7f97ef-7c5e2c22a22ec44a.elb.us-west-2.amazonaws.com:34567
     ```
 
 1.  In a browser, navigate to the URL for `frontendURL`. You should see the voting app webpage.
