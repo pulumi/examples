@@ -60,3 +60,7 @@ Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/
 ### [Static Website on AWS S3](aws-js-s3-folder/)
 
 This example deploys a static website to AWS S3, demonstrating how to combine infrastructure code and content in the same application.
+
+### [Voting App with Containers](cloud-ts-voting-app/)
+
+A simple voting app that uses Redis for a data store and a Python Flask app for the frontend, demonstrating the high-level framework `@pulumi/cloud`.
