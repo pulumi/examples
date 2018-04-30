@@ -4,7 +4,7 @@
         {
             "label": "voting app",            
             "type": "typescript",
-            "tsconfig": "voting-app/tsconfig.json",
+            "tsconfig": "cloud-ts-voting-app/tsconfig.json",
             "option": "watch",
             "problemMatcher": [
                 "$tsc-watch"
@@ -17,7 +17,7 @@
         {
             "label": "url shortener",               
             "type": "typescript",
-            "tsconfig": "url-shortener/tsconfig.json",
+            "tsconfig": "cloud-ts-url-shortener/tsconfig.json",
             "option": "watch",
             "problemMatcher": [
                 "$tsc-watch"
@@ -30,7 +30,7 @@
         {
             "label": "url shortener with cache",               
             "type": "typescript",
-            "tsconfig": "url-shortener-with-cache/tsconfig.json",
+            "tsconfig": "cloud-ts-url-shortener-cache/tsconfig.json",
             "option": "watch",
             "problemMatcher": [
                 "$tsc-watch"
@@ -39,32 +39,6 @@
                 "kind": "build",
                 "isDefault": true
             }
-        },        
-        {
-            "label": "webserver",            
-            "type": "typescript",
-            "tsconfig": "webserver/tsconfig.json",
-            "option": "watch",
-            "problemMatcher": [
-                "$tsc-watch"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "webserver-component",            
-            "type": "typescript",
-            "tsconfig": "webserver-component/tsconfig.json",
-            "option": "watch",
-            "problemMatcher": [
-                "$tsc-watch"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        }                
+        },                   
     ]
 }

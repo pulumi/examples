@@ -13,50 +13,60 @@ http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applicat
 
 1.  Login to the Pulumi CLI via `pulumi login`.
 
-1.  Initialize a Pulumi repository with pulumi init, using your GitHub username. (Note: this step will be removed in the future.)
-
-    ```bash
-    $ pulumi init --owner githubUsername
-    ```
-
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init webserver-testing
-    Created stack 'webserver-testing'.
+    $ pulumi stack init python-webserver-testing
     ```
 
-1.  Run `pulumi preview`:
+1.  Since Pulumi is in private beta, run the following to install pip packages. For more information, see [Using Pulumi PyPI Packages](https://docs.pulumi.com/reference/python.html#pypi-packages).
 
     ```
-    $ pulumi preview
-    Previewing stack 'python-test' in the Pulumi Cloud ☁️
-    Previewing changes:
-
-    pulumi:Stack("webserver-py-python-test"): Completed 
-    aws:SecurityGroup("web-secgrp"):          + Would create 
-    aws:Instance("web-server-www"):           + Would create 
-    info: 3 changes previewed:
-        + 3 resources to create
+    pip install \
+        --extra-index-url https://${PULUMI_ACCESS_TOKEN}@pypi.pulumi.com/simple \
+        -r requirements.txt
     ```
 
-1.  Run `pulumi update`:
+1.  Set the AWS region:
+
+    ```
+    $ pulumi config set aws:region us-west-2
+    ```
+
+1.  Run `pulumi update` to preview and deploy changes:
 
     ```
     $ pulumi update
-    Updating stack 'python-test' in the Pulumi Cloud ☁️
+    Previewing stack 'python-webserver-testing'
+    Previewing changes:
+    ...
+
+    Do you want to proceed? yes
+    Updating stack 'python-webserver-testing'
     Performing changes:
 
-    pulumi:Stack("webserver-py-python-test"): Completed 
-    aws:SecurityGroup("web-secgrp"):          + Created 
-    aws:Instance("web-server-www"):           + Created 
+    #: Resource Type          Name                                   Status     Extra Info
+    1: pulumi:pulumi:Stack    webserver-py-python-webserver-testing  + created  
+    2: aws:ec2:SecurityGroup  web-secgrp                             + created  
+    3: aws:ec2:Instance       web-server-www                         + created  
+    
     info: 3 changes performed:
         + 3 resources created
-    Update duration: 26.445180782s
+    Update duration: 26.470339302s
+
+    Permalink: https://pulumi.com/lindydonna/examples/webserver-py/python-webserver-testing/updates/1
     ```
+
+1.  View the host name and IP address of the instance via `stack output`:
+
+    ```
+    $ pulumi stack output
+    Current stack outputs (2):
+        OUTPUT                                           VALUE
+        public_dns                                       ec2-34-217-176-141.us-west-2.compute.amazonaws.com
+        public_ip                                        34.217.176.141
+    ```    
 
 1.  Verify that the EC2 instance exists, by either using the AWS Console or running `aws ec2 describe-instances`.
 
-1.  Clean up resources by running `pulumi destroy`.
-
-    
+1.  Clean up resources by running `pulumi destroy` and answering the confirmation question at the prompt.

@@ -4,17 +4,10 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
 
 ## Deploying and running the program
 
-1.  Initialize a Pulumi repository with pulumi init, using your GitHub username. (Note: this step will be removed in the future.)
-
-    ```
-    $ pulumi init --owner githubUsername
-    ```
-
 1. Create a new stack:
 
     ```
-    $ pulumi stack init
-    Enter a stack name: url-shortener-test
+    $ pulumi stack init url-shortener-test
     ```
 
 1. Set the provider and region:
@@ -28,30 +21,27 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
 
 1. Compile the program via `tsc` or `npm run build`.
 
-1. Preview the program deployment:
-
-    ```
-    $ pulumi preview
-    [...details omitted...]
-    ---outputs:---
-    endpointUrl: computed<string>
-    info: 48 changes previewed:
-        + 48 resources to create
-    ```
-
-1. Perform the deployment:
+1. Preview and run the deployment via `pulumi update`. The operation will take about 3 minutes to complete.
 
     ```
     $ pulumi update
-    [...details omitted...]
-    ---outputs:---
-    endpointUrl: "https://gs8t66u634.execute-api.us-east-1.amazonaws.com/stage/"
+    Previewing stack 'url-shortener-test'
+    ...
+
+    Updating stack 'url-shortener-test'
+    Performing changes:
+
+    #:  Resource Type                         Name                                    Status   
+    1:  pulumi:pulumi:Stack                   url-shortener-url-shortener-test        + creatin
+    ...
+    48: aws:apigateway:Stage                  urlshortener                            + created
+    
     info: 48 changes performed:
         + 48 resources created
-    Update duration: 4m7.023449447s
+    Update duration: 2m50.772883687s
     ```
 
-1. The API endpoint will be shown as the value for `endpointUrl` in the CLI output. You can always get this value by running `pulumi stack output`:
+1. To view the url for the API endpoint, run `pulumi stack output`:
 
     ```
     $ pulumi stack output endpointUrl

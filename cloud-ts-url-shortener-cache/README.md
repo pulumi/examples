@@ -4,42 +4,54 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
 
 ## Deploying and running the program
 
-1.  Initialize a Pulumi repository with pulumi init, using your GitHub username. (Note: this step will be removed in the future.)
-
-    ```
-    $ pulumi init --owner githubUsername
-    ```
-
 1. Create a new stack:
 
     ```
-    $ pulumi stack init testing
+    $ pulumi stack init url-cache-testing
     ```
 
-1. Set the provider and region:
+1.  Set AWS as the provider:
 
     ```
     $ pulumi config set cloud:provider aws
-    $ pulumi config set aws:region us-west-2
     ```
 
-1. Set a value for the Redis password. The value can be an encrypted secret, specified with the `--secret` flag. If this flag is not provided, the value will be saved as plaintext in `Pulumi.testing.yaml` (since `testing` is the current stack name).
+1.  Configure Pulumi to use AWS Fargate, which is currently only available in `us-east-1`, `us-west-2`, and `eu-west-1`:
+
+    ```
+    $ pulumi config set aws:region us-west-2
+    $ pulumi config set cloud-aws:useFargate true
+    ```    
+
+1. Set a value for the Redis password. The value can be an encrypted secret, specified with the `--secret` flag. If this flag is not provided, the value will be saved as plaintext in `Pulumi.url-cache-testing.yaml` (since `url-cache-testing` is the current stack name).
 
     ```
     $ pulumi config set --secret redisPassword S3cr37Password
-    Enter your passphrase to protect config/secrets: 
-    Re-enter your passphrase to confirm:     
     ```
 
 1. Restore NPM modules via `npm install`.
 
 1. Compile the program via `tsc` or `npm run build`.
 
-1. Preview the program deployment:
+1. Preview and run the deployment via `pulumi update`. The operation will take about 5 minutes to complete.
 
+    ```
+    $ pulumi update
+    Previewing stack 'url-cache-testing'
+    ...
 
+    Updating stack 'url-cache-testing'
+    Performing changes:
 
-1. Perform the deployment:
+    #:  Resource Type                            Name                    
+    1:  pulumi:pulumi:Stack                      url-shortener-cache-url-
+    ...
+    63: aws:apigateway:Stage                     urlshortener            
+    
+    info: 63 changes performed:
+        + 63 resources created
+    Update duration: 5m48.727390626s
+    ```
 
 1. To view the API endpoint, use the `stack output` command:
 
@@ -50,4 +62,4 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
 
 1. Open this page in a browser and you'll see a single page app for creating and viewing short URLs.
 
-
+1.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
