@@ -29,17 +29,12 @@ $ cd ..
 # Build the Pulumi program
 $ npm run build
 
-# Preview the deployment
-$ pulumi preview
-Previewing changes:
-[snip...]
-info: 9 changes previewed:
-    + 9 resources to create
-
-# Deploy the update
+# Preview and run the deployment
 $ pulumi update
+Previewing changes:
+...
 Performing changes:
-[snip...]
+...
 info: 9 changes performed:
     + 9 resources created
 Update duration: 25.017340162s

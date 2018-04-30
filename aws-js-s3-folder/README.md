@@ -4,12 +4,6 @@ A static website that uses [S3's website support](https://docs.aws.amazon.com/Am
 
 ## Deploying and running the program
 
-1.  Initialize a Pulumi repository with `pulumi init`, using your GitHub username. (Note: this step will be removed in the future.)
-
-    ```bash
-    $ pulumi init --owner githubUsername
-    ```
-
 1.  Create a new stack:
 
     ```bash
@@ -24,39 +18,28 @@ A static website that uses [S3's website support](https://docs.aws.amazon.com/Am
 
 1.  Restore NPM modules via `npm install`.
 
-1.  Run `pulumi preview` to see what AWS resources will be created:
-
-    ```bash
-    $ pulumi preview
-    Previewing stack 'testing' in the Pulumi Cloud ☁️
-    Previewing changes:
-
-    pulumi:Stack("aws-js-s3-folder-testing"): Completed
-    aws:Bucket("s3-website-bucket"):          + Would create
-    aws:BucketPolicy("bucketPolicy"):         + Would create
-    aws:BucketObject("favicon.png"):          + Would create
-    aws:BucketObject("index.html"):           + Would create
-    info: 5 changes previewed:
-        + 5 resources to create    
-    ```
-
-1.  Now, provision resources via `pulumi update`:
+1.  Run `pulumi update` to preview and deploy changes.
 
     ```bash
     $ pulumi update
-    Updating stack 'testing' in the Pulumi Cloud ☁️
+    Previewing stack 'website-testing'
+    Previewing changes:
+    ...
+
     Performing changes:
 
-    pulumi:Stack("aws-js-s3-folder-testing"): Completed
-    aws:Bucket("s3-website-bucket"):          + Created
-    aws:BucketPolicy("bucketPolicy"):         + Created
-    aws:BucketObject("favicon.png"):          + Created
-    aws:BucketObject("index.html"):           + Created
+    #: Resource Type        Name                              Status     Extra Inf
+    1: pulumi:pulumi:Stack  aws-js-s3-folder-website-testing  + created  
+    2: aws:s3:Bucket        s3-website-bucket                 + created  
+    3: aws:s3:BucketPolicy  bucketPolicy                      + created  
+    4: aws:s3:BucketObject  favicon.png                       + created  
+    5: aws:s3:BucketObject  index.html                        + created  
+    
     info: 5 changes performed:
         + 5 resources created
-    Update duration: 7.083525991s
+    Update duration: 8.827698762s
 
-    Permalink: https://pulumi.com/lindydonna/examples/aws-js-s3-folder/testing/updates/9
+    Permalink: https://pulumi.com/lindydonna/examples/aws-js-s3-folder/website-testing/updates/1
     ```
 
 1.  To see the resources that were created, run `pulumi stack output`:
@@ -86,5 +69,4 @@ A static website that uses [S3's website support](https://docs.aws.amazon.com/Am
 
     ![Hello S3 example](images/part2-website.png)
 
-
-
+1.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
