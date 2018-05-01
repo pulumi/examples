@@ -1,0 +1,3 @@
+name: cloud-js-httpendpoint
+description: A Pulumi project.
+runtime: nodejs
