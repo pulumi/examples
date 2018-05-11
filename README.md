@@ -3,15 +3,15 @@
 This repository contains examples of using Pulumi to build and deploy cloud applications and infrastructure.
 
 Each example has a two-part prefix, `<cloud>-<language>`, to indicate which `<cloud>` and `<language>` it pertains to.
-The cloud is one of `aws` (for [Amazon Web Services](https://github.com/pulumi/pulumi-aws)), `azure` (for [Microsoft
-Azure](https://github.com/pulumi/pulumi-azure)), `gcp` (for [Google Cloud
-Platform](https://github.com/pulumi/pulumi-gcp)), `kubernetes` (for
-[Kubernetes](https://github.com/pulumi/pulumi-kubernetes)), or `cloud` (for
-[Pulumi's cross-cloud programming framework](https://github.com/pulumi/pulumi-cloud)).
+The cloud is one of `aws` for [Amazon Web Services](https://github.com/pulumi/pulumi-aws), `azure` for [Microsoft
+Azure](https://github.com/pulumi/pulumi-azure), `gcp` for [Google Cloud
+Platform](https://github.com/pulumi/pulumi-gcp), `kubernetes` for
+[Kubernetes](https://github.com/pulumi/pulumi-kubernetes), or `cloud` for
+[Pulumi's cross-cloud programming framework](https://github.com/pulumi/pulumi-cloud).
 
 See the [Pulumi documentation](https://docs.pulumi.com) for more details on getting started with Pulumi.
 
-### Infrastructure examples
+### Cloud Infrastructure
 
 #### Web Server
 
@@ -32,9 +32,13 @@ This example deploys a static website to AWS S3, demonstrating how to combine in
 
 An [extension of this sample](aws-js-s3-folder-component/) shows how to create your own component for reusable infrastructure. 
 
-### Infrastructure and code examples
+### Cloud Applications
 
-#### [Cloud-Agnostic URL Shortener](cloud-ts-url-shortener/)
+#### [Serverless REST API](cloud-js-httpendpoint)
+
+This example shows how to build a simple REST API to count the number of times a route has been hit. It shows how easy it is to create a simple application that uses AWS Lambda, API Gateway, and Dynamo DB.
+
+#### [Cloud-Agnostic Serverless URL Shortener](cloud-ts-url-shortener/)
 
 This example demonstrates a complete URL shortener web application using high-level `cloud.Table` and
 `cloud.HttpEndpoint` components, highlighting the ability to combine deployment time and runtime code, and the simple,
@@ -67,6 +71,6 @@ This examples shows a version of the [Kubernetes
 Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/) app using Pulumi and
 `@pulumi/kubernetes`.
 
-#### [Voting App with Containers](cloud-ts-voting-app/)
+#### [AWS Voting App with Containers](cloud-ts-voting-app/)
 
 A simple voting app that uses Redis for a data store and a Python Flask app for the frontend, demonstrating the high-level framework `@pulumi/cloud`.
