@@ -1,3 +1,3 @@
 name: cloud-js-httpendpoint
-description: A Pulumi project.
+description: A simple HTTP endpoint that returns the number of times a route has been hit.
 runtime: nodejs

@@ -1,11 +1,10 @@
-import * as cloud  from "@pulumi/cloud";
-import * as pulumi from "@pulumi/pulumi";
+const cloud = require("@pulumi/cloud-aws");
+
+// Create a mapping from 'route' to a count
+let counterTable = new cloud.Table("counterTable", "route");
 
 // Create an API endpoint
 let endpoint = new cloud.HttpEndpoint("hello-world");
-
-// Create a table `counterTable`, with `route` as primary key.
-let counterTable = new cloud.Table("counterTable", "route");
 
 endpoint.get("/{route+}", async (req, res) => {
     let route = req.params["route"];
@@ -20,4 +19,4 @@ endpoint.get("/{route+}", async (req, res) => {
     console.log(`Got count ${count} for '${route}'`);
 });
 
-export let url = endpoint.publish().url;
+module.exports.endpoint = endpoint.publish().url;

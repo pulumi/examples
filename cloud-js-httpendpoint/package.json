@@ -1,16 +1,8 @@
 {
     "name": "cloud-js-httpendpoint",
-    "main": "bin/index.js",
-    "scripts": {
-        "build": "tsc"
-    },
-    "devDependencies": {
-        "@types/node": "^8.0.27",
-        "typescript": "^2.7.2"
-    },
+    "main": "index.js",
     "dependencies": {
-        "@pulumi/cloud": "^0.12.0",
         "@pulumi/cloud-aws": "^0.12.0",
-        "@pulumi/pulumi": "^0.12.0"
+        "@pulumi/cloud": "^0.12.0"
     }
 }
