@@ -1,70 +1,46 @@
 "use strict";
 
 const cloud = require("@pulumi/cloud-aws");
-const pulumi = require("@pulumi/pulumi");
 
-const config = new pulumi.Config("video-thumbnailer-rekognition");
+const video = require("./video-label-processor");
 
-// A task which runs a containerized FFMPEG job to extract a thumbnail image.
+const bucket = new cloud.Bucket("bucket");
+const bucketName = bucket.bucket.id;
+
 const ffmpegThumbnailTask = new cloud.Task("ffmpegThumbTask", {
     build: "./docker-ffmpeg-thumb",
     memoryReservation: 128,
 });
 
-// A bucket to store videos and thumbnails.
-const bucket = new cloud.Bucket("bucket");
-const bucketName = bucket.bucket.id;
+// Use a module for processing video through Rekognition 
+// The module creates an SNS topic
+const videoProcessor = new video.VideoLabelProcessor();
 
-const topic = new cloud.Topic("AmazonRekognitionTopic");
+/// When a new video is uploaded, run Rekognition using videoProcessor
+bucket.onPut("onNewVideo", async (bucketArgs) => {  
+    console.log(`*** New video: file ${bucketArgs.key} was uploaded at ${bucketArgs.eventTime}.`);
+    videoProcessor.startRekognitionJob(bucketName.get(), bucketArgs.key);
+}, { keySuffix: ".mp4" });  // run this Lambda only on .mp4 files
 
-topic.subscribe("labelResults", (jobStatus) => {
-    let rekognition = require("./rekognition");
-    
-    rekognition.processResults(jobStatus, (data) => {
-        let searchObject = "cat";
-        let timestamp = rekognition.getTimestampForLabel(data.Labels, searchObject);
-        return extractKeyFrame(jobStatus.Video.S3Bucket, jobStatus.Video.S3ObjectName, timestamp);
-    });
-});
+videoProcessor.onLabelResult("cat", (filename, timestamp) => {
+    const outputFilename = filename.substring(0, filename.lastIndexOf('.')) + '.jpg';
 
-function extractKeyFrame(bucketName, filename, timestamp) {
-    let outputFilename = filename.substring(0, filename.lastIndexOf('.')) + '.png';
-
+    // launch ffmpeg in a container, use environment variables to connect resources together
     return ffmpegThumbnailTask.run({
         environment: {
-            "S3_BUCKET": bucketName,
+            "S3_BUCKET": bucketName.get(),      // Can easily reference bucketName defined above
             "INPUT_VIDEO_FILE_NAME": filename,
-            "POSITION_TIME_DURATION": timestamp.toString(),
+            "POSITION_TIME_DURATION": timestamp,
             "OUTPUT_THUMBS_FILE_NAME": outputFilename
         },
     }).then(() => {
         console.log(`*** Launched thumbnailer task for ${bucketName}/${filename} at timestamp ${timestamp}`);
     });
-}
+});
 
-const roleArn = config.require("RekognitionRoleArn");
-
-
-// When a new video is uploaded, run the FFMPEG job on the video file.
-bucket.onPut("onNewVideo", async (bucketArgs) => {
-
-    console.log(`*** New video: file ${bucketArgs.key} was uploaded at ${bucketArgs.eventTime}.`);
-
-    // const framePos = filename.substring(filename.indexOf('_')+1, filename.indexOf('.')).replace('-',':');
-    let rekognition = require("./rekognition");
-    rekognition.startRekognitionJob(bucketName.get(), bucketArgs.key, roleArn, topic.topic.arn.get());
-
-}, { keySuffix: ".mp4" });
-
-
-// When a new thumbnail is created, log a message.
 bucket.onPut("onNewThumbnail", async (bucketArgs) => {
-
     console.log(`*** New thumbnail: Saved file ${bucketArgs.key} at ${bucketArgs.eventTime}.`);
-}, { keySuffix: ".png" });
-
-
+}, { keySuffix: ".jpg" });
 
 // Export the bucket name.
 exports.bucketName = bucketName;
-exports.topicArn = topic.topic.arn;
