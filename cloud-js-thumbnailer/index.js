@@ -13,7 +13,7 @@ const ffmpegThumbnailTask = new cloud.Task("ffmpegThumbTask", {
 });
 
 // When a new video is uploaded, run the FFMPEG task on the video file.
-/// Use the time index specified in the filename (e.g. cat_00-01.mp4 uses timestamp 00:01)
+// Use the time index specified in the filename (e.g. cat_00-01.mp4 uses timestamp 00:01)
 bucket.onPut("onNewVideo", async (bucketArgs) => {
     console.log(`*** New video: file ${bucketArgs.key} was uploaded at ${bucketArgs.eventTime}.`);
     const file = bucketArgs.key;
@@ -21,7 +21,7 @@ bucket.onPut("onNewVideo", async (bucketArgs) => {
     const thumbnailFile = file.substring(0, file.indexOf('_')) + '.jpg';
     const framePos = file.substring(file.indexOf('_')+1, file.indexOf('.')).replace('-',':');
 
-    ffmpegThumbnailTask.run({
+    await ffmpegThumbnailTask.run({
         environment: {
             "S3_BUCKET": bucketName.get(),
             "INPUT_VIDEO_FILE_NAME": file,
