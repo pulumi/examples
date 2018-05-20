@@ -1,8 +1,8 @@
 <html>
 
 <head>
-    <link rel="shortcut icon" href="/stage/favicon.png" type="image/png">
-    <link rel="stylesheet" href="/stage/bootstrap.min.css" type="text/css">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <link rel="stylesheet" href="bootstrap.min.css" type="text/css">
     <title>Short URL Manager</title>
 </head>
 
@@ -40,12 +40,12 @@
             <tbody>
                 <script type="text/javascript">
                     function refreshList() {
-                        $.getJSON('/stage/url', data => {
+                        $.getJSON('url', data => {
                             $("#urltable tbody tr").remove();
                             data.forEach(item =>
                                 $("#urltable").append(
                                     `<tr>
-                                        <td><a target="_blank" href=\"/stage/url/${item.name}\">${item.name}</a></td>
+                                        <td><a target="_blank" href=\"url/${item.name}\">${item.name}</a></td>
                                         <td>${item.url}</td>
                                     </tr>`
                                 )
@@ -59,7 +59,7 @@
                             let name = document.getElementById("input-name").value;
                             let url = document.getElementById("input-url").value;
 
-                            $.post('/stage/url/?name=' + name + "&url=" + url, {}, data => {
+                            $.post('url/?name=' + name + "&url=" + url, {}, data => {
                                 console.log(data);
                                 refreshList();
                                 document.getElementById("add").reset();

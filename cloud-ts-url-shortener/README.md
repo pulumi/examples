@@ -10,10 +10,9 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
     $ pulumi stack init url-shortener-test
     ```
 
-1. Set the provider and region:
+1. Set the AWS region:
 
     ```
-    $ pulumi config set cloud:provider aws
     $ pulumi config set aws:region us-west-2
     ```
 
@@ -21,24 +20,61 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
 
 1. Compile the program via `tsc` or `npm run build`.
 
-1. Preview and run the deployment via `pulumi update`. The operation will take about 3 minutes to complete.
+1. Preview and run the deployment via `pulumi update`. The operation will take about 2 minutes to complete and will create 34 resources:
 
     ```
     $ pulumi update
-    Previewing stack 'url-shortener-test'
+    Previewing update of stack 'url-shortener-dev'
     ...
 
-    Updating stack 'url-shortener-test'
+    Do you want to perform this update? yes
+    Updating stack 'url-shortener-dev'
     Performing changes:
 
-    #:  Resource Type                         Name                                    Status   
-    1:  pulumi:pulumi:Stack                   url-shortener-url-shortener-test        + creatin
-    ...
-    48: aws:apigateway:Stage                  urlshortener                            + created
+        Type                                      Name                                    Status      Info
+    +   pulumi:pulumi:Stack                       url-shortener-url-shortener-dev         created     
+    +   ├─ cloud:table:Table                      urls                                    created     
+    +   │  └─ aws:dynamodb:Table                  urls                                    created     
+    +   └─ cloud:http:HttpEndpoint                urlshortener                            created     
+    +      ├─ aws:s3:Bucket                       urlshortener                            created     
+    +      ├─ aws:iam:Role                        urlshortener4c238266                    created     
+    +      ├─ cloud:function:Function             urlshortener0f7d8d8d                    created     
+    +      │  └─ aws:serverless:Function          urlshortener0f7d8d8d                    created     
+    +      │     ├─ aws:iam:Role                  urlshortener0f7d8d8d                    created     
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortener0f7d8d8d-32be53a2           created     
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortener0f7d8d8d-fd1a00e5           created     
+    +      │     └─ aws:lambda:Function           urlshortener0f7d8d8d                    created     
+    +      ├─ cloud:function:Function             urlshortenerd9505e4a                    created     
+    +      │  └─ aws:serverless:Function          urlshortenerd9505e4a                    created     
+    +      │     ├─ aws:iam:Role                  urlshortenerd9505e4a                    created     
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenerd9505e4a-32be53a2           created     
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenerd9505e4a-fd1a00e5           created     
+    +      │     └─ aws:lambda:Function           urlshortenerd9505e4a                    created     
+    +      ├─ cloud:function:Function             urlshortenereeb67ce9                    created     
+    +      │  └─ aws:serverless:Function          urlshortenereeb67ce9                    created     
+    +      │     ├─ aws:iam:Role                  urlshortenereeb67ce9                    created     
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenereeb67ce9-32be53a2           created     
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenereeb67ce9-fd1a00e5           created     
+    +      │     └─ aws:lambda:Function           urlshortenereeb67ce9                    created     
+    +      ├─ aws:s3:BucketObject                 urlshortener4c238266/bootstrap.min.css  created     
+    +      ├─ aws:s3:BucketObject                 urlshortener4c238266/favicon.png        created     
+    +      ├─ aws:s3:BucketObject                 urlshortener4c238266/index.html         created     
+    +      ├─ aws:iam:RolePolicyAttachment        urlshortener4c238266                    created     
+    +      ├─ aws:apigateway:RestApi              urlshortener                            created     
+    +      ├─ aws:apigateway:Deployment           urlshortener                            created     
+    +      ├─ aws:lambda:Permission               urlshortener-0f7d8d8d                   created     
+    +      ├─ aws:lambda:Permission               urlshortener-eeb67ce9                   created     
+    +      ├─ aws:lambda:Permission               urlshortener-d9505e4a                   created     
+    +      └─ aws:apigateway:Stage                urlshortener                            created     
     
-    info: 48 changes performed:
-        + 48 resources created
-    Update duration: 2m50.772883687s
+    ---outputs:---
+    endpointUrl: "https://hxgmq2ujml.execute-api.us-west-2.amazonaws.com/stage/"
+
+    info: 34 changes performed:
+        + 34 resources created
+    Update duration: 1m47.983408851s
+
+    Permalink: https://pulumi.com/lindydonna/url-shortener-dev/updates/1
     ```
 
 1. To view the url for the API endpoint, run `pulumi stack output`:
@@ -48,7 +84,7 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
     https://gs8t66u634.execute-api.us-east-1.amazonaws.com/stage/
     ```
 
-1. Open this page in a browser and you'll see a single page app for creating and viewing short URLs.
+1. Open the URL in a browser and you'll see a single page app for creating and viewing short URLs.
 
 ### Logging
 
@@ -64,15 +100,9 @@ Collecting logs since 2018-03-27T18:20:32.000-07:00.
  2018-03-27T19:20:36.879-07:00[          urlshortener0f7d8d8d] GET /url retrieved 1 items
 ```
 
-### Delete resources
+## Clean up
 
-When you're done, run `pulumi destroy` to delete the program's resources:
-
-```
-$ pulumi destroy
-This will permanently destroy all resources in the 'url-shortener-test' stack!
-Please confirm that this is what you'd like to do by typing ("url-shortener-test"): url-shortener-test
-```
+To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
 
 ## About the code
 

@@ -22,24 +22,29 @@ A static website that uses [S3's website support](https://docs.aws.amazon.com/Am
 
     ```bash
     $ pulumi update
-    Previewing stack 'website-testing'
+    Previewing update of stack 'website-testing'
     Previewing changes:
     ...
 
+    Updating stack 'website-testing'
     Performing changes:
 
-    #: Resource Type        Name                              Status     Extra Inf
-    1: pulumi:pulumi:Stack  aws-js-s3-folder-website-testing  + created  
-    2: aws:s3:Bucket        s3-website-bucket                 + created  
-    3: aws:s3:BucketPolicy  bucketPolicy                      + created  
-    4: aws:s3:BucketObject  favicon.png                       + created  
-    5: aws:s3:BucketObject  index.html                        + created  
-    
+        Type                    Name                                   Status      Info
+    +   pulumi:pulumi:Stack     aws-js-s3-folder-website-testing  created
+    +   ├─ aws:s3:Bucket        s3-website-bucket                      created
+    +   ├─ aws:s3:BucketPolicy  bucketPolicy                           created
+    +   ├─ aws:s3:BucketObject  favicon.png                            created
+    +   └─ aws:s3:BucketObject  index.html                             created
+
+    ---outputs:---
+    bucketName: "s3-website-bucket-5afcc1d"
+    websiteUrl: "s3-website-bucket-5afcc1d.s3-website-us-west-2.amazonaws.com"
+
     info: 5 changes performed:
         + 5 resources created
-    Update duration: 8.827698762s
+    Update duration: 8.69080606s
 
-    Permalink: https://pulumi.com/lindydonna/examples/aws-js-s3-folder/website-testing/updates/1
+    Permalink: https://pulumi.com/lindydonna/website-testing/updates/4
     ```
 
 1.  To see the resources that were created, run `pulumi stack output`:

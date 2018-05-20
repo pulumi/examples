@@ -6,9 +6,9 @@ const mime = require("mime");
 
 // Create a bucket and expose a website index document
 let siteBucket = new aws.s3.Bucket("s3-website-bucket", {
-    websites: [{
+    website: {
         indexDocument: "index.html",
-    }],
+    },
 });
 
 let siteDir = "www"; // directory for content files
