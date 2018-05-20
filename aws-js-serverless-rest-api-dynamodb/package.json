@@ -1,0 +1,10 @@
+{
+    "name": "aws-serverless-rest-api-dynamodb",
+    "dependencies": {
+        "@pulumi/aws": "latest",
+        "@pulumi/aws-serverless": "latest",
+        "@pulumi/pulumi": "latest",
+        "aws-sdk": "^2.243.1",
+        "uuid": "^2.0.3"
+    }
+}
