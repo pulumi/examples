@@ -58,11 +58,11 @@ A simple REST API that counts the number of times a route has been hit. For a de
     $ pulumi stack output 
     Current stack outputs (1):
         OUTPUT            VALUE
-        url               https://5e8xrktey3.execute-api.us-west-2.amazonaws.com/stage/
+        endpoint          https://5e8xrktey3.execute-api.us-west-2.amazonaws.com/stage/
     
-    $ curl $(pulumi stack output url)/hello
+    $ curl $(pulumi stack output endpoint)/hello
     {"route":"hello","count":1}
-    $ curl $(pulumi stack output url)/woohoo
+    $ curl $(pulumi stack output endpoint)/woohoo
     {"route":"woohoo","count":1}
     ```
 
