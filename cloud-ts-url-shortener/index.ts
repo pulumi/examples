@@ -1,6 +1,6 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
-import * as cloud from "@pulumi/cloud";
+import * as cloud from "@pulumi/cloud-aws";
 import { Output } from "@pulumi/pulumi"; // for output property
 
 // Create a web server.
