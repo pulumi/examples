@@ -1,6 +1,6 @@
 # Static Website Hosted on AWS S3
 
-The component version of [aws-js-s3-folder](../aws-js-s3-folder). For a detailed walkthrough of this example, see [Part 2 of the Pulumi quickstart](https://docs.pulumi.com/quickstart/part2.html).
+The component version of [aws-js-s3-folder](../aws-js-s3-folder). For a detailed walkthrough of this example, see [Tutorial: Pulumi Components](https://docs.pulumi.com/reference/component-tutorial.html).
 
 ## Deploying and running the program
 
@@ -22,25 +22,30 @@ The component version of [aws-js-s3-folder](../aws-js-s3-folder). For a detailed
 
     ```bash
     $ pulumi update
-    Previewing stack 'website-component-testing'
+    Previewing update of stack 'website-component-testing'
     Previewing changes:
     ...
 
+    Updating stack 'website-component-testing'
     Performing changes:
 
-    #: Resource Type        Name                                                  
-    1: pulumi:pulumi:Stack  aws-js-s3-folder-component-website-component-testing  
-    2: examples:S3Folder    pulumi-static-site                                    
-    3: aws:s3:Bucket        pulumi-static-site                                    
-    4: aws:s3:BucketPolicy  bucketPolicy                                          
-    5: aws:s3:BucketObject  favicon.png                                           
-    6: aws:s3:BucketObject  index.html                                            
-    
+        Type                       Name                                                  Status      Info
+    +   pulumi:pulumi:Stack        aws-js-s3-folder-component-website-component-testing  created
+    +   └─ examples:S3Folder       pulumi-static-site                                    created
+    +      ├─ aws:s3:Bucket        pulumi-static-site                                    created
+    +      ├─ aws:s3:BucketPolicy  bucketPolicy                                          created
+    +      ├─ aws:s3:BucketObject  favicon.png                                           created
+    +      └─ aws:s3:BucketObject  index.html                                            created
+
+    ---outputs:---
+    bucketName: "pulumi-static-site-517ff4e"
+    websiteUrl: undefined
+
     info: 6 changes performed:
         + 6 resources created
-    Update duration: 6.159165618s
+    Update duration: 8.997389052s
 
-    Permalink: https://pulumi.com/lindydonna/examples/aws-js-s3-folder-component/website-component-testing/updates/1
+    Permalink: https://pulumi.com/lindydonna/website-component-testing/updates/1
     ```
 
 1.  To see the resources that were created, run `pulumi stack output`:
