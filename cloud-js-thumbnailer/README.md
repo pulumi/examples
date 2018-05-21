@@ -4,6 +4,8 @@ A video thumbnail extractor using serverless functions and containers.
 
 Loosely derived from the example at https://serverless.com/blog/serverless-application-for-long-running-process-fargate-lambda/.
 
+![When a new video is uploaded, extract a thumbnail](thumbnailer-diagram.png)
+
 ## Prerequisites
 
 To run this example, make sure [Docker](https://docs.docker.com/engine/installation/) is installed and running.
