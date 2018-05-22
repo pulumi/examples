@@ -122,7 +122,7 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
 
     ```
     $ aws s3 cp s3://$(pulumi stack output bucketName)/cat.jpg .
-    download: s3://bucket-0e25c2d/cat.png to ./cat.jpg            
+    download: s3://bucket-0e25c2d/cat.jpg to ./cat.jpg            
     ```
 
 ## Clean up
