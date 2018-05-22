@@ -2,39 +2,40 @@
 
 const cloud = require("@pulumi/cloud-aws");
 
+// A bucket to store videos and thumbnails.
+const bucket = new cloud.Bucket("bucket");
+const bucketName = bucket.bucket.id;
+
 // A task which runs a containerized FFMPEG job to extract a thumbnail image.
 const ffmpegThumbnailTask = new cloud.Task("ffmpegThumbTask", {
     build: "./docker-ffmpeg-thumb",
     memoryReservation: 128,
 });
 
-// A bucket to store videos and thumbnails.
-const bucket = new cloud.Bucket("bucket");
-const bucketName = bucket.bucket.id;
+// When a new video is uploaded, run the FFMPEG task on the video file.
+// Use the time index specified in the filename (e.g. cat_00-01.mp4 uses timestamp 00:01)
+bucket.onPut("onNewVideo", async (bucketArgs) => {
+    console.log(`*** New video: file ${bucketArgs.key} was uploaded at ${bucketArgs.eventTime}.`);
+    const file = bucketArgs.key;
+    
+    const thumbnailFile = file.substring(0, file.indexOf('_')) + '.jpg';
+    const framePos = file.substring(file.indexOf('_')+1, file.indexOf('.')).replace('-',':');
 
-// When a new video is uploaded, run the FFMPEG job on the video file.
-bucket.onPut("onNewVideo", bucketArgs => {
-    console.log(`A new ${bucketArgs.size}B video was uploaded to ${bucketArgs.key} at ${bucketArgs.eventTime}.`);
-    const key = bucketArgs.key;
-    const thumbnailFile = key.substring(0, key.indexOf('_')) + '.png';
-    const framePos = key.substring(key.indexOf('_')+1, key.indexOf('.')).replace('-',':');
-    return ffmpegThumbnailTask.run({
+    await ffmpegThumbnailTask.run({
         environment: {
             "S3_BUCKET": bucketName.get(),
-            "INPUT_VIDEO_FILE_NAME": key,
+            "INPUT_VIDEO_FILE_NAME": file,
             "POSITION_TIME_DURATION": framePos,
             "OUTPUT_THUMBS_FILE_NAME": thumbnailFile,
         },
-    }).then(() => {
-        console.log(`Running thumbnailer task.`);
     });
+    console.log(`Running thumbnailer task.`);
 }, { keySuffix: ".mp4" });
 
 // When a new thumbnail is created, log a message.
-bucket.onPut("onNewThumbnail", bucketArgs => {
-    console.log(`A new ${bucketArgs.size}B thumbnail was saved to ${bucketArgs.key} at ${bucketArgs.eventTime}.`);
-    return Promise.resolve();
-}, { keySuffix: ".png" });
+bucket.onPut("onNewThumbnail", async (bucketArgs) => {
+    console.log(`*** New thumbnail: file ${bucketArgs.key} was saved at ${bucketArgs.eventTime}.`);
+}, { keySuffix: ".jpg" });
 
 // Export the bucket name.
 exports.bucketName = bucketName;
