@@ -52,7 +52,7 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
     $ pulumi logs --follow
     Collecting logs for stack container-quickstart-dev since 2018-05-22T14:25:46.000-07:00.    
     2018-05-22T15:33:22.057-07:00[                  pulumi-nginx] 172.31.13.248 - - [22/May/2018:22:33:22 +0000] "GET / HTTP/1.1" 200 189 "-" "curl/7.54.0" "-"
-        ```    
+    ```
 
 ## Clean up
 

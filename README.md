@@ -38,6 +38,10 @@ An [extension of this sample](aws-js-s3-folder-component/) shows how to create y
 
 This example shows how to build a simple REST API to count the number of times a route has been hit. It shows how easy it is to create a simple application that uses AWS Lambda, API Gateway, and Dynamo DB.
 
+#### [Easy NGINX Container](cloud-js-containers)
+
+This example shows how easy it is to build a simple container and deploy to AWS Fargate. With just 15 lines of code, you can deploy a container to a production service. Pulumi automatically builds the Docker container, provisions a container registry instance, and pushes the built image to it. 
+
 #### [Cloud-Agnostic Serverless URL Shortener](cloud-ts-url-shortener/)
 
 This example demonstrates a complete URL shortener web application using high-level `cloud.Table` and
