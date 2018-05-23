@@ -12,4 +12,4 @@ let service = new cloud.Service("pulumi-nginx", {
 });
 
 // export just the hostname property of the container frontend
-exports.hostname = service.defaultEndpoint.apply(e => e.hostname);
+exports.hostname = service.defaultEndpoint.apply(e => `http://${e.hostname}`);

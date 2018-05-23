@@ -29,21 +29,22 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
     $ pulumi update
     ```
 
-1.  View the endpoint URL and run curl:
+1.  View the endpoint URL, and run curl or view in a browser.
 
     ```bash
     $ pulumi stack output
     Current stack outputs (1)  
         OUTPUT                  VALUE
-        hostname                42dc3ff4-ac65d11-86a100b6e1d7f210.elb.us-west-2.amazonaws.com
+        hostname                http://42dc3ff4-ac65d11-86a100b6e1d7f210.elb.us-west-2.amazonaws.com
 
     $ curl $(pulumi stack output hostname)
-    <html><head>
-        <title>Hello world</title><meta charset="UTF-8">
-    </head>
-    <body><p>Hello, containers!</p><p>Made with ❤️ with <a href="https://pulumi.com">Pulumi</a></p>
-    </body></html>    
+      <html>
+          <head>
+          <title>Hello Pulumi</title><meta charset="UTF-8">
+      ...
     ```
+
+    ![Screenshot of browser](./final-screenshot.png)
 
 1.  To view the runtime logs from the container, use the `pulumi logs` command. To get a log stream, use `pulumi logs --follow`.
 
