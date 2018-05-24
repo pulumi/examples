@@ -14,7 +14,7 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
     $ pulumi stack init containers-dev
     ```
 
-1.  Configure Pulumi to use AWS Fargate, which is currently only available in `us-east-1`, `us-west-2`, and `eu-west-1`:
+1.  Configure Pulumi to use AWS Fargate, which is currently only available in `us-east-1`, `us-east-2`, `us-west-2`, and `eu-west-1`:
 
     ```
     $ pulumi config set aws:region us-west-2
@@ -29,7 +29,7 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
     $ pulumi update
     ```
 
-1.  View the endpoint URL, and run curl or view in a browser.
+1.  View the endpoint URL, and run curl:
 
     ```bash
     $ pulumi stack output
@@ -38,13 +38,14 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
         hostname                http://42dc3ff4-ac65d11-86a100b6e1d7f210.elb.us-west-2.amazonaws.com
 
     $ curl $(pulumi stack output hostname)
-      <html>
-          <head>
-          <title>Hello Pulumi</title><meta charset="UTF-8">
-      ...
+    <html>
+        <head><meta charset="UTF-8">
+        <title>Hello, Pulumi!</title></head>
+    <body>
+        <p>Hello, S3!</p>
+        <p>Made with ❤️ with <a href="https://pulumi.com">Pulumi</a></p>
+    </body></html>
     ```
-
-    ![Screenshot of browser](./final-screenshot.png)
 
 1.  To view the runtime logs from the container, use the `pulumi logs` command. To get a log stream, use `pulumi logs --follow`.
 

@@ -16,7 +16,7 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
     $ pulumi config set cloud:provider aws
     ```
 
-1.  Configure Pulumi to use AWS Fargate, which is currently only available in `us-east-1`, `us-west-2`, and `eu-west-1`:
+1.  Configure Pulumi to use AWS Fargate, which is currently only available in `us-east-1`, `us-east-2`, `us-west-2`, and `eu-west-1`:
 
     ```
     $ pulumi config set aws:region us-west-2
