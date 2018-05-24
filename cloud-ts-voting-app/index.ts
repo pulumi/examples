@@ -14,7 +14,7 @@ let redisCache = new cloud.Service("voting-app-cache", {
     containers: {
         redis: {
             image: "redis:alpine",
-            memory: 128,
+            memory: 512,
             ports: [{ port: redisPort }],
             command: ["redis-server", "--requirepass", redisPassword],
         },
@@ -30,7 +30,7 @@ let frontend = new cloud.Service("voting-app-frontend", {
     containers: {
         votingAppFrontend: {
             build: "./frontend",   // path to the folder containing the Dockerfile
-            memory: 128,
+            memory: 512,
             ports: [{ port: 80 }],            
             environment: { 
                 // pass the Redis container info in environment variables

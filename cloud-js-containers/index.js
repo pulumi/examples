@@ -4,7 +4,7 @@ let service = new cloud.Service("pulumi-nginx", {
     containers: {
         nginx: {
             build: "./app",
-            memory: 128,
+            memory: 512,
             ports: [{ port: 80 }],
         },
     },
