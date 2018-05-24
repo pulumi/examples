@@ -59,6 +59,8 @@ This example features an end-to-end pipeline for generating keyframe thumbnails 
 containerized [FFmpeg](https://www.ffmpeg.org/).  It combines containers, serverless functions, and cloud storage into
 a single 40-line application using `@pulumi/cloud-aws`.
 
+[An extension of this sample](cloud-js-thumbnailer-machine-learning/) uses AWS Rekognition to find the timestamp with the highest confidence for a particular label.
+
 #### [Raw AWS Serverless](aws-ts-serverless-raw/)
 
 This example deploys a complete serverless C# application using raw `aws.apigateway.RestAPI`, `aws.lambda.Function` and
