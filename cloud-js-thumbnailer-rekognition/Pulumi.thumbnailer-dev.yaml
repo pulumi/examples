@@ -1,5 +1,0 @@
-config:
-  aws:region: us-west-2
-  cloud-aws:computeIAMRolePolicyARNs: arn:aws:iam::aws:policy/AWSLambdaFullAccess,arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess,arn:aws:iam::aws:policy/AmazonRekognitionFullAccess
-  cloud-aws:useFargate: "true"
-  video-thumbnailer-rekognition:RekognitionRoleArn: arn:aws:iam::153052954103:role/donna-rekognition
