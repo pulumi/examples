@@ -9,7 +9,7 @@ const bucketName = bucket.bucket.id;
 // A task which runs a containerized FFMPEG job to extract a thumbnail image.
 const ffmpegThumbnailTask = new cloud.Task("ffmpegThumbTask", {
     build: "./docker-ffmpeg-thumb",
-    memoryReservation: 128,
+    memoryReservation: 512,
 });
 
 // When a new video is uploaded, run the FFMPEG task on the video file.
