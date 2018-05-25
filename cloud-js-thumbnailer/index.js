@@ -23,10 +23,10 @@ bucket.onPut("onNewVideo", async (bucketArgs) => {
 
     await ffmpegThumbnailTask.run({
         environment: {
-            "S3_BUCKET": bucketName.get(),
-            "INPUT_VIDEO_FILE_NAME": file,
-            "POSITION_TIME_DURATION": framePos,
-            "OUTPUT_THUMBS_FILE_NAME": thumbnailFile,
+            "S3_BUCKET":   bucketName.get(),
+            "INPUT_VIDEO": file,
+            "TIME_OFFSET": framePos,
+            "OUTPUT_FILE": thumbnailFile,
         },
     });
     console.log(`Running thumbnailer task.`);
