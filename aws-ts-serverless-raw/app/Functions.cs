@@ -60,7 +60,7 @@ namespace app
 
             var counter = await DDBContext.LoadAsync<Counter>(request.Path);
             if (counter == null) {
-                counter = new Counter { Id = request.Path, Count = 0 };
+                counter = new Counter { Id = request.Path, Count = 1 };
             }
             var count = counter.Count++;
             await DDBContext.SaveAsync<Counter>(counter);
