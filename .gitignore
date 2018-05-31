@@ -1,7 +1,8 @@
-.pulumi/
-node_modules/
+/.pulumi/
+/.vscode/
 bin/
+node_modules/
+*.pyc
 yarn.lock
 package-lock.json
-*.pyc
 Pulumi.*.yaml
