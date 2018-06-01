@@ -1,0 +1,16 @@
+{
+    "name": "kubernetes-ts-jenkins",
+    "main": "bin/index.js",
+    "typings": "bin/index.d.ts",
+    "scripts": {
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "typescript": "^2.7.2",
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^0.12.2",
+        "@pulumi/kubernetes": "^0.13.0"
+    }
+}
