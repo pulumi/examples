@@ -1,0 +1,18 @@
+{
+    "name": "aws-serverless-js-twitter",
+    "main": "bin/index.js",
+    "typings": "bin/index.d.ts",
+    "scripts": {
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "typescript": "^2.7.2",
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@pulumi/cloud": "^0.13.1",
+        "@pulumi/cloud-aws": "^0.13.1",
+        "@pulumi/pulumi": "latest",
+        "twitter": "^1.7.1"
+    }
+}
