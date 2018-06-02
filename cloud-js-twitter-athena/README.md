@@ -16,12 +16,12 @@ Register a new [Twitter app](https://apps.twitter.com/).
 
 1.  In Twitter, get the keys for your application. Set configuration values for your Twitter consumer key/secret and application key/secret. Use the `--secret` flag to securely encrypt secret values.
 
-  ```
-  pulumi config set twitterAccessTokenKey <Value for Consumer Key (API Key)>
-  pulumi config set --secret twitterAccessTokenSecret <Value for Consumer Secret (API Secret)> 
-  pulumi config set twitterConsumerKey <Value for Access Token>
-  pulumi config set --secret twitterConsumerSecret <Value for Access Token Secret>
-  ```
+    ```
+    pulumi config set twitterAccessTokenKey <Value for Consumer Key (API Key)>
+    pulumi config set --secret twitterAccessTokenSecret <Value for Consumer Secret (API Secret)> 
+    pulumi config set twitterConsumerKey <Value for Access Token>
+    pulumi config set --secret twitterConsumerSecret <Value for Access Token Secret>
+    ```
 
 1.  Set a search term to query for:
 
