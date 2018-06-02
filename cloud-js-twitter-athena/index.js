@@ -1,6 +1,6 @@
-import * as pulumi from "@pulumi/pulumi";
-import * as aws from "@pulumi/aws";
-import * as cloud from "@pulumi/cloud-aws";
+const pulumi = require("@pulumi/pulumi");
+const aws = require("@pulumi/aws");
+const cloud = require("@pulumi/cloud-aws");
 
 const bucket = new cloud.Bucket("tweet-bucket");
 
@@ -23,10 +23,10 @@ cloud.timer.interval("twitter-search-timer", { minutes: 2 }, async() => {
         access_token_secret: accessTokenSecret,
     });
     
-    client.get('search/tweets', {q: twitterQuery, count: 100}, function(error: any, tweets: any, response: any) {
-        let statuses: any[] = tweets.statuses;
+    client.get('search/tweets', {q: twitterQuery, count: 100}, function(error, tweets, response) {
+        let statuses = tweets.statuses;
 
-        let results = statuses.map( (s:any) => {
+        let results = statuses.map(s => {
             let user = s.user.screen_name;
     
             return JSON.stringify({ 
@@ -53,13 +53,13 @@ cloud.timer.interval("twitter-search-timer", { minutes: 2 }, async() => {
 
 // athena setup
 let athena = new aws.athena.Database("tweets_database", 
-    { name: "tweets_database", bucket: bucket.bucket.id }
+    { name: "tweets_database", bucket: bucket.bucket.id, forceDestroy: true } 
 );
 
 // Sadly, there isn't support for Athena tables in Terraform. 
 // See https://github.com/terraform-providers/terraform-provider-aws/pull/1893#issuecomment-351300973
 // So, we'll instead create a query for the table definition
-function createTableQuery(bucket: string) {
+function createTableQuery(bucket) {
     return `CREATE EXTERNAL TABLE IF NOT EXISTS tweets (
         id string,
         text string,
@@ -71,7 +71,7 @@ function createTableQuery(bucket: string) {
         isRetweet boolean
     )
     ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
-    LOCATION 's3://${outputFolder}/${bucket}';`;
+    LOCATION 's3://${bucket}/${outputFolder}/';`;
 }
 
 let topUsersQuery = 
@@ -80,19 +80,20 @@ let topUsersQuery =
     where isRetweet = false and followers > 1000
     order by followers desc`;
 
-export let bucketName = bucket.bucket.id;
+let bucketName = bucket.bucket.id;
 
 let createTableAthenaQuery = new aws.athena.NamedQuery(
     "createTable", { database: athena.id, query: bucketName.apply(createTableQuery)});
 
 let topUsersAthenaQuery = new aws.athena.NamedQuery("topUsers", { database: athena.id, query: topUsersQuery});
 
-function getQueryUri(queryId: string) {
+function getQueryUri(queryId) {
     let config = new pulumi.Config("aws");
     let region = config.require("region");
     return `https://${region}.console.aws.amazon.com/athena/home?force#query/saved/${queryId}`;
 }
 
-export let athenaDatabase = athena.id;
-export let topUsersQueryUri = topUsersAthenaQuery.id.apply(getQueryUri);
-export let createTableQueryUri = createTableAthenaQuery.id.apply(getQueryUri); 
+exports.bucketName = bucketName
+exports.athenaDatabase = athena.id;
+exports.topUsersQueryUri = topUsersAthenaQuery.id.apply(getQueryUri);
+exports.createTableQueryUri = createTableAthenaQuery.id.apply(getQueryUri); 
