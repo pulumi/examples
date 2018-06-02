@@ -8,10 +8,10 @@ RUN pip install awscli
 
 WORKDIR /tmp/workdir
 
-COPY copy_thumb.sh /tmp/workdir
-COPY copy_video.sh /tmp/workdir
-
-ENTRYPOINT echo "Starting ffmpeg task..." && \
-  ./copy_video.sh && \
-  ffmpeg -v error -i ./${INPUT_VIDEO_FILE_NAME} -ss ${POSITION_TIME_DURATION} -vframes 1 -f image2 -an -y ${OUTPUT_THUMBS_FILE_NAME} && \
-  ./copy_thumb.sh
+ENTRYPOINT \
+  echo "Starting ffmpeg task..." && \
+  echo "Copying video from s3://${S3_BUCKET}/${INPUT_VIDEO} to ${INPUT_VIDEO}..." && \
+  aws s3 cp s3://${S3_BUCKET}/${INPUT_VIDEO} ./${INPUT_VIDEO} && \
+  ffmpeg -v error -i ./${INPUT_VIDEO} -ss ${TIME_OFFSET} -vframes 1 -f image2 -an -y ${OUTPUT_FILE} && \
+  echo "Copying thumbnail to S3://${S3_BUCKET}/${OUTPUT_FILE} ..." && \
+  aws s3 cp ./${OUTPUT_FILE} s3://${S3_BUCKET}/${OUTPUT_FILE}

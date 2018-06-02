@@ -108,15 +108,18 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
 1.  View the logs from both the Lambda function and the ECS task:
 
     ```
-    2018-05-19T20:07:43.879-07:00[                    onNewVideo] *** New video: file cat_00-01.mp4 was uploaded at 2018-05-20T03:07:42.477Z.
-    2018-05-19T20:07:43.880-07:00[                    onNewVideo] Running thumbnailer task.
-    2018-05-19T20:08:54.229-07:00[               ffmpegThumbTask] Starting...
-    2018-05-19T20:08:54.271-07:00[               ffmpegThumbTask] Copying from S3 bucket-c647dfb/cat_00-01.mp4 to cat_00-01.mp4 ...
-    download: s3://bucket-c647dfb/cat_00-01.mp4 to ./cat_00-01.mp4      eted 256.0 KiB/666.5 KiB (840.9 KiB/s) with 1 file(s) remaining
-    2018-05-19T20:08:59.687-07:00[               ffmpegThumbTask] Copying cat.jpg to S3 at bucket-c647dfb/cat.jpg ...
-    upload: ./cat.jpg to s3://bucket-c647dfb/cat.jpg                ompleted 86.6 KiB/86.6 KiB (1.0 MiB/s) with 1 file(s) remaining
-    2018-05-19T20:09:02.289-07:00[                onNewThumbnail] *** New thumbnail: file cat.jpg was saved at 2018-05-20T03:09:02.162Z.
-    ```
+    $ pulumi logs -f
+    Collecting logs for stack thumbnailer-testing since 2018-05-25T11:56:53.000-07:00.
+
+    2018-05-25T12:57:26.326-07:00[                    onNewVideo] *** New video: file cat_00-01.mp4 was uploaded at 2018-05-25T19:57:25.507Z.
+    2018-05-25T12:57:30.705-07:00[                    onNewVideo] Running thumbnailer task.
+    2018-05-25T12:58:34.960-07:00[               ffmpegThumbTask] Starting ffmpeg task...
+    2018-05-25T12:58:34.960-07:00[               ffmpegThumbTask] Copying video from S3 bucket-5ea6b28/cat_00-01.mp4 to cat_00-01.mp4...
+    2018-05-25T12:58:37.267-07:00[               ffmpegThumbTask] Completed 256.0 KiB/666.5 KiB (2.5 MiB/s) with 1 fildownload: s3://bucket-5ea6b28/cat_00-01.mp4 to ./cat_00-01.mp4    
+    2018-05-25T12:58:40.306-07:00[               ffmpegThumbTask] Copying cat.jpg to S3 at bucket-5ea6b28/cat.jpg ...
+    2018-05-25T12:58:43.034-07:00[               ffmpegThumbTask] Completed 86.6 KiB/86.6 KiB (619.7 KiB/s) with 1 filupload: ./cat.jpg to s3://bucket-5ea6b28/cat.jpg                  
+    2018-05-25T12:58:43.758-07:00[                onNewThumbnail] *** New thumbnail: file cat.jpg was saved at 2018-05-25T19:58:43.028Z.
+        ```
 
 1.  Download the key frame:
 

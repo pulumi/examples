@@ -12,7 +12,7 @@ const bucketName = bucket.bucket.id;
 // A task which runs a containerized FFMPEG job to extract a thumbnail image.
 const ffmpegThumbnailTask = new cloud.Task("ffmpegThumbTask", {
     build: "./docker-ffmpeg-thumb",
-    memoryReservation: 128,
+    memoryReservation: 512,
 });
 
 // Use module for processing video through Rekognition
@@ -33,10 +33,10 @@ videoProcessor.onLabelResult("cat", async (file, framePos) => {
     // launch ffmpeg in a container, use environment variables to connect resources together
     await ffmpegThumbnailTask.run({
         environment: {
-            "S3_BUCKET": bucketName.get(),
-            "INPUT_VIDEO_FILE_NAME": file,
-            "POSITION_TIME_DURATION": framePos,
-            "OUTPUT_THUMBS_FILE_NAME": thumbnailFile,
+            "S3_BUCKET":   bucketName.get(),
+            "INPUT_VIDEO": file,
+            "TIME_OFFSET": framePos,
+            "OUTPUT_FILE": thumbnailFile,
         },
     });
     console.log("*** Launched thumbnailer task.");

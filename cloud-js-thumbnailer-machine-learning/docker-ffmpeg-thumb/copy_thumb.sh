@@ -1,4 +1,0 @@
-#!/bin/bash
-
-echo "Copying ${OUTPUT_THUMBS_FILE_NAME} to S3 at ${S3_BUCKET}/${OUTPUT_THUMBS_FILE_NAME} ..."
-aws s3 cp ./${OUTPUT_THUMBS_FILE_NAME} s3://${S3_BUCKET}/${OUTPUT_THUMBS_FILE_NAME}
