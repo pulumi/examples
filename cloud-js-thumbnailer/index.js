@@ -14,27 +14,29 @@ const ffmpegThumbnailTask = new cloud.Task("ffmpegThumbTask", {
 
 // When a new video is uploaded, run the FFMPEG task on the video file.
 // Use the time index specified in the filename (e.g. cat_00-01.mp4 uses timestamp 00:01)
-bucket.onPut("onNewVideo", async (bucketArgs) => {
+bucket.onPut("onNewVideo", bucketArgs => {
     console.log(`*** New video: file ${bucketArgs.key} was uploaded at ${bucketArgs.eventTime}.`);
     const file = bucketArgs.key;
     
     const thumbnailFile = file.substring(0, file.indexOf('_')) + '.jpg';
     const framePos = file.substring(file.indexOf('_')+1, file.indexOf('.')).replace('-',':');
 
-    await ffmpegThumbnailTask.run({
+    ffmpegThumbnailTask.run({
         environment: {
             "S3_BUCKET":   bucketName.get(),
             "INPUT_VIDEO": file,
             "TIME_OFFSET": framePos,
             "OUTPUT_FILE": thumbnailFile,
         },
+    }).then(() => {  // If using Node 8, can change this to `async/await`
+        console.log(`Running thumbnailer task.`);
     });
-    console.log(`Running thumbnailer task.`);
 }, { keySuffix: ".mp4" });
 
 // When a new thumbnail is created, log a message.
-bucket.onPut("onNewThumbnail", async (bucketArgs) => {
+bucket.onPut("onNewThumbnail", bucketArgs => {
     console.log(`*** New thumbnail: file ${bucketArgs.key} was saved at ${bucketArgs.eventTime}.`);
+    return Promise.resolve();
 }, { keySuffix: ".jpg" });
 
 // Export the bucket name.
