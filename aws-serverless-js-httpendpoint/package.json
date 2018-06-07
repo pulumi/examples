@@ -1,0 +1,7 @@
+{
+    "name": "aws-serverless-js-httpendpoint",
+    "dependencies": {
+        "@pulumi/aws-serverless": "dev",
+        "aws-sdk": "^2.252.1"
+    }
+}
