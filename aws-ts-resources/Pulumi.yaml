@@ -1,0 +1,3 @@
+name: aws-ts-resources
+description: A Pulumi program that demonstrates creating various AWS resources.
+runtime: nodejs
