@@ -39,7 +39,7 @@ videoProcessor.onLabelResult("cat", (file, framePos) => {
             "TIME_OFFSET": framePos,
             "OUTPUT_FILE": thumbnailFile,
         },
-    }).then(() => {  // If using Node 8, can change this to `async/await`
+    }).then(() => {
         console.log(`*** Launched thumbnailer task.`);
     });
 });

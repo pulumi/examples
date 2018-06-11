@@ -1,6 +1,7 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
 const cloud = require("@pulumi/cloud-aws");
+const aws = require("@pulumi/aws");
 
 // A bucket to store videos and thumbnails.
 const bucket = new cloud.Bucket("bucket");
@@ -28,7 +29,7 @@ bucket.onPut("onNewVideo", bucketArgs => {
             "TIME_OFFSET": framePos,
             "OUTPUT_FILE": thumbnailFile,
         },
-    }).then(() => {  // If using Node 8, can change this to `async/await`
+    }).then(() => {
         console.log(`Running thumbnailer task.`);
     });
 }, { keySuffix: ".mp4" });
