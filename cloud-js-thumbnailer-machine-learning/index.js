@@ -19,32 +19,35 @@ const ffmpegThumbnailTask = new cloud.Task("ffmpegThumbTask", {
 const videoProcessor = new video.VideoLabelProcessor();
 
 // When a new video is uploaded, start Rekognition label detection
-bucket.onPut("onNewVideo", async (bucketArgs) => {  
+bucket.onPut("onNewVideo", bucketArgs => {  
     console.log(`*** New video: file ${bucketArgs.key} was uploaded at ${bucketArgs.eventTime}.`);
     videoProcessor.startRekognitionJob(bucketName.get(), bucketArgs.key);
+    return Promise.resolve();
 }, { keySuffix: ".mp4" });  // run this Lambda only on .mp4 files
 
 // When Rekognition processing is complete, run the FFMPEG task on the video file
 // Use the timestamp with the highest confidence for the label "cat"
-videoProcessor.onLabelResult("cat", async (file, framePos) => {
+videoProcessor.onLabelResult("cat", (file, framePos) => {
     console.log(`*** Rekognition processing complete for ${bucketName.get()}/${file} at timestamp ${framePos}`);
     const thumbnailFile = file.substring(0, file.lastIndexOf('.')) + '.jpg';
 
     // launch ffmpeg in a container, use environment variables to connect resources together
-    await ffmpegThumbnailTask.run({
+    ffmpegThumbnailTask.run({
         environment: {
             "S3_BUCKET":   bucketName.get(),
             "INPUT_VIDEO": file,
             "TIME_OFFSET": framePos,
             "OUTPUT_FILE": thumbnailFile,
         },
+    }).then(() => {
+        console.log(`*** Launched thumbnailer task.`);
     });
-    console.log("*** Launched thumbnailer task.");
 });
 
 // When a new thumbnail is created, log a message.
-bucket.onPut("onNewThumbnail", async (bucketArgs) => {
+bucket.onPut("onNewThumbnail", bucketArgs => {
     console.log(`*** New thumbnail: file ${bucketArgs.key} was saved at ${bucketArgs.eventTime}.`);
+    return Promise.resolve();
 }, { keySuffix: ".jpg" });
 
 // Export the bucket name.
