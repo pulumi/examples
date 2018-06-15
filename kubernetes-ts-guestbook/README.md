@@ -5,8 +5,8 @@ Pulumi and `@pulumi/kubernetes`.
 
 ## Running the App
 
-Follow the steps in [Pulumi Installation and Setup](https://docs.pulumi.com/install/) and [Configuring Pulumi
-Kubernetes](https://docs.pulumi.com/reference/kubernetes.html#configuration) to get setup with Pulumi and Kubernetes.
+Follow the steps in [Pulumi Installation and Setup](https://pulumi.io/install/) and [Configuring Pulumi
+Kubernetes](https://pulumi.io/reference/kubernetes.html#configuration) to get setup with Pulumi and Kubernetes.
 
 > *Note*: The code in this repo assumes you are deploying to a cluster that supports the
 > [`LoadBalancer`](https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer) service type.

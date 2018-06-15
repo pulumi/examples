@@ -5,9 +5,9 @@ http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applicat
 
 ## Prerequisites
 
-1. [Install Pulumi](https://docs.pulumi.com/install/)
-1. [Configure Pulumi for AWS](https://docs.pulumi.com/install/aws-config.html)
-1. [Configure Pulumi for Python](https://docs.pulumi.com/reference/python.html)
+1. [Install Pulumi](https://pulumi.io/install/)
+1. [Configure Pulumi for AWS](https://pulumi.io/install/aws-config.html)
+1. [Configure Pulumi for Python](https://pulumi.io/reference/python.html)
 
 ## Deploying and running the program
 
@@ -19,7 +19,7 @@ http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applicat
     $ pulumi stack init python-webserver-testing
     ```
 
-1.  Since Pulumi is in private beta, run the following to install pip packages. For more information, see [Using Pulumi PyPI Packages](https://docs.pulumi.com/reference/python.html#pypi-packages).
+1.  Since Pulumi is in private beta, run the following to install pip packages. For more information, see [Using Pulumi PyPI Packages](https://pulumi.io/reference/python.html#pypi-packages).
 
     ```
     pip install \

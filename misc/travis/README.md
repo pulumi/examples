@@ -4,4 +4,4 @@ This directory contains some helpful example scripts for doing continuous deploy
 your continuous integration service.
 
 For more comprehensive information about how to accomplish Travis integration, see
-https://docs.pulumi.com/reference/cd-travis.html.
+https://pulumi.io/reference/cd-travis.html.
