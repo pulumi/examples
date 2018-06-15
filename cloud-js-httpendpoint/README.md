@@ -6,6 +6,9 @@ A simple REST API that counts the number of times a route has been hit. For a de
 
 ## Deploying and running the program
 
+Note: some values in this example will be different from run to run.  These values are indicated
+with `***`.
+
 1.  Create a new stack:
 
     ```bash
@@ -18,7 +21,7 @@ A simple REST API that counts the number of times a route has been hit. For a de
     $ pulumi config set aws:region us-west-2
     ```
 
-1.  Restore NPM modules via `npm install`.
+1.  Restore NPM modules via `npm install` or `yarn install`.
 
 1.  Run `pulumi update` to preview and deploy changes:
 
@@ -47,21 +50,21 @@ A simple REST API that counts the number of times a route has been hit. For a de
     +      └─ aws:apigateway:Stage                hello-world                              created
 
     ---outputs:---
-    endpoint: "https://k6z25g5lw6.execute-api.us-west-2.amazonaws.com/stage/"
+    endpoint: "https://***.us-west-2.amazonaws.com/stage/"
 
     info: 14 changes performed:
         + 14 resources created
-    Update duration: 48.510747688s
+    Update duration: ***
     ```
 
 1.  View the endpoint URL and curl a few routes:
 
     ```bash
-    $ pulumi stack output 
+    $ pulumi stack output
     Current stack outputs (1):
         OUTPUT            VALUE
-        endpoint          https://5e8xrktey3.execute-api.us-west-2.amazonaws.com/stage/
-    
+        endpoint          https://***.us-west-2.amazonaws.com/stage/
+
     $ curl $(pulumi stack output endpoint)/hello
     {"route":"hello","count":1}
     $ curl $(pulumi stack output endpoint)/hello
