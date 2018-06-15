@@ -62,4 +62,6 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
 
 1. Open this page in a browser and you'll see a single page app for creating and viewing short URLs.
 
-1.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+## Clean up
+
+To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
