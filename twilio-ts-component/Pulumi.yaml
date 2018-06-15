@@ -1,0 +1,3 @@
+name: twilio-ts-component
+description: A small example that builds a Pulumi component for Twilio Programable SMS
+runtime: nodejs
