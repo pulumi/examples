@@ -4,7 +4,7 @@ const cloud = require("@pulumi/cloud-aws");
 let counterTable = new cloud.Table("counterTable", "route");
 
 // Create an API endpoint
-let endpoint = new cloud.HttpEndpoint("hello-world");
+let endpoint = new cloud.API("hello-world");
 
 endpoint.get("/{route+}", (req, res) => {
     let route = req.params["route"];
@@ -12,11 +12,11 @@ endpoint.get("/{route+}", (req, res) => {
 
     // get previous value and increment
     // reference outer `counterTable` object
-    counterTable.get({ route }).then(value => { 
+    counterTable.get({ route }).then(value => {
         let count = (value && value.count) || 0;
         counterTable.insert({ route, count: ++count }).then(() => {
             res.status(200).json({ route, count });
-            console.log(`Got count ${count} for '${route}'`);    
+            console.log(`Got count ${count} for '${route}'`);
         });
     });
 });
