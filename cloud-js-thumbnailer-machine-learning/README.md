@@ -10,6 +10,9 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 ## Running the App
 
+Note: some values in this example will be different from run to run.  These values are indicated
+with `***`.
+
 1.  Create a new stack:
 
     ```
@@ -29,13 +32,13 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
     $ pulumi config set cloud-aws:computeIAMRolePolicyARNs arn:aws:iam::aws:policy/AWSLambdaFullAccess,arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess,arn:aws:iam::aws:policy/AmazonRekognitionFullAccess
     ```
 
-1.  Restore NPM modules via `npm install`.
+1.  Restore NPM modules via `npm install` or `yarn install`.
 
-1.  Preview and deploy the app via `pulumi update`. The preview will take some time, as it builds a Docker container. A total of 44 resources are created.
+1.  Preview and deploy the app via `pulumi update`. The preview will take some time, as it builds a Docker container. A total of 48 resources are created.
 
     ```
     $ pulumi update
-    Previewing update of stack 'donna-thumbnailer-rekognition'
+    Previewing update of stack 'thumbnailer-rekognition'
     ...
 
     Performing changes:
@@ -88,21 +91,18 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
     +   └─ aws:sns:TopicSubscription              AmazonRekognitionTopic_labelResults                    created
 
     ...
-    ---outputs:---
-    bucketName: "bucket-d6c6339"
-
     info: 44 changes performed:
         + 44 resources created
-    Update duration: 2m27.112988339s
+    Update duration: ***
 
-    Permalink: https://pulumi.com/pulumi/donna-thumbnailer-rekognition/updates/1
+    Permalink: https://app.pulumi.com/***
     ```
 
 1.  Upload a video:
 
     ```
     $ aws s3 cp ./sample/cat.mp4 s3://$(pulumi stack output bucketName)
-    upload: sample/cat.mp4 to s3://bucket-c647dfb/cat.mp4
+    upload: sample/cat.mp4 to s3://***/cat.mp4
     ```
 
 1.  View the logs from both the Lambda function and the ECS task:
@@ -113,7 +113,7 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
     2018-05-21T19:57:35.968-07:00[                    onNewVideo] *** New video: file cat.mp4 was uploaded at 2018-05-22T02:57:35.431Z.
     2018-05-21T19:57:36.376-07:00[                    onNewVideo] *** Submitted Rekognition job for cat.mp4
     2018-05-21T19:57:45.848-07:00[AmazonRekognitionTopic_labelRe] *** Rekognition job complete
-    2018-05-21T19:57:50.690-07:00[AmazonRekognitionTopic_labelRe] Raw label results: 
+    2018-05-21T19:57:50.690-07:00[AmazonRekognitionTopic_labelRe] Raw label results:
     ...
     2018-05-21T19:57:50.746-07:00[AmazonRekognitionTopic_labelRe]     *** Found object Cat at position 1568.  Confidence = 50.56669616699219
     2018-05-21T19:57:50.746-07:00[AmazonRekognitionTopic_labelRe] *** Rekognition processing complete for bucket-d6c6339/cat.mp4 at timestamp 1.568
@@ -130,7 +130,7 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
 
     ```
     $ aws s3 cp s3://$(pulumi stack output bucketName)/cat.jpg .
-    download: s3://bucket-0e25c2d/cat.jpg to ./cat.jpg            
+    download: s3://***/cat.jpg to ./cat.jpg
     ```
 
 ## Clean up
