@@ -5,6 +5,9 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
 
 ## Deploying and running the program
 
+Note: some values in this example will be different from run to run.  These values are indicated
+with `***`.
+
 1.  Create a new stack:
 
     ```bash
@@ -17,9 +20,10 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
     $ pulumi config set aws:region us-west-2
     ```
 
-1.  Restore NPM modules via `npm install`.
+1.  Restore NPM modules via `npm install` or `yarn install`.
 
-1.  Run `pulumi update` to preview and deploy changes.
+1.  Run `pulumi update` to preview and deploy changes.  After the preview is shown you will be
+    prompted if you want to continue or not.
 
     ```bash
     $ pulumi update
@@ -37,15 +41,11 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
     +   ├─ aws:s3:BucketObject  favicon.png                            created
     +   └─ aws:s3:BucketObject  index.html                             created
 
-    ---outputs:---
-    bucketName: "s3-website-bucket-5afcc1d"
-    websiteUrl: "s3-website-bucket-5afcc1d.s3-website-us-west-2.amazonaws.com"
-
     info: 5 changes performed:
         + 5 resources created
-    Update duration: 8.69080606s
+    Update duration: ***
 
-    Permalink: https://pulumi.com/lindydonna/website-testing/updates/4
+    Permalink: https://app.pulumi.com/***
     ```
 
 1.  To see the resources that were created, run `pulumi stack output`:
@@ -54,8 +54,8 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
     $ pulumi stack output
     Current stack outputs (2):
         OUTPUT                                           VALUE
-        bucketName                                       s3-website-bucket-e7c0411
-        websiteUrl                                       s3-website-bucket-e7c0411.s3-website-us-west-2.amazonaws.com
+        bucketName                                       s3-website-bucket-***
+        websiteUrl                                       ***.s3-website-us-west-2.amazonaws.com
     ```
 
 1.  To see that the S3 objects exist, you can either use the AWS Console or the AWS CLI:
@@ -70,7 +70,7 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
 
     ```bash
     $ pulumi stack output websiteUrl
-    s3-website-bucket-8533d8b.s3-website-us-west-2.amazonaws.com
+    ***.s3-website-us-west-2.amazonaws.com
     ```
 
     ![Hello S3 example](images/part2-website.png)

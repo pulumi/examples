@@ -4,6 +4,9 @@ The component version of [aws-js-s3-folder](../aws-js-s3-folder). For a detailed
 
 ## Deploying and running the program
 
+Note: some values in this example will be different from run to run.  These values are indicated
+with `***`.
+
 1.  Create a new stack:
 
     ```bash
@@ -16,9 +19,10 @@ The component version of [aws-js-s3-folder](../aws-js-s3-folder). For a detailed
     $ pulumi config set aws:region us-west-2
     ```
 
-1.  Restore NPM modules via `npm install`.
+1.  Restore NPM modules via `npm install` or `yarn install`.
 
-1.  Run `pulumi update` to preview and deploy changes.
+1.  Run `pulumi update` to preview and deploy changes.  After the preview is shown you will be
+    prompted if you want to continue or not.
 
     ```bash
     $ pulumi update
@@ -38,14 +42,11 @@ The component version of [aws-js-s3-folder](../aws-js-s3-folder). For a detailed
     +      └─ aws:s3:BucketObject  index.html                                            created
 
     ---outputs:---
-    bucketName: "pulumi-static-site-517ff4e"
-    websiteUrl: undefined
-
     info: 6 changes performed:
         + 6 resources created
-    Update duration: 8.997389052s
+    Update duration: ***
 
-    Permalink: https://pulumi.com/lindydonna/website-component-testing/updates/1
+    Permalink: https://app.pulumi.com/***
     ```
 
 1.  To see the resources that were created, run `pulumi stack output`:
@@ -54,8 +55,8 @@ The component version of [aws-js-s3-folder](../aws-js-s3-folder). For a detailed
     $ pulumi stack output
     Current stack outputs (2):
         OUTPUT                                           VALUE
-        bucketName                                       s3-website-bucket-e7c0411
-        websiteUrl                                       s3-website-bucket-e7c0411.s3-website-us-west-2.amazonaws.com
+        bucketName                                       s3-website-bucket-***
+        websiteUrl                                       ***.s3-website-us-west-2.amazonaws.com
     ```
 
 1.  To see that the S3 objects exist, you can either use the AWS Console or the AWS CLI:
@@ -70,7 +71,7 @@ The component version of [aws-js-s3-folder](../aws-js-s3-folder). For a detailed
 
     ```bash
     $ pulumi stack output websiteUrl
-    s3-website-bucket-8533d8b.s3-website-us-west-2.amazonaws.com
+    ***.s3-website-us-west-2.amazonaws.com
     ```
 
 1.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
