@@ -1,8 +1,12 @@
 # Serverless URL Shortener
 
-A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.HttpEndpoint` components. The example shows to combine both deployment time and runtime code in one program.
+A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.API` components. The
+example shows to combine both deployment time and runtime code in one program.
 
 ## Deploying and running the program
+
+Note: some values in this example will be different from run to run.  These values are indicated
+with `***`.
 
 1. Create a new stack:
 
@@ -16,11 +20,12 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
     $ pulumi config set aws:region us-west-2
     ```
 
-1. Restore NPM modules via `npm install`.
+1. Restore NPM modules via `npm install` or `yarn install`.
 
-1. Compile the program via `tsc` or `npm run build`.
+1. Compile the program via `tsc` or `npm run build` or `yarn run build`.
 
-1. Preview and run the deployment via `pulumi update`. The operation will take about 2 minutes to complete and will create 34 resources:
+1. Preview and run the deployment via `pulumi update`. The operation will take about 2 minutes to
+   complete and will create 34 resources:
 
     ```
     $ pulumi update
@@ -32,56 +37,56 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
     Performing changes:
 
         Type                                      Name                                    Status      Info
-    +   pulumi:pulumi:Stack                       url-shortener-url-shortener-dev         created     
-    +   ├─ cloud:table:Table                      urls                                    created     
-    +   │  └─ aws:dynamodb:Table                  urls                                    created     
-    +   └─ cloud:http:HttpEndpoint                urlshortener                            created     
-    +      ├─ aws:s3:Bucket                       urlshortener                            created     
-    +      ├─ aws:iam:Role                        urlshortener4c238266                    created     
-    +      ├─ cloud:function:Function             urlshortener0f7d8d8d                    created     
-    +      │  └─ aws:serverless:Function          urlshortener0f7d8d8d                    created     
-    +      │     ├─ aws:iam:Role                  urlshortener0f7d8d8d                    created     
-    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortener0f7d8d8d-32be53a2           created     
-    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortener0f7d8d8d-fd1a00e5           created     
-    +      │     └─ aws:lambda:Function           urlshortener0f7d8d8d                    created     
-    +      ├─ cloud:function:Function             urlshortenerd9505e4a                    created     
-    +      │  └─ aws:serverless:Function          urlshortenerd9505e4a                    created     
-    +      │     ├─ aws:iam:Role                  urlshortenerd9505e4a                    created     
-    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenerd9505e4a-32be53a2           created     
-    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenerd9505e4a-fd1a00e5           created     
-    +      │     └─ aws:lambda:Function           urlshortenerd9505e4a                    created     
-    +      ├─ cloud:function:Function             urlshortenereeb67ce9                    created     
-    +      │  └─ aws:serverless:Function          urlshortenereeb67ce9                    created     
-    +      │     ├─ aws:iam:Role                  urlshortenereeb67ce9                    created     
-    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenereeb67ce9-32be53a2           created     
-    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenereeb67ce9-fd1a00e5           created     
-    +      │     └─ aws:lambda:Function           urlshortenereeb67ce9                    created     
-    +      ├─ aws:s3:BucketObject                 urlshortener4c238266/bootstrap.min.css  created     
-    +      ├─ aws:s3:BucketObject                 urlshortener4c238266/favicon.png        created     
-    +      ├─ aws:s3:BucketObject                 urlshortener4c238266/index.html         created     
-    +      ├─ aws:iam:RolePolicyAttachment        urlshortener4c238266                    created     
-    +      ├─ aws:apigateway:RestApi              urlshortener                            created     
-    +      ├─ aws:apigateway:Deployment           urlshortener                            created     
-    +      ├─ aws:lambda:Permission               urlshortener-0f7d8d8d                   created     
-    +      ├─ aws:lambda:Permission               urlshortener-eeb67ce9                   created     
-    +      ├─ aws:lambda:Permission               urlshortener-d9505e4a                   created     
-    +      └─ aws:apigateway:Stage                urlshortener                            created     
-    
+    +   pulumi:pulumi:Stack                       url-shortener-url-shortener-dev         created
+    +   ├─ cloud:table:Table                      urls                                    created
+    +   │  └─ aws:dynamodb:Table                  urls                                    created
+    +   └─ cloud:http:HttpEndpoint                urlshortener                            created
+    +      ├─ aws:s3:Bucket                       urlshortener                            created
+    +      ├─ aws:iam:Role                        urlshortener4c238266                    created
+    +      ├─ cloud:function:Function             urlshortener0f7d8d8d                    created
+    +      │  └─ aws:serverless:Function          urlshortener0f7d8d8d                    created
+    +      │     ├─ aws:iam:Role                  urlshortener0f7d8d8d                    created
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortener0f7d8d8d-32be53a2           created
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortener0f7d8d8d-fd1a00e5           created
+    +      │     └─ aws:lambda:Function           urlshortener0f7d8d8d                    created
+    +      ├─ cloud:function:Function             urlshortenerd9505e4a                    created
+    +      │  └─ aws:serverless:Function          urlshortenerd9505e4a                    created
+    +      │     ├─ aws:iam:Role                  urlshortenerd9505e4a                    created
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenerd9505e4a-32be53a2           created
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenerd9505e4a-fd1a00e5           created
+    +      │     └─ aws:lambda:Function           urlshortenerd9505e4a                    created
+    +      ├─ cloud:function:Function             urlshortenereeb67ce9                    created
+    +      │  └─ aws:serverless:Function          urlshortenereeb67ce9                    created
+    +      │     ├─ aws:iam:Role                  urlshortenereeb67ce9                    created
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenereeb67ce9-32be53a2           created
+    +      │     ├─ aws:iam:RolePolicyAttachment  urlshortenereeb67ce9-fd1a00e5           created
+    +      │     └─ aws:lambda:Function           urlshortenereeb67ce9                    created
+    +      ├─ aws:s3:BucketObject                 urlshortener4c238266/bootstrap.min.css  created
+    +      ├─ aws:s3:BucketObject                 urlshortener4c238266/favicon.png        created
+    +      ├─ aws:s3:BucketObject                 urlshortener4c238266/index.html         created
+    +      ├─ aws:iam:RolePolicyAttachment        urlshortener4c238266                    created
+    +      ├─ aws:apigateway:RestApi              urlshortener                            created
+    +      ├─ aws:apigateway:Deployment           urlshortener                            created
+    +      ├─ aws:lambda:Permission               urlshortener-0f7d8d8d                   created
+    +      ├─ aws:lambda:Permission               urlshortener-eeb67ce9                   created
+    +      ├─ aws:lambda:Permission               urlshortener-d9505e4a                   created
+    +      └─ aws:apigateway:Stage                urlshortener                            created
+
     ---outputs:---
-    endpointUrl: "https://hxgmq2ujml.execute-api.us-west-2.amazonaws.com/stage/"
+    endpointUrl: "https://***.us-west-2.amazonaws.com/stage/"
 
     info: 34 changes performed:
         + 34 resources created
-    Update duration: 1m47.983408851s
+    Update duration: ***
 
-    Permalink: https://pulumi.com/lindydonna/url-shortener-dev/updates/1
+    Permalink: https://app.pulumi.com/***
     ```
 
 1. To view the url for the API endpoint, run `pulumi stack output`:
 
     ```
     $ pulumi stack output endpointUrl
-    https://gs8t66u634.execute-api.us-east-1.amazonaws.com/stage/
+    https://***.us-east-1.amazonaws.com/stage/
     ```
 
 1. Open the URL in a browser and you'll see a single page app for creating and viewing short URLs.
@@ -110,13 +115,13 @@ This example combines deployment time and runtime code in the same application. 
 
 ```typescript
 // Create a web server.
-let endpoint = new cloud.HttpEndpoint("urlshortener");
+let endpoint = new cloud.API("urlshortener");
 
 // Create a table `urls`, with `name` as primary key.
 let urlTable = new cloud.Table("urls", "name");
 ```
 
-During `pulumi update`, the declaration `new cloud.HttpEndpoint` provisions an AWS API Gateway resource and `new cloud.Table` provisions a Dynamo DB instance. To learn more about how this works, see [How Pulumi Works](https://pulumi.io/reference/how.html) in the documentation.
+During `pulumi update`, the declaration `new cloud.API` provisions an AWS API Gateway resource and `new cloud.Table` provisions a Dynamo DB instance. To learn more about how this works, see [How Pulumi Works](https://pulumi.io/reference/how.html) in the documentation.
 
 The `endpoint.get` and `endpoint.post` method calls cause Pulumi to register API routes on the API Gateway, pointing to an AWS Lambda function for each implementation:
 
@@ -125,7 +130,7 @@ endpoint.get("/url", async (req, res) => { // this function is the body of the L
     try {
         let items = await urlTable.scan();  // reference outer urlTable definition
         res.status(200).json(items);
-        console.log(`GET /url retrieved ${items.length} items`); 
+        console.log(`GET /url retrieved ${items.length} items`);
     } catch (err) {
         res.status(500).json(err.stack);
         console.log(`GET /url error: ${err.stack}`);
