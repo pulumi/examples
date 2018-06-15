@@ -116,7 +116,7 @@ let endpoint = new cloud.HttpEndpoint("urlshortener");
 let urlTable = new cloud.Table("urls", "name");
 ```
 
-During `pulumi update`, the declaration `new cloud.HttpEndpoint` provisions an AWS API Gateway resource and `new cloud.Table` provisions a Dynamo DB instance. To learn more about how this works, see [How Pulumi Works](https://docs.pulumi.com/reference/how.html) in the documentation.
+During `pulumi update`, the declaration `new cloud.HttpEndpoint` provisions an AWS API Gateway resource and `new cloud.Table` provisions a Dynamo DB instance. To learn more about how this works, see [How Pulumi Works](https://pulumi.io/reference/how.html) in the documentation.
 
 The `endpoint.get` and `endpoint.post` method calls cause Pulumi to register API routes on the API Gateway, pointing to an AWS Lambda function for each implementation:
 
@@ -135,4 +135,4 @@ endpoint.get("/url", async (req, res) => { // this function is the body of the L
 
 Pulumi creates a Lambda function that contains the anonymous function passed to `endpoint.get`. Note that the value of `urlTable` is "captured." This means that `urlTable.scan` is turned into an API call on Dynamo DB, using the physical identifier for `urlTable`. There's no need to store this information in an environment variable; Pulumi wires everything up for you.
 
-To learn more about runtime and deployment time code, see [Programming Model](https://docs.pulumi.com/reference/programming-model.html) in the Pulumi documentation.
+To learn more about runtime and deployment time code, see [Programming Model](https://pulumi.io/reference/programming-model.html) in the Pulumi documentation.

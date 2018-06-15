@@ -1,6 +1,6 @@
 # Easy container example
 
-Companion to the tutorial [Provision containers on AWS](https://docs.pulumi.com/quickstart/aws-containers.html).
+Companion to the tutorial [Provision containers on AWS](https://pulumi.io/quickstart/aws-containers.html).
 
 ## Prerequisites
 

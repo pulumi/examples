@@ -1,8 +1,7 @@
 # Static Website Hosted on AWS S3 in Go
 
 A static website that uses [S3's website support](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html).
-For a detailed walkthrough of this example, see
-[Part 2 of the Pulumi quickstart](https://docs.pulumi.com/quickstart/part2.html).
+For a detailed walkthrough of this example, see the tutorial [Static Website on AWS S3](https://pulumi.io/quickstart/aws-s3-website.html).
 
 ## Deploying and running the program
 

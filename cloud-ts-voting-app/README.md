@@ -76,7 +76,7 @@ Please confirm that this is what you'd like to do by typing ("testing"): testing
 
 ## About the code
 
-At the start of the program, the following lines retrieve the value for the Redis password by reading a [configuration value](https://docs.pulumi.com/reference/config.html). This is the same value that was set above with the command `pulumi config set redisPassword <value>`:
+At the start of the program, the following lines retrieve the value for the Redis password by reading a [configuration value](https://pulumi.io/reference/config.html). This is the same value that was set above with the command `pulumi config set redisPassword <value>`:
 
 ```typescript
 let config = new pulumi.Config("voting-app");
@@ -94,9 +94,9 @@ let redisCache = new cloud.Service("voting-app-cache", ... )
 let frontend = new cloud.Service("voting-app-frontend", ... )
 ```
 
-The definition of `redisCache` uses the [`image` property of `cloud.Service`](https://docs.pulumi.com/packages/pulumi-cloud/interfaces/_service_.container.html#image) to point to an existing Docker image. In this case, this is the image `redis` at tag `alpine` on Docker Hub. The `redisPassword` variable is passed to the startup command for this image.
+The definition of `redisCache` uses the [`image` property of `cloud.Service`](https://pulumi.io/reference/pkg/nodejs/@pulumi/cloud-aws/index.html) to point to an existing Docker image. In this case, this is the image `redis` at tag `alpine` on Docker Hub. The `redisPassword` variable is passed to the startup command for this image.
 
-The definition of `frontend` is more interesting, as it uses [`build` property of `cloud.Service`](https://docs.pulumi.com/packages/pulumi-cloud/interfaces/_service_.container.html#build) to point to a folder with a Dockerfile, which in this case is a Python Flask app. Pulumi automatically invokes `docker build` for you and pushes the container to ECR. 
+The definition of `frontend` is more interesting, as it uses `build` property of `cloud.Service` to point to a folder with a Dockerfile, which in this case is a Python Flask app. Pulumi automatically invokes `docker build` for you and pushes the container to ECR. 
 
 So that the `frontend` container can connect to `redisCache`, the environment variables `REDIS`, `REDIS_PORT` are defined. Using the `redisCache.endpoints` property, it's easy to declare the connection between the two containers. 
 
