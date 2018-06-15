@@ -1,0 +1,3 @@
+name: aws-serverless-js-twitter
+description: Analyze tweets in AWS Athena
+runtime: nodejs

@@ -80,3 +80,8 @@ Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/
 #### [AWS Voting App with Containers](cloud-ts-voting-app/)
 
 A simple voting app that uses Redis for a data store and a Python Flask app for the frontend, demonstrating the high-level framework `@pulumi/cloud`.
+
+#### [AWS Athena Twitter Analyzer](cloud-js-twitter-athena/)
+
+A sample project that periodically queries Twitter for a search term, stores the results in S3, and configures an Athena query for data analysis.
+
