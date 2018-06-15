@@ -1,7 +1,9 @@
-# AWS web server example in Python
+# AWS Web Server example in Python
 
-An example based on the basic Amazon EC2 Instance sample at:
-http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applications.html. The example deploys an EC2 instance and opens port 80. To get the correct Amazon Linux AMI for the instance size and region, a mapping is defined in [ami.py](./ami.py).
+An example based on the Amazon sample at:
+http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applications.html. The example deploys an EC2 instance and opens port 80. 
+
+To get the correct Amazon Linux AMI for the instance size and region, a mapping is defined in [ami.py](./ami.py).
 
 ## Prerequisites
 
@@ -69,4 +71,6 @@ http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applicat
 
 1.  Verify that the EC2 instance exists, by either using the AWS Console or running `aws ec2 describe-instances`.
 
-1.  Clean up resources by running `pulumi destroy` and answering the confirmation question at the prompt.
+## Clean up
+
+To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
