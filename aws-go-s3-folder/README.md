@@ -20,6 +20,7 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
 3.  Compile the Go program and ensure it's on your path (such as with `$GOPATH`):
 
     ```
+    $ go get .
     $ go install .
     ```
 
@@ -47,31 +48,25 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
     Permalink: https://pulumi.com/lindydonna/examples/aws-js-s3-folder/website-testing/updates/1
     ```
 
-5.  To see the resources that were created, run `pulumi stack output`:
+5.  To see the resources that were created, run `pulumi stack`:
 
     ```bash
-    $ pulumi stack output
-    Current stack outputs (2):
-        OUTPUT                                           VALUE
-        bucketName                                       s3-website-bucket-e7c0411
-        websiteUrl                                       s3-website-bucket-e7c0411.s3-website-us-west-2.amazonaws.com
+    $ pulumi stack
+    Current stack is go-website-testing:
+        Managed by https://api.pulumi.com
+        Owner: swgillespie
+        Last updated: 13 minutes ago (2018-06-15 14:19:06.856631155 -0700 PDT)
+        Pulumi version: v0.14.0-rc1
+        Plugin go [language] version: 0.14.0-rc1
+        Plugin aws [resource] version: 0.14.0-rc1
+
+    Current stack resources (5):
+        TYPE                                             NAME
+        pulumi:pulumi:Stack                              aws-go-s3-folder-go-website-testing
+        aws:s3/bucket:Bucket                             s3-website-bucket
+        aws:s3/bucketPolicy:BucketPolicy                 bucketPolicy
+        aws:s3/bucketObject:BucketObject                 www/index.html
+        aws:s3/bucketObject:BucketObject                 www/favicon.png
     ```
 
-6.  To see that the S3 objects exist, you can either use the AWS Console or the AWS CLI:
-
-    ```bash
-    $ aws s3 ls $(pulumi stack output bucketName)
-    2018-04-17 15:40:47      13731 favicon.png
-    2018-04-17 15:40:48        249 index.html
-    ```
-
-7.  Open the site URL in a browser to see both the rendered HTML and the favicon:
-
-    ```bash
-    $ pulumi stack output websiteUrl
-    s3-website-bucket-8533d8b.s3-website-us-west-2.amazonaws.com
-    ```
-
-    ![Hello S3 example](images/part2-website.png)
-
-8.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+6.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
