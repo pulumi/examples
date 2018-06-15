@@ -4,7 +4,7 @@ import * as cloud from "@pulumi/cloud-aws";
 import { Output } from "@pulumi/pulumi"; // for output property
 
 // Create a web server.
-let endpoint = new cloud.HttpEndpoint("urlshortener");
+let endpoint = new cloud.API("urlshortener");
 
 // Create a table `urls`, with `name` as primary key.
 let urlTable = new cloud.Table("urls", "name");

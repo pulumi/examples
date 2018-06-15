@@ -12,6 +12,9 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 ## Running the App
 
+Note: some values in this example will be different from run to run.  These values are indicated
+with `***`.
+
 1.  Create a new stack:
 
     ```
@@ -23,9 +26,9 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
     ```
     $ pulumi config set aws:region us-west-2
     $ pulumi config set cloud-aws:useFargate true
-    ```    
+    ```
 
-1.  Restore NPM modules via `npm install`.
+1.  Restore NPM modules via `npm install` or `yarn install`.
 
 1.  Preview and deploy the app via `pulumi update`. The preview will take some time, as it builds a Docker container. A total of 32 resources are created.
 
@@ -79,14 +82,11 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
     +      └─ aws:ec2:SecurityGroup               pulumi-thumbnaile-global               created
     ...
 
-    ---outputs:---
-    bucketName: "bucket-c647dfb"
-
     info: 32 changes performed:
         + 32 resources created
-    Update duration: 1m32.73050186s
+    Update duration: ***
 
-    Permalink: https://pulumi.com/lindydonna/thumbnailer-testing/updates/1
+    Permalink: https://app.pulumi.com/***
     ```
 
 1.  View the stack outputs:
@@ -95,29 +95,29 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
     $ pulumi stack output
     Current stack outputs (1):
         OUTPUT                                           VALUE
-        bucketName                                       bucket-6120251
+        bucketName                                       ***
     ```
 
 1.  Upload a video, embedding the timestamp in the filename:
 
     ```
     $ aws s3 cp ./sample/cat.mp4 s3://$(pulumi stack output bucketName)/cat_00-01.mp4
-    upload: sample/cat.mp4 to s3://bucket-c647dfb/cat_00-01.mp4
+    upload: sample/cat.mp4 to s3://***/cat_00-01.mp4
     ```
 
 1.  View the logs from both the Lambda function and the ECS task:
 
     ```
     $ pulumi logs -f
-    Collecting logs for stack thumbnailer-testing since 2018-05-25T11:56:53.000-07:00.
+    Collecting logs for stack thumbnailer-testing since ***
 
     2018-05-25T12:57:26.326-07:00[                    onNewVideo] *** New video: file cat_00-01.mp4 was uploaded at 2018-05-25T19:57:25.507Z.
     2018-05-25T12:57:30.705-07:00[                    onNewVideo] Running thumbnailer task.
     2018-05-25T12:58:34.960-07:00[               ffmpegThumbTask] Starting ffmpeg task...
     2018-05-25T12:58:34.960-07:00[               ffmpegThumbTask] Copying video from S3 bucket-5ea6b28/cat_00-01.mp4 to cat_00-01.mp4...
-    2018-05-25T12:58:37.267-07:00[               ffmpegThumbTask] Completed 256.0 KiB/666.5 KiB (2.5 MiB/s) with 1 fildownload: s3://bucket-5ea6b28/cat_00-01.mp4 to ./cat_00-01.mp4    
+    2018-05-25T12:58:37.267-07:00[               ffmpegThumbTask] Completed 256.0 KiB/666.5 KiB (2.5 MiB/s) with 1 fildownload: s3://bucket-5ea6b28/cat_00-01.mp4 to ./cat_00-01.mp4
     2018-05-25T12:58:40.306-07:00[               ffmpegThumbTask] Copying cat.jpg to S3 at bucket-5ea6b28/cat.jpg ...
-    2018-05-25T12:58:43.034-07:00[               ffmpegThumbTask] Completed 86.6 KiB/86.6 KiB (619.7 KiB/s) with 1 filupload: ./cat.jpg to s3://bucket-5ea6b28/cat.jpg                  
+    2018-05-25T12:58:43.034-07:00[               ffmpegThumbTask] Completed 86.6 KiB/86.6 KiB (619.7 KiB/s) with 1 filupload: ./cat.jpg to s3://bucket-5ea6b28/cat.jpg
     2018-05-25T12:58:43.758-07:00[                onNewThumbnail] *** New thumbnail: file cat.jpg was saved at 2018-05-25T19:58:43.028Z.
         ```
 
@@ -125,7 +125,7 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
 
     ```
     $ aws s3 cp s3://$(pulumi stack output bucketName)/cat.jpg .
-    download: s3://bucket-0e25c2d/cat.jpg to ./cat.jpg            
+    download: s3://***/cat.jpg to ./cat.jpg
     ```
 
 ## Clean up
