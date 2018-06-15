@@ -1,8 +1,11 @@
 # Serverless URL Shortener with Redis Cache
 
-A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.HttpEndpoint` components. The example shows to combine serverless functions along with containers.
+A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.API` components. The example shows to combine serverless functions along with containers.
 
 ## Deploying and running the program
+
+Note: some values in this example will be different from run to run.  These values are indicated
+with `***`.
 
 1. Create a new stack:
 
@@ -21,7 +24,7 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
     ```
     $ pulumi config set aws:region us-west-2
     $ pulumi config set cloud-aws:useFargate true
-    ```    
+    ```
 
 1. Set a value for the Redis password. The value can be an encrypted secret, specified with the `--secret` flag. If this flag is not provided, the value will be saved as plaintext in `Pulumi.url-cache-testing.yaml` (since `url-cache-testing` is the current stack name).
 
@@ -29,9 +32,9 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
     $ pulumi config set --secret redisPassword S3cr37Password
     ```
 
-1. Restore NPM modules via `npm install`.
+1. Restore NPM modules via `npm install` or `yarn install`.
 
-1. Compile the program via `tsc` or `npm run build`.
+1. Compile the program via `tsc` or `npm run build` or `yarn run build`.
 
 1. Preview and run the deployment via `pulumi update`. The operation will take about 5 minutes to complete.
 
@@ -43,21 +46,21 @@ A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.Htt
     Updating stack 'url-cache-testing'
     Performing changes:
 
-    #:  Resource Type                            Name                    
+    #:  Resource Type                            Name
     1:  pulumi:pulumi:Stack                      url-shortener-cache-url-
     ...
-    63: aws:apigateway:Stage                     urlshortener            
-    
-    info: 63 changes performed:
-        + 63 resources created
-    Update duration: 5m48.727390626s
+    49: aws:apigateway:Stage                     urlshortener
+
+    info: 49 changes performed:
+        + 49 resources created
+    Update duration: ***
     ```
 
 1. To view the API endpoint, use the `stack output` command:
 
     ```
     $ pulumi stack output endpointUrl
-    https://gs8t66u634.execute-api.us-east-1.amazonaws.com/stage/
+    https://***.us-east-1.amazonaws.com/stage/
     ```
 
 1. Open this page in a browser and you'll see a single page app for creating and viewing short URLs.
