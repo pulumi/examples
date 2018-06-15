@@ -8,6 +8,9 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 ## Running the App
 
+Note: some values in this example will be different from run to run.  These values are indicated
+with `***`.
+
 1.  Create a new stack:
 
     ```
@@ -19,9 +22,9 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
     ```
     $ pulumi config set aws:region us-west-2
     $ pulumi config set cloud-aws:useFargate true
-    ```    
+    ```
 
-1.  Restore NPM modules via `npm install`.
+1.  Restore NPM modules via `npm install` or `yarn install`.
 
 1.  Preview and deploy the app via `pulumi update`. The preview will take a few minutes, as it builds a Docker container. A total of 19 resources are created.
 
@@ -33,9 +36,9 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
 
     ```bash
     $ pulumi stack output
-    Current stack outputs (1)  
+    Current stack outputs (1)
         OUTPUT                  VALUE
-        hostname                http://42dc3ff4-ac65d11-86a100b6e1d7f210.elb.us-west-2.amazonaws.com
+        hostname                http://***.elb.us-west-2.amazonaws.com
 
     $ curl $(pulumi stack output hostname)
     <html>
@@ -51,7 +54,7 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
 
     ```
     $ pulumi logs --follow
-    Collecting logs for stack container-quickstart-dev since 2018-05-22T14:25:46.000-07:00.    
+    Collecting logs for stack container-quickstart-dev since 2018-05-22T14:25:46.000-07:00.
     2018-05-22T15:33:22.057-07:00[                  pulumi-nginx] 172.31.13.248 - - [22/May/2018:22:33:22 +0000] "GET / HTTP/1.1" 200 189 "-" "curl/7.54.0" "-"
     ```
 

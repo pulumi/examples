@@ -14,7 +14,10 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 ## Deploying and running the program
 
-### Configure the deployment  
+### Configure the deployment
+
+Note: some values in this example will be different from run to run.  These values are indicated
+with `***`.
 
 1.  Login via `pulumi login`.
 
@@ -45,19 +48,19 @@ To use this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 ### Compile the TypeScript program
 
-1.  Restore NPM modules via `npm install`.
+1.  Restore NPM modules via `npm install` or `yarn install`.
 
-1.  Compile the program via `tsc` or `npm run build`.
+1.  Compile the program via `tsc` or `npm run build` or `yarn run build`.
 
 ### Preview and deploy
 
-1.  Ensure the Docker daemon is running on your machine, then preview and deploy the program with `pulumi update`. The program deploys 32 resources and takes about 10 minutes to complete. 
+1.  Ensure the Docker daemon is running on your machine, then preview and deploy the program with `pulumi update`. The program deploys 24 resources and takes about 10 minutes to complete.
 
 1.  View the stack output properties via `pulumi stack output`. The stack output property `frontendUrl` is the URL and port of the deployed app:
 
     ```bash
     $ pulumi stack output frontendURL
-    8f351c44-f9d1584-247a3196f19f7797.elb.us-west-2.amazonaws.com
+    ***.elb.us-west-2.amazonaws.com
     ```
 
 1.  In a browser, navigate to the URL for `frontendURL`. You should see the voting app webpage.
@@ -80,10 +83,10 @@ At the start of the program, the following lines retrieve the value for the Redi
 
 ```typescript
 let config = new pulumi.Config("voting-app");
-let redisPassword = config.require("redisPassword"); 
+let redisPassword = config.require("redisPassword");
 ```
 
-In the program, the value can be used like any other variable. 
+In the program, the value can be used like any other variable.
 
 ### Resources
 
@@ -96,9 +99,9 @@ let frontend = new cloud.Service("voting-app-frontend", ... )
 
 The definition of `redisCache` uses the [`image` property of `cloud.Service`](https://pulumi.io/reference/pkg/nodejs/@pulumi/cloud-aws/index.html) to point to an existing Docker image. In this case, this is the image `redis` at tag `alpine` on Docker Hub. The `redisPassword` variable is passed to the startup command for this image.
 
-The definition of `frontend` is more interesting, as it uses `build` property of `cloud.Service` to point to a folder with a Dockerfile, which in this case is a Python Flask app. Pulumi automatically invokes `docker build` for you and pushes the container to ECR. 
+The definition of `frontend` is more interesting, as it uses `build` property of `cloud.Service` to point to a folder with a Dockerfile, which in this case is a Python Flask app. Pulumi automatically invokes `docker build` for you and pushes the container to ECR.
 
-So that the `frontend` container can connect to `redisCache`, the environment variables `REDIS`, `REDIS_PORT` are defined. Using the `redisCache.endpoints` property, it's easy to declare the connection between the two containers. 
+So that the `frontend` container can connect to `redisCache`, the environment variables `REDIS`, `REDIS_PORT` are defined. Using the `redisCache.endpoints` property, it's easy to declare the connection between the two containers.
 
 The Flask app uses these environment variables to connect to the Redis cache container. See the following in [`frontend/app/main.py`](frontend/app/main.py):
 
