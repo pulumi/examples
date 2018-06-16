@@ -1,3 +1,0 @@
-name: kube-nginx
-runtime: python
-description: An example of creating a single Kubernetes Nginx Pod in Python.
