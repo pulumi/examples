@@ -1,6 +1,0 @@
-/.pulumi/
-/bin/
-/include/
-/lib/
-*.pyc
-.Python

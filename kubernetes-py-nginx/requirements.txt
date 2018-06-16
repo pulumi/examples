@@ -1,2 +1,0 @@
-pulumi>=0.11.0
-pulumi_kubernetes>=0.11.2
