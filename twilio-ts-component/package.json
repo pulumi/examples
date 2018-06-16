@@ -10,8 +10,8 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/pulumi": "^0.12.3",
-        "@pulumi/aws-serverless": "dev",
+        "@pulumi/pulumi": "^0.14.0",
+        "@pulumi/aws-serverless": "^0.14.0",
         "twilio": "latest"
     }
 }

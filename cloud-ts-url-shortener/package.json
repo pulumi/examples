@@ -11,7 +11,7 @@
         "typescript": "^2.8.3"
     },
     "dependencies": {
-        "@pulumi/cloud-aws": "^0.13.0",
-        "@pulumi/cloud": "^0.13.0"
+        "@pulumi/cloud-aws": "^0.14.0",
+        "@pulumi/cloud": "^0.14.0"
     }
 }

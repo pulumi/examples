@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@pulumi/kubernetes": "^0.14.0",
-    "@pulumi/pulumi": "^0.12"
+    "@pulumi/pulumi": "^0.14.0"
   },
   "license": "MIT"
 }
