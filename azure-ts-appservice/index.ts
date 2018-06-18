@@ -2,7 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
 import { signedBlobReadUrl } from "./sas";
 
-const name = 'azpulumi';
+const name = pulumi.getStack();
 
 const resourceGroup = new azure.core.ResourceGroup(`${name}-rg`, {
         location: "West US 2",
@@ -39,8 +39,9 @@ const storageContainer = new azure.storage.Container(`${name}-c`, {
     containerAccessType: "private",
 });
 
-const map: pulumi.asset.AssetMap = {};
-map["index.html"] = new pulumi.asset.StringAsset("<html><body><h1>Greetings from Azure App Service!</h1></body></html>");
+const map: pulumi.asset.AssetMap = {
+    "index.html": new pulumi.asset.StringAsset("<html><body><h1>Greetings from Azure App Service!</h1></body></html>"),
+};
 
 const blob = new azure.storage.ZipBlob(`${name}-b`, {
     resourceGroupName: resourceGroup.name,
@@ -94,9 +95,9 @@ const app = new azure.appservice.AppService(`${name}-as`, {
 
     connectionStrings: [{
         name: "db",
-        value: sqlServer.name.apply(
-            server => database.name.apply(
-                db => `Server=tcp:${server}.database.windows.net;initial catalog=${db};user ID=${username};password=${pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;`)),
+        value: 
+            pulumi.all([sqlServer, database]).apply(([server, db]) => 
+                `Server=tcp:${server}.database.windows.net;initial catalog=${db};user ID=${username};password=${pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;`),
         type: "SQLAzure"
     }]    
 });
