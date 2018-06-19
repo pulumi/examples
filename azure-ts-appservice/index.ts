@@ -39,10 +39,6 @@ const storageContainer = new azure.storage.Container(`${name}-c`, {
     containerAccessType: "private",
 });
 
-const map: pulumi.asset.AssetMap = {
-    "index.html": new pulumi.asset.StringAsset("<html><body><h1>Greetings from Azure App Service!</h1></body></html>"),
-};
-
 const blob = new azure.storage.ZipBlob(`${name}-b`, {
     resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
