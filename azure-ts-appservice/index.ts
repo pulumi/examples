@@ -49,8 +49,7 @@ const blob = new azure.storage.ZipBlob(`${name}-b`, {
     storageContainerName: storageContainer.name,
     type: "block",
 
-    content: new pulumi.asset.AssetArchive(map)
-             // to pack a folder use new pulumi.asset.FileArchive("folder")
+    content: new pulumi.asset.FileArchive("wwwroot")
 });
 
 const codeBlobUrl = signedBlobReadUrl(blob, storageAccount, storageContainer);
