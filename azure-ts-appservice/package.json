@@ -1,0 +1,18 @@
+{
+    "name": "azure-ts-appservice",
+    "version": "1.0.0",
+    "main": "bin/index.js",
+    "typings": "bin/index.d.ts",
+    "scripts": {
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "@types/node": "^10.3.3",
+        "typescript": "^2.9.2"
+    },
+    "dependencies": {
+        "@pulumi/azure": "^0.14.0",
+        "@pulumi/pulumi": "^0.14.0",
+        "azure-storage": "^2.9.0-preview"
+    }
+}
