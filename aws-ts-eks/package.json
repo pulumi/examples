@@ -1,0 +1,13 @@
+{
+    "name": "aws-ts-eks",
+    "devDependencies": {
+        "typescript": "^2.7.2",
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^0.15.0",
+		"@pulumi/aws": "^0.15.0",
+		"@pulumi/aws-infra": "^0.15.0",
+		"@pulumi/kubernetes": "^0.15.0"
+    }
+}

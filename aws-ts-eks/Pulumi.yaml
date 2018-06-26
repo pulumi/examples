@@ -1,0 +1,3 @@
+name: aws-ts-eks
+description: EKS cluster example
+runtime: nodejs
