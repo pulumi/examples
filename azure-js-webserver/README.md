@@ -49,8 +49,7 @@ passwords](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq#w
 1.  Check the IP address:
 
     ```
-    $ pulumi stack output privateIP
-    10.0.2.4
+    $ pulumi stack output publicIP
+    40.112.181.239
     ```
 
-*TODO*: Expose the Public IP address as well so that the VM can be SSH'd into or CURL'd directly.

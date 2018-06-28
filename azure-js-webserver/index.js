@@ -80,6 +80,12 @@ let vm = new azure.compute.VirtualMachine("server-vm", {
     },
 });
 
-// Note - due to a bug in the terraform-provider-azurerm, the public IP address is not yet populated corerctly.
-exports.publicIP = publicIP.ipAddress;
-exports.privateIP = networkInterface.privateIpAddress;
+// The public IP address is not allocated until the VM is running, so we wait
+// for that resource to create, and then lookup the IP address again to report
+// its public IP.
+exports.publicIP = vm.id.apply(_ => 
+    azure.network.getPublicIP({
+        name: publicIP.name,
+        resourceGroupName: publicIP.resourceGroupName,
+    }).then(ip => ip.ipAddress)
+);
