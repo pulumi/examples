@@ -34,7 +34,7 @@ An [extension of this sample](aws-js-s3-folder-component/) shows how to create y
 
 ### Cloud Applications
 
-#### [Serverless REST API](cloud-js-httpendpoint)
+#### [Serverless REST API](cloud-js-api)
 
 This example shows how to build a simple REST API to count the number of times a route has been hit. It shows how easy it is to create a simple application that uses AWS Lambda, API Gateway, and Dynamo DB.
 
