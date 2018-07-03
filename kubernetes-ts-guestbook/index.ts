@@ -1,12 +1,12 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
 import * as pulumi from "@pulumi/pulumi";
-import * as kubernetes from "@pulumi/kubernetes";
+import * as k8s from "@pulumi/kubernetes";
 
 // REDIS MASTER
 
 let redisMasterLabels = { app: "redis", tier: "backend", role: "master"};
-let redisMasterService = new kubernetes.Service("redis-master", {
+let redisMasterService = new k8s.core.v1.Service("redis-master", {
     metadata: {
         name: "redis-master",
         labels: [redisMasterLabels],
@@ -16,12 +16,14 @@ let redisMasterService = new kubernetes.Service("redis-master", {
         selector: [redisMasterLabels],
     },
 });
-let redisMasterDeployment = new kubernetes.Deployment("redis-master", {
+let redisMasterDeployment = new k8s.apps.v1.Deployment("redis-master", {
     metadata: {
         name: "redis-master",
     },
     spec: {
-        selector: redisMasterLabels,
+        selector: {
+            matchLabels: redisMasterLabels
+        },
         replicas: 1,
         template: {
             metadata: {
@@ -48,7 +50,7 @@ let redisMasterDeployment = new kubernetes.Deployment("redis-master", {
 
 // REDIS SLAVE
 let redisSlaveLabels = { app: "redis", tier: "backend", role: "slave" };
-let redisSlaveService = new kubernetes.Service("redis-slave", {
+let redisSlaveService = new k8s.core.v1.Service("redis-slave", {
     metadata: {
         name: "redis-slave",
         labels: redisSlaveLabels,
@@ -58,12 +60,14 @@ let redisSlaveService = new kubernetes.Service("redis-slave", {
         selector: [redisSlaveLabels],
     },
 });
-let redisSlaveDeployment = new kubernetes.Deployment("redis-slave", {
+let redisSlaveDeployment = new k8s.apps.v1.Deployment("redis-slave", {
     metadata: {
         name: "redis-slave",
     },
     spec: {
-        selector: redisSlaveLabels,
+        selector: {
+            matchLabels: redisSlaveLabels
+        },
         replicas: 1,
         template: {
             metadata: {
@@ -79,12 +83,12 @@ let redisSlaveDeployment = new kubernetes.Deployment("redis-slave", {
                             memory: "100Mi",
                         },
                     },
-                    envs: [{
+                    env: [{
                         name: "GET_HOSTS_FROM",
                         value: "dns",
                         // If your cluster config does not include a dns service, then to instead access an environment
                         // variable to find the master service's host, comment out the 'value: dns' line above, and
-                        // uncomment the line below: 
+                        // uncomment the line below:
                         // value: "env"
                     }],
                     ports: [{
@@ -98,7 +102,7 @@ let redisSlaveDeployment = new kubernetes.Deployment("redis-slave", {
 
 // FRONTEND
 let frontendLabels = { app: "guestbook", tier: "frontend" };
-let frontendService = new kubernetes.Service("frontend", {
+let frontendService = new k8s.core.v1.Service("frontend", {
     metadata: {
         name: "frontend",
         labels: [frontendLabels],
@@ -111,12 +115,14 @@ let frontendService = new kubernetes.Service("frontend", {
         selector: [frontendLabels],
     },
 });
-let frontendDeployment = new kubernetes.Deployment("frontend", {
+let frontendDeployment = new k8s.apps.v1.Deployment("frontend", {
     metadata: {
         name: "frontend",
     },
     spec: {
-        selector: frontendLabels,
+        selector: {
+            matchLabels: frontendLabels
+        },
         replicas: 3,
         template: {
             metadata: {
@@ -132,12 +138,12 @@ let frontendDeployment = new kubernetes.Deployment("frontend", {
                             memory: "100Mi",
                         },
                     },
-                    envs: [{
+                    env: [{
                         name: "GET_HOSTS_FROM",
                         value: "dns",
                         // If your cluster config does not include a dns service, then to instead access an environment
                         // variable to find the master service's host, comment out the 'value: dns' line above, and
-                        // uncomment the line below: 
+                        // uncomment the line below:
                         // value: "env"
                     }],
                     ports: [{
