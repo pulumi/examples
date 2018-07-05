@@ -1,0 +1,3 @@
+name: aws-js-sqs-slack
+description: Post to Slack for each SQS message!
+runtime: nodejs
