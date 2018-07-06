@@ -1,11 +1,12 @@
 # serverless-raw
 
-An example using some serverless AWS resources, including:
+This example deploys a complete serverless C# application using raw `aws.apigateway.RestAPI`, `aws.lambda.Function` and
+`aws.dynamodb.Table` resources from `@pulumi/aws`.  Although this doesn't feature any of the higher-level abstractions
+from the `@pulumi/cloud` package, it demonstrates that you can program the raw resources directly available in AWS
+to accomplish all of the same things this higher-level package offers.
 
-* AWS Lambda Function
-* AWS IAM Role
-* AWS DynamoDB Table
-* AWS APIGateway RestAPI
+The deployed Lambda function is a simple C# application, highlighting the ability to manage existing application code
+in a Pulumi application, even if your Pulumi code is written in a different language like JavaScript or Python.
 
 The Lambda function is a C# application using dotnet2.0 (a similar approach works for any other language supported by
 AWS Lambda).  To deploy the complete application:

@@ -1,6 +1,7 @@
 # Serverless URL Shortener with Redis Cache
 
-A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.API` components. The example shows to combine serverless functions along with containers.
+A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.API` components. The example shows to combine serverless functions along with containers. This shows that you can create your own `cloud.*`-like
+abstractions for your own use, your team's, or to share with the community using your language's package manager.
 
 ## Deploying and running the program
 

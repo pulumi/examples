@@ -13,75 +13,38 @@ See the [Pulumi documentation](https://pulumi.io) for more details on getting st
 
 ### Cloud Infrastructure
 
-#### Web Server
-
-This is one of our most basic examples, showing how to provision a simple Linux webserver serving traffic on port 80.
-This example is available in multiple flavors:
-
-* [AWS EC2 instance in JavaScript](aws-js-webserver)
-* [AWS EC2 instance in Python](aws-py-webserver)
-* [Azure Virtual Machine in JavaScript](azure-js-webserver)
-* [Kubernetes Nginx in Python](kubernetes-py-nginx)
-
-An [extension of this example](aws-js-webserver-component/) demonstrates creating a minimal component that encapsulates
-creating EC2 instances, highlighting one of the benefits of using general purpose languages for managing infrastructure.
-
-#### [Static Website on AWS S3](aws-js-s3-folder/)
-
-This example deploys a static website to AWS S3, demonstrating how to combine infrastructure code and content in the same application.
-
-An [extension of this sample](aws-js-s3-folder-component/) shows how to create your own component for reusable infrastructure. 
+Example                 | Language          | Cloud |
+-----                   | -------           | ------| 
+[AWS EC2 instance (JavaScript)](aws-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | AWS |
+[AWS EC2 instance (Python)](aws-py-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | Python | AWS |
+[Azure Virtual Machine (JavaScript)](azure-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | Azure |
+[GCP Virtual Machine (JavaScript)](gcp-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | Google Cloud Platform |
+[Component for creating EC2 instances (JavaScript)](aws-js-webserver-component/) <br/>A minimal component that encapsulates creating EC2 instances | JavaScript | AWS |
+[Simple static website on AWS S3 (JavaScript)](aws-js-s3-folder) <br/> A simple program that uses S3's website support | JavaScript | AWS |
+[Component for simple static website (JavaScript)](aws-js-s3-folder-component) <br/> A reusable component for hosting static websites on AWS S3 | JavaScript | AWS |
+[Simple static website on AWS S3 (Go)](aws-go-s3-folder) <br/> A static website that uses S3's website support | Go | AWS |
+[Production-ready static website on AWS (TypeScript)](aws-ts-static-website) <br/> An end-to-end example for hosting a static website on AWS, using S3, CloudFront, Route53, and Amazon Certificate Manager | TypeScript | AWS |
+[Jenkins on Kubernetes (JavaScript)](kubernetes-ts-jenkins) <br/> A Jenkins container running on Kubernetes | JavaScript | Kubernetes |
+[AWS RDS and Airflow (TypeScript)](aws-ts-airflow)<br/> Deploys an RDS Postgres instance and containerized Airflow | TypeScript | AWS |
+[CloudWatch Log Groups, Event Targets, Metric Alarms, IAM roles, and more! (TypeScript)](aws-ts-resources) <br/> An example that shows how to create a number of AWS resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, `sqs.Queue`, and more. | TypeScript | AWS | 
+[Azure App Service with SQL Database and Application Insights](azure-ts-appservice) <br/> Deploy Azure App Service along with SQL Database and Application Insights | TypeScript | Azure |
+[Azure Functions](azure-ts-functions) <br/> A simple component for deploying inline code to Azure Functions | TypeScript | Azure |
 
 ### Cloud Applications
 
-#### [Serverless REST API](cloud-js-api)
-
-This example shows how to build a simple REST API to count the number of times a route has been hit. It shows how easy it is to create a simple application that uses AWS Lambda, API Gateway, and Dynamo DB.
-
-#### [Easy NGINX Container](cloud-js-containers)
-
-This example shows how easy it is to build a simple container and deploy to AWS Fargate. With just 15 lines of code, you can deploy a container to a production service. Pulumi automatically builds the Docker container, provisions a container registry instance, and pushes the built image to it. 
-
-#### [Cloud-Agnostic Serverless URL Shortener](cloud-ts-url-shortener/)
-
-This example demonstrates a complete URL shortener web application using high-level `cloud.Table` and
-`cloud.HttpEndpoint` components, highlighting the ability to combine deployment time and runtime code, and the simple,
-cloud-agnostic, programming model of `@pulumi/cloud`.  Although we only support AWS today in this framework, our plan
-is to offer an implementation of this on all major clouds, and so any code targeting this can truly run anywhere.
-
-An [extension of this example](cloud-ts-url-shortener-cache/) adds a reusable cache component to the URL shortener
-using `cloud.Service` to run a containerized Redis image.  This shows that you can create your own `cloud.*`-like
-abstractions for your own use, your team's, or to share with the community using your language's package manager.
-
-#### [AWS Video Thumbnailer](cloud-js-thumbnailer/)
-
-This example features an end-to-end pipeline for generating keyframe thumbnails from videos uploaded to a bucket using
-containerized [FFmpeg](https://www.ffmpeg.org/).  It combines containers, serverless functions, and cloud storage into
-a single 40-line application using `@pulumi/cloud-aws`.
-
-[An extension of this sample](cloud-js-thumbnailer-machine-learning/) uses AWS Rekognition to find the timestamp with the highest confidence for a particular label.
-
-#### [Raw AWS Serverless](aws-ts-serverless-raw/)
-
-This example deploys a complete serverless C# application using raw `aws.apigateway.RestAPI`, `aws.lambda.Function` and
-`aws.dynamodb.Table` resources from `@pulumi/aws`.  Although this doesn't feature any of the higher-level abstractions
-from the `@pulumi/cloud` package, it demonstrates that you can program the raw resources directly available in AWS
-to accomplish all of the same things this higher-level package offers.
-
-The deployed Lambda function is a simple C# application, highlighting the ability to manage existing application code
-in a Pulumi application, even if your Pulumi code is written in a different language like JavaScript or Python.
-
-#### [Kubernetes Guestbook](kubernetes-ts-guestbook/)
-
-This examples shows a version of the [Kubernetes
-Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/) app using Pulumi and
-`@pulumi/kubernetes`.
-
-#### [AWS Voting App with Containers](cloud-ts-voting-app/)
-
-A simple voting app that uses Redis for a data store and a Python Flask app for the frontend, demonstrating the high-level framework `@pulumi/cloud`.
-
-#### [AWS Athena Twitter Analyzer](cloud-js-twitter-athena/)
-
-A sample project that periodically queries Twitter for a search term, stores the results in S3, and configures an Athena query for data analysis.
-
+Example                 | Language          | Cloud |
+-----                   | -------           | ------| 
+[Serverless REST API (JavaScript)](cloud-js-api) <br/> A simple REST API to count the number of times a route has been hit | JavaScript | AWS |
+[NGINX container on AWS ECS (JavaScript)](cloud-js-containers) <br/> In 15 lines of code, deploy an NGINX container to production | JavaScript | AWS |
+[Serverless URL shortener (TypeScript)](cloud-ts-url-shortener) <br/> A complete URL shortener web application using high-level `cloud.Table` and `cloud.HttpEndpoint` components | TypeScript | AWS |
+[Serverless URL shortener with cache (TypeScript)](cloud-ts-url-shortener-cache) <br/> An extension of the URL shortener that adds a Redis cache | TypeScript | AWS |
+[Serverless video thumbnailer with Lambda and Fargate (JavaScript)](cloud-js-thumbnailer) <br/> An end-to-end pipeline for generating keyframe thumbnails from videos uploaded to a bucket using containerized FFmpeg | JavaScript | AWS |
+[Serverless video thumbnailer with machine learning (JavaScript)](cloud-js-thumbnailer-machine-learning) <br/> An extension of the video thumbnail example that uses AWS Rekognition video labels | JavaScript | AWS |
+[Raw AWS Serverless (TypeScript and C#)](aws-ts-serverless-raw) <br/> A complete serverless C# application using that uses the raw resources `aws.apigateway.RestAPI`, `aws.lambda.Function` and `aws.dynamodb.Table` | TypeScript | AWS |
+[Voting App with containers (TypeScript)](cloud-ts-voting-app) <br/> A simple voting app that uses Redis for a data store and a Python Flask app for the frontend, demonstrating the high-level framework `@pulumi/cloud`. | TypeScript | AWS |
+[Kubernetes Guestbook (TypeScript)](kubernetes-ts-guestbook/) <br/>A version of the [Kubernetes Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/) app using Pulumi and `@pulumi/kubernetes` | TypeScript | Kubernetes | 
+[Kubernetes Sock Shop (TypeScript)](kubernetes-ts-sock-shop) <br/> A version of the standard [Sock Shop microservices reference app](https://github.com/microservices-demo/microservices-demo) app using Pulumi and `@pulumi/kubernetes` | TypeScript | Kubernetes |
+[AWS Athena Twitter Analyzer (JavaScript)](cloud-js-twitter-athena) <br/> An application that periodically queries Twitter for a search term, stores the results in S3, and configures an Athena query for data analysis | JavaScript | AWS |
+[Serverless SQS to Slack (JavaScript)](aws-js-sqs-slack) <br/> Uses a Lambda function to post SQS messages to a Slack channel | JavaScript | AWS |
+[AWS Step Functions](aws-ts-stepfunctions) <br/> A basic example that demonstrates using AWS Step Functions with a Lambda function | TypeScript | AWS | 
+[Twilio SMS handler for API Gateway](twilio-ts-component) <br/>A sample component that makes it easy to connect AWS API Gateway and Twilio SMS | TypeScript | AWS |
