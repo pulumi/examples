@@ -20,8 +20,7 @@ const config = {
 };
 
 // contentBucket is the S3 bucket that the website's contents will be stored in.
-const contentBucket = new aws.s3.Bucket(
-    "contentBucket",
+const contentBucket = new aws.s3.Bucket("contentBucket",
     {
         bucket: config.targetDomain,
         acl: "public-read",
@@ -72,8 +71,7 @@ crawlDirectory(
     });
 
 // logsBucket is an S3 bucket that will contain the CDN's request logs.
-const logsBucket = new aws.s3.Bucket(
-    "requestLogs",
+const logsBucket = new aws.s3.Bucket("requestLogs",
     {
         bucket: `${config.targetDomain}-logs`,
         acl: "private",
