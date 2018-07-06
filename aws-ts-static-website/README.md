@@ -14,8 +14,8 @@ This sample uses the following AWS products:
 Install prerequisites and build the Pulumi program with:
 
 ```bash
-yarn install
-yarn build
+npm install
+npm run build
 ```
 
 Configure the Pulumi program. There are several configuration settings that need to be
@@ -74,6 +74,7 @@ return new aws.route53.Record(
             ],
         });
 ```
+
 ## Troubleshooting
 
 ### Scary HTTPS Warning
@@ -89,7 +90,7 @@ window, which will avoid any local caches your browser might have.
 
 Sometimes updating the CloudFront distribution will fail with:
 
-```
+```text
 "PreconditionFailed: The request failed because it didn't meet the preconditions in one or more
 request-header fields."
 ```
@@ -103,3 +104,20 @@ and AWS. (Which can happen when inspecting the CloudFront distribution in the AW
 
 This will get fixed in Pulumi soon, but for the time being you can find workaround steps in
 the [issue on GitHub](pulumi/pulumi/issues/1449).
+
+## Deployment Speed
+
+This example creates a `aws.S3.BucketObject` for every file served from the website. When deploying
+large websites, that can lead to very long updates as every individual file is checked for any
+changes.
+
+It may be more efficient to not manage individual files using Pulumi and and instead just use the
+AWS CLI to sync local files with the S3 bucket directly.
+
+Remove the call to `crawlDirectory` and run `pulumi update`. Pulumi will then delete the contents
+of the S3 bucket, and no longer manage their contents. Then do a bulk upload outside of Pulumi
+using the AWS CLI.
+
+```bash
+aws s3 sync ./www/ s3://example-bucket/
+```

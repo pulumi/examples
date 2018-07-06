@@ -25,7 +25,7 @@ const contentBucket = new aws.s3.Bucket(
     {
         bucket: config.targetDomain,
         acl: "public-read",
-        // Configure S3 serve bucket contents as a website. This way S3 will automatically convert
+        // Configure S3 to serve bucket contents as a website. This way S3 will automatically convert
         // requests for "foo/" to "foo/index.html".
         website: {
             indexDocument: "index.html",
@@ -56,9 +56,6 @@ crawlDirectory(
     webContentsRootPath,
     (filePath: string) => {
         const relativeFilePath = filePath.replace(webContentsRootPath + "/", "");
-        // Create the aws.S3.BucketObject for every file. This has Pulumi track every file change for each
-        // update to the website. However, for large website it may be more efficient to not manage individual
-        // files using pulumi and instead just use the AWS CLI to sync files instead. (e.g. `aws s3 sync`.)
         const contentFile = new aws.s3.BucketObject(
             relativeFilePath,
             {
