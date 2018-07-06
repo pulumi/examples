@@ -1,0 +1,9 @@
+{
+    "name": "webserver-gcp",
+    "version": "0.1.0",
+    "main": "index.js",
+    "dependencies": {
+        "@pulumi/pulumi": "^0.14.0",
+        "@pulumi/gcp": "^0.14.0"
+    }
+}

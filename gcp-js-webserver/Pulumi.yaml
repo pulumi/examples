@@ -1,0 +1,3 @@
+name: webserver-gcp
+runtime: nodejs
+description: Basic example of an Google Cloud web server accessible over HTTP.
