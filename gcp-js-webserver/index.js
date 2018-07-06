@@ -13,7 +13,7 @@ const computeFirewall = new gcp.compute.Firewall("firewall", {
 });
 
 // (optional) create a simple web server using the startup script for the instance
-let startupScript = `#!/bin/bash
+const startupScript = `#!/bin/bash
 echo "Hello, World!" > index.html
 nohup python -m SimpleHTTPServer 80 &`;
 
