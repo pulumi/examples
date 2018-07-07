@@ -223,6 +223,7 @@
   version = "v1.0.0"
 
 [[projects]]
+  branch = "lukehoban/skipbuild"
   name = "github.com/pulumi/pulumi"
   packages = [
     "pkg/apitype",
@@ -258,8 +259,7 @@
     "pkg/workspace",
     "sdk/proto/go"
   ]
-  revision = "67a06a1e9d6425cabf0e8f8dc1e20dbecefffa08"
-  version = "v0.14.2"
+  revision = "2d4ec55aadab88ea0d7d6156cd18d07dd01b0e6c"
 
 [[projects]]
   branch = "master"
@@ -516,6 +516,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3e5f32980073c09b2c21fd5f2aee05a75f4662c2cc11a085e7158ea2600f57f3"
+  inputs-digest = "01a7e87a7001d6fc8a6bb4c9f8f0ae68055b5bebca2c3bcb406c8db8c4d4ca92"
   solver-name = "gps-cdcl"
   solver-version = 1

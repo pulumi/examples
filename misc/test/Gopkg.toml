@@ -1,0 +1,3 @@
+[[constraint]]
+  branch = "lukehoban/skipbuild"
+  name = "github.com/pulumi/pulumi"
