@@ -52,8 +52,11 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "aws-py-webserver"),
-			SkipBuild: true,
+			Dir:           path.Join(cwd, "..", "..", "aws-py-webserver"),
+			Verbose:       true,
+			DebugLogLevel: 8,
+			DebugUpdates:  true,
+			SkipBuild:     true,
 			Config: map[string]string{
 				"aws:region": "us-west-2",
 			},
