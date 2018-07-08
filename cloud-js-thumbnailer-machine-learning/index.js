@@ -19,7 +19,7 @@ const ffmpegThumbnailTask = new cloud.Task("ffmpegThumbTask", {
 const videoProcessor = new video.VideoLabelProcessor();
 
 // When a new video is uploaded, start Rekognition label detection
-bucket.onPut("onNewVideo", bucketArgs => {  
+bucket.onPut("onNewVideo", bucketArgs => {
     console.log(`*** New video: file ${bucketArgs.key} was uploaded at ${bucketArgs.eventTime}.`);
     videoProcessor.startRekognitionJob(bucketName.get(), bucketArgs.key);
     return Promise.resolve();

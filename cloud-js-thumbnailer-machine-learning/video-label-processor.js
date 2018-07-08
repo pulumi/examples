@@ -1,19 +1,18 @@
+// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+
 "use strict";
 
 const cloud = require("@pulumi/cloud-aws");
 const aws = require("@pulumi/aws");
 
 class VideoLabelProcessor {
-
     constructor() {
         let topic = new cloud.Topic("AmazonRekognitionTopic");
-        let topicArn = topic.topic.arn;
         let role = createRekognitionRole();
 
-        this.startRekognitionJob = (bucketName, filename) => {    
-            var aws = require('aws-sdk');
+        this.startRekognitionJob = (bucketName, filename) => {
+            var aws = require("aws-sdk");
             var rekognition = new aws.Rekognition();
-            
             var params = {
                 Video: { 
                     S3Object: {
@@ -23,38 +22,38 @@ class VideoLabelProcessor {
                 },
                 NotificationChannel: {
                     RoleArn: role.arn.get(),
-                    SNSTopicArn: topicArn.get(),
+                    SNSTopicArn: topic.topic.arn.get(),
                 }
             };
-        
+
             rekognition.startLabelDetection(params, (err, data) => {
                 if (!err) {
                     console.log(`*** Submitted Rekognition job for ${filename}`);
+                } else {
+                    console.log(err, err.stack);
                 }
-                else console.log(err, err.stack);        
             });
         }
-        
+
         this.onLabelResult = (searchLabel, action) => {
-            topic.subscribe("labelResults", (jobStatus) => {   
+            topic.subscribe("labelResults", (jobStatus) => {
                 console.log("*** Rekognition job complete");
-                
-                if (jobStatus.Status == 'SUCCEEDED' && jobStatus.API == 'StartLabelDetection') {
-                    var aws = require('aws-sdk');
+
+                if (jobStatus.Status == "SUCCEEDED" && jobStatus.API == "StartLabelDetection") {
+                    var aws = require("aws-sdk");
                     var rekognition = new aws.Rekognition();
-            
-                    rekognition.getLabelDetection( { JobId: jobStatus.JobId }, 
+                    rekognition.getLabelDetection( { JobId: jobStatus.JobId },
                         function (err, data) {
                             if (!err) {
-                                let timestamp = getTimestampForLabel(data.Labels, searchLabel).toString();
-
                                 // call callback to process the video at a timestamp
+                                let timestamp = getTimestampForLabel(data.Labels, searchLabel).toString();
                                 action(jobStatus.Video.S3ObjectName, timestamp);
+                            } else {
+                                console.log(err, err.stack);
                             }
-                            else console.log(err, err.stack); 
                         }
                     );
-                }                             
+                }
             });
         }
     }
@@ -74,8 +73,8 @@ function getTimestampForLabel(labels, filterName) {
             console.log(`    *** Found object ${element.Label.Name} at position ${bestTimestamp}.  Confidence = ${highestConfidence}`);
         }
     });
-    
-    return bestTimestamp / 1000; // convert to milliseconds        
+
+    return bestTimestamp / 1000; // convert to milliseconds
 }
 
 function createRekognitionRole() {
