@@ -223,7 +223,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  branch = "lukehoban/skipbuild"
+  branch = "master"
   name = "github.com/pulumi/pulumi"
   packages = [
     "pkg/apitype",
@@ -259,7 +259,7 @@
     "pkg/workspace",
     "sdk/proto/go"
   ]
-  revision = "2d4ec55aadab88ea0d7d6156cd18d07dd01b0e6c"
+  revision = "015344ab0693ca433d211698eddc6a6a85588bf0"
 
 [[projects]]
   branch = "master"
@@ -379,7 +379,7 @@
     "unix",
     "windows"
   ]
-  revision = "ce36f3865eeb42541ce3f87f32f8462c5687befa"
+  revision = "3c6ecd8f22c6f40fbeec94c000a069d7d87c7624"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -406,7 +406,7 @@
   branch = "master"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
-  revision = "ff3583edef7de132f219f0efc00e097cabcc0ec0"
+  revision = "8b2cc369ab52e0003a878865c9372afdd6ca5c5a"
 
 [[projects]]
   name = "google.golang.org/grpc"
@@ -516,6 +516,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "01a7e87a7001d6fc8a6bb4c9f8f0ae68055b5bebca2c3bcb406c8db8c4d4ca92"
+  inputs-digest = "2811b7bbabe0f2389bed6f5bffbf43f5d298e6c14bde0a21ff18dcc49bbc7b57"
   solver-name = "gps-cdcl"
   solver-version = 1
