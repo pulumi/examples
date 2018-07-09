@@ -21,14 +21,6 @@ To get the correct Amazon Linux AMI for the instance size and region, a mapping 
     $ pulumi stack init python-webserver-testing
     ```
 
-1.  Since Pulumi is in private beta, run the following to install pip packages. For more information, see [Using Pulumi PyPI Packages](https://pulumi.io/reference/python.html#pypi-packages).
-
-    ```
-    pip install \
-        --extra-index-url https://${PULUMI_ACCESS_TOKEN}@pypi.pulumi.com/simple \
-        -r requirements.txt
-    ```
-
 1.  Set the AWS region:
 
     ```
