@@ -1,7 +1,9 @@
 # Serverless URL Shortener
 
-A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.API` components. The
-example shows to combine both deployment time and runtime code in one program.
+This example demonstrates a complete URL shortener web application using high-level `cloud.Table` and
+`cloud.HttpEndpoint` components, highlighting the ability to combine deployment time and runtime code, and the simple,
+cloud-agnostic, programming model of `@pulumi/cloud`.  Although we only support AWS today in this framework, our plan
+is to offer an implementation of this on all major clouds, and so any code targeting this can truly run anywhere.
 
 ## Deploying and running the program
 

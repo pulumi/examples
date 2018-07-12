@@ -1,4 +1,4 @@
-# Kubernetes Guestbook
+# Kubernetes Sock Shop
 
 A version of the standard [Sock Shop microservices reference app](https://github.com/microservices-demo/microservices-demo) app using
 Pulumi and `@pulumi/kubernetes`.
