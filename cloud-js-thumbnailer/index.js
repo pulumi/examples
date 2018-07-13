@@ -1,7 +1,6 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
 const cloud = require("@pulumi/cloud-aws");
-const aws = require("@pulumi/aws");
 
 // A bucket to store videos and thumbnails.
 const bucket = new cloud.Bucket("bucket");
