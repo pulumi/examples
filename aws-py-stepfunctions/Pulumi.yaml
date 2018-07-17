@@ -1,0 +1,3 @@
+name: stepfunctions-py
+description: Basic example of AWS Step Functions in Python.
+runtime: python
