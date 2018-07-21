@@ -9,11 +9,11 @@ let redisMasterLabels = { app: "redis", tier: "backend", role: "master"};
 let redisMasterService = new k8s.core.v1.Service("redis-master", {
     metadata: {
         name: "redis-master",
-        labels: [redisMasterLabels],
+        labels: redisMasterLabels,
     },
     spec: {
         ports: [{ port: 6379, targetPort: 6379 }],
-        selector: [redisMasterLabels],
+        selector: redisMasterLabels,
     },
 });
 let redisMasterDeployment = new k8s.apps.v1.Deployment("redis-master", {
@@ -57,7 +57,7 @@ let redisSlaveService = new k8s.core.v1.Service("redis-slave", {
     },
     spec: {
         ports: [{ port: 6379, targetPort: 6379 }],
-        selector: [redisSlaveLabels],
+        selector: redisSlaveLabels,
     },
 });
 let redisSlaveDeployment = new k8s.apps.v1.Deployment("redis-slave", {
@@ -105,14 +105,14 @@ let frontendLabels = { app: "guestbook", tier: "frontend" };
 let frontendService = new k8s.core.v1.Service("frontend", {
     metadata: {
         name: "frontend",
-        labels: [frontendLabels],
+        labels: frontendLabels,
     },
     spec: {
         // If your cluster does not support `LoadBalancer` (such as on minikube), comment out the it, uncomment the
         // following to automatically create an external load-balanced IP for the frontend service.
         type: "LoadBalancer",
         ports: [{ port: 80 }],
-        selector: [frontendLabels],
+        selector: frontendLabels,
     },
 });
 let frontendDeployment = new k8s.apps.v1.Deployment("frontend", {

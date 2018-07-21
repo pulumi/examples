@@ -23,6 +23,12 @@ Install dependencies:
 $ npm install
 ```
 
+Build the Pulumi program:
+
+```
+$ npm run build
+```
+
 Create a new stack:
 
 ```
