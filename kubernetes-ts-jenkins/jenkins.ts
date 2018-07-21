@@ -1,13 +1,12 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as input from "@pulumi/kubernetes/types/input";
-import { extensions } from "@pulumi/kubernetes";
 
-function createDeploymentArgs(args: JenkinsArgs): input.extensions.v1beta1.Deployment {
+function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
     const image = args.image || {
         registry: "docker.io",
         repository: "bitnami/jenkins",
-        tag: "2.107.3",
+        tag: "2.121.2",
         pullPolicy: "IfNotPresent",
     };
 
@@ -19,6 +18,11 @@ function createDeploymentArgs(args: JenkinsArgs): input.extensions.v1beta1.Deplo
         },
         spec: {
             replicas: 1,
+            selector: {
+                matchLabels:  {
+                    app: args.name,
+                }
+            },
             template: {
                 metadata: {
                     labels: {
@@ -106,8 +110,8 @@ function createDeploymentArgs(args: JenkinsArgs): input.extensions.v1beta1.Deplo
  * ComponentResource for a Jenkins instance running in a Kubernetes cluster.
  */
 export class Instance extends pulumi.ComponentResource {
-    constructor(name: string, args: JenkinsArgs, opts?: pulumi.ResourceOptions) {
-        super("jenkins:jenkins:Instance", name, args, opts);
+    constructor(args: JenkinsArgs, opts?: pulumi.ResourceOptions) {
+        super("jenkins:jenkins:Instance", args.name, args, opts);
 
         // The Secret will contain the root password for this instance.
         const secret = new k8s.core.v1.Secret(`${args.name}-secret`, {
@@ -120,12 +124,12 @@ export class Instance extends pulumi.ComponentResource {
             },
         }, { parent: this });
 
-        // The PVC provides persistant storage for Jenkins state.
+        // The PVC provides persistent storage for Jenkins state.
         const pvc = new k8s.core.v1.PersistentVolumeClaim(`${args.name}-pvc`, {
             metadata: {
                 name: args.name,
                 annotations: {
-                    "volume.beta.kubernetes.io/storage-class": "standard"
+                    "volume.beta.kubernetes.io/storage-class": `${args.storageClass || "standard" }`
                 },
             },
             spec: {
@@ -140,7 +144,7 @@ export class Instance extends pulumi.ComponentResource {
 
         // The Deployment describes the desired state for our Jenkins setup.
         const deploymentArgs = createDeploymentArgs(args);
-        const deployment = new k8s.extensions.v1beta1.Deployment(`${args.name}-deploy`, deploymentArgs, { parent: this });
+        const deployment = new k8s.apps.v1.Deployment(`${args.name}-deploy`, deploymentArgs, { parent: this });
 
         // The Service exposes Jenkins to the external internet by providing load-balanced ingress for HTTP and HTTPS.
         const service = new k8s.core.v1.Service(`${args.name}-service`, {
@@ -196,6 +200,11 @@ export interface JenkinsArgs {
      * Resource requests for this instance.
      */
     readonly resources: JenkinsResources,
+
+    /**
+     * Storage class to use for the persistent volume claim.
+     */
+    readonly storageClass?: string,
 }
 
 /**
