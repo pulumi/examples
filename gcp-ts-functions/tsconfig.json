@@ -17,6 +17,7 @@
         "strictNullChecks": true
     },
     "files": [
-        "index.ts"
+        "gcpFunction.ts",
+        "index.ts",
     ]
 }
