@@ -1,5 +1,5 @@
 #!/bin/bash -e
-source /etc/profile.d/rvm.sh
+source /etc/profile.d/rvm.sh || true
 rvm use 2.3.1
 export HOME=/home/ec2-user
 export PATH=$PATH:/usr/local/bin

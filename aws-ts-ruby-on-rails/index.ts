@@ -84,8 +84,8 @@ const webServer = new aws.ec2.Instance("webServer", {
                         owner: "root",
                         group: "root",
                     },
-                    "/home/ec2-user/start-application": {
-                        content: renderConfigFile("./files/start-application", config),
+                    "/home/ec2-user/start_application": {
+                        content: renderConfigFile("./files/start_application", config),
                         mode: "000500",
                         owner: "root",
                         group: "root",
@@ -96,19 +96,24 @@ const webServer = new aws.ec2.Instance("webServer", {
                         command: "/tmp/install_application > /var/log/install_application.log",
                     },
                     "02_configure_reboot": {
-                        command: "echo /home/ec2-user/start-application >> /etc/rc.local",
+                        command: "echo /home/ec2-user/start_application >> /etc/rc.local",
                     },
                     "03_start_application": {
-                        command: "/home/ec2-user/start-application",
+                        command: "/home/ec2-user/start_application > var/log/start_application.log",
                     },
+                    /*
                     "04_cleanup": {
                         command: "rm /tmp/install_application",
                     },
+                     */
                 },
             },
         },
     ),
 });
 
-// Expor the URL for our newly created Rails application.
+// Export the VM IP in case we want to SSH.
+export let vmIP = webServer.publicIp;
+
+// Export the URL for our newly created Rails application.
 export let websiteURL = webServer.publicDns.apply(url => `http://${url}/notes`);

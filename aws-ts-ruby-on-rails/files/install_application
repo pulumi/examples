@@ -1,5 +1,5 @@
 #!/bin/bash -e
-source /etc/profile.d/rvm.sh
+source /etc/profile.d/rvm.sh || true
 rvm use 2.3.1
 export HOME=/home/ec2-user
 export PATH=$PATH:/usr/local/bin
@@ -15,7 +15,8 @@ if pgrep ruby &> /dev/null ; then pkill -TERM ruby ; fi
 # Create a new application, with therubyracer javascript library
 rails new sample -d mysql --skip-spring --skip-bundle --force
 cd /home/ec2-user/sample
-sed -i 's/^# \\(.*therubyracer.*$\\)/\\1/' Gemfile
+sed -i 's/^# \(.*mini_racer.*$\)/\1/' Gemfile
+sed -i 's/^# \(.*therubyracer.*$\)/\1/' Gemfile
 bundle install
 
 # Create a sample scoffold
