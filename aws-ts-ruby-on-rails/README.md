@@ -54,7 +54,13 @@ After cloning this repo, from this working directory, run these commands:
 5. Visit your new website by entering the websiteURL into your browser, or running:
 
     ```bash
-    $ curl curl $(pulumi stack output websiteURL)
+    $ curl $(pulumi stack output websiteURL)
+    ```
+
+    If you've configured an SSH key, you can also SSH into the webserver VM easily:
+
+    ```bash
+    $ ssh -i <your-key>.pem ec2-user@$(pulumi stack output vmIP)
     ```
 
 6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your VM.

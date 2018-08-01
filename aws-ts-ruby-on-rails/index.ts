@@ -1,6 +1,6 @@
 import * as aws from "@pulumi/aws";
-import * as ami from "./ami";
 import * as config from "./config";
+import { getLinuxAmi } from "pawsami";
 import { createUserData, renderConfigFile } from "pcloudinit";
 
 const webSg = new aws.ec2.SecurityGroup("webServerSecurityGroup", {
@@ -15,7 +15,7 @@ const webSg = new aws.ec2.SecurityGroup("webServerSecurityGroup", {
 });
 
 const webServer = new aws.ec2.Instance("webServer", {
-    ami: ami.get(aws.config.requireRegion(), config.instanceType),
+    ami: getLinuxAmi(config.instanceType),
     instanceType: config.instanceType,
     securityGroups: [ webSg.name ],
     keyName: config.keyName,
