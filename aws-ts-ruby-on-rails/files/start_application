@@ -1,0 +1,9 @@
+#!/bin/bash -e
+source /etc/profile.d/rvm.sh || true
+rvm use 2.3.1
+export HOME=/home/ec2-user
+export PATH=$PATH:/usr/local/bin
+cd /home/ec2-user/sample
+
+# Startup the application
+rails server --binding 0.0.0.0 -p 80 -d

@@ -1,0 +1,17 @@
+{
+    "name": "aws-ec2-rails",
+    "version": "0.1.0",
+    "main": "bin/index.js",
+    "typings": "bin/index.d.ts",
+    "scripts": {
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "typescript": "^2.7.2"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^0.14.0",
+        "@pulumi/pulumi": "^0.14.0",
+        "pcloudinit": "^0.1.0"
+    }
+}

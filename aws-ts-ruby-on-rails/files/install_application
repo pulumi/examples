@@ -1,0 +1,27 @@
+#!/bin/bash -e
+source /etc/profile.d/rvm.sh || true
+rvm use 2.3.1
+export HOME=/home/ec2-user
+export PATH=$PATH:/usr/local/bin
+cd /home/ec2-user
+
+# Kill the rails server if it is running to allow update
+if pgrep ruby &> /dev/null ; then pkill -TERM ruby ; fi
+
+# This sample template creates a new application inline
+# Typically you would use files and/or sources to download
+# your application package and perform any configuration here.
+
+# Create a new application, with therubyracer javascript library
+rails new sample -d mysql --skip-spring --skip-bundle --force
+cd /home/ec2-user/sample
+sed -i 's/^# \(.*mini_racer.*$\)/\1/' Gemfile
+sed -i 's/^# \(.*therubyracer.*$\)/\1/' Gemfile
+bundle install
+
+# Create a sample scoffold
+rails generate scaffold Note title:string body:text --force
+
+# Configure the database connection
+mv /tmp/database.yml config
+rake db:create db:migrate
