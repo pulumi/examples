@@ -17,7 +17,6 @@
     },
     "files": [
         "index.ts",
-        "config.ts",
-        "init.ts"
+        "config.ts"
     ]
 }

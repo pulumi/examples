@@ -7,13 +7,11 @@
         "build": "tsc"
     },
     "devDependencies": {
-        "@types/mustache": "^0.8.31",
         "typescript": "^2.7.2"
     },
     "dependencies": {
         "@pulumi/aws": "^0.14.0",
         "@pulumi/pulumi": "^0.14.0",
-        "async-file": "^2.0.2",
-        "mustache": "^2.3.0"
+        "pcloudinit": "^0.1.0"
     }
 }

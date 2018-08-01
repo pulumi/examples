@@ -1,7 +1,7 @@
 import * as aws from "@pulumi/aws";
 import * as ami from "./ami";
 import * as config from "./config";
-import { createUserData, renderConfigFile } from "./init";
+import { createUserData, renderConfigFile } from "pcloudinit";
 
 const webSg = new aws.ec2.SecurityGroup("webServerSecurityGroup", {
     description: "Enable HTTP and SSH access",
@@ -101,11 +101,9 @@ const webServer = new aws.ec2.Instance("webServer", {
                     "03_start_application": {
                         command: "/home/ec2-user/start_application > var/log/start_application.log",
                     },
-                    /*
                     "04_cleanup": {
                         command: "rm /tmp/install_application",
                     },
-                     */
                 },
             },
         },
