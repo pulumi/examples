@@ -1,4 +1,5 @@
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 const region = aws.config.requireRegion();
 
@@ -65,29 +66,43 @@ const sfnRolePolicy = new aws.iam.RolePolicy("sfnRolePolicy", {
     })
 });
 
-const helloWorldFunction = new aws.serverless.Function(
-    "helloWorldFunction",
+const helloFunction = new aws.serverless.Function(
+    "helloFunction",
     { role: lambdaRole },
     (event, context, callback) => {
-        callback(null, "Hello world!");
+        callback(null, "Hello");
     }
+);
+
+const worldFunction = new aws.serverless.Function(
+  "worldFunction",
+  {role: lambdaRole},
+  (event, context, callback) => {
+    callback(null, `${event} World!`);
+  }
 );
 
 const stateMachine = new aws.sfn.StateMachine("stateMachine", {
     roleArn: sfnRole.arn,
-    definition: helloWorldFunction.lambda.arn.apply(lambdaArn => {
-        return JSON.stringify({
-            "Comment": "A Hello World example of the Amazon States Language using an AWS Lambda Function",
-            "StartAt": "HelloWorld",
-            "States": {
-                "HelloWorld": {
-                    "Type": "Task",
-                    "Resource": lambdaArn,
-                    "End": true
-                }
-            }
-        });
-    }),
+    definition: pulumi.all([helloFunction.lambda.arn, worldFunction.lambda.arn])
+      .apply(([helloArn, worldArn]) => {
+      return JSON.stringify({
+        "Comment": "A Hello World example of the Amazon States Language using two AWS Lambda Functions",
+        "StartAt": "Hello",
+        "States": {
+          "Hello": {
+            "Type": "Task",
+            "Resource": helloArn,
+            "Next": "World"
+          },
+          "World": {
+            "Type": "Task",
+            "Resource": worldArn,
+            "End": true
+          }
+        }
+      });
+    })
 });
 
 exports.stateMachineArn = stateMachine.id;
