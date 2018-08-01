@@ -12,6 +12,7 @@
     "dependencies": {
         "@pulumi/aws": "^0.14.0",
         "@pulumi/pulumi": "^0.14.0",
+        "pawsami": "^0.1.1",
         "pcloudinit": "^0.1.0"
     }
 }
