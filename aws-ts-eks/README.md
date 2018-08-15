@@ -35,8 +35,22 @@ After cloning this repo, from this working directory, run these commands:
 2. Set the required configuration variables for this program:
 
     ```bash
-    $ pulumi config set aws:region us-east-1
+    $ pulumi config set aws:region us-west-2
     ```
+
+   We recommend using `us-west-2` to host your EKS cluster as other regions (notably `us-east-1`) may have capacity
+   issues that prevent EKS clusters from creating:
+
+	```
+	Diagnostics:
+	  aws:eks:Cluster: eksCluster
+		error: Plan apply failed: creating urn:pulumi:aws-ts-eks-example::aws-ts-eks::EKSCluster$aws:eks/cluster:Cluster::eksCluster: error creating EKS Cluster (eksCluster-233c968): UnsupportedAvailabilityZoneException: Cannot create cluster 'eksCluster-233c968' because us-east-1a, the targeted availability zone, does not currently have sufficient capacity to support the cluster. Retry and choose from these availability zones: us-east-1b, us-east-1c, us-east-1d
+			status code: 400, request id: 9f031e89-a0b0-11e8-96f8-534c1d26a353
+	```
+
+	Due to limitations in the Pulumi AWS Network abstraction, the only workaround for this issue is to deploy into an
+	entirely different region. https://github.com/pulumi/pulumi-aws-infra/issues/32 tracks adding an explicit list of
+	availability zones to the Network abstraction in order to improve this experience.
 
 3. Stand up the EKS cluster, which will also deploy the Kubernetes Dashboard:
 
@@ -68,15 +82,15 @@ After cloning this repo, from this working directory, run these commands:
 
         Data
         ====
+        token:      <authentication_token>
         ca.crt:     1025 bytes
         namespace:  11 bytes
-        token:      <authentication_token>
         ```
 
     - Run the kubectl proxy:
 
         ```bash
-        $ KUBECONFGIG=./kubeconfig.json kubectl proxy
+        $ KUBECONFIG=./kubeconfig.json kubectl proxy
         ```
 
     - Open `http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/` in a web
@@ -89,7 +103,7 @@ After cloning this repo, from this working directory, run these commands:
    must be set up in order for the chart to deploy; see the "Prerequisites" section for details.
 
     ```typescript
-    import * as helm from "@pulumi/kubernetes/helm"
+    import * as helm from "@pulumi/kubernetes/helm";
 
     // ... existing code here ...
 
@@ -107,10 +121,10 @@ After cloning this repo, from this working directory, run these commands:
             postgresPassword: "some-password",
             // Expose the postgres server via a load balancer.
             service: {
-                type: "LoadBalanacer",
+                type: "LoadBalancer",
             },
         },
-    }, { provider: myk8s });
+    }, { providers: { kubernetes: myk8s } });
     ```
 
     Once the chart has been deployed, you can find its public, load-balanced endpoint via the Kubernetes Dashboard.

@@ -284,7 +284,7 @@ export class EKSCluster extends pulumi.ComponentResource {
         // Create the Kubernetes provider we'll use to manage the config map we need to allow worker nodes to access
         // the EKS cluster.
         const k8sProvider = new k8s.Provider("eks-k8s", {
-            kubeconfig: myKubeconfig.apply(c => JSON.stringify(c)),
+            kubeconfig: myKubeconfig.apply(JSON.stringify),
         }, { parent: this });
 
         // Enable access to the EKS cluster for worker nodes.
