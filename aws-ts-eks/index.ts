@@ -11,7 +11,7 @@ const instanceType = (config.get("instanceType") || "m4.large") as aws.ec2.Insta
 // Create a VPC for our cluster.
 const network = new awsinfra.Network("eksNetwork");
 
-// Create the EKS cluster itself.
+// Create the EKS cluster itself, including a "gp2"-backed StorageClass and a dpeloyment of the Kubernetes dashboard.
 const cluster = new EKSCluster("eksCluster", {
     vpcId: network.vpcId,
     subnetIds: network.subnetIds,
