@@ -10,9 +10,10 @@ To deploy your infrastructure, follow the below steps.
 ### Prerequisites
 
 1. [Install Pulumi](https://pulumi.io/install)
-2. [Configure AWS Credentials](https://pulumi.io/install/aws.html)
+2. [Install Node.js 8.11.3](https://nodejs.org/en/download/)
+3. [Configure AWS Credentials](https://pulumi.io/install/aws.html)
 
-If you'd like to follow the optional instructions in step 6 in order to deploy a Helm chart into your cluster, you'll
+If you'd like to follow the optional instructions in step 7 in order to deploy a Helm chart into your cluster, you'll
 also need to set up the Helm client:
 
 1. [Install the Helm client binaries](https://docs.helm.sh/using_helm/#installing-helm)
@@ -26,13 +27,19 @@ also need to set up the Helm client:
 
 After cloning this repo, from this working directory, run these commands:
 
-1. Create a new stack, which is an isolated deployment target for this example:
+1. Install the required Node.js packages:
+
+	```bash
+	$ npm install
+	```
+
+2. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
     $ pulumi stack init
     ```
 
-2. Set the required configuration variables for this program:
+3. Set the required configuration variables for this program:
 
     ```bash
     $ pulumi config set aws:region us-west-2
@@ -52,19 +59,19 @@ After cloning this repo, from this working directory, run these commands:
 	entirely different region. https://github.com/pulumi/pulumi-aws-infra/issues/32 tracks adding an explicit list of
 	availability zones to the Network abstraction in order to improve this experience.
 
-3. Stand up the EKS cluster, which will also deploy the Kubernetes Dashboard:
+4. Stand up the EKS cluster, which will also deploy the Kubernetes Dashboard:
 
     ```bash
     $ pulumi up
     ```
 
-4. After 10-15 minutes, your cluster will be ready, and the kubeconfig JSON you'll use to connect to the cluster will
+5. After 10-15 minutes, your cluster will be ready, and the kubeconfig JSON you'll use to connect to the cluster will
    be available as an output. You can save this kubeconfig to a file like so:
 
     ```bash
     $ pulumi stack output kubeconfig >kubeconfig.json
     ```
-5. You can now connect to the Kubernetes Dashboard by fetching an authentication token and starting the kubectl proxy.
+6. You can now connect to the Kubernetes Dashboard by fetching an authentication token and starting the kubectl proxy.
 
     - Fetch an authentication token:
 
@@ -97,7 +104,7 @@ After cloning this repo, from this working directory, run these commands:
       browser.
     - Choose `Token` authentication, paste the token retrieved earlier into the `Token` field, and sign in.
 
-6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your VM.
+7. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your VM.
    For example, in order to deploy a Helm chart into your cluster, simply import the `@pulumi/kubernetes/helm` package,
    add a `Chart` resource that targets the EKS cluster to `index.ts`, and run `pulumi up`. Note that the Helm client
    must be set up in order for the chart to deploy; see the "Prerequisites" section for details.
@@ -129,7 +136,7 @@ After cloning this repo, from this working directory, run these commands:
 
     Once the chart has been deployed, you can find its public, load-balanced endpoint via the Kubernetes Dashboard.
 
-7. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+8. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
     ```bash
     $ pulumi destroy --yes
