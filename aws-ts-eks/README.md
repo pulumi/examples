@@ -12,7 +12,7 @@ To deploy your infrastructure, follow the below steps.
 1. [Install Pulumi](https://pulumi.io/install)
 2. [Install Node.js 8.11.3](https://nodejs.org/en/download/)
 3. [Configure AWS Credentials](https://pulumi.io/install/aws.html)
-4. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html)
+4. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html#get-started-kubectl)
 
 If you'd like to follow the optional instructions in step 7 in order to deploy a Helm chart into your cluster, you'll
 also need to set up the Helm client:
@@ -56,9 +56,7 @@ After cloning this repo, from this working directory, run these commands:
 			status code: 400, request id: 9f031e89-a0b0-11e8-96f8-534c1d26a353
 	```
 
-	Due to limitations in the Pulumi AWS Network abstraction, the only workaround for this issue is to deploy into an
-	entirely different region. https://github.com/pulumi/pulumi-aws-infra/issues/32 tracks adding an explicit list of
-	availability zones to the Network abstraction in order to improve this experience.
+	We are tracking enabling the creation of VPCs limited to specific AZs to unblock this in `us-east-1`: pulumi/pulumi-aws-infra#32
 
 4. Stand up the EKS cluster, which will also deploy the Kubernetes Dashboard:
 
@@ -105,7 +103,7 @@ After cloning this repo, from this working directory, run these commands:
       browser.
     - Choose `Token` authentication, paste the token retrieved earlier into the `Token` field, and sign in.
 
-7. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your VM.
+7. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
    For example, in order to deploy a Helm chart into your cluster, simply import the `@pulumi/kubernetes/helm` package,
    add a `Chart` resource that targets the EKS cluster to `index.ts`, and run `pulumi up`. Note that the Helm client
    must be set up in order for the chart to deploy; see the "Prerequisites" section for details.

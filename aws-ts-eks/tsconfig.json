@@ -20,6 +20,6 @@
     },
     "files": [
         "index.ts",
-    	"serviceRole.ts"
+        "serviceRole.ts"
     ]
 }
