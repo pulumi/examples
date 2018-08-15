@@ -30,9 +30,9 @@ After cloning this repo, from this working directory, run these commands:
 
 1. Install the required Node.js packages:
 
-	```bash
-	$ npm install
-	```
+    ```bash
+    $ npm install
+    ```
 
 2. Create a new stack, which is an isolated deployment target for this example:
 
@@ -49,14 +49,14 @@ After cloning this repo, from this working directory, run these commands:
    We recommend using `us-west-2` to host your EKS cluster as other regions (notably `us-east-1`) may have capacity
    issues that prevent EKS clusters from creating:
 
-	```
-	Diagnostics:
-	  aws:eks:Cluster: eksCluster
-		error: Plan apply failed: creating urn:pulumi:aws-ts-eks-example::aws-ts-eks::EKSCluster$aws:eks/cluster:Cluster::eksCluster: error creating EKS Cluster (eksCluster-233c968): UnsupportedAvailabilityZoneException: Cannot create cluster 'eksCluster-233c968' because us-east-1a, the targeted availability zone, does not currently have sufficient capacity to support the cluster. Retry and choose from these availability zones: us-east-1b, us-east-1c, us-east-1d
-			status code: 400, request id: 9f031e89-a0b0-11e8-96f8-534c1d26a353
-	```
+    ```
+    Diagnostics:
+      aws:eks:Cluster: eksCluster
+        error: Plan apply failed: creating urn:pulumi:aws-ts-eks-example::aws-ts-eks::EKSCluster$aws:eks/cluster:Cluster::eksCluster: error creating EKS Cluster (eksCluster-233c968): UnsupportedAvailabilityZoneException: Cannot create cluster 'eksCluster-233c968' because us-east-1a, the targeted availability zone, does not currently have sufficient capacity to support the cluster. Retry and choose from these availability zones: us-east-1b, us-east-1c, us-east-1d
+            status code: 400, request id: 9f031e89-a0b0-11e8-96f8-534c1d26a353
+    ```
 
-	We are tracking enabling the creation of VPCs limited to specific AZs to unblock this in `us-east-1`: pulumi/pulumi-aws-infra#32
+    We are tracking enabling the creation of VPCs limited to specific AZs to unblock this in `us-east-1`: pulumi/pulumi-aws-infra#32
 
 4. Stand up the EKS cluster, which will also deploy the Kubernetes Dashboard:
 
@@ -70,6 +70,14 @@ After cloning this repo, from this working directory, run these commands:
     ```bash
     $ pulumi stack output kubeconfig >kubeconfig.json
     ```
+
+    Once you have this file in hand, you can interact with your new cluster as usual via `kubectl`:
+
+    ```bash
+    $ KUBECONFIG=./kubeconfig.json kubectl get nodes
+    ```
+
+
 6. You can now connect to the Kubernetes Dashboard by fetching an authentication token and starting the kubectl proxy.
 
     - Fetch an authentication token:
