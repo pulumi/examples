@@ -1,0 +1,123 @@
+# AWS EKS Cluster
+
+This example deploys an EKS Kubernetes cluster with an EBS-backed StorageClass and deploys the Kubernetes Dashboard
+into the cluster.
+
+## Deploying the App
+
+To deploy your infrastructure, follow the below steps.
+
+### Prerequisites
+
+1. [Install Pulumi](https://pulumi.io/install)
+2. [Configure AWS Credentials](https://pulumi.io/install/aws.html)
+
+If you'd like to follow the optional instructions in step 6 in order to deploy a Helm chart into your cluster, you'll
+also need to set up the Helm client:
+
+1. [Install the Helm client binaries](https://docs.helm.sh/using_helm/#installing-helm)
+2. Initialize the Helm client:
+
+    ```bash
+    $ helm init --client-only
+    ```
+
+### Steps
+
+After cloning this repo, from this working directory, run these commands:
+
+1. Create a new stack, which is an isolated deployment target for this example:
+
+    ```bash
+    $ pulumi stack init
+    ```
+
+2. Set the required configuration variables for this program:
+
+    ```bash
+    $ pulumi config set aws:region us-east-1
+    ```
+
+3. Stand up the EKS cluster, which will also deploy the Kubernetes Dashboard:
+
+    ```bash
+    $ pulumi up
+    ```
+
+4. After 10-15 minutes, your cluster will be ready, and the kubeconfig JSON you'll use to connect to the cluster will
+   be available as an output. You can save this kubeconfig to a file like so:
+
+    ```bash
+    $ pulumi stack output kubeconfig >kubeconfig.json
+    ```
+5. You can now connect to the Kubernetes Dashboard by fetching an authentication token and starting the kubectl proxy.
+
+    - Fetch an authentication token:
+
+        ```bash
+        $ KUBECONFIG=./kubeconfig.json kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}'
+        eks-admin-token-b5zv4
+        $ KUBECONFIG=./kubeconfig.json kubectl -n kube-system describe secret eks-admin-token-b5zv4
+        Name:         eks-admin-token-b5zv4
+        Namespace:    kube-system
+        Labels:       <none>
+        Annotations:  kubernetes.io/service-account.name=eks-admin
+                      kubernetes.io/service-account.uid=bcfe66ac-39be-11e8-97e8-026dce96b6e8
+
+        Type:  kubernetes.io/service-account-token
+
+        Data
+        ====
+        ca.crt:     1025 bytes
+        namespace:  11 bytes
+        token:      <authentication_token>
+        ```
+
+    - Run the kubectl proxy:
+
+        ```bash
+        $ KUBECONFGIG=./kubeconfig.json kubectl proxy
+        ```
+
+    - Open `http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/` in a web
+      browser.
+    - Choose `Token` authentication, paste the token retrieved earlier into the `Token` field, and sign in.
+
+6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your VM.
+   For example, in order to deploy a Helm chart into your cluster, simply import the `@pulumi/kubernetes/helm` package,
+   add a `Chart` resource that targets the EKS cluster to `index.ts`, and run `pulumi up`. Note that the Helm client
+   must be set up in order for the chart to deploy; see the "Prerequisites" section for details.
+
+    ```typescript
+    import * as helm from "@pulumi/kubernetes/helm"
+
+    // ... existing code here ...
+
+    const myk8s = new k8s.Provider("myk8s", {
+        kubeconfig: cluster.kubeconfig.apply(JSON.stringify),
+    });
+
+    const postgres = new helm.v2.Chart("postgres", {
+        // stable/postgresql@0.15.0
+        repo: "stable",
+        chart: "postgresql",
+        version: "0.15.0",
+        values: {
+            // Use a stable password.
+            postgresPassword: "some-password",
+            // Expose the postgres server via a load balancer.
+            service: {
+                type: "LoadBalanacer",
+            },
+        },
+    }, { provider: myk8s });
+    ```
+
+    Once the chart has been deployed, you can find its public, load-balanced endpoint via the Kubernetes Dashboard.
+
+7. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+
+    ```bash
+    $ pulumi destroy --yes
+    $ pulumi stack rm --yes
+    ```
