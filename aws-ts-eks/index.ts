@@ -6,7 +6,7 @@ import * as k8s from "@pulumi/kubernetes";
 import { EKSCluster } from "./cluster";
 
 const config = new pulumi.Config();
-const instanceType = (config.get("instanceType") || "m4.large") as aws.ec2.InstanceType;
+const instanceType = (config.get("instanceType") || "t2.medium") as aws.ec2.InstanceType;
 
 // Create a VPC for our cluster.
 const network = new awsinfra.Network("eksNetwork");

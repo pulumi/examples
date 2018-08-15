@@ -398,11 +398,18 @@ systemctl restart kubelet kube-proxy
             minSize: args.minSize,
             vpcZoneIdentifiers: args.subnetIds,
 
-            tags: [{
-                key: eksCluster.name.apply(n => `kubernetes.io/cluster/${n}`),
-                value: "owned",
-                propagateAtLaunch: true,
-            }]
+            tags: [
+                {
+                    key: eksCluster.name.apply(n => `kubernetes.io/cluster/${n}`),
+                    value: "owned",
+                    propagateAtLaunch: true,
+                },
+                {
+                    key: "Name",
+                    value: eksCluster.name.apply(n => `${n}-worker`),
+                    propagateAtLaunch: true,
+                }
+            ]
 
         }, { parent: this, dependsOn: eksNodeAccess });
 
