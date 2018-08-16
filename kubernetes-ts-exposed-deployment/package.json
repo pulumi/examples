@@ -1,0 +1,10 @@
+{
+    "name": "exposed-deployment",
+    "devDependencies": {
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "latest",
+        "@pulumi/kubernetes": "latest"
+    }
+}
