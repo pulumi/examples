@@ -1,21 +1,14 @@
-import * as pulumi from "@pulumi/pulumi";
-import * as aws from "@pulumi/aws";
 import * as awsinfra from "@pulumi/aws-infra";
-import * as k8s from "@pulumi/kubernetes";
-
-import { EKSCluster } from "./cluster";
-
-const config = new pulumi.Config();
-const instanceType = (config.get("instanceType") || "t2.medium") as aws.ec2.InstanceType;
+import * as eks from "@pulumi/eks";
 
 // Create a VPC for our cluster.
-const network = new awsinfra.Network("eksNetwork");
+const vpc = new awsinfra.Network("vpc");
 
 // Create the EKS cluster itself, including a "gp2"-backed StorageClass and a dpeloyment of the Kubernetes dashboard.
-const cluster = new EKSCluster("eksCluster", {
-    vpcId: network.vpcId,
-    subnetIds: network.subnetIds,
-    instanceType: instanceType,
+const cluster = new eks.Cluster("cluster", {
+    vpcId: vpc.vpcId,
+    subnetIds: vpc.subnetIds,
+    instanceType: "t2.medium",
     desiredCapacity: 2,
     minSize: 1,
     maxSize: 2,
