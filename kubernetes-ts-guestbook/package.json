@@ -1,18 +1,13 @@
 {
   "name": "guestbook",
   "version": "0.1.0",
-  "main": "bin/index.js",
-  "typings": "bin/index.d.ts",
-  "scripts": {
-    "build": "tsc"
-  },
   "devDependencies": {
     "@types/node": "^9.3.0",
     "typescript": "^2.5.3"
   },
   "dependencies": {
-    "@pulumi/kubernetes": "^0.14.0",
-    "@pulumi/pulumi": "^0.14.0"
+    "@pulumi/kubernetes": "^0.15.0",
+    "@pulumi/pulumi": "^0.15.0"
   },
   "license": "MIT"
 }

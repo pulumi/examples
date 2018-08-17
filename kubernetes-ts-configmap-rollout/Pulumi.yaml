@@ -1,0 +1,3 @@
+name: configmap-rollout
+description: A Deployment that mounts a ConfigMap; updating the data in the ConfigMap triggers a rollout of the Deployment
+runtime: nodejs

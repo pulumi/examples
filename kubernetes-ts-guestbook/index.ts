@@ -2,155 +2,80 @@
 
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
+import * as util from "./util";
 
-// REDIS MASTER
+// Minikube does not implement services of type `LoadBalancer`; require the user to specify if we're
+// running on minikube, and if so, create only services of type ClusterIP.
+let config = new pulumi.Config("guestbook");
+let isMinikube = config.require("isMinikube");
 
-let redisMasterLabels = { app: "redis", tier: "backend", role: "master"};
+//
+// REDIS MASTER.
+//
+
+let redisMasterDeployment = util.deployContainer("redis-master", 1, {
+    name: "master",
+    image: "k8s.gcr.io/redis:e2e",
+    resources: { requests: { cpu: "100m", memory: "100Mi" } },
+    ports: [{ containerPort: 6379 }]
+});
 let redisMasterService = new k8s.core.v1.Service("redis-master", {
     metadata: {
-        name: "redis-master",
-        labels: redisMasterLabels,
+        labels: redisMasterDeployment.metadata.apply(meta => meta.labels)
     },
     spec: {
         ports: [{ port: 6379, targetPort: 6379 }],
-        selector: redisMasterLabels,
-    },
-});
-let redisMasterDeployment = new k8s.apps.v1.Deployment("redis-master", {
-    metadata: {
-        name: "redis-master",
-    },
-    spec: {
-        selector: {
-            matchLabels: redisMasterLabels
-        },
-        replicas: 1,
-        template: {
-            metadata: {
-                labels: redisMasterLabels,
-            },
-            spec: {
-                containers: [{
-                    name: "master",
-                    image: "k8s.gcr.io/redis:e2e",
-                    resources: {
-                        requests: {
-                            cpu: "100m",
-                            memory: "100Mi",
-                        },
-                    },
-                    ports: [{
-                        containerPort: 6379,
-                    }],
-                }],
-            },
-        },
-    },
+        selector: redisMasterDeployment.spec.apply(spec => spec.template.metadata.labels)
+    }
 });
 
-// REDIS SLAVE
-let redisSlaveLabels = { app: "redis", tier: "backend", role: "slave" };
+//
+// REDIS SLAVE.
+//
+
+let redisSlaveDeployment = util.deployContainer("redis-slave", 1, {
+    name: "slave",
+    image: "gcr.io/google_samples/gb-redisslave:v1",
+    resources: { requests: { cpu: "100m", memory: "100Mi" } },
+    // If your cluster config does not include a dns service, then to instead access an environment
+    // variable to find the master service's host, change `value: "dns"` to read `value: "env"`.
+    env: [{ name: "GET_HOSTS_FROM", value: "dns" }],
+    ports: [{ containerPort: 6379 }]
+});
 let redisSlaveService = new k8s.core.v1.Service("redis-slave", {
-    metadata: {
-        name: "redis-slave",
-        labels: redisSlaveLabels,
-    },
+    metadata: { labels: redisSlaveDeployment.metadata.apply(meta => meta.labels) },
     spec: {
         ports: [{ port: 6379, targetPort: 6379 }],
-        selector: redisSlaveLabels,
-    },
-});
-let redisSlaveDeployment = new k8s.apps.v1.Deployment("redis-slave", {
-    metadata: {
-        name: "redis-slave",
-    },
-    spec: {
-        selector: {
-            matchLabels: redisSlaveLabels
-        },
-        replicas: 1,
-        template: {
-            metadata: {
-                labels: redisSlaveLabels,
-            },
-            spec: {
-                containers: [{
-                    name: "slave",
-                    image: "gcr.io/google_samples/gb-redisslave:v1",
-                    resources: {
-                        requests: {
-                            cpu: "100m",
-                            memory: "100Mi",
-                        },
-                    },
-                    env: [{
-                        name: "GET_HOSTS_FROM",
-                        value: "dns",
-                        // If your cluster config does not include a dns service, then to instead access an environment
-                        // variable to find the master service's host, comment out the 'value: dns' line above, and
-                        // uncomment the line below:
-                        // value: "env"
-                    }],
-                    ports: [{
-                        containerPort: 6379,
-                    }],
-                }],
-            },
-        },
-    },
+        selector: redisSlaveDeployment.spec.apply(spec => spec.template.metadata.labels)
+    }
 });
 
+//
 // FRONTEND
-let frontendLabels = { app: "guestbook", tier: "frontend" };
+//
+
+let frontendDeployment = util.deployContainer("frontend", 3, {
+    name: "php-redis",
+    image: "gcr.io/google-samples/gb-frontend:v4",
+    resources: { requests: { cpu: "100m", memory: "100Mi" } },
+    // If your cluster config does not include a dns service, then to instead access an environment
+    // variable to find the master service's host, change `value: "dns"` to read `value: "env"`.
+    env: [{ name: "GET_HOSTS_FROM", value: "dns" /* value: "env"*/ }],
+    ports: [{ containerPort: 80 }]
+});
 let frontendService = new k8s.core.v1.Service("frontend", {
-    metadata: {
-        name: "frontend",
-        labels: frontendLabels,
-    },
+    metadata: { labels: frontendDeployment.metadata.apply(meta => meta.labels) },
     spec: {
-        // If your cluster does not support `LoadBalancer` (such as on minikube), comment out the it, uncomment the
-        // following to automatically create an external load-balanced IP for the frontend service.
-        type: "LoadBalancer",
+        type: isMinikube === "true" ? "ClusterIP" : "LoadBalancer",
         ports: [{ port: 80 }],
-        selector: frontendLabels,
-    },
+        selector: frontendDeployment.spec.apply(spec => spec.template.metadata.labels)
+    }
 });
-let frontendDeployment = new k8s.apps.v1.Deployment("frontend", {
-    metadata: {
-        name: "frontend",
-    },
-    spec: {
-        selector: {
-            matchLabels: frontendLabels
-        },
-        replicas: 3,
-        template: {
-            metadata: {
-                labels: frontendLabels,
-            },
-            spec: {
-                containers: [{
-                    name: "php-redis",
-                    image: "gcr.io/google-samples/gb-frontend:v4",
-                    resources: {
-                        requests: {
-                            cpu: "100m",
-                            memory: "100Mi",
-                        },
-                    },
-                    env: [{
-                        name: "GET_HOSTS_FROM",
-                        value: "dns",
-                        // If your cluster config does not include a dns service, then to instead access an environment
-                        // variable to find the master service's host, comment out the 'value: dns' line above, and
-                        // uncomment the line below:
-                        // value: "env"
-                    }],
-                    ports: [{
-                        containerPort: 80,
-                    }],
-                }],
-            },
-        },
-    },
-});
+
+// Export the frontend IP.
+export let frontendIp: pulumi.Output<string>;
+if (isMinikube === "true") {
+    frontendIp = frontendService.spec.apply(spec => spec.clusterIP);
+} else {
+    frontendIp = frontendService.status.apply(status => status.loadBalancer.ingress[0].ip);
+}
