@@ -7,6 +7,6 @@
     "dependencies": {
         "@pulumi/pulumi": "^0.15.0",
         "@pulumi/aws-infra": "^0.15.0",
-        "@pulumi/eks": "^0.15.0-dev"
+        "@pulumi/eks": "dev"
     }
 }
