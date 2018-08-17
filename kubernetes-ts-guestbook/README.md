@@ -8,119 +8,63 @@ Pulumi and `@pulumi/kubernetes`.
 Follow the steps in [Pulumi Installation and Setup](https://pulumi.io/install/) and [Configuring Pulumi
 Kubernetes](https://pulumi.io/reference/kubernetes.html#configuration) to get setup with Pulumi and Kubernetes.
 
-> *Note*: The code in this repo assumes you are deploying to a cluster that supports the
-> [`LoadBalancer`](https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer) service type.
-> This includes most cloud providers as well as [Docker for Mac Edge w/
-> Kubernetes](https://docs.docker.com/docker-for-mac/kubernetes/). If not (for example if you are targeting `minikube`
-> or your own custom Kubernetes cluster), replace `type: "LoadBalancer"` with `type: "ClusterIP"` in `index.ts`.  See
-> the Kubernetes [Services
-> docs](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types) for more
-> details.
-
 Install dependencies:
 
-```
-$ npm install
-```
-
-Build the Pulumi program:
-
-```
-$ npm run build
+```sh
+npm install
 ```
 
 Create a new stack:
 
-```
+```sh
 $ pulumi stack init
-Enter a stack name: testing
+Enter a stack name: testbook
 ```
 
-Preview the deployment of the application:
+This example will attempt to expose the Guestbook application to the Internet with a `Service` of
+type `LoadBalancer`. Since minikube does not support `LoadBalancer`, the Guestbook application
+already knows to use type `ClusterIP` instead; all you need to do is to tell it whether you're
+deploying to minikube:
 
-``` 
-$ pulumi preview
-Previewing stack 'testing' in the Pulumi Cloud ☁️
-Previewing changes:
-
-pulumi:Stack("guestbook-testing"):     Completed
-kubernetes:Service("frontend"):        + Would create
-kubernetes:Service("redis-slave"):     + Would create
-kubernetes:Service("redis-master"):    + Would create
-kubernetes:Deployment("redis-master"): + Would create
-kubernetes:Deployment("frontend"):     + Would create
-kubernetes:Deployment("redis-slave"):  + Would create
-info: 7 changes previewed:
-    + 7 resources to create
+```sh
+pulumi config set guestbook:isMinikube <value>
 ```
 
 Perform the deployment:
 
-```
-$ pulumi update
-Updating stack 'testing' in the Pulumi Cloud ☁️
+```sh
+$ pulumi up
+Updating stack 'testbook'
 Performing changes:
 
-pulumi:Stack("guestbook-testing"):     Completed
-kubernetes:Service("frontend"):        + Created
-kubernetes:Service("redis-slave"):     + Created
-kubernetes:Service("redis-master"):    + Created
-kubernetes:Deployment("redis-master"): + Created
-kubernetes:Deployment("frontend"):     + Created
-kubernetes:Deployment("redis-slave"):  + Created
+     Type                           Name                Status      Info
+ +   pulumi:pulumi:Stack            guestbook-testbook  created     1 warning
+ +   ├─ kubernetes:apps:Deployment  redis-master        created
+ +   ├─ kubernetes:apps:Deployment  frontend            created
+ +   ├─ kubernetes:apps:Deployment  redis-slave         created
+ +   ├─ kubernetes:core:Service     redis-master        created     1 info message
+ +   ├─ kubernetes:core:Service     redis-slave         created     1 info message
+ +   └─ kubernetes:core:Service     frontend            created     2 info messages
+
+---outputs:---
+frontendIp: "35.232.147.18"
+
 info: 7 changes performed:
     + 7 resources created
-Update duration: 3.535908863s
+Update duration: 40.829381902s
 
-Permalink: https://pulumi.com/pulumi/examples/guestbook/testing/updates/1
+Permalink: https://app.pulumi.com/hausdorff/testbook/updates/1
 ```
 
-The application is now deployed.  Use `kubectl` to see the deployed services.
+And finally - open the application in your browser to see the running application. If you're running
+macOS you can simply run:
 
-```
-$ kubectl get services
-NAME           TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
-frontend       LoadBalancer   10.98.65.192     localhost     80:30235/TCP   51m
-redis-master   ClusterIP      10.99.238.82     <none>        6379/TCP       51m
-redis-slave    ClusterIP      10.111.117.113   <none>        6379/TCP       51m
+```sh
+open $(pulumi stack output frontendIp)
 ```
 
-And finally - open the application in your browser to see the running application.
-
-> *Note*: If you are deploying to a cluster that does not support `type: "LoadBalancer"`, and deployed the example using
-> `type: "ClusterIP"` instead, run `kubectl port-forward svc/frontend 8080:80` to forward the cluster port to the local
+> *Note*: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure
+> to run `kubectl port-forward svc/frontend 8080:80` to forward the cluster port to the local
 > machine and access the service via `localhost:8080`.
 
 ![Guestbook in browser](./imgs/guestbook.png)
-
-Or `curl` it from your CLI:
-
-```
-$ curl localhost:80
-<html ng-app="redis">
-  <head>
-    <title>Guestbook</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
-    <script src="controllers.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.0/ui-bootstrap-tpls.js"></script>
-  </head>
-  <body ng-controller="RedisCtrl">
-    <div style="width: 50%; margin-left: 20px">
-      <h2>Guestbook</h2>
-    <form>
-    <fieldset>
-    <input ng-model="msg" placeholder="Messages" class="form-control" type="text" name="input"><br>
-    <button type="button" class="btn btn-primary" ng-click="controller.onRedis()">Submit</button>
-    </fieldset>
-    </form>
-    <div>
-      <div ng-repeat="msg in messages track by $index">
-        {{msg}}
-      </div>
-    </div>
-    </div>
-  </body>
-</html>
-```
-
