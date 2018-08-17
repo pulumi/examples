@@ -5,9 +5,9 @@ import * as eks from "@pulumi/eks";
 const vpc = new awsinfra.Network("vpc");
 
 // Create the EKS cluster itself, including a "gp2"-backed StorageClass and a dpeloyment of the Kubernetes dashboard.
-const cluster = new EKSCluster("cluster", {
-    vpcId: network.vpcId,
-    subnetIds: network.subnetIds,
+const cluster = new eks.Cluster("cluster", {
+    vpcId: vpc.vpcId,
+    subnetIds: vpc.subnetIds,
     instanceType: "t2.medium",
     desiredCapacity: 2,
     minSize: 1,
