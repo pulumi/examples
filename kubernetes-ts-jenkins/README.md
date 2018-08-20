@@ -63,7 +63,7 @@ info: 6 changes previewed:
 Perform the deployment:
 
 ```
-$ pulumi update --skip-preview
+$ pulumi up --skip-preview
 Updating stack 'kubernetes-ts-jenkins-dev'
      Type    Name    Status        Info
  *   global  global  unchanged

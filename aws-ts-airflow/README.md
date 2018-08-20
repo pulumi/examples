@@ -31,8 +31,7 @@ For more information on how to run this example, see: https://pulumi.io/referenc
     ```
 
 1. Restore NPM modules via `yarn install`.
-1. Build the TypeScript code via `yarn run build`.
-1. Run `pulumi update` to preview and deploy changes.  After the preview is shown you will be
+1. Run `pulumi up` to preview and deploy changes.  After the preview is shown you will be
    prompted if you want to continue or not.
 
 ```

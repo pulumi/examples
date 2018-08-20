@@ -5,4 +5,4 @@ let folder = new s3folder.S3Folder("pulumi-static-site", "./www");
 
 // Export `folder` output properties as stack outputs
 exports.bucketName = folder.bucketName;
-exports.websiteUrl = folder.websiteUrl; 
+exports.websiteUrl = folder.websiteUrl;

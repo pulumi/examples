@@ -118,7 +118,7 @@ info: 2 changes previewed:
       2 resources unchanged
 ```
 
-Running `pulumi update` should similarly look something like this:
+Running `pulumi up` should similarly look something like this:
 
 ```sh
 Updating stack 'configmap-rollout-dev'

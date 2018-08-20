@@ -42,5 +42,5 @@ let frontend = new cloud.Service("voting-app-frontend", {
     },
 });
 
-// Export a variable that will be displayed during 'pulumi update'
+// Export a variable that will be displayed during 'pulumi up'
 export let frontendURL = frontend.endpoints.apply(e => e["votingAppFrontend"][80].hostname);

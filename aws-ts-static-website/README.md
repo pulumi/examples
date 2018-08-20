@@ -11,11 +11,10 @@ This sample uses the following AWS products:
 
 ## Getting Started
 
-Install prerequisites and build the Pulumi program with:
+Install prerequisites with:
 
 ```bash
 npm install
-npm run build
 ```
 
 Configure the Pulumi program. There are several configuration settings that need to be
@@ -33,7 +32,7 @@ set:
 
 The Pulumi program constructs the S3 bucket, and constructs an `aws.s3.BucketObject` object
 for every file in `config.pathToWebsiteContents`. This is essentially tracks every file on
-your static website as a Pulumi-managed resource. So a subsequent `pulumi update` where the
+your static website as a Pulumi-managed resource. So a subsequent `pulumi up` where the
 file's contents have changed will result in an update to the `aws.s3.BucketObject` resource.
 
 Note how the `contentType` property is set by calling the NPM package [mime](https://www.npmjs.com/package/mime).
@@ -114,7 +113,7 @@ changes.
 It may be more efficient to not manage individual files using Pulumi and and instead just use the
 AWS CLI to sync local files with the S3 bucket directly.
 
-Remove the call to `crawlDirectory` and run `pulumi update`. Pulumi will then delete the contents
+Remove the call to `crawlDirectory` and run `pulumi up`. Pulumi will then delete the contents
 of the S3 bucket, and no longer manage their contents. Then do a bulk upload outside of Pulumi
 using the AWS CLI.
 

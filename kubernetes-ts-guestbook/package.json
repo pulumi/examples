@@ -2,11 +2,10 @@
   "name": "guestbook",
   "version": "0.1.0",
   "devDependencies": {
-    "@types/node": "^9.3.0",
-    "typescript": "^2.5.3"
+    "@types/node": "^9.3.0"
   },
   "dependencies": {
-    "@pulumi/kubernetes": "^0.15.0",
+    "@pulumi/kubernetes": "^0.15.1",
     "@pulumi/pulumi": "^0.15.0"
   },
   "license": "MIT"

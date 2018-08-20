@@ -26,10 +26,10 @@ with `***`.
 
 1.  Restore NPM modules via `npm install` or `yarn install`.
 
-1.  Preview and deploy the app via `pulumi update`. The preview will take a few minutes, as it builds a Docker container. A total of 19 resources are created.
+1.  Preview and deploy the app via `pulumi up`. The preview will take a few minutes, as it builds a Docker container. A total of 19 resources are created.
 
     ```
-    $ pulumi update
+    $ pulumi up
     ```
 
 1.  View the endpoint URL, and run curl:

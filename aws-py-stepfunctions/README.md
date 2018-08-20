@@ -11,7 +11,7 @@ $ pulumi stack init stepfunctions-dev
 $ pulumi config set aws:region us-east-2
 
 # Preview and run the deployment
-$ pulumi update
+$ pulumi up
 
 # Start execution using the AWS CLI (or from the console at https://console.aws.amazon.com/states)
 $ aws stepfunctions start-execution --state-machine-arn $(pulumi stack output state_machine_arn)

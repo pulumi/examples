@@ -1,19 +1,13 @@
 {
     "name": "azure-ts-functions",
     "version": "1.0.0",
-    "main": "bin/index.js",
-    "typings": "bin/index.d.ts",
-    "scripts": {
-        "build": "tsc"
-    },
     "devDependencies": {
         "@types/node": "^10.3.3",
-        "azure-functions-ts-essentials": "^1.3.2",
-        "typescript": "^2.9.2"
+        "azure-functions-ts-essentials": "^1.3.2"
     },
     "dependencies": {
-        "@pulumi/azure": "^0.14.0",
-        "@pulumi/pulumi": "^0.14.0",
+        "@pulumi/azure": "^0.15.1",
+        "@pulumi/pulumi": "^0.15.0",
         "azure-storage": "^2.9.0-preview"
     }
 }

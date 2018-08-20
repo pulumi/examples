@@ -37,10 +37,10 @@ After installing the CLI and cloning the repo, `cd` into the directory, and run 
     $ pulumi config set slackToken xoxb-123456789012-Xw937qtWSXJss1lFaKeqFAKE --secret
     ```
 
-4. Deploy your program to AWS using the `pulumi update` command:
+4. Deploy your program to AWS using the `pulumi up` command:
 
    ```
-   $ pulumi update
+   $ pulumi up
    ```
 
    This command  will show you the changes before it makes them.  As soon as you select `yes`, it will begin
@@ -66,7 +66,7 @@ After installing the CLI and cloning the repo, `cd` into the directory, and run 
     2018-07-05T16:46:03.708-07:00[mySlackPoster-queue-subscripti] 2018-07-05T23:46:03.708Z	68b50931-a005-5e85-b5c4-5a890fee5519	Posted SQS message 3caa4069-f549-44d7-8534-6d61840d3420 to Slack channel #general
     ```
 
-7. If you'd like to make some edits, try changing the `index.js` file, and then just run `pulumi update` again.
+7. If you'd like to make some edits, try changing the `index.js` file, and then just run `pulumi up` again.
    Pulumi will detect the minimal set of edits needed to deploy your code.
 
 8. After you're done playing around, you can destroy your program and stack by simply running two commands:

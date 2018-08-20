@@ -66,5 +66,5 @@ do
 
     # Finally, perform the actual update.
     echo "Deploying Pulumi updates:"
-    pulumi update
+    pulumi up
 done

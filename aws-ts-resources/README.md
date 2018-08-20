@@ -10,12 +10,10 @@ $ pulumi config set aws:region us-east-2
 # Install dependencies
 $ npm install
 
-# Compile the TypeScript program
-npm run build
-
 # Preview and run the deployment
-$ pulumi update
+$ pulumi up
 
 # Remove the app
 $ pulumi destroy
+$ pulumi stack rm
 ```
