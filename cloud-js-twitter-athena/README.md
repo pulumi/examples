@@ -37,7 +37,7 @@ Register a new [Twitter app](https://apps.twitter.com/).
 
 1.  Restore NPM modules via `npm install`.
 
-1.  Preview and run the deployment via `pulumi update`. A total of 16 resources are created.
+1.  Preview and run the deployment via `pulumi up`. A total of 16 resources are created.
 
 1.  Run `pulumi stack output` to view output properties (or view the stack on pulumi.com).
 

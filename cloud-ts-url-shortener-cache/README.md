@@ -35,12 +35,10 @@ with `***`.
 
 1. Restore NPM modules via `npm install` or `yarn install`.
 
-1. Compile the program via `tsc` or `npm run build` or `yarn run build`.
-
-1. Preview and run the deployment via `pulumi update`. The operation will take about 5 minutes to complete.
+1. Preview and run the deployment via `pulumi up`. The operation will take about 5 minutes to complete.
 
     ```
-    $ pulumi update
+    $ pulumi up
     Previewing stack 'url-cache-testing'
     ...
 

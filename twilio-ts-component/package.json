@@ -1,17 +1,11 @@
 {
     "name": "twilio-ts-component",
-    "main": "bin/index.js",
-    "typings": "bin/index.d.ts",
-    "scripts": {
-        "build": "tsc"
-    },
     "devDependencies": {
-        "typescript": "^2.7.2",
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/pulumi": "^0.14.0",
-        "@pulumi/aws-serverless": "^0.14.0",
+        "@pulumi/pulumi": "^0.15.0",
+        "@pulumi/aws-serverless": "^0.15.0",
         "twilio": "latest"
     }
 }

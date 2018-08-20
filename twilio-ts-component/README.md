@@ -26,11 +26,9 @@ A sample for interacting with Twilio SMS. This sample includes a custom Componen
 
 1. Restore NPM modules via `npm install`.
 
-1. Compile the program via `tsc` or `npm run build`.
-
-1. Preview and run the deployment via `pulumi update`. 
+1. Preview and run the deployment via `pulumi up`. 
     ```
-    $ pulumi update
+    $ pulumi up
     Previewing update of stack 'url-shortener-dev'
     ...
 

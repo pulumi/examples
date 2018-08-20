@@ -64,7 +64,7 @@ info: 27 changes previewed:
 Perform the deployment:
 
 ```sh
-$ pulumi update
+$ pulumi up
 Updating stack 'testing'
 Performing changes:
 

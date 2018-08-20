@@ -21,11 +21,11 @@ with `***`.
 
 1.  Restore NPM modules via `npm install` or `yarn install`.
 
-1.  Run `pulumi update` to preview and deploy changes.  After the preview is shown you will be
+1.  Run `pulumi up` to preview and deploy changes.  After the preview is shown you will be
     prompted if you want to continue or not.
 
     ```bash
-    $ pulumi update
+    $ pulumi up
     Previewing update of stack 'website-component-testing'
     Previewing changes:
     ...

@@ -23,10 +23,10 @@ with `***`.
 
 1.  Restore NPM modules via `npm install` or `yarn install`.
 
-1.  Run `pulumi update` to preview and deploy changes:
+1.  Run `pulumi up` to preview and deploy changes:
 
     ```
-    $ pulumi update
+    $ pulumi up
     Previewing update of stack 'count-api-testing'
     ...
 

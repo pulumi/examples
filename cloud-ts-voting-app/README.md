@@ -46,15 +46,13 @@ with `***`.
     $ pulumi config set --secret redisPassword S3cr37Password
     ```
 
-### Compile the TypeScript program
+### Install dependencies
 
 1.  Restore NPM modules via `npm install` or `yarn install`.
 
-1.  Compile the program via `tsc` or `npm run build` or `yarn run build`.
-
 ### Preview and deploy
 
-1.  Ensure the Docker daemon is running on your machine, then preview and deploy the program with `pulumi update`. The program deploys 24 resources and takes about 10 minutes to complete.
+1.  Ensure the Docker daemon is running on your machine, then preview and deploy the program with `pulumi up`. The program deploys 24 resources and takes about 10 minutes to complete.
 
 1.  View the stack output properties via `pulumi stack output`. The stack output property `frontendUrl` is the URL and port of the deployed app:
 

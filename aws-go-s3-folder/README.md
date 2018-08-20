@@ -24,10 +24,10 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
     $ go install .
     ```
 
-4.  Run `pulumi update` to preview and deploy changes.
+4.  Run `pulumi up` to preview and deploy changes.
 
     ```bash
-    $ pulumi update
+    $ pulumi up
     Previewing stack 'website-testing'
     Previewing changes:
     ...

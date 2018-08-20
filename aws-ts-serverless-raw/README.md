@@ -19,19 +19,13 @@ $ pulumi config set aws:region us-east-2
 # Install dependencies
 $ npm install
 
-# Compile the TypeScript program
-npm run build
-
 # Build the C# app
 $ cd ./app
 $ dotnet publish
 $ cd ..
 
-# Build the Pulumi program
-$ npm run build
-
 # Preview and run the deployment
-$ pulumi update
+$ pulumi up
 Previewing changes:
 ...
 Performing changes:

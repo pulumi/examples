@@ -24,13 +24,11 @@ with `***`.
 
 1. Restore NPM modules via `npm install` or `yarn install`.
 
-1. Compile the program via `tsc` or `npm run build` or `yarn run build`.
-
-1. Preview and run the deployment via `pulumi update`. The operation will take about 2 minutes to
+1. Preview and run the deployment via `pulumi up`. The operation will take about 2 minutes to
    complete and will create 34 resources:
 
     ```
-    $ pulumi update
+    $ pulumi up
     Previewing update of stack 'url-shortener-dev'
     ...
 
@@ -123,7 +121,7 @@ let endpoint = new cloud.API("urlshortener");
 let urlTable = new cloud.Table("urls", "name");
 ```
 
-During `pulumi update`, the declaration `new cloud.API` provisions an AWS API Gateway resource and `new cloud.Table` provisions a Dynamo DB instance. To learn more about how this works, see [How Pulumi Works](https://pulumi.io/reference/how.html) in the documentation.
+During `pulumi up`, the declaration `new cloud.API` provisions an AWS API Gateway resource and `new cloud.Table` provisions a Dynamo DB instance. To learn more about how this works, see [How Pulumi Works](https://pulumi.io/reference/how.html) in the documentation.
 
 The `endpoint.get` and `endpoint.post` method calls cause Pulumi to register API routes on the API Gateway, pointing to an AWS Lambda function for each implementation:
 

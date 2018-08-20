@@ -30,10 +30,10 @@ with `***`.
 
 1.  Restore NPM modules via `npm install` or `yarn install`.
 
-1.  Preview and deploy the app via `pulumi update`. The preview will take some time, as it builds a Docker container. A total of 32 resources are created.
+1.  Preview and deploy the app via `pulumi up`. The preview will take some time, as it builds a Docker container. A total of 32 resources are created.
 
     ```
-    $ pulumi update
+    $ pulumi up
     Previewing update of stack 'thumbnailer-testing'
     Previewing changes:
 

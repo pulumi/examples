@@ -23,16 +23,10 @@ An example Pulumi component that deploys a TypeScript function to Google Cloud F
     $ npm install
     ```
 
-1.  Build the Typescript project:
-
-    ```
-    $ npm run build
-    ```
-
-1.  Run `pulumi update` to preview and deploy changes:
+1.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
-    $ pulumi update
+    $ pulumi up
     Previewing changes:
     ...
 

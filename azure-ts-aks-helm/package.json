@@ -2,12 +2,11 @@
     "name": "azure-ts-aks-helm",
     "version": "0.1.0",
     "devDependencies": {
-        "@types/node": "^8.0.26",
-        "typescript": "^2.5.3"
+        "@types/node": "^8.0.26"
     },
     "dependencies": {
-        "@pulumi/azure": "^0.15.0",
-        "@pulumi/kubernetes": "^0.15.0",
+        "@pulumi/azure": "^0.15.1",
+        "@pulumi/kubernetes": "^0.15.1",
         "@pulumi/pulumi": "^0.15.0"
     },
     "license": "Apache-2.0"

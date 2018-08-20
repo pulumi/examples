@@ -25,12 +25,6 @@ with App Service.
     $ npm install
     ```
 
-1.  Build the Typescript project:
-
-    ```
-    $ npm run build
-    ```
-
 1. Define SQL Server password (make it complex enough to satisfy Azure policy):
 
     ```
@@ -38,10 +32,10 @@ with App Service.
     ```
 
 
-1.  Run `pulumi update` to preview and deploy changes:
+1.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
-    $ pulumi update
+    $ pulumi up
     Previewing changes:
     ...
 

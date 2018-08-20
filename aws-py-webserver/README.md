@@ -27,10 +27,10 @@ To get the correct Amazon Linux AMI for the instance size and region, a mapping 
     $ pulumi config set aws:region us-west-2
     ```
 
-1.  Run `pulumi update` to preview and deploy changes:
+1.  Run `pulumi up` to preview and deploy changes:
 
     ```
-    $ pulumi update
+    $ pulumi up
     Previewing stack 'python-webserver-testing'
     Previewing changes:
     ...

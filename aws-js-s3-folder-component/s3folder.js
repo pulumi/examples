@@ -8,38 +8,38 @@ const mime = require("mime");
 class S3Folder extends pulumi.ComponentResource {
 
     constructor(bucketName, path, opts) {
-        super("examples:S3Folder", bucketName, {}, opts); // Register this component with name examples:S3Folder
+        super("pulumi:examples:S3Folder", bucketName, {}, opts); // Register this component with name pulumi:examples:S3Folder
 
         // Create a bucket and expose a website index document
         let siteBucket = new aws.s3.Bucket(bucketName, {
-            websites: [{
+            website: {
                 indexDocument: "index.html",
-            }],
+            },
         }, { parent: this }); // specify resource parent
 
         // For each file in the directory, create an S3 object stored in `siteBucket`
         for (let item of require("fs").readdirSync(path)) {
             let filePath = require("path").join(path, item);
-            let object = new aws.s3.BucketObject(item, { 
+            let object = new aws.s3.BucketObject(item, {
                 bucket: siteBucket,                               // reference the s3.Bucket object
                 source: new pulumi.asset.FileAsset(filePath),     // use FileAsset to point to a file
                 contentType: mime.getType(filePath) || undefined, // set the MIME type of the file
             }, { parent: this }); // specify resource parent
         }
-            
+
         // Set the access policy for the bucket so all objects are readable
         let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
             bucket: siteBucket.bucket,
             policy: siteBucket.bucket.apply(this.publicReadPolicyForBucket),
         }, { parent: this }); // specify resource parent
 
-        this.bucketName = siteBucket.bucket,
-        this.websiteUrl = siteBucket.websiteEndpoint,
+        this.bucketName = siteBucket.bucket;
+        this.websiteUrl = siteBucket.websiteEndpoint;
 
         // Register output properties for this component
         this.registerOutputs({
             bucketName: this.bucketName,
-            websiteUrl: this.websiteEndpoint,
+            websiteUrl: this.websiteUrl,
         });
     }
 
@@ -57,7 +57,7 @@ class S3Folder extends pulumi.ComponentResource {
                 ]
             }]
         });
-    }    
+    }
 }
 
 module.exports.S3Folder = S3Folder;

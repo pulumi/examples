@@ -32,10 +32,10 @@ passwords](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq#w
     $ npm install
     ```
 
-1.  Run `pulumi update` to preview and deploy changes:
+1.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
-    $ pulumi update
+    $ pulumi up
     Previewing changes:
     ...
 

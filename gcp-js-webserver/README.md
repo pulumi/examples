@@ -23,10 +23,10 @@ Starting point for building the Pulumi web server sample in Google Cloud.
     $ npm install
     ```
 
-1.  Run `pulumi update` to preview and deploy changes:
+1.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
-    $ pulumi update
+    $ pulumi up
     Previewing changes:
     ...
 
