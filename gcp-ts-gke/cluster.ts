@@ -3,15 +3,16 @@
 import * as gcp from "@pulumi/gcp";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-import { password, username } from "./config";
+import { nodeCount, nodeMachineType, password, username } from "./config";
 
 // Create the GKE cluster and export it.
 export const k8sCluster = new gcp.container.Cluster("gke-cluster", {
-    initialNodeCount: 3,
+    initialNodeCount: nodeCount,
     nodeVersion: "latest",
     minMasterVersion: "latest",
     masterAuth: { username, password },
     nodeConfig: {
+        machineType: nodeMachineType,
         oauthScopes: [
             "https://www.googleapis.com/auth/compute",
             "https://www.googleapis.com/auth/devstorage.read_only",

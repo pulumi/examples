@@ -34,6 +34,16 @@ After cloning this repo, `cd` into it and run these commands. A GKE Kubernetes c
     $ pulumi config set password --secret [your-cluster-password-here]
     ```
 
+   By default, your cluster will have 3 nodes of type `n1-standard-1`. This is configurable, however; for instance
+   if we'd like to choose 5 nodes of type `n1-standard-2` instead, we can run these commands:
+
+   ```bash
+   $ pulumi config set nodeCount 5
+   $ pulumi config set nodeMachineType n1-standard-2
+   ```
+
+   This shows how stacks can be configurable in useful ways. You can even change these after provisioning.
+
 3. Deploy everything with the `pulumi up` command. This provisions all the GCP resources necessary, including
    your GKE cluster itself, and then deploys a Kubernetes Deployment running nginx, all in a single gesture:
 
