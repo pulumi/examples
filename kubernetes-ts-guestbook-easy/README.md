@@ -1,11 +1,9 @@
-# Kubernetes Guestbook
+# Kubernetes Guestbook (Easy Variant)
 
 A version of the [Kubernetes Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/)
-application using Pulumi.
-
-This is a straight port of the original YAML, and doesn't highlight advantages of using real languages. For an example
-using abstraction to cut down on boilerplate, please see the [easy Guestbook variant](../kubernetes-ts-guestbook-easy),
-also in this repo. It provisions the same set of resources.
+application using Pulumi. Unlike [the straight port of the original YAML](../kubernetes-ts-guestbook), this variant
+leverages real code to eliminate boilerplate. A `ServiceDeployment` class is used that combines the common pattern
+of deploying a container image using a Kubernetes `Deployment`, and then scaling it using a `Service`.
 
 ## Running the App
 
@@ -38,26 +36,29 @@ Perform the deployment:
 
 ```sh
 $ pulumi up
-Updating stack 'testbook'
+Updating stack 'k8sjs-guestbook'
 Performing changes:
 
-     Type                           Name                Status      Info
- +   pulumi:pulumi:Stack            guestbook-testbook  created
- +   ├─ kubernetes:apps:Deployment  redis-master        created
- +   ├─ kubernetes:apps:Deployment  frontend            created
- +   ├─ kubernetes:apps:Deployment  redis-slave         created
- +   ├─ kubernetes:core:Service     redis-master        created     1 info message
- +   ├─ kubernetes:core:Service     redis-slave         created     1 info message
- +   └─ kubernetes:core:Service     frontend            created     2 info messages
+     Type                                Name                Status      Info
+ +   pulumi:pulumi:Stack                 guestbook-testbook  created
+ +   ├─ k8sjs:service:ServiceDeployment  redis-master        created
+ +   │  ├─ kubernetes:apps:Deployment    redis-master        created
+ +   │  └─ kubernetes:core:Service       redis-master        created
+ +   ├─ k8sjs:service:ServiceDeployment  redis-slave         created
+ +   │  ├─ kubernetes:apps:Deployment    redis-slave         created
+ +   │  └─ kubernetes:core:Service       redis-slave         created
+ +   └─ k8sjs:service:ServiceDeployment  frontend            created
+ +      ├─ kubernetes:apps:Deployment    frontend            created
+ +      └─ kubernetes:core:Service       frontend            created
 
 ---outputs:---
 frontendIp: "35.232.147.18"
 
-info: 7 changes performed:
-    + 7 resources created
-Update duration: 40.829381902s
+info: 10 changes performed:
+    + 10 resources created
+Update duration: 18.829381902s
 
-Permalink: https://app.pulumi.com/hausdorff/testbook/updates/1
+Permalink: https://app.pulumi.com/acmecorp/k8sjs-guestbook/updates/1
 ```
 
 And finally - open the application in your browser to see the running application. If you're running
