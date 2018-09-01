@@ -1,7 +1,7 @@
-# Kubernetes Guestbook (Easy Variant)
+# Kubernetes Guestbook (with Components)
 
 A version of the [Kubernetes Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/)
-application using Pulumi. Unlike [the straight port of the original YAML](../kubernetes-ts-guestbook), this variant
+application using Pulumi. Unlike [the straight port of the original YAML](../simple), this variant
 leverages real code to eliminate boilerplate. A `ServiceDeployment` class is used that combines the common pattern
 of deploying a container image using a Kubernetes `Deployment`, and then scaling it using a `Service`.
 
