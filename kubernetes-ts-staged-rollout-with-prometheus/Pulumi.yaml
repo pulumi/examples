@@ -1,0 +1,3 @@
+name: staged-rollout
+description: Staged application rollout gated by Prometheus checks
+runtime: nodejs
