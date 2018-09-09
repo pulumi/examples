@@ -6,7 +6,7 @@ import * as k8s from "@pulumi/kubernetes";
 let config = new pulumi.Config();
 
 let nginxLabels = { app: "nginx" };
-let nginxDeployment = new k8s.apps.v1.Deployment("nginx", {
+let nginxDeployment = new k8s.apps.v1.Deployment("nginx-deployment", {
     spec: {
         selector: { matchLabels: nginxLabels },
         replicas: config.getNumber("replicas") || 2,
@@ -22,3 +22,5 @@ let nginxDeployment = new k8s.apps.v1.Deployment("nginx", {
         },
     },
 });
+
+export let nginx = nginxDeployment.metadata.apply(md => md.name);
