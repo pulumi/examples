@@ -1,0 +1,3 @@
+name: aws-serverless-rest-api-dynamodb
+description: A RESTful Web Service allowing you to create, list, get, update, and delete Todos using DynamoDB.
+runtime: nodejs
