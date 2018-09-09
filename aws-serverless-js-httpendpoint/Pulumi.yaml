@@ -1,0 +1,3 @@
+name: aws-serverless-js-httpendpoint
+description: A small example of using @pulumi/aws-serverless to create a REST API.
+runtime: nodejs
