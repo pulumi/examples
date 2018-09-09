@@ -7,8 +7,8 @@ of deploying a container image using a Kubernetes `Deployment`, and then scaling
 
 ## Running the App
 
-Follow the steps in [Pulumi Installation and Setup](https://pulumi.io/install/) and [Configuring Pulumi
-Kubernetes](https://pulumi.io/reference/kubernetes.html#configuration) to get setup with Pulumi and Kubernetes.
+Follow the steps in [Pulumi Installation](https://pulumi.io/install/) and [Kubernetes Setup](
+https://pulumi.io/quickstart/kubernetes/setup.html) to get Pulumi working with Kubernetes.
 
 Install dependencies:
 
