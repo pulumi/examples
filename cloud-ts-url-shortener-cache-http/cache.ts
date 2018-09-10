@@ -1,14 +1,13 @@
 // Copyright 2016-2017, Pulumi Corporation.  All rights reserved.
 
+import * as pulumi from "@pulumi/pulumi";
 import * as cloud from "@pulumi/cloud";
 import * as config from "./config";
 
 // A simple cache abstraction that wraps Redis.
 export class Cache {
-    public readonly get: (key: string) => Promise<string>;
-    public readonly set: (key: string, value: string) => Promise<void>;
-
     private readonly redis: cloud.Service;
+    private readonly endpoint: pulumi.Output<cloud.Endpoint>;
 
     constructor(name: string, memory: number = 128) {
         let pw = config.redisPassword;
@@ -23,38 +22,39 @@ export class Cache {
             },
         });
 
-        let endpoint = this.redis.endpoints.apply(endpoints => endpoints.redis[6379]);
-        this.get = async (key: string) => {
-            let ep = (await endpoint).get();
-            console.log(`Getting key '${key}' on Redis@${ep.hostname}:${ep.port}`);
-
-            let client = require("redis").createClient(ep.port, ep.hostname, { password: pw });
-            return new Promise<string>((resolve, reject) => {
-                client.get(key, (err: any, v: any) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(v);
-                    }
-                });
-            });
-        };
-
-        this.set = async (key: string, value: string) => {
-            let ep = (await endpoint).get();
-            console.log(`Setting key '${key}' to '${value}' on Redis@${ep.hostname}:${ep.port}`);
-
-            let client = require("redis").createClient(ep.port, ep.hostname, { password: pw });
-            return new Promise<void>((resolve, reject) => {
-                client.set(key, value, (err: any, v: any) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        console.log("Set succeeed: " + JSON.stringify(v))
-                        resolve();
-                    }
-                });
-            });
-        };
+        this.endpoint = this.redis.endpoints.apply(endpoints => endpoints.redis[6379]);
     }
+
+    public get(key: string): Promise<string> {
+        let ep = this.endpoint.get();
+        console.log(`Getting key '${key}' on Redis@${ep.hostname}:${ep.port}`);
+
+        let client = require("redis").createClient(ep.port, ep.hostname, { password: config.redisPassword });
+        return new Promise<string>((resolve, reject) => {
+            client.get(key, (err: any, v: any) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(v);
+                }
+            });
+        });
+    }
+
+    public set(key: string, value: string): Promise<void> {
+        let ep = this.endpoint.get();
+        console.log(`Setting key '${key}' to '${value}' on Redis@${ep.hostname}:${ep.port}`);
+
+        let client = require("redis").createClient(ep.port, ep.hostname, { password: config.redisPassword });
+        return new Promise<void>((resolve, reject) => {
+            client.set(key, value, (err: any, v: any) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    console.log("Set succeeed: " + JSON.stringify(v))
+                    resolve();
+                }
+            });
+        });
+    };
 }
