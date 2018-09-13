@@ -17,9 +17,13 @@ import (
 )
 
 func TestExamples(t *testing.T) {
-	region := os.Getenv("AWS_REGION")
-	if region == "" {
+	awsRegion := os.Getenv("AWS_REGION")
+	if awsRegion == "" {
 		t.Skipf("Skipping test due to missing AWS_REGION environment variable")
+	}
+	azureEnviron := os.Getenv("ARM_ENVIRONMENT")
+	if azureEnviron == "" {
+		t.Skipf("Skipping test due to missing ARM_ENVIRONMENT variable")
 	}
 	cwd, err := os.Getwd()
 	if !assert.NoError(t, err, "expected a valid working directory: %v", err) {
@@ -35,7 +39,7 @@ func TestExamples(t *testing.T) {
 			Dir:       path.Join(cwd, "..", "..", "aws-js-webserver"),
 			SkipBuild: true,
 			Config: map[string]string{
-				"aws:region": "us-west-2",
+				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				expectHelloWorld(t, stack.Outputs["publicHostName"])
@@ -45,10 +49,22 @@ func TestExamples(t *testing.T) {
 			Dir:       path.Join(cwd, "..", "..", "aws-js-webserver-component"),
 			SkipBuild: true,
 			Config: map[string]string{
-				"aws:region": "us-west-2",
+				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				expectHelloWorld(t, stack.Outputs["webUrl"])
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "azure-js-webserver"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"username":          "testuser",
+				"password":          "testTEST1234+-*/",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				expectHelloWorld(t, stack.Outputs["publicIP"])
 			},
 		}),
 		// TODO[pulumi/pulumi#1606] This test is failing in CI, disabling until this issue is resolved.
@@ -59,7 +75,7 @@ func TestExamples(t *testing.T) {
 		// 	DebugUpdates:  true,
 		// 	SkipBuild:     true,
 		// 	Config: map[string]string{
-		// 		"aws:region": "us-west-2",
+		// 		"aws:region": awsRegion,
 		// 	},
 		// 	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 		// 		expectHelloWorld(t, stack.Outputs["public_dns"])

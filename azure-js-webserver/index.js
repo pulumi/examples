@@ -3,7 +3,7 @@
 const pulumi = require("@pulumi/pulumi");
 const azure = require("@pulumi/azure");
 
-let config = new pulumi.Config("webserver-azure");
+let config = new pulumi.Config();
 let username = config.require("username");
 let password = config.require("password");
 
@@ -83,9 +83,9 @@ let vm = new azure.compute.VirtualMachine("server-vm", {
 // The public IP address is not allocated until the VM is running, so we wait
 // for that resource to create, and then lookup the IP address again to report
 // its public IP.
-exports.publicIP = vm.id.apply(_ => 
+exports.publicIP = pulumi.all({ id: vm.id, name: publicIP.name, resourceGroupName: publicIP.resourceGroupName }).apply(ip =>
     azure.network.getPublicIP({
-        name: publicIP.name,
-        resourceGroupName: publicIP.resourceGroupName,
+        name: ip.name,
+        resourceGroupName: ip.resourceGroupName,
     }).then(ip => ip.ipAddress)
 );
