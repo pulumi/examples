@@ -84,7 +84,7 @@ npm install
     can use `curl` and `grep` to retrieve the `<title>` of the site the proxy points at.
 
     ```sh
-    $ curl -sL $(pulumi stack output frontendIp) | grep "<title>"
+    $ curl -sL $(pulumi stack output frontendAddress) | grep "<title>"
         <title>Node/Angular Todo App</title>>
     ```
 
