@@ -60,6 +60,8 @@ func TestExamples(t *testing.T) {
 			SkipBuild: true,
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
+				"username":          "testuser",
+				"password":          "testTEST1234+-*/",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				expectHelloWorld(t, stack.Outputs["publicIP"])

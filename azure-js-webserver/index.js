@@ -3,7 +3,7 @@
 const pulumi = require("@pulumi/pulumi");
 const azure = require("@pulumi/azure");
 
-let config = new pulumi.Config("webserver-azure");
+let config = new pulumi.Config();
 let username = config.require("username");
 let password = config.require("password");
 
