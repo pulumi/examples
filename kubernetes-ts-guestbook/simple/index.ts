@@ -19,15 +19,17 @@ let redisMasterDeployment = new k8s.apps.v1.Deployment("redis-master", {
         template: {
             metadata: { labels: redisMasterLabels },
             spec: {
-                containers: [{
-                    name: "master",
-                    image: "k8s.gcr.io/redis:e2e",
-                    resources: { requests: { cpu: "100m", memory: "100Mi" } },
-                    ports: [{ containerPort: 6379 }]
-                }],
-            },
-        },
-    },
+                containers: [
+                    {
+                        name: "master",
+                        image: "k8s.gcr.io/redis:e2e",
+                        resources: { requests: { cpu: "100m", memory: "100Mi" } },
+                        ports: [{ containerPort: 6379 }]
+                    }
+                ]
+            }
+        }
+    }
 });
 let redisMasterService = new k8s.core.v1.Service("redis-master", {
     metadata: {
@@ -40,34 +42,37 @@ let redisMasterService = new k8s.core.v1.Service("redis-master", {
 });
 
 //
-// REDIS SLAVE.
+// REDIS REPLICA.
 //
 
-let redisSlaveLabels = { app: "redis-slave" };
-let redisSlaveDeployment = new k8s.apps.v1.Deployment("redis-slave", {
+let redisReplicaLabels = { app: "redis-replica" };
+let redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-replica", {
     spec: {
-        selector: { matchLabels: redisSlaveLabels },
+        selector: { matchLabels: redisReplicaLabels },
         template: {
-            metadata: { labels: redisSlaveLabels },
+            metadata: { labels: redisReplicaLabels },
             spec: {
-                containers: [{
-                    name: "slave",
-                    image: "gcr.io/google_samples/gb-redisslave:v1",
-                    resources: { requests: { cpu: "100m", memory: "100Mi" } },
-                    // If your cluster config does not include a dns service, then to instead access an environment
-                    // variable to find the master service's host, change `value: "dns"` to read `value: "env"`.
-                    env: [{ name: "GET_HOSTS_FROM", value: "dns" }],
-                    ports: [{ containerPort: 6379 }]
-                }],
-            },
-        },
-    },
+                containers: [
+                    {
+                        name: "replica",
+                        // TODO: Change this to `*-redisreplica` when upstream re-publishes under that name.
+                        image: "gcr.io/google_samples/gb-redisslave:v1",
+                        resources: { requests: { cpu: "100m", memory: "100Mi" } },
+                        // If your cluster config does not include a dns service, then to instead access an environment
+                        // variable to find the master service's host, change `value: "dns"` to read `value: "env"`.
+                        env: [{ name: "GET_HOSTS_FROM", value: "dns" }],
+                        ports: [{ containerPort: 6379 }]
+                    }
+                ]
+            }
+        }
+    }
 });
-let redisSlaveService = new k8s.core.v1.Service("redis-slave", {
-    metadata: { labels: redisSlaveDeployment.metadata.apply(meta => meta.labels) },
+let redisReplicaService = new k8s.core.v1.Service("redis-replica", {
+    metadata: { labels: redisReplicaDeployment.metadata.apply(meta => meta.labels) },
     spec: {
         ports: [{ port: 6379, targetPort: 6379 }],
-        selector: redisSlaveDeployment.spec.apply(spec => spec.template.metadata.labels)
+        selector: redisReplicaDeployment.spec.apply(spec => spec.template.metadata.labels)
     }
 });
 
@@ -83,18 +88,20 @@ let frontendDeployment = new k8s.apps.v1.Deployment("frontend", {
         template: {
             metadata: { labels: frontendLabels },
             spec: {
-                containers: [{
-                    name: "php-redis",
-                    image: "gcr.io/google-samples/gb-frontend:v4",
-                    resources: { requests: { cpu: "100m", memory: "100Mi" } },
-                    // If your cluster config does not include a dns service, then to instead access an environment
-                    // variable to find the master service's host, change `value: "dns"` to read `value: "env"`.
-                    env: [{ name: "GET_HOSTS_FROM", value: "dns" /* value: "env"*/ }],
-                    ports: [{ containerPort: 80 }]
-                }],
-            },
-        },
-    },
+                containers: [
+                    {
+                        name: "php-redis",
+                        image: "gcr.io/google-samples/gb-frontend:v4",
+                        resources: { requests: { cpu: "100m", memory: "100Mi" } },
+                        // If your cluster config does not include a dns service, then to instead access an environment
+                        // variable to find the master service's host, change `value: "dns"` to read `value: "env"`.
+                        env: [{ name: "GET_HOSTS_FROM", value: "dns" /* value: "env"*/ }],
+                        ports: [{ containerPort: 80 }]
+                    }
+                ]
+            }
+        }
+    }
 });
 let frontendService = new k8s.core.v1.Service("frontend", {
     metadata: { labels: frontendDeployment.metadata.apply(meta => meta.labels) },

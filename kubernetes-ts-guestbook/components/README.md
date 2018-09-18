@@ -7,8 +7,7 @@ of deploying a container image using a Kubernetes `Deployment`, and then scaling
 
 ## Running the App
 
-Follow the steps in [Pulumi Installation](https://pulumi.io/install/) and [Kubernetes Setup](
-https://pulumi.io/quickstart/kubernetes/setup.html) to get Pulumi working with Kubernetes.
+Follow the steps in [Pulumi Installation](https://pulumi.io/install/) and [Kubernetes Setup](https://pulumi.io/quickstart/kubernetes/setup.html) to get Pulumi working with Kubernetes.
 
 Install dependencies:
 
@@ -44,9 +43,9 @@ Performing changes:
  +   ├─ k8sjs:service:ServiceDeployment  redis-master        created
  +   │  ├─ kubernetes:apps:Deployment    redis-master        created
  +   │  └─ kubernetes:core:Service       redis-master        created
- +   ├─ k8sjs:service:ServiceDeployment  redis-slave         created
- +   │  ├─ kubernetes:apps:Deployment    redis-slave         created
- +   │  └─ kubernetes:core:Service       redis-slave         created
+ +   ├─ k8sjs:service:ServiceDeployment  redis-replica       created
+ +   │  ├─ kubernetes:apps:Deployment    redis-replica       created
+ +   │  └─ kubernetes:core:Service       redis-replica       created
  +   └─ k8sjs:service:ServiceDeployment  frontend            created
  +      ├─ kubernetes:apps:Deployment    frontend            created
  +      └─ kubernetes:core:Service       frontend            created
@@ -68,7 +67,7 @@ macOS you can simply run:
 open $(pulumi stack output frontendIp)
 ```
 
-> *Note*: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure
+> _Note_: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure
 > to run `kubectl port-forward svc/frontend 8080:80` to forward the cluster port to the local
 > machine and access the service via `localhost:8080`.
 
