@@ -35,7 +35,7 @@ This example will attempt to expose the `nginx` deployment Internet with a `Serv
 type `ClusterIP` instead; all you need to do is to tell it whether you're deploying to minikube:
 
 ```sh
-pulumi config set nginx:isMinikube <value>
+pulumi config set isMinikube <value>
 ```
 
 Perform the deployment:
@@ -70,7 +70,7 @@ We can see here in the `---outputs:---` section that Wordpress was allocated a p
 case `35.226.79.225`. It is exported with a stack output variable, `frontendIp`. We can use `curl`
 and `grep` to retrieve the `<title>` of the site the proxy points at.
 
-> *Note*: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure
+> _Note_: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure
 > to run `kubectl port-forward svc/frontend 8080:80` to forward the cluster port to the local
 > machine and access the service via `localhost:8080`.
 

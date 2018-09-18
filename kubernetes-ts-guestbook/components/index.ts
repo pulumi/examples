@@ -5,20 +5,21 @@ let config = new pulumi.Config();
 
 let redisMaster = new k8sjs.ServiceDeployment("redis-master", {
     image: "k8s.gcr.io/redis:e2e",
-    ports: [ 6379 ]
+    ports: [6379]
 });
 
-let redisSlave = new k8sjs.ServiceDeployment("redis-slave", {
+let redisReplica = new k8sjs.ServiceDeployment("redis-replica", {
+    // TODO: Change this to `*-redisreplica` when upstream re-publishes under that name.
     image: "gcr.io/google_samples/gb-redisslave:v1",
-    ports: [ 6379 ]
- });
+    ports: [6379]
+});
 
 let frontend = new k8sjs.ServiceDeployment("frontend", {
     replicas: 3,
     image: "gcr.io/google-samples/gb-frontend:v4",
-    ports: [ 80 ],
+    ports: [80],
     allocateIpAddress: true,
-    isMinikube: config.getBoolean("isMinikube"),
+    isMinikube: config.getBoolean("isMinikube")
 });
 
 export let frontendIp = frontend.ipAddress;
