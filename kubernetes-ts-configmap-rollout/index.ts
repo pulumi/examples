@@ -4,7 +4,7 @@ import * as k8s from "@pulumi/kubernetes";
 
 // Minikube does not implement services of type `LoadBalancer`; require the user to specify if we're
 // running on minikube, and if so, create only services of type ClusterIP.
-let config = new pulumi.Config("rolloutTest");
+let config = new pulumi.Config();
 let isMinikube = config.require("isMinikube");
 
 const appName = "nginx";

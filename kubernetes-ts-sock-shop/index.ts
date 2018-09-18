@@ -5,7 +5,7 @@ import * as k8s from "@pulumi/kubernetes";
 
 // Minikube does not implement services of type `LoadBalancer`; require the user to specify if we're
 // running on minikube, and if so, create only services of type ClusterIP.
-const config = new pulumi.Config("sockshop");
+const config = new pulumi.Config();
 if (config.require("isMinikube") === "true") {
     throw new Error("This example does not yet support minikube");
 }

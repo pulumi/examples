@@ -30,7 +30,7 @@ already knows to use type `ClusterIP` instead; all you need to do is to tell it 
 deploying to minikube:
 
 ```sh
-pulumi config set guestbook:isMinikube <value>
+pulumi config set isMinikube <value>
 ```
 
 Perform the deployment:

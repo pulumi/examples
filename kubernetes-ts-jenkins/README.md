@@ -8,11 +8,11 @@ Kubernetes cluster using Pulumi and `@pulumi/kubernetes`.
 Follow the steps in [Pulumi Installation and Setup](https://pulumi.io/install/) and [Configuring Pulumi
 Kubernetes](https://pulumi.io/reference/kubernetes.html#configuration) to get setup with Pulumi and Kubernetes.
 
-> *Note*: The code in this repo assumes you are deploying to a cluster that supports the
+> _Note_: The code in this repo assumes you are deploying to a cluster that supports the
 > [`LoadBalancer`](https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer) service type.
 > This includes most cloud providers as well as [Docker for Mac Edge w/
 > Kubernetes](https://docs.docker.com/docker-for-mac/kubernetes/). If not (for example if you are targeting `minikube`
-> or your own custom Kubernetes cluster), replace `type: "LoadBalancer"` with `type: "ClusterIP"` in `jenkins.ts`.  See
+> or your own custom Kubernetes cluster), replace `type: "LoadBalancer"` with `type: "ClusterIP"` in `jenkins.ts`. See
 > the Kubernetes [Services
 > docs](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types) for more
 > details.
@@ -27,15 +27,15 @@ Create a new stack:
 
 ```
 $ pulumi stack init
-Enter a stack name: kubernetes-ts-jenkins-dev 
+Enter a stack name: kubernetes-ts-jenkins-dev
 ```
 
 Create configuration keys for the root username and password for the Jenkins instance we are
 about to create:
 
 ```
-$ pulumi config set jenkins:username <your desired username>
-$ pulumi config set jenkins:password <your desired password> --secret
+$ pulumi config set username <your desired username>
+$ pulumi config set password <your desired password> --secret
 ```
 
 Preview the deployment of the application:
@@ -80,7 +80,7 @@ Performing changes:
 
 info: 6 changes performed:
     + 6 resources created
-Update duration: 2m30.397621136s 
+Update duration: 2m30.397621136s
 ```
 
 The deployment is complete! Use `kubectl` to see the Service that we just deployed:
@@ -95,7 +95,7 @@ The Jenkins instance we just deployed is reachable through port 80 of the extern
 visit `http://35.230.56.127/jenkins/login` in a Web browser to begin the first-install flow for your new Jenkins instance.
 You can use the username and password that you saved in your Pulumi config to log in to your new Jenkins instance.
 
-> *Note*: If you are deploying to a cluster that does not support `type: "LoadBalancer"`, and deployed the example using
+> _Note_: If you are deploying to a cluster that does not support `type: "LoadBalancer"`, and deployed the example using
 > `type: "ClusterIP"` instead, run `kubectl port-forward svc/jenkins 8080:80` to forward the cluster port to the local
 > machine and access the service via `localhost:8080`.
 

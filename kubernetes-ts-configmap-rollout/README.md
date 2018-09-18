@@ -32,7 +32,7 @@ a `Service` of type `LoadBalancer`. Since minikube does not support
 all you need to do is to tell it whether you're deploying to minikube:
 
 ```sh
-pulumi config set rolloutTest:isMinikube <value>
+pulumi config set isMinikube <value>
 ```
 
 Perform the deployment:
@@ -66,12 +66,10 @@ and `grep` to retrieve the `<title>` of the site the proxy points at.
 $ curl -sL $(pulumi stack output frontendIp):80 | grep -C 1 "<title>"
 
     <title>Pulumi. Serverless // Containers // Infrastructure // Cloud // DevOps</title>
-
 ```
 
 Now, open `default.conf` and change `.node.server` and `.server.location.proxy_set_header` to point
-at `google.com`. If you're on macOS you can run `sed -i bak "s/pulumi.github.io/google.com/g"
-default.conf`
+at `google.com`. If you're on macOS you can run `sed -i bak "s/pulumi.github.io/google.com/g" default.conf`
 
 The result should look like this:
 
@@ -141,7 +139,7 @@ Permalink: https://app.pulumi.com/hausdorff/configmap-rollout-dev/updates/13
 
 Now, if we `curl` the IP address once more, we see that it points at google.com!
 
-> *Note*: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure
+> _Note_: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure
 > to run `kubectl port-forward svc/frontend 8080:80` to forward the cluster port to the local
 > machine and access the service via `localhost:8080`.
 
