@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"mime"
+	"path"
 	"path/filepath"
 
 	"github.com/pulumi/pulumi-aws/sdk/go/aws/s3"
@@ -34,10 +35,10 @@ func main() {
 		for _, item := range files {
 			name := item.Name()
 			filePath := filepath.Join(siteDir, name)
-			if _, err := s3.NewBucketObject(ctx, filePath, &s3.BucketObjectArgs{
-				Bucket:      siteBucket.ID(),              // reference to the s3.Bucket object
-				Source:      asset.NewFileAsset(filePath), // use FileAsset to point to a file
-				ContentType: mime.TypeByExtension(name),   // set the MIME type of the file
+			if _, err := s3.NewBucketObject(ctx, name, &s3.BucketObjectArgs{
+				Bucket:      siteBucket.ID(),                      // reference to the s3.Bucket object
+				Source:      asset.NewFileAsset(filePath),         // use FileAsset to point to a file
+				ContentType: mime.TypeByExtension(path.Ext(name)), // set the MIME type of the file
 			}); err != nil {
 				return err
 			}
@@ -52,8 +53,8 @@ func main() {
 		}
 
 		// Stack exports
-		ctx.Export("bucketName", siteBucket.ID)
-		ctx.Export("websiteUrl", siteBucket.WebsiteEndpoint)
+		ctx.Export("bucketName", siteBucket.ID())
+		ctx.Export("websiteUrl", siteBucket.WebsiteEndpoint())
 		return nil
 	})
 }
