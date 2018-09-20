@@ -36,6 +36,30 @@ func TestExamples(t *testing.T) {
 
 	examples := []integration.ProgramTestOptions{
 		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "aws-js-s3-folder"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), func(body string) bool {
+					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "aws-js-s3-folder-component"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), func(body string) bool {
+					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir:       path.Join(cwd, "..", "..", "aws-js-webserver"),
 			SkipBuild: true,
 			Config: map[string]string{
