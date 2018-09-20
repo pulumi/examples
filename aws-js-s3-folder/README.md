@@ -3,50 +3,29 @@
 A static website that uses [S3's website support](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html).
 For a detailed walkthrough of this example, see the tutorial [Static Website on AWS S3](https://pulumi.io/quickstart/aws-s3-website.html).
 
-## Deploying and running the program
+## Getting Started (Pulumi Cloud Console)
 
-Note: some values in this example will be different from run to run.  These values are indicated
-with `***`.
+Create a new project from this example in the [Pulumi Cloud Console](https://app.pulumi.com/) by clicking the 'Deploy with Pulumi' button:
 
-1.  Create a new stack:
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-    ```bash
-    $ pulumi stack init website-testing
-    ```
+After creating the project, a command will be provided (e.g. `pulumi new https://github.com/pulumi/examples/aws-js-s3-folder -s <owner>/<stack-name>`) that you can run to get the source code and preview an initial deployment.
 
-1.  Set the AWS region:
+When you run the command, you'll be presented a preview of the AWS resources that will be created.  Once you've reviewed and selected "Yes", the deployment will begin.
 
-    ```
-    $ pulumi config set aws:region us-west-2
-    ```
+## Getting Started (Command Line)
 
-1.  Restore NPM modules via `npm install` or `yarn install`.
+Alternatively, you can create a new project from the example entirely from the command line by running:
 
-1.  Run `pulumi up` to preview and deploy changes.  After the preview is shown you will be
-    prompted if you want to continue or not.
+```bash
+$ pulumi new https://github.com/pulumi/examples/aws-js-s3-folder
+```
 
-    ```bash
-    $ pulumi up
-    Previewing update of stack 'website-testing'
-    Previewing changes:
-    ...
+You'll have a chance to configure a few settings, such as the project name, project description, stack name, and AWS region to deploy into.  You'll then be presented a preview of the AWS resources that will be created.  Once you've reviewed and selected "Yes", the deployment will begin.
 
-    Updating stack 'website-testing'
-    Performing changes:
+## Next Steps
 
-        Type                    Name                                   Status      Info
-    +   pulumi:pulumi:Stack     aws-js-s3-folder-website-testing  created
-    +   ├─ aws:s3:Bucket        s3-website-bucket                      created
-    +   ├─ aws:s3:BucketPolicy  bucketPolicy                           created
-    +   ├─ aws:s3:BucketObject  favicon.png                            created
-    +   └─ aws:s3:BucketObject  index.html                             created
-
-    info: 5 changes performed:
-        + 5 resources created
-    Update duration: ***
-
-    Permalink: https://app.pulumi.com/***
-    ```
+> Note: some values in this example will be different from run to run.  These values are indicated with `***`.
 
 1.  To see the resources that were created, run `pulumi stack output`:
 
@@ -76,3 +55,5 @@ with `***`.
     ![Hello S3 example](images/part2-website.png)
 
 1.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+
+1.  To delete the stack, run `pulumi stack rm`.
