@@ -115,15 +115,26 @@ func assertHTTPResult(t *testing.T, output interface{}, check func(string) bool)
 	if !strings.HasPrefix(hostname, "http://") {
 		hostname = fmt.Sprintf("http://%s", host)
 	}
-	resp, err := http.Get(hostname)
+	// GET the HTTP endpoint, retying up to 5 times.
+	var err error
+	var resp *http.Response
+	for i := 0; i < 5; i++ {
+		resp, err = http.Get(hostname)
+		if err == nil {
+			break
+		}
+		time.Sleep(time.Duration(i) * 5 * time.Second)
+	}
 	if !assert.NoError(t, err) {
 		return false
 	}
+	// Read the body
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if !assert.NoError(t, err) {
 		return false
 	}
+	// Verify it matches expectations
 	return check(string(body))
 }
 
