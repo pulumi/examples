@@ -99,8 +99,7 @@ func TestExamples(t *testing.T) {
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					firstLine := strings.Split(body, "\n")[0]
-					return assert.Equal(t, "Greetings from Azure Functions!", firstLine)
+					return assert.Contains(t, body, "Greetings from Azure Functions!")
 				})
 			},
 		}),
@@ -136,15 +135,15 @@ func assertHTTPResult(t *testing.T, output interface{}, check func(string) bool)
 	if !(strings.HasPrefix(hostname, "http://") || strings.HasPrefix(hostname, "https://")) {
 		hostname = fmt.Sprintf("http://%s", hostname)
 	}
-	// GET the HTTP endpoint, retying up to 5 times.
+	// GET the HTTP endpoint, retying up to 3 times.
 	var err error
 	var resp *http.Response
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 3; i++ {
+		time.Sleep(time.Duration(i) * time.Minute)
 		resp, err = http.Get(hostname)
 		if err == nil {
 			break
 		}
-		time.Sleep(time.Duration(i) * 5 * time.Second)
 	}
 	if !assert.NoError(t, err) {
 		return false
