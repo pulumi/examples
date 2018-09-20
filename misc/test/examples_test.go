@@ -103,20 +103,19 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
-		// TODO[pulumi/pulumi#1606] This test is failing in CI, disabling until this issue is resolved.
-		// base.With(integration.ProgramTestOptions{
-		// 	Dir:           path.Join(cwd, "..", "..", "aws-py-webserver"),
-		// 	Verbose:       true,
-		// 	DebugLogLevel: 8,
-		// 	DebugUpdates:  true,
-		// 	SkipBuild:     true,
-		// 	Config: map[string]string{
-		// 		"aws:region": awsRegion,
-		// 	},
-		// 	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		// 		expectHelloWorld(t, stack.Outputs["public_dns"])
-		// 	},
-		// }),
+		base.With(integration.ProgramTestOptions{
+			Dir:           path.Join(cwd, "..", "..", "aws-py-webserver"),
+			Verbose:       true,
+			DebugLogLevel: 8,
+			DebugUpdates:  true,
+			SkipBuild:     true,
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPHelloWorld(t, stack.Outputs["public_dns"])
+			},
+		}),
 	}
 
 	for _, ex := range examples {
