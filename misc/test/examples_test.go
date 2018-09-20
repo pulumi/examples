@@ -36,13 +36,37 @@ func TestExamples(t *testing.T) {
 
 	examples := []integration.ProgramTestOptions{
 		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "aws-js-s3-folder"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), func(body string) bool {
+					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "aws-js-s3-folder-component"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["websiteUrl"].(string), func(body string) bool {
+					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir:       path.Join(cwd, "..", "..", "aws-js-webserver"),
 			SkipBuild: true,
 			Config: map[string]string{
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				expectHelloWorld(t, stack.Outputs["publicHostName"])
+				assertHTTPHelloWorld(t, stack.Outputs["publicHostName"])
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
@@ -52,7 +76,7 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				expectHelloWorld(t, stack.Outputs["webUrl"])
+				assertHTTPHelloWorld(t, stack.Outputs["webUrl"])
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
@@ -64,7 +88,19 @@ func TestExamples(t *testing.T) {
 				"password":          "testTEST1234+-*/",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				expectHelloWorld(t, stack.Outputs["publicIP"])
+				assertHTTPHelloWorld(t, stack.Outputs["publicIP"])
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "azure-ts-functions"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Azure Functions!")
+				})
 			},
 		}),
 		// TODO[pulumi/pulumi#1606] This test is failing in CI, disabling until this issue is resolved.
@@ -91,26 +127,39 @@ func TestExamples(t *testing.T) {
 	}
 }
 
-func expectHelloWorld(t *testing.T, output interface{}) bool {
-	host, ok := output.(string)
+func assertHTTPResult(t *testing.T, output interface{}, check func(string) bool) bool {
+	hostname, ok := output.(string)
 	if !assert.True(t, ok, fmt.Sprintf("expected `%s` output", output)) {
 		return false
 	}
-	// Wait to ensure startup script has time to run
-	time.Sleep(1 * time.Minute)
-	hostname := host
-	if !strings.HasPrefix(hostname, "http://") {
-		hostname = fmt.Sprintf("http://%s", host)
+	if !(strings.HasPrefix(hostname, "http://") || strings.HasPrefix(hostname, "https://")) {
+		hostname = fmt.Sprintf("http://%s", hostname)
 	}
-	resp, err := http.Get(hostname)
+	// GET the HTTP endpoint, retying up to 3 times.
+	var err error
+	var resp *http.Response
+	for i := 0; i < 3; i++ {
+		time.Sleep(time.Duration(i) * time.Minute)
+		resp, err = http.Get(hostname)
+		if err == nil {
+			break
+		}
+	}
 	if !assert.NoError(t, err) {
 		return false
 	}
+	// Read the body
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if !assert.NoError(t, err) {
 		return false
 	}
-	return assert.Equal(t, "Hello, World!\n", string(body))
+	// Verify it matches expectations
+	return check(string(body))
+}
 
+func assertHTTPHelloWorld(t *testing.T, output interface{}) bool {
+	return assertHTTPResult(t, output, func(s string) bool {
+		return assert.Equal(t, "Hello, World!\n", s)
+	})
 }
