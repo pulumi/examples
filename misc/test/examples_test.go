@@ -54,7 +54,7 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["websiteUrl"].(string), func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -129,15 +129,12 @@ func TestExamples(t *testing.T) {
 }
 
 func assertHTTPResult(t *testing.T, output interface{}, check func(string) bool) bool {
-	host, ok := output.(string)
+	hostname, ok := output.(string)
 	if !assert.True(t, ok, fmt.Sprintf("expected `%s` output", output)) {
 		return false
 	}
-	// Wait to ensure startup script has time to run
-	time.Sleep(1 * time.Minute)
-	hostname := host
-	if !strings.HasPrefix(hostname, "http://") {
-		hostname = fmt.Sprintf("http://%s", host)
+	if !(strings.HasPrefix(hostname, "http://") || strings.HasPrefix(hostname, "https://")) {
+		hostname = fmt.Sprintf("http://%s", hostname)
 	}
 	// GET the HTTP endpoint, retying up to 5 times.
 	var err error
