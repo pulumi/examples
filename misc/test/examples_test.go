@@ -103,6 +103,32 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
+		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "azure-ts-functions"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				func(t *testing.T, output interface{}) bool {
+					endpoint, ok := output.(string)
+					if !assert.True(t, ok, fmt.Sprintf("expected `%s` output", output)) {
+						return false
+					}
+					resp, err := http.Get(endpoint)
+					if !assert.NoError(t, err) {
+						return false
+					}
+					defer resp.Body.Close()
+					body, err := ioutil.ReadAll(resp.Body)
+					if !assert.NoError(t, err) {
+						return false
+					}
+					return assert.Contains(t, string(body), "Greetings from Azure Functions!")
+				}(t, stack.Outputs["endpoint"])
+			},
+		}),
+
 		// TODO[pulumi/pulumi#1606] This test is failing in CI, disabling until this issue is resolved.
 		// base.With(integration.ProgramTestOptions{
 		// 	Dir:           path.Join(cwd, "..", "..", "aws-py-webserver"),
