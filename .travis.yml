@@ -13,6 +13,9 @@ before_install:
     # Install Pulumi
     - curl -L https://get.pulumi.com/ | bash -s -- --version 0.15.2
     - export PATH=$HOME/.pulumi/bin:$PATH
+    # Install Helm
+    - curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+    - helm init -c
 install:
     # Now restore all dependencies, after cloning, to rebuild vendor appropriately.
     - cd misc/test
