@@ -17,10 +17,10 @@ import (
 )
 
 func TestExamples(t *testing.T) {
-	// awsRegion := os.Getenv("AWS_REGION")
-	// if awsRegion == "" {
-	// 	t.Skipf("Skipping test due to missing AWS_REGION environment variable")
-	// }
+	awsRegion := os.Getenv("AWS_REGION")
+	if awsRegion == "" {
+		t.Skipf("Skipping test due to missing AWS_REGION environment variable")
+	}
 	azureEnviron := os.Getenv("ARM_ENVIRONMENT")
 	if azureEnviron == "" {
 		t.Skipf("Skipping test due to missing ARM_ENVIRONMENT variable")
