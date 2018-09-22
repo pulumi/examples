@@ -16,6 +16,7 @@ before_install:
     # Install Helm
     - curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
     - helm init -c
+    - helm repo add bitnami https://charts.bitnami.com/bitnami
 install:
     # Now restore all dependencies, after cloning, to rebuild vendor appropriately.
     - cd misc/test
