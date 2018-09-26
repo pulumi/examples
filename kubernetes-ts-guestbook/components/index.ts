@@ -9,7 +9,6 @@ let redisMaster = new k8sjs.ServiceDeployment("redis-master", {
 });
 
 let redisReplica = new k8sjs.ServiceDeployment("redis-replica", {
-    // TODO: Change this to `*-redisreplica` when upstream re-publishes under that name.
     image: "gcr.io/google_samples/gb-redisslave:v1",
     ports: [6379]
 });

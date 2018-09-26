@@ -55,7 +55,6 @@ let redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-replica", {
                 containers: [
                     {
                         name: "replica",
-                        // TODO: Change this to `*-redisreplica` when upstream re-publishes under that name.
                         image: "gcr.io/google_samples/gb-redisslave:v1",
                         resources: { requests: { cpu: "100m", memory: "100Mi" } },
                         // If your cluster config does not include a dns service, then to instead access an environment
