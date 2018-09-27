@@ -116,6 +116,7 @@ func TestExamples(t *testing.T) {
 					return assert.Contains(t, body, "It works!")
 				})
 			},
+			Verbose: true,
 		}),
 		// TODO[pulumi/pulumi#1606] This test is failing in CI, disabling until this issue is resolved.
 		// base.With(integration.ProgramTestOptions{
