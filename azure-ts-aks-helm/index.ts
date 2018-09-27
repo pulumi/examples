@@ -18,4 +18,5 @@ export let cluster = k8sCluster.name;
 export let kubeConfig = k8sCluster.kubeConfigRaw;
 export let serviceIP = apache
     .getResource("v1/Service", "apache-apache")
-    .spec.apply(s => s.clusterIP);
+    .status.apply(status => status.loadBalancer.ingress[0].ip);
+
