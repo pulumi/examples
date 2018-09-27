@@ -104,8 +104,11 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "azure-ts-aks-helm"),
-			SkipBuild: true,
+			Dir:           path.Join(cwd, "..", "..", "azure-ts-aks-helm"),
+			Verbose:       true,
+			DebugLogLevel: 8,
+			DebugUpdates:  true,
+			SkipBuild:     true,
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
 				"password":          "testTEST1234+_^$",
@@ -116,7 +119,6 @@ func TestExamples(t *testing.T) {
 					return assert.Contains(t, body, "It works!")
 				})
 			},
-			Verbose: true,
 		}),
 		// TODO[pulumi/pulumi#1606] This test is failing in CI, disabling until this issue is resolved.
 		// base.With(integration.ProgramTestOptions{
