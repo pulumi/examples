@@ -104,11 +104,8 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:           path.Join(cwd, "..", "..", "azure-ts-aks-helm"),
-			Verbose:       true,
-			DebugLogLevel: 8,
-			DebugUpdates:  true,
-			SkipBuild:     true,
+			Dir:       path.Join(cwd, "..", "..", "azure-ts-aks-helm"),
+			SkipBuild: true,
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
 				"password":          "testTEST1234+_^$",
