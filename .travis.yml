@@ -22,6 +22,6 @@ install:
     - cd misc/test
     - dep ensure -v
 script:
-    - go test . --timeout 1h -v
+    - go test . --timeout 1h -v -short
 notifications:
     webhooks: https://ufci1w66n3.execute-api.us-west-2.amazonaws.com/stage/travis
