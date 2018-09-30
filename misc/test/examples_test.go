@@ -19,11 +19,13 @@ import (
 func TestExamples(t *testing.T) {
 	awsRegion := os.Getenv("AWS_REGION")
 	if awsRegion == "" {
-		t.Skipf("Skipping test due to missing AWS_REGION environment variable")
+		awsRegion = "us-west-1"
+		t.Logf("Defaulting AWS_REGION to 'us-west-1'.  You can override using the AWS_REGION environment variable")
 	}
 	azureEnviron := os.Getenv("ARM_ENVIRONMENT")
 	if azureEnviron == "" {
-		t.Skipf("Skipping test due to missing ARM_ENVIRONMENT variable")
+		azureEnviron = "public"
+		t.Logf("Defaulting ARM_ENVIRONMENT to 'public'.  You can override using the ARM_ENVIRONMENT variable")
 	}
 	cwd, err := os.Getwd()
 	if !assert.NoError(t, err, "expected a valid working directory: %v", err) {
@@ -100,6 +102,20 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure Functions!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "azure-ts-aks-mean"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"password":          "testTEST1234+_^$",
+				"sshPublicKey":      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+					return assert.Contains(t, body, "<title>Node/Angular Todo App</title>>")
 				})
 			},
 		}),
