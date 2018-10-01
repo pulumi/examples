@@ -105,6 +105,14 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
+	}
+
+	// The tests in the skippedExamples collection below will not be run and will be reported as SKIPPED on the test run
+	// output.  Put a comment above the test to document why the test is being skipped.
+	skippedExamples := []integration.ProgramTestOptions{
+		// This test fails due to a bug in the Terraform Azure provider in which the
+		// service principal is not available when attempting to create the K8s cluster.
+		// See the azure-ts-aks-example readme for more detail.
 		base.With(integration.ProgramTestOptions{
 			Dir:       path.Join(cwd, "..", "..", "azure-ts-aks-mean"),
 			SkipBuild: true,
@@ -120,19 +128,29 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		// TODO[pulumi/pulumi#1606] This test is failing in CI, disabling until this issue is resolved.
-		// base.With(integration.ProgramTestOptions{
-		// 	Dir:           path.Join(cwd, "..", "..", "aws-py-webserver"),
-		// 	Verbose:       true,
-		// 	DebugLogLevel: 8,
-		// 	DebugUpdates:  true,
-		// 	SkipBuild:     true,
-		// 	Config: map[string]string{
-		// 		"aws:region": awsRegion,
-		// 	},
-		// 	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		// 		expectHelloWorld(t, stack.Outputs["public_dns"])
-		// 	},
-		// }),
+		base.With(integration.ProgramTestOptions{
+			Dir:           path.Join(cwd, "..", "..", "aws-py-webserver"),
+			Verbose:       true,
+			DebugLogLevel: 8,
+			DebugUpdates:  true,
+			SkipBuild:     true,
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPHelloWorld(t, stack.Outputs["public_dns"])
+			},
+		}),
+	}
+
+	// Print skipped example tests to the test output
+	if len(skippedExamples) > 0 {
+		t.Logf("SKIPPED Tests =============")
+		for _, skippedTest := range skippedExamples {
+			_, exampleName := path.Split(skippedTest.Dir)
+			t.Logf("  SKIPPED Example Test: %v", exampleName)
+		}
+		t.Logf("===========================")
 	}
 
 	longExamples := []integration.ProgramTestOptions{
