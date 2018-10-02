@@ -1,0 +1,3 @@
+name: cloud-js-httpserver
+description: A simple HTTP server that returns the number of times a route has been hit.
+runtime: nodejs
