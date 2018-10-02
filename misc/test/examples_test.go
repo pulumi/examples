@@ -105,6 +105,19 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
+		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "azure-ts-appservice"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"sqlPassword":       "2@Password@2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Azure App Service!")
+				})
+			},
+		}),
 		// TODO: This test fails due to a bug in the Terraform Azure provider in which the
 		// service principal is not available when attempting to create the K8s cluster.
 		// See the azure-ts-aks-example readme for more detail.
