@@ -10,7 +10,7 @@ with App Service.
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init appservice
+    $ pulumi stack init azure-appservice
     ```
 
 1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
@@ -49,7 +49,11 @@ with App Service.
 
     ```
     $ pulumi stack output endpoint
-    https://azpulumi-as0ef47193.azurewebsites.net
+    https://azpulumi-as0ef47193.azurewebsites.net (you will get a different url)
     $ curl "$(pulumi stack output endpoint)"
-    Greetings from Azure App Service!
+    <html>
+        <body>
+            <h1>Greetings from Azure App Service!</h1>
+        </body>
+    </html>%
     ```

@@ -2,9 +2,10 @@ import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
 import { signedBlobReadUrl } from "./sas";
 
-const name = pulumi.getStack();
+// use first 10 characters of the stackname as prefix for resource names
+const prefix = pulumi.getStack().substring(0, 9);
 
-const resourceGroup = new azure.core.ResourceGroup(`${name}-rg`, {
+const resourceGroup = new azure.core.ResourceGroup(`${prefix}-rg`, {
         location: "West US 2",
     });
 
@@ -13,8 +14,8 @@ const resourceGroupArgs = {
     location: resourceGroup.location,
 };
 
-// Storage Accounts cannot have any dash characters
-const storageAccountName = `${name.replace(/-/g, "")}sa`;
+// Storage Account name must be lowercase and cannot have any dash characters
+const storageAccountName = `${prefix.toLowerCase().replace(/-/g, "")}sa`;
 const storageAccount = new azure.storage.Account(storageAccountName, {
     ...resourceGroupArgs,
 
@@ -24,7 +25,7 @@ const storageAccount = new azure.storage.Account(storageAccountName, {
 });
 
 
-const appServicePlan = new azure.appservice.Plan(`${name}-asp`, {
+const appServicePlan = new azure.appservice.Plan(`${prefix}-asp`, {
     ...resourceGroupArgs,
 
     kind: "App",
@@ -35,13 +36,13 @@ const appServicePlan = new azure.appservice.Plan(`${name}-asp`, {
     },
 });
 
-const storageContainer = new azure.storage.Container(`${name}-c`, {
+const storageContainer = new azure.storage.Container(`${prefix}-c`, {
     resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     containerAccessType: "private",
 });
 
-const blob = new azure.storage.ZipBlob(`${name}-b`, {
+const blob = new azure.storage.ZipBlob(`${prefix}-b`, {
     resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     storageContainerName: storageContainer.name,
@@ -52,7 +53,7 @@ const blob = new azure.storage.ZipBlob(`${name}-b`, {
 
 const codeBlobUrl = signedBlobReadUrl(blob, storageAccount, storageContainer);
 
-const appInsights = new azure.appinsights.Insights(`${name}-ai`, {
+const appInsights = new azure.appinsights.Insights(`${prefix}-ai`, {
     ...resourceGroupArgs,
 
     applicationType: "Web"
@@ -61,10 +62,10 @@ const appInsights = new azure.appinsights.Insights(`${name}-ai`, {
 const username = "pulumi";
 
 // Get the password to use for SQL from config.
-const config = new pulumi.Config(name);
+const config = new pulumi.Config();
 const pwd = config.require("sqlPassword"); 
 
-const sqlServer = new azure.sql.SqlServer(`${name}-sql`, {
+const sqlServer = new azure.sql.SqlServer(`${prefix}-sql`, {
     ...resourceGroupArgs,
 
     administratorLogin: username,
@@ -72,13 +73,13 @@ const sqlServer = new azure.sql.SqlServer(`${name}-sql`, {
     version: "12.0", 
 });
 
-const database = new azure.sql.Database(`${name}-db`, {
+const database = new azure.sql.Database(`${prefix}-db`, {
     ...resourceGroupArgs,
     serverName: sqlServer.name,
     requestedServiceObjectiveName: "S0"
 });
 
-const app = new azure.appservice.AppService(`${name}-as`, {
+const app = new azure.appservice.AppService(`${prefix}-as`, {
     ...resourceGroupArgs,
 
     appServicePlanId: appServicePlan.id,
