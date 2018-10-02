@@ -10,7 +10,7 @@ with App Service.
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init azure-appservice
+    $ pulumi stack init appservice
     ```
 
 1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
@@ -28,9 +28,8 @@ with App Service.
 1. Define SQL Server password (make it complex enough to satisfy Azure policy):
 
     ```
-    pulumi config set <stack>:sqlPassword <value>
+    pulumi config set --secret <stack>:sqlPassword <value>
     ```
-
 
 1.  Run `pulumi up` to preview and deploy changes:
 

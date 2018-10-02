@@ -13,7 +13,9 @@ const resourceGroupArgs = {
     location: resourceGroup.location,
 };
 
-const storageAccount = new azure.storage.Account(`${name}sa`, {
+// Storage Accounts cannot have any dash characters
+const storageAccountName = `${name.replace(/-/g, "")}sa`;
+const storageAccount = new azure.storage.Account(storageAccountName, {
     ...resourceGroupArgs,
 
     accountKind: "StorageV2",
