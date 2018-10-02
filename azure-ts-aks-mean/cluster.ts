@@ -23,7 +23,7 @@ export const k8sCluster = new azure.containerservice.KubernetesCluster("aksClust
         count: config.nodeCount,
         vmSize: config.nodeSize,
     },
-    dnsPrefix: `${pulumi.getStack()}-kubernetes`,
+    dnsPrefix: `${pulumi.getStack()}-kube`,
     linuxProfile: {
         adminUsername: "aksuser",
         sshKeys: [{
