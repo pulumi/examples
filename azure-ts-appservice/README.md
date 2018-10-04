@@ -28,9 +28,8 @@ with App Service.
 1. Define SQL Server password (make it complex enough to satisfy Azure policy):
 
     ```
-    pulumi config set <stack>:sqlPassword <value>
+    pulumi config set --secret azure-appservice:sqlPassword <value>
     ```
-
 
 1.  Run `pulumi up` to preview and deploy changes:
 
@@ -52,5 +51,9 @@ with App Service.
     $ pulumi stack output endpoint
     https://azpulumi-as0ef47193.azurewebsites.net
     $ curl "$(pulumi stack output endpoint)"
-    Greetings from Azure App Service!
+    <html>
+        <body>
+            <h1>Greetings from Azure App Service!</h1>
+        </body>
+    </html>
     ```

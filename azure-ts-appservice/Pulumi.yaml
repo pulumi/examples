@@ -1,2 +1,3 @@
 name: azure-appservice
 runtime: nodejs
+description: Creates Azure App Service with SQL Database and Application Insights.
