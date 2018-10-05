@@ -41,7 +41,7 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi up
     ```
 
-4. After a couple minutes, your VM will be ready, and two stack outputs are printed:
+4. After several minutes, your VM will be ready, and two stack outputs are printed:
 
     ```bash
     $ pulumi stack output
