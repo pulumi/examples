@@ -128,7 +128,9 @@ func TestExamples(t *testing.T) {
 				"dbRootPassword": "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				maxWait := 20 * time.Minute
+				// Due to setup time on the vm this output does not show up for several minutes so
+				// increase wait time a bit
+				maxWait := 10 * time.Minute
 				assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], maxWait, func(body string) bool {
 					return assert.Contains(t, body, "New Note")
 				})
@@ -220,7 +222,11 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, maxWait time.Du
 	for true {
 		now := time.Now()
 		resp, err = http.Get(hostname)
-		if err == nil || now.Sub(startTime) >= maxWait {
+		if err == nil {
+			break
+		}
+		if now.Sub(startTime) >= maxWait {
+			fmt.Printf("Timeout after %v. Unable to http.get %v successfully.", maxWait, hostname)
 			break
 		}
 		count++
