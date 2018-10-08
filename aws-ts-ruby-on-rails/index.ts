@@ -9,8 +9,8 @@ const webSg = new aws.ec2.SecurityGroup("webServerSecurityGroup", {
         { protocol: "-1", fromPort: 0, toPort: 0, cidrBlocks: [ "0.0.0.0/0" ] },
     ],
     ingress: [
-        { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: [ "0.0.0.0/0" ] },
-        { protocol: "tcp", fromPort: 80, toPort: 80, cidrBlocks: [ config.sshLocation ] },
+        { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: [ config.sshLocation ] },
+        { protocol: "tcp", fromPort: 80, toPort: 80, cidrBlocks: [ "0.0.0.0/0" ] },
     ],
 });
 

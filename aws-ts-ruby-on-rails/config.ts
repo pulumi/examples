@@ -1,7 +1,7 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
-const config = new pulumi.Config(pulumi.getProject());
+const config = new pulumi.Config();
 
 // keyName is the name of an existing EC2 KeyPair to enable SSH access to the instances.
 export const keyName = config.get("keyName");
