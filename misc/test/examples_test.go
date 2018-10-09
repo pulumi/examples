@@ -20,12 +20,12 @@ func TestExamples(t *testing.T) {
 	awsRegion := os.Getenv("AWS_REGION")
 	if awsRegion == "" {
 		awsRegion = "us-west-1"
-		t.Logf("Defaulting AWS_REGION to 'us-west-1'.  You can override using the AWS_REGION environment variable")
+		fmt.Println("Defaulting AWS_REGION to 'us-west-1'.  You can override using the AWS_REGION environment variable")
 	}
 	azureEnviron := os.Getenv("ARM_ENVIRONMENT")
 	if azureEnviron == "" {
 		azureEnviron = "public"
-		t.Logf("Defaulting ARM_ENVIRONMENT to 'public'.  You can override using the ARM_ENVIRONMENT variable")
+		fmt.Println("Defaulting ARM_ENVIRONMENT to 'public'.  You can override using the ARM_ENVIRONMENT variable")
 	}
 	cwd, err := os.Getwd()
 	if !assert.NoError(t, err, "expected a valid working directory: %v", err) {
@@ -118,6 +118,24 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
+		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"aws:region":     awsRegion,
+				"dbUser":         "testUser",
+				"dbPassword":     "2@Password@2",
+				"dbRootPassword": "2@Password@2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				// Due to setup time on the vm this output does not show up for several minutes so
+				// increase wait time a bit
+				maxWait := 10 * time.Minute
+				assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], maxWait, func(body string) bool {
+					return assert.Contains(t, body, "New Note")
+				})
+			},
+		}),
 		// TODO: This test fails due to a bug in the Terraform Azure provider in which the
 		// service principal is not available when attempting to create the K8s cluster.
 		// See the azure-ts-aks-example readme for more detail.
@@ -170,10 +188,10 @@ func TestExamples(t *testing.T) {
 
 	// Only include the long examples on non-Short test runs
 	if !testing.Short() {
-		t.Logf("Running full test suite including longer tests. To run only shorter tests run with the -short option.")
+		fmt.Println("Running full test suite including longer tests. To run only shorter tests run with the -short option.")
 		examples = append(examples, longExamples...)
 	} else {
-		t.Logf("Running short test suite.  To run full test suite run without -short option")
+		fmt.Println("Running short test suite.  To run full test suite run without -short option")
 	}
 
 	for _, ex := range examples {
@@ -185,6 +203,10 @@ func TestExamples(t *testing.T) {
 }
 
 func assertHTTPResult(t *testing.T, output interface{}, check func(string) bool) bool {
+	return assertHTTPResultWithRetry(t, output, 3*time.Minute, check)
+}
+
+func assertHTTPResultWithRetry(t *testing.T, output interface{}, maxWait time.Duration, check func(string) bool) bool {
 	hostname, ok := output.(string)
 	if !assert.True(t, ok, fmt.Sprintf("expected `%s` output", output)) {
 		return false
@@ -192,15 +214,31 @@ func assertHTTPResult(t *testing.T, output interface{}, check func(string) bool)
 	if !(strings.HasPrefix(hostname, "http://") || strings.HasPrefix(hostname, "https://")) {
 		hostname = fmt.Sprintf("http://%s", hostname)
 	}
-	// GET the HTTP endpoint, retying up to 3 times.
+
 	var err error
 	var resp *http.Response
-	for i := 0; i < 3; i++ {
-		time.Sleep(time.Duration(i) * time.Minute)
+	startTime := time.Now()
+	count, sleep := 0, 0
+	for true {
+		now := time.Now()
 		resp, err = http.Get(hostname)
 		if err == nil {
 			break
 		}
+		if now.Sub(startTime) >= maxWait {
+			fmt.Printf("Timeout after %v. Unable to http.get %v successfully.", maxWait, hostname)
+			break
+		}
+		count++
+		// delay 10s, 20s, then 30s and stay at 30s
+		if sleep > 30 {
+			sleep = 30
+		} else {
+			sleep += 10
+		}
+		time.Sleep(time.Duration(sleep) * time.Second)
+		fmt.Printf("Http Error: %v\n", err)
+		fmt.Printf("  Retry: %v, elapsed wait: %v, max wait %v\n", count, now.Sub(startTime), maxWait)
 	}
 	if !assert.NoError(t, err) {
 		return false
