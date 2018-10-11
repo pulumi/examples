@@ -7,7 +7,7 @@
     "dependencies": {
         "@pulumi/azure": "^0.15.1",
         "@pulumi/kubernetes": "^0.16.0",
-        "@pulumi/pulumi": "^0.15.0"
+        "@pulumi/pulumi": "^0.16.0-rc"
     },
     "license": "Apache-2.0"
 }

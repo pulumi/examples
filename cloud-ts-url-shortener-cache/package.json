@@ -6,7 +6,7 @@
     },
     "dependencies": {
         "redis": "^2.8.0",
-        "@pulumi/cloud": "^0.15.0",
-        "@pulumi/cloud-aws": "^0.15.0"
+        "@pulumi/cloud": "^0.16.0-rc",
+        "@pulumi/cloud-aws": "^0.16.0-rc"
     }
 }

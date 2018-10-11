@@ -4,9 +4,9 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/aws": "^0.15.0",
+        "@pulumi/aws": "^0.16.0-rc",
         "@pulumi/kubernetes": "latest",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/pulumi": "^0.16.0-rc",
         "@types/mime": "^2.0.0",
         "crypto": "^1.0.1",
         "mime": "^2.3.1"

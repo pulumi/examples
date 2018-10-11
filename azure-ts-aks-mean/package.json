@@ -6,7 +6,7 @@
     "dependencies": {
         "@pulumi/azure": "latest",
         "@pulumi/kubernetes": "v0.17.0-rc1",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/pulumi": "^0.16.0-rc",
         "@types/mongoose": "^5.2.11",
         "mongoose": "^5.2.13"
     }

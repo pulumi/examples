@@ -7,6 +7,6 @@
         "@pulumi/docker": "^0.15.2",
         "@pulumi/gcp": "latest",
         "@pulumi/kubernetes": "^0.17.1",
-        "@pulumi/pulumi": "latest"
+        "@pulumi/pulumi": "^0.16.0-rc"
     }
 }

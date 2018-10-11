@@ -15,11 +15,11 @@
         "@types/mime-types": "^2.1.0"
     },
     "dependencies": {
-        "@pulumi/pulumi": "^0.15.2-dev",
+        "@pulumi/pulumi": "^0.16.0-rc",
         "@pulumi/azure": "^0.15.2-dev",
         "@pulumi/azure-serverless": "^0.15.1-rc1",
-        "@pulumi/cloud": "^0.15.2-dev",
-        "@pulumi/cloud-aws": "^0.15.2-dev",
+        "@pulumi/cloud": "^0.16.0-rc",
+        "@pulumi/cloud-aws": "^0.16.0-rc",
         "@pulumi/cloud-azure": "^0.15.2-dev",
         "redis": "^2.8.0",
         "express": "^4.16.3",
