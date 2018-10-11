@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Spawn the Rails App.
+echo "* SPAWNING RAILS:"
+bundle exec rails s -p 3000 -b '0.0.0.0' &
+
+# Wait for it to come up, and then ensure the database is created and migrated.
+sleep 5
+echo "* CREATING DATABASE (first time only):"
+bin/rails db:create
+echo "* MIGRATING DATABASE (if needed):"
+bin/rails db:migrate
+
+echo "* RUNNING..."
+wait
