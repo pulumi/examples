@@ -152,7 +152,8 @@ func TestExamples(t *testing.T) {
 			Dir:       path.Join(cwd, "..", "..", "cloud-js-containers"),
 			SkipBuild: true,
 			Config: map[string]string{
-				"aws:region":           awsRegion,
+				// use us-west-2 to assure fargate
+				"aws:region":           "us-west-2",
 				"cloud-aws:useFargate": "true",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -178,11 +179,11 @@ func TestExamples(t *testing.T) {
 			Dir:       path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache-http"),
 			SkipBuild: true,
 			Config: map[string]string{
-				"aws:region":                        awsRegion,
+				// use us-west-2 to assure fargate
+				"aws:region":                        "us-west-2",
 				"url-shortener-cache:redisPassword": "s3cr7Password",
 				"cloud:provider":                    "aws",
 				"cloud-aws:useFargate":              "true",
-				"cloud-aws:functionIncludePaths":    "true",
 			},
 			// TODO: This test is not returning a valid payload see issue: https://github.com/pulumi/examples/issues/155
 			// ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
