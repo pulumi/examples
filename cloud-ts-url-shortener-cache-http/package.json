@@ -27,6 +27,5 @@
         "send": "^0.16.2",
         "mime-types": "^2.1.20"
     },
-    "peerDependencies": {
-    }
+    "peerDependencies": {}
 }

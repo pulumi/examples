@@ -148,6 +148,50 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
+		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "cloud-js-containers"),
+			SkipBuild: true,
+			Config: map[string]string{
+				// use us-west-2 to assure fargate
+				"aws:region":           "us-west-2",
+				"cloud-aws:useFargate": "true",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["hostname"], func(body string) bool {
+					return assert.Contains(t, body, "<p>Hello, containers!</p>")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "cloud-js-httpserver"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"cloud:provider": "aws",
+				"aws:region":     awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", func(body string) bool {
+					return assert.Contains(t, body, "{\"route\":\"/hello\",\"count\":1}")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache-http"),
+			SkipBuild: true,
+			Config: map[string]string{
+				// use us-west-2 to assure fargate
+				"aws:region":                        "us-west-2",
+				"url-shortener-cache:redisPassword": "s3cr7Password",
+				"cloud:provider":                    "aws",
+				"cloud-aws:useFargate":              "true",
+			},
+			// TODO: This test is not returning a valid payload see issue: https://github.com/pulumi/examples/issues/155
+			// ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+			// 	assertHTTPResult(t, stack.Outputs["endpointUrl"], func(body string) bool {
+			// 		return assert.Contains(t, body, "<title>Short URL Manager</title>")
+			// 	})
+			// },
+		}),
 		// TODO: This test fails due to a bug in the Terraform Azure provider in which the
 		// service principal is not available when attempting to create the K8s cluster.
 		// See the azure-ts-aks-example readme for more detail.
