@@ -1,0 +1,3 @@
+name: stateful-cassandra
+runtime: nodejs
+description: Deploys Cassandra to Kubernetes using StatefulSet
