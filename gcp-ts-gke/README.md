@@ -30,7 +30,7 @@ After cloning this repo, `cd` into it and run these commands. A GKE Kubernetes c
 
     ```bash
     $ pulumi config set gcp:project [your-gcp-project-here]
-    $ pulumi config set gcp:zone us-west-1a # any valid GCP zone here
+    $ pulumi config set gcp:zone us-west1-a # any valid GCP zone here
     $ pulumi config set password --secret [your-cluster-password-here]
     ```
 
