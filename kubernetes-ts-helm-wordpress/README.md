@@ -46,7 +46,17 @@ $ pulumi stack init
 Enter a stack name: wordpress-dev
 ```
 
-Preview the deployment of the application.
+This chart requires you to set two configuration values: `wordpressPassword`, `mariadbPassword`, and
+`mariadbRootPassword`. If these values are not set, Helm will re-generate the passwords each
+upgrade, which will cause the upgrade to fail. (See
+[helm/charts#5167](https://github.com/helm/charts/issues/5167).)
+
+```sh
+p config set isMinikube false # This chart disallows minikube.
+p config set wordpressPassword <value>
+p config set mariadbPassword <value>
+p config set mariadbRootPassword <value>
+```
 
 > **TIP:** This example installs the Wordpress Chart. You can use `helm search` to find other Helm
 > charts, as well as available versions for them.

@@ -12,7 +12,16 @@ if (config.require("isMinikube") === "true") {
 const wordpress = new k8s.helm.v2.Chart("wpdev", {
     repo: "stable",
     version: "2.1.3",
-    chart: "wordpress"
+    chart: "wordpress",
+    values: {
+        // NOTE: These are required, as Helm will re-generate these passwords every time. See:
+        // helm/charts#5167.
+        wordpressPassword: config.require("wordpressPassword"),
+        mariadb: {
+            db: { password: config.require("mariadbPassword") },
+            rootUser: { password: config.require("mariadbRootPassword") }
+        }
+    }
 });
 
 // Export the public IP for Wordpress.
