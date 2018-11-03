@@ -3,6 +3,6 @@
     "version": "0.1.0",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/cloud-aws": "^0.15.0"
+        "@pulumi/cloud-aws": "dev"
     }
 }

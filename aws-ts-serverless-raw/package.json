@@ -2,7 +2,7 @@
     "name": "serverless-raw",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "^0.15.0",
-        "@pulumi/pulumi": "^0.15.0"
+        "@pulumi/aws": "dev",
+        "@pulumi/pulumi": "dev"
     }
 }

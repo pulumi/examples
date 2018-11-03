@@ -5,9 +5,9 @@
         "@types/node": "^8.0.26"
     },
     "dependencies": {
-        "@pulumi/azure": "^0.15.1",
-        "@pulumi/kubernetes": "^0.16.0",
-        "@pulumi/pulumi": "^0.15.0"
+        "@pulumi/azure": "dev",
+        "@pulumi/kubernetes": "dev",
+        "@pulumi/pulumi": "dev"
     },
     "license": "Apache-2.0"
 }

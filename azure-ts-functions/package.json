@@ -6,8 +6,8 @@
         "azure-functions-ts-essentials": "^1.3.2"
     },
     "dependencies": {
-        "@pulumi/azure": "^0.15.1",
-        "@pulumi/pulumi": "^0.15.0",
+        "@pulumi/azure": "dev",
+        "@pulumi/pulumi": "dev",
         "azure-storage": "^2.9.0-preview"
     }
 }
