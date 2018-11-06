@@ -1,0 +1,10 @@
+{
+    "name": "create-role",
+    "devDependencies": {
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "latest"
+    }
+}

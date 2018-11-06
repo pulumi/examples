@@ -1,0 +1,3 @@
+name: create-role
+runtime: nodejs
+description: Demonstrate use of AWS AssumeRole Functionality
