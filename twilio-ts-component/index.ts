@@ -1,7 +1,7 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as twilo from "./twilio"
 
-const config = new pulumi.Config(pulumi.getProject());
+const config = new pulumi.Config();
 const phoneNumberSid = config.require("phoneNumberSid");
 
 const handler = new twilo.IncomingPhoneNumber("twilio-example", {

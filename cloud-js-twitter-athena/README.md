@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Twitter Search in Athena
 
 A sample project that queries Twitter every 2 minutes and stores the results in S3. The project also sets up an Athena table and query. This project demonstrates using `cloud.Timer` to run a Lambda on an interval.

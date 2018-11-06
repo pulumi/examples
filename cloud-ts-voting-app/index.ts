@@ -4,7 +4,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as cloud from "@pulumi/cloud";
 
 // Get the password to use for Redis from config.
-let config = new pulumi.Config("voting-app");
+let config = new pulumi.Config();
 let redisPassword = config.require("redisPassword"); 
 let redisPort = 6379;
 

@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Serverless URL Shortener
 
 This example demonstrates a complete URL shortener web application using high-level `cloud.Table` and

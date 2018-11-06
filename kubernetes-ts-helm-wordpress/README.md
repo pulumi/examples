@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Kubernetes: Deploying the Wordpress Helm chart
 
 Uses the Helm API of `@pulumi/kubernetes` to deploy `v2.1.3` of the Wordpress Helm Chart to a

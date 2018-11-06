@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Kubernetes: Triggering a rollout of an app by changing data in S3
 
 This example is similar in principle to the [`ConfigMap`-based rollout example][rollout], except a

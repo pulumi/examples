@@ -4,7 +4,7 @@ const cloud = require("@pulumi/cloud-aws");
 
 const bucket = new cloud.Bucket("tweet-bucket");
 
-let config = new pulumi.Config("aws-serverless-js-twitter");
+let config = new pulumi.Config();
 let consumerKey = config.require("twitterConsumerKey");
 let consumerSecret = config.require("twitterConsumerSecret");
 let accessTokenKey = config.require("twitterAccessTokenKey");

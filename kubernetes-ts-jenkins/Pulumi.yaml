@@ -1,3 +1,11 @@
 name: kubernetes-ts-jenkins
 description: Jenkins deployment on Kubernetes
 runtime: nodejs
+template:
+  description: Jenkins deployment on Kubernetes
+  config:
+    username:
+      description: Your desired username for the Jenkins instance
+    password:
+      description: Your desired password for the Jenkins instance
+      secret: true

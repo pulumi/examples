@@ -1,3 +1,14 @@
 name: azure-mean
 description: A simple Deployment running nginx, exposed to the Internet with a Service
 runtime: nodejs
+template:
+  description: A simple Deployment running nginx, exposed to the Internet with a Service
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    password:
+      description: Your cluster password
+      secret: true
+    sshPublicKey:
+      description: Your SSH public key (generate with `ssh-keygen -t rsa -f key.rsa`)

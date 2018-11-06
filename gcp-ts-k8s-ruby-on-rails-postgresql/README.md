@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/gcp-ts-k8s-ruby-on-rails-postgresql/infra)
+
 # Containerized Ruby on Rails App Delivery on GCP
 
 This example is a full end to end example of delivering a containerized Ruby on Rails application. It

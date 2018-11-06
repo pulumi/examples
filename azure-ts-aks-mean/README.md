@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # A Node.js demo app deployed on AKS, using CosmosDB
 
 Stands up an [Azure Kubernetes Service][aks] (AKS) cluster and a MongoDB-flavored instance of

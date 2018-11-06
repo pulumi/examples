@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Static Website Hosted on AWS S3
 
 The component version of [aws-js-s3-folder](../aws-js-s3-folder). For a detailed walkthrough of this example, see [Tutorial: Pulumi Components](https://pulumi.io/reference/component-tutorial.html).

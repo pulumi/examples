@@ -1,3 +1,12 @@
 name: video-thumbnailer
 runtime: nodejs
-description: A video thumbnail extractor using serverless functions and containers.
+description: A video thumbnail extractor using serverless functions and containers
+template:
+  description: A video thumbnail extractor using serverless functions and containers
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    cloud-aws:useFargate:
+      description: Whether to use Fargate-based container compute
+      default: true

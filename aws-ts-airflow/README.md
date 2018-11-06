@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # AWS RDS and Airflow example
 
 A Pulumi program to deploy an RDS Postgres instance and containerized Airflow.

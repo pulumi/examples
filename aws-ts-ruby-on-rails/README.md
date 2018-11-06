@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # AWS EC2 Ruby on Rails
 
 This is a conversion of the AWS CloudFormation Application Framework template for a basic Ruby on Rails server.

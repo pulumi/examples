@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Serverless URL Shortener with Redis Cache
 
 A sample URL shortener SPA that uses the high-level `cloud.Table` and `cloud.API` components. The example shows to combine serverless functions along with containers. This shows that you can create your own `cloud.*`-like

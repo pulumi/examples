@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # AWS Web Server example in Python
 
 An example based on the Amazon sample at:

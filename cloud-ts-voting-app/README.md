@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Voting app with two containers
 
 A simple voting app that uses Redis for a data store and a Python Flask app for the frontend. The example has been ported from https://github.com/Azure-Samples/azure-voting-app-redis.
@@ -80,7 +82,7 @@ Please confirm that this is what you'd like to do by typing ("testing"): testing
 At the start of the program, the following lines retrieve the value for the Redis password by reading a [configuration value](https://pulumi.io/reference/config.html). This is the same value that was set above with the command `pulumi config set redisPassword <value>`:
 
 ```typescript
-let config = new pulumi.Config("voting-app");
+let config = new pulumi.Config();
 let redisPassword = config.require("redisPassword");
 ```
 

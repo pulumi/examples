@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Kubernetes: Staged application rollout gated by Prometheus checks
 
 Demonstrates how to create a staged rollout (from 3-replica canary -> 10-replica staging), gated by

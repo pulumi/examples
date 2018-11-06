@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Kubernetes: Exposing a Deployment with a public IP address
 
 Deploys `nginx` to a Kubernetes cluster, and publicly exposes it to the Internet with an IP address,
