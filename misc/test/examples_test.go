@@ -180,10 +180,10 @@ func TestExamples(t *testing.T) {
 			SkipBuild: true,
 			Config: map[string]string{
 				// use us-west-2 to assure fargate
-				"aws:region":                        "us-west-2",
-				"url-shortener-cache:redisPassword": "s3cr7Password",
-				"cloud:provider":                    "aws",
-				"cloud-aws:useFargate":              "true",
+				"aws:region":           "us-west-2",
+				"redisPassword":        "s3cr7Password",
+				"cloud:provider":       "aws",
+				"cloud-aws:useFargate": "true",
 			},
 			// TODO: This test is not returning a valid payload see issue: https://github.com/pulumi/examples/issues/155
 			// ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
