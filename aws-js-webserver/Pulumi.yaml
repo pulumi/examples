@@ -1,3 +1,9 @@
 name: webserver
 runtime: nodejs
-description: Basic example of an AWS web server accessible over HTTP.
+description: Basic example of an AWS web server accessible over HTTP
+template:
+  description: Basic example of an AWS web server accessible over HTTP
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1

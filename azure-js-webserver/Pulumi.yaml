@@ -1,3 +1,14 @@
 name: webserver-azure
 runtime: nodejs
-description: Basic example of an Azure web server accessible over HTTP.
+description: Basic example of an Azure web server accessible over HTTP
+template:
+  description: Basic example of an Azure web server accessible over HTTP
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    username:
+      description: The username used to configure the Virtual Machine
+    password:
+      description: The password used to configure the Virtual Machine
+      secret: true

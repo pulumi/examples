@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Azure App Service with SQL Database and Application Insights
 
 Starting point for building web application hosted in Azure App Service.

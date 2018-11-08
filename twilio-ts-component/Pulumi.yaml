@@ -1,3 +1,16 @@
 name: twilio-ts-component
 description: A small example that builds a Pulumi component for Twilio Programable SMS
 runtime: nodejs
+template:
+  description: A small example that builds a Pulumi component for Twilio Programable SMS
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    twilio:accountSid:
+      description: Your account sid from https://www.twilio.com/console
+    twilio:authToken:
+      description: Your auth token from https://www.twilio.com/console
+      secret: true
+    phoneNumberSid:
+      description: The phone number sid from https://www.twilio.com/console/phone-numbers/

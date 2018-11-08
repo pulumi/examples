@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Video Thumbnailer with AWS Rekognition
 
 A video thumbnail extractor using serverless functions, containers, and [AWS Rekognition](https://aws.amazon.com/rekognition/). This is an extension of the sample [cloud-js-thumbnailer](../cloud-js-thumbnailer). When a new video is uploaded to S3, this sample calls AWS Rekognition to find a frame with the highest confidence for the label "cat" and extracts a jpg of this frame, by running ffmpeg in an AWS Fargate container.

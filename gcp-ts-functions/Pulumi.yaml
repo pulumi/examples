@@ -1,2 +1,10 @@
 name: gcp-functions
 runtime: nodejs
+description: GCP Functions example
+template:
+  description: GCP Functions example
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:region:
+      description: The Google Cloud region

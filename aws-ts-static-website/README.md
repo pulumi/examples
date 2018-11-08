@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Static Website using AWS and TypeScript
 
 This example serves a static website using TypeScript and AWS.

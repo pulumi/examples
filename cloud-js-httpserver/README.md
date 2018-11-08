@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Serverless REST API on AWS
 
 A simple REST API that counts the number of times a route has been hit.

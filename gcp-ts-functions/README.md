@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # GCP Functions
 
 An example Pulumi component that deploys a TypeScript function to Google Cloud Functions.

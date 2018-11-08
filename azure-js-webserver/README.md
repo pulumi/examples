@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Pulumi web server (Azure)
 
 Starting point for building the Pulumi web server sample in Azure.

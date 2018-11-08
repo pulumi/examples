@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Kubernetes: Triggering a rollout of an app by changing ConfigMap data
 
 Uses nginx to reverse-proxy traffic to `pulumi.github.io`. The nginx configuration is contained in

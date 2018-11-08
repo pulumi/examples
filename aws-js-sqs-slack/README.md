@@ -1,3 +1,5 @@
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+
 # Post AWS SQS Messages to Slack using Serverless Lambdas
 
 This example wires up a serverless AWS Lambda to an AWS SQS queue and demonstrates posting a

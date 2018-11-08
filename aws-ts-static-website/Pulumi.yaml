@@ -1,3 +1,15 @@
 name: static-website
-description: Static website example.
+description: Static website example
 runtime: nodejs
+template:
+  description: Static website example
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
+    static-website:certificateArn:
+      description: ACM certificate ARN for the target domain; must be in the us-east-1 region
+    static-website:targetDomain:
+      description: The domain to serve the website at (e.g. www.example.com)
+    static-website:pathToWebsiteContents:
+      description: Relative path to the website's contents (e.g. the `./www` folder)
