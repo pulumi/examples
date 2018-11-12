@@ -296,7 +296,7 @@
     "pkg/workspace",
     "sdk/proto/go"
   ]
-  revision = "676adf62b8d4d5dc83a7cf91eff0eb6d2eb1b9a8"
+  revision = "8cbe6554f5e84d405e09c9e97b7cc09a908a56a6"
 
 [[projects]]
   branch = "master"
@@ -498,8 +498,8 @@
     "core",
     "terminal"
   ]
-  revision = "fb519f89e19299d852ffdd9b734af122d2dcbd30"
-  version = "v1.7.0"
+  revision = "3409e8256f5cf23a9e9ee2a8816c4c5da78a181d"
+  version = "v1.6.4"
 
 [[projects]]
   name = "gopkg.in/src-d/go-billy.v4"

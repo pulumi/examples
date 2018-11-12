@@ -31,10 +31,15 @@ func TestExamples(t *testing.T) {
 	if !assert.NoError(t, err, "expected a valid working directory: %v", err) {
 		return
 	}
+	overrides, err := integration.DecodeMapString(os.Getenv("PULUMI_TEST_NODE_OVERRIDES"))
+	if !assert.NoError(t, err, "expected valid override map: %v", err) {
+		return
+	}
 
 	base := integration.ProgramTestOptions{
 		Tracing:              "https://tracing.pulumi-engineering.com/collector/api/v1/spans",
 		ExpectRefreshChanges: true,
+		Overrides:            overrides,
 	}
 
 	examples := []integration.ProgramTestOptions{
