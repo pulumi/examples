@@ -5,8 +5,8 @@
         "@types/node": "^10.3.3"
     },
     "dependencies": {
-        "@pulumi/azure": "^0.15.1",
-        "@pulumi/pulumi": "^0.15.0",
+        "@pulumi/azure": "latest",
+        "@pulumi/pulumi": "latest",
         "azure-storage": "^2.9.0-preview"
     }
 }
