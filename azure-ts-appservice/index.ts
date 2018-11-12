@@ -94,7 +94,7 @@ const app = new azure.appservice.AppService(`${prefix}-as`, {
     connectionStrings: [{
         name: "db",
         value: 
-            pulumi.all([sqlServer, database]).apply(([server, db]) => 
+            pulumi.all([sqlServer.name, database.name]).apply(([server, db]) => 
                 `Server=tcp:${server}.database.windows.net;initial catalog=${db};user ID=${username};password=${pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;`),
         type: "SQLAzure"
     }]    
