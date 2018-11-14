@@ -119,6 +119,19 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir:       path.Join(cwd, "..", "..", "aws-ts-apigateway"),
+			SkipBuild: true,
+			Config: map[string]string{
+				"aws:region":     awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				assertHTTPResultWithRetry(t, stack.Outputs["endpoint"], maxWait, func(body string) bool {
+					return assert.Contains(t, body, "route")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir:       path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
 			SkipBuild: true,
 			Config: map[string]string{
