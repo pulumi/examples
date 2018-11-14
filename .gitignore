@@ -3,6 +3,9 @@
 bin/
 node_modules/
 *.pyc
+.Python
+include/
+lib/
 yarn.lock
 package-lock.json
 Pulumi.*.yaml
