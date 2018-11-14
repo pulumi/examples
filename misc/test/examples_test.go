@@ -126,7 +126,7 @@ func TestExamples(t *testing.T) {
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
-				assertHTTPResultWithRetry(t, stack.Outputs["endpoint"], maxWait, func(body string) bool {
+				assertHTTPResultWithRetry(t, stack.Outputs["endpoint"] + "hello", maxWait, func(body string) bool {
 					return assert.Contains(t, body, "route")
 				})
 			},
