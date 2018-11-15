@@ -24,5 +24,5 @@ server = ec2.Instance('web-server-www',
     user_data=user_data,
     ami=get_linux_ami(size))
 
-pulumi.output('public_ip', server.public_ip)
-pulumi.output('public_dns', server.public_dns)
+pulumi.export('public_ip', server.public_ip)
+pulumi.export('public_dns', server.public_dns)
