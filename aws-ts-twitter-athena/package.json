@@ -1,0 +1,12 @@
+{
+    "name": "aws-ts-twitter-athena",
+    "version": "0.1.0",
+    "dependencies": {
+        "@pulumi/aws": "dev",
+        "@pulumi/pulumi": "dev",
+        "twitter": "^1.7.1"
+    },
+    "devDependencies": {
+        "@types/twitter": "^0.0.28"
+    }
+}

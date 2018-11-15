@@ -15,7 +15,7 @@ const webSg = new aws.ec2.SecurityGroup("webServerSecurityGroup", {
 });
 
 const webServer = new aws.ec2.Instance("webServer", {
-    ami: getLinuxAmi(config.instanceType),
+    ami: getLinuxAmi(<any>config.instanceType),
     instanceType: config.instanceType,
     securityGroups: [ webSg.name ],
     keyName: config.keyName,

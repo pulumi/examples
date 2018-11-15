@@ -1,0 +1,9 @@
+name: aws-ts-apigateway
+runtime: nodejs
+description: Basic example of using AWS API Gateway
+template:
+  description: Basic example of using AWS API Gateway
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2
