@@ -1,0 +1,11 @@
+name: multicloud-ts-buckets
+runtime: nodejs
+description: Example showing a single program deploying to both AWS and GCP
+template:
+  description: Example showing a single program deploying to both AWS and GCP
+  config:
+    aws:region:
+      description: The AWS region in which to perform operations
+      default: us-east-1
+    gcp:project:
+      description: The ID of the GCP project in which deploy resources
