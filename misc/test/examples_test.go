@@ -33,13 +33,13 @@ func TestExamples(t *testing.T) {
 	}
 
 	base := integration.ProgramTestOptions{
-		Tracing: "https://tracing.pulumi-engineering.com/collector/api/v1/spans",
+		Tracing:              "https://tracing.pulumi-engineering.com/collector/api/v1/spans",
+		ExpectRefreshChanges: true,
 	}
 
 	examples := []integration.ProgramTestOptions{
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "aws-js-s3-folder"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
 			},
@@ -50,8 +50,7 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "aws-js-s3-folder-component"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder-component"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
 			},
@@ -62,8 +61,7 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "aws-js-webserver"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "aws-js-webserver"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
 			},
@@ -72,8 +70,7 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "aws-js-webserver-component"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "aws-js-webserver-component"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
 			},
@@ -82,8 +79,7 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "azure-js-webserver"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
 				"username":          "testuser",
@@ -94,8 +90,7 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "azure-ts-functions"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
 			},
@@ -106,8 +101,7 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "azure-ts-appservice"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "azure-ts-appservice"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
 				"sqlPassword":       "2@Password@2",
@@ -119,22 +113,20 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "aws-ts-apigateway"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "aws-ts-apigateway"),
 			Config: map[string]string{
-				"aws:region":     awsRegion,
+				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["endpoint"].(string)
-				assertHTTPResultWithRetry(t, endpoint + "hello", maxWait, func(body string) bool {
+				assertHTTPResultWithRetry(t, endpoint+"hello", maxWait, func(body string) bool {
 					return assert.Contains(t, body, "route")
 				})
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
 			Config: map[string]string{
 				"aws:region":     awsRegion,
 				"dbUser":         "testUser",
@@ -151,8 +143,7 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "cloud-js-api"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "cloud-js-api"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
 			},
@@ -163,8 +154,7 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "cloud-js-containers"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "cloud-js-containers"),
 			Config: map[string]string{
 				// use us-west-2 to assure fargate
 				"aws:region":           "us-west-2",
@@ -177,8 +167,7 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "cloud-js-httpserver"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "cloud-js-httpserver"),
 			Config: map[string]string{
 				"cloud:provider": "aws",
 				"aws:region":     awsRegion,
@@ -190,8 +179,7 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache-http"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache-http"),
 			Config: map[string]string{
 				// use us-west-2 to assure fargate
 				"aws:region":           "us-west-2",
@@ -211,7 +199,6 @@ func TestExamples(t *testing.T) {
 		// See the azure-ts-aks-example readme for more detail.
 		// base.With(integration.ProgramTestOptions{
 		// 	Dir:       path.Join(cwd, "..", "..", "azure-ts-aks-mean"),
-		// 	SkipBuild: true,
 		// 	Config: map[string]string{
 		// 		"azure:environment": azureEnviron,
 		// 		"password":          "testTEST1234+_^$",
@@ -229,7 +216,6 @@ func TestExamples(t *testing.T) {
 		// 	Verbose:       true,
 		// 	DebugLogLevel: 8,
 		// 	DebugUpdates:  true,
-		// 	SkipBuild:     true,
 		// 	Config: map[string]string{
 		// 		"aws:region": awsRegion,
 		// 	},
@@ -241,8 +227,7 @@ func TestExamples(t *testing.T) {
 
 	longExamples := []integration.ProgramTestOptions{
 		base.With(integration.ProgramTestOptions{
-			Dir:       path.Join(cwd, "..", "..", "azure-ts-aks-helm"),
-			SkipBuild: true,
+			Dir: path.Join(cwd, "..", "..", "azure-ts-aks-helm"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
 				"password":          "testTEST1234+_^$",
