@@ -2,7 +2,7 @@
     "name": "aws-ts-apigateway",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "dev",
-        "@pulumi/pulumi": "dev"
+        "@pulumi/aws": "latest",
+        "@pulumi/pulumi": "latest"
     }
 }
