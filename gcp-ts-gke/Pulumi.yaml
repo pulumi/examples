@@ -2,7 +2,6 @@ name: gcp-ts-gke
 description: A Google Kubernetes Engine (GKE) cluster, with canary deployment
 runtime: nodejs
 template:
-  description: A Google Kubernetes Engine (GKE) cluster, with canary deployment
   config:
     gcp:project:
       description: The Google Cloud project to deploy into

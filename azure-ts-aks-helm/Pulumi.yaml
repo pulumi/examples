@@ -2,7 +2,6 @@ name: azure-ts-aks-helm
 runtime: nodejs
 description: Create an Azure Kubernetes Service (AKS) cluster and deploy a Helm Chart into it
 template:
-  description: Create an Azure Kubernetes Service (AKS) cluster and deploy a Helm Chart into it
   config:
     azure:environment:
       description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)

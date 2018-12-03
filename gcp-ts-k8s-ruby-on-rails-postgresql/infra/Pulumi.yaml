@@ -2,7 +2,6 @@ name: gcp-rails
 runtime: nodejs
 description: A containerized Ruby on Rails app using managed Kubernetes and PostgreSQL
 template:
-  description: A containerized Ruby on Rails app using managed Kubernetes and PostgreSQL
   config:
     gcp:project:
       description: The Google Cloud project to deploy into

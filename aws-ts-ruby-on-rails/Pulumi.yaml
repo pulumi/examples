@@ -2,7 +2,6 @@ name: rails
 runtime: nodejs
 description: A Ruby on Rails stack using a single EC2 instance with a local MySQL database for storage
 template:
-  description: A Ruby on Rails stack using a single EC2 instance with a local MySQL database for storage
   config:
     aws:region:
       description: The AWS region to deploy into

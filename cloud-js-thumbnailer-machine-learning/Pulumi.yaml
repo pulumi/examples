@@ -2,7 +2,6 @@ name: video-thumbnailer-rekognition
 runtime: nodejs
 description: A video thumbnail extractor using serverless functions, containers, and AWS Rekognition
 template:
-  description: A video thumbnail extractor using serverless functions, containers, and AWS Rekognition
   config:
     aws:region:
       description: The AWS region to deploy into

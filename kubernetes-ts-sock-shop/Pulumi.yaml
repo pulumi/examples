@@ -2,4 +2,3 @@ name: sock-shop
 runtime: nodejs
 description: The standard Weaveworks Sock Shop demo based on https://github.com/microservices-demo/microservices-demo
 template:
-  description: The standard Weaveworks Sock Shop demo based on https://github.com/microservices-demo/microservices-demo

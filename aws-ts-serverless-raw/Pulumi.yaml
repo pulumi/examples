@@ -2,7 +2,6 @@ name: serverless
 runtime: nodejs
 description: Basic example of a serverless AWS application
 template:
-  description: Basic example of a serverless AWS application
   config:
     aws:region:
       description: The AWS region to deploy into

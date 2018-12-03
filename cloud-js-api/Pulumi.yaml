@@ -2,7 +2,6 @@ name: cloud-js-httpendpoint
 description: A simple HTTP endpoint that returns the number of times a route has been hit
 runtime: nodejs
 template:
-  description: A simple HTTP endpoint that returns the number of times a route has been hit
   config:
     aws:region:
       description: The AWS region to deploy into

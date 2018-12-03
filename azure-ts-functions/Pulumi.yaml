@@ -2,7 +2,6 @@ name: azure-functions
 runtime: nodejs
 description: Azure Functions example
 template:
-  description: Azure Functions example
   config:
     azure:environment:
       description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)

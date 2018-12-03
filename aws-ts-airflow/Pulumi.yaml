@@ -2,7 +2,6 @@ name: airflow
 runtime: nodejs
 description: AWS RDS and Airflow example
 template:
-  description: AWS RDS and Airflow example
   config:
     aws:region:
       description: The AWS region to deploy into

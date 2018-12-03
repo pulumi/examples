@@ -2,7 +2,6 @@ name: voting-app
 runtime: nodejs
 description: Voting app that uses containers
 template:
-  description: Voting app that uses containers
   config:
     aws:region:
       description: The AWS region to deploy into
