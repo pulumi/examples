@@ -2,7 +2,6 @@ name: twilio-ts-component
 description: A small example that builds a Pulumi component for Twilio Programable SMS
 runtime: nodejs
 template:
-  description: A small example that builds a Pulumi component for Twilio Programable SMS
   config:
     aws:region:
       description: The AWS region to deploy into

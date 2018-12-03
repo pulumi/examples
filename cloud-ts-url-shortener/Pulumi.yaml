@@ -2,7 +2,6 @@ name: url-shortener
 runtime: nodejs
 description: URL shortener sample
 template:
-  description: URL shortener sample
   config:
     aws:region:
       description: The AWS region to deploy into

@@ -2,7 +2,6 @@ name: webserver-gcp
 runtime: nodejs
 description: Basic example of an Google Cloud web server accessible over HTTP
 template:
-  description: Basic example of an Google Cloud web server accessible over HTTP
   config:
     gcp:project:
       description: The Google Cloud project to deploy into

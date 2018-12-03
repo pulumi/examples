@@ -2,7 +2,6 @@ name: cloud-js-httpserver
 description: A simple HTTP server that returns the number of times a route has been hit
 runtime: nodejs
 template:
-  description: A simple HTTP server that returns the number of times a route has been hit
   config:
     cloud:provider:
       description: The cloud provider to use

@@ -2,7 +2,6 @@ name: aws-serverless-js-twitter
 description: Analyze tweets in AWS Athena
 runtime: nodejs
 template:
-  description: Analyze tweets in AWS Athena
   config:
     aws:region:
       description: The AWS region to deploy into

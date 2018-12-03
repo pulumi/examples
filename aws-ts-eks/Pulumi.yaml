@@ -2,7 +2,6 @@ name: aws-ts-eks
 description: EKS cluster example
 runtime: nodejs
 template:
-  description: EKS cluster example
   config:
     aws:region:
       description: The AWS region to deploy into

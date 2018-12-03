@@ -2,7 +2,6 @@ name: aws-ts-resources
 description: A Pulumi program that demonstrates creating various AWS resources
 runtime: nodejs
 template:
-  description: A Pulumi program that demonstrates creating various AWS resources
   config:
     aws:region:
       description: The AWS region to deploy into

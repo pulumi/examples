@@ -2,7 +2,6 @@ name: url-shortener-cache
 runtime: nodejs
 description: URL shortener with cache
 template:
-  description: URL shortener with cache
   config:
     aws:region:
       description: The AWS region to deploy into

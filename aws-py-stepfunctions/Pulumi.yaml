@@ -2,7 +2,6 @@ name: stepfunctions-py
 description: Basic example of AWS Step Functions in Python
 runtime: python
 template:
-  description: Basic example of AWS Step Functions in Python
   config:
     aws:region:
       description: The AWS region to deploy into

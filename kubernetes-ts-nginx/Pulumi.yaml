@@ -2,5 +2,4 @@ name: k8s-nginx
 runtime: nodejs
 description: Example of a Kubernetes Stateless Application Deployment, using Nginx
 template:
-  description: Example of a Kubernetes Stateless Application Deployment, using Nginx
 

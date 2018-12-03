@@ -2,7 +2,6 @@ name: stepfunctions
 description: Basic example of AWS Step Functions
 runtime: nodejs
 template:
-  description: Basic example of AWS Step Functions
   config:
     aws:region:
       description: The AWS region to deploy into
