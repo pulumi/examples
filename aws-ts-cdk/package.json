@@ -1,0 +1,14 @@
+{
+    "name": "aws-ts-eks",
+    "devDependencies": {
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "latest",
+        "@aws-cdk/cdk": "^0.18.1",
+        "@aws-cdk/aws-ec2": "^0.18.1",
+        "@aws-cdk/aws-ecs": "^0.18.1",
+        "@aws-cdk/aws-elasticloadbalancingv2": "^0.18.1"
+    }
+}
