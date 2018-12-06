@@ -1,0 +1,14 @@
+name: azure-ts-aks-multiregion
+runtime: nodejs
+description: Create multiple Azure Kubernetes Service (AKS) clusters in different regions and with different node counts.
+template:
+  description: Create multiple Azure Kubernetes Service (AKS) clusters in different regions and with different node counts.
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    password:
+      description: Your cluster password
+      secret: true
+    sshPublicKey:
+      description: Your SSH public key (generate with `ssh-keygen -t rsa -f key.rsa`)
