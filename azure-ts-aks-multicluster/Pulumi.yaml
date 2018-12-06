@@ -1,4 +1,4 @@
-name: azure-ts-aks-multiregion
+name: azure-ts-aks-multicluster
 runtime: nodejs
 description: Create multiple Azure Kubernetes Service (AKS) clusters in different regions and with different node counts.
 template:

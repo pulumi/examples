@@ -1,5 +1,5 @@
 {
-    "name": "azure-ts-aks-multiregion",
+    "name": "azure-ts-aks-multicluster",
     "version": "0.1.0",
     "devDependencies": {
         "@types/node": "latest"
