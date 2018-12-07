@@ -2,7 +2,6 @@ name: azure-ts-aks-multicluster
 runtime: nodejs
 description: Create multiple Azure Kubernetes Service (AKS) clusters in different regions and with different node counts.
 template:
-  description: Create multiple Azure Kubernetes Service (AKS) clusters in different regions and with different node counts.
   config:
     azure:environment:
       description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
