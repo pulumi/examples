@@ -2,13 +2,7 @@
 
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
-
-// Global Config
-const config = new pulumi.Config();
-const configPassword = config.require("password");
-const configSshPublicKey = config.require("sshPublicKey");
-const configResourceGroupLocation = config.require("resourceGroupLocation");
-const resourceGroup = new azure.core.ResourceGroup("aks", {location: configResourceGroupLocation});
+import * as config from "./config";
 
 // Per-Cluster Config
 const aksClusterConfig = [
@@ -31,25 +25,25 @@ const adApp = new azure.ad.Application("aks");
 const adSp = new azure.ad.ServicePrincipal("aksSp", {applicationId: adApp.applicationId});
 const adSpPassword = new azure.ad.ServicePrincipalPassword("aksSpPassword", {
     servicePrincipalId: adSp.id,
-    value: configPassword,
+    value: config.password,
     endDate: "2099-01-01T00:00:00Z",
 });
 
 // Create the individual clusters
-const k8sClusters = aksClusterConfig.map((clusterConfig, index) => {
-    const cluster = new azure.containerservice.KubernetesCluster(`aksCluster-${clusterConfig.name}`, {
-        resourceGroupName: resourceGroup.name,
-        location: clusterConfig.location,
+const k8sClusters = aksClusterConfig.map((perClusterConfig, index) => {
+    const cluster = new azure.containerservice.KubernetesCluster(`aksCluster-${perClusterConfig.name}`, {
+        resourceGroupName: config.resourceGroup.name,
+        location: config.location,
         agentPoolProfile: {
             name: "aksagentpool",
-            count: clusterConfig.nodeCount,
-            vmSize: clusterConfig.nodeSize,
+            count: perClusterConfig.nodeCount,
+            vmSize: perClusterConfig.nodeSize,
         },
         dnsPrefix: `${pulumi.getStack()}-kube`,
         linuxProfile: {
             adminUsername: "aksuser",
             sshKeys: [{
-                keyData: configSshPublicKey,
+                keyData: config.sshPublicKey,
             }],
         },
         servicePrincipal: {
