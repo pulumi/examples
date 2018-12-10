@@ -19,7 +19,6 @@
         "strictNullChecks": true
     },
     "files": [
-        "index.ts",
-        "serviceRole.ts"
+        "index.ts"
     ]
 }
