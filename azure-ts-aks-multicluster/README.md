@@ -28,6 +28,7 @@ After cloning this repo, `cd` into it and run these commands.
     ```bash
     $ pulumi config set azure:environment public
     $ pulumi config set password --secret [your-cluster-password-here]
+    $ pulumi config set resourceGroupLocation [azure-location]
     $ ssh-keygen -t rsa -f key.rsa
     $ pulumi config set sshPublicKey < key.rsa.pub
     ```

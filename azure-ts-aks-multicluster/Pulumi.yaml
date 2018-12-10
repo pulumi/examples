@@ -1,6 +1,6 @@
 name: azure-ts-aks-multicluster
 runtime: nodejs
-description: Create multiple Azure Kubernetes Service (AKS) clusters in different regions and with different node counts.
+description: Create multiple Azure Kubernetes Service (AKS) clusters in different regions and with different node counts
 template:
   config:
     azure:environment:
@@ -11,3 +11,5 @@ template:
       secret: true
     sshPublicKey:
       description: Your SSH public key (generate with `ssh-keygen -t rsa -f key.rsa`)
+    resourceGroupLocation:
+      description: The location to use for the Azure Resource Group
