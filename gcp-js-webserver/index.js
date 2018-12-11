@@ -22,7 +22,7 @@ const computeInstance = new gcp.compute.Instance("instance", {
     metadataStartupScript: startupScript,
     bootDisk: {
         initializeParams: {
-            image: "debian-cloud/debian-8",
+            image: "debian-cloud/debian-9-stretch-v20181210",
         },
     },
     networkInterfaces: [{
