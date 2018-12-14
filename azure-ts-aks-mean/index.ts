@@ -55,5 +55,5 @@ const node = new k8s.helm.v2.Chart(
 export const kubeconfig = k8sCluster.kubeConfig;
 export const cluster = k8sCluster.name;
 export const frontendAddress = node
-    .getResource("v1/Service", "node-node")
-    .status.apply(status => status.loadBalancer.ingress[0].ip);
+    .getResourceProperty("v1/Service", "node-node", "status")
+    .apply(status => status.loadBalancer.ingress[0].ip);

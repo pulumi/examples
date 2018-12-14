@@ -4,6 +4,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as http from "http";
 import { spawn } from "child_process";
+import { meta } from "@pulumi/kubernetes/types/input";
 
 export interface PromPortForwardOpts {
     localPort: number;
@@ -19,15 +20,15 @@ export interface PromPortForwardOpts {
 // This is useful for when we can't run Pulumi in-cluster, in which case simply calling to the
 // appropriate KubeDNS URL is not sufficient.
 export function forwardPrometheusService(
-    service: k8s.core.v1.Service,
-    deployment: k8s.extensions.v1beta1.Deployment,
+    service: pulumi.Input<k8s.core.v1.Service>,
+    deployment: pulumi.Input<k8s.extensions.v1beta1.Deployment>,
     opts: PromPortForwardOpts
 ): pulumi.Output<() => void> {
     if (pulumi.runtime.isDryRun()) {
         return pulumi.output(() => {});
     }
 
-    return pulumi.all([service.metadata, deployment.urn]).apply(([meta]) => {
+    return pulumi.all([service, deployment]).apply(([s, d]) => pulumi.all([s.metadata, d.urn])).apply(([meta]) => {
         return new Promise<() => void>((resolve, reject) => {
             const forwarderHandle = spawn("kubectl", [
                 "port-forward",
@@ -182,7 +183,7 @@ function getHttpLatency(url: string): Promise<string> {
 
             // Append to the body until the end.
             const body: string[] = [];
-            response.on("data", chunk => body.push(chunk));
+            response.on("data", chunk => body.push(chunk.toString()));
             response.on("end", () => resolve(body.join("")));
         });
 

@@ -17,6 +17,6 @@ const apache = new helm.v2.Chart(
 export let cluster = k8sCluster.name;
 export let kubeConfig = k8sCluster.kubeConfigRaw;
 export let serviceIP = apache
-    .getResource("v1/Service", "apache-apache")
-    .status.apply(status => status.loadBalancer.ingress[0].ip);
+    .getResourceProperty("v1/Service", "apache-apache", "status")
+    .apply(status => status.loadBalancer.ingress[0].ip);
 
