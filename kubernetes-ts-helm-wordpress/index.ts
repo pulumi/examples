@@ -16,5 +16,5 @@ const wordpress = new k8s.helm.v2.Chart("wpdev", {
 });
 
 // Export the public IP for Wordpress.
-const frontend = wordpress.getResource("v1/Service", "wpdev-wordpress");
-export const frontendIp = frontend.status.apply(status => status.loadBalancer.ingress[0].ip);
+const frontend = wordpress.getResourceProperty("v1/Service", "wpdev-wordpress", "status");
+export const frontendIp = frontend.apply(status => status.loadBalancer.ingress[0].ip);
