@@ -1,14 +1,12 @@
 {
     "name": "airflow",
-    "version": "0.1",
-    "main": "bin/index.js",
     "devDependencies": {
         "@types/node": "^10.1.2"
     },
     "dependencies": {
-        "@pulumi/aws": "^0.15.0",
-        "@pulumi/cloud": "^0.15.0",
-        "@pulumi/cloud-aws": "^0.15.0",
-        "@pulumi/pulumi": "^0.15.0"
+        "@pulumi/aws": "^0.16.4",
+        "@pulumi/cloud": "^0.16.2",
+        "@pulumi/cloud-aws": "^0.16.2",
+        "@pulumi/pulumi": "^0.16.8"
     }
 }
