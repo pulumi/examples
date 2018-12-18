@@ -11,5 +11,5 @@ template:
       secret: true
     sshPublicKey:
       description: Your SSH public key (generate with `ssh-keygen -t rsa -f key.rsa`)
-    resourceGroupLocation:
+    location:
       description: The location to use for the Azure Resource Group
