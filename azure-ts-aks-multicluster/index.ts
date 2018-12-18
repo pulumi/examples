@@ -4,7 +4,7 @@ import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
 import * as config from "./config";
 
-// Per-Cluster Config
+// Per-cluster config
 const aksClusterConfig = [
     {
         name: 'east',
@@ -32,14 +32,8 @@ const adSpPassword = new azure.ad.ServicePrincipalPassword("aksSpPassword", {
 // Create the individual clusters
 const k8sClusters = aksClusterConfig.map((perClusterConfig, index) => {
     const cluster = new azure.containerservice.KubernetesCluster(`aksCluster-${perClusterConfig.name}`, {
+        // Global config arguments
         resourceGroupName: config.resourceGroup.name,
-        location: config.location,
-        agentPoolProfile: {
-            name: "aksagentpool",
-            count: perClusterConfig.nodeCount,
-            vmSize: perClusterConfig.nodeSize,
-        },
-        dnsPrefix: `${pulumi.getStack()}-kube`,
         linuxProfile: {
             adminUsername: "aksuser",
             sshKeys: [{
@@ -50,6 +44,14 @@ const k8sClusters = aksClusterConfig.map((perClusterConfig, index) => {
             clientId: adApp.applicationId,
             clientSecret: adSpPassword.value,
         },
+        // Per-cluster config arguments
+        location: perClusterConfig.location,
+        agentPoolProfile: {
+            name: "aksagentpool",
+            count: perClusterConfig.nodeCount,
+            vmSize: perClusterConfig.nodeSize,
+        },
+        dnsPrefix: `${pulumi.getStack()}-kube`,
     });
     return cluster;
 });
