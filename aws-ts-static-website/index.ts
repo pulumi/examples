@@ -15,8 +15,8 @@ const config = {
     pathToWebsiteContents: stackConfig.require("pathToWebsiteContents"),
     // targetDomain is the domain/host to serve content at.
     targetDomain: stackConfig.require("targetDomain"),
-    // ACM certificate for the target domain. Must be in the us-east-1 region.
-    certificateArn: stackConfig.require("certificateArn"),
+    // (Optional) ACM certificate ARN for the target domain; must be in the us-east-1 region. If omitted, an ACM certificate will be created.
+    certificateArn: stackConfig.get("certificateArn"),
 };
 
 // contentBucket is the S3 bucket that the website's contents will be stored in.
@@ -78,6 +78,38 @@ const logsBucket = new aws.s3.Bucket("requestLogs",
     });
 
 const tenMinutes = 60 * 10;
+
+let certificateArn: pulumi.Input<string> = config.certificateArn!;
+if (config.certificateArn === undefined) {
+    // Per AWS, ACM certificate must be in the us-east-1 region.
+    const eastRegion = new aws.Provider("east", {
+        region: "us-east-1",
+    });
+    const certificate = new aws.acm.Certificate("certificate", {
+        domainName: config.targetDomain,
+        validationMethod: "DNS",
+    }, { provider: eastRegion })
+
+    const domainParts = getDomainAndSubdomain(config.targetDomain);
+    const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }).then(zone => zone.id);
+
+    const certificateValidationDomain = new aws.route53.Record(
+        `${config.targetDomain}-validation`,
+        {
+            name: certificate.domainValidationOptions.apply(d => d[0].resourceRecordName),
+            zoneId: hostedZoneId,
+            type: certificate.domainValidationOptions.apply(d => d[0].resourceRecordType),
+            records: [certificate.domainValidationOptions.apply(d => d[0].resourceRecordValue)],
+            ttl: tenMinutes,
+        });
+
+    const certificateValidation = new aws.acm.CertificateValidation("certificateValidation", {
+        certificateArn: certificate.arn,
+        validationRecordFqdns: [certificateValidationDomain.fqdn],
+    }, { provider: eastRegion });
+
+    certificateArn = certificateValidation.certificateArn;
+}
 
 // distributionArgs configures the CloudFront distribution. Relevant documentation:
 // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html
@@ -141,7 +173,7 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
 
     // CloudFront certs must be in us-east-1, just like API Gateway.
     viewerCertificate: {
-        acmCertificateArn: config.certificateArn,
+        acmCertificateArn: certificateArn,
         sslSupportMethod: "sni-only",
     },
 
@@ -156,7 +188,7 @@ const cdn = new aws.cloudfront.Distribution("cdn", distributionArgs);
 
 // Split a domain name into its subdomain and parent domain names.
 // e.g. "www.example.com" => "www", "example.com".
-function getDomainAndSubdomain(domain: string): { subdomain: string, parentDomain: string} {
+function getDomainAndSubdomain(domain: string): { subdomain: string, parentDomain: string } {
     const parts = domain.split(".");
     if (parts.length < 2) {
         throw new Error(`No TLD found on ${domain}`);
@@ -177,7 +209,7 @@ function getDomainAndSubdomain(domain: string): { subdomain: string, parentDomai
 
 // Creates a new Route53 DNS record pointing the domain to the CloudFront distribution.
 async function createAliasRecord(
-        targetDomain: string, distribution: aws.cloudfront.Distribution): Promise<aws.route53.Record> {
+    targetDomain: string, distribution: aws.cloudfront.Distribution): Promise<aws.route53.Record> {
     const domainParts = getDomainAndSubdomain(targetDomain);
     const hostedZone = await aws.route53.getZone({ name: domainParts.parentDomain });
     return new aws.route53.Record(
@@ -203,3 +235,4 @@ const aRecord = createAliasRecord(config.targetDomain, cdn);
 export const contentBucketUri = contentBucket.bucket.apply(b => `s3://${b}`);
 export const contentBucketWebsiteEndpoint = contentBucket.websiteEndpoint;
 export const cloudFrontDomain = cdn.domainName;
+export const customDomainEndpoint = `https://${config.targetDomain}/`;
