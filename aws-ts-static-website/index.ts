@@ -1,6 +1,5 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-import { Output } from "@pulumi/pulumi";
 
 import * as fs from "fs";
 import * as mime from "mime";
@@ -88,7 +87,7 @@ if (config.certificateArn === undefined) {
     const certificate = new aws.acm.Certificate("certificate", {
         domainName: config.targetDomain,
         validationMethod: "DNS",
-    }, { provider: eastRegion })
+    }, { provider: eastRegion });
 
     const domainParts = getDomainAndSubdomain(config.targetDomain);
     const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }).then(zone => zone.id);
