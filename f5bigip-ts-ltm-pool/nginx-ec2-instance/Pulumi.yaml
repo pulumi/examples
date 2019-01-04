@@ -1,0 +1,9 @@
+name: nginx-ec2-instance/
+runtime: nodejs
+description: A F5 BIG-IP TypeScript example program
+template:
+  description: A minimal AWS TypeScript Pulumi program
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
