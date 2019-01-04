@@ -1,8 +1,7 @@
 name: f5bigip-pool
 runtime: nodejs
-description: A F5 BIG-IP TypeScript example program
+description: Provision F5 BigIP Local Traffic Manager (LTM) resources (in TypeScript)
 template:
-  description: A minimal AWS TypeScript Pulumi program
   config:
     aws:region:
       description: The AWS region to deploy into
