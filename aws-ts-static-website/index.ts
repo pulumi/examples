@@ -79,11 +79,16 @@ const logsBucket = new aws.s3.Bucket("requestLogs",
 const tenMinutes = 60 * 10;
 
 let certificateArn: pulumi.Input<string> = config.certificateArn!;
+
+/**
+ * Only provision a certificate (and related resources) if a certificateArn is _not_ provided via configuration.
+ */
 if (config.certificateArn === undefined) {
-    // Per AWS, ACM certificate must be in the us-east-1 region.
+    
     const eastRegion = new aws.Provider("east", {
-        region: "us-east-1",
+        region: "us-east-1", // Per AWS, ACM certificate must be in the us-east-1 region.
     });
+
     const certificate = new aws.acm.Certificate("certificate", {
         domainName: config.targetDomain,
         validationMethod: "DNS",
@@ -92,16 +97,27 @@ if (config.certificateArn === undefined) {
     const domainParts = getDomainAndSubdomain(config.targetDomain);
     const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }).then(zone => zone.id);
 
-    const certificateValidationDomain = new aws.route53.Record(
-        `${config.targetDomain}-validation`,
-        {
-            name: certificate.domainValidationOptions.apply(d => d[0].resourceRecordName),
-            zoneId: hostedZoneId,
-            type: certificate.domainValidationOptions.apply(d => d[0].resourceRecordType),
-            records: [certificate.domainValidationOptions.apply(d => d[0].resourceRecordValue)],
-            ttl: tenMinutes,
-        });
+    /**
+     *  Create a DNS record to prove that we _own_ the domain we're requesting a certificate for.
+     *  See https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-validate-dns.html for more info.
+     */
+    const certificateValidationDomain = new aws.route53.Record(`${config.targetDomain}-validation`, {
+        name: certificate.domainValidationOptions.apply(d => d[0].resourceRecordName),
+        zoneId: hostedZoneId,
+        type: certificate.domainValidationOptions.apply(d => d[0].resourceRecordType),
+        records: [certificate.domainValidationOptions.apply(d => d[0].resourceRecordValue)],
+        ttl: tenMinutes,
+    });
 
+    /**
+     * This is a _special_ resource that waits for ACM to complete validation via the DNS record 
+     * checking for a status of "ISSUED" on the certificate itself. No actual resources are 
+     * created (or updated or deleted). 
+     * 
+     * See https://www.terraform.io/docs/providers/aws/r/acm_certificate_validation.html for slightly more detail
+     * and https://github.com/terraform-providers/terraform-provider-aws/blob/master/aws/resource_aws_acm_certificate_validation.go
+     * for the actual implementation.
+     */
     const certificateValidation = new aws.acm.CertificateValidation("certificateValidation", {
         certificateArn: certificate.arn,
         validationRecordFqdns: [certificateValidationDomain.fqdn],
@@ -115,6 +131,8 @@ if (config.certificateArn === undefined) {
 // https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html
 const distributionArgs: aws.cloudfront.DistributionArgs = {
     enabled: true,
+    // Alternate aliases the CloudFront distribution can be reached at, in addition to https://xxxx.cloudfront.net.
+    // Required if you want to access the distribution via config.targetDomain as well.  
     aliases: [ config.targetDomain ],
 
     // We only specify one origin for this distribution, the S3 content bucket.
@@ -170,9 +188,8 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
         },
     },
 
-    // CloudFront certs must be in us-east-1, just like API Gateway.
     viewerCertificate: {
-        acmCertificateArn: certificateArn,
+        acmCertificateArn: certificateArn,  // Per AWS, ACM certificate must be in the us-east-1 region.
         sslSupportMethod: "sni-only",
     },
 
@@ -234,4 +251,4 @@ const aRecord = createAliasRecord(config.targetDomain, cdn);
 export const contentBucketUri = contentBucket.bucket.apply(b => `s3://${b}`);
 export const contentBucketWebsiteEndpoint = contentBucket.websiteEndpoint;
 export const cloudFrontDomain = cdn.domainName;
-export const customDomainEndpoint = `https://${config.targetDomain}/`;
+export const targetDomainEndpoint = `https://${config.targetDomain}/`;
