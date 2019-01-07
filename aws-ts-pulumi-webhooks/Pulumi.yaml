@@ -1,0 +1,3 @@
+name: aws-ts-pulumi-webhooks
+runtime: nodejs
+description: Lambda app that handles Pulumi webhook notifications.
