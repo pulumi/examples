@@ -31,6 +31,25 @@ const contentBucket = new aws.s3.Bucket("contentBucket",
         }
     });
 
+// contentBucket needs to have the "public-read" ACL so its contents can be ready by CloudFront and
+// served. But we deny the s3:ListBucket permission to prevent unintended disclosure of the bucket's
+// contents.
+const denyListPolicyState: aws.s3.BucketPolicyArgs = {
+    bucket: contentBucket.bucket,
+    policy: contentBucket.arn.apply(arn => JSON.stringify({
+        Version: "2008-10-17",
+        Statement: [
+            {
+                Effect: "Deny",
+                Principal: "*",
+                Action: "s3:ListBucket",
+                Resource: arn,
+            },
+        ],
+    })),
+};
+const denyListPolicy = new aws.s3.BucketPolicy("deny-list", denyListPolicyState);
+
 // crawlDirectory recursive crawls the provided directory, applying the provided function
 // to every file it contains. Doesn't handle cycles from symlinks.
 function crawlDirectory(dir: string, f: (_: string) => void) {
