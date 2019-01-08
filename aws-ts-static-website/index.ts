@@ -33,7 +33,7 @@ const contentBucket = new aws.s3.Bucket("contentBucket",
 
 // contentBucket needs to have the "public-read" ACL so its contents can be ready by CloudFront and
 // served. But we deny the s3:ListBucket permission to prevent unintended disclosure of the bucket's
-// contents.
+// contents. If you know the Bucket object path, it is still available for anonymous access however.
 const denyListPolicyState: aws.s3.BucketPolicyArgs = {
     bucket: contentBucket.bucket,
     policy: contentBucket.arn.apply(arn => JSON.stringify({
