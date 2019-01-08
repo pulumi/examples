@@ -14,7 +14,7 @@ let autoScalingGroup = cluster.createAutoScalingGroup("airflow", {
         minSize: 20,
     },
     launchConfigurationArgs: {
-        instanceType: "t2.medium",
+        instanceType: "t2.xlarge",
     },
 });
 
@@ -79,12 +79,14 @@ let airflowController = new awsx.ecs.EC2Service("airflowcontroller", {
                 portMappings: [airflowControllerListener],
                 environment: environment,
                 command: [ "webserver" ],
+                memory: 128,
             },
 
             "scheduler": {
                 image: awsx.ecs.Image.fromPath("./airflow-container"),
                 environment: environment,
                 command: [ "scheduler" ],
+                memory: 128,
             },
         },
     },
@@ -107,6 +109,7 @@ let airflower = new awsx.ecs.EC2Service("airflower", {
                 portMappings: [airflowerListener],
                 environment: environment,
                 command: [ "flower" ],
+                memory: 128,
             },
         },
     },
