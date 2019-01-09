@@ -1,0 +1,8 @@
+name: container-quickstart
+description: NGINX container example
+runtime: nodejs
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2

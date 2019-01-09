@@ -1,14 +1,27 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
-import * as awscloud from "@pulumi/cloud-aws";
+import * as awsx from "@pulumi/aws-infra";
 
 let config = new pulumi.Config("airflow");
 const dbPassword = config.require("dbPassword");
 
-let securityGroupIds = [ awscloud.getCluster()!.securityGroupId! ];
+let vpc = awsx.ec2.Vpc.getDefault();
+
+// Create a basic cluster and autoscaling group
+let cluster = new awsx.ecs.Cluster("airflow", { vpc });
+let autoScalingGroup = cluster.createAutoScalingGroup("airflow", {
+    templateParameters: {
+        minSize: 20,
+    },
+    launchConfigurationArgs: {
+        instanceType: "t2.xlarge",
+    },
+});
+
+let securityGroupIds = cluster.securityGroups.map(g => g.id);
 
 let dbSubnets = new aws.rds.SubnetGroup("dbsubnets", {
-    subnetIds: awscloud.getNetwork().subnetIds,
+    subnetIds: vpc.publicSubnetIds,
 });
 
 let db = new aws.rds.Instance("postgresdb", {
@@ -28,7 +41,7 @@ let db = new aws.rds.Instance("postgresdb", {
 });
 
 let cacheSubnets = new aws.elasticache.SubnetGroup("cachesubnets", {
-    subnetIds: awscloud.getNetwork().subnetIds,
+    subnetIds: vpc.publicSubnetIds,
 });
 
 let cacheCluster = new aws.elasticache.Cluster("cachecluster", {
@@ -42,57 +55,80 @@ let cacheCluster = new aws.elasticache.Cluster("cachecluster", {
     securityGroupIds: securityGroupIds,
 });
 
-let environment = {
-    "POSTGRES_HOST": db.endpoint.apply(e => e.split(":")[0]),
-    "POSTGRES_PASSWORD": dbPassword,
+let hosts = pulumi.all([db.endpoint.apply(e => e.split(":")[0]), cacheCluster.cacheNodes.apply(n => n[0].address)]);
+let environment = hosts.apply(([postgresHost, redisHost]) => [
+    { name: "POSTGRES_HOST", value: postgresHost },
+    { name: "POSTGRES_PASSWORD", value: dbPassword },
+    { name: "REDIS_HOST", value: redisHost },
+    { name: "EXECUTOR", value: "Celery" }
+]);
 
-    "REDIS_HOST": cacheCluster.cacheNodes.apply(n => n[0].address),
-
-    "EXECUTOR": "Celery",
-};
-
-let airflowController = new awscloud.Service("airflowcontroller", {
-    containers: {
-        "webserver": {
-            build: "./airflow-container",
-            ports: [{ port: 8080, external: true, protocol: "http" }],
-            environment: environment,
-            command: [ "webserver" ],
-        },
-
-        "scheduler": {
-            build: "./airflow-container",
-            environment: environment,
-            command: [ "scheduler" ],
-        },
-    },
-    replicas: 1,
+let airflowControllerListener = new awsx.elasticloadbalancingv2.ApplicationListener("airflowcontroller", {
+    external: true,
+    port: 8080,
+    protocol: "HTTP",
 });
 
-let airflower = new awscloud.Service("airflower", {
-    containers: {
-        // If the container is named "flower", we create environment variables that start
-        // with `FLOWER_` and Flower tries and fails to parse them as configuration.
-        "notflower": {
-            build: "./airflow-container",
-            ports: [{ port: 5555, external: true, protocol: "http" }],
-            environment: environment,
-            command: [ "flower" ],
+let airflowController = new awsx.ecs.EC2Service("airflowcontroller", {
+    cluster,
+    desiredCount: 1,
+    taskDefinitionArgs: {
+        containers: {
+            "webserver": {
+                image: awsx.ecs.Image.fromPath("./airflow-container"),
+                portMappings: [airflowControllerListener],
+                environment: environment,
+                command: [ "webserver" ],
+                memory: 128,
+            },
+
+            "scheduler": {
+                image: awsx.ecs.Image.fromPath("./airflow-container"),
+                environment: environment,
+                command: [ "scheduler" ],
+                memory: 128,
+            },
         },
     },
 });
 
-let airflowWorkers = new awscloud.Service("airflowworkers", {
-    containers: {
-        "worker": {
-            build: "./airflow-container",
-            environment: environment,
-            command: [ "worker" ],
-            memory: 1024,
-        },
-    },
-    replicas: 3,
+let airflowerListener = new awsx.elasticloadbalancingv2.ApplicationListener("airflower", {
+    port: 5555,
+    external: true,
+    protocol: "HTTP"
 });
 
-export let airflowEndpoint = airflowController.defaultEndpoint.apply(e => e.hostname);
-export let flowerEndpoint = airflower.defaultEndpoint.apply(e => e.hostname);
+let airflower = new awsx.ecs.EC2Service("airflower", {
+    cluster,
+    taskDefinitionArgs: {
+        containers: {
+            // If the container is named "flower", we create environment variables that start
+            // with `FLOWER_` and Flower tries and fails to parse them as configuration.
+            "notflower": {
+                image: awsx.ecs.Image.fromPath("./airflow-container"),
+                portMappings: [airflowerListener],
+                environment: environment,
+                command: [ "flower" ],
+                memory: 128,
+            },
+        },
+    },
+});
+
+let airflowWorkers = new awsx.ecs.EC2Service("airflowworkers", {
+    cluster,
+    desiredCount: 3,
+    taskDefinitionArgs: {
+        containers: {
+            "worker": {
+                image: awsx.ecs.Image.fromPath("./airflow-container"),
+                environment: environment,
+                command: [ "worker" ],
+                memory: 1024,
+            },
+        },
+    },
+});
+
+export let airflowEndpoint = airflowControllerListener.endpoint().apply(e => e.hostname);
+export let flowerEndpoint = airflowerListener.endpoint().apply(e => e.hostname);

@@ -20,12 +20,6 @@ For more information on how to run this example, see: https://pulumi.io/referenc
     $ pulumi config set aws:region us-east-1
     ```
 
-1. Enable ECS auto clustering:
-
-    ```
-    $ pulumi config set cloud-aws:ecsAutoCluster true
-    ```
-
 1. Set the desired RDS password with:
 
     ```
