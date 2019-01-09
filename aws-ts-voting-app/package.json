@@ -1,0 +1,13 @@
+{
+    "name": "voting-app",
+    "version": "0.1.0",
+    "devDependencies": {
+        "@types/node": "^8.0.27"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "dev",
+        "@pulumi/aws": "dev",
+        "@pulumi/aws-infra": "dev",
+        "@pulumi/cloud-aws": "dev"
+    }
+}
