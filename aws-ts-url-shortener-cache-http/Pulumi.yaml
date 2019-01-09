@@ -1,0 +1,20 @@
+name: url-shortener-cache-http
+runtime: nodejs
+description: URL shortener with cache and HttpServer
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    cloud:provider:
+      description: The cloud provider
+      default: aws
+    cloud-aws:useFargate:
+      description: Whether to use Fargate-based container compute
+      default: true
+    cloud-aws:functionIncludePaths:
+      description: Directory to include with the uploaded function code
+      default: www
+    redisPassword:
+      description: The Redis password
+      secret: true
