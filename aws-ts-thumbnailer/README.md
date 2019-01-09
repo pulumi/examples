@@ -50,37 +50,7 @@ with `***`.
         Type                                Name                                   Status        Info
     *   global                              global                                 unchanged     1 info message. info: Building container image 'pulum-
     +   pulumi:pulumi:Stack                 video-thumbnailer-thumbnailer-testing  created      1 info message. info: 081c66fa4b0c: Pushed
-    +   ├─ cloud:bucket:Bucket              bucket                                 created
-    +   │  ├─ cloud:function:Function             onNewVideo                             created
-    +   │  │  └─ aws:serverless:Function          onNewVideo                             created
-    +   │  │  └─ aws:serverless:Function          onNewVideo                             created
-    +   │  │  └─ aws:serverless:Function          onNewVideo                             created
-    +   │  │  └─ aws:serverless:Function          onNewVideo                             created
-    +   │  ├─ cloud:function:Function             onNewThumbnail                         created
-    +   │  │  └─ aws:serverless:Function          onNewThumbnail                         created
-    +   │  │  └─ aws:serverless:Function          onNewThumbnail                         created
-    +   │  │     └─ aws:lambda:Function           onNewVideo                             created
-    +   │  │  └─ aws:serverless:Function          onNewThumbnail                         created
-    +   │  │  └─ aws:serverless:Function          onNewThumbnail                         created
-    +   │  │     └─ aws:lambda:Function           onNewThumbnail                         created
-    +   │  ├─ aws:s3:Bucket                       bucket                                 created
-    +   │  ├─ aws:lambda:Permission               onNewThumbnail                         created
-    +   │  ├─ aws:lambda:Permission               onNewVideo                             created
-    +   │  └─ aws:s3:BucketNotification           bucket                                 created
-    +   ├─ aws-infra:network:Network              default-vpc                            created
-    +   ├─ aws:ecr:Repository                     pulum-dc8d99de-container               created
-    +   ├─ cloud:global:infrastructure            global-infrastructure                  created
-    +   │  ├─ aws:iam:Role                        pulumi-thumbnailer--task               created
-    +   │  ├─ aws:iam:Role                        pulumi-thumbna-execution               created
-    +   │  ├─ aws:iam:RolePolicyAttachment        pulumi-thu-task-32be53a2               created
-    +   │  ├─ aws:iam:RolePolicyAttachment        pulumi-thu-task-fd1a00e5               created
-    +   │  └─ aws:iam:RolePolicyAttachment        pulumi-thumbna-execution               created
-    +   ├─ cloud:task:Task                        ffmpegThumbTask                        created
-    +   │  ├─ aws:cloudwatch:LogGroup             ffmpegThumbTask                        created
-    +   │  └─ aws:ecs:TaskDefinition              ffmpegThumbTask                        created
-    +   └─ aws-infra:cluster:Cluster              pulumi-thumbnaile-global               created
-    +      ├─ aws:ecs:Cluster                     pulumi-thumbnaile-global               created
-    +      └─ aws:ec2:SecurityGroup               pulumi-thumbnaile-global               created
+    + ...
     ...
 
     info: 32 changes performed:
