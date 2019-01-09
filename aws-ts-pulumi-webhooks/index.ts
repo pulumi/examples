@@ -1,6 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as cloud from "@pulumi/cloud";
-import * as cloudAws from "@pulumi/cloud-aws";
 
 import * as crypto from "crypto";
 
@@ -19,8 +18,8 @@ const stackConfig = {
 
 // Just logs information aincomming webhook request.
 async function logRequest(req: cloud.Request, _: cloud.Response, next: () => void) {
-    const webhookID = req.headers["pulumi-webhook-id"] as string;
-    const webhookKind = req.headers["pulumi-webhook-kind"] as string;
+    const webhookID = req.headers["pulumi-webhook-id"];
+    const webhookKind = req.headers["pulumi-webhook-kind"];
     console.log(`Received webhook from Pulumi ${webhookID} [${webhookKind}]`);
     next();
 }
@@ -28,13 +27,13 @@ async function logRequest(req: cloud.Request, _: cloud.Response, next: () => voi
 // Webhooks can optionally be configured with a shared secret, so that webhook handlers like this app can authenticate
 // message integrity. Rejects any incomming requests that don't have a valid "pulumi-webhook-signature" header.
 async function authenticateRequest(req: cloud.Request, res: cloud.Response, next: () => void) {
-    const webhookSig = req.headers["pulumi-webhook-signature"] as string;
+    const webhookSig = req.headers["pulumi-webhook-signature"] as string;  // headers[] returns (string | string[]).
     if (!stackConfig.sharedSecret || !webhookSig) {
         next();
         return;
     }
 
-    const payload = <string>req.body.toString();
+    const payload = req.body.toString();
     const hmacAlg = crypto.createHmac("sha256", stackConfig.sharedSecret);
     const hmac = hmacAlg.update(payload).digest("hex");
 
@@ -47,14 +46,14 @@ async function authenticateRequest(req: cloud.Request, res: cloud.Response, next
     next();
 }
 
-const webhookHandler = new cloudAws.HttpEndpoint("pulumi-webhook-handler");
+const webhookHandler = new cloud.HttpEndpoint("pulumi-webhook-handler");
 
 webhookHandler.get("/", async (_, res) => {
     res.status(200).end("🍹 Pulumi Webhook Responder🍹\n");
 });
 
 webhookHandler.post("/", logRequest, authenticateRequest, async (req, res) => {
-    const webhookKind = req.headers["pulumi-webhook-kind"] as string;
+    const webhookKind = req.headers["pulumi-webhook-kind"];
     const payload = <string>req.body.toString();
     const prettyPrintedPayload = JSON.stringify(JSON.parse(payload), null, 2);
 
