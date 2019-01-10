@@ -31,25 +31,6 @@ const contentBucket = new aws.s3.Bucket("contentBucket",
         }
     });
 
-// contentBucket needs to have the "public-read" ACL so its contents can be ready by CloudFront and
-// served. But we deny the s3:ListBucket permission to prevent unintended disclosure of the bucket's
-// contents. If you know the Bucket object path, it is still available for anonymous access however.
-const denyListPolicyState: aws.s3.BucketPolicyArgs = {
-    bucket: contentBucket.bucket,
-    policy: contentBucket.arn.apply(arn => JSON.stringify({
-        Version: "2008-10-17",
-        Statement: [
-            {
-                Effect: "Deny",
-                Principal: "*",
-                Action: "s3:ListBucket",
-                Resource: arn,
-            },
-        ],
-    })),
-};
-const denyListPolicy = new aws.s3.BucketPolicy("deny-list", denyListPolicyState);
-
 // crawlDirectory recursive crawls the provided directory, applying the provided function
 // to every file it contains. Doesn't handle cycles from symlinks.
 function crawlDirectory(dir: string, f: (_: string) => void) {
@@ -97,17 +78,16 @@ const logsBucket = new aws.s3.Bucket("requestLogs",
 
 const tenMinutes = 60 * 10;
 
+const eastRegion = new aws.Provider("east", {
+    region: "us-east-1", // Certain resources must be in the us-east-1 region.
+});
+
 let certificateArn: pulumi.Input<string> = config.certificateArn!;
 
 /**
  * Only provision a certificate (and related resources) if a certificateArn is _not_ provided via configuration.
  */
 if (config.certificateArn === undefined) {
-    
-    const eastRegion = new aws.Provider("east", {
-        region: "us-east-1", // Per AWS, ACM certificate must be in the us-east-1 region.
-    });
-
     const certificate = new aws.acm.Certificate("certificate", {
         domainName: config.targetDomain,
         validationMethod: "DNS",
@@ -145,6 +125,107 @@ if (config.certificateArn === undefined) {
     certificateArn = certificateValidation.certificateArn;
 }
 
+const languageRedirectRole = new aws.iam.Role("language-redirect", {
+    assumeRolePolicy: JSON.stringify({
+        Version: "2012-10-17",
+        Statement: [
+            {
+                Action: "sts:AssumeRole",
+                Principal: {
+                    Service: [
+                        "lambda.amazonaws.com",
+                        "edgelambda.amazonaws.com",
+                    ],
+                },
+                Effect: "Allow",
+                Sid: "",
+            },
+        ],
+    }),
+});
+
+const languageRedirectRPA = new aws.iam.RolePolicyAttachment("language-redirect", {
+    role: languageRedirectRole,
+    policyArn: aws.iam.AWSLambdaFullAccess,
+});
+
+const languageRedirectLambda = new aws.lambda.Function("language-redirect", {
+    code: new pulumi.asset.AssetArchive({
+        "index.js": new pulumi.asset.StringAsset(
+            `
+            'use strict';
+
+            exports.handler = (event, context, callback) => {
+                const request = event.Records[0].cf.request;
+                const headers = request.headers;
+                if (request.uri == '/') {
+                    if (typeof headers['accept-language'] !== 'undefined') {
+                        const supportedLanguages = headers['accept-language'][0].value;
+                        console.log('Supported languages:', supportedLanguages)
+                        if (supportedLanguages.startsWith('es')) {
+                            callback(null, redirect('/es/'));
+                        }
+                        else {
+                            callback(null, request);
+                        }
+                    }
+                    else {
+                        callback(null, request);
+                    }
+                }
+                else {
+                    callback(null, request);
+                }
+            };
+
+            function redirect(to) {
+                const response = {
+                    status: '301',
+                    statusDescription: 'redirect to browser language',
+                    headers: {
+                        location: [{ key: 'Location', value: to }]
+                    }
+                };
+                console.log('RESPONSE:', response);
+                return response;
+            };
+            `,
+        ),
+    }),
+    role: languageRedirectRole.arn,
+    handler: "index.handler",
+    publish: true,
+    runtime: aws.lambda.NodeJS6d10Runtime,
+}, { provider: eastRegion });
+
+// let logGroup = new aws.cloudwatch.LogGroup("/aws/lambda/mylambda", {
+//     retentionInDays: 7,
+// });
+
+// let logcollector = new aws.lambda.Function("mylambda-logcollector", {
+//     code: new pulumi.asset.AssetArchive({
+//         "index.js": new pulumi.asset.StringAsset(
+//             "exports.handler = (e, c, cb) => console.log(e);",
+//         ),
+//     }),
+//     role: languageRedirectRole.arn,
+//     handler: "index.handler",
+//     runtime: aws.lambda.NodeJS6d10Runtime,
+// });
+
+// let permission = new aws.lambda.Permission("logcollector-permission", {
+//     action: "lambda:InvokeFunction",
+//     principal: "logs.us-east-1.amazonaws.com",
+//     sourceArn: logGroup.arn,
+//     function: logcollector,
+// });
+
+// let logSubscription = new aws.cloudwatch.LogSubscriptionFilter("logsubscription", {
+//     destinationArn: logcollector.arn,
+//     logGroup: logGroup,
+//     filterPattern: "",
+// });
+
 // distributionArgs configures the CloudFront distribution. Relevant documentation:
 // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html
 // https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html
@@ -152,7 +233,7 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
     enabled: true,
     // Alternate aliases the CloudFront distribution can be reached at, in addition to https://xxxx.cloudfront.net.
     // Required if you want to access the distribution via config.targetDomain as well.  
-    aliases: [ config.targetDomain ],
+    aliases: [config.targetDomain],
 
     // We only specify one origin for this distribution, the S3 content bucket.
     origins: [
@@ -190,6 +271,28 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
         defaultTtl: tenMinutes,
         maxTtl: tenMinutes,
     },
+
+    orderedCacheBehaviors: [
+        {
+            targetOriginId: contentBucket.arn,
+            pathPattern: "/*",
+            allowedMethods: ["GET", "HEAD",],
+            cachedMethods: ["GET", "HEAD",],
+            forwardedValues: {
+                cookies: { forward: "none" },
+                headers: ["accept-language"],
+                queryString: false,
+            },
+            lambdaFunctionAssociations: [{
+                eventType: "viewer-request",
+                includeBody: false,
+                lambdaArn: pulumi
+                    .all([languageRedirectLambda.arn, languageRedirectLambda.version])
+                    .apply(([arn, version]) => `${arn}:${version}`),
+            }],
+            viewerProtocolPolicy: "allow-all",
+        }
+    ],
 
     // "All" is the most broad distribution, and also the most expensive.
     // "100" is the least broad, and also the least expensive.
