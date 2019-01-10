@@ -16,6 +16,8 @@ const config = {
     targetDomain: stackConfig.require("targetDomain"),
     // (Optional) ACM certificate ARN for the target domain; must be in the us-east-1 region. If omitted, an ACM certificate will be created.
     certificateArn: stackConfig.get("certificateArn"),
+    // (Optional) Boolean flag to provision a Lambda@Edge fuction to redirect for specific client-supported languages.
+    languageRedirect: stackConfig.getBoolean("languageRedirect"),
 };
 
 // contentBucket is the S3 bucket that the website's contents will be stored in.
@@ -82,11 +84,10 @@ const eastRegion = new aws.Provider("east", {
     region: "us-east-1", // Certain resources must be in the us-east-1 region.
 });
 
-let certificateArn: pulumi.Input<string> = config.certificateArn!;
-
 /**
  * Only provision a certificate (and related resources) if a certificateArn is _not_ provided via configuration.
  */
+let certificateArn: pulumi.Input<string> = config.certificateArn!;
 if (config.certificateArn === undefined) {
     const certificate = new aws.acm.Certificate("certificate", {
         domainName: config.targetDomain,
@@ -125,106 +126,64 @@ if (config.certificateArn === undefined) {
     certificateArn = certificateValidation.certificateArn;
 }
 
-const languageRedirectRole = new aws.iam.Role("language-redirect", {
-    assumeRolePolicy: JSON.stringify({
-        Version: "2012-10-17",
-        Statement: [
-            {
-                Action: "sts:AssumeRole",
-                Principal: {
-                    Service: [
-                        "lambda.amazonaws.com",
-                        "edgelambda.amazonaws.com",
-                    ],
+/**
+ * Only provision a Lambda@Edge fuction (and related resources) if languageRedirect is 'true' from configuration.
+ * Once provisioned test with the following curl commands
+ * - curl -L -H 'accept-language: en' $(pulumi stack output targetDomainEndpoint)
+ * - curl -L -H 'accept-language: es' $(pulumi stack output targetDomainEndpoint)
+ */
+let languageCacheBehavior = [];
+if (config.languageRedirect) {
+    const languageRedirectRole = new aws.iam.Role("language-redirect", {
+        assumeRolePolicy: JSON.stringify({
+            Version: "2012-10-17",
+            Statement: [
+                {
+                    Action: "sts:AssumeRole",
+                    Principal: {
+                        Service: [
+                            "lambda.amazonaws.com",
+                            "edgelambda.amazonaws.com",
+                        ],
+                    },
+                    Effect: "Allow",
+                    Sid: "",
                 },
-                Effect: "Allow",
-                Sid: "",
-            },
-        ],
-    }),
-});
+            ],
+        }),
+    });
 
-const languageRedirectRPA = new aws.iam.RolePolicyAttachment("language-redirect", {
-    role: languageRedirectRole,
-    policyArn: aws.iam.AWSLambdaFullAccess,
-});
+    const languageRedirectLambda = new aws.lambda.Function("language-redirect", {
+        code: new pulumi.asset.AssetArchive({
+            "index.js": new pulumi.asset.FileAsset("./src/lambda-language-redirect.js"),
+        }),
+        role: languageRedirectRole.arn,
+        handler: "index.handler",
+        publish: true,
+        runtime: aws.lambda.NodeJS8d10Runtime,
+    }, { provider: eastRegion });
 
-const languageRedirectLambda = new aws.lambda.Function("language-redirect", {
-    code: new pulumi.asset.AssetArchive({
-        "index.js": new pulumi.asset.StringAsset(
-            `
-            'use strict';
+    const cacheBehavior = {
+        targetOriginId: contentBucket.arn,
+        pathPattern: "/*",
+        allowedMethods: ["GET", "HEAD",],
+        cachedMethods: ["GET", "HEAD",],
+        forwardedValues: {
+            cookies: { forward: "none" },
+            queryString: false,
+        },
+        lambdaFunctionAssociations: [{
+            eventType: "viewer-request",
+            includeBody: false,
+            lambdaArn: pulumi
+                .all([languageRedirectLambda.arn, languageRedirectLambda.version])
+                .apply(([arn, version]) => `${arn}:${version}`),
+        }],
+        viewerProtocolPolicy: "allow-all",
+    };
 
-            exports.handler = (event, context, callback) => {
-                const request = event.Records[0].cf.request;
-                const headers = request.headers;
-                if (request.uri == '/') {
-                    if (typeof headers['accept-language'] !== 'undefined') {
-                        const supportedLanguages = headers['accept-language'][0].value;
-                        console.log('Supported languages:', supportedLanguages)
-                        if (supportedLanguages.startsWith('es')) {
-                            callback(null, redirect('/es/'));
-                        }
-                        else {
-                            callback(null, request);
-                        }
-                    }
-                    else {
-                        callback(null, request);
-                    }
-                }
-                else {
-                    callback(null, request);
-                }
-            };
-
-            function redirect(to) {
-                const response = {
-                    status: '301',
-                    statusDescription: 'redirect to browser language',
-                    headers: {
-                        location: [{ key: 'Location', value: to }]
-                    }
-                };
-                console.log('RESPONSE:', response);
-                return response;
-            };
-            `,
-        ),
-    }),
-    role: languageRedirectRole.arn,
-    handler: "index.handler",
-    publish: true,
-    runtime: aws.lambda.NodeJS6d10Runtime,
-}, { provider: eastRegion });
-
-// let logGroup = new aws.cloudwatch.LogGroup("/aws/lambda/mylambda", {
-//     retentionInDays: 7,
-// });
-
-// let logcollector = new aws.lambda.Function("mylambda-logcollector", {
-//     code: new pulumi.asset.AssetArchive({
-//         "index.js": new pulumi.asset.StringAsset(
-//             "exports.handler = (e, c, cb) => console.log(e);",
-//         ),
-//     }),
-//     role: languageRedirectRole.arn,
-//     handler: "index.handler",
-//     runtime: aws.lambda.NodeJS6d10Runtime,
-// });
-
-// let permission = new aws.lambda.Permission("logcollector-permission", {
-//     action: "lambda:InvokeFunction",
-//     principal: "logs.us-east-1.amazonaws.com",
-//     sourceArn: logGroup.arn,
-//     function: logcollector,
-// });
-
-// let logSubscription = new aws.cloudwatch.LogSubscriptionFilter("logsubscription", {
-//     destinationArn: logcollector.arn,
-//     logGroup: logGroup,
-//     filterPattern: "",
-// });
+    languageCacheBehavior.push(cacheBehavior);
+}
 
 // distributionArgs configures the CloudFront distribution. Relevant documentation:
 // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html
@@ -272,27 +231,7 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
         maxTtl: tenMinutes,
     },
 
-    orderedCacheBehaviors: [
-        {
-            targetOriginId: contentBucket.arn,
-            pathPattern: "/*",
-            allowedMethods: ["GET", "HEAD",],
-            cachedMethods: ["GET", "HEAD",],
-            forwardedValues: {
-                cookies: { forward: "none" },
-                headers: ["accept-language"],
-                queryString: false,
-            },
-            lambdaFunctionAssociations: [{
-                eventType: "viewer-request",
-                includeBody: false,
-                lambdaArn: pulumi
-                    .all([languageRedirectLambda.arn, languageRedirectLambda.version])
-                    .apply(([arn, version]) => `${arn}:${version}`),
-            }],
-            viewerProtocolPolicy: "allow-all",
-        }
-    ],
+    orderedCacheBehaviors: languageCacheBehavior,
 
     // "All" is the most broad distribution, and also the most expensive.
     // "100" is the least broad, and also the least expensive.

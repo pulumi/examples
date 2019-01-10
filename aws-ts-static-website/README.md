@@ -9,7 +9,8 @@ This sample uses the following AWS products:
 - [Amazon S3](https://aws.amazon.com/s3/) is used to store the website's contents.
 - [Amazon CloudFront](https://aws.amazon.com/cloudfront/) is the CDN serving content.
 - [Amazon Route53](https://aws.amazon.com/route53/) is used to set up the DNS for the website.
-- [Amazon Certificate Manager](https://aws.amazon.com/certificate-manager/) is used for securing things via HTTPS.
+- [Amazon Certificate Manager](https://aws.amazon.com/certificate-manager/) (ACM) is used for securing things via HTTPS.
+- [Amazon Lambda@Edge](https://aws.amazon.com/lambda/edge/) is used for performing redirect logic within CloudFront.
 
 ## Getting Started
 
@@ -22,13 +23,14 @@ npm install
 Configure the Pulumi program. There are several configuration settings that need to be
 set:
 
-- `certificateArn` - ACM certificate to serve content from. ACM certificate creation needs to be
-  done manually. Also, any certificate used to secure a CloudFront distribution must be created
-  in the `us-east-1` region.
+- `pathToWebsiteContents` - Directory of the website's contents. e.g. the `./www` folder.
 - `targetDomain` - The domain to serve the website at (e.g. www.example.com). It is assumed that
   the parent domain (example.com) is a Route53 Hosted Zone in the AWS account you are running the
   Pulumi program in.
-- `pathToWebsiteContents` - Directory of the website's contents. e.g. the `./www` folder.
+- `certificateArn` - (Optional) ACM certificate to serve content from. If provided, the certificate 
+must be in the `us-east-1` region. If omitted, a certificate will be created with ACM.
+- `languageRedirect` - (Optional) Boolean flag to provision a Lambda@Edge fuction to redirect for 
+  specific client-supported languages.
 
 ## How it works
 
@@ -105,6 +107,18 @@ and AWS. (Which can happen when inspecting the CloudFront distribution in the AW
 
 This will get fixed in Pulumi soon, but for the time being you can find workaround steps in
 the [issue on GitHub](pulumi/pulumi/issues/1449).
+
+### Lambda was unable to delete arn:aws:lambda:... because it is a replicated function.
+
+This error should only occur during a `pulumi destroy` and only if you've set 
+`languageRedirect` to `true` in your application configuration. This error occurs because 
+Lambda@Edge functions are replicated to work with CloudFront and can only be deleted when 
+the replicas of the function have been deleted by CloudFront. Per AWS documentation, this can 
+take a few hours. If you encounter this error during a destroy, repeat the `pulumi destroy` 
+until it succeeds.
+
+See [Deleting Lambda@Edge Functions and Replicas](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-edge-delete-replicas.html) 
+for more detail.
 
 ## Deployment Speed
 
