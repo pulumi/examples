@@ -132,7 +132,7 @@ if (config.certificateArn === undefined) {
  * - curl -L -H 'accept-language: en' $(pulumi stack output targetDomainEndpoint)
  * - curl -L -H 'accept-language: es' $(pulumi stack output targetDomainEndpoint)
  */
-let languageCacheBehavior = [];
+let cacheBehaviours = [];
 if (config.languageRedirect) {
     const languageRedirectRole = new aws.iam.Role("language-redirect", {
         assumeRolePolicy: JSON.stringify({
@@ -182,7 +182,7 @@ if (config.languageRedirect) {
         viewerProtocolPolicy: "allow-all",
     };
 
-    languageCacheBehavior.push(cacheBehavior);
+    cacheBehaviours.push(cacheBehavior);
 }
 
 // distributionArgs configures the CloudFront distribution. Relevant documentation:
@@ -231,7 +231,7 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
         maxTtl: tenMinutes,
     },
 
-    orderedCacheBehaviors: languageCacheBehavior,
+    orderedCacheBehaviors: cacheBehaviours,
 
     // "All" is the most broad distribution, and also the most expensive.
     // "100" is the least broad, and also the least expensive.
