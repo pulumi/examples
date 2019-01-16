@@ -4,6 +4,20 @@
 
 An example Pulumi component that deploys a TypeScript function to Azure Functions.
 
+## Prerequisites
+
+If you have not done so already, from the directory that you want to use for Pulumi examples, clone the examples.
+
+```
+$ git clone https://github.com/pulumi/examples.git
+```
+Now change to the directory with the azure-ts-functions files.
+
+```
+$ cd examples/azure-ts-functions
+
+```
+
 ## Running the App
 
 1.  Create a new stack:
