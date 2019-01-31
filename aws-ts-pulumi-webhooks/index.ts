@@ -58,10 +58,10 @@ webhookHandler.post("/", logRequest, authenticateRequest, async (req, res) => {
     const webhookKind = req.headers["pulumi-webhook-kind"].toString();
     const payload = <string>req.body.toString();
     const prettyPrintedPayload = JSON.stringify(JSON.parse(payload), null, 2);
-    const fallbackText = `Pulumi Service Webhook (\`${webhookKind}\`)\n` + "```\n" + prettyPrintedPayload + "```\n";
 
     const client = new slack.WebClient(stackConfig.slackToken);
 
+    const fallbackText = `Pulumi Service Webhook (\`${webhookKind}\`)\n` + "```\n" + prettyPrintedPayload + "```\n";
     const messageArgs: slack.ChatPostMessageArguments = {
         channel: stackConfig.slackChannel,
         text: fallbackText,

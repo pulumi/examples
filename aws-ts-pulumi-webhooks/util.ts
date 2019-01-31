@@ -5,115 +5,126 @@ import { ChatPostMessageArguments } from "@slack/client";
 // https://pulumi.io/reference/service/webhooks.html
 // https://api.slack.com/docs/message-attachments
 export function formatSlackMessage(kind: string, payload: any, messageArgs: ChatPostMessageArguments): ChatPostMessageArguments {
-
-    let summary: string;
     const cloned: ChatPostMessageArguments = Object.assign({}, messageArgs) as ChatPostMessageArguments;
 
-    if (kind === "stack") {
-        summary = `${payload.organization.githubLogin}/${payload.stackName} ${payload.action}.`;
-        cloned.text = summary;
-        cloned.attachments = [
-            {
-                fallback: summary,
-                fields: [
-                    {
-                        title: "User",
-                        value: `${payload.user.name} (${payload.user.githubLogin})`,
-                        short: true,
-                    },
-                    {
-                        title: "Action",
-                        value: payload.action,
-                        short: true,
-                    },
-                ],
-            },
-        ];
-    }
-
-    if (kind === "team") {
-        summary = `${payload.organization.githubLogin} team ${payload.action}.`;
-        cloned.text = summary;
-        cloned.attachments = [
-            {
-                fallback: summary,
-                fields: [
-                    {
-                        title: "User",
-                        value: `${payload.user.name} (${payload.user.githubLogin})`,
-                        short: true,
-                    },
-                    {
-                        title: "Team",
-                        value: payload.team.name,
-                        short: true,
-                    },
-                    {
-                        title: "Stack",
-                        value: `${payload.organization.githubLogin}/${payload.stackName}`,
-                        short: true,
-                    },
-                    {
-                        title: "Action",
-                        value: payload.action,
-                        short: true,
-                    },
-                    {
-                        title: "Members",
-                        value: payload.team.members.map((m: any) => `• ${m.name} (${m.githubLogin})`).join("\n"),
-                        short: false,
-                    },
-                    {
-                        title: "Stacks",
-                        value: payload.team.stacks.map((s: any) => `• ${s.stackName} (${s.permission})`).join("\n"),
-                        short: false,
-                    },
-                ],
-            },
-        ];
-    }
-
-    if (kind === "stack_preview" || kind === "stack_update") {
-        summary = `${payload.organization.githubLogin}/${payload.stackName} ${payload.kind} ${payload.result}.`;
-        cloned.text = `${resultEmoji(payload.result)} ${summary}`;
-        cloned.attachments = [
-            {
-                fallback: `${summary}: ${payload.updateUrl}`,
-                color: resultColor(payload.result),
-                fields: [
-                    {
-                        title: "User",
-                        value: `${payload.user.name} (${payload.user.githubLogin})`,
-                        short: true,
-                    },
-                    {
-                        title: "Stack",
-                        value: `${payload.organization.githubLogin}/${payload.stackName}`,
-                        short: true,
-                    },
-                    {
-                        title: "Resource Changes",
-                        value: Object.keys(payload.resourceChanges)
-                            .map(key => `• ${titleCase(key)}: ${payload.resourceChanges[key]}`)
-                            .join("\n"),
-                        short: true,
-                    },
-                    {
-                        title: "Kind",
-                        value: titleCase(kind.replace("stack_", "")),
-                        short: true,
-                    },
-                    {
-                        title: "Permalink",
-                        value: payload.updateUrl,
-                        short: false,
-                    },
-                ],
-            },
-        ];
+    switch (kind) {
+        case "stack":
+            return formatStack(payload, cloned);
+        case "team":
+            return formatTeam(payload, cloned);
+        case "stack_preview":
+        case "stack_update":
+            return formatUpdate(kind, payload, cloned);
     }
 
     return cloned;
+}
+
+function formatStack(payload: any, args: ChatPostMessageArguments): ChatPostMessageArguments {
+    const summary = `${payload.organization.githubLogin}/${payload.stackName} ${payload.action}.`;
+    args.text = summary;
+    args.attachments = [
+        {
+            fallback: summary,
+            fields: [
+                {
+                    title: "User",
+                    value: `${payload.user.name} (${payload.user.githubLogin})`,
+                    short: true,
+                },
+                {
+                    title: "Action",
+                    value: payload.action,
+                    short: true,
+                },
+            ],
+        },
+    ];
+    return args
+}
+
+function formatTeam(payload: any, args: ChatPostMessageArguments): ChatPostMessageArguments {
+    const summary = `${payload.organization.githubLogin} team ${payload.action}.`;
+    args.text = summary;
+    args.attachments = [
+        {
+            fallback: summary,
+            fields: [
+                {
+                    title: "User",
+                    value: `${payload.user.name} (${payload.user.githubLogin})`,
+                    short: true,
+                },
+                {
+                    title: "Team",
+                    value: payload.team.name,
+                    short: true,
+                },
+                {
+                    title: "Stack",
+                    value: `${payload.organization.githubLogin}/${payload.stackName}`,
+                    short: true,
+                },
+                {
+                    title: "Action",
+                    value: payload.action,
+                    short: true,
+                },
+                {
+                    title: "Members",
+                    value: payload.team.members.map((m: any) => `• ${m.name} (${m.githubLogin})`).join("\n"),
+                    short: false,
+                },
+                {
+                    title: "Stacks",
+                    value: payload.team.stacks.map((s: any) => `• ${s.stackName} (${s.permission})`).join("\n"),
+                    short: false,
+                },
+            ],
+        },
+    ];
+    return args;
+}
+
+function formatUpdate(kind: "stack_preview" | "stack_update", payload: any, args: ChatPostMessageArguments): ChatPostMessageArguments {
+    const summary = `${payload.organization.githubLogin}/${payload.stackName} ${payload.kind} ${payload.result}.`;
+    args.text = `${resultEmoji(payload.result)} ${summary}`;
+    args.attachments = [
+        {
+            fallback: `${summary}: ${payload.updateUrl}`,
+            color: resultColor(payload.result),
+            fields: [
+                {
+                    title: "User",
+                    value: `${payload.user.name} (${payload.user.githubLogin})`,
+                    short: true,
+                },
+                {
+                    title: "Stack",
+                    value: `${payload.organization.githubLogin}/${payload.stackName}`,
+                    short: true,
+                },
+                {
+                    title: "Resource Changes",
+                    value: Object.keys(payload.resourceChanges)
+                        .map(key => `• ${titleCase(key)}: ${payload.resourceChanges[key]}`)
+                        .join("\n"),
+                    short: true,
+                },
+                {
+                    title: "Kind",
+                    value: titleCase(kind.replace("stack_", "")),
+                    short: true,
+                },
+                {
+                    title: "Permalink",
+                    value: payload.updateUrl,
+                    short: false,
+                },
+            ],
+        },
+    ];
+    return args;
 }
 
 function resultColor(result: string): string {
