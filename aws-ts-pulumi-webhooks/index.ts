@@ -55,7 +55,7 @@ webhookHandler.get("/", async (_, res) => {
 });
 
 webhookHandler.post("/", logRequest, authenticateRequest, async (req, res) => {
-    const webhookKind = req.headers["pulumi-webhook-kind"].toString();
+    const webhookKind = req.headers["pulumi-webhook-kind"] as string;  // headers[] returns (string | string[]).
     const payload = <string>req.body.toString();
     const prettyPrintedPayload = JSON.stringify(JSON.parse(payload), null, 2);
 
