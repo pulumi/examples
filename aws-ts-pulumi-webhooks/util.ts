@@ -21,7 +21,7 @@ export function formatSlackMessage(kind: string, payload: any, messageArgs: Chat
 }
 
 function formatStack(payload: any, args: ChatPostMessageArguments): ChatPostMessageArguments {
-    const summary = `${payload.organization.githubLogin}/${payload.stackName} ${payload.action}.`;
+    const summary = `${payload.organization.githubLogin}/${payload.projectName}/${payload.stackName} ${payload.action}.`;
     args.text = summary;
     args.attachments = [
         {
@@ -87,7 +87,7 @@ function formatTeam(payload: any, args: ChatPostMessageArguments): ChatPostMessa
 }
 
 function formatUpdate(kind: "stack_preview" | "stack_update", payload: any, args: ChatPostMessageArguments): ChatPostMessageArguments {
-    const summary = `${payload.organization.githubLogin}/${payload.stackName} ${payload.kind} ${payload.result}.`;
+    const summary = `${payload.organization.githubLogin}/${payload.projectName}/${payload.stackName} ${payload.kind} ${payload.result}.`;
     args.text = `${resultEmoji(payload.result)} ${summary}`;
     args.attachments = [
         {
