@@ -5,6 +5,8 @@ import * as crypto from "crypto";
 
 import * as slack from "@slack/client";
 
+import { formatSlackMessage } from "./util";
+
 const config = new pulumi.Config();
 
 const stackConfig = {
@@ -53,19 +55,23 @@ webhookHandler.get("/", async (_, res) => {
 });
 
 webhookHandler.post("/", logRequest, authenticateRequest, async (req, res) => {
-    const webhookKind = req.headers["pulumi-webhook-kind"];
+    const webhookKind = req.headers["pulumi-webhook-kind"] as string;  // headers[] returns (string | string[]).
     const payload = <string>req.body.toString();
     const prettyPrintedPayload = JSON.stringify(JSON.parse(payload), null, 2);
 
     const client = new slack.WebClient(stackConfig.slackToken);
-    await client.chat.postMessage(
-        {
-            channel: stackConfig.slackChannel,
-            text:
-                `Pulumi Service Webhook (\`${webhookKind}\`)\n` +
-                "```\n" + prettyPrintedPayload + "```\n",
-            as_user: true,
-        });
+
+    const fallbackText = `Pulumi Service Webhook (\`${webhookKind}\`)\n` + "```\n" + prettyPrintedPayload + "```\n";
+    const messageArgs: slack.ChatPostMessageArguments = {
+        channel: stackConfig.slackChannel,
+        text: fallbackText,
+        as_user: true,
+    }
+
+    // Format the Slack message based on the kind of webhook received.
+    const formattedMessageArgs = formatSlackMessage(webhookKind, payload, messageArgs);
+
+    await client.chat.postMessage(formattedMessageArgs);
     res.status(200).end(`posted to Slack channel ${stackConfig.slackChannel}\n`);
 });
 
