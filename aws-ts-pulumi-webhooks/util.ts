@@ -4,7 +4,7 @@ import { ChatPostMessageArguments } from "@slack/client";
 // See the Pulumi and Slack webhook documentation for details.
 // https://pulumi.io/reference/service/webhooks.html
 // https://api.slack.com/docs/message-attachments
-export function formatSlackMessage(kind: string, payload: any, messageArgs: ChatPostMessageArguments): ChatPostMessageArguments {
+export function formatSlackMessage(kind: string, payload: object, messageArgs: ChatPostMessageArguments): ChatPostMessageArguments {
     const cloned: ChatPostMessageArguments = Object.assign({}, messageArgs) as ChatPostMessageArguments;
 
     switch (kind) {

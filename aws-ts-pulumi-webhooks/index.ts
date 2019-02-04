@@ -57,7 +57,8 @@ webhookHandler.get("/", async (_, res) => {
 webhookHandler.post("/", logRequest, authenticateRequest, async (req, res) => {
     const webhookKind = req.headers["pulumi-webhook-kind"] as string;  // headers[] returns (string | string[]).
     const payload = <string>req.body.toString();
-    const prettyPrintedPayload = JSON.stringify(JSON.parse(payload), null, 2);
+    const parsedPayload = JSON.parse(payload);
+    const prettyPrintedPayload = JSON.stringify(parsedPayload, null, 2);
 
     const client = new slack.WebClient(stackConfig.slackToken);
 
@@ -69,7 +70,7 @@ webhookHandler.post("/", logRequest, authenticateRequest, async (req, res) => {
     }
 
     // Format the Slack message based on the kind of webhook received.
-    const formattedMessageArgs = formatSlackMessage(webhookKind, payload, messageArgs);
+    const formattedMessageArgs = formatSlackMessage(webhookKind, parsedPayload, messageArgs);
 
     await client.chat.postMessage(formattedMessageArgs);
     res.status(200).end(`posted to Slack channel ${stackConfig.slackChannel}\n`);
