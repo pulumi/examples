@@ -1,0 +1,16 @@
+name: aws-ts-stackreference-team
+runtime: nodejs
+description: An AWS TypeScript Pulumi program demonstrating sharing configuration
+  via StackReference resources
+template:
+  description: A minimal AWS TypeScript Pulumi program
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    companyStack:
+      description: The stack to reference company properties from
+    departmentStack:
+      description: The stack to reference department properties from
+    teamName:
+      description: The team name to use
