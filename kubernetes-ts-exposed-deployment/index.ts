@@ -22,7 +22,7 @@ const nginx = new k8s.apps.v1beta1.Deployment(appName, {
 
 // Allocate an IP to the nginx Deployment.
 const frontend = new k8s.core.v1.Service(appName, {
-    metadata: { labels: nginx.spec.apply(spec => spec.template.metadata.labels) },
+    metadata: { labels: nginx.spec.template.metadata.labels },
     spec: {
         type: isMinikube === "true" ? "ClusterIP" : "LoadBalancer",
         ports: [{ port: 80, targetPort: 80, protocol: "TCP" }],
@@ -33,7 +33,7 @@ const frontend = new k8s.core.v1.Service(appName, {
 // When "done", this will print the public IP.
 export let frontendIp: pulumi.Output<string>;
 if (isMinikube === "true") {
-    frontendIp = frontend.spec.apply(spec => spec.clusterIP);
+    frontendIp = frontend.spec.clusterIP;
 } else {
-    frontendIp = frontend.status.apply(status => status.loadBalancer.ingress[0].ip);
+    frontendIp = frontend.status.loadBalancer.ingress[0].ip;
 }

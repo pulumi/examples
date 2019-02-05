@@ -3,7 +3,7 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
-// The location of the built dotnet2.0 application to deploy 
+// The location of the built dotnet2.0 application to deploy
 let dotNetApplicationPublishFolder = "./app/bin/Debug/netcoreapp2.0/publish";
 let dotNetApplicationEntryPoint = "app::app.Functions::GetAsync";
 // The stage name to use for the API Gateway URL
@@ -58,7 +58,7 @@ let lambda = new aws.lambda.Function("mylambda", {
     timeout: 300,
     handler: dotNetApplicationEntryPoint,
     role: role.arn,
-    environment: { 
+    environment: {
         variables: {
             "COUNTER_TABLE": counterTable.name
         }
@@ -105,11 +105,11 @@ let restApi = new aws.apigateway.RestApi("api", {
 let deployment = new aws.apigateway.Deployment("api-deployment", {
     restApi: restApi,
     // Note: Set to empty to avoid creating an implicit stage, we'll create it explicitly below instead.
-    stageName: "", 
+    stageName: "",
 });
 
 // Create a stage, which is an addressable instance of the Rest API. Set it to point at the latest deployment.
-let stage = new aws.apigateway.Stage("api-stage", { 
+let stage = new aws.apigateway.Stage("api-stage", {
     restApi: restApi,
     deployment: deployment,
     stageName: stageName
@@ -120,8 +120,8 @@ let invokePermission = new aws.lambda.Permission("api-lambda-permission", {
     action: "lambda:invokeFunction",
     function: lambda,
     principal: "apigateway.amazonaws.com",
-    sourceArn: deployment.executionArn.apply(arn => arn + "*/*"),
+    sourceArn: pulumi.interpolate `${deployment.executionArn}*/*`,
 });
 
 // Export the https endpoint of the running Rest API
-export let endpoint = deployment.invokeUrl.apply(url => url + stageName);
+export let endpoint = pulumi.interpolate `${deployment.invokeUrl}${stageName}`;

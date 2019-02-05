@@ -71,7 +71,7 @@ export class HttpFunction extends pulumi.ComponentResource {
 
         this.storageAccount = new azure.storage.Account(`${name}sa`, {
             ...resourceGroupArgs,
-        
+
             accountKind: "StorageV2",
             accountTier: "Standard",
             accountReplicationType: "LRS",
@@ -88,7 +88,7 @@ export class HttpFunction extends pulumi.ComponentResource {
             storageAccountName: this.storageAccount.name,
             storageContainerName: this.storageContainer.name,
             type: "block",
-        
+
             content: new pulumi.asset.AssetArchive(blobContent(name, handler)),
         }, parentArgs);
 
@@ -96,9 +96,9 @@ export class HttpFunction extends pulumi.ComponentResource {
 
         this.appServicePlan = new azure.appservice.Plan(`${name}-p`, {
             ...resourceGroupArgs,
-        
+
             kind: "FunctionApp",
-        
+
             // https://social.msdn.microsoft.com/Forums/azure/en-US/665c365d-2b86-4a77-8cea-72ccffef216c
             sku: {
                 tier: "Dynamic",
@@ -108,17 +108,15 @@ export class HttpFunction extends pulumi.ComponentResource {
 
         this.functionApp = new azure.appservice.FunctionApp(`${name}-app`, {
             ...resourceGroupArgs,
-        
+
             appServicePlanId: this.appServicePlan.id,
             storageConnectionString: this.storageAccount.primaryConnectionString,
-        
+
             appSettings: {
                 "WEBSITE_RUN_FROM_ZIP": this.codeBlobUrl,
             },
         }, parentArgs);
 
-        this.endpoint = this.functionApp.defaultHostname.apply(h => {
-            return `https://${h}/api/${name}`;
-        });
+        this.endpoint = pulumi.interpolate `https://${this.functionApp.defaultHostname}/api/${name}`;
     }
 };

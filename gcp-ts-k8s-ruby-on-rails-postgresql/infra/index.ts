@@ -1,5 +1,6 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
+import * as pulumi from "@pulumi/pulumi";
 import * as docker from "@pulumi/docker";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
@@ -43,16 +44,16 @@ const appDeployment = new k8s.apps.v1.Deployment("rails-deployment", {
     },
 }, { provider: cluster.provider });
 const appService = new k8s.core.v1.Service("rails-service", {
-    metadata: { labels: appDeployment.metadata.apply(m => m.labels) },
+    metadata: { labels: appDeployment.metadata.labels },
     spec: {
         type: "LoadBalancer",
         ports: [{ port: appPort, targetPort: appPort }],
-        selector: appDeployment.spec.apply(spec => spec.template.metadata.labels),
+        selector: appDeployment.spec.template.metadata.labels,
     },
 }, { provider: cluster.provider });
 
 // Export the app deployment name so we can easily access it.
-export let appName = appDeployment.metadata.apply(m => m.name);
+export let appName = appDeployment.metadata.name;
 
 // Export the service's IP address.
 export let appAddress = appService.status.apply(s => `http://${s.loadBalancer.ingress[0].ip}:${appPort}`);

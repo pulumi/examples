@@ -1,3 +1,4 @@
+import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as config from "./config";
 import { getLinuxAmi } from "pawsami";
@@ -50,7 +51,7 @@ const webServer = new aws.ec2.Instance("webServer", {
                     },
                 },
                 services: {
-                    "sysvinit": {  
+                    "sysvinit": {
                         "mysqld": { enabled: true, ensureRunning: true },
                     },
                 },
@@ -114,4 +115,4 @@ const webServer = new aws.ec2.Instance("webServer", {
 export let vmIP = webServer.publicIp;
 
 // Export the URL for our newly created Rails application.
-export let websiteURL = webServer.publicDns.apply(url => `http://${url}/notes`);
+export let websiteURL = pulumi.interpolate `http://${webServer.publicDns}/notes`;

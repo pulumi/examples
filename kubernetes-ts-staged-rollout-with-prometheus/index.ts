@@ -65,6 +65,4 @@ const staging = new k8s.apps.v1beta1.Deployment("staging-example-app", {
     spec: { replicas: 1, template: instrumentedPod }
 });
 
-export const p90ResponseTime = staging.metadata.apply(
-    meta => meta.annotations["example.com/p90ResponseTime"]
-);
+export const p90ResponseTime = staging.metadata.annotations["example.com/p90ResponseTime"];

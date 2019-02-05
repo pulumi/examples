@@ -1,3 +1,4 @@
+const pulumi = require("@pulumi/pulumi");
 const awsx = require("@pulumi/awsx");
 
 let cluster = new awsx.ecs.Cluster("example", { });
@@ -17,4 +18,4 @@ let service = new awsx.ecs.FargateService("nginx", {
 });
 
 // export just the hostname property of the container frontend
-exports.hostname = listener.endpoint().apply(e => `http://${e.hostname}`);
+exports.hostname = pulumi.interpolate `http://${listener.endpoint().hostname}`;
