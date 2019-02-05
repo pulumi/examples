@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/pulumi": "latest",
-        "@pulumi/gcp": "latest"
+        "@pulumi/pulumi": "feature-proxyOutput",
+        "@pulumi/gcp": "feature-proxyOutput"
     }
 }

@@ -6,8 +6,8 @@
         "azure-functions-ts-essentials": "^1.3.2"
     },
     "dependencies": {
-        "@pulumi/azure": "latest",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/azure": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput",
         "azure-storage": "^2.9.0-preview"
     }
 }

@@ -4,9 +4,9 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/azure": "latest",
-        "@pulumi/kubernetes": "latest",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/azure": "feature-proxyOutput",
+        "@pulumi/kubernetes": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput",
         "@types/mongoose": "^5.2.11",
         "mongoose": "^5.2.13"
     }

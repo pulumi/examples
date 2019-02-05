@@ -5,8 +5,8 @@
         "@types/node": "^8.0.27"
     },
     "dependencies": {
-        "@pulumi/pulumi": "^0.16.8",
-        "@pulumi/cloud": "^0.16.2",
-        "@pulumi/cloud-aws": "^0.16.2"
+        "@pulumi/pulumi": "feature-proxyOutput",
+        "@pulumi/cloud": "feature-proxyOutput",
+        "@pulumi/cloud-aws": "feature-proxyOutput"
     }
 }

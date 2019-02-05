@@ -4,8 +4,8 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/aws": "latest",
-        "@pulumi/gcp": "latest",
-        "@pulumi/pulumi": "latest"
+        "@pulumi/aws": "feature-proxyOutput",
+        "@pulumi/gcp": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput"
     }
 }

@@ -1,4 +1,4 @@
-import * as awsinfra from "@pulumi/aws-infra";
+import * as awsinfra from "@pulumi/awsx";
 import * as eks from "@pulumi/eks";
 
 // Create a VPC for our cluster.

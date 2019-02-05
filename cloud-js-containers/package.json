@@ -2,9 +2,9 @@
     "name": "container-quickstart",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/aws": "latest",
-        "@pulumi/cloud": "latest",
-        "@pulumi/cloud-aws": "latest",
-        "@pulumi/pulumi": "latest"
+        "@pulumi/aws": "feature-proxyOutput",
+        "@pulumi/cloud": "feature-proxyOutput",
+        "@pulumi/cloud-aws": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput"
     }
 }

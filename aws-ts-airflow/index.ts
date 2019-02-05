@@ -1,6 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/aws-infra";
+import * as awsx from "@pulumi/awsx";
 
 let config = new pulumi.Config("airflow");
 const dbPassword = config.require("dbPassword");

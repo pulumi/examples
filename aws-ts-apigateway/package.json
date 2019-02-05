@@ -2,7 +2,7 @@
     "name": "aws-ts-apigateway",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "latest",
-        "@pulumi/pulumi": "latest"
+        "@pulumi/aws": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput"
     }
 }

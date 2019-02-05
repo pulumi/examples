@@ -1,7 +1,7 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/aws-infra";
+import * as awsx from "@pulumi/awsx";
 
 // A simple cluster to run our tasks in.
 const cluster = awsx.ecs.Cluster.getDefault();

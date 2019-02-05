@@ -4,9 +4,9 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/docker": "^0.16.2",
-        "@pulumi/gcp": "latest",
-        "@pulumi/kubernetes": "^0.17.1",
-        "@pulumi/pulumi": "latest"
+        "@pulumi/docker": "feature-proxyOutput",
+        "@pulumi/gcp": "feature-proxyOutput",
+        "@pulumi/kubernetes": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput"
     }
 }

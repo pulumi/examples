@@ -5,8 +5,8 @@
         "@types/node": "^10.3.3"
     },
     "dependencies": {
-        "@pulumi/azure": "latest",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/azure": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput",
         "azure-storage": "^2.9.0-preview"
     }
 }

@@ -4,9 +4,9 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/aws": "^0.16.4",
-        "@pulumi/kubernetes": "^0.18.0",
-        "@pulumi/pulumi": "^0.16.8",
+        "@pulumi/aws": "feature-proxyOutput",
+        "@pulumi/kubernetes": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput",
         "@types/mime": "^2.0.0",
         "crypto": "^1.0.1",
         "mime": "^2.3.1"

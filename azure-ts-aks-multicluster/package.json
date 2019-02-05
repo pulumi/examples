@@ -5,9 +5,9 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/azure": "latest",
-        "@pulumi/kubernetes": "latest",
-        "@pulumi/pulumi": "latest"
+        "@pulumi/azure": "feature-proxyOutput",
+        "@pulumi/kubernetes": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput"
     },
     "license": "Apache-2.0"
 }

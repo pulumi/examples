@@ -2,8 +2,8 @@
     "name": "aws-ec2-rails",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "latest",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput",
         "pawsami": "^0.1.1",
         "pcloudinit": "^0.1.0"
     }

@@ -1,7 +1,7 @@
 // Copyright 2017, Pulumi Corporation.  All rights reserved.
 
 import * as pulumi from "@pulumi/pulumi";
-import * as awsx from "@pulumi/aws-infra";
+import * as awsx from "@pulumi/awsx";
 
 // Get the password to use for Redis from config.
 let config = new pulumi.Config();

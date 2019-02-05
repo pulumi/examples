@@ -2,8 +2,8 @@
     "name": "aws-ts-twitter-athena",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "latest",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput",
         "twitter": "^1.7.1"
     },
     "devDependencies": {

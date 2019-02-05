@@ -4,7 +4,7 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/pulumi": "latest",
-        "@pulumi/kubernetes": "latest"
+        "@pulumi/pulumi": "feature-proxyOutput",
+        "@pulumi/kubernetes": "feature-proxyOutput"
     }
 }

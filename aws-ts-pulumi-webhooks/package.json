@@ -4,8 +4,8 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/cloud-aws": "latest",
-        "@pulumi/pulumi": "latest",
-        "@slack/client": "latest"
+        "@pulumi/cloud-aws": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput",
+        "@slack/client": "feature-proxyOutput"
     }
 }

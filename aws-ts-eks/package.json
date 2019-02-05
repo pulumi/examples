@@ -4,8 +4,8 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/pulumi": "latest",
-        "@pulumi/aws-infra": "latest",
-        "@pulumi/eks": "latest"
+        "@pulumi/pulumi": "feature-proxyOutput",
+        "@pulumi/awsx": "feature-proxyOutput",
+        "@pulumi/eks": "feature-proxyOutput"
     }
 }

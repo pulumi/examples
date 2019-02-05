@@ -5,8 +5,8 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/aws": "latest",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "feature-proxyOutput",
+        "@pulumi/pulumi": "feature-proxyOutput",
         "mime": "^2.0.3"
     }
 }

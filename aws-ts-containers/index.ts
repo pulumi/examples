@@ -1,4 +1,4 @@
-import * as awsx from "@pulumi/aws-infra";
+import * as awsx from "@pulumi/awsx";
 
 // Create an elastic network listener to listen for requests and route them to the container.
 // See https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html

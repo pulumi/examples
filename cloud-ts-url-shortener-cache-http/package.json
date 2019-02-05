@@ -15,12 +15,12 @@
         "@types/mime-types": "^2.1.0"
     },
     "dependencies": {
-        "@pulumi/pulumi": "latest",
-        "@pulumi/azure": "latest",
-        "@pulumi/azure-serverless": "latest",
-        "@pulumi/cloud": "latest",
-        "@pulumi/cloud-aws": "latest",
-        "@pulumi/cloud-azure": "latest",
+        "@pulumi/pulumi": "feature-proxyOutput",
+        "@pulumi/azure": "feature-proxyOutput",
+        "@pulumi/azure-serverless": "feature-proxyOutput",
+        "@pulumi/cloud": "feature-proxyOutput",
+        "@pulumi/cloud-aws": "feature-proxyOutput",
+        "@pulumi/cloud-azure": "feature-proxyOutput",
         "redis": "^2.8.0",
         "express": "^4.16.3",
         "parseurl": "^1.3.2",
