@@ -31,7 +31,6 @@ stacks via [StackReference](https://pulumi.io/reference/organizing-stacks-projec
 1. Set the required configuration variables:
 
     ```bash
-    $ pulumi config set aws:region us-west-2    # any valid AWS zone works
     $ pulumi config set companyName 'ACME Widget Co.'
     ```
 
@@ -131,6 +130,7 @@ stacks via [StackReference](https://pulumi.io/reference/organizing-stacks-projec
     $ pulumi config set companyStack YOUR_ORG/aws-ts-stackreference-company/dev
     $ pulumi config set departmentStack YOUR_ORG/aws-ts-stackreference-department/dev
     $ pulumi config set teamName 'Frontend Dev'
+    $ pulumi config set aws:region us-west-2 # any valid AWS zone works
     ```
 
 1. Deploy everything with the `pulumi up` command. 
