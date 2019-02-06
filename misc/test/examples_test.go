@@ -278,6 +278,7 @@ func TestExamples(t *testing.T) {
 	var tests []integration.ProgramTestOptions
 	if testing.Short() {
 		tests = shortTests
+		tests = append(tests, quickTests...)
 	} else {
 		tests = longTests
 	}
