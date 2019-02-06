@@ -230,7 +230,7 @@ func TestExamples(t *testing.T) {
 		// }),
 	}
 
-	longExamples := []integration.ProgramTestOptions{
+	longTests := []integration.ProgramTestOptions{
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-ts-aks-helm"),
 			Config: map[string]string{
@@ -268,7 +268,7 @@ func TestExamples(t *testing.T) {
 		tests = longTests
 	}
 
-	for _, ex := range examples {
+	for _, ex := range tests {
 		example := ex
 		t.Run(example.Dir, func(t *testing.T) {
 			integration.ProgramTest(t, &example)
