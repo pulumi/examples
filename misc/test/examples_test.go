@@ -42,7 +42,7 @@ func TestExamples(t *testing.T) {
 		Overrides:            overrides,
 	}
 
-	examples := []integration.ProgramTestOptions{
+	shortTests := []integration.ProgramTestOptions{
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder"),
 			Config: map[string]string{
@@ -258,12 +258,14 @@ func TestExamples(t *testing.T) {
 		// }),
 	}
 
-	// Only include the long examples on non-Short test runs
-	if !testing.Short() {
-		fmt.Println("Running full test suite including longer tests. To run only shorter tests run with the -short option.")
-		examples = append(examples, longExamples...)
+	// Run the short or long tests depending on the config.  Note that we only run long tests on
+	// travis after already running short tests.  So no need to actually run both at the same time
+	// ever.
+	var tests []integration.ProgramTestOptions
+	if testing.Short() {
+		tests = shortTests
 	} else {
-		fmt.Println("Running short test suite.  To run full test suite run without -short option")
+		tests = longTests
 	}
 
 	for _, ex := range examples {
