@@ -47,18 +47,22 @@ After cloning this repo, from this working directory, run these commands:
 1. After 10-15 minutes, your cluster will be ready, and the kubeconfig JSON you'll use to connect to the cluster will
    be available as an output.
 
-    As part of the update, you'll see a few new objects in the output such as: a
-    `Namespace` in Kubernetes to deploy into, and a `Deployment` resource for
-    the NGINX app. Pulumi understands which changes to a given cloud
-    resource can be made in-place, and which require replacement, and computes
+    As part of the update, you'll see some new objects in the output: a
+    `Namespace` in Kubernetes to deploy into, a `Deployment` resource for
+    the NGINX app, and a LoadBalancer `Service` to publicly access NGINX.
+
+    Pulumi understands which changes to a given cloud resource can be made
+    in-place, and which require replacement, and computes
     the minimally disruptive change to achieve the desired state.
 
     ```
     ...
 
-    + deploymentName: "helloworld-58jkmc7c"
+    + deploymentName : "helloworld-58jkmc7c"
     ...
-    + namespaceName : "helloworld-xaldhgca"
+    + namespaceName  : "helloworld-xaldhgca"
+    + serviceHostname: "a71f5ab3f2a6e11e3ac39200f4a9ad5d-1297981966.us-west-2.elb.amazonaws.com"
+    + serviceName    : "helloworld-3fc2uhh7"
     ```
 
     To access your new Kubernetes cluster using `kubectl`, we need to setup the
@@ -67,9 +71,9 @@ After cloning this repo, from this working directory, run these commands:
 
     ```bash
     $ pulumi stack output kubeconfig > kubeconfig
+    $ export KUBECONFIG=$PWD/kubeconfig
     $ export KUBERNETES_VERSION=1.11.5 && sudo curl -s -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/amd64/kubectl && sudo chmod +x /usr/local/bin/kubectl
 
-    $ export KUBECONFIG=$PWD/kubeconfig
     $ kubectl version
     $ kubectl cluster-info
     $ kubectl get nodes
