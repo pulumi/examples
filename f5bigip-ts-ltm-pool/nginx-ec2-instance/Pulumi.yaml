@@ -1,0 +1,8 @@
+name: nginx-ec2-instance/
+runtime: nodejs
+description: Provision multiple NGINX instances on AWS EC2 (in TypeScript)
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2

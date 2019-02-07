@@ -1,0 +1,10 @@
+name: f5bigip-ec2-instance
+runtime: nodejs
+description: Provision an F5 BigIP appliance from the AWS Marketplace (in TypeScript)
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    f5BigIpAdminPassword:
+      description: The 'admin' password to set on the F5 BIG-IP instance
