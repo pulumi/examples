@@ -1,4 +1,4 @@
-const awsx = require("@pulumi/aws-infra");
+const awsx = require("@pulumi/awsx");
 
 let cluster = new awsx.ecs.Cluster("example", { });
 let listener= new awsx.elasticloadbalancingv2.NetworkListener("nginx", { port: 80 });

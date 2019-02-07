@@ -58,7 +58,7 @@ After cloning this repo, from this working directory, run these commands:
             status code: 400, request id: 9f031e89-a0b0-11e8-96f8-534c1d26a353
     ```
 
-    We are tracking enabling the creation of VPCs limited to specific AZs to unblock this in `us-east-1`: pulumi/pulumi-aws-infra#32
+    We are tracking enabling the creation of VPCs limited to specific AZs to unblock this in `us-east-1`: pulumi/pulumi-awsx#32
 
 4. Stand up the EKS cluster, which will also deploy the Kubernetes Dashboard:
 
