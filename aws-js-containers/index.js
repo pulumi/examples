@@ -17,4 +17,4 @@ let service = new awsx.ecs.FargateService("nginx", {
 });
 
 // export just the hostname property of the container frontend
-exports.hostname = listener.endpoint().apply(e => `http://${e.hostname}`);
+exports.hostname = listener.endpoint.apply(e => `http://${e.hostname}`);
