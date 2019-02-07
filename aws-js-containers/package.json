@@ -4,6 +4,6 @@
     "dependencies": {
         "@pulumi/pulumi": "dev",
         "@pulumi/aws": "dev",
-        "@pulumi/aws-infra": "dev"
+        "@pulumi/awsx": "dev"
     }
 }
