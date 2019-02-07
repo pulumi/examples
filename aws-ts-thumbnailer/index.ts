@@ -1,7 +1,7 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/aws-infra";
+import * as awsx from "@pulumi/awsx";
 
 // A simple cluster to run our tasks in.
 const cluster = awsx.ecs.Cluster.getDefault();
@@ -15,7 +15,7 @@ export const bucketName = bucket.id;
 // A task which runs a containerized FFMPEG job to extract a thumbnail image.
 const ffmpegThumbnailTask = new awsx.ecs.FargateTaskDefinition("ffmpegThumbTask", {
     container: {
-        image: awsx.ecs.Image.fromPath("./docker-ffmpeg-thumb"),
+        image: awsx.ecs.Image.fromPath("ffmpegThumbTask", "./docker-ffmpeg-thumb"),
         memoryReservation: 512,
     },
 });

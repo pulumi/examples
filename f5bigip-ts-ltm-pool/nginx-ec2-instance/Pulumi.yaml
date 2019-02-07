@@ -1,6 +1,6 @@
-name: aws-ts-eks-hello-world
-description: EKS + Kubernetes Hello World example
+name: nginx-ec2-instance/
 runtime: nodejs
+description: Provision multiple NGINX instances on AWS EC2 (in TypeScript)
 template:
   config:
     aws:region:

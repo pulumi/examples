@@ -48,8 +48,8 @@ with `***`.
         Type                                Name                                                         Status        Info
     *   global                                    global                                                 unchanged     1 info message. info: Building container image 'p
     +   pulumi:pulumi:Stack                       video-thumbnailer-rekognition                          created       1 info message. info: 88888b9b1b5b: Pushed
-    +   ├─ aws-infra:network:Network              default-vpc                                            created
-    +   ├─ aws-infra:network:Network              default-vpc                                            created
+    +   ├─ awsx:network:Network              default-vpc                                            created
+    +   ├─ awsx:network:Network              default-vpc                                            created
     +   ├─ cloud:global:infrastructure            global-infrastructure                                  created
     +   ├─ cloud:global:infrastructure            global-infrastructure                                  created
     +   │  ├─ aws:iam:Role                        pulumi-donna-t-execution                               created
@@ -85,7 +85,7 @@ with `***`.
     +   ├─ cloud:task:Task                        ffmpegThumbTask                                        created
     +   │  ├─ aws:cloudwatch:LogGroup             ffmpegThumbTask                                        created
     +   │  └─ aws:ecs:TaskDefinition              ffmpegThumbTask                                        created
-    +   ├─ aws-infra:cluster:Cluster              pulumi-donna-thum-global                               created
+    +   ├─ awsx:cluster:Cluster              pulumi-donna-thum-global                               created
     +   │  ├─ aws:ecs:Cluster                     pulumi-donna-thum-global                               created
     +   │  └─ aws:ec2:SecurityGroup               pulumi-donna-thum-global                               created
     +   ├─ aws:iam:RolePolicyAttachment           rekognition-access                                     created

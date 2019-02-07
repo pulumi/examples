@@ -2,8 +2,8 @@
     "name": "container-quickstart",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/pulumi": "dev",
-        "@pulumi/aws": "dev",
-        "@pulumi/aws-infra": "=0.16.3-dev.1546999531"
+        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "latest",
+        "@pulumi/aws-infra": "latest"
     }
 }

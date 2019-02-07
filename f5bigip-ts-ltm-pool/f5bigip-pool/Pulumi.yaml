@@ -1,0 +1,10 @@
+name: f5bigip-pool
+runtime: nodejs
+description: Provision F5 BigIP Local Traffic Manager (LTM) resources (in TypeScript)
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    backendInstances: 
+      description: Comma-delimited list of IP addresses with ports to load balance - i.e. '10.0.0.10:80,10.0.0.11:80,10.0.0.12:80'

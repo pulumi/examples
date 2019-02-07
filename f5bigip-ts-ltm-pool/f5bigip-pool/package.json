@@ -1,10 +1,10 @@
 {
-    "name": "wordpress",
+    "name": "aws-typescript",
     "devDependencies": {
         "@types/node": "latest"
     },
     "dependencies": {
         "@pulumi/pulumi": "latest",
-        "@pulumi/kubernetes": "latest"
+        "@pulumi/f5bigip": "latest"
     }
 }

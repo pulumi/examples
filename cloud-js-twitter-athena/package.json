@@ -2,9 +2,9 @@
     "name": "aws-serverless-js-twitter",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/cloud": "^0.16.2",
-        "@pulumi/cloud-aws": "^0.16.2",
-        "@pulumi/pulumi": "^0.16.8",
+        "@pulumi/cloud": "latest",
+        "@pulumi/cloud-aws": "latest",
+        "@pulumi/pulumi": "latest",
         "twitter": "^1.7.1"
     }
 }

@@ -1,6 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/aws-infra";
+import * as awsx from "@pulumi/awsx";
 
 let config = new pulumi.Config("airflow");
 const dbPassword = config.require("dbPassword");
@@ -75,7 +75,7 @@ let airflowController = new awsx.ecs.EC2Service("airflowcontroller", {
     taskDefinitionArgs: {
         containers: {
             "webserver": {
-                image: awsx.ecs.Image.fromPath("./airflow-container"),
+                image: awsx.ecs.Image.fromPath("webserver", "./airflow-container"),
                 portMappings: [airflowControllerListener],
                 environment: environment,
                 command: [ "webserver" ],
@@ -83,7 +83,7 @@ let airflowController = new awsx.ecs.EC2Service("airflowcontroller", {
             },
 
             "scheduler": {
-                image: awsx.ecs.Image.fromPath("./airflow-container"),
+                image: awsx.ecs.Image.fromPath("scheduler", "./airflow-container"),
                 environment: environment,
                 command: [ "scheduler" ],
                 memory: 128,
@@ -105,7 +105,7 @@ let airflower = new awsx.ecs.EC2Service("airflower", {
             // If the container is named "flower", we create environment variables that start
             // with `FLOWER_` and Flower tries and fails to parse them as configuration.
             "notflower": {
-                image: awsx.ecs.Image.fromPath("./airflow-container"),
+                image: awsx.ecs.Image.fromPath("notflower", "./airflow-container"),
                 portMappings: [airflowerListener],
                 environment: environment,
                 command: [ "flower" ],
@@ -121,7 +121,7 @@ let airflowWorkers = new awsx.ecs.EC2Service("airflowworkers", {
     taskDefinitionArgs: {
         containers: {
             "worker": {
-                image: awsx.ecs.Image.fromPath("./airflow-container"),
+                image: awsx.ecs.Image.fromPath("worker", "./airflow-container"),
                 environment: environment,
                 command: [ "worker" ],
                 memory: 1024,
