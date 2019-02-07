@@ -1,7 +1,7 @@
 // Copyright 2017, Pulumi Corporation.  All rights reserved.
 
 import * as pulumi from "@pulumi/pulumi";
-import * as awsx from "@pulumi/aws-infra";
+import * as awsx from "@pulumi/awsx";
 
 // Get the password to use for Redis from config.
 let config = new pulumi.Config();
@@ -34,7 +34,7 @@ let frontend = new awsx.ecs.FargateService("voting-app-frontend", {
     taskDefinitionArgs: {
         containers: {
             votingAppFrontend: {
-                image: awsx.ecs.Image.fromPath("./frontend"),   // path to the folder containing the Dockerfile
+                image: awsx.ecs.Image.fromPath("voting-app-frontend", "./frontend"),   // path to the folder containing the Dockerfile
                 memory: 512,
                 portMappings: [frontendListener],
                 environment: redisEndpoint.apply(e => [

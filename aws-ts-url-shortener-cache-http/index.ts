@@ -1,7 +1,7 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/aws-infra";
+import * as awsx from "@pulumi/awsx";
 import * as cloud from "@pulumi/cloud-aws";
 import * as cache from "./cache";
 import * as express from "express";

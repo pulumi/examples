@@ -15,10 +15,10 @@
         "@types/mime-types": "^2.1.0"
     },
     "dependencies": {
-        "@pulumi/pulumi": "^0.16.9",
-        "@pulumi/aws": "^0.16.5",
-        "@pulumi/aws-infra": "dev",
-        "@pulumi/cloud-aws": "^0.16.2",
+        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "latest",
+        "@pulumi/aws-infra": "latest",
+        "@pulumi/cloud-aws": "latest",
         "redis": "^2.8.0",
         "express": "^4.16.3",
         "parseurl": "^1.3.2",

@@ -3,8 +3,8 @@
     "version": "0.1.0",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/pulumi": "^0.16.9",
-        "@pulumi/aws": "^0.16.5",
-        "@pulumi/aws-infra": "dev"
+        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "latest",
+        "@pulumi/aws-infra": "latest"
     }
 }

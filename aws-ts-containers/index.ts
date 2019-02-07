@@ -1,4 +1,4 @@
-import * as awsx from "@pulumi/aws-infra";
+import * as awsx from "@pulumi/awsx";
 
 // Create an elastic network listener to listen for requests and route them to the container.
 // See https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html
@@ -12,7 +12,7 @@ let service = new awsx.ecs.FargateService("nginx", {
     taskDefinitionArgs: {
         containers: {
             nginx: {
-                image: awsx.ecs.Image.fromPath("./app"),
+                image: awsx.ecs.Image.fromPath("nginx", "./app"),
                 memory: 512,
                 portMappings: [listener],
             },

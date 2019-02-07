@@ -5,9 +5,9 @@
         "@types/node": "^8.0.27"
     },
     "dependencies": {
-        "@pulumi/pulumi": "dev",
-        "@pulumi/aws": "dev",
-        "@pulumi/aws-infra": "dev",
-        "@pulumi/cloud-aws": "dev"
+        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "latest",
+        "@pulumi/aws-infra": "latest",
+        "@pulumi/cloud-aws": "latest"
     }
 }

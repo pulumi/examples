@@ -1,4 +1,4 @@
-import * as awsinfra from "@pulumi/aws-infra";
+import * as awsx from "@pulumi/awsx";
 import * as eks from "@pulumi/eks";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
@@ -6,7 +6,7 @@ import * as pulumi from "@pulumi/pulumi";
 const name = "helloworld";
 
 // Create an EKS cluster with non-default configuration
-const vpc = new awsinfra.Network("vpc", { usePrivateSubnets: false });
+const vpc = new awsx.Network("vpc", { usePrivateSubnets: false });
 const cluster = new eks.Cluster(name, {
     vpcId: vpc.vpcId,
     subnetIds: vpc.subnetIds,
