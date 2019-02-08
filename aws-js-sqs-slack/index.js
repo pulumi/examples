@@ -1,12 +1,11 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
 let aws = require("@pulumi/aws");
-let serverless = require("@pulumi/aws-serverless");
 let config = require("./config");
 
 let queue = new aws.sqs.Queue("mySlackQueue", { visibilityTimeoutSeconds: 180 });
 
-serverless.queue.subscribe("mySlackPoster", queue, async (e) => {
+queue.onEvent("mySlackPoster", async (e) => {
     let slack = require("@slack/client");
     let client = new slack.WebClient(config.slackToken);
     for (let rec of e.Records) {

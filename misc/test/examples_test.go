@@ -54,6 +54,13 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 		}),
+		quickBase.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-js-sqs-slack"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+				"slackToken": "token",
+			},
+		}),
 	}
 
 	shortTests := []integration.ProgramTestOptions{
