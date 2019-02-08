@@ -17,7 +17,7 @@
     "dependencies": {
         "@pulumi/pulumi": "latest",
         "@pulumi/aws": "latest",
-        "@pulumi/aws-infra": "latest",
+        "@pulumi/awsx": "latest",
         "@pulumi/cloud-aws": "latest",
         "redis": "^2.8.0",
         "express": "^4.16.3",

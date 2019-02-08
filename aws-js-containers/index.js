@@ -8,7 +8,7 @@ let service = new awsx.ecs.FargateService("nginx", {
     taskDefinitionArgs: {
         containers: {
             nginx: {
-                image: awsx.ecs.Image.fromPath("./app"),
+                image: awsx.ecs.Image.fromPath("nginx", "./app"),
                 memory: 512,
                 portMappings: [listener],
             },
@@ -17,4 +17,4 @@ let service = new awsx.ecs.FargateService("nginx", {
 });
 
 // export just the hostname property of the container frontend
-exports.hostname = listener.endpoint().apply(e => `http://${e.hostname}`);
+exports.hostname = listener.endpoint.apply(e => `http://${e.hostname}`);

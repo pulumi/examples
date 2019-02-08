@@ -42,6 +42,20 @@ func TestExamples(t *testing.T) {
 		Overrides:            overrides,
 	}
 
+	quickBase := base.With(integration.ProgramTestOptions{
+		Quick:       true,
+		SkipRefresh: true,
+	})
+
+	quickTests := []integration.ProgramTestOptions{
+		quickBase.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-js-containers"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+		}),
+	}
+
 	shortTests := []integration.ProgramTestOptions{
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder"),
@@ -264,6 +278,7 @@ func TestExamples(t *testing.T) {
 	var tests []integration.ProgramTestOptions
 	if testing.Short() {
 		tests = shortTests
+		tests = append(tests, quickTests...)
 	} else {
 		tests = longTests
 	}

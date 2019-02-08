@@ -5,7 +5,7 @@
     },
     "dependencies": {
         "@pulumi/pulumi": "latest",
-        "@pulumi/aws-infra": "latest",
+        "@pulumi/awsx": "latest",
         "@pulumi/eks": "latest"
     }
 }
