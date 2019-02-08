@@ -3,7 +3,7 @@
     "dependencies": {
         "@types/node": "latest",
         "@pulumi/aws": "latest",
-        "@pulumi/aws-infra": "latest",
+        "@pulumi/awsx": "latest",
         "@pulumi/kubernetes": "latest",
         "@pulumi/eks": "latest",
         "@pulumi/pulumi": "latest"
