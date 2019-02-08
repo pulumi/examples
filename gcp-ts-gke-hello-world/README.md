@@ -11,11 +11,20 @@ To deploy your infrastructure, follow the below steps.
 ### Prerequisites
 
 1. [Install Pulumi](https://pulumi.io/install)
-1. [Install Node.js 8.11.3](https://nodejs.org/en/download/)
+1. [Install Node.js version 6 or later](https://nodejs.org/en/download/)
+1. Install a package manager for Node.js, such as [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/en/docs/install).
 1. [Install Google Cloud SDK (`gcloud`)](https://cloud.google.com/sdk/docs/downloads-interactive)
-1. [Configure GCP Service Account Key & Download Credentials](https://pulumi.io/install/gcp.html)
-    * **Note**: The Service Account key credentials used must have the
-    role `Kubernetes Engine Admin` / `container.admin`
+1. Configure Auth Options
+    1. `gcloud` Login
+
+        ```bash
+        $ gcloud auth login
+        $ gcloud config set project <YOUR_PROJECT_HERE>
+        $ gcloud auth application-default login
+        ```
+    1. [Configure GCP Service Account Key & Download Credentials](https://pulumi.io/install/gcp.html)
+        * **Note**: The Service Account key credentials used must have the
+        role `Kubernetes Engine Admin` / `container.admin`
 
 ### Steps
 
@@ -35,25 +44,20 @@ After cloning this repo, from this working directory, run these commands:
 
 1. Set the required GCP configuration variables:
 
-    Note, `credentials.json` is the GCP Service Account key downloaded from the [GCP
-    Credentials](https://console.cloud.google.com/apis/credentials) page.
-
     ```bash
-    $ cat credentials.json | pulumi config set gcp:credentials --secret
     $ pulumi config set gcp:project <your-gcp-project-here>
     $ pulumi config set gcp:zone us-west1-a     // any valid GCP Zone here
     ```
 
-   By default, your cluster will have 2 nodes of type `n1-standard-1`.
-   This is configurable, however; for instance if we'd like to choose
-   3 nodes of type `n1-standard-2` instead, we can run these commands:
-
-   ```bash
-   $ pulumi config set nodeCount 3
-   $ pulumi config set nodeMachineType n1-standard-2
-   ```
-
-   This shows how stacks can be configurable in useful ways. You can even change these after provisioning.
+	> *Note*: By default, your cluster's config will be set to use 2 nodes of
+	> type `n1-standard-1`. This is configurable, however; for instance if
+	> we'd like to choose 3 nodes of type `n1-standard-2` instead,
+	> we can run these commands and then `pulumi up` on a future run:
+	>
+	> ```bash
+	> $ pulumi config set nodeCount 3
+	> $ pulumi config set nodeMachineType n1-standard-2
+	> ```
 
 1. Stand up the GKE cluster:
 
@@ -114,26 +118,26 @@ After cloning this repo, from this working directory, run these commands:
     in-place, and which require replacement, and computes
     the minimally disruptive change to achieve the desired state.
 
-    **Note:** Pulumi auto-generates a suffix for all objects. Pulumi's object model does
-    create-before-delete replacements by default on updates, but this will only work if
-    you are using name auto-generation so that the newly created resource is
-    guaranteed to have a differing, non-conflicting name. Doing this
-    allows a new resource to be created, and dependencies to be updated to
-    point to the new resource, before the old resource is deleted.
-    This is generally quite useful.
+    > **Note:** Pulumi auto-generates a suffix for all objects. Pulumi's object model does
+    > create-before-delete replacements by default on updates, but this will only work if
+    > you are using name auto-generation so that the newly created resource is
+    > guaranteed to have a differing, non-conflicting name. Doing this
+    > allows a new resource to be created, and dependencies to be updated to
+    > point to the new resource, before the old resource is deleted.
+    > This is generally quite useful.
+    >
+    > ```
+    > clusterName    : "helloworld-2a6de9a"
+	> deploymentName : "helloworld-tlsr4sg5"
+    > kubeconfig     : "<KUBECONFIG_CONTENTS>"
+	> namespaceName  : "helloworld-pz4u5kyq"
+	> serviceName    : "helloworld-l61b5dby"
+	> servicePublicIP: "35.236.26.151"
+    > ```
 
-    ```
-    ...
-	deploymentName : "helloworld-tlsr4sg5"
-    ...
-	namespaceName  : "helloworld-pz4u5kyq"
-	serviceName    : "helloworld-l61b5dby"
-	servicePublicIP: "35.236.26.151"
-    ```
-
-    If you visit the FQDN listed in `serviceHostname` you should land on the
+    If you visit the FQDN listed in `servicePublicIP` you should land on the
     NGINX welcome page. Note, that it may take a minute or so for the
-    LoadBalancer to become active on AWS.
+    LoadBalancer to become active on GCP.
 
 1. Access the Kubernetes Cluster using `kubectl`
 
@@ -167,9 +171,14 @@ After cloning this repo, from this working directory, run these commands:
     $ kubectl delete deployment my-nginx
     ```
 
+    Of course, by doing so, resources are outside of Pulumi's purview, but this simply
+    demonstrates that all the `kubectl` commands you're used to will work.
+
 1. Experimentation
 
     From here on, feel free to experiment. Simply making edits and running `pulumi up` afterwords, will incrementally update your stack.
+
+    ### Running Off-the-Shelf Guestbook YAML
 
     For example, if you wish to pull existing Kubernetes YAML manifests into
     Pulumi to aid in your transition, append the following code block to the existing
@@ -212,7 +221,8 @@ After cloning this repo, from this working directory, run these commands:
     );
 
     // Export the Guestbook public LoadBalancer endpoint
-    export const guestbookPublicIP = guestbook.getResourceProperty("v1/Service", "frontend", "status").apply(s => s.loadBalancer.ingress[0].ip);
+    export const guestbookPublicIP =
+        guestbook.getResourceProperty("v1/Service", "frontend", "status").apply(s => s.loadBalancer.ingress[0].ip);
     ```
 
 1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
