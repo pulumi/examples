@@ -14,17 +14,20 @@ To deploy your infrastructure, follow the below steps.
 1. [Install Node.js version 6 or later](https://nodejs.org/en/download/)
 1. Install a package manager for Node.js, such as [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/en/docs/install).
 1. [Install Google Cloud SDK (`gcloud`)](https://cloud.google.com/sdk/docs/downloads-interactive)
-1. Configure Auth Options
-    1. `gcloud` Login
+1. Configure GCP Auth
+
+    * Login using `gcloud`
 
         ```bash
         $ gcloud auth login
-        $ gcloud config set project <YOUR_PROJECT_HERE>
+        $ gcloud config set project <YOUR_GCP_PROJECT_HERE>
         $ gcloud auth application-default login
         ```
-    1. [Configure GCP Service Account Key & Download Credentials](https://pulumi.io/install/gcp.html)
-        * **Note**: The Service Account key credentials used must have the
-        role `Kubernetes Engine Admin` / `container.admin`
+    > Note: This auth mechanism is meant for inner loop developer
+    > workflows. If you want to run this example in an unattended service
+    > account setting, such as in CI/CD, please [follow instructions to
+    > configure your service account](https://pulumi.io/install/gcp.html). The
+    > service account must have the role `Kubernetes Engine Admin` / `container.admin`.
 
 ### Steps
 
@@ -32,11 +35,15 @@ After cloning this repo, from this working directory, run these commands:
 
 1. Install the required Node.js packages:
 
+    This installs the dependent packages [needed](https://pulumi.io/reference/how.html) for our Pulumi program.
+
     ```bash
     $ npm install
     ```
 
-1. Create a new stack, which is an isolated deployment target for this example:
+1. Create a new Pulumi stack, which is an isolated deployment target for this example:
+
+    This will initialize the Pulumi program in TypeScript.
 
     ```bash
     $ pulumi stack init
@@ -44,20 +51,12 @@ After cloning this repo, from this working directory, run these commands:
 
 1. Set the required GCP configuration variables:
 
+    This sets configuration options and default values for our cluster.
+
     ```bash
-    $ pulumi config set gcp:project <your-gcp-project-here>
+    $ pulumi config set gcp:project <YOUR_GCP_PROJECT_HERE>
     $ pulumi config set gcp:zone us-west1-a     // any valid GCP Zone here
     ```
-
-	> *Note*: By default, your cluster's config will be set to use 2 nodes of
-	> type `n1-standard-1`. This is configurable, however; for instance if
-	> we'd like to choose 3 nodes of type `n1-standard-2` instead,
-	> we can run these commands and then `pulumi up` on a future run:
-	>
-	> ```bash
-	> $ pulumi config set nodeCount 3
-	> $ pulumi config set nodeMachineType n1-standard-2
-	> ```
 
 1. Stand up the GKE cluster:
 
@@ -67,6 +66,12 @@ After cloning this repo, from this working directory, run these commands:
     and prompts on whether to proceed with the deployment. Note that the stack
     itself is counted as a resource, though it does not correspond
     to a physical cloud resource.
+
+    You can also run `pulumi up --diff` to see and inspect the diffs of the
+    overall changes expected to take place.
+
+    Running `pulumi up` will deploy the GKE cluster. Note, provisioning a
+    new GKE cluster takes between 3-5 minutes.
 
     ```bash
     $ pulumi update
@@ -118,13 +123,8 @@ After cloning this repo, from this working directory, run these commands:
     in-place, and which require replacement, and computes
     the minimally disruptive change to achieve the desired state.
 
-    > **Note:** Pulumi auto-generates a suffix for all objects. Pulumi's object model does
-    > create-before-delete replacements by default on updates, but this will only work if
-    > you are using name auto-generation so that the newly created resource is
-    > guaranteed to have a differing, non-conflicting name. Doing this
-    > allows a new resource to be created, and dependencies to be updated to
-    > point to the new resource, before the old resource is deleted.
-    > This is generally quite useful.
+	> **Note:** Pulumi auto-generates a suffix for all objects.
+    > See the [Pulumi Programming Model](../../reference/programming-model.md#autonaming) for more info.
     >
     > ```
     > clusterName    : "helloworld-2a6de9a"
