@@ -1,3 +1,4 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 import * as awsx from "@pulumi/awsx";
 import * as eks from "@pulumi/eks";
 import * as k8s from "@pulumi/kubernetes";
