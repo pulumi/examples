@@ -12,9 +12,10 @@ To deploy your infrastructure, follow the below steps.
 ### Prerequisites
 
 1. [Install Pulumi](https://pulumi.io/install)
-2. [Install Node.js 8.11.3](https://nodejs.org/en/download/)
-3. [Configure AWS Credentials](https://pulumi.io/install/aws.html)
-4. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html#get-started-kubectl)
+1. [Install Node.js version 6 or later](https://nodejs.org/en/download/)
+1. Install a package manager for Node.js, such as [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/en/docs/install).
+1. [Configure AWS Credentials](https://pulumi.io/install/aws.html)
+1. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html#get-started-kubectl)
 
 ### Steps
 
@@ -22,17 +23,23 @@ After cloning this repo, from this working directory, run these commands:
 
 1. Install the required Node.js packages:
 
+    This installs the dependent packages [needed](https://pulumi.io/reference/how.html) for our Pulumi program.
+
     ```bash
     $ npm install
     ```
 
 1. Create a new stack, which is an isolated deployment target for this example:
 
+    This will initialize the Pulumi program in TypeScript.
+
     ```bash
     $ pulumi stack init
     ```
 
-1. Set the required configuration variables for this program:
+1. Set the required AWS configuration variables:
+
+    This sets configuration options and default values for our cluster.
 
     ```bash
     $ pulumi config set aws:region us-west-2
@@ -46,6 +53,12 @@ After cloning this repo, from this working directory, run these commands:
     and prompts on whether to proceed with the deployment. Note that the stack
     itself is counted as a resource, though it does not correspond
     to a physical cloud resource.
+
+    You can also run `pulumi up --diff` to see and inspect the diffs of the
+    overall changes expected to take place.
+
+    Running `pulumi up` will deploy the EKS cluster. Note, provisioning a
+    new EKS cluster takes between 10-15 minutes.
 
     ```bash
     $ pulumi update
@@ -205,23 +218,16 @@ After cloning this repo, from this working directory, run these commands:
     in-place, and which require replacement, and computes
     the minimally disruptive change to achieve the desired state.
 
-    **Note:** Pulumi auto-generates a suffix for all objects. Pulumi's object model does
-    create-before-delete replacements by default on updates, but this will only work if
-    you are using name auto-generation so that the newly created resource is
-    guaranteed to have a differing, non-conflicting name. Doing this
-    allows a new resource to be created, and dependencies to be updated to
-    point to the new resource, before the old resource is deleted.
-    This is generally quite useful.
-
-    ```
-    ...
-
-    + deploymentName : "helloworld-58jkmc7c"
-    ...
-    + namespaceName  : "helloworld-xaldhgca"
-    + serviceHostname: "a71f5ab3f2a6e11e3ac39200f4a9ad5d-1297981966.us-west-2.elb.amazonaws.com"
-    + serviceName    : "helloworld-3fc2uhh7"
-    ```
+	> **Note:** Pulumi auto-generates a suffix for all objects.
+    > See the [Pulumi Programming Model](../../reference/programming-model.md#autonaming) for more info.
+    >
+    > ```
+    > deploymentName : "helloworld-58jkmc7c"
+    > ...
+    > namespaceName  : "helloworld-xaldhgca"
+    > serviceHostname: "a71f5ab3f2a6e11e3ac39200f4a9ad5d-1297981966.us-west-2.elb.amazonaws.com"
+    > serviceName    : "helloworld-3fc2uhh7"
+    > ```
 
     If you visit the FQDN listed in `serviceHostname` you should land on the
     NGINX welcome page. Note, that it may take a minute or so for the
@@ -259,9 +265,13 @@ After cloning this repo, from this working directory, run these commands:
     $ kubectl delete deployment my-nginx
     ```
 
+    Of course, by doing so, resources are outside of Pulumi's purview, but this simply
+
 1. Experimentation
 
     From here on, feel free to experiment. Simply making edits and running `pulumi up` afterwords, will incrementally update your stack.
+
+    ### Running Off-the-Shelf Guestbook YAML
 
     For example, if you wish to pull existing Kubernetes YAML manifests into
     Pulumi to aid in your transition, append the following code block to the existing
@@ -304,7 +314,8 @@ After cloning this repo, from this working directory, run these commands:
     );
 
     // Export the Guestbook public LoadBalancer endpoint
-    export const guestbookPublicIP = guestbook.getResourceProperty("v1/Service", "frontend", "status").apply(s => s.loadBalancer.ingress[0].ip);
+    export const guestbookPublicIP =
+        guestbook.getResourceProperty("v1/Service", "frontend", "status").apply(s => s.loadBalancer.ingress[0].ip);
     ```
 
 1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
