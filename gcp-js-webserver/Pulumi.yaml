@@ -5,6 +5,6 @@ template:
   config:
     gcp:project:
       description: The Google Cloud project to deploy into
-    gcp:project:
+    gcp:zone:
       description: The Google Cloud zone
       default: us-central1-a
