@@ -12,14 +12,21 @@ Starting point for building the Pulumi nginx server sample in Google Cloud Platf
     $ pulumi stack init gcp-instance-nginx
     ```
 
-2.  Configure the project:
+2. Configure Python environment:
+    ```
+    virtualenv -p python3 venv
+    source venv/bin/activate
+    pip install pulumi_gcp
+    ```
+
+3.  Configure the project:
 
     ```
     $ export GOOGLE_PROJECT=cncf-230209; export GOOGLE_REGION=asia-east1; export GOOGLE_ZONE=asia-east1-a;
     $ export GOOGLE_CREDENTIALS=YOURGCPCREDENTIALS
     ```
 
-3.  Run `pulumi up` to preview and deploy changes:
+4.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
     Previewing update (gcp-instance-nginx):
@@ -73,7 +80,7 @@ Starting point for building the Pulumi nginx server sample in Google Cloud Platf
     Duration: 51s
     ```
 
-4.  Curl the HTTP server:
+5.  Curl the HTTP server:
 
     ```
     $ curl $(pulumi stack output external_ip)
@@ -195,7 +202,7 @@ Starting point for building the Pulumi nginx server sample in Google Cloud Platf
     </html>
     ```
 
-5. Destroy the created resources:
+6. Destroy the created resources:
 
     ```
     $ pulumi destroy
@@ -227,7 +234,7 @@ Starting point for building the Pulumi nginx server sample in Google Cloud Platf
     Duration: 1m57s
     ```
 
-6. Destroy the stack:
+7. Destroy the stack:
 
     ```
     $ pulumi stack rm
