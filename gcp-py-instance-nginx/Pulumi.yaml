@@ -1,0 +1,3 @@
+name: gcp-instance-nginx
+runtime: python
+description: Deploy a Nginx Server in a GCP instance
