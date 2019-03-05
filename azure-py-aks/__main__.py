@@ -6,11 +6,11 @@ from pulumi_azure.ad import Application, ServicePrincipal, ServicePrincipalPassw
 from pulumi_azure.containerservice import KubernetesCluster, Registry
 from pulumi_azure.network import VirtualNetwork, Subnet
 
-config = pulumi.Config('azure-py-kubernetes')
-PREFIX = config.get('prefix') or 'replaceme'
-PASSWORD = config.get('password') or 'DEf34tg!rg35y#F23'
-SSHKEY = config.get('sshkey') or 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxinIAIDDCradZPAgX5GzBLv00u4rigOLUbU00E44FrfMTqu5wXiejJ4ycSb1bI+//ZNgaB2UYRbPL7A9OUKY+K4sX5O84Q6DPMjo/90IANHVTLf3xTaSc7hpvXOtIjJTJeiamxClgnTAcR55RV/j9/Wptxa8GGcRmRCcSmJUkx5AZTFI+s8aF0W3aeHHRw7TxNKBuwrX7FDcHyGKvdkFg4OP863Xe5hp5ql1C3XibmCOp1CMPIU2hCmGOy1LGbOf/Pa+QKAdtUSrPNK/jBWvPWo0k02Ii0JtMAdlpVqnJc3czNIp5gEqZCRCGEdkb/kZnJiMRZhmLBYnC8tiMxvZj core@k8s'
-LOCATION = config.get('location') or 'westeurope'
+config = pulumi.Config('azure-py-aks')
+PREFIX = config.require('prefix')
+PASSWORD = config.require('password')
+SSHKEY = config.require('sshkey')
+LOCATION = config.get('location') or 'east us'
 
 # create Azure AD Application for AKS
 app = Application(
@@ -88,7 +88,7 @@ aks = KubernetesCluster(
     agent_pool_profile=(
         {
             "name": "type1",
-            "count": 2,
+            "count": 3,
             "vmSize": "Standard_B2ms",
             "osType": "Linux",
             "maxPods": 110,

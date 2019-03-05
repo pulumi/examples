@@ -31,12 +31,13 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi stack init
     ```
 
-3. Set the configuration variables for this program, they have default values, so you dont have to do that:
+3. Set the configuration variables for this program:
 
     ```bash
     $ pulumi config set prefix all_resources_will_be_prefixed_with_this_value
     $ pulumi config set password service_principal_password
-    $ pulumi config set sshkey your_public_ssh_key
+    $ pulumi config set sshkey < ~/.ssh/id_rsa.pub
+    $ # this has a default value, so you can skip it
     $ pulumi config set location any_valid_azure_location_for_aks
     ```
 
@@ -49,13 +50,13 @@ After cloning this repo, from this working directory, run these commands:
 5. After 10-15 minutes, your cluster will be ready, and the kubeconfig YAML you'll use to connect to the cluster will be available as an output. You can save this kubeconfig to a file like so:
 
     ```bash
-    $ pulumi stack output kubeconfig >kubeconfig.yaml
+    $ pulumi stack output kubeconfig > kubeconfig.yaml
     ```
 
     Once you have this file in hand, you can interact with your new cluster as usual via `kubectl`:
 
     ```bash
-    $ KUBECONFIG=./kubeconfig.json kubectl get nodes
+    $ KUBECONFIG=./kubeconfig.yaml kubectl get nodes
     ```
 6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
