@@ -1,3 +1,4 @@
+const pulumi = require("@pulumi/pulumi");
 const cloud = require("@pulumi/cloud-aws");
 
 let service = new cloud.Service("pulumi-nginx", {
@@ -12,4 +13,4 @@ let service = new cloud.Service("pulumi-nginx", {
 });
 
 // export just the hostname property of the container frontend
-exports.hostname = service.defaultEndpoint.apply(e => `http://${e.hostname}`);
+exports.hostname = pulumi.interpolate `http://${service.defaultEndpoint.hostname}`;

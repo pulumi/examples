@@ -47,7 +47,7 @@ export class FileBucket {
             .update(this.fileContents[fileName])
             .digest("hex")
             .slice(0, 6);
-        return this.bucket.bucket.apply(bucketName => `${bucketName}-${digest}`);
+        return pulumi.interpolate `${this.bucket.bucket}-${digest}`;
     }
 
     getUrlForFile(file: string): pulumi.Output<string> {

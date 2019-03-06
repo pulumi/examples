@@ -22,7 +22,7 @@ export class Cache {
             },
         });
 
-        this.endpoint = this.redis.endpoints.apply(endpoints => endpoints.redis[6379]);
+        this.endpoint = this.redis.endpoints.redis[6379];
     }
 
     public get(key: string): Promise<string> {

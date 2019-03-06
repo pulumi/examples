@@ -44,11 +44,11 @@ const nginx = new k8s.apps.v1beta1.Deployment("nginx", {
 
 // Expose proxy to the public Internet.
 const frontend = new k8s.core.v1.Service("nginx", {
-    metadata: { labels: nginx.spec.apply(spec => spec.template.metadata.labels) },
+    metadata: { labels: nginx.spec.template.metadata.labels },
     spec: {
         type: "LoadBalancer",
         ports: [{ port: 80, targetPort: 80, protocol: "TCP" }],
-        selector: nginx.spec.apply(spec => spec.template.metadata.labels)
+        selector: nginx.spec.template.metadata.labels,
     }
 });
 

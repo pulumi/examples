@@ -23,4 +23,4 @@ let nginxDeployment = new k8s.apps.v1.Deployment("nginx-deployment", {
     },
 });
 
-export let nginx = nginxDeployment.metadata.apply(md => md.name);
+export let nginx = nginxDeployment.metadata.name;

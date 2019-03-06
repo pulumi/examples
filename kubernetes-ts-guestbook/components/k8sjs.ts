@@ -35,11 +35,11 @@ export class ServiceDeployment extends pulumi.ComponentResource {
 
         this.service = new k8s.core.v1.Service(name, {
             metadata: {
-                labels: this.deployment.metadata.apply(meta => meta.labels),
+                labels: this.deployment.metadata.labels,
             },
             spec: {
                 ports: args.ports && args.ports.map(p => ({ port: p, targetPort: p })),
-                selector: this.deployment.spec.apply(spec => spec.template.metadata.labels),
+                selector: this.deployment.spec.template.metadata.labels,
                 // Minikube does not implement services of type `LoadBalancer`; require the user to specify if we're
                 // running on minikube, and if so, create only services of type ClusterIP.
                 type: args.allocateIpAddress ? (args.isMinikube ? "ClusterIP" : "LoadBalancer") : undefined,

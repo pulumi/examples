@@ -1,3 +1,4 @@
+import * as pulumi from "@pulumi/pulumi";
 import * as awsx from "@pulumi/awsx";
 
 // Create an elastic network listener to listen for requests and route them to the container.
@@ -21,4 +22,4 @@ let service = new awsx.ecs.FargateService("nginx", {
 });
 
 // export just the hostname property of the container frontend
-export const hostname = listener.endpoint().apply(e => `http://${e.hostname}`);
+export const hostname = pulumi.interpolate `http://${listener.endpoint.hostname}`;

@@ -81,5 +81,5 @@ const f5BigIpInstance = new aws.ec2.Instance("bigIp", {
     vpcSecurityGroupIds: [firewall.id],
 });
 
-export const f5Address = f5BigIpInstance.publicIp.apply(x => `https://${x}:8443`);
+export const f5Address = pulumi.interpolate `https://${f5BigIpInstance.publicIp}:8443`;
 export const f5PrivateIp = f5BigIpInstance.privateIp;

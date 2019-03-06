@@ -35,4 +35,4 @@ const computeInstance = new gcp.compute.Instance("instance", {
 }, { dependsOn: [computeFirewall] });
 
 exports.instanceName = computeInstance.name;
-exports.instanceIP = computeInstance.networkInterfaces.apply(ni => ni[0].accessConfigs[0].natIp);
+exports.instanceIP = computeInstance.networkInterfaces[0].accessConfigs[0].natIp;

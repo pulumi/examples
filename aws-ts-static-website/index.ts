@@ -1,5 +1,5 @@
-import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
+import * as aws from "@pulumi/aws";
 
 import * as fs from "fs";
 import * as mime from "mime";
@@ -84,7 +84,7 @@ let certificateArn: pulumi.Input<string> = config.certificateArn!;
  * Only provision a certificate (and related resources) if a certificateArn is _not_ provided via configuration.
  */
 if (config.certificateArn === undefined) {
-    
+
     const eastRegion = new aws.Provider("east", {
         region: "us-east-1", // Per AWS, ACM certificate must be in the us-east-1 region.
     });
@@ -102,18 +102,18 @@ if (config.certificateArn === undefined) {
      *  See https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-validate-dns.html for more info.
      */
     const certificateValidationDomain = new aws.route53.Record(`${config.targetDomain}-validation`, {
-        name: certificate.domainValidationOptions.apply(d => d[0].resourceRecordName),
+        name: certificate.domainValidationOptions[0].resourceRecordName,
         zoneId: hostedZoneId,
-        type: certificate.domainValidationOptions.apply(d => d[0].resourceRecordType),
-        records: [certificate.domainValidationOptions.apply(d => d[0].resourceRecordValue)],
+        type: certificate.domainValidationOptions[0].resourceRecordType,
+        records: [certificate.domainValidationOptions[0].resourceRecordValue],
         ttl: tenMinutes,
     });
 
     /**
-     * This is a _special_ resource that waits for ACM to complete validation via the DNS record 
-     * checking for a status of "ISSUED" on the certificate itself. No actual resources are 
-     * created (or updated or deleted). 
-     * 
+     * This is a _special_ resource that waits for ACM to complete validation via the DNS record
+     * checking for a status of "ISSUED" on the certificate itself. No actual resources are
+     * created (or updated or deleted).
+     *
      * See https://www.terraform.io/docs/providers/aws/r/acm_certificate_validation.html for slightly more detail
      * and https://github.com/terraform-providers/terraform-provider-aws/blob/master/aws/resource_aws_acm_certificate_validation.go
      * for the actual implementation.
@@ -132,7 +132,7 @@ if (config.certificateArn === undefined) {
 const distributionArgs: aws.cloudfront.DistributionArgs = {
     enabled: true,
     // Alternate aliases the CloudFront distribution can be reached at, in addition to https://xxxx.cloudfront.net.
-    // Required if you want to access the distribution via config.targetDomain as well.  
+    // Required if you want to access the distribution via config.targetDomain as well.
     aliases: [ config.targetDomain ],
 
     // We only specify one origin for this distribution, the S3 content bucket.
@@ -248,7 +248,7 @@ const aRecord = createAliasRecord(config.targetDomain, cdn);
 
 // Export properties from this stack. This prints them at the end of `pulumi up` and
 // makes them easier to access from the pulumi.com.
-export const contentBucketUri = contentBucket.bucket.apply(b => `s3://${b}`);
+export const contentBucketUri = pulumi.interpolate `s3://${contentBucket.bucket}`;
 export const contentBucketWebsiteEndpoint = contentBucket.websiteEndpoint;
 export const cloudFrontDomain = cdn.domainName;
 export const targetDomainEndpoint = `https://${config.targetDomain}/`;

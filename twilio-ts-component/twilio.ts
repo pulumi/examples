@@ -13,7 +13,7 @@ export class IncomingPhoneNumber extends pulumi.ComponentResource {
 
     constructor(name: string, args: IncomingPhoneNumberArgs, opts? : pulumi.ResourceOptions) {
         super("twilio:rest:IncomingPhoneNumber", name, {}, opts);
-        
+
         const apiArgs : APIArgs = {
             routes: [{
                 path: "/sms",
@@ -37,7 +37,7 @@ export class IncomingPhoneNumber extends pulumi.ComponentResource {
                     const payload: SmsPayload = {
                         MessageSid: params.MessageSid,
                         AcountSid: params.AccountSid,
-                        MessagingServiceSid: params.MessagingServiceSid,    
+                        MessagingServiceSid: params.MessagingServiceSid,
                         From: params.From,
                         To: params.To,
                         Body: params.Body,
@@ -46,13 +46,13 @@ export class IncomingPhoneNumber extends pulumi.ComponentResource {
                             City: params.FromCity,
                             State: params.FromState,
                             Zip: params.FromZip,
-                            Country: params.FromCountry,                            
+                            Country: params.FromCountry,
                         },
                         ToLocation: {
                             City: params.ToCity,
                             State: params.ToState,
                             Zip: params.ToZip,
-                            Country: params.ToCountry,                            
+                            Country: params.ToCountry,
                         }
                     }
 
@@ -63,12 +63,12 @@ export class IncomingPhoneNumber extends pulumi.ComponentResource {
         };
 
         const api = new serverless.apigateway.API(`${name}-api`, apiArgs, { parent: this });
-        this.smsUrl = api.url.apply(url => `${url}sms`);
+        this.smsUrl = pulumi.interpolate `${api.url}sms`;
 
         // Use the twilio SDK to update the handler for the SMS webhook to what we just created.
         const twilio = require("twilio")
         const client = new twilio(accountSid, authToken);
-                
+
         this.smsUrl.apply(url =>{
             client.incomingPhoneNumbers(args.phoneNumberSid).update({
                 smsMethod: "POST",
@@ -79,7 +79,7 @@ export class IncomingPhoneNumber extends pulumi.ComponentResource {
         // Register the smsUrl as an output of the component itself.
         super.registerOutputs({
             smsUrl: this.smsUrl
-        });        
+        });
     }
 }
 
@@ -93,7 +93,7 @@ export interface IncomingPhoneNumberArgs {
 export interface SmsPayload {
     MessageSid: string,
     AcountSid: string,
-    MessagingServiceSid: string,    
+    MessagingServiceSid: string,
     From: string,
     To: string,
     Body: string,
