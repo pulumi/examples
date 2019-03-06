@@ -63,14 +63,14 @@ const username = "pulumi";
 
 // Get the password to use for SQL from config.
 const config = new pulumi.Config();
-const pwd = config.require("sqlPassword"); 
+const pwd = config.require("sqlPassword");
 
 const sqlServer = new azure.sql.SqlServer(`${prefix}-sql`, {
     ...resourceGroupArgs,
 
     administratorLogin: username,
     administratorLoginPassword: pwd,
-    version: "12.0", 
+    version: "12.0",
 });
 
 const database = new azure.sql.Database(`${prefix}-db`, {
@@ -93,11 +93,11 @@ const app = new azure.appservice.AppService(`${prefix}-as`, {
 
     connectionStrings: [{
         name: "db",
-        value: 
-            pulumi.all([sqlServer.name, database.name]).apply(([server, db]) => 
+        value:
+            pulumi.all([sqlServer.name, database.name]).apply(([server, db]) =>
                 `Server=tcp:${server}.database.windows.net;initial catalog=${db};user ID=${username};password=${pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;`),
         type: "SQLAzure"
-    }]    
+    }]
 });
 
-exports.endpoint = app.defaultSiteHostname.apply(n => `https://${n}`);
+exports.endpoint = pulumi.interpolate `https://${app.defaultSiteHostname}`;

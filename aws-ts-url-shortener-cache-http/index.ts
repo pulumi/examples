@@ -1,5 +1,6 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
+import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import * as cloud from "@pulumi/cloud-aws";
@@ -104,4 +105,4 @@ let httpServer = new cloud.HttpServer("urlshortener", () => {
     return app;
 });
 
-export let endpointUrl = httpServer.url.apply(u => u + "index.html");
+export let endpointUrl = pulumi.interpolate `${httpServer.url}index.html`;

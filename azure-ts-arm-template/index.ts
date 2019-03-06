@@ -71,4 +71,4 @@ const armDeployment = new azure.core.TemplateDeployment("test-dep", {
 });
 
 // Finally, export the allocated storage account name.
-export const storageAccountName = armDeployment.outputs.apply(outs => outs["storageAccountName"]);
+export const storageAccountName = armDeployment.outputs["storageAccountName"];

@@ -55,7 +55,7 @@ let cacheCluster = new aws.elasticache.Cluster("cachecluster", {
     securityGroupIds: securityGroupIds,
 });
 
-let hosts = pulumi.all([db.endpoint.apply(e => e.split(":")[0]), cacheCluster.cacheNodes.apply(n => n[0].address)]);
+let hosts = pulumi.all([db.endpoint.apply(e => e.split(":")[0]), cacheCluster.cacheNodes[0].address]);
 let environment = hosts.apply(([postgresHost, redisHost]) => [
     { name: "POSTGRES_HOST", value: postgresHost },
     { name: "POSTGRES_PASSWORD", value: dbPassword },
@@ -130,5 +130,5 @@ let airflowWorkers = new awsx.ecs.EC2Service("airflowworkers", {
     },
 });
 
-export let airflowEndpoint = airflowControllerListener.endpoint().apply(e => e.hostname);
-export let flowerEndpoint = airflowerListener.endpoint().apply(e => e.hostname);
+export let airflowEndpoint = airflowControllerListener.endpoint().hostname;
+export let flowerEndpoint = airflowerListener.endpoint().hostname;

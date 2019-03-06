@@ -10,7 +10,7 @@ const database = new aws.athena.Database("mydatabase", {
 
 const namedQuery = new aws.athena.NamedQuery("mynamedquery", {
     database: database.id,
-    query: database.id.apply(n => `SELECT * FROM ${n} limit 10;`)
+    query: pulumi.interpolate `SELECT * FROM ${database.id} limit 10;`,
 });
 
 // CloudWatch
