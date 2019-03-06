@@ -130,5 +130,5 @@ let airflowWorkers = new awsx.ecs.EC2Service("airflowworkers", {
     },
 });
 
-export let airflowEndpoint = airflowControllerListener.endpoint().hostname;
-export let flowerEndpoint = airflowerListener.endpoint().hostname;
+export let airflowEndpoint = airflowControllerListener.endpoint.hostname;
+export let flowerEndpoint = airflowerListener.endpoint.hostname;
