@@ -40,30 +40,24 @@ func TestExamples(t *testing.T) {
 		Tracing:              "https://tracing.pulumi-engineering.com/collector/api/v1/spans",
 		ExpectRefreshChanges: true,
 		Overrides:            overrides,
+		Quick:                true,
+		SkipRefresh:          true,
 	}
 
-	quickBase := base.With(integration.ProgramTestOptions{
-		Quick:       true,
-		SkipRefresh: true,
-	})
-
-	quickTests := []integration.ProgramTestOptions{
-		quickBase.With(integration.ProgramTestOptions{
+	shortTests := []integration.ProgramTestOptions{
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-containers"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
 			},
 		}),
-		quickBase.With(integration.ProgramTestOptions{
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-sqs-slack"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
 				"slackToken": "token",
 			},
 		}),
-	}
-
-	shortTests := []integration.ProgramTestOptions{
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder"),
 			Config: map[string]string{
@@ -279,15 +273,9 @@ func TestExamples(t *testing.T) {
 		// }),
 	}
 
-	// Run the short or long tests depending on the config.  Note that we only run long tests on
-	// travis after already running short tests.  So no need to actually run both at the same time
-	// ever.
-	var tests []integration.ProgramTestOptions
-	if testing.Short() {
-		tests = shortTests
-		tests = append(tests, quickTests...)
-	} else {
-		tests = longTests
+	tests := shortTests
+	if !testing.Short() {
+		tests = append(longTests...)
 	}
 
 	for _, ex := range tests {
