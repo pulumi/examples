@@ -134,7 +134,7 @@ func TestExamples(t *testing.T) {
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-pulumi-webhooks"),
 			Config: map[string]string{
-				"cloud:provider", "aws",
+				"cloud:provider":                      "aws",
 				"aws:region":                          awsRegion,
 				"aws-ts-pulumi-webhooks:slackChannel": "general",
 				"aws-ts-pulumi-webhooks:slackToken":   "12345",
