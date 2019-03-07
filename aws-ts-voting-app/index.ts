@@ -24,7 +24,7 @@ let redisCache = new awsx.ecs.FargateService("voting-app-cache", {
     },
 });
 
-let redisEndpoint = redisListener.endpoint();
+let redisEndpoint = redisListener.endpoint;
 
 // A custom container for the frontend, which is a Python Flask app
 // Use the 'build' property to specify a folder that contains a Dockerfile.
@@ -48,4 +48,4 @@ let frontend = new awsx.ecs.FargateService("voting-app-frontend", {
 });
 
 // Export a variable that will be displayed during 'pulumi up'
-export let frontendURL = frontendListener.endpoint();
+export let frontendURL = frontendListener.endpoint;

@@ -8,7 +8,7 @@ import * as config from "./config";
 // A simple cache abstraction that wraps Redis.
 export class Cache {
     private readonly redis: awsx.ecs.FargateService;
-    private readonly endpoint: pulumi.Output<aws.apigateway.x.Endpoint>;
+    private readonly endpoint: pulumi.Output<awsx.elasticloadbalancingv2.ListenerEndpoint>;
 
     constructor(name: string, memory: number = 128) {
         let pw = config.redisPassword;
@@ -26,7 +26,7 @@ export class Cache {
             },
         });
 
-        this.endpoint = listener.endpoint();
+        this.endpoint = listener.endpoint;
     }
 
     public get(key: string): Promise<string> {
