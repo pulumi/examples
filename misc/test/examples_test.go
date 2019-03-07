@@ -275,7 +275,7 @@ func TestExamples(t *testing.T) {
 
 	tests := shortTests
 	if !testing.Short() {
-		tests = append(longTests...)
+		tests = append(tests, longTests...)
 	}
 
 	for _, ex := range tests {
