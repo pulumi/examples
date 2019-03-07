@@ -119,6 +119,13 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-assume-role", "create-role"),
+			Config: map[string]string{
+				"aws:region":                       awsRegion,
+				"create-role:unprivilegedUsername": "unpriv",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
 			Config: map[string]string{
 				"aws:region":     awsRegion,
