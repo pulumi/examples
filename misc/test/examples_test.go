@@ -52,13 +52,6 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-js-sqs-slack"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-				"slackToken": "token",
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
@@ -81,6 +74,13 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-js-sqs-slack"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+				"slackToken": "token",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-webserver"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
@@ -96,6 +96,36 @@ func TestExamples(t *testing.T) {
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPHelloWorld(t, stack.Outputs["webUrl"])
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-apigateway"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["endpoint"].(string)
+				assertHTTPResultWithRetry(t, endpoint+"hello", maxWait, func(body string) bool {
+					return assert.Contains(t, body, "route")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
+			Config: map[string]string{
+				"aws:region":     awsRegion,
+				"dbUser":         "testUser",
+				"dbPassword":     "2@Password@2",
+				"dbRootPassword": "2@Password@2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				// Due to setup time on the vm this output does not show up for several minutes so
+				// increase wait time a bit
+				maxWait := 10 * time.Minute
+				assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], maxWait, func(body string) bool {
+					return assert.Contains(t, body, "New Note")
+				})
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
@@ -129,36 +159,6 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-apigateway"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				maxWait := 10 * time.Minute
-				endpoint := stack.Outputs["endpoint"].(string)
-				assertHTTPResultWithRetry(t, endpoint+"hello", maxWait, func(body string) bool {
-					return assert.Contains(t, body, "route")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
-			Config: map[string]string{
-				"aws:region":     awsRegion,
-				"dbUser":         "testUser",
-				"dbPassword":     "2@Password@2",
-				"dbRootPassword": "2@Password@2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				// Due to setup time on the vm this output does not show up for several minutes so
-				// increase wait time a bit
-				maxWait := 10 * time.Minute
-				assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], maxWait, func(body string) bool {
-					return assert.Contains(t, body, "New Note")
 				})
 			},
 		}),

@@ -10,6 +10,7 @@ let vpc = awsx.ec2.Vpc.getDefault();
 // Create a basic cluster and autoscaling group
 let cluster = new awsx.ecs.Cluster("airflow", { vpc });
 let autoScalingGroup = cluster.createAutoScalingGroup("airflow", {
+    subnetIds: vpc.publicSubnetIds,
     templateParameters: {
         minSize: 20,
     },

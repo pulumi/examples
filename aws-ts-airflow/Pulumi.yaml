@@ -6,9 +6,6 @@ template:
     aws:region:
       description: The AWS region to deploy into
       default: us-east-1
-    cloud-aws:ecsAutoCluster:
-      description: Automatically provision ECS Cluster?
-      default: true
     airflow:dbPassword:
       description: The desired RDS password
       secret: true
