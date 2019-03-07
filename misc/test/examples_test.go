@@ -126,6 +126,12 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-containers"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
 			Config: map[string]string{
 				"aws:region":     awsRegion,
