@@ -299,7 +299,7 @@ func TestExamples(t *testing.T) {
 }
 
 func assertHTTPResult(t *testing.T, output interface{}, check func(string) bool) bool {
-	return assertHTTPResultWithRetry(t, output, 3*time.Minute, check)
+	return assertHTTPResultWithRetry(t, output, 5*time.Minute, check)
 }
 
 func assertHTTPResultWithRetry(t *testing.T, output interface{}, maxWait time.Duration, check func(string) bool) bool {
