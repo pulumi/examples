@@ -98,13 +98,13 @@ func TestExamples(t *testing.T) {
 				assertHTTPHelloWorld(t, stack.Outputs["webUrl"])
 			},
 		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-airflow"),
-			Config: map[string]string{
-				"aws:region":         awsRegion,
-				"airflow:dbPassword": "secretP4ssword",
-			},
-		}),
+		// base.With(integration.ProgramTestOptions{
+		// 	Dir: path.Join(cwd, "..", "..", "aws-ts-airflow"),
+		// 	Config: map[string]string{
+		// 		"aws:region":         awsRegion,
+		// 		"airflow:dbPassword": "secretP4ssword",
+		// 	},
+		// }),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-apigateway"),
 			Config: map[string]string{
