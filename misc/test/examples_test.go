@@ -194,6 +194,13 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-voting-app"),
+			Config: map[string]string{
+				"aws:region":    awsRegion,
+				"redisPassword": "s3cr7Password",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
