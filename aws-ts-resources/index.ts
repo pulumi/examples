@@ -258,10 +258,10 @@ const bucketNotification = new aws.s3.BucketNotification("my-bucket-notification
     bucket: bucket.bucket
 });
 
-const bucketObject = new aws.s3.BucketObject("my-bucket-object", {
-    bucket: bucket.bucket,
-    content: "hello world"
-});
+// const bucketObject = new aws.s3.BucketObject("my-bucket-object", {
+//     bucket: bucket.bucket,
+//     content: "hello world"
+// });
 
 const bucketPolicy = new aws.s3.BucketPolicy("my-bucket-policy", {
     bucket: bucket.bucket,
