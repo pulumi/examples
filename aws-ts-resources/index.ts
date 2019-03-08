@@ -2,16 +2,16 @@ import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 
 // Athena
-const databaseBucket = new aws.s3.Bucket("mydatabasebucket");
-const database = new aws.athena.Database("mydatabase", {
-    name: "mydatabase",
-    bucket: databaseBucket.bucket
-});
+// const databaseBucket = new aws.s3.Bucket("mydatabasebucket");
+// const database = new aws.athena.Database("mydatabase", {
+//     name: "mydatabase",
+//     bucket: databaseBucket.bucket
+// });
 
-const namedQuery = new aws.athena.NamedQuery("mynamedquery", {
-    database: database.id,
-    query: pulumi.interpolate `SELECT * FROM ${database.id} limit 10;`,
-});
+// const namedQuery = new aws.athena.NamedQuery("mynamedquery", {
+//     database: database.id,
+//     query: pulumi.interpolate `SELECT * FROM ${database.id} limit 10;`,
+// });
 
 // CloudWatch
 const dashboard = new aws.cloudwatch.Dashboard("mydashboard", {
