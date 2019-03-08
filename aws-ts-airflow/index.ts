@@ -10,6 +10,7 @@ let vpc = awsx.ec2.Vpc.getDefault();
 // Create a basic cluster and autoscaling group
 let cluster = new awsx.ecs.Cluster("airflow", { vpc });
 let autoScalingGroup = cluster.createAutoScalingGroup("airflow", {
+    subnetIds: vpc.publicSubnetIds,
     templateParameters: {
         minSize: 20,
     },
@@ -45,7 +46,7 @@ let cacheSubnets = new aws.elasticache.SubnetGroup("cachesubnets", {
 });
 
 let cacheCluster = new aws.elasticache.Cluster("cachecluster", {
-    clusterId: "cache-" + pulumi.getStack(),
+    clusterId: `cache-${pulumi.getStack()}`.substr(0, 20),
     engine: "redis",
 
     nodeType: "cache.t2.micro",

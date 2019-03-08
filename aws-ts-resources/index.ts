@@ -2,16 +2,16 @@ import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 
 // Athena
-const databaseBucket = new aws.s3.Bucket("mydatabasebucket");
-const database = new aws.athena.Database("mydatabase", {
-    name: "mydatabase",
-    bucket: databaseBucket.bucket
-});
+// const databaseBucket = new aws.s3.Bucket("mydatabasebucket");
+// const database = new aws.athena.Database("mydatabase", {
+//     name: "mydatabase",
+//     bucket: databaseBucket.bucket
+// });
 
-const namedQuery = new aws.athena.NamedQuery("mynamedquery", {
-    database: database.id,
-    query: pulumi.interpolate `SELECT * FROM ${database.id} limit 10;`,
-});
+// const namedQuery = new aws.athena.NamedQuery("mynamedquery", {
+//     database: database.id,
+//     query: pulumi.interpolate `SELECT * FROM ${database.id} limit 10;`,
+// });
 
 // CloudWatch
 const dashboard = new aws.cloudwatch.Dashboard("mydashboard", {
@@ -235,12 +235,12 @@ const user = new aws.iam.User("myuser");
 
 const group = new aws.iam.Group("mygroup");
 
-const policyAttachment = new aws.iam.PolicyAttachment("mypolicyattachment", {
-    users: [user],
-    groups: [group],
-    roles: [role],
-    policyArn: policy.arn
-});
+// const policyAttachment = new aws.iam.PolicyAttachment("mypolicyattachment", {
+//     users: [user],
+//     groups: [group],
+//     roles: [role],
+//     policyArn: policy.arn
+// });
 
 // Kinesis
 const stream = new aws.kinesis.Stream("mystream", {
@@ -248,41 +248,41 @@ const stream = new aws.kinesis.Stream("mystream", {
 });
 
 // S3
-const bucket = new aws.s3.Bucket("my-bucket");
+// const bucket = new aws.s3.Bucket("my-bucket");
 
-const bucketMetric = new aws.s3.BucketMetric("my-bucket-metric", {
-    bucket: bucket.bucket
-});
+// const bucketMetric = new aws.s3.BucketMetric("my-bucket-metric", {
+//     bucket: bucket.bucket
+// });
 
-const bucketNotification = new aws.s3.BucketNotification("my-bucket-notification", {
-    bucket: bucket.bucket
-});
+// const bucketNotification = new aws.s3.BucketNotification("my-bucket-notification", {
+//     bucket: bucket.bucket
+// });
 
-const bucketObject = new aws.s3.BucketObject("my-bucket-object", {
-    bucket: bucket.bucket,
-    content: "hello world"
-});
+// const bucketObject = new aws.s3.BucketObject("my-bucket-object", {
+//     bucket: bucket.bucket,
+//     content: "hello world"
+// });
 
-const bucketPolicy = new aws.s3.BucketPolicy("my-bucket-policy", {
-    bucket: bucket.bucket,
-    policy: bucket.bucket.apply(publicReadPolicyForBucket)
-})
+// const bucketPolicy = new aws.s3.BucketPolicy("my-bucket-policy", {
+//     bucket: bucket.bucket,
+//     policy: bucket.bucket.apply(publicReadPolicyForBucket)
+// })
 
-function publicReadPolicyForBucket(bucketName: string) {
-    return JSON.stringify({
-        Version: "2012-10-17",
-        Statement: [{
-            Effect: "Allow",
-            Principal: "*",
-            Action: [
-                "s3:GetObject"
-            ],
-            Resource: [
-                `arn:aws:s3:::${bucketName}/*` // policy refers to bucket name explicitly
-            ]
-        }]
-    });
-}
+// function publicReadPolicyForBucket(bucketName: string) {
+//     return JSON.stringify({
+//         Version: "2012-10-17",
+//         Statement: [{
+//             Effect: "Allow",
+//             Principal: "*",
+//             Action: [
+//                 "s3:GetObject"
+//             ],
+//             Resource: [
+//                 `arn:aws:s3:::${bucketName}/*` // policy refers to bucket name explicitly
+//             ]
+//         }]
+//     });
+// }
 
 // SQS
 const queue = new aws.sqs.Queue("myqueue");

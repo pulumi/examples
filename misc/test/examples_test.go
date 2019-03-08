@@ -40,30 +40,17 @@ func TestExamples(t *testing.T) {
 		Tracing:              "https://tracing.pulumi-engineering.com/collector/api/v1/spans",
 		ExpectRefreshChanges: true,
 		Overrides:            overrides,
+		Quick:                true,
+		SkipRefresh:          true,
 	}
 
-	quickBase := base.With(integration.ProgramTestOptions{
-		Quick:       true,
-		SkipRefresh: true,
-	})
-
-	quickTests := []integration.ProgramTestOptions{
-		quickBase.With(integration.ProgramTestOptions{
+	shortTests := []integration.ProgramTestOptions{
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-containers"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
 			},
 		}),
-		quickBase.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-js-sqs-slack"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-				"slackToken": "token",
-			},
-		}),
-	}
-
-	shortTests := []integration.ProgramTestOptions{
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder"),
 			Config: map[string]string{
@@ -87,6 +74,13 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-js-sqs-slack"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+				"slackToken": "token",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-webserver"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
@@ -104,40 +98,13 @@ func TestExamples(t *testing.T) {
 				assertHTTPHelloWorld(t, stack.Outputs["webUrl"])
 			},
 		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
-			Config: map[string]string{
-				"azure:environment": azureEnviron,
-				"username":          "testuser",
-				"password":          "testTEST1234+-*/",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["publicIP"])
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
-			Config: map[string]string{
-				"azure:environment": azureEnviron,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure Functions!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "azure-ts-appservice"),
-			Config: map[string]string{
-				"azure:environment": azureEnviron,
-				"sqlPassword":       "2@Password@2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service!")
-				})
-			},
-		}),
+		// base.With(integration.ProgramTestOptions{
+		// 	Dir: path.Join(cwd, "..", "..", "aws-ts-airflow"),
+		// 	Config: map[string]string{
+		// 		"aws:region":         awsRegion,
+		// 		"airflow:dbPassword": "secretP4ssword",
+		// 	},
+		// }),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-apigateway"),
 			Config: map[string]string{
@@ -149,6 +116,34 @@ func TestExamples(t *testing.T) {
 				assertHTTPResultWithRetry(t, endpoint+"hello", maxWait, func(body string) bool {
 					return assert.Contains(t, body, "route")
 				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-assume-role", "create-role"),
+			Config: map[string]string{
+				"aws:region":                       awsRegion,
+				"create-role:unprivilegedUsername": "unpriv",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-containers"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-pulumi-webhooks"),
+			Config: map[string]string{
+				"cloud:provider":                      "aws",
+				"aws:region":                          awsRegion,
+				"aws-ts-pulumi-webhooks:slackChannel": "general",
+				"aws-ts-pulumi-webhooks:slackToken":   "12345",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-resources"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
@@ -169,6 +164,77 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-stepfunctions"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-thumbnailer"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+		}),
+		// base.With(integration.ProgramTestOptions{
+		// 	Dir: path.Join(cwd, "..", "..", "aws-ts-twitter-athena"),
+		// 	Config: map[string]string{
+		// 		"aws:region": awsRegion,
+		// 		"aws-ts-twitter-athena:twitterConsumerKey":       "12345",
+		// 		"aws-ts-twitter-athena:twitterConsumerSecret":    "xyz",
+		// 		"aws-ts-twitter-athena:twitterAccessTokenKey":    "12345",
+		// 		"aws-ts-twitter-athena:twitterAccessTokenSecret": "xyz",
+		// 		"aws-ts-twitter-athena:twitterQuery":             "smurfs",
+		// 	},
+		// }),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-url-shortener-cache-http"),
+			Config: map[string]string{
+				"aws:region":    awsRegion,
+				"redisPassword": "s3cr7Password",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-voting-app"),
+			Config: map[string]string{
+				"aws:region":    awsRegion,
+				"redisPassword": "s3cr7Password",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"username":          "testuser",
+				"password":          "testTEST1234+-*/",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPHelloWorld(t, stack.Outputs["publicIP"])
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-appservice"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"sqlPassword":       "2@Password@2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Azure App Service!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Azure Functions!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "cloud-js-api"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
@@ -182,14 +248,8 @@ func TestExamples(t *testing.T) {
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "cloud-js-containers"),
 			Config: map[string]string{
-				// use us-west-2 to assure fargate
-				"aws:region":           "us-west-2",
+				"aws:region":           awsRegion,
 				"cloud-aws:useFargate": "true",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["hostname"], func(body string) bool {
-					return assert.Contains(t, body, "<p>Hello, containers!</p>")
-				})
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
@@ -205,10 +265,35 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache-http"),
+			Dir: path.Join(cwd, "..", "..", "cloud-js-thumbnailer"),
 			Config: map[string]string{
 				// use us-west-2 to assure fargate
-				"aws:region":           "us-west-2",
+				"aws:region":           awsRegion,
+				"cloud-aws:useFargate": "true",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener"),
+			Config: map[string]string{
+				"aws:region":           awsRegion,
+				"redisPassword":        "s3cr7Password",
+				"cloud:provider":       "aws",
+				"cloud-aws:useFargate": "true",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache"),
+			Config: map[string]string{
+				"aws:region":           awsRegion,
+				"redisPassword":        "s3cr7Password",
+				"cloud:provider":       "aws",
+				"cloud-aws:useFargate": "true",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache-http"),
+			Config: map[string]string{
+				"aws:region":           awsRegion,
 				"redisPassword":        "s3cr7Password",
 				"cloud:provider":       "aws",
 				"cloud-aws:useFargate": "true",
@@ -279,15 +364,9 @@ func TestExamples(t *testing.T) {
 		// }),
 	}
 
-	// Run the short or long tests depending on the config.  Note that we only run long tests on
-	// travis after already running short tests.  So no need to actually run both at the same time
-	// ever.
-	var tests []integration.ProgramTestOptions
-	if testing.Short() {
-		tests = shortTests
-		tests = append(tests, quickTests...)
-	} else {
-		tests = longTests
+	tests := shortTests
+	if !testing.Short() {
+		tests = append(tests, longTests...)
 	}
 
 	for _, ex := range tests {
