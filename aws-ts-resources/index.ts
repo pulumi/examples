@@ -235,12 +235,12 @@ const user = new aws.iam.User("myuser");
 
 const group = new aws.iam.Group("mygroup");
 
-const policyAttachment = new aws.iam.PolicyAttachment("mypolicyattachment", {
-    users: [user],
-    groups: [group],
-    roles: [role],
-    policyArn: policy.arn
-});
+// const policyAttachment = new aws.iam.PolicyAttachment("mypolicyattachment", {
+//     users: [user],
+//     groups: [group],
+//     roles: [role],
+//     policyArn: policy.arn
+// });
 
 // Kinesis
 const stream = new aws.kinesis.Stream("mystream", {
