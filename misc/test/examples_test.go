@@ -175,17 +175,17 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-twitter-athena"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-				"aws-ts-twitter-athena:twitterConsumerKey":       "12345",
-				"aws-ts-twitter-athena:twitterConsumerSecret":    "xyz",
-				"aws-ts-twitter-athena:twitterAccessTokenKey":    "12345",
-				"aws-ts-twitter-athena:twitterAccessTokenSecret": "xyz",
-				"aws-ts-twitter-athena:twitterQuery":             "smurfs",
-			},
-		}),
+		// base.With(integration.ProgramTestOptions{
+		// 	Dir: path.Join(cwd, "..", "..", "aws-ts-twitter-athena"),
+		// 	Config: map[string]string{
+		// 		"aws:region": awsRegion,
+		// 		"aws-ts-twitter-athena:twitterConsumerKey":       "12345",
+		// 		"aws-ts-twitter-athena:twitterConsumerSecret":    "xyz",
+		// 		"aws-ts-twitter-athena:twitterAccessTokenKey":    "12345",
+		// 		"aws-ts-twitter-athena:twitterAccessTokenSecret": "xyz",
+		// 		"aws-ts-twitter-athena:twitterQuery":             "smurfs",
+		// 	},
+		// }),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-url-shortener-cache-http"),
 			Config: map[string]string{
@@ -250,11 +250,6 @@ func TestExamples(t *testing.T) {
 			Config: map[string]string{
 				"aws:region":           awsRegion,
 				"cloud-aws:useFargate": "true",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["hostname"], func(body string) bool {
-					return assert.Contains(t, body, "<p>Hello, containers!</p>")
-				})
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
