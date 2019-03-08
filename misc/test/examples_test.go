@@ -271,11 +271,6 @@ func TestExamples(t *testing.T) {
 				"aws:region":           awsRegion,
 				"cloud-aws:useFargate": "true",
 			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["hostname"], func(body string) bool {
-					return assert.Contains(t, body, "<p>Hello, containers!</p>")
-				})
-			},
 		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener"),
