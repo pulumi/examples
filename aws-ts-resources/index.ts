@@ -248,7 +248,7 @@ const stream = new aws.kinesis.Stream("mystream", {
 });
 
 // S3
-const bucket = new aws.s3.Bucket("my-bucket");
+// const bucket = new aws.s3.Bucket("my-bucket");
 
 // const bucketMetric = new aws.s3.BucketMetric("my-bucket-metric", {
 //     bucket: bucket.bucket
