@@ -176,6 +176,17 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-twitter-athena"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+				"aws-ts-twitter-athena:twitterConsumerKey":       "12345",
+				"aws-ts-twitter-athena:twitterConsumerSecret":    "xyz",
+				"aws-ts-twitter-athena:twitterAccessTokenKey":    "12345",
+				"aws-ts-twitter-athena:twitterAccessTokenSecret": "xyz",
+				"aws-ts-twitter-athena:twitterQuery":             "smurfs",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
