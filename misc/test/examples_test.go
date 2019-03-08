@@ -283,6 +283,24 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener"),
+			Config: map[string]string{
+				"aws:region":           awsRegion,
+				"redisPassword":        "s3cr7Password",
+				"cloud:provider":       "aws",
+				"cloud-aws:useFargate": "true",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache"),
+			Config: map[string]string{
+				"aws:region":           awsRegion,
+				"redisPassword":        "s3cr7Password",
+				"cloud:provider":       "aws",
+				"cloud-aws:useFargate": "true",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache-http"),
 			Config: map[string]string{
 				"aws:region":           awsRegion,
