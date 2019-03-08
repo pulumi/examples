@@ -170,6 +170,12 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-thumbnailer"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
