@@ -212,17 +212,6 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
-			Config: map[string]string{
-				"azure:environment": azureEnviron,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure Functions!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-ts-appservice"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
@@ -231,6 +220,17 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Azure Functions!")
 				})
 			},
 		}),
@@ -248,8 +248,7 @@ func TestExamples(t *testing.T) {
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "cloud-js-containers"),
 			Config: map[string]string{
-				// use us-west-2 to assure fargate
-				"aws:region":           "us-west-2",
+				"aws:region":           awsRegion,
 				"cloud-aws:useFargate": "true",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -267,6 +266,19 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", func(body string) bool {
 					return assert.Contains(t, body, "{\"route\":\"/hello\",\"count\":1}")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "cloud-js-thumbnailer"),
+			Config: map[string]string{
+				// use us-west-2 to assure fargate
+				"aws:region":           awsRegion,
+				"cloud-aws:useFargate": "true",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["hostname"], func(body string) bool {
+					return assert.Contains(t, body, "<p>Hello, containers!</p>")
 				})
 			},
 		}),
