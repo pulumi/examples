@@ -187,6 +187,13 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-url-shortener-cache-http"),
+			Config: map[string]string{
+				"aws:region":    awsRegion,
+				"redisPassword": "s3cr7Password",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
@@ -259,8 +266,7 @@ func TestExamples(t *testing.T) {
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache-http"),
 			Config: map[string]string{
-				// use us-west-2 to assure fargate
-				"aws:region":           "us-west-2",
+				"aws:region":           awsRegion,
 				"redisPassword":        "s3cr7Password",
 				"cloud:provider":       "aws",
 				"cloud-aws:useFargate": "true",
