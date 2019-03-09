@@ -98,13 +98,14 @@ func TestExamples(t *testing.T) {
 				assertHTTPHelloWorld(t, stack.Outputs["webUrl"])
 			},
 		}),
+		// base.With(integration.ProgramTestOptions{
+		// 	Dir: path.Join(cwd, "..", "..", "aws-ts-airflow"),
+		// 	Config: map[string]string{
+		// 		"aws:region":         awsRegion,
+		// 		"airflow:dbPassword": "secretP4ssword",
+		// 	},
+		// }),
 		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-airflow"),
-			Config: map[string]string{
-				"aws:region":         awsRegion,
-				"airflow:dbPassword": "secretP4ssword",
-			},
-		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-apigateway"),
 			Config: map[string]string{
@@ -270,11 +271,6 @@ func TestExamples(t *testing.T) {
 				// use us-west-2 to assure fargate
 				"aws:region":           awsRegion,
 				"cloud-aws:useFargate": "true",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["hostname"], func(body string) bool {
-					return assert.Contains(t, body, "<p>Hello, containers!</p>")
-				})
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
