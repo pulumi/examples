@@ -50,6 +50,13 @@ func TestExamples(t *testing.T) {
 			Config: map[string]string{
 				"aws:region": awsRegion,
 			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["frontendURL"].(string)
+				assertHTTPResultWithRetry(t, endpoint+"nginx", maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
+			},
 		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder"),
@@ -129,6 +136,13 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "aws-ts-containers"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["frontendURL"].(string)
+				assertHTTPResultWithRetry(t, endpoint+"nginx", maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
