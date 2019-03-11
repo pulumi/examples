@@ -39,7 +39,7 @@ the virtual machine that we are going to create.
     $ pulumi config set azure-web:username myusername
     ```
 
-The password is a secret, so we can ask Pulumi to encrypt the configuration:
+    The password is a secret, so we can ask Pulumi to encrypt the configuration:
 
     ```
     $ pulumi config set --secret azure-web:password Hunter2hunter2
