@@ -16,6 +16,7 @@ To deploy your new serverless application, follow the below steps.
 
 ### Prerequisites
 
+0. [Ensure you have Node.js](https://nodejs.org/en/download/)
 1. [Install Pulumi](https://pulumi.io/install)
 2. [Configure AWS Credentials](https://pulumi.io/install/aws.html)
 
@@ -23,13 +24,19 @@ To deploy your new serverless application, follow the below steps.
 
 After cloning this repo, from this working directory, run these commands:
 
-1. Create a new stack, which is an isolated environment for this example:
+0. Install Node.js dependencies, either using NPM or Yarn:
+
+    ```bash
+    $ npm install
+    ```
+
+1. Create a new Pulumi stack, which is an isolated environment for this example:
 
     ```bash
     $ pulumi stack init
     ```
 
-   This will ask you to provide a name; `dev` is a fine name to begin with.
+   This will ask you to give your stack a name; `dev` is a fine name to begin with.
 
 2. Configure the AWS region for this program -- any valid AWS region will do:
 
