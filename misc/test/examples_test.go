@@ -411,7 +411,7 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, maxWait time.Du
 	for true {
 		now := time.Now()
 		resp, err = http.Get(hostname)
-		if err == nil {
+		if err == nil && resp.StatusCode == 200 {
 			break
 		}
 		if now.Sub(startTime) >= maxWait {
