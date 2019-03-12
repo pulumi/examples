@@ -21,5 +21,12 @@ let service = new awsx.ecs.FargateService("nginx", {
     },
 });
 
-// export just the hostname property of the container frontend
-export const hostname = pulumi.interpolate `http://${listener.endpoint.hostname}`;
+// expose some APIs meant for testing purposes.
+const api = new awsx.apigateway.API("containers", {
+    routes: [{
+        path: "/nginx",
+        target: listener,
+    }],
+});
+
+export let frontendURL = api.url;
