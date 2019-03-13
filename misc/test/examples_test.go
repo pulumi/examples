@@ -53,7 +53,7 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["frontendURL"].(string)
-				assertHTTPResultWithRetry(t, endpoint+"nginx", maxWait, func(body string) bool {
+				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -140,7 +140,7 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["frontendURL"].(string)
-				assertHTTPResultWithRetry(t, endpoint+"nginx", maxWait, func(body string) bool {
+				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
