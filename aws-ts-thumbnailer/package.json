@@ -3,8 +3,8 @@
     "version": "0.1.0",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/pulumi": "latest",
-        "@pulumi/aws": "latest",
+        "@pulumi/pulumi": "feature-admission-policy",
+        "@pulumi/aws": "feature-admission-policy",
         "@pulumi/awsx": "latest"
     }
 }
