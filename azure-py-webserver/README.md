@@ -93,6 +93,13 @@ the virtual machine that we are going to create.
     137.117.15.111
     ```
 
+1. Check to see that your server is now running:
+
+    ```
+    $ curl http://$(pulumi stack output public_ip)
+    Hello, World!
+    ```
+
 1. Destroy the stack:
 
     ```

@@ -35,8 +35,7 @@ network_iface = network.NetworkInterface("server-nic",
                                              "public_ip_address_id": public_ip.id,
                                          }])
 
-userdata = """
-#!/bin/bash
+userdata = """#!/bin/bash
 
 echo "Hello, World!" > index.html
 nohup python -m SimpleHTTPServer 80 &"""
@@ -69,10 +68,6 @@ vm = compute.VirtualMachine("server-vm",
                             })
 
 
-async def get_public_ip(public_ip_name, resource_group_name):
-    ip_result = await network.get_public_ip(name=public_ip_name, resource_group_name=resource_group_name)
-    return ip_result.ip_address
-
 combined_output = Output.all(vm.id, public_ip.name, public_ip.resource_group_name)
-public_ip_addr = combined_output.apply(lambda lst: get_public_ip(lst[1], lst[2]))
-pulumi.export("public_ip", public_ip_addr)
+public_ip_addr = combined_output.apply(lambda lst: network.get_public_ip(name=lst[1], resource_group_name=lst[2]))
+pulumi.export("public_ip", public_ip_addr.ip_address)
