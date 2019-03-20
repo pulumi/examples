@@ -48,5 +48,84 @@ the virtual machine that we are going to create.
 1. Run `pulumi up` to preview and deploy the changes:
 
     ```
-    ... fill in when not broken ...
+    $ pulumi update
+    Previewing update (azuredev):
+
+        Type                               Name                         Plan       
+    +   pulumi:pulumi:Stack                azure-py-webserver-azuredev  create     
+    +   ├─ azure:core:ResourceGroup        server                       create     
+    +   ├─ azure:network:VirtualNetwork    server-network               create     
+    +   ├─ azure:network:PublicIp          server-ip                    create     
+    +   ├─ azure:network:Subnet            server-subnet                create     
+    +   ├─ azure:network:NetworkInterface  server-nic                   create     
+    +   └─ azure:compute:VirtualMachine    server-vm                    create     
+    
+    Resources:
+        + 7 to create
+
+    Do you want to perform this update? yes
+    Updating (azuredev):
+
+        Type                               Name                         Status      
+    +   pulumi:pulumi:Stack                azure-py-webserver-azuredev  created     
+    +   ├─ azure:core:ResourceGroup        server                       created     
+    +   ├─ azure:network:VirtualNetwork    server-network               created     
+    +   ├─ azure:network:PublicIp          server-ip                    created     
+    +   ├─ azure:network:Subnet            server-subnet                created     
+    +   ├─ azure:network:NetworkInterface  server-nic                   created     
+    +   └─ azure:compute:VirtualMachine    server-vm                    created     
+    
+    Outputs:
+        public_ip: "137.117.15.111"
+
+    Resources:
+        + 7 created
+
+    Duration: 2m55s
+
+    Permalink: https://app.pulumi.com/swgillespie/azure-py-webserver/azuredev/updates/3
+    ```
+
+1. Get the IP address of the newly-created instance from the stack's outputs: 
+
+    ```
+    $ pulumi stack output public_ip
+    137.117.15.111
+    ```
+
+1. Destroy the stack:
+
+    ```
+    ▶ pulumi destroy --yes
+    Previewing destroy (azuredev):
+
+        Type                               Name                         Plan       
+    -   pulumi:pulumi:Stack                azure-py-webserver-azuredev  delete     
+    -   ├─ azure:compute:VirtualMachine    server-vm                    delete     
+    -   ├─ azure:network:NetworkInterface  server-nic                   delete     
+    -   ├─ azure:network:Subnet            server-subnet                delete     
+    -   ├─ azure:network:PublicIp          server-ip                    delete     
+    -   ├─ azure:network:VirtualNetwork    server-network               delete     
+    -   └─ azure:core:ResourceGroup        server                       delete     
+    
+    Resources:
+        - 7 to delete
+
+    Destroying (azuredev):
+
+        Type                               Name                         Status      
+    -   pulumi:pulumi:Stack                azure-py-webserver-azuredev  deleted     
+    -   ├─ azure:compute:VirtualMachine    server-vm                    deleted     
+    -   ├─ azure:network:NetworkInterface  server-nic                   deleted     
+    -   ├─ azure:network:Subnet            server-subnet                deleted     
+    -   ├─ azure:network:VirtualNetwork    server-network               deleted     
+    -   ├─ azure:network:PublicIp          server-ip                    deleted     
+    -   └─ azure:core:ResourceGroup        server                       deleted     
+    
+    Resources:
+        - 7 deleted
+
+    Duration: 3m49s
+
+    Permalink: https://app.pulumi.com/swgillespie/azure-py-webserver/azuredev/updates/4
     ```

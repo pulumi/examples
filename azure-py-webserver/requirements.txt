@@ -1,2 +1,2 @@
-pulumi>=0.16.4
-pulumi_azure>=0.16.4
+pulumi>=0.17.2
+pulumi_azure>=0.17.3
