@@ -1,0 +1,3 @@
+name: azure-py-webserver
+runtime: python
+description: An Azure example using Python to provision a webserver
