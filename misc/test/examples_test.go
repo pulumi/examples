@@ -223,14 +223,14 @@ func TestExamples(t *testing.T) {
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-py-webserver"),
 			Config: map[string]string{
-				"azure:environment": azureEnviron,
+				"azure:environment":  azureEnviron,
 				"azure-web:username": "myusername",
 				"azure-web:password": "Hunter2hunter2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPHelloWorld(t, stack.Outputs["public_ip"])
 			},
-		})
+		}),
 		// TODO: This test fails due to a bug in the Terraform Azure provider in which the
 		// service principal is not available when attempting to create the K8s cluster.
 		// See the azure-ts-aks-example readme for more detail.
@@ -275,7 +275,6 @@ func TestExamples(t *testing.T) {
 					return assert.Contains(t, body, "It works!")
 				})
 			},
-
 		}),
 		// TODO: This test fails due to a bug in the Terraform Azure provider in which the
 		// service principal is not available when attempting to create the K8s cluster.
