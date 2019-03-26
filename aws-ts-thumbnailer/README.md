@@ -20,13 +20,13 @@ with `***`.
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init thumbnailer-testing
+    pulumi stack init thumbnailer-testing
     ```
 
 1.  Configure Pulumi to use an AWS region where Fargate is supported, which is currently only available in `us-east-1`, `us-east-2`, `us-west-2`, and `eu-west-1`:
 
     ```
-    $ pulumi config set aws:region us-west-2
+    pulumi config set aws:region us-west-2
     ```
 
 1.  Restore NPM modules via `npm install` or `yarn install`.
@@ -101,4 +101,10 @@ with `***`.
 
 ## Clean up
 
-To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+To clean up the resources, you will first need to clear the contents of the bucket.
+
+```bash
+aws s3 rm s3://$(pulumi stack output bucketName) --recursive
+```
+
+Then, run `pulumi destroy` and answer the confirmation question at the prompt.
