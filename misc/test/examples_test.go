@@ -200,20 +200,30 @@ func TestExamples(t *testing.T) {
 		// 		"aws-ts-twitter-athena:twitterQuery":             "smurfs",
 		// 	},
 		// }),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-url-shortener-cache-http"),
-			Config: map[string]string{
-				"aws:region":    awsRegion,
-				"redisPassword": "s3cr7Password",
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-voting-app"),
-			Config: map[string]string{
-				"aws:region":    awsRegion,
-				"redisPassword": "s3cr7Password",
-			},
-		}),
+
+		// Test disabled due to flakiness (often times out when destroying)
+		// https://github.com/pulumi/examples/issues/260
+		/*
+			base.With(integration.ProgramTestOptions{
+				Dir: path.Join(cwd, "..", "..", "aws-ts-url-shortener-cache-http"),
+				Config: map[string]string{
+					"aws:region":    awsRegion,
+					"redisPassword": "s3cr7Password",
+				},
+			}),
+		*/
+
+		// Test disabled due to flakiness (often times out when destroying)
+		// https://github.com/pulumi/examples/issues/260
+		/*
+			base.With(integration.ProgramTestOptions{
+				Dir: path.Join(cwd, "..", "..", "aws-ts-voting-app"),
+				Config: map[string]string{
+					"aws:region":    awsRegion,
+					"redisPassword": "s3cr7Password",
+				},
+			}),
+		*/
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
 			Config: map[string]string{
