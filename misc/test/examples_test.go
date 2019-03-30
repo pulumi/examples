@@ -45,24 +45,19 @@ func TestExamples(t *testing.T) {
 	}
 
 	shortTests := []integration.ProgramTestOptions{
-		// Test disabled due to flakiness
-		// https://github.com/pulumi/examples/issues/263
-		/*
-			base.With(integration.ProgramTestOptions{
-				Dir: path.Join(cwd, "..", "..", "aws-js-containers"),
-				Config: map[string]string{
-					"aws:region": awsRegion,
-				},
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					maxWait := 10 * time.Minute
-					endpoint := stack.Outputs["frontendURL"].(string)
-					assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
-						return assert.Contains(t, body, "Hello, Pulumi!")
-					})
-				},
-			}),
-		*/
-
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-js-containers"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["frontendURL"].(string)
+				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
+			},
+		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder"),
 			Config: map[string]string{
@@ -137,25 +132,19 @@ func TestExamples(t *testing.T) {
 				"create-role:unprivilegedUsername": "unpriv",
 			},
 		}),
-
-		// Test disabled due to flakiness
-		// https://github.com/pulumi/examples/issues/263
-		/*
-			base.With(integration.ProgramTestOptions{
-				Dir: path.Join(cwd, "..", "..", "aws-ts-containers"),
-				Config: map[string]string{
-					"aws:region": awsRegion,
-				},
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					maxWait := 10 * time.Minute
-					endpoint := stack.Outputs["frontendURL"].(string)
-					assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
-						return assert.Contains(t, body, "Hello, Pulumi!")
-					})
-				},
-			}),
-		*/
-
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-containers"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["frontendURL"].(string)
+				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
+			},
+		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-pulumi-webhooks"),
 			Config: map[string]string{
@@ -280,19 +269,13 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
-
-		// Test disabled due to flakiness
-		// https://github.com/pulumi/examples/issues/263
-		/*
-			base.With(integration.ProgramTestOptions{
-				Dir: path.Join(cwd, "..", "..", "cloud-js-containers"),
-				Config: map[string]string{
-					"aws:region":           awsRegion,
-					"cloud-aws:useFargate": "true",
-				},
-			}),
-		*/
-
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "cloud-js-containers"),
+			Config: map[string]string{
+				"aws:region":           awsRegion,
+				"cloud-aws:useFargate": "true",
+			},
+		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "cloud-js-httpserver"),
 			Config: map[string]string{
