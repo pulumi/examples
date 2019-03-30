@@ -8,7 +8,7 @@ ensure:
 only_build:
 
 only_test:
-	go test ./misc/test/... --timeout 2h -v -count=1 -short -parallel 8
+	go test ./misc/test/... --timeout 2h -v -count=1 -short -parallel 20
 
 # The travis_* targets are entrypoints for CI.
 .PHONY: travis_cron travis_push travis_pull_request travis_api
