@@ -1,4 +1,5 @@
 import * as aws from "@pulumi/aws";
+import * as awsx from "@pulumi/awsx";
 
 // Create a mapping from 'route' to a count
 let counterTable = new aws.dynamodb.Table("counterTable", {
@@ -12,14 +13,14 @@ let counterTable = new aws.dynamodb.Table("counterTable", {
 });
 
 // Create an API endpoint
-let endpoint = new aws.apigateway.x.API("hello-world", {
+let endpoint = new awsx.apigateway.API("hello-world", {
     routes: [{
         path: "/{route+}",
         method: "GET",
         eventHandler: async (event) => {
             let route = event.pathParameters["route"];
             console.log(`Getting count for '${route}'`);
-            
+
             const client = new aws.sdk.DynamoDB.DocumentClient();
 
             // get previous value and increment
