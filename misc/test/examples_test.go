@@ -70,6 +70,17 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-py-s3-folder"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), func(body string) bool {
+					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder-component"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
