@@ -1,7 +1,7 @@
-import * as gcpFunction from "./gcpFunction";
+import * as gcp from "@pulumi/gcp";
 
-let greetingFunction = new gcpFunction.HttpFunction("greeting", (req, res) => {
+let greeting = new gcp.cloudfunctions.HttpCallbackFunction("greeting", (req, res) => {
     res.send(`Greetings from ${req.body.name || 'Google Cloud Functions'}!`);
 });
 
-export let url = greetingFunction.httpsTriggerUrl;
+export let url = greeting.httpsTriggerUrl;
