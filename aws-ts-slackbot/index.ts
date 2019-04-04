@@ -5,6 +5,9 @@ import * as awsx from "@pulumi/awsx";
 import * as qs from "qs";
 import * as superagent from "superagent";
 
+// A simple slack bot that, when requested, will monitor for @mentions of your name and post them to
+// the channel you contacted the bot from.
+
 const config = new pulumi.Config("mentionbot");
 const slackToken = config.require("slackToken");
 const verificationToken = config.require("verificationToken");
@@ -112,7 +115,11 @@ function onUrlVerification(request: UrlVerificationRequest) {
 }
 
 async function onEventCallback(request: EventCallbackRequest) {
-    validateToken(request.token);
+    if (request.token !== verificationToken) {
+        var err = new Error();
+        (<any>err).verificationFailed = true;
+        throw err;
+    }
 
     const event = request.event;
     if (!event) {
@@ -190,7 +197,7 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
         }
 
         const permaLink = await getPermalink(event.channel, event.event_ts);
-        const text = `Hi <@${id}>.  You've been mentioned in ${permaLink}!`
+        const text = `New mention at: ${permaLink}`
 
         await sendChannelMessage(getResult.Item.channel, text);
     }
@@ -258,14 +265,6 @@ async function subscribeToMentions(event: Event) {
 
     const text = `Hi <@${event.user}>.  You've been subscribed to @ mentions. Send me an message containing 'unsubscribe' to stop receiving these notifications.`;
     await sendChannelMessage(event.channel, text);
-}
-
-function validateToken(token: string) {
-    if (token !== verificationToken) {
-        var err = new Error();
-        (<any>err).verificationFailed = true;
-        throw err;
-    }
 }
 
 export const url = endpoint.url;
