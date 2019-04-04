@@ -58,8 +58,42 @@ You can connect a [Flic](https://flic.io) button using [IFTTT](https://ifttt.com
     ...
     ```
 
-1. [TODO] Google Maps
+1. Get a [Google Maps](https://cloud.google.com/maps-platform/) API key by clicking 'Get started'.
 
-1. [TODO] Twilio
+    * Check the Routes and then click continue.
+    * Select the GCP project you are deploying your Cloud function to.
+    * Replace <INSERT_API_KEY> with the API key and run the following command:
+
+    ```bash
+    pulumi config set googleMapsApiKey <INSERT_API_KEY> --secret
+    ```
+
+    * Replace <DESTINATION> and set the destination by running the following command:
+
+     ```bash
+    pulumi config set destination <DESTINATION> --secret
+    ```
+
+    * [Optional] If you would like to set an offset (i.e. it takes me 5 minutes to get down to my car), you can run the following:
+
+    ```bash
+    pulumi config set travelOffset <TRAVEL_OFFSET> --secret
+    ```
+
+1. Set up your [Twilio](https://www.twilio.com/) account.
+
+    Run the following commands to:
+
+    ```bash
+    pulumi config set twillioAccessToken <TWILIO_ACCESS_TOKEN> --secret
+    pulumi config set twillioAccountSid <TWILIO_ACCOUNT_SID> --secret
+    pulumi config set fromPhoneNumber <FROM_PHONE_NUMBER> --secret
+    ```
+
+    Add the number you would like notify by running the following:
+
+    ```bash
+    pulumi config set toPhoneNumber <TO_PHONE_NUMBER> --secret
+    ```
 
 1. [TODO] IFTT

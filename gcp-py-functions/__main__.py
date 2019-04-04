@@ -4,9 +4,6 @@ from pulumi_gcp import cloudfunctions
 import time
 import os
 
-# Set destination here
-destination = "1525 4th Avenue #800, Seattle, WA 98101"
-
 # Get values from Pulumi config to use as environment variables in our Cloud fxn
 config = pulumi.Config(name=None)
 config_values = {
@@ -15,7 +12,8 @@ config_values = {
     "TO_PHONE_NUMBER": config.get("toPhoneNumber"),
     "FROM_PHONE_NUMBER": config.get("fromPhoneNumber"),
     "GOOGLE_MAPS_API_KEY": config.get("googleMapsApiKey"),
-    "DESTINATION": destination,
+    "DESTINATION": config.get("destination"),
+    "TRAVEL_OFFSET": config.get("travelOffset"),
 }
 
 # Create a GCP resource (Storage Bucket)

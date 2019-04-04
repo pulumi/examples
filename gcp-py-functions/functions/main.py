@@ -24,8 +24,12 @@ def hello_get(request):
     destination = os.getenv(
         "DESTINATION", "1525 4th Avenue #800, Seattle, WA 98101")
 
+    travel_offset_str = os.getenv("TRAVEL_OFFSET", "0")
+    travel_offset = int(travel_offset_str)
+
     # Get travel time from origin to destination using Google Maps
-    travel_time_str = getTravelTime(origin=origin, destination=destination)
+    travel_time_str = getTravelTime(
+        origin=origin, destination=destination, offset=travel_offset)
 
     # Construct text message body
     salutation = "Hey honey-bunny, letting you know I'm heading out to pick you up."
@@ -38,7 +42,7 @@ def hello_get(request):
     return sendText(message_body)
 
 
-def getTravelTime(origin, destination):
+def getTravelTime(origin, destination, offset):
     gmapKey = os.getenv("GOOGLE_MAPS_API_KEY", "")
     if gmapKey:
         gmaps = googlemaps.Client(key=gmapKey)
@@ -49,6 +53,7 @@ def getTravelTime(origin, destination):
                                              departure_time=now)
         travel_time = directions_result[0]["legs"][0]["duration"]["value"]
         travel_time /= 60
+        travel_time += offset
         return "%d minutes" % travel_time
     return "[ENABLE GOOGLE MAPS TO DETERMINE TRAVEL TIME]"
 
