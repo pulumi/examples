@@ -1,0 +1,3 @@
+name: aws-py-s3-folder
+runtime: python
+description: A minimal AWS Python Pulumi program
