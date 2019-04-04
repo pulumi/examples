@@ -1,2 +1,3 @@
 pulumi>=0.16.4
 pulumi_gcp>=0.16.2
+twilio>=6.26.0
