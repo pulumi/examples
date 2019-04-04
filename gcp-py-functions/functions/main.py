@@ -4,17 +4,9 @@ import os
 import twilio.rest
 
 
-def hello_get(request):
-    """HTTP Cloud Function.
-    Args:
-        request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
-    Returns:
-        The response text, or any set of values that can be turned into a
-        Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
-    """
+def get_demo(request):
 
+    # Determine origin and destination
     lat = request.args.get("lat")
     long = request.args.get("long")
     if lat and long:
@@ -24,6 +16,7 @@ def hello_get(request):
     destination = os.getenv(
         "DESTINATION", "1525 4th Avenue #800, Seattle, WA 98101")
 
+    # Get travel offset
     travel_offset_str = os.getenv("TRAVEL_OFFSET", "0")
     travel_offset = int(travel_offset_str)
 
