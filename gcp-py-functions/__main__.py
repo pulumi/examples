@@ -3,10 +3,24 @@ from pulumi_gcp import storage
 from pulumi_gcp import cloudfunctions
 import time
 
-config = pulumi.Config(name=None)
+# Set destination here
+destination = "1525 4th Avenue #800, Seattle, WA 98101"
 
+# Get values from Pulumi config to use as environment variables in our Cloud fxn
+config = pulumi.Config(name=None)
+config_values = {
+    "TWILLIO_ACCESS_TOKEN": config.get("twillioAccessToken"),
+    "TWILLIO_ACCOUNT_SID": config.get("twillioAccountSid"),
+    "TO_PHONE_NUMBER": config.get("toPhoneNumber"),
+    "FROM_PHONE_NUMBER": config.get("fromPhoneNumber"),
+    "GOOGLE_MAPS_API_KEY": config.get("googleMapsApiKey"),
+    "DESTINATION": destination,
+}
+
+# Create a GCP resource (Storage Bucket)
 bucket = storage.Bucket('locatebucket')
 
+# Create a Bucket Object from an Asset Archive
 requirements = pulumi.FileAsset(path="./functions/requirements.txt")
 asset = pulumi.FileAsset(path="./functions/locate.py")
 archive = pulumi.AssetArchive(assets={
@@ -18,36 +32,16 @@ object = storage.BucketObject("main.py",
                               bucket=bucket.name,
                               source=archive)
 
-# Create a GCP resource (Storage Bucket)
-
-# Export the DNS name of the bucket
-pulumi.export('bucket_name',  bucket.url)
-
+# Create a Cloud Function
 fxn = cloudfunctions.Function("locatefunction",
-                              opts=None,
-                              available_memory_mb=None,
-                              description=None,
                               entry_point="hello_get",
-                              environment_variables={
-                                  "TWILLIO_ACCESS_TOKEN": config.get("twillioAccessToken"),
-                                  "TWILLIO_ACCOUNT_SID": config.get("twillioAccountSid"),
-                                  "TO_PHONE_NUMBER": config.get("toPhoneNumber"),
-                                  "FROM_PHONE_NUMBER": config.get("fromPhoneNumber"),
-                              },
-                              event_trigger=None,
-                              https_trigger_url=None,
-                              labels=None,
-                              name=None,
-                              project=None,
+                              environment_variables=config_values,
                               region="us-central1",
                               runtime="python37",
-                              service_account_email=None,
                               source_archive_bucket=bucket.name,
                               source_archive_object=object.name,
-                              source_repository=None,
-                              timeout=None,
-                              trigger_http=True,
-                              __name__=None,
-                              __opts__=None)
+                              trigger_http=True)
 
+# Export the DNS name of the bucket and the cloud function URL
+pulumi.export('bucket_name',  bucket.url)
 pulumi.export("fxn_url", fxn.https_trigger_url)
