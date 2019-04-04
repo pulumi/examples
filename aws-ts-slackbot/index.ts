@@ -20,8 +20,7 @@ const subscriptionsTable = new aws.dynamodb.Table("subscriptions", {
         type: "S",
     }],
     hashKey: "id",
-    readCapacity: 5,
-    writeCapacity: 5,
+    billingMode: "PAY_PER_REQUEST"
 });
 
 // Slack has strict requirements on how fast you must be when responding to their messages. In order
@@ -143,15 +142,20 @@ async function onEventCallback(request: EventCallbackRequest) {
 messageTopic.onEvent("processTopicMessage", async ev => {
     console.log(`Processing topic.  Got ${ev.Records.length} record(s)`);
     for (const record of ev.Records) {
-        const request = <EventCallbackRequest>JSON.parse(record.Sns.Message);
+        try {
+            const request = <EventCallbackRequest>JSON.parse(record.Sns.Message);
 
-        switch (request.event.type) {
-            case "message":
-                return await onMessageEventCallback(request);
-            case "app_mention":
-                return await onAppMentionEventCallback(request);
-            default:
-                console.log("Unknown event type: " + request.event.type);
+            switch (request.event.type) {
+                case "message":
+                    return await onMessageEventCallback(request);
+                case "app_mention":
+                    return await onAppMentionEventCallback(request);
+                default:
+                    console.log("Unknown event type: " + request.event.type);
+            }
+        }
+        catch (err) {
+            console.log("Error: " + (err.stack || err.message));
         }
     }
 });
@@ -214,7 +218,7 @@ async function sendChannelMessage(channel: string, text: string) {
     console.log("posting url: " + url);
 
     const res = await superagent.get(url)
-    console.log("res: " + res.text);
+    console.log("res: " + JSON.stringify(res));
 }
 
 async function getPermalink(channel: string, message_ts: string) {
@@ -235,10 +239,13 @@ async function getPermalink(channel: string, message_ts: string) {
 }
 
 async function onAppMentionEventCallback(request: EventCallbackRequest) {
+    console.log("Got an app_mention: " + JSON.stringify(request));
     const event = request.event;
-    await event.text.toLowerCase().indexOf("unsubscribe") >= 0
+    var promise = event.text.toLowerCase().indexOf("unsubscribe") >= 0
         ? unsubscribeFromMentions(event)
         : subscribeToMentions(event);
+
+    return await promise;
 }
 
 async function unsubscribeFromMentions(event: Event) {
@@ -258,10 +265,12 @@ async function subscribeToMentions(event: Event) {
     const client = new aws.sdk.DynamoDB.DocumentClient();
 
     // User is subscribing.  Add them from subscription table.
+    console.log(`Placing user=${event.user} channel=${event.channel} in the subscription table.`);
     await client.put({
         TableName: subscriptionsTable.name.get(),
         Item: { id: event.user, channel: event.channel },
     }).promise();
+    console.log("Done placing user");
 
     const text = `Hi <@${event.user}>.  You've been subscribed to @ mentions. Send me an message containing 'unsubscribe' to stop receiving these notifications.`;
     await sendChannelMessage(event.channel, text);
