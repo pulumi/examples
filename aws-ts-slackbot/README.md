@@ -80,40 +80,58 @@ with `***`.
 
 To create a new Slackbot, first go to https://api.slack.com/apps and create an account if necessary.  Next, click on 'Create New App' here:
 
-![image](https://user-images.githubusercontent.com/4564579/55648728-e7127180-5795-11e9-9ddf-849d789ea05b.png)
-
+<p align=center>
+<img src=https://user-images.githubusercontent.com/4564579/55648728-e7127180-5795-11e9-9ddf-849d789ea05b.png>
+</p>
+    
 Pick your desired name for the app, and the Workspace the app belongs to.  Here we choose `MentionBot`:
 
-![image](https://user-images.githubusercontent.com/4564579/55648747-f7c2e780-5795-11e9-9f95-e715ba76b7c8.png)
+<p align=center>
+<img src=https://user-images.githubusercontent.com/4564579/55648747-f7c2e780-5795-11e9-9f95-e715ba76b7c8.png>
+</p>
 
 Once created, you will need to 'Add features and functionality' to your app. You'll eventually need all these configured:
 
-![image](https://user-images.githubusercontent.com/4564579/55648788-15904c80-5796-11e9-9c6c-27f68c900f13.png)
+<p align=center>
+<img src=https://user-images.githubusercontent.com/4564579/55648788-15904c80-5796-11e9-9c6c-27f68c900f13.png>
+</p>
 
 First, we'll enable 'Incoming Webhooks'.  This allows your Slack bot to post messages into Slack for you:
  
-![image](https://user-images.githubusercontent.com/4564579/55648806-22ad3b80-5796-11e9-8dfd-ba86b7ba9351.png)
+<p align=center>
+<img src=https://user-images.githubusercontent.com/4564579/55648806-22ad3b80-5796-11e9-8dfd-ba86b7ba9351.png>
+</p>
 
 Next, create a bot user like so:
 
-![image](https://user-images.githubusercontent.com/4564579/55648827-32c51b00-5796-11e9-9abc-086a3760f6af.png)
+<p align=center>
+<img src=https://user-images.githubusercontent.com/4564579/55648827-32c51b00-5796-11e9-9abc-086a3760f6af.png>
+</p>
 
 Next, we'll enable 'Event Subscriptions'.  This will tell Slack to push events to your ApiGateway endpoint when changes happen.  Note that we put the Stack-Output `url` shown above (along with the `events` suffix).  This corresponds to the specific ApiGateway Route that was defined in the Pulumi app. Note that Slack will test this endpoint to ensure it is accepting Slack notifications and responding to them in a valid manner.  We'll also setup notifications for the events we care about.  Importantly, our bot will have to hear about when people mention it (for subscribing/unsubscribing), as well as hearing about all messages (so it can look for @-mentions):
 
-![image](https://user-images.githubusercontent.com/4564579/55648880-58522480-5796-11e9-95fd-edfc9d12c381.png)
-![image](https://user-images.githubusercontent.com/4564579/55648902-63a55000-5796-11e9-8cf6-8e8f4909d600.png)
+<p align=center>
+<img src=https://user-images.githubusercontent.com/4564579/55648880-58522480-5796-11e9-95fd-edfc9d12c381.png>
+<img src=https://user-images.githubusercontent.com/4564579/55648902-63a55000-5796-11e9-8cf6-8e8f4909d600.png>
+</p>
 
 Next, we'll go to 'Permissions'.  Here, we can find the oauth tokens your Pulumi App will need.  Specifically, we'll need the 'Bot User Oauth Token' listed here:
 
-![image](https://user-images.githubusercontent.com/4564579/55648951-7fa8f180-5796-11e9-81ba-b45d7ebc4bb7.png)
+<p align=center>
+<img src=https://user-images.githubusercontent.com/4564579/55648951-7fa8f180-5796-11e9-81ba-b45d7ebc4bb7.png>
+</p>
 
 Underneath this, we'll set the following Scopes defining the permissions of the bot:
 
-   ![image](https://user-images.githubusercontent.com/4564579/55647362-55edcb80-5792-11e9-8f60-ae5261fa9c9a.png)
+<p align=center>
+   <img src=https://user-images.githubusercontent.com/4564579/55647362-55edcb80-5792-11e9-8f60-ae5261fa9c9a.png>
+</p>
 
 Now, we're almost done.  The only thing left to do is supply your Pulumi App with the appropriate secrets/tokens.  We'll need the Bot Oauth token (shown above), and the 'Verification Token' (found under 'Basic Information'): 
 
-   ![image](https://user-images.githubusercontent.com/4564579/55647507-af55fa80-5792-11e9-80bf-b07b894d996f.png)
+<p align=center>
+   <img src=https://user-images.githubusercontent.com/4564579/55647507-af55fa80-5792-11e9-80bf-b07b894d996f.png>
+</p>
 
 Supply these both like so:
 
@@ -124,7 +142,9 @@ Supply these both like so:
 
 Next, install the Slack App into your workspace:
 
-   ![image](https://user-images.githubusercontent.com/4564579/55647599-eaf0c480-5792-11e9-88c5-83daefb32580.png)
+<p align=center>
+   <img src=https://user-images.githubusercontent.com/4564579/55647599-eaf0c480-5792-11e9-88c5-83daefb32580.png>
+</p>
 
 And we're done!
 
@@ -132,20 +152,27 @@ And we're done!
 
 From Slack you can now create your own private channel:
 
-![image](https://user-images.githubusercontent.com/4564579/55647696-2ab7ac00-5793-11e9-8165-5672146036d3.png)
+<p align=center>
+<img src=https://user-images.githubusercontent.com/4564579/55647696-2ab7ac00-5793-11e9-8165-5672146036d3.png>
+</p>
 
 Invite the bot to the channel:
 
-![image](https://user-images.githubusercontent.com/4564579/55647722-40c56c80-5793-11e9-8a97-5ce087d2bfe3.png)
+<p align=center>
+<img src=https://user-images.githubusercontent.com/4564579/55647722-40c56c80-5793-11e9-8a97-5ce087d2bfe3.png>
+</p>
 
 Then send it a message.  Note, it may take several seconds for the bot to respond due to Slack push notification delays, SNS Topic delays, and Slack incoming message delays.
 
-![image](https://user-images.githubusercontent.com/4564579/55648466-3e641200-5795-11e9-9917-e64cdf45b63e.png)
+<p align=center>
+<img src=https://user-images.githubusercontent.com/4564579/55648466-3e641200-5795-11e9-9917-e64cdf45b63e.png>
+</p>
 
 And you're set!  From now on when someone mentions you, you'll get a little message in your channel like so:
 
-![image](https://user-images.githubusercontent.com/4564579/55648631-b0d4f200-5795-11e9-886a-8ce0f932e9f1.png)
-
+<p align=center>
+<img src=https://user-images.githubusercontent.com/4564579/55648631-b0d4f200-5795-11e9-886a-8ce0f932e9f1.png>
+</p>
 
 ## Clean up
 
