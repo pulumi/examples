@@ -9,11 +9,11 @@ import * as superagent from "superagent";
 // the channel you contacted the bot from.
 
 const config = new pulumi.Config("mentionbot");
-const slackToken = config.require("slackToken");
-const verificationToken = config.require("verificationToken");
+const slackToken = config.get("slackToken");
+const verificationToken = config.get("verificationToken");
 
 // Make a simple table that keeps track of which users have requested to be notified when their name
-// is mentioned.
+// is mentioned, and which channel they'll be notified in.
 const subscriptionsTable = new aws.dynamodb.Table("subscriptions", {
     attributes: [{
         name: "id",
@@ -27,6 +27,8 @@ const subscriptionsTable = new aws.dynamodb.Table("subscriptions", {
 // to ensure we don't respond too slowly, all we do is enqueue messages to this topic, and then
 // return immediately.
 const messageTopic = new aws.sns.Topic("messages");
+
+// Shapes of the slack messages we receive.
 
 interface SlackRequest {
     type: "url_verification" | "event_callback";
@@ -66,81 +68,77 @@ const endpoint = new awsx.apigateway.API("mentionbot", {
         method: "POST",
         eventHandler: async (event) => {
             try {
+                if (!slackToken) {
+                    throw new Error("mentionbot:slackToken was not provided");
+                }
+
+                if (!verificationToken) {
+                    throw new Error("mentionbot:verificationToken was not provided")
+                }
+
                 if (!event.isBase64Encoded) {
-                    console.log("Received data that wasn't encoded as expected");
+                    console.log("Unexpected content received");
                     console.log(JSON.stringify(event));
-                    return { statusCode: 200, body: "unexpected content received" };
                 }
+                else {
+                    const parsed = JSON.parse(Buffer.from(event.body, "base64").toString());
 
-                const data = Buffer.from(event.body, "base64").toString();
-                console.log("data: " + data);
-                const parsed = JSON.parse(Buffer.from(event.body, "base64").toString());
+                    switch (parsed.type) {
+                        case "url_verification":
+                            // url_verification is the simple message slack sends to our endpoint to
+                            // just make sure we're setup properly.  All we have to do is get the
+                            // challenge data they send us and return it untouched.
+                            const verificationRequest = <UrlVerificationRequest>parsed;
+                            const challenge = verificationRequest.challenge;
+                            return { statusCode: 200, body: JSON.stringify({ challenge }) };
 
-                switch (parsed.type) {
-                    case "url_verification":
-                        return onUrlVerification(<UrlVerificationRequest>parsed);
+                        case "event_callback":
+                            const eventRequest = <EventCallbackRequest>parsed;
 
-                    case "event_callback":
-                        await onEventCallback(<EventCallbackRequest>parsed);
-                        break;
+                            if (eventRequest.token !== verificationToken) {
+                                console.log("Error: Invalid verification token");
+                                return { statusCode: 401, body: "Invalid verification token" }
+                            }
 
-                    default:
-                        const message = "Unknown event type: " + parsed.type;
-                        console.log(message);
-                        break;
+                            await onEventCallback(eventRequest);
+                            break;
+
+                        default:
+                            console.log("Unknown event type: " + parsed.type);
+                            break;
+                    }
                 }
-
-                return { statusCode: 200, body: "success" }
             }
             catch (err) {
-                if (err.verificationFailed) {
-                    return { statusCode: 401, body: "Invalid verification token" }
-                }
-
-                return { statusCode: 500, body: err.message }
+                console.log("Error: " + err.message);
+                // Fall through. Even in the event of an error, we want to return '200' so that slack
+                // doesn't just repeat the message, causing the same error.
             }
+
+            // Always return success so that Slack doesn't just immediately resend this message to us.
+            return { statusCode: 200, body: "" };
         },
     }],
 });
 
-function onUrlVerification(request: UrlVerificationRequest) {
-    // url_verification is the simple message slack sends to our endpoint to just make sure we're
-    // setup properly.  All we have to do is get the challenge data they send us and return it
-    // untouched.
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ challenge: request.challenge }),
-    };
-}
-
 async function onEventCallback(request: EventCallbackRequest) {
-    if (request.token !== verificationToken) {
-        var err = new Error();
-        (<any>err).verificationFailed = true;
-        throw err;
-    }
-
     const event = request.event;
     if (!event) {
-        console.log("No event in request.");
-        console.log(JSON.stringify(request));
+        // No event in request, not processing any further.
         return;
     }
 
     // Just enqueue the request to our topic and return immediately.  We have a strict time limit from
-    // slack and they will resend messages if we don't get back to them aspa.
-    console.log("Posting to topic");
+    // slack and they will resend messages if we don't get back to them ASAP.
     const client = new aws.sdk.SNS();
     await client.publish({
         Message: JSON.stringify(request),
         TopicArn: messageTopic.arn.get(),
     }).promise();
-    console.log("Successfully posted to topic");
 }
 
 // Hook up a lambda that will then process the topic when possible.
 messageTopic.onEvent("processTopicMessage", async ev => {
-    console.log(`Processing topic.  Got ${ev.Records.length} record(s)`);
     for (const record of ev.Records) {
         try {
             const request = <EventCallbackRequest>JSON.parse(record.Sns.Message);
@@ -164,14 +162,14 @@ messageTopic.onEvent("processTopicMessage", async ev => {
 async function onMessageEventCallback(request: EventCallbackRequest) {
     const event = request.event;
     if (!event.text) {
-        console.log("Event had no text");
+        // No text for the message, so nothing to do.
         return;
     }
 
     // Look to see if there are any @mentions.
     const matches = event.text.match(/<@[A-Z0-9]+>/gi);
     if (!matches || matches.length === 0) {
-        console.log("No @mentions in this message.");
+        // No @mentions in the message, so nothing to do.
         return;
     }
 
@@ -188,7 +186,6 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
 
     async function processMatch(match: string) {
         const id = match.substring("@<".length, match.length - ">".length);
-        console.log("Looking up subscription for: " + id);
 
         const getResult = await client.get({
             TableName: subscriptionsTable.name.get(),
@@ -196,7 +193,7 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
         }).promise();
 
         if (!getResult.Item) {
-            console.log("Couldn't find subscription for this user.")
+            // No subscription found for this user.
             return;
         }
 
@@ -207,39 +204,34 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
     }
 }
 
+function getSlackToken() {
+
+    return slackToken;
+}
+
 async function sendChannelMessage(channel: string, text: string) {
     const message = {
-        token: slackToken,
+        token: getSlackToken(),
         channel,
         text,
     };
 
-    const url = `https://slack.com/api/chat.postMessage?${qs.stringify(message)}`;
-    console.log("posting url: " + url);
-
-    const res = await superagent.get(url)
-    console.log("res: " + JSON.stringify(res));
+    await superagent.get(`https://slack.com/api/chat.postMessage?${qs.stringify(message)}`)
 }
 
 async function getPermalink(channel: string, message_ts: string) {
     const message = {
-        token: slackToken,
+        token: getSlackToken(),
         channel,
         message_ts,
     };
 
-    const url = `https://slack.com/api/chat.getPermalink?${qs.stringify(message)}`;
-    console.log("posting url: " + url);
-
-    const res = await superagent.get(url)
-    console.log("res: " + res.text);
-
-    const js = JSON.parse(res.text);
-    return js.permalink;
+    const result = await superagent.get(`https://slack.com/api/chat.getPermalink?${qs.stringify(message)}`)
+    return JSON.parse(result.text).permalink;
 }
 
 async function onAppMentionEventCallback(request: EventCallbackRequest) {
-    console.log("Got an app_mention: " + JSON.stringify(request));
+    // Got an app_mention to @mentionbot.
     const event = request.event;
     var promise = event.text.toLowerCase().indexOf("unsubscribe") >= 0
         ? unsubscribeFromMentions(event)
@@ -265,12 +257,10 @@ async function subscribeToMentions(event: Event) {
     const client = new aws.sdk.DynamoDB.DocumentClient();
 
     // User is subscribing.  Add them from subscription table.
-    console.log(`Placing user=${event.user} channel=${event.channel} in the subscription table.`);
     await client.put({
         TableName: subscriptionsTable.name.get(),
         Item: { id: event.user, channel: event.channel },
     }).promise();
-    console.log("Done placing user");
 
     const text = `Hi <@${event.user}>.  You've been subscribed to @ mentions. Send me an message containing 'unsubscribe' to stop receiving these notifications.`;
     await sendChannelMessage(event.channel, text);
