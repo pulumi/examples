@@ -93,6 +93,8 @@ The application uses the [Google Maps API](https://developers.google.com/maps/do
     pulumi config set travelOffset <TRAVEL_OFFSET>
     ```
 
+1. Run `pulumi up` to re-deploy your cloud function with the new configuration.
+
 ### Twilio for SMS Notifications
 
 To have the Cloud Function send a text message, you'll need to a Twilio key too:
@@ -113,6 +115,8 @@ To have the Cloud Function send a text message, you'll need to a Twilio key too:
     ```bash
     pulumi config set toPhoneNumber <TO_PHONE_NUMBER> --secret
     ```
+
+1. Run `pulumi up` to re-deploy your cloud function with the new configuration.
 
 ### Flic Button to Trigger the Cloud Function
 
