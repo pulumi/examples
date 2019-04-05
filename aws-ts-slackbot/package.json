@@ -1,0 +1,15 @@
+{
+    "name": "aws-ts-slackbot",
+    "version": "0.1.0",
+    "dependencies": {
+        "@pulumi/aws": "latest",
+        "@pulumi/awsx": "latest",
+        "@pulumi/pulumi": "latest",
+        "qs": "^6.7.0",
+        "superagent": "^5.0.2"
+    },
+    "devDependencies": {
+        "@types/qs": "^6.5.2",
+        "@types/superagent": "^4.1.1"
+    }
+}
