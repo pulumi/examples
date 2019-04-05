@@ -43,12 +43,12 @@ You can connect a [Flic](https://flic.io) button using [IFTTT](https://ifttt.com
 
     Performing changes:
     ...
-    info: 6 changes performed:
-        + 6 resources created
-    Update duration: 39.65130324s
+    Resources:
+        + 4 created
+    Duration: 1m2s
     ```
 
-1. Check the deployed function endpoint:
+1. Check the deployed function endpoint (replace <YOUR_LATITUDE> & <YOUR_LONGITUDE>):
 
     ```BASH
     $ pulumi stack output fxn_url
@@ -58,31 +58,37 @@ You can connect a [Flic](https://flic.io) button using [IFTTT](https://ifttt.com
     ...
     ```
 
+### Add in Google Maps
+
 1. Get a [Google Maps](https://cloud.google.com/maps-platform/) API key by clicking 'Get started'.
 
     * Check the Routes and then click continue.
     * Select the GCP project you are deploying your Cloud function to.
     * Replace <INSERT_API_KEY> with the API key and run the following command:
 
+1. Configure the API Key as a Pulumi secret by replacing <INSERT_API_KEY> and running the following command:
+
     ```bash
     pulumi config set googleMapsApiKey <INSERT_API_KEY> --secret
     ```
 
-    * Replace <DESTINATION> and set the destination by running the following command:
+1. Configure your destination as a Pulumi secret by replacing <DESTINATION> and running the following command:
 
      ```bash
     pulumi config set destination <DESTINATION> --secret
     ```
 
-    * [Optional] If you would like to set an offset (i.e. it takes me 5 minutes to get down to my car), you can run the following:
+1. [Optional] Configure an offset (i.e. it takes me 5 minutes to get down to my car), by running the following:
 
     ```bash
     pulumi config set travelOffset <TRAVEL_OFFSET> --secret
     ```
 
+### Add in Texting with Twilio
+
 1. Set up your [Twilio](https://www.twilio.com/) account.
 
-    Run the following commands to:
+1. Run the following commands based on your Twilio account:
 
     ```bash
     pulumi config set twillioAccessToken <TWILIO_ACCESS_TOKEN> --secret
@@ -90,10 +96,18 @@ You can connect a [Flic](https://flic.io) button using [IFTTT](https://ifttt.com
     pulumi config set fromPhoneNumber <FROM_PHONE_NUMBER> --secret
     ```
 
-    Add the number you would like notify by running the following:
+1. Add the number you would like notify by running the following:
 
     ```bash
     pulumi config set toPhoneNumber <TO_PHONE_NUMBER> --secret
     ```
 
-1. [TODO] IFTT
+### Set up the Flic Button
+
+1. To set up the Flic button, install the Flic app on your phone and pair your phone. Enable location services for the Flic app and add an IFTTT for one of the click gestures.
+
+1. Create a new Applet on IFTTT: "If You click a Flic, then Make a web request"
+    * For "If" select the "Flic" service then " "Flic is clicked"
+    * Select your Flic button and the appropriate gesture from the menu.
+    * For "Then" select the "Make a web request" service
+    * Under URL enter following (replace <FUNCTION_URL> with the value from `pulumi stack output fxn_url`): `<FUNCTION_URL>?long={{Longitude}}&lat={{Latitude}}`

@@ -34,7 +34,7 @@ source_archive_object = storage.BucketObject("eta_demo_object",
 
 # Create a Cloud Function
 fxn = cloudfunctions.Function("eta_demo_function",
-                              entry_point="hello_get",
+                              entry_point="get_demo",
                               environment_variables=config_values,
                               region="us-central1",
                               runtime="python37",
