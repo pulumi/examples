@@ -136,8 +136,8 @@ async function onEventCallback(request: EventCallbackRequest) {
     await topic.publish(Buffer.from(JSON.stringify(request)));
 }
 
-// Hook up a lambda that will then process the topic when possible.
-messageTopic.onMessagePublished("processTopicMessage", async (data: gcp.pubsub.TopicData) => {
+// Hook up a cloud-function that will then process the topic when possible.
+messageTopic.onMessagePublished("processTopicMessage", async (data) => {
     try {
         const request = <EventCallbackRequest>JSON.parse(Buffer.from(data.data, "base64").toString());
 
