@@ -80,37 +80,32 @@ with `***`.
 
 To create a new Slackbot, first go to https://api.slack.com/apps and create an account if necessary.  Next, click on 'Create New App' here:
 
-   ![image](https://user-images.githubusercontent.com/4564579/55644887-03111580-578c-11e9-9db8-17dcb258af72.png)
+![image](https://user-images.githubusercontent.com/4564579/55648728-e7127180-5795-11e9-9ddf-849d789ea05b.png)
 
 Pick your desired name for the app, and the Workspace the app belongs to.  Here we choose `MentionBot`:
 
-   ![image](https://user-images.githubusercontent.com/4564579/55644961-30f65a00-578c-11e9-8307-038da1462a90.png)
+![image](https://user-images.githubusercontent.com/4564579/55648747-f7c2e780-5795-11e9-9f95-e715ba76b7c8.png)
 
-Once created, you will need to 'Add features and functionality' to your app, and then 'Install app to your workspace':
+Once created, you will need to 'Add features and functionality' to your app. You'll eventually need all these configured:
 
-   ![image](https://user-images.githubusercontent.com/4564579/55645045-5d11db00-578c-11e9-9209-b08dad4a1898.png)
-
-For 'Add features and functionality' you'll eventually need all these configured:
-
-   ![image](https://user-images.githubusercontent.com/4564579/55645110-87fc2f00-578c-11e9-9f99-e0704a44d39f.png)
+![image](https://user-images.githubusercontent.com/4564579/55648788-15904c80-5796-11e9-9c6c-27f68c900f13.png)
 
 First, we'll enable 'Incoming Webhooks'.  This allows your Slack bot to post messages into Slack for you:
  
-   ![image](https://user-images.githubusercontent.com/4564579/55646051-00fc8600-578f-11e9-9a80-abfda38eb251.png)
+![image](https://user-images.githubusercontent.com/4564579/55648806-22ad3b80-5796-11e9-8dfd-ba86b7ba9351.png)
 
-Next, create a bot users like so:
+Next, create a bot user like so:
 
-   ![image](https://user-images.githubusercontent.com/4564579/55647000-6b162a80-5791-11e9-960c-423433c8f8dc.png)
+![image](https://user-images.githubusercontent.com/4564579/55648827-32c51b00-5796-11e9-9abc-086a3760f6af.png)
 
 Next, we'll enable 'Event Subscriptions'.  This will tell Slack to push events to your ApiGateway endpoint when changes happen.  Note that we put the Stack-Output `url` shown above (along with the `events` suffix).  This corresponds to the specific ApiGateway Route that was defined in the Pulumi app. Note that Slack will test this endpoint to ensure it is accepting Slack notifications and responding to them in a valid manner.  We'll also setup notifications for the events we care about.  Importantly, our bot will have to hear about when people mention it (for subscribing/unsubscribing), as well as hearing about all messages (so it can look for @-mentions):
 
-   ![image](https://user-images.githubusercontent.com/4564579/55646822-fe9b2b80-5790-11e9-8d3e-8167577b3a2e.png)
-   ![image](https://user-images.githubusercontent.com/4564579/55647096-a6b0f480-5791-11e9-83bf-4aa80cf4e971.png)
-   ![image](https://user-images.githubusercontent.com/4564579/55647138-bdefe200-5791-11e9-8b44-21100d874db3.png)
+![image](https://user-images.githubusercontent.com/4564579/55648880-58522480-5796-11e9-95fd-edfc9d12c381.png)
+![image](https://user-images.githubusercontent.com/4564579/55648902-63a55000-5796-11e9-8cf6-8e8f4909d600.png)
 
 Next, we'll go to 'Permissions'.  Here, we can find the oauth tokens your Pulumi App will need.  Specifically, we'll need the 'Bot User Oauth Token' listed here:
 
-   ![image](https://user-images.githubusercontent.com/4564579/55647255-145d2080-5792-11e9-93bc-29d15f04953a.png)
+![image](https://user-images.githubusercontent.com/4564579/55648951-7fa8f180-5796-11e9-81ba-b45d7ebc4bb7.png)
 
 Underneath this, we'll set the following Scopes defining the permissions of the bot:
 
@@ -143,7 +138,13 @@ Invite the bot to the channel:
 
 ![image](https://user-images.githubusercontent.com/4564579/55647722-40c56c80-5793-11e9-8a97-5ce087d2bfe3.png)
 
+Then send it a message.  Note, it may take several seconds for the bot to respond due to Slack push notification delays, SNS Topic delays, and Slack incoming message delays.
 
+![image](https://user-images.githubusercontent.com/4564579/55648466-3e641200-5795-11e9-9917-e64cdf45b63e.png)
+
+And you're set!  From now on when someone mentions you, you'll get a little message in your channel like so:
+
+![image](https://user-images.githubusercontent.com/4564579/55648631-b0d4f200-5795-11e9-886a-8ce0f932e9f1.png)
 
 
 ## Clean up
