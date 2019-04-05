@@ -204,28 +204,13 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
     }
 }
 
-function getSlackToken() {
-
-    return slackToken;
-}
-
 async function sendChannelMessage(channel: string, text: string) {
-    const message = {
-        token: getSlackToken(),
-        channel,
-        text,
-    };
-
+    const message = { token: slackToken, channel, text };
     await superagent.get(`https://slack.com/api/chat.postMessage?${qs.stringify(message)}`)
 }
 
 async function getPermalink(channel: string, message_ts: string) {
-    const message = {
-        token: getSlackToken(),
-        channel,
-        message_ts,
-    };
-
+    const message = { token: slackToken, channel, message_ts };
     const result = await superagent.get(`https://slack.com/api/chat.getPermalink?${qs.stringify(message)}`)
     return JSON.parse(result.text).permalink;
 }
