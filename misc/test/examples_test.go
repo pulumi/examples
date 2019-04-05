@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -75,7 +76,7 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), func(body string) bool {
+				assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -417,7 +418,7 @@ func TestExamples(t *testing.T) {
 
 	for _, ex := range tests {
 		example := ex
-		t.Run(example.Dir, func(t *testing.T) {
+		t.Run(filepath.Base(example.Dir), func(t *testing.T) {
 			integration.ProgramTest(t, &example)
 		})
 	}
