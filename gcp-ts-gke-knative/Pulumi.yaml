@@ -1,0 +1,3 @@
+name: gcp-ts-gke-knative
+runtime: nodejs
+description: knative GKE demo

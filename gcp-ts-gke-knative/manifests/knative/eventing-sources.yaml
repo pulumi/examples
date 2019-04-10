@@ -1,0 +1,170 @@
+
+---
+# sources.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: knative-sources
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: controller-manager
+  namespace: knative-sources
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: eventing-sources-controller
+rules:
+- apiGroups:
+  - sources.eventing.knative.dev
+  resources:
+  - awssqssources
+  - containersources
+  - cronjobsources
+  - githubsources
+  - kuberneteseventsources
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - sources.eventing.knative.dev
+  resources:
+  - awssqssources/status
+  - containersources/status
+  - cronjobsources/status
+  - githubsources/status
+  - kuberneteseventsources/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - eventing.knative.dev
+  resources:
+  - channels
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - serving.knative.dev
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: eventing-sources-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: eventing-sources-controller
+subjects:
+- kind: ServiceAccount
+  name: controller-manager
+  namespace: knative-sources
+
+---
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: controller
+  namespace: knative-sources
+spec:
+  ports:
+  - port: 443
+  selector:
+    control-plane: controller-manager
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: controller-manager
+  namespace: knative-sources
+spec:
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+  serviceName: controller-manager
+  template:
+    metadata:
+      labels:
+        control-plane: controller-manager
+    spec:
+      containers:
+      - env:
+        - name: K8S_RA_IMAGE
+          value: gcr.io/knative-releases/github.com/knative/eventing-sources/cmd/kuberneteseventsource@sha256:1575a5aac67418fa34a7d51c93b54902074e4cc98575896db6b34e84db96ad5b
+        - name: GH_RA_IMAGE
+          value: gcr.io/knative-releases/github.com/knative/eventing-sources/cmd/github_receive_adapter@sha256:6eed453aa11ddb7ffdefe87a8cb316959b6f7f4e4a142b05358d10d4567d7668
+        - name: CRONJOB_RA_IMAGE
+          value: gcr.io/knative-releases/github.com/knative/eventing-sources/cmd/cronjob_receive_adapter@sha256:e03fc5fa1df717cba4478db8e18e853573d2957193c9ce55bec453153abe4658
+        image: gcr.io/knative-releases/github.com/knative/eventing-sources/cmd/manager@sha256:1c7a802f2b392581a02536fa00ad581b1f47be4a9cebab48f9bdc8e3cd5dffe0
+        name: manager
+        resources:
+          limits:
+            cpu: 100m
+            memory: 30Mi
+          requests:
+            cpu: 100m
+            memory: 20Mi
+      serviceAccountName: controller-manager
+      terminationGracePeriodSeconds: 10
+
+---
