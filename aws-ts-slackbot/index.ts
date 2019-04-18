@@ -76,7 +76,7 @@ const endpoint = new awsx.apigateway.API("mentionbot", {
                     throw new Error("mentionbot:verificationToken was not provided")
                 }
 
-                if (!event.isBase64Encoded) {
+                if (!event.isBase64Encoded || event.body == null) {
                     console.log("Unexpected content received");
                     console.log(JSON.stringify(event));
                 }
