@@ -18,7 +18,7 @@ let endpoint = new awsx.apigateway.API("hello-world", {
         path: "/{route+}",
         method: "GET",
         eventHandler: async (event) => {
-            let route = event.pathParameters["route"];
+            let route = event.pathParameters!["route"];
             console.log(`Getting count for '${route}'`);
 
             const client = new aws.sdk.DynamoDB.DocumentClient();
