@@ -12,27 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import * as awsx from "@pulumi/awsx";
-import * as aws from '@pulumi/aws';
 import * as pulumi from '@pulumi/pulumi';
 
 import * as jwksClient from 'jwks-rsa';
 import * as jwt from 'jsonwebtoken';
 import * as util from 'util';
 
+const config = new pulumi.Config();
+const jwksUri = config.require("jwksUri");
+const audience = config.require("audience");
+const issuer = config.require("issuer");
 
 const authorizers: awsx.apigateway.LambdaAuthorizer[] = [
     awsx.apigateway.getTokenLambdaAuthorizer({
         authorizerName: "jwt-rsa-custom-authorizer",
         header: "Authorization",
-        handler: async (event: awsx.apigateway.AuthorizerEvent, context: any): Promise<awsx.apigateway.AuthorizerResponse> => {
+        handler: async (event: awsx.apigateway.AuthorizerEvent): Promise<awsx.apigateway.AuthorizerResponse> => {
             let data: awsx.apigateway.AuthorizerResponse;
             try {
                 data = await authenticate(event);
             }
             catch (err) {
                 console.log(err);
-                context.fail(`Unauthorized: ${err.message}`);
-                return nil;
+                throw new Error(`Unauthorized`);
             }
             return data;
         },
@@ -56,11 +58,8 @@ const api = new awsx.apigateway.API("myapi", {
 
 export const url = api.url;
 
-// Code copied directly from Auth0's Guide
+// Code copied + converted to TypeScript from Auth0's Guide
 // https://github.com/auth0-samples/jwt-rsa-aws-custom-authorizer
-
-require('dotenv').config({ silent: true });
-
 
 // extract and return the Bearer Token from the Lambda event parameters
 const getToken = (event: awsx.apigateway.AuthorizerEvent) => {
@@ -80,17 +79,12 @@ const getToken = (event: awsx.apigateway.AuthorizerEvent) => {
     return match[1];
 }
 
-const jwtOptions = {
-    audience: process.env.AUDIENCE,
-    issuer: process.env.TOKEN_ISSUER
-};
-
-const authenticate = (event: awsx.apigateway.AuthorizerEvent): awsx.apigateway.AuthorizerResponse => {
+const authenticate = async (event: awsx.apigateway.AuthorizerEvent): Promise<awsx.apigateway.AuthorizerResponse> => {
     console.log(event);
     const token = getToken(event);
 
     const decoded = jwt.decode(token, { complete: true });
-    if (!decoded || !decoded.header || !decoded.header.kid) {
+    if (!decoded || typeof decoded === "string" || !decoded.header || !decoded.header.kid) {
         throw new Error('invalid token');
     }
 
@@ -98,16 +92,33 @@ const authenticate = (event: awsx.apigateway.AuthorizerEvent): awsx.apigateway.A
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 10, // Default value
-        jwksUri: process.env.JWKS_URI
+        jwksUri: jwksUri
     });
 
     const getSigningKey = util.promisify(client.getSigningKey);
-    return getSigningKey(decoded.header.kid)
-        .then((key) => {
-            const signingKey = key.publicKey || key.rsaPublicKey;
-            return jwt.verify(token, signingKey, jwtOptions);
-        })
-        .then(decoded => (
-            awsx.apigateway.authorizerResponse(decoded.sub, 'Allow', event.methodArn, { scope: decoded.scope })
-        ));
+    const key = await getSigningKey(decoded.header.kid);
+    const signingKey = key.publicKey || key.rsaPublicKey;
+    if (!signingKey) {
+        throw new Error('couldnt get signing key');
+    }
+
+    const jwtOptions = {
+        audience: audience,
+        issuer: issuer
+    };
+    const verifiedJWT = await jwt.verify(token, signingKey, jwtOptions);
+
+    if (!verifiedJWT || typeof verifiedJWT === "string" || !isVerifiedJWT(verifiedJWT)) {
+        throw new Error('couldnt verify JWT');
+    }
+    return awsx.apigateway.authorizerResponse(verifiedJWT.sub, 'Allow', event.methodArn, { scope: verifiedJWT.scope });
+}
+
+interface VerifiedJWT {
+    sub: string,
+    scope: string,
+}
+
+function isVerifiedJWT(toBeDetermined: VerifiedJWT | Object): toBeDetermined is VerifiedJWT {
+    return (<VerifiedJWT>toBeDetermined).sub !== undefined;
 }
