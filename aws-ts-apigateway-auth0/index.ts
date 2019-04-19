@@ -23,6 +23,7 @@ const jwksUri = config.require("jwksUri");
 const audience = config.require("audience");
 const issuer = config.require("issuer");
 
+// Create the Lambda Authorizer
 const authorizers: awsx.apigateway.LambdaAuthorizer[] = [
     awsx.apigateway.getTokenLambdaAuthorizer({
         authorizerName: "jwt-rsa-custom-authorizer",
@@ -42,6 +43,7 @@ const authorizers: awsx.apigateway.LambdaAuthorizer[] = [
         authorizerResultTtlInSeconds: 3600,
     })];
 
+// Create our API and reference the custom authorizer
 const api = new awsx.apigateway.API("myapi", {
     routes: [{
         path: "/a",
@@ -56,12 +58,17 @@ const api = new awsx.apigateway.API("myapi", {
     }],
 });
 
+// Export the URL for our API
 export const url = api.url;
 
-// Code copied + converted to TypeScript from Auth0's Guide
-// https://github.com/auth0-samples/jwt-rsa-aws-custom-authorizer
+/**
+ * Below is all code that gets added to the custom Authorizer Lambda. The code was copied and
+ * converted to TypeScript from [Auth0's GitHub
+ * Example](https://github.com/auth0-samples/jwt-rsa-aws-custom-authorizer)
+ */
 
-// extract and return the Bearer Token from the Lambda event parameters
+
+// Extract and return the Bearer Token from the Lambda event parameters
 const getToken = (event: awsx.apigateway.AuthorizerEvent) => {
     if (!event.type || event.type !== 'TOKEN') {
         throw new Error('Expected "event.type" parameter to have value "TOKEN"');
@@ -79,6 +86,7 @@ const getToken = (event: awsx.apigateway.AuthorizerEvent) => {
     return match[1];
 }
 
+// Check the Token is valid with Auth0
 const authenticate = async (event: awsx.apigateway.AuthorizerEvent): Promise<awsx.apigateway.AuthorizerResponse> => {
     console.log(event);
     const token = getToken(event);
