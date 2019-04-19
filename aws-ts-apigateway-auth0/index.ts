@@ -119,12 +119,11 @@ const authenticate = async (event: awsx.apigateway.AuthorizerEvent): Promise<aws
     if (!verifiedJWT || typeof verifiedJWT === "string" || !isVerifiedJWT(verifiedJWT)) {
         throw new Error('couldnt verify JWT');
     }
-    return awsx.apigateway.authorizerResponse(verifiedJWT.sub, 'Allow', event.methodArn, { scope: verifiedJWT.scope });
+    return awsx.apigateway.authorizerResponse(verifiedJWT.sub, 'Allow', event.methodArn);
 }
 
 interface VerifiedJWT {
     sub: string,
-    scope: string,
 }
 
 function isVerifiedJWT(toBeDetermined: VerifiedJWT | Object): toBeDetermined is VerifiedJWT {
