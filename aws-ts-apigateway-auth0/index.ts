@@ -24,20 +24,19 @@ const audience = config.require("audience");
 const issuer = config.require("issuer");
 
 // Create the Lambda Authorizer
-const authorizers: awsx.apigateway.LambdaAuthorizer[] = [
+const authorizers = [
     awsx.apigateway.getTokenLambdaAuthorizer({
         authorizerName: "jwt-rsa-custom-authorizer",
         header: "Authorization",
-        handler: async (event: awsx.apigateway.AuthorizerEvent): Promise<awsx.apigateway.AuthorizerResponse> => {
-            let data: awsx.apigateway.AuthorizerResponse;
+        handler: async (event) => {
             try {
-                data = await authenticate(event);
+                return await authenticate(event);
             }
             catch (err) {
                 console.log(err);
+                // Tells API Gateway to return a 401 Unauthorized response
                 throw new Error(`Unauthorized`);
             }
-            return data;
         },
         identityValidationExpression: "^Bearer [-0-9a-zA-Z\._]*$",
         authorizerResultTtlInSeconds: 3600,
@@ -69,7 +68,7 @@ export const url = api.url;
 
 
 // Extract and return the Bearer Token from the Lambda event parameters
-const getToken = (event: awsx.apigateway.AuthorizerEvent) => {
+function getToken(event: awsx.apigateway.AuthorizerEvent): string {
     if (!event.type || event.type !== 'TOKEN') {
         throw new Error('Expected "event.type" parameter to have value "TOKEN"');
     }
@@ -87,7 +86,7 @@ const getToken = (event: awsx.apigateway.AuthorizerEvent) => {
 }
 
 // Check the Token is valid with Auth0
-const authenticate = async (event: awsx.apigateway.AuthorizerEvent): Promise<awsx.apigateway.AuthorizerResponse> => {
+async function authenticate(event: awsx.apigateway.AuthorizerEvent): Promise<awsx.apigateway.AuthorizerResponse> {
     console.log(event);
     const token = getToken(event);
 
@@ -114,7 +113,7 @@ const authenticate = async (event: awsx.apigateway.AuthorizerEvent): Promise<aws
         audience: audience,
         issuer: issuer
     };
-    const verifiedJWT = await jwt.verify(token, signingKey, jwtOptions);
+    const verifiedJWT = await jwt.verify(token, signingKey, { audience, issuer });
 
     if (!verifiedJWT || typeof verifiedJWT === "string" || !isVerifiedJWT(verifiedJWT)) {
         throw new Error('couldnt verify JWT');

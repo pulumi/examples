@@ -41,14 +41,47 @@ You can follow the steps below or alternatively you can follow [Auth0's Part 1: 
     Run the following commands after replacing `<jwksUri>`, `<audience>` and `<issuer>` with the appropriate values.
 
     ```bash
-    pulumi config set jwksUri <jwksUri> --secret
-    pulumi config set audience <audience> --secret
-    pulumi config set issuer <issuer> --secret
+    pulumi config set --secret jwksUri <jwksUri>
+    pulumi config set --secret audience <audience>
+    pulumi config set --secret issuer <issuer>
     ```
 
 1. Restore NPM modules via `npm install` or `yarn install`.
 
 1. Run `pulumi up` to preview and deploy changes:
+
+```bash
+$ pulumi up
+Previewing update (dev):
+
+...
+
+Updating (dev):
+
+     Type                                Name                                         Status      Info
+ +   pulumi:pulumi:Stack                 lambda-authorizer-dev                        created     1 message
+ +   ├─ aws:apigateway:x:API             myapi                                        created
+ +   │  ├─ aws:iam:Role                  myapi70a45a97                                created
+ +   │  ├─ aws:iam:RolePolicyAttachment  myapi70a45a97-32be53a2                       created
+ +   │  ├─ aws:lambda:Function           myapi70a45a97                                created
+ +   │  ├─ aws:apigateway:RestApi        myapi                                        created
+ +   │  ├─ aws:apigateway:Deployment     myapi                                        created
+ +   │  ├─ aws:lambda:Permission         myapi-31a4e902                               created
+ +   │  └─ aws:apigateway:Stage          myapi                                        created
+ +   ├─ aws:iam:Role                     jwt-rsa-custom-authorizer                    created
+ +   ├─ aws:iam:Role                     jwt-rsa-custom-authorizer-authorizer-role    created
+ +   ├─ aws:iam:RolePolicyAttachment     jwt-rsa-custom-authorizer-32be53a2           created
+ +   ├─ aws:lambda:Function              jwt-rsa-custom-authorizer                    created
+ +   └─ aws:iam:RolePolicy               jwt-rsa-custom-authorizer-invocation-policy  created
+
+Outputs:
+    url: "https://***.execute-api.us-east-2.amazonaws.com/stage/"
+
+Resources:
+    + 14 created
+
+Duration: 18s
+```
 
 ## Clean up
 
