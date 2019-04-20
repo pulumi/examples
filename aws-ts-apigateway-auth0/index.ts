@@ -79,7 +79,7 @@ function getToken(event: awsx.apigateway.AuthorizerEvent): string {
     }
 
     const match = tokenString.match(/^Bearer (.*)$/);
-    if (!match || match.length < 2) {
+    if (!match) {
         throw new Error(`Invalid Authorization token - ${tokenString} does not match "Bearer .*"`);
     }
     return match[1];
