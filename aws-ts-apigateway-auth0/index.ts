@@ -41,7 +41,6 @@ const authorizerLambda = async (event: awsx.apigateway.AuthorizerEvent) => {
     }
 }
 
-
 // Create our API and reference the custom authorizer
 const api = new awsx.apigateway.API("myapi", {
     routes: [{
@@ -66,7 +65,6 @@ export const url = api.url;
  * converted to TypeScript from [Auth0's GitHub
  * Example](https://github.com/auth0-samples/jwt-rsa-aws-custom-authorizer)
  */
-
 
 // Extract and return the Bearer Token from the Lambda event parameters
 function getToken(event: awsx.apigateway.AuthorizerEvent): string {
