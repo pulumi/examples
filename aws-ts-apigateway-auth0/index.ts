@@ -23,37 +23,38 @@ const jwksUri = config.require("jwksUri");
 const audience = config.require("audience");
 const issuer = config.require("issuer");
 
-// Create the Lambda Authorizer
-const authorizers = [
-    awsx.apigateway.getTokenLambdaAuthorizer({
-        authorizerName: "jwt-rsa-custom-authorizer",
-        header: "Authorization",
-        handler: async (event) => {
-            try {
-                return await authenticate(event);
-            }
-            catch (err) {
-                console.log(err);
-                // Tells API Gateway to return a 401 Unauthorized response
-                throw new Error(`Unauthorized`);
-            }
-        },
-        identityValidationExpression: "^Bearer [-0-9a-zA-Z\._]*$",
-        authorizerResultTtlInSeconds: 3600,
-    })];
+const backendLambda = async () => {
+    return {
+        statusCode: 200,
+        body: "<h1>Hello world!</h1>",
+    };
+}
+
+const authorizerLambda = async (event: awsx.apigateway.AuthorizerEvent) => {
+    try {
+        return await authenticate(event);
+    }
+    catch (err) {
+        console.log(err);
+        // Tells API Gateway to return a 401 Unauthorized response
+        throw new Error("Unauthorized");
+    }
+}
+
 
 // Create our API and reference the custom authorizer
 const api = new awsx.apigateway.API("myapi", {
     routes: [{
-        path: "/a",
+        path: "/hello",
         method: "GET",
-        eventHandler: async () => {
-            return {
-                statusCode: 200,
-                body: "<h1>Hello world!</h1>",
-            };
-        },
-        authorizers: authorizers,
+        eventHandler: backendLambda,
+        authorizers: awsx.apigateway.getTokenLambdaAuthorizer({
+            authorizerName: "jwt-rsa-custom-authorizer",
+            header: "Authorization",
+            handler: authorizerLambda,
+            identityValidationExpression: "^Bearer [-0-9a-zA-Z\._]*$",
+            authorizerResultTtlInSeconds: 3600,
+        }),
     }],
 });
 
@@ -106,17 +107,12 @@ async function authenticate(event: awsx.apigateway.AuthorizerEvent): Promise<aws
     const key = await getSigningKey(decoded.header.kid);
     const signingKey = key.publicKey || key.rsaPublicKey;
     if (!signingKey) {
-        throw new Error('couldnt get signing key');
+        throw new Error('could not get signing key');
     }
 
-    const jwtOptions = {
-        audience: audience,
-        issuer: issuer
-    };
     const verifiedJWT = await jwt.verify(token, signingKey, { audience, issuer });
-
     if (!verifiedJWT || typeof verifiedJWT === "string" || !isVerifiedJWT(verifiedJWT)) {
-        throw new Error('couldnt verify JWT');
+        throw new Error('could not verify JWT');
     }
     return awsx.apigateway.authorizerResponse(verifiedJWT.sub, 'Allow', event.methodArn);
 }
