@@ -23,13 +23,6 @@ const jwksUri = config.require("jwksUri");
 const audience = config.require("audience");
 const issuer = config.require("issuer");
 
-const backendLambda = async () => {
-    return {
-        statusCode: 200,
-        body: "<h1>Hello world!</h1>",
-    };
-}
-
 const authorizerLambda = async (event: awsx.apigateway.AuthorizerEvent) => {
     try {
         return await authenticate(event);
@@ -39,14 +32,19 @@ const authorizerLambda = async (event: awsx.apigateway.AuthorizerEvent) => {
         // Tells API Gateway to return a 401 Unauthorized response
         throw new Error("Unauthorized");
     }
-}
+};
 
-// Create our API and reference the custom authorizer
+// Create our API and reference the Lambda authorizer
 const api = new awsx.apigateway.API("myapi", {
     routes: [{
         path: "/hello",
         method: "GET",
-        eventHandler: backendLambda,
+        eventHandler: async () => {
+            return {
+                statusCode: 200,
+                body: "<h1>Hello world!</h1>",
+            };
+        },
         authorizers: awsx.apigateway.getTokenLambdaAuthorizer({
             authorizerName: "jwt-rsa-custom-authorizer",
             header: "Authorization",
@@ -61,7 +59,7 @@ const api = new awsx.apigateway.API("myapi", {
 export const url = api.url;
 
 /**
- * Below is all code that gets added to the custom Authorizer Lambda. The code was copied and
+ * Below is all code that gets added to the Authorizer Lambda. The code was copied and
  * converted to TypeScript from [Auth0's GitHub
  * Example](https://github.com/auth0-samples/jwt-rsa-aws-custom-authorizer)
  */
@@ -101,8 +99,7 @@ async function authenticate(event: awsx.apigateway.AuthorizerEvent): Promise<aws
         jwksUri: jwksUri
     });
 
-    const getSigningKey = util.promisify(client.getSigningKey);
-    const key = await getSigningKey(decoded.header.kid);
+    const key = await util.promisify(client.getSigningKey)(decoded.header.kid);
     const signingKey = key.publicKey || key.rsaPublicKey;
     if (!signingKey) {
         throw new Error('could not get signing key');
