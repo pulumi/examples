@@ -88,21 +88,21 @@ Duration: 18s
 We can now use cURL to test out our new endpoint. If we cURL without a token, we should get a 401 Unauthorized response.
 
 ```bash
-$ curl https://XXXXX.execute-api.us-west-2.amazonaws.com/stage/hello
+$ curl $(pulumi stack output url)hello
 {"message":"Unauthorized"}
 ```
 
 We can curl our endpoint with an invalid token and should once again get a 401 Unauthorized response.
 
 ```bash
-$ curl https://XXXXX.execute-api.us-west-2.amazonaws.com/stage/hello -H "Authorization: Bearer invalid"
+$ curl $(pulumi stack output url)hello -H "Authorization: Bearer invalid"
 {"message":"Unauthorized"}
 ```
 
 Finally, we expect a 200 response when we obtain a token from Auth0 and use it to call our API. We can get a token by visiting the API Details page for our API and clicking the Test tab. Using the provided access token and the API a 200 response: Hello world!
 
 ```bash
-$ curl https://xqnfg2ly7c.execute-api.us-west-2.amazonaws.com/stage/hello -H "Authorization: Bearer <VALID_TOKEN>"
+$ curl $(pulumi stack output url)hello -H "Authorization: Bearer <VALID_TOKEN>"
 <h1>Hello world!</h1>
 ```
 
