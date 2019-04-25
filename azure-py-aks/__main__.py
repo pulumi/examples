@@ -43,14 +43,14 @@ vnet = VirtualNetwork(
     name=PREFIX + 'vnet',
     location=rg.location,
     resource_group_name=rg.name,
-    address_spaces=['10.0.0.0/8']
+    address_spaces=['10.0.0.0/16']
 )
 
 subnet = Subnet(
     'subnet',
     name=PREFIX + 'subnet',
     resource_group_name=rg.name,
-    address_prefix='10.0.0.0/23',
+    address_prefix='10.0.0.0/24',
     virtual_network_name=vnet.name
 )
 
@@ -83,12 +83,12 @@ aks = KubernetesCluster(
     name=PREFIX + 'aks',
     location=rg.location,
     resource_group_name=rg.name,
-    kubernetes_version="1.12.5",
+    kubernetes_version="1.13.5",
     dns_prefix="dns",
     agent_pool_profile=(
         {
             "name": "type1",
-            "count": 3,
+            "count": 2,
             "vmSize": "Standard_B2ms",
             "osType": "Linux",
             "maxPods": 110,
@@ -98,11 +98,9 @@ aks = KubernetesCluster(
     linux_profile=(
         {
             "adminUsername": "azureuser",
-            "ssh_key": [
-                {
-                    "keyData": SSHKEY
-                }
-            ]
+            "ssh_key": {
+                "keyData": SSHKEY
+            }
         }
     ),
     service_principal={
