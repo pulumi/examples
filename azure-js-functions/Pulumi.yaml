@@ -1,0 +1,8 @@
+name: azure-js-functions
+runtime: nodejs
+description: Azure Functions example
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public

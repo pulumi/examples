@@ -1,0 +1,8 @@
+{
+  "name": "azure-javascript",
+  "main": "index.js",
+  "dependencies": {
+    "@pulumi/azure-serverless": "^0.17.0",
+    "@pulumi/pulumi": "latest"
+  }
+}
