@@ -3,6 +3,7 @@ from pulumi_gcp.config import project, zone
 from pulumi_gcp.container import Cluster
 from pulumi_kubernetes import Provider
 from pulumi_kubernetes.apps.v1 import Deployment
+from pulumi_kubernetes.core.v1 import Service
 
 # Read in some configurable settings for our cluster:
 config = Config(None)
@@ -80,5 +81,15 @@ canary = Deployment('canary',
     }, __opts__=ResourceOptions(provider=k8s_provider)
 )
 
+ingress = Service('ingress',
+    spec={
+        'type': 'LoadBalancer',
+        'selector': labels,
+        'ports': [{'port': 80}],
+    }, __opts__=ResourceOptions(provider=k8s_provider)
+)
+
 # Finally, export the kubeconfig so that the client can easily access the cluster.
 export('kubeconfig', k8s_config)
+# Export the k8s ingress IP to access the canary deployment
+export('ingress_ip', Output.all(ingress.status['load_balancer']['ingress'][0]['ip']))
