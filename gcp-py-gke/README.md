@@ -64,12 +64,13 @@ After cloning this repo, `cd` into it and run these commands. A GKE Kubernetes c
      +   ├─ gcp:container:Cluster        gke-cluster   create
      +   ├─ pulumi:providers:kubernetes  gkeK8s        create
      +   └─ kubernetes:apps:Deployment   canary        create
+     +   └─ kubernetes:core:Service      ingress       create
 
         ---outputs:---
         kubeConfig: "apiVersion: v1\n..."
 
-    info: 4 changes updated:
-        + 4 resources created
+    info: 5 changes updated:
+        + 5 resources created
     Update duration: 2m07.424737735s
     ```
 
