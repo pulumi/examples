@@ -50,7 +50,7 @@ const blob = new azure.storage.ZipBlob(`${prefix}-b`, {
     storageContainerName: storageContainer.name,
     type: "block",
 
-    content: new pulumi.asset.FileArchive("../src/bin/Debug/netcoreapp2.1/publish.zip")
+    content: new pulumi.asset.FileArchive("../src/bin/Debug/netcoreapp2.1/publish")
 });
 
 const codeBlobUrl = signedBlobReadUrl(blob, storageAccount, storageContainer);
