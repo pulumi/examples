@@ -1,0 +1,11 @@
+name: azure-ts-serverless-url-shorterner-global
+runtime: nodejs
+description: Multi-region deployment of Azure Functions and Cosmos DB with Traffic Manager
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    locations:
+      description: Comma-separated list of location aliases
+      default: westus,westeurope
