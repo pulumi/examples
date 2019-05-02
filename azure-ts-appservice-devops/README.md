@@ -81,4 +81,8 @@ Provisions Azure SQL Database and Azure Application Insights to be used in combi
 
 ## Integrating with Azure DevOps
 
-Follow [Azure DevOps](https://pulumi.io/reference/cd-azure-devops.html) guide to deploy the project as Azure DevOps pipeline.
+`azure-pipeline.yml` in the root folder of this example shows a configuration for Azure DevOps using [Pulumi task](https://marketplace.visualstudio.com/items?itemName=pulumi.build-and-release-task).
+
+`alternative-pipeline` folder contains custom scripts and a pipeline to run Pulumi program in environments that have to access to the marketplace.
+
+Follow [Azure DevOps](https://pulumi.io/reference/cd-azure-devops.html) guide for more details.

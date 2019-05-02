@@ -1,0 +1,24 @@
+jobs:
+- job: infrastructure
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'publish'
+      projects: 'src'
+      zipAfterPublish: false
+      modifyOutputPath: false
+    displayName: 'Build and publish ASP.NET Core app'
+  - script: |
+      chmod +x scripts/*.sh
+      ./scripts/setup.sh
+      ./scripts/run-pulumi.sh
+    displayName: 'Install pulumi and run infra code'
+    name: pulumi
+    env:
+      PULUMI_ACCESS_TOKEN: $(pulumi.access.token)
+      ARM_CLIENT_ID: $(arm.client.id)
+      ARM_TENANT_ID: $(arm.tenant.id)
+      ARM_CLIENT_SECRET: $(arm.client.secret)
+      ARM_SUBSCRIPTION_ID: $(arm.subscription.id)

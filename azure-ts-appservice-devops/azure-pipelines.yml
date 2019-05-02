@@ -10,17 +10,19 @@ jobs:
       zipAfterPublish: false
       modifyOutputPath: false
     displayName: 'Build and publish ASP.NET Core app'
-  - script: |
-      chmod +x infra/scripts/*.sh
-      ./infra/scripts/setup.sh
-      ./infra/scripts/run-pulumi.sh
+  - task: Npm@1
+    inputs:
+      command: 'install'
+      workingDir: 'infra'  
+    displayName: 'NPM install packages'
+  - task: Pulumi@0
+    inputs:
+      azureSubscription: 'Microsoft Azure Sponsorship(ebca75f3-9e5e-4a96-a777-aeeb2777dbde)'
+      command: 'up'
+      args: '--yes'
+      cwd: 'infra'
+      stack: 'dev'
     displayName: 'Install pulumi and run infra code'
     name: pulumi
     env:
       PULUMI_ACCESS_TOKEN: $(pulumi.access.token)
-      ARM_CLIENT_ID: $(arm.client.id)
-      ARM_TENANT_ID: $(arm.tenant.id)
-      ARM_CLIENT_SECRET: $(arm.client.secret)
-      ARM_SUBSCRIPTION_ID: $(arm.subscription.id)
-      SQL_USERNAME: ${sql.username}
-      SQL_PASSWORD: ${sql.password}
