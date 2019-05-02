@@ -17,7 +17,7 @@ jobs:
     displayName: 'NPM install packages'
   - task: Pulumi@0
     inputs:
-      azureSubscription: 'Microsoft Azure Sponsorship(ebca75f3-9e5e-4a96-a777-aeeb2777dbde)'
+      azureSubscription: 'Microsoft Azure Sponsorship(aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee)'
       command: 'up'
       args: '--yes'
       cwd: 'infra'
