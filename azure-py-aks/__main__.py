@@ -120,4 +120,8 @@ aks = KubernetesCluster(
     ), __opts__=ResourceOptions(depends_on=[acr_assignment, subnet_assignment])
 )
 
+custom_provider = Provider(
+    "inflation_provider", kubeconfig=aks.kube_config_raw
+)
+
 pulumi.export('kubeconfig', aks.kube_config_raw)
