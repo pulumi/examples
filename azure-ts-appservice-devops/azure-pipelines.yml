@@ -24,5 +24,3 @@ jobs:
       stack: 'dev'
     displayName: 'Install pulumi and run infra code'
     name: pulumi
-    env:
-      PULUMI_ACCESS_TOKEN: $(pulumi.access.token)
