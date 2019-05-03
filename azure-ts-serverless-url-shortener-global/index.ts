@@ -3,25 +3,22 @@ import * as azure from "@pulumi/azure";
 import { Container } from "@azure/cosmos";
 import { getContainer } from "./cosmosclient";
 
+const config = new pulumi.Config();
 // Read a list of target locations from the config file:
 // Expecting a comma-separated list, e.g., "westus,eastus,westeurope"
-const config = new pulumi.Config();
 const locations = config.require("locations").split(',');
 // The first location is considered primary
 const primaryLocation = locations[0];
 
-let resourceGroup = new azure.core.ResourceGroup("urlshort-rg", {
+let resourceGroup = new azure.core.ResourceGroup("UrlShorterner", {
     location: primaryLocation,
 });
 
 // Cosmos DB with a single write region (primary location) and multiple read replicas
-let cosmosdb = new azure.cosmosdb.Account("url-cosmos", {
+let cosmosdb = new azure.cosmosdb.Account("UrlStore", {
     resourceGroupName: resourceGroup.name,
     location: primaryLocation,
-    geoLocations: locations.map((location, priority) => ({
-        location: location,
-        failoverPriority: priority,
-    })),
+    geoLocations: locations.map((location, failoverPriority) => ({ location, failoverPriority })),
     offerType: "Standard",
     consistencyPolicy: {
         consistencyLevel: "Session",
@@ -31,12 +28,13 @@ let cosmosdb = new azure.cosmosdb.Account("url-cosmos", {
 });
 
 // Traffic Manager as a global HTTP endpoint
-const profile = new azure.trafficmanager.Profile("urlshort-tm", {
+const profile = new azure.trafficmanager.Profile("UrlShortEndpoint", {
     resourceGroupName: resourceGroup.name,
     trafficRoutingMethod: 'Performance',
     dnsConfigs: [{
-        relativeName: "urlshort-tm",
-        ttl: 60
+        // Subdomain must be globally unique, so we default it with the full resource group name
+        relativeName: resourceGroup.name,
+        ttl: 60,
     }],
     monitorConfigs: [{
         protocol: 'HTTP',
@@ -46,7 +44,7 @@ const profile = new azure.trafficmanager.Profile("urlshort-tm", {
 });
 
 // Azure Function to accept new URL shortcodes and save to Cosmos DB
-const fn = new azure.appservice.HttpEventSubscription("urlshort-add", {
+const fn = new azure.appservice.HttpEventSubscription("AddUrl", {
     resourceGroup,
     location: primaryLocation,
     methods: ["POST"],
@@ -68,7 +66,7 @@ export const addEndpoint = fn.url;
 for (const location of locations) {
 
     // URL redirection function - one per region
-    const fn = new azure.appservice.HttpEventSubscription(`urlshort-fa-${location}`, {
+    const fn = new azure.appservice.HttpEventSubscription(`GetUrl-${location}`, {
         resourceGroup,
         location,
         route: "{key}",
