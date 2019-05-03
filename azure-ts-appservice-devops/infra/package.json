@@ -1,0 +1,15 @@
+{
+    "name": "azure-ts-appservice-devops",
+    "scripts": {
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "@types/node": "latest",
+        "typescript": "^3.1.1"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "latest",
+        "@pulumi/azure": "latest",
+        "azure-storage": "^2.9.0-preview"
+    }
+}
