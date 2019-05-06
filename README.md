@@ -29,6 +29,7 @@ Example                 | Language          | Cloud |
 [CloudWatch Log Groups, Event Targets, Metric Alarms, IAM roles, and more! (TypeScript)](aws-ts-resources) <br/> An example that shows how to create a number of AWS resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, `sqs.Queue`, and more. | TypeScript | AWS | 
 [Azure App Service with SQL Database and Application Insights](azure-ts-appservice) <br/> Deploy Azure App Service along with SQL Database and Application Insights | TypeScript | Azure |
 [Azure Functions](azure-ts-functions) <br/> A simple component for deploying inline code to Azure Functions | TypeScript | Azure |
+[Linode instance (JavaScript)](linode-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | Linode |
 
 ### Cloud Applications
 
