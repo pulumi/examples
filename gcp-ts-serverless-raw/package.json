@@ -1,0 +1,8 @@
+{
+    "name": "gcp-ts-serverless-raw",
+    "version": "1.0.0",
+    "dependencies": {
+        "@pulumi/gcp": "latest",
+        "@pulumi/pulumi": "latest"
+    }
+}
