@@ -1,5 +1,6 @@
 import pulumi
 from pulumi import ResourceOptions
+from pulumi_kubernetes import Provider
 from pulumi_azure.core import ResourceGroup
 from pulumi_azure.role import Assignment
 from pulumi_azure.ad import Application, ServicePrincipal, ServicePrincipalPassword
@@ -98,9 +99,11 @@ aks = KubernetesCluster(
     linux_profile=(
         {
             "adminUsername": "azureuser",
-            "ssh_key": {
-                "keyData": SSHKEY
-            }
+            "ssh_key": [
+                {
+                    "keyData": SSHKEY
+                }
+            ]
         }
     ),
     service_principal={
