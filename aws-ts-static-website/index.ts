@@ -86,6 +86,7 @@ let certificateArn: pulumi.Input<string> = config.certificateArn!;
 if (config.certificateArn === undefined) {
 
     const eastRegion = new aws.Provider("east", {
+        profile: aws.config.profile,
         region: "us-east-1", // Per AWS, ACM certificate must be in the us-east-1 region.
     });
 
