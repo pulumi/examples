@@ -13,20 +13,26 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
     $ pulumi stack init website-testing
     ```
 
-2.  Set the AWS region:
+1. Install the Pulumi AWS plugin:
+
+    ```
+    $ pulumi plugin install resource aws 0.18.3
+    ```
+
+1.  Set the AWS region:
 
     ```
     $ pulumi config set aws:region us-west-2
     ```
 
-3.  Compile the Go program and ensure it's on your path (such as with `$GOPATH`):
+1.  Compile the Go program and ensure it's on your path (such as with `$GOPATH`):
 
     ```
     $ go get .
     $ go install .
     ```
 
-4.  Run `pulumi up` to preview and deploy changes.
+1.  Run `pulumi up` to preview and deploy changes.
 
     ```bash
     $ pulumi up
@@ -50,7 +56,7 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
     Permalink: https://pulumi.com/lindydonna/examples/aws-js-s3-folder/website-testing/updates/1
     ```
 
-5.  To see the resources that were created, run `pulumi stack`:
+1.  To see the resources that were created, run `pulumi stack`:
 
     ```bash
     $ pulumi stack
@@ -71,4 +77,4 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
         aws:s3/bucketObject:BucketObject                 www/favicon.png
     ```
 
-6.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+1.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
