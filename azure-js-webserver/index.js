@@ -33,7 +33,7 @@ let subnet = new azure.network.Subnet("server-subnet", {
 let publicIP = new azure.network.PublicIp("server-ip", {
     resourceGroupName: resourceGroup.name,
     location: resourceGroup.location,
-    publicIpAddressAllocation: "Dynamic",
+    allocationMethod: "Dynamic",
 });
 
 let networkInterface = new azure.network.NetworkInterface("server-nic", {
