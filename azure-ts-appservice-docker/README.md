@@ -61,5 +61,9 @@ The example shows two scenarios:
     $ pulumi stack output getStartedEndpoint
     http://get-started15da1348.azurewebsites.net
     $ curl "$(pulumi stack output getStartedEndpoint)"
-    Hello, world!
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Azure App Service</title>
+    ...
     ```
