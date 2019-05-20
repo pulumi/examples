@@ -1,0 +1,8 @@
+name: azure-appservice-docker
+runtime: nodejs
+description: Creates Azure App Service running Docker containers on Linux
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
