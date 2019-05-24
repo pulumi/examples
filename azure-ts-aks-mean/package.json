@@ -5,6 +5,7 @@
     },
     "dependencies": {
         "@pulumi/azure": "latest",
+        "@pulumi/azuread": "latest",
         "@pulumi/kubernetes": "latest",
         "@pulumi/pulumi": "latest",
         "@types/mongoose": "^5.2.11",
