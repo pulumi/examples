@@ -24,7 +24,7 @@ namespace webapp
         public async Task<string> GetSqlUser()
         {
             var connectionString = Configuration.GetConnectionString("db");
-            var token = await GetTokenAsync("database");
+            var token = await GetTokenAsync("database.windows.net");
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.AccessToken = token;
@@ -40,7 +40,7 @@ namespace webapp
 
         public async Task<string> GetBlobText()
         {
-            string accessToken = await GetTokenAsync("storage");
+            string accessToken = await GetTokenAsync("storage.azure.com");
             var tokenCredential = new TokenCredential(accessToken);
             var storageCredentials = new StorageCredentials(tokenCredential);
             // Define the blob to read
@@ -53,7 +53,7 @@ namespace webapp
         private static Task<String> GetTokenAsync(string service)
         {
             var provider = new AzureServiceTokenProvider();
-            return provider.GetAccessTokenAsync($"https://{service}.windows.net/");
+            return provider.GetAccessTokenAsync($"https://{service}/");
         }
     }
 }

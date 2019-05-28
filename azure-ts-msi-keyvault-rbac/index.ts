@@ -1,6 +1,7 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
 import { signedBlobReadUrl } from "./sas";
+import { execSync} from "child_process";
 
 // Create a resource group
 const resourceGroup = new azure.core.ResourceGroup("resourceGroup", {
@@ -71,8 +72,15 @@ const blob = new azure.storage.ZipBlob("zip", {
 });
 
 const clientConfig = pulumi.output(azure.core.getClientConfig({}));
-export const currentPricipal = clientConfig.apply(c => c.servicePrincipalObjectId);
 const tenantId = clientConfig.apply(c => c.tenantId);
+
+// Determine the ID of the current user or service principal
+const currentPrincipal = clientConfig.apply(c => 
+    c.servicePrincipalObjectId !== "" 
+    // Current, only service principal ID is available in the context
+    ? c.servicePrincipalObjectId
+    // If logged in with a user, find their ID via Azure CLI
+    : execSync("az ad signed-in-user show --query objectId").toString().replace(/[^A-Za-z0-9/-]/g, ""));
 
 // Key Vault to store secrets (e.g. Blob URL with SAS)
 const vault = new azure.keyvault.KeyVault("vault", {
@@ -82,15 +90,11 @@ const vault = new azure.keyvault.KeyVault("vault", {
     },
     tenantId: tenantId,
     // It won't setup any access if pulumi is executed under user account
-    accessPolicies: currentPricipal.apply(objectId => 
-        objectId !== "" 
-            ? [{
-                tenantId,
-                objectId,
-                secretPermissions: ["delete", "get", "list", "set"],
-            }]
-            : []
-        ),
+    accessPolicies: [{
+        tenantId,
+        objectId: currentPrincipal,
+        secretPermissions: ["delete", "get", "list", "set"],
+    }]        
 });
 
 // Put the URL of the zip Blob to KV
@@ -126,11 +130,14 @@ const app = new azure.appservice.AppService("app", {
     }]
 });
 
+// Work around a preview issue https://github.com/pulumi/pulumi-azure/issues/192
+const principalId = app.identity.apply(id => id.principalId || "11111111-1111-1111-1111-111111111111");
+
 // Grant App Service access to KV secrets
 new azure.keyvault.AccessPolicy("app-policy", {
     keyVaultId: vault.id,
     tenantId: tenantId,
-    objectId: app.identity.principalId,
+    objectId: principalId,
     secretPermissions: ["get"],
 });
 
@@ -138,14 +145,14 @@ new azure.keyvault.AccessPolicy("app-policy", {
 const sqlAdmin = new azure.sql.ActiveDirectoryAdministrator("adadmin", {
     resourceGroupName: resourceGroup.name,
     tenantId: tenantId,
-    objectId: app.identity.principalId,
+    objectId: principalId,
     login: "adadmin",
     serverName: sqlServer.name,
 });
 
 // Grant access from App Service to the container in the storage
 const blobPermission = new azure.role.Assignment("readblob", {
-    principalId: app.identity.principalId,
+    principalId,
     scope: pulumi.interpolate`${storageAccount.id}/blobServices/default/containers/${storageContainer.name}`,
     roleDefinitionName: "Storage Blob Data Reader",
 });
