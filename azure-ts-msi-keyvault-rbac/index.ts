@@ -80,7 +80,7 @@ const currentPrincipal = clientConfig.apply(c =>
     // Current, only service principal ID is available in the context
     ? c.servicePrincipalObjectId
     // If logged in with a user, find their ID via Azure CLI
-    : execSync("az ad signed-in-user show --query objectId").toString().replace(/[^A-Za-z0-9/-]/g, ""));
+    : <string>JSON.parse(execSync("az ad signed-in-user show --query objectId").toString()));
 
 // Key Vault to store secrets (e.g. Blob URL with SAS)
 const vault = new azure.keyvault.KeyVault("vault", {
