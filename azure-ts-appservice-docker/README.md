@@ -29,12 +29,6 @@ The example shows two scenarios:
     $ npm install
     ```
 
-1. Clone a sample Docker image from GitHub. If you run on Windows, be sure to keep Linux line endings:
-
-    ```
-    git clone -c core.autocrlf=false https://github.com/Azure-Samples/docker-django-webapp-linux
-    ```
-
 1.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
