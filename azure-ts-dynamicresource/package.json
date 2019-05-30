@@ -8,7 +8,6 @@
         "@azure/arm-cdn": "^4.2.0",
         "@azure/ms-rest-nodeauth": "^1.1.1",
         "@pulumi/azure": "latest",
-        "@pulumi/pulumi": "latest",
-        "azure-storage": "^2.9.0-preview"
+        "@pulumi/pulumi": "latest"
     }
 }
