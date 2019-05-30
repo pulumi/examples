@@ -57,7 +57,7 @@ const cdnEndpoint = new azure.cdn.Endpoint("my-cdn-endpoint", {
     ],
     origins: [
         {
-            name: "nyp-functionapp-origin",
+            name: "cdn-origin",
             hostName: storageAccount.primaryBlobEndpoint,
             httpsPort: 443,
         }
