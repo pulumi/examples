@@ -30,7 +30,7 @@ const blobContainer = new azure.storage.Container("blob-container", {
 
 const cdnProfile = new azure.cdn.Profile("cdn-profile", {
     location: location,
-    resourceGroupName: this.cdnOptions.resourceGroup.name,
+    resourceGroupName: resourceGroup.name,
     sku: "Standard_Akamai",
 });
 
