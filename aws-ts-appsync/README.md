@@ -24,14 +24,14 @@ This example shows how to setup a basic GraphQL endpoint in AWS AppSync. The end
 
     ``` 
     $ pulumi up
-    Previewing changes:
+    Previewing update (dev):
     ...
 
-    Performing changes:
+    Updating (dev):
     ...
-    info: 10 changes performed:
-        + 10 resources created
-    Update duration: 0m44s
+    Resources:
+        + 10 created
+    Duration: 20s
     ```
 
 1.  Check the deployed GraphQL endpoint:
