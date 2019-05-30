@@ -1,0 +1,14 @@
+{
+    "name": "azure-ts-appservice",
+    "version": "1.0.0",
+    "devDependencies": {
+        "@types/node": "^10.3.3"
+    },
+    "dependencies": {
+        "@azure/arm-cdn": "^4.2.0",
+        "@azure/ms-rest-nodeauth": "^1.1.1",
+        "@pulumi/azure": "latest",
+        "@pulumi/pulumi": "latest",
+        "azure-storage": "^2.9.0-preview"
+    }
+}

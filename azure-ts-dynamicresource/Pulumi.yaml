@@ -1,0 +1,11 @@
+name: azure-appservice
+runtime: nodejs
+description: Creates Azure App Service with SQL Database and Application Insights
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    sqlPassword:
+      description: SQL Server password (complex enough to satisfy Azure policy)
+      secret: true
