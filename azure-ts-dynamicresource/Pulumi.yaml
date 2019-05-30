@@ -1,11 +1,8 @@
-name: azure-appservice
+name: azure-cdn-custom-domain
 runtime: nodejs
-description: Creates Azure App Service with SQL Database and Application Insights
+description: Creates Azure CDN with a custom domain.
 template:
   config:
     azure:environment:
       description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
       default: public
-    sqlPassword:
-      description: SQL Server password (complex enough to satisfy Azure policy)
-      secret: true
