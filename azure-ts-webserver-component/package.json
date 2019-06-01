@@ -1,0 +1,8 @@
+{
+    "name": "ws-ts-azure-comp",
+    "version": "0.1.0",
+    "dependencies": {
+        "@pulumi/pulumi": "latest",
+        "@pulumi/azure": "latest"
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "name": "webserver-ts-azure",
+    "version": "0.1.0",
+    "dependencies": {
+        "@pulumi/pulumi": "latest",
+        "@pulumi/azure": "latest"
+    }
+}
