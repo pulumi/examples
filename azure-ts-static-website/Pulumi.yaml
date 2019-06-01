@@ -1,0 +1,3 @@
+name: azure-ts-static-website
+runtime: nodejs
+description: An example of a static website hosted on Azure Blob Storage + Azure CDN.
