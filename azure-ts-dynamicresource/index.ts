@@ -53,7 +53,7 @@ const cdnEndpoint = new azure.cdn.Endpoint("my-cdn-endpoint", {
     isHttpsAllowed: true,
     isHttpAllowed: false,
     isCompressionEnabled: true,
-    originHostHeader: storageAccount.primaryBlobEndpoint,
+    originHostHeader: storageAccount.primaryBlobHost,
     contentTypesToCompresses: [
         "text/plain",
         "text/html",
@@ -69,7 +69,7 @@ const cdnEndpoint = new azure.cdn.Endpoint("my-cdn-endpoint", {
     origins: [
         {
             name: "cdn-origin",
-            hostName: storageAccount.primaryBlobEndpoint,
+            hostName: storageAccount.primaryBlobHost,
             httpsPort: 443,
         }
     ]
