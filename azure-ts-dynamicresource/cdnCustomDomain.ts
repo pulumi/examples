@@ -8,16 +8,21 @@ export interface CustomDomainOptions {
   resourceGroupName: string;
   profileName: string;
   endpointName: string;
-  customDomainName: string;
   customDomainHostName: string;
   httpsEnabled: boolean;
 }
 
 export interface CustomDomainOutputs extends cdnManagement.CdnManagementModels.CustomDomainsCreateResponse {
   inputs: CustomDomainOptions;
+  name: string;
 }
 
 class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider {
+  private name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
 
   private async getCDNManagementClient(): Promise<cdnManagement.CdnManagementClient> {
     let clientID = azure.config.clientId;
@@ -62,7 +67,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
       result = {
         failures: [
           {
-            property: news.customDomainName,
+            property: this.name,
             reason: validationOutput.reason || "domain_validation_failed"
           }
         ]
@@ -75,21 +80,21 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
 
     return result;
   }
-  async diff(id: string, olds: CustomDomainOutputs, news: CustomDomainOptions): Promise<pulumi.dynamic.DiffResult> {
-    const oldInputs = olds.inputs;
+  async diff(id: string, previousOutput: CustomDomainOutputs, news: CustomDomainOptions): Promise<pulumi.dynamic.DiffResult> {
+    const oldInputs = previousOutput.inputs;
     const replaces: string[] = [];
     let changes = false;
     let deleteBeforeReplace = false;
 
-    if (oldInputs.customDomainHostName !== news.customDomainHostName || oldInputs.customDomainName !== news.customDomainName) {
+    if (oldInputs.customDomainHostName !== news.customDomainHostName || previousOutput.name !== this.name) {
       console.warn("Changing the domain name properties will cause a downtime.")
 
       deleteBeforeReplace = true;
       if (oldInputs.customDomainHostName !== news.customDomainHostName) {
         replaces.push("customDomainHostName");
       }
-      if (oldInputs.customDomainName !== news.customDomainName) {
-        replaces.push("customDomainHostName");
+      if (previousOutput.name !== this.name) {
+        replaces.push("customDomainName");
       }
     }
 
@@ -119,7 +124,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         inputs.resourceGroupName,
         inputs.profileName,
         inputs.endpointName,
-        inputs.customDomainName,
+        this.name,
         inputs.customDomainHostName);
     console.log(`Custom domain provisioning state is ${ result.resourceState }.`);
 
@@ -131,17 +136,20 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         inputs.resourceGroupName,
         inputs.profileName,
         inputs.endpointName,
-        inputs.customDomainName);
+        this.name);
     }
 
-    const outs = { ...result, inputs: {
-      resourceGroupName: inputs.resourceGroupName,
-      profileName: inputs.profileName,
-      endpointName: inputs.endpointName,
-      customDomainName: inputs.customDomainName,
-      customDomainHostName: inputs.customDomainHostName,
-      httpsEnabled: inputs.httpsEnabled
-    }};
+    const outs = {
+      ...result,
+      name: this.name,
+      inputs: {
+        resourceGroupName: inputs.resourceGroupName,
+        profileName: inputs.profileName,
+        endpointName: inputs.endpointName,
+        customDomainHostName: inputs.customDomainHostName,
+        httpsEnabled: inputs.httpsEnabled,
+      },
+    };
 
     return {
       id: result.id!,
@@ -152,7 +160,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
   async read(id: string, props: any): Promise<pulumi.dynamic.ReadResult> {
     const inputs = props.inputs as CustomDomainOptions;
     const cdnClient = await this.getCDNManagementClient();
-    const result = await cdnClient.customDomains.get(inputs.resourceGroupName, inputs.profileName, inputs.endpointName, inputs.customDomainName);
+    const result = await cdnClient.customDomains.get(inputs.resourceGroupName, inputs.profileName, inputs.endpointName, this.name);
     return {
       id: result.id,
       props: { ...result, inputs: { ...inputs }}
@@ -163,7 +171,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
     const inputs = props.inputs as CustomDomainOptions;
     const cdnClient = await this.getCDNManagementClient();
     try {
-      const result = await cdnClient.customDomains.deleteMethod(inputs.resourceGroupName, inputs.profileName, inputs.endpointName, inputs.customDomainName);
+      const result = await cdnClient.customDomains.deleteMethod(inputs.resourceGroupName, inputs.profileName, inputs.endpointName, this.name);
       if (result._response.status >= 400) {
         throw new Error("Error response received while trying to delete the custom domain.");
       }
@@ -197,7 +205,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
           newInputs.resourceGroupName,
           newInputs.profileName,
           newInputs.endpointName,
-          newInputs.customDomainName);
+          this.name);
       
       currentOutputs.inputs.httpsEnabled = true;
       return {
@@ -210,7 +218,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         newInputs.resourceGroupName,
         newInputs.profileName,
         newInputs.endpointName,
-        newInputs.customDomainName);
+        this.name);
 
     currentOutputs.inputs.httpsEnabled = true;
     return {
@@ -226,6 +234,6 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
  */
 export class CDNCustomDomainResource extends pulumi.dynamic.Resource {
   constructor(name: string, args: CustomDomainOptions, opts?: pulumi.CustomResourceOptions) {
-    super(new CDNCustomDomainResourceProvider(), `azure:cdn:Endpoint:CustomDomains:${name}`, args, opts);
+    super(new CDNCustomDomainResourceProvider(name), `azure:cdn:Endpoint:CustomDomains:${name}`, args, opts);
   }
 }

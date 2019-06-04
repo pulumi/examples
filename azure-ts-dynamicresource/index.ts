@@ -3,6 +3,12 @@ import * as azure from "@pulumi/azure";
 
 import { CDNCustomDomainResource } from "./cdnCustomDomain";
 
+/**
+ * The location where our resource group and the resources under it will be created.
+ *
+ * To externalize this value, and make this configurable across environments/stacks,
+ * learn more at https://pulumi.io/reference/config/.
+ */
 const location = "West US";
 
 /** The custom domain host of the CDN endpoint. */
@@ -14,23 +20,29 @@ const resourceGroup = new azure.core.ResourceGroup("resourceGroup", {
 });
 
 // Create an Azure resource (Storage Account) so we can point the CDN endpoint to it.
-const storageAccount = new azure.storage.Account("storage-account", {
+const storageAccount = new azure.storage.Account("storageAccount", {
     resourceGroupName: resourceGroup.name,
-    location: resourceGroup.location,
     accountTier: "Standard",
     accountReplicationType: "LRS",
 });
 
-// Create a Blob container in the storage account.
+/**
+ * Create a Blob container in the storage account,
+ * to store any static files. The CDN endpoint will be pointed at the
+ * endpoint for this blob container.
+ */
 const blobContainer = new azure.storage.Container("blob-container", {
     resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
-    containerAccessType: "blob"
+    // Make each "blob" in the container publicly accessible.
+    // DO NOT set this property if you are going to store sensitive files!
+    containerAccessType: "blob",
 });
 
 const cdnProfile = new azure.cdn.Profile("cdn-profile", {
-    location: location,
     resourceGroupName: resourceGroup.name,
+    // Choose an appropriate SKU to use.
+    // https://docs.microsoft.com/en-us/azure/cdn/cdn-features
     sku: "Standard_Akamai",
 });
 
@@ -40,7 +52,6 @@ const cdnEndpoint = new azure.cdn.Endpoint("my-cdn-endpoint", {
     profileName: cdnProfile.name,
     isHttpsAllowed: true,
     isHttpAllowed: false,
-    location: location,
     isCompressionEnabled: true,
     originHostHeader: storageAccount.primaryBlobEndpoint,
     contentTypesToCompresses: [
@@ -53,7 +64,7 @@ const cdnEndpoint = new azure.cdn.Endpoint("my-cdn-endpoint", {
         "application/json",
         "application/xml",
         "image/png",
-        "image/jpeg"
+        "image/jpeg",
     ],
     origins: [
         {
@@ -69,11 +80,11 @@ export const cdnEndpointUrl = pulumi.interpolate `https://${cdnEndpoint.hostName
 pulumi.all([resourceGroup.name, cdnProfile.name, cdnEndpoint.name])
     .apply(([resourceGroupName, cdnProfileName, cdnEndpointName]) => {
         cdnCustomDomainResource = new CDNCustomDomainResource("cdnCustomDomain", {
+            resourceGroupName: resourceGroupName,
             // Ensure that there is a CNAME record for mycompany.com
             // pointing to my-cdn-endpoint.azureedge.net.
             // You would do that in your domain registrar's portal.
             customDomainHostName: "mycompany.com",
-            customDomainName: "custom-domain",
             profileName: cdnProfileName,
             endpointName: cdnEndpointName,
             // This will enable HTTPS through Azure's one-click
@@ -81,6 +92,5 @@ pulumi.all([resourceGroup.name, cdnProfile.name, cdnEndpoint.name])
             // The certificate is fully managed by Azure from provisioning
             // to automatic renewal at no additional cost to you.
             httpsEnabled: true,
-            resourceGroupName: resourceGroupName
         }, { parent: cdnEndpoint });
     });
