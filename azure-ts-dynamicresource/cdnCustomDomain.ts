@@ -3,6 +3,7 @@ import * as azure from "@pulumi/azure";
 
 import * as msRestAzure from "@azure/ms-rest-nodeauth";
 import * as cdnManagement from "@azure/arm-cdn";
+import { ServiceClientCredentials } from "@azure/ms-rest-js";
 
 export interface CustomDomainOptions {
   resourceGroupName: string;
@@ -29,6 +30,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
     let clientSecret = azure.config.clientSecret;
     let tenantID = azure.config.tenantId;
     let subscriptionID = azure.config.subscriptionId;
+    let credentials: ServiceClientCredentials;
 
     // If at least one of them is empty, try looking at the env vars.
     if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
@@ -41,10 +43,13 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
 
     // If they are still empty, then throw an error.
     if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
-      throw new Error("ARM credentials could not be detected.");
+      credentials = await msRestAzure.AzureCliCredentials.create();
+      const defaultSubscription = await msRestAzure.AzureCliCredentials.getDefaultSubscription();
+      subscriptionID = defaultSubscription.id;
+    } else {
+      credentials = await msRestAzure.loginWithServicePrincipalSecret(clientID, clientSecret, tenantID);
     }
 
-    const credentials = await msRestAzure.loginWithServicePrincipalSecret(clientID, clientSecret, tenantID);
     return new cdnManagement.CdnManagementClient(credentials, subscriptionID);
   }
 
