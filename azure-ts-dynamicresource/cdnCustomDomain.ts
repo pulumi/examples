@@ -43,9 +43,9 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
 
     // If they are still empty, then throw an error.
     if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
-      credentials = await msRestAzure.AzureCliCredentials.create();
-      const defaultSubscription = await msRestAzure.AzureCliCredentials.getDefaultSubscription();
-      subscriptionID = defaultSubscription.id;
+      const cliCredentials = await msRestAzure.AzureCliCredentials.create();
+      subscriptionID = cliCredentials.subscriptionInfo.id;
+      credentials = cliCredentials;
     } else {
       credentials = await msRestAzure.loginWithServicePrincipalSecret(clientID, clientSecret, tenantID);
     }
