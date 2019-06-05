@@ -14,20 +14,20 @@ Here's an example:
 
 ```ts
 const cdnCustomDomainResource = new CDNCustomDomainResource("cdnCustomDomain", {
-            // Ensure that there is a CNAME record for mycompany.com
-            // pointing to my-cdn-endpoint.azureedge.net.
-            // You would do that in your domain registrar's portal.
-            customDomainHostName: "mycompany.com",
-            customDomainName: "custom-domain",
-            profileName: cdnProfileName,
-            endpointName: cdnEndpointName,
-            // This will enable HTTPS through Azure's one-click
-            // automated certificate deployment.
-            // The certificate is fully managed by Azure from provisioning
-            // to automatic renewal at no additional cost to you.
-            httpsEnabled: true,
-            resourceGroupName: resourceGroupName
-        }, { parent: cdnEndpoint });
+    // Ensure that there is a CNAME record for mycompany.com
+    // pointing to my-cdn-endpoint.azureedge.net.
+    // You would do that in your domain registrar's portal.
+    customDomainHostName: "mycompany.com",
+    customDomainName: "custom-domain",
+    profileName: cdnProfileName,
+    endpointName: cdnEndpointName,
+    // This will enable HTTPS through Azure's one-click
+    // automated certificate deployment.
+    // The certificate is fully managed by Azure from provisioning
+    // to automatic renewal at no additional cost to you.
+    httpsEnabled: true,
+    resourceGroupName: resourceGroupName
+}, { parent: cdnEndpoint });
 ```
 
 That's it! The dynamic provider will automatically use the underlying Azure provider's configuration to determine the credentials to your subscription. If it cannot find them through the Azure provider, it will also look at the following environment variables:

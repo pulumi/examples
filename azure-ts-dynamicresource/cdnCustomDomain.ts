@@ -85,26 +85,23 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         if (olds.profileName === news.profileName &&
             olds.endpointName === news.endpointName &&
             olds.customDomainHostName === news.customDomainHostName) {
-            return {
-                inputs: news
-            };
+            return { inputs: news };
         }
 
         const validationOutput = await cdnClient.endpoints.validateCustomDomain(
-            news.resourceGroupName, news.profileName, news.endpointName, news.customDomainHostName);
+            news.resourceGroupName,
+            news.profileName,
+            news.endpointName,
+            news.customDomainHostName);
         if (!validationOutput.customDomainValidated) {
             result = {
-                failures: [
-                    {
-                        property: this.name,
-                        reason: validationOutput.reason || "domain_validation_failed"
-                    }
-                ]
+                failures: [{
+                    property: this.name,
+                    reason: validationOutput.reason || "domain_validation_failed"
+                }]
             };
         } else {
-            result = {
-                inputs: news
-            };
+            result = { inputs: news };
         }
 
         return result;
@@ -148,23 +145,21 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
     async create(inputs: DynamicProviderInputs): Promise<pulumi.dynamic.CreateResult> {
         const cdnClient = await this.getCDNManagementClient();
         const result =
-            await cdnClient.customDomains
-                .create(
-                    inputs.resourceGroupName,
-                    inputs.profileName,
-                    inputs.endpointName,
-                    this.name,
-                    inputs.customDomainHostName);
+            await cdnClient.customDomains.create(
+                inputs.resourceGroupName,
+                inputs.profileName,
+                inputs.endpointName,
+                this.name,
+                inputs.customDomainHostName);
 
         if (inputs.httpsEnabled) {
             console.log("Enabling HTTPS for the custom domain");
 
-            await cdnClient.customDomains
-                .enableCustomHttps(
-                    inputs.resourceGroupName,
-                    inputs.profileName,
-                    inputs.endpointName,
-                    this.name);
+            await cdnClient.customDomains.enableCustomHttps(
+                inputs.resourceGroupName,
+                inputs.profileName,
+                inputs.endpointName,
+                this.name);
         }
 
         const outs: DynamicProviderOutputs = {
@@ -177,10 +172,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
             httpsEnabled: inputs.httpsEnabled,
         };
 
-        return {
-            id: result.id!,
-            outs: outs
-        };
+        return { id: result.id!, outs: outs };
     }
 
     async read(id: string, props: DynamicProviderOutputs): Promise<pulumi.dynamic.ReadResult> {
@@ -188,7 +180,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         const result = await cdnClient.customDomains.get(props.resourceGroupName, props.profileName, props.endpointName, this.name);
         return {
             id: result.id,
-            props: { ...props, ...result }
+            props: { ...props, ...result },
         };
     }
 
@@ -198,7 +190,6 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         if (result._response.status >= 400) {
             throw new Error("Error response received while trying to delete the custom domain.");
         }
-
         if (!result.resourceState) {
             return;
         }
@@ -215,30 +206,24 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
     async update(id: string, currentOutputs: DynamicProviderOutputs, newInputs: DynamicProviderInputs): Promise<pulumi.dynamic.UpdateResult> {
         const cdnClient = await this.getCDNManagementClient();
         if (newInputs.httpsEnabled) {
-            await cdnClient.customDomains
-                .enableCustomHttps(
-                    newInputs.resourceGroupName,
-                    newInputs.profileName,
-                    newInputs.endpointName,
-                    this.name);
-
-            currentOutputs.httpsEnabled = true;
-            return {
-                outs: currentOutputs
-            };
-        }
-
-        await cdnClient.customDomains
-            .disableCustomHttps(
+            await cdnClient.customDomains.enableCustomHttps(
                 newInputs.resourceGroupName,
                 newInputs.profileName,
                 newInputs.endpointName,
                 this.name);
 
+            currentOutputs.httpsEnabled = true;
+            return { outs: currentOutputs };
+        }
+
+        await cdnClient.customDomains.disableCustomHttps(
+            newInputs.resourceGroupName,
+            newInputs.profileName,
+            newInputs.endpointName,
+            this.name);
+
         currentOutputs.httpsEnabled = true;
-        return {
-            outs: currentOutputs
-        };
+        return { outs: currentOutputs };
     }
 }
 

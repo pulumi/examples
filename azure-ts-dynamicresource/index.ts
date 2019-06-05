@@ -13,9 +13,6 @@ import { CDNCustomDomainResource } from "./cdnCustomDomain";
  */
 const location = "West US";
 
-/** The custom domain host of the CDN endpoint. */
-export let cdnCustomDomainResource: CDNCustomDomainResource | undefined;
-
 // Create an Azure Resource Group
 const resourceGroup = new azure.core.ResourceGroup("resourceGroup", {
     location: location,
@@ -79,7 +76,7 @@ const cdnEndpoint = new azure.cdn.Endpoint("my-cdn-endpoint", {
 
 export const cdnEndpointUrl = pulumi.interpolate`https://${cdnEndpoint.hostName}`;
 
-cdnCustomDomainResource = new CDNCustomDomainResource("cdnCustomDomain", {
+export let cdnCustomDomainResource = new CDNCustomDomainResource("cdnCustomDomain", {
     resourceGroupName: resourceGroup.name,
     // Ensure that there is a CNAME record for mycompany.com
     // pointing to my-cdn-endpoint.azureedge.net.
