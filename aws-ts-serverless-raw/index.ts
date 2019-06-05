@@ -29,18 +29,7 @@ let counterTable = new aws.dynamodb.Table("counterTable", {
 
 // Give our Lambda access to the Dynamo DB table, CloudWatch Logs and Metrics.
 const role = new aws.iam.Role("mylambda-role", {
-    assumeRolePolicy: pulumi.output(
-        aws.iam.getPolicyDocument({
-            statements: [{
-                actions: ["sts:AssumeRole"],
-                principals: [{
-                    identifiers: ["lambda.amazonaws.com"], 
-                    type: "Service",
-                }],
-                effect: "Allow",
-            }],
-        })
-    ).apply(r => r.json),
+    assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: "lambda.amazonaws.com" })
 });
 
 const policy = new aws.iam.Policy("mylambda-policy", {
@@ -56,6 +45,7 @@ const policy = new aws.iam.Policy("mylambda-policy", {
         }],
    })).apply(r => r.json),
 }); 
+
 
 let access = new aws.iam.RolePolicyAttachment("mylambda-access", {
     role: role,
