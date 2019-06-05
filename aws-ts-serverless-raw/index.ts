@@ -3,8 +3,8 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 
-// The location of the built dotnet2.0 application to deploy
-let dotNetApplicationPublishFolder = "./app/bin/Debug/netcoreapp2.0/publish";
+// The location of the built dotnet2.1 application to deploy
+let dotNetApplicationPublishFolder = "./app/bin/Debug/netcoreapp2.1/publish";
 let dotNetApplicationEntryPoint = "app::app.Functions::GetAsync";
 // The stage name to use for the API Gateway URL
 let stageName = "api";
@@ -27,31 +27,44 @@ let counterTable = new aws.dynamodb.Table("counterTable", {
 // Lambda Function
 ///////////////////
 
-// Create a Role giving our Lambda access.
-let policy: aws.iam.PolicyDocument = {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Action": "sts:AssumeRole",
-            "Principal": {
-                "Service": "lambda.amazonaws.com",
-            },
-            "Effect": "Allow",
-            "Sid": "",
-        },
-    ],
-};
-let role = new aws.iam.Role("mylambda-role", {
-    assumeRolePolicy: JSON.stringify(policy),
+// Give our Lambda access to the Dynamo DB table, CloudWatch Logs and Metrics.
+const role = new aws.iam.Role("mylambda-role", {
+    assumeRolePolicy: pulumi.output(
+        aws.iam.getPolicyDocument({
+            statements: [{
+                actions: ["sts:AssumeRole"],
+                principals: [{
+                    identifiers: ["lambda.amazonaws.com"], 
+                    type: "Service",
+                }],
+                effect: "Allow",
+            }],
+        })
+    ).apply(r => r.json),
 });
-let fullAccess = new aws.iam.RolePolicyAttachment("mylambda-access", {
+
+const policy = new aws.iam.Policy("mylambda-policy", {
+    policy: counterTable.arn.apply(arn => aws.iam.getPolicyDocument({
+        statements: [{
+            actions: ["dynamodb:UpdateItem", "dynamodb:PutItem", "dynamodb:GetItem", "dynamodb:DescribeTable"],
+            resources: [arn],
+            effect: "Allow",
+        }, {
+            actions: ["logs:*", "cloudwatch:*"],
+            resources: ["*"],
+            effect: "Allow",
+        }],
+   })).apply(r => r.json),
+}); 
+
+let access = new aws.iam.RolePolicyAttachment("mylambda-access", {
     role: role,
-    policyArn: aws.iam.AWSLambdaFullAccess,
+    policyArn: policy.arn,
 });
 
 // Create a Lambda function, using code from the `./app` folder.
 let lambda = new aws.lambda.Function("mylambda", {
-    runtime: aws.lambda.DotnetCore2d0Runtime,
+    runtime: aws.lambda.DotnetCore2d1Runtime,
     code: new pulumi.asset.AssetArchive({
         ".": new pulumi.asset.FileArchive(dotNetApplicationPublishFolder),
     }),
@@ -63,7 +76,7 @@ let lambda = new aws.lambda.Function("mylambda", {
             "COUNTER_TABLE": counterTable.name
         }
     },
-}, { dependsOn: [fullAccess] });
+}, { dependsOn: [access] });
 
 ///////////////////
 // APIGateway RestAPI
