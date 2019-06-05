@@ -64,8 +64,9 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
             subscriptionID = process.env["ARM_SUBSCRIPTION_ID"];
         }
 
-        // If they are still empty, then throw an error.
+        // If they are still empty, try to get the creds from Az CLI.
         if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
+            // `create()` will throw an error if the Az CLI is not installed or `az login` has never been run.
             const cliCredentials = await msRestAzure.AzureCliCredentials.create();
             subscriptionID = cliCredentials.subscriptionInfo.id;
             credentials = cliCredentials;
