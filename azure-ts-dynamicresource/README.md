@@ -79,7 +79,7 @@ Learn more about dynamic providers [here](https://pulumi.io/reference/programmin
 ## Known Issues
 
 If you get a 404 error when deleting a custom domain or a deserialization error `SyntaxError: Unexpected token o in JSON at position 1`, this was due to a bug in the Azure nodeJS SDK. See https://github.com/Azure/azure-sdk-for-js/issues/2842. Ensure you have the latest versions by running `npm list @azure/ms-rest-js @azure/ms-rest-azure-js`. The versions you should have are:
-- `@azure/ms-rest-js` - 1.3.7
-- `@azure/ms-rest-azure-js` - 1.8.10
+- `@azure/ms-rest-js` - 1.8.10
+- `@azure/ms-rest-azure-js` - 1.3.7
 
 If you do not have the latest versions, then delete the `node_modules` folder, and the `package-lock.json`, or if you are using yarn, then `yarn-lock.json`, and then run `npm install` (or `yarn install`) again. Then verify that you have the correct versions again by running the `npm list ...` command.

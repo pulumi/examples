@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
 
@@ -5,240 +7,269 @@ import * as msRestAzure from "@azure/ms-rest-nodeauth";
 import * as cdnManagement from "@azure/arm-cdn";
 import { ServiceClientCredentials } from "@azure/ms-rest-js";
 
+/**
+ * CustomDomainOptions represents the inputs to the dynamic resource.
+ * Any property of type `Input<T>` will automatically be resolved by the custom dynamic resource
+ * before passing them to the dynamic resource provider.
+ */
 export interface CustomDomainOptions {
-  resourceGroupName: string;
-  profileName: string;
-  endpointName: string;
-  customDomainHostName: string;
-  httpsEnabled: boolean;
+    resourceGroupName: pulumi.Input<string>;
+    profileName: pulumi.Input<string>;
+    endpointName: pulumi.Input<string>;
+    customDomainHostName: pulumi.Input<string>;
+    httpsEnabled: boolean;
 }
 
-export interface CustomDomainOutputs extends cdnManagement.CdnManagementModels.CustomDomainsCreateResponse {
-  inputs: CustomDomainOptions;
-  name: string;
+/**
+ * DynamicProviderInputs represents the inputs that are passed as inputs
+ * to each function in the implementation of a `pulumi.dynamic.ResourceProvider`.
+ * The property names in this must match `CustomDomainOptions`.
+ */
+interface DynamicProviderInputs {
+    resourceGroupName: string;
+    profileName: string;
+    endpointName: string;
+    customDomainHostName: string;
+    httpsEnabled: boolean;
+}
+
+/**
+ * DynamicProviderOutputs represents the output type of `create` function in the
+ * dynamic resource provider.
+ */
+interface DynamicProviderOutputs extends DynamicProviderInputs, cdnManagement.CdnManagementModels.CustomDomainsCreateResponse {
+    name: string;
 }
 
 class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider {
-  private name: string;
+    private name: string;
 
-  constructor(name: string) {
-    this.name = name;
-  }
-
-  private async getCDNManagementClient(): Promise<cdnManagement.CdnManagementClient> {
-    let clientID = azure.config.clientId;
-    let clientSecret = azure.config.clientSecret;
-    let tenantID = azure.config.tenantId;
-    let subscriptionID = azure.config.subscriptionId;
-    let credentials: ServiceClientCredentials;
-
-    // If at least one of them is empty, try looking at the env vars.
-    if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
-      console.log("Checking env vars for ARM credentials.");
-      clientID = process.env["ARM_CLIENT_ID"];
-      clientSecret = process.env["ARM_CLIENT_SECRET"];
-      tenantID = process.env["ARM_TENANT_ID"];
-      subscriptionID = process.env["ARM_SUBSCRIPTION_ID"];
+    constructor(name: string) {
+        this.name = name;
     }
 
-    // If they are still empty, then throw an error.
-    if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
-      const cliCredentials = await msRestAzure.AzureCliCredentials.create();
-      subscriptionID = cliCredentials.subscriptionInfo.id;
-      credentials = cliCredentials;
-    } else {
-      credentials = await msRestAzure.loginWithServicePrincipalSecret(clientID, clientSecret, tenantID);
+    private async getCDNManagementClient(): Promise<cdnManagement.CdnManagementClient> {
+        let clientID = azure.config.clientId;
+        let clientSecret = azure.config.clientSecret;
+        let tenantID = azure.config.tenantId;
+        let subscriptionID = azure.config.subscriptionId;
+        let credentials: ServiceClientCredentials;
+
+        // If at least one of them is empty, try looking at the env vars.
+        if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
+            console.log("Checking env vars for ARM credentials.");
+            clientID = process.env["ARM_CLIENT_ID"];
+            clientSecret = process.env["ARM_CLIENT_SECRET"];
+            tenantID = process.env["ARM_TENANT_ID"];
+            subscriptionID = process.env["ARM_SUBSCRIPTION_ID"];
+        }
+
+        // If they are still empty, then throw an error.
+        if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
+            const cliCredentials = await msRestAzure.AzureCliCredentials.create();
+            subscriptionID = cliCredentials.subscriptionInfo.id;
+            credentials = cliCredentials;
+        } else {
+            credentials = await msRestAzure.loginWithServicePrincipalSecret(clientID, clientSecret, tenantID);
+        }
+
+        return new cdnManagement.CdnManagementClient(credentials, subscriptionID);
     }
 
-    return new cdnManagement.CdnManagementClient(credentials, subscriptionID);
-  }
+    async check(olds: DynamicProviderInputs, news: DynamicProviderInputs): Promise<pulumi.dynamic.CheckResult> {
+        const cdnClient = await this.getCDNManagementClient();
+        let result: pulumi.dynamic.CheckResult;
 
-  async check(olds: CustomDomainOptions, news: CustomDomainOptions): Promise<pulumi.dynamic.CheckResult> {
-    const cdnClient = await this.getCDNManagementClient();
-    let result: pulumi.dynamic.CheckResult;
+        // If none of the CDN properties changed, then there is nothing to be validated.
+        if (olds.profileName === news.profileName &&
+            olds.endpointName === news.endpointName &&
+            olds.customDomainHostName === news.customDomainHostName) {
+            return {
+                inputs: news
+            };
+        }
 
-    // If none of the CDN properties changed, then there is nothing to be validated.
-    if (olds.profileName === news.profileName &&
-        olds.endpointName === news.endpointName &&
-        olds.customDomainHostName === news.customDomainHostName) {
-      return {
-        inputs: news
-      };
+        const validationOutput = await cdnClient.endpoints.validateCustomDomain(
+            news.resourceGroupName, news.profileName, news.endpointName, news.customDomainHostName);
+        if (!validationOutput.customDomainValidated) {
+            result = {
+                failures: [
+                    {
+                        property: this.name,
+                        reason: validationOutput.reason || "domain_validation_failed"
+                    }
+                ]
+            };
+        } else {
+            result = {
+                inputs: news
+            };
+        }
+
+        return result;
     }
 
-    const validationOutput = await cdnClient.endpoints.validateCustomDomain(
-      news.resourceGroupName, news.profileName, news.endpointName, news.customDomainHostName);
-    if (!validationOutput.customDomainValidated) {
-      result = {
-        failures: [
-          {
-            property: this.name,
-            reason: validationOutput.reason || "domain_validation_failed"
-          }
-        ]
-      };
-    } else {
-      result = {
-        inputs: news
-      };
+    async diff(id: string, previousOutput: DynamicProviderOutputs, news: DynamicProviderInputs): Promise<pulumi.dynamic.DiffResult> {
+        const replaces: string[] = [];
+        let changes = false;
+        let deleteBeforeReplace = false;
+
+        if (previousOutput.customDomainHostName !== news.customDomainHostName || previousOutput.name !== this.name) {
+            console.warn("Changing the domain name properties will cause a downtime.")
+
+            deleteBeforeReplace = true;
+            if (previousOutput.customDomainHostName !== news.customDomainHostName) {
+                replaces.push("customDomainHostName");
+            }
+            if (previousOutput.name !== this.name) {
+                replaces.push("customDomainName");
+            }
+        }
+
+        if (previousOutput.endpointName !== news.endpointName) {
+            deleteBeforeReplace = true;
+            replaces.push("endpointName");
+        }
+
+        // HTTPS can be enabled/disabled in-place.
+        if (previousOutput.httpsEnabled !== news.httpsEnabled) {
+            changes = true;
+            replaces.push("httpsEnabled");
+        }
+
+        return {
+            deleteBeforeReplace: deleteBeforeReplace,
+            replaces: replaces,
+            changes: changes
+        };
     }
 
-    return result;
-  }
-  async diff(id: string, previousOutput: CustomDomainOutputs, news: CustomDomainOptions): Promise<pulumi.dynamic.DiffResult> {
-    const oldInputs = previousOutput.inputs;
-    const replaces: string[] = [];
-    let changes = false;
-    let deleteBeforeReplace = false;
+    async create(inputs: DynamicProviderInputs): Promise<pulumi.dynamic.CreateResult> {
+        const cdnClient = await this.getCDNManagementClient();
+        const result =
+            await cdnClient.customDomains
+                .create(
+                    inputs.resourceGroupName,
+                    inputs.profileName,
+                    inputs.endpointName,
+                    this.name,
+                    inputs.customDomainHostName);
 
-    if (oldInputs.customDomainHostName !== news.customDomainHostName || previousOutput.name !== this.name) {
-      console.warn("Changing the domain name properties will cause a downtime.")
+        if (inputs.httpsEnabled) {
+            console.log("Enabling HTTPS for the custom domain");
 
-      deleteBeforeReplace = true;
-      if (oldInputs.customDomainHostName !== news.customDomainHostName) {
-        replaces.push("customDomainHostName");
-      }
-      if (previousOutput.name !== this.name) {
-        replaces.push("customDomainName");
-      }
+            await cdnClient.customDomains
+                .enableCustomHttps(
+                    inputs.resourceGroupName,
+                    inputs.profileName,
+                    inputs.endpointName,
+                    this.name);
+        }
+
+        const outs: DynamicProviderOutputs = {
+            ...result,
+            name: this.name,
+            resourceGroupName: inputs.resourceGroupName,
+            profileName: inputs.profileName,
+            endpointName: inputs.endpointName,
+            customDomainHostName: inputs.customDomainHostName,
+            httpsEnabled: inputs.httpsEnabled,
+        };
+
+        return {
+            id: result.id!,
+            outs: outs
+        };
     }
 
-    if (oldInputs.endpointName !== news.endpointName) {
-      deleteBeforeReplace = true;
-      replaces.push("endpointName");
+    async read(id: string, props: DynamicProviderOutputs): Promise<pulumi.dynamic.ReadResult> {
+        const cdnClient = await this.getCDNManagementClient();
+        const result = await cdnClient.customDomains.get(props.resourceGroupName, props.profileName, props.endpointName, this.name);
+        return {
+            id: result.id,
+            props: { ...props, ...result }
+        };
     }
 
-    // HTTPS can be enabled/disabled in-place.
-    if (oldInputs.httpsEnabled !== news.httpsEnabled) {
-      changes = true;
-      replaces.push("httpsEnabled");
+    async delete(id: string, props: DynamicProviderOutputs): Promise<void> {
+        const cdnClient = await this.getCDNManagementClient();
+        const result = await cdnClient.customDomains.deleteMethod(props.resourceGroupName, props.profileName, props.endpointName, this.name);
+        if (result._response.status >= 400) {
+            throw new Error("Error response received while trying to delete the custom domain.");
+        }
+
+        if (!result.resourceState) {
+            return;
+        }
+        if (result.resourceState !== 'Deleting') {
+            throw new Error(`Provisioning state of the custom domain was expected to be 'Deleting', but was ${result.resourceState}.`);
+        }
+
+        console.log("The request to delete was successful. However, it can take a minute or two to fully complete deletion.");
     }
 
-    return {
-      deleteBeforeReplace: deleteBeforeReplace,
-      replaces: replaces,
-      changes: changes
-    };
-  }
+    /**
+     * The only thing that the update method really updates in the custom domain is the HTTPS enablement.
+     */
+    async update(id: string, currentOutputs: DynamicProviderOutputs, newInputs: DynamicProviderInputs): Promise<pulumi.dynamic.UpdateResult> {
+        const cdnClient = await this.getCDNManagementClient();
+        if (newInputs.httpsEnabled) {
+            await cdnClient.customDomains
+                .enableCustomHttps(
+                    newInputs.resourceGroupName,
+                    newInputs.profileName,
+                    newInputs.endpointName,
+                    this.name);
 
-  async create(inputs: CustomDomainOptions): Promise<pulumi.dynamic.CreateResult> {
-    const cdnClient = await this.getCDNManagementClient();
-    const result =
-    await cdnClient.customDomains
-      .create(
-        inputs.resourceGroupName,
-        inputs.profileName,
-        inputs.endpointName,
-        this.name,
-        inputs.customDomainHostName);
-    console.log(`Custom domain provisioning state is ${ result.resourceState }.`);
+            currentOutputs.httpsEnabled = true;
+            return {
+                outs: currentOutputs
+            };
+        }
 
-    if (inputs.httpsEnabled) {
-      console.log("Enabling HTTPS now");
+        await cdnClient.customDomains
+            .disableCustomHttps(
+                newInputs.resourceGroupName,
+                newInputs.profileName,
+                newInputs.endpointName,
+                this.name);
 
-      await cdnClient.customDomains
-      .enableCustomHttps(
-        inputs.resourceGroupName,
-        inputs.profileName,
-        inputs.endpointName,
-        this.name);
+        currentOutputs.httpsEnabled = true;
+        return {
+            outs: currentOutputs
+        };
     }
-
-    const outs = {
-      ...result,
-      name: this.name,
-      inputs: {
-        resourceGroupName: inputs.resourceGroupName,
-        profileName: inputs.profileName,
-        endpointName: inputs.endpointName,
-        customDomainHostName: inputs.customDomainHostName,
-        httpsEnabled: inputs.httpsEnabled,
-      },
-    };
-
-    return {
-      id: result.id!,
-      outs: outs
-    };
-  }
-
-  async read(id: string, props: any): Promise<pulumi.dynamic.ReadResult> {
-    const inputs = props.inputs as CustomDomainOptions;
-    const cdnClient = await this.getCDNManagementClient();
-    const result = await cdnClient.customDomains.get(inputs.resourceGroupName, inputs.profileName, inputs.endpointName, this.name);
-    return {
-      id: result.id,
-      props: { ...result, inputs: { ...inputs }}
-    };
-  }
-
-  async delete(id: string, props: any): Promise<void> {
-    const inputs = props.inputs as CustomDomainOptions;
-    const cdnClient = await this.getCDNManagementClient();
-    try {
-      const result = await cdnClient.customDomains.deleteMethod(inputs.resourceGroupName, inputs.profileName, inputs.endpointName, this.name);
-      if (result._response.status >= 400) {
-        throw new Error("Error response received while trying to delete the custom domain.");
-      }
-
-      if (!result.resourceState) {
-        return;
-      }
-      if (result.resourceState !== 'Deleting') {
-        throw new Error(`Provisioning state of the custom domain was expected to be 'Deleting', but was ${ result.resourceState }.`);
-      }
-
-      console.log("The request to delete was successful. However, it can take a minute or two to fully complete deletion.");
-    } catch (err) {
-      // Due to a bug in the Azure CDN SDK, deletion will result in a 404 even though it succeeded.
-      // This console.log statement will at least keep the user aware of the problem.
-      // Once the bug is fixed in the SDK, we should never hit this unless the custom domain to be deleted
-      // cannot be genuinely found.
-      // See: https://github.com/Azure/azure-sdk-for-js/issues/2842.
-      console.log(err);
-    }
-  }
-
-  /**
-   * The only thing that the update method really updates in the custom domain is the HTTPS enablement.
-   */
-  async update (id: string, currentOutputs: CustomDomainOutputs, newInputs: CustomDomainOptions): Promise<pulumi.dynamic.UpdateResult> {
-    const cdnClient = await this.getCDNManagementClient();
-    if (newInputs.httpsEnabled) {
-      await cdnClient.customDomains
-        .enableCustomHttps(
-          newInputs.resourceGroupName,
-          newInputs.profileName,
-          newInputs.endpointName,
-          this.name);
-      
-      currentOutputs.inputs.httpsEnabled = true;
-      return {
-        outs: currentOutputs
-      };
-    }
-
-    await cdnClient.customDomains
-      .disableCustomHttps(
-        newInputs.resourceGroupName,
-        newInputs.profileName,
-        newInputs.endpointName,
-        this.name);
-
-    currentOutputs.inputs.httpsEnabled = true;
-    return {
-      outs: currentOutputs
-    };
-  }
 }
 
 /**
  * CDNCustomDomainResource is a resource that can be used to create
  * custom domains against Azure CDN resources.
  * The Azure CDN resource itself must exist in order to create a custom domain for it.
+ * 
+ * Outputs from the dynamic resource provider must be declared in the dynamic resource itself
+ * as `public readonly` members with the type `Output<T>`. These are automatically set by the dynamic
+ * provider engine. The names of these properties must match the names of the properties exactly as
+ * returned in the outputs of the dynamic resource provider functions.
  */
 export class CDNCustomDomainResource extends pulumi.dynamic.Resource {
-  constructor(name: string, args: CustomDomainOptions, opts?: pulumi.CustomResourceOptions) {
-    super(new CDNCustomDomainResourceProvider(name), `azure:cdn:Endpoint:CustomDomains:${name}`, args, opts);
-  }
+    /**
+     * These are the same properties that were originally passed as inputs, but available as outputs
+     * for convenience. The names of these properties must match with `CustomDomainOptions`.
+     */
+    public readonly resourceGroupName: pulumi.Output<string>;
+    public readonly profileName: pulumi.Output<string>;
+    public readonly endpointName: pulumi.Output<string>;
+    public readonly customDomainHostName: pulumi.Output<string>;
+    public readonly httpsEnabled: pulumi.Output<boolean>;
+
+    // The following are properties set by the CDN rest client.
+    public readonly customHttpsProvisioningState: pulumi.Output<cdnManagement.CdnManagementModels.CustomHttpsProvisioningState>;
+    public readonly customHttpsProvisioningSubstate: pulumi.Output<cdnManagement.CdnManagementModels.CustomHttpsProvisioningSubstate>;
+    public readonly provisioningState: pulumi.Output<string>;
+    public readonly resourceState: pulumi.Output<cdnManagement.CdnManagementModels.CustomDomainResourceState>;
+    public readonly type: pulumi.Output<string>;
+
+    constructor(name: string, args: CustomDomainOptions, opts?: pulumi.CustomResourceOptions) {
+        super(new CDNCustomDomainResourceProvider(name), `azure:cdn:Endpoint:CustomDomains:${name}`, args, opts);
+    }
 }

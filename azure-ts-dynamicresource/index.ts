@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
 
@@ -75,22 +77,19 @@ const cdnEndpoint = new azure.cdn.Endpoint("my-cdn-endpoint", {
     ]
 });
 
-export const cdnEndpointUrl = pulumi.interpolate `https://${cdnEndpoint.hostName}`;
+export const cdnEndpointUrl = pulumi.interpolate`https://${cdnEndpoint.hostName}`;
 
-pulumi.all([resourceGroup.name, cdnProfile.name, cdnEndpoint.name])
-    .apply(([resourceGroupName, cdnProfileName, cdnEndpointName]) => {
-        cdnCustomDomainResource = new CDNCustomDomainResource("cdnCustomDomain", {
-            resourceGroupName: resourceGroupName,
-            // Ensure that there is a CNAME record for mycompany.com
-            // pointing to my-cdn-endpoint.azureedge.net.
-            // You would do that in your domain registrar's portal.
-            customDomainHostName: "mycompany.com",
-            profileName: cdnProfileName,
-            endpointName: cdnEndpointName,
-            // This will enable HTTPS through Azure's one-click
-            // automated certificate deployment.
-            // The certificate is fully managed by Azure from provisioning
-            // to automatic renewal at no additional cost to you.
-            httpsEnabled: true,
-        }, { parent: cdnEndpoint });
-    });
+cdnCustomDomainResource = new CDNCustomDomainResource("cdnCustomDomain", {
+    resourceGroupName: resourceGroup.name,
+    // Ensure that there is a CNAME record for mycompany.com
+    // pointing to my-cdn-endpoint.azureedge.net.
+    // You would do that in your domain registrar's portal.
+    customDomainHostName: "mycompany.com",
+    profileName: cdnProfile.name,
+    endpointName: cdnEndpoint.name,
+    // This will enable HTTPS through Azure's one-click
+    // automated certificate deployment.
+    // The certificate is fully managed by Azure from provisioning
+    // to automatic renewal at no additional cost to you.
+    httpsEnabled: true,
+}, { parent: cdnEndpoint });
