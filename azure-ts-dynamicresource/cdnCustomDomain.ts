@@ -79,7 +79,6 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
 
     async check(olds: DynamicProviderInputs, news: DynamicProviderInputs): Promise<pulumi.dynamic.CheckResult> {
         const cdnClient = await this.getCDNManagementClient();
-        let result: pulumi.dynamic.CheckResult;
 
         // If none of the CDN properties changed, then there is nothing to be validated.
         if (olds.profileName === news.profileName &&
@@ -94,17 +93,15 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
             news.endpointName,
             news.customDomainHostName);
         if (!validationOutput.customDomainValidated) {
-            result = {
+            return {
                 failures: [{
                     property: this.name,
                     reason: validationOutput.reason || "domain_validation_failed"
                 }]
             };
-        } else {
-            result = { inputs: news };
         }
 
-        return result;
+        return { inputs: news };
     }
 
     async diff(id: string, previousOutput: DynamicProviderOutputs, news: DynamicProviderInputs): Promise<pulumi.dynamic.DiffResult> {
