@@ -67,10 +67,12 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
 
         // If they are still empty, try to get the creds from Az CLI.
         if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
+            await pulumi.log.info("Env vars did not contain ARM credentials. Trying Az CLI.", undefined, undefined, true);
             // `create()` will throw an error if the Az CLI is not installed or `az login` has never been run.
             const cliCredentials = await msRestAzure.AzureCliCredentials.create();
             subscriptionID = cliCredentials.subscriptionInfo.id;
             credentials = cliCredentials;
+            await pulumi.log.info("Using credentials from Az CLI.", undefined, undefined, true);
         } else {
             credentials = await msRestAzure.loginWithServicePrincipalSecret(clientID, clientSecret, tenantID);
         }
@@ -79,8 +81,6 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
     }
 
     async check(olds: DynamicProviderInputs, news: DynamicProviderInputs): Promise<pulumi.dynamic.CheckResult> {
-        const cdnClient = await this.getCDNManagementClient();
-
         // If none of the CDN properties changed, then there is nothing to be validated.
         if (olds.profileName === news.profileName &&
             olds.endpointName === news.endpointName &&
@@ -88,18 +88,28 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
             return { inputs: news };
         }
 
-        const validationOutput = await cdnClient.endpoints.validateCustomDomain(
-            news.resourceGroupName,
-            news.profileName,
-            news.endpointName,
-            news.customDomainHostName);
-        if (!validationOutput.customDomainValidated) {
-            return {
-                failures: [{
-                    property: this.name,
-                    reason: validationOutput.reason || "domain_validation_failed"
-                }]
-            };
+        const failures: pulumi.dynamic.CheckFailure[] = [];
+        if (!news.endpointName) {
+            failures.push({
+                property: "endpointName",
+                reason: "endpointName is required",
+            });
+        }
+        if (!news.profileName) {
+            failures.push({
+                property: "profileName",
+                reason: "profileName is required",
+            });
+        }
+        if (!news.customDomainHostName) {
+            failures.push({
+                property: "customDomainHostName",
+                reason: "customDomainHostName is required",
+            });
+        }
+
+        if (failures.length > 0) {
+            return { failures: failures };
         }
 
         return { inputs: news };
@@ -144,6 +154,16 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
 
     async create(inputs: DynamicProviderInputs): Promise<pulumi.dynamic.CreateResult> {
         const cdnClient = await this.getCDNManagementClient();
+
+        const validationOutput = await cdnClient.endpoints.validateCustomDomain(
+            inputs.resourceGroupName,
+            inputs.profileName,
+            inputs.endpointName,
+            inputs.customDomainHostName);
+        if (!validationOutput.customDomainValidated) {
+            throw new Error(`Validation of custom domain failed with ${validationOutput.reason}`);
+        }
+
         const result =
             await cdnClient.customDomains.create(
                 inputs.resourceGroupName,

@@ -30,7 +30,7 @@ const storageAccount = new azure.storage.Account("storageAccount", {
  * to store any static files. The CDN endpoint will be pointed at the
  * endpoint for this blob container.
  */
-const blobContainer = new azure.storage.Container("blob-container", {
+const blobContainer = new azure.storage.Container("blobContainer", {
     resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     // Make each "blob" in the container publicly accessible.
@@ -38,14 +38,22 @@ const blobContainer = new azure.storage.Container("blob-container", {
     containerAccessType: "blob",
 });
 
-const cdnProfile = new azure.cdn.Profile("cdn-profile", {
+const cdnProfile = new azure.cdn.Profile("cdnProfile", {
     resourceGroupName: resourceGroup.name,
     // Choose an appropriate SKU to use.
     // https://docs.microsoft.com/en-us/azure/cdn/cdn-features
     sku: "Standard_Akamai",
 });
 
-const cdnEndpoint = new azure.cdn.Endpoint("my-cdn-endpoint", {
+const cdnEndpoint = new azure.cdn.Endpoint("cdnEndpoint", {
+    /**
+     * Specify a well-known name for the endpoint name,
+     * so you can add a CNAME record for your custom domain
+     * pointing to this CDN endpoint to it.
+     *
+     * For example, the URL for this CDN endpoint when it is created 
+     * would be `my-cdn-endpoint.azureedge.net`.
+     */
     name: "my-cdn-endpoint",
     resourceGroupName: resourceGroup.name,
     profileName: cdnProfile.name,
@@ -76,17 +84,18 @@ const cdnEndpoint = new azure.cdn.Endpoint("my-cdn-endpoint", {
 
 export const cdnEndpointUrl = pulumi.interpolate`https://${cdnEndpoint.hostName}`;
 
-export let cdnCustomDomainResource = new CDNCustomDomainResource("cdnCustomDomain", {
+export const cdnCustomDomainResource = new CDNCustomDomainResource("cdnCustomDomain", {
     resourceGroupName: resourceGroup.name,
-    // Ensure that there is a CNAME record for mycompany.com
-    // pointing to my-cdn-endpoint.azureedge.net.
+    // Ensure that there is a CNAME record for mycompany.com pointing to my-cdn-endpoint.azureedge.net.
     // You would do that in your domain registrar's portal.
     customDomainHostName: "mycompany.com",
     profileName: cdnProfile.name,
     endpointName: cdnEndpoint.name,
-    // This will enable HTTPS through Azure's one-click
-    // automated certificate deployment.
-    // The certificate is fully managed by Azure from provisioning
-    // to automatic renewal at no additional cost to you.
+    /**
+     * This will enable HTTPS through Azure's one-click
+     * automated certificate deployment. The certificate is 
+     * fully managed by Azure from provisioning to automatic renewal
+     * at no additional cost to you.
+     */
     httpsEnabled: true,
 }, { parent: cdnEndpoint });
