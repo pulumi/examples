@@ -9,15 +9,16 @@ import { ServiceClientCredentials } from "@azure/ms-rest-js";
 
 /**
  * CustomDomainOptions represents the inputs to the dynamic resource.
- * Any property of type `Input<T>` will automatically be resolved by the custom dynamic resource
- * before passing them to the dynamic resource provider.
+ * Any property of type `Input<T>` will automatically be resolved to their type `T`
+ * by the custom dynamic resource before passing them to the functions in the
+ * dynamic resource provider.
  */
 export interface CustomDomainOptions {
     resourceGroupName: pulumi.Input<string>;
     profileName: pulumi.Input<string>;
     endpointName: pulumi.Input<string>;
     customDomainHostName: pulumi.Input<string>;
-    httpsEnabled: boolean;
+    httpsEnabled: pulumi.Input<boolean>;
 }
 
 /**
