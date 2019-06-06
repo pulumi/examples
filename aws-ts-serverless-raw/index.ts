@@ -29,27 +29,23 @@ let counterTable = new aws.dynamodb.Table("counterTable", {
 
 // Give our Lambda access to the Dynamo DB table, CloudWatch Logs and Metrics.
 const role = new aws.iam.Role("mylambda-role", {
-    assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: "lambda.amazonaws.com" })
+    assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: "lambda.amazonaws.com" }),
 });
 
-const policy = new aws.iam.Policy("mylambda-policy", {
-    policy: counterTable.arn.apply(arn => aws.iam.getPolicyDocument({
-        statements: [{
-            actions: ["dynamodb:UpdateItem", "dynamodb:PutItem", "dynamodb:GetItem", "dynamodb:DescribeTable"],
-            resources: [arn],
-            effect: "Allow",
+const policy = new aws.iam.RolePolicy("mylambda-policy", {
+    role,
+    policy: pulumi.output({
+        Version: "2012-10-17",
+        Statement: [{
+            Action: ["dynamodb:UpdateItem", "dynamodb:PutItem", "dynamodb:GetItem", "dynamodb:DescribeTable"],
+            Resource: counterTable.arn,
+            Effect: "Allow",
         }, {
-            actions: ["logs:*", "cloudwatch:*"],
-            resources: ["*"],
-            effect: "Allow",
+            Action: ["logs:*", "cloudwatch:*"],
+            Resource: "*",
+            Effect: "Allow",
         }],
-   })).apply(r => r.json),
-}); 
-
-
-let access = new aws.iam.RolePolicyAttachment("mylambda-access", {
-    role: role,
-    policyArn: policy.arn,
+    }),
 });
 
 // Create a Lambda function, using code from the `./app` folder.
@@ -64,9 +60,9 @@ let lambda = new aws.lambda.Function("mylambda", {
     environment: {
         variables: {
             "COUNTER_TABLE": counterTable.name
-        }
+        },
     },
-}, { dependsOn: [access] });
+}, { dependsOn: [policy] });
 
 ///////////////////
 // APIGateway RestAPI
@@ -95,7 +91,7 @@ function swaggerRouteHandler(lambdaArn: string) {
                 httpMethod: "POST",
                 type: "aws_proxy",
             },
-        }
+        },
     };
 }
 
@@ -115,7 +111,7 @@ let deployment = new aws.apigateway.Deployment("api-deployment", {
 let stage = new aws.apigateway.Stage("api-stage", {
     restApi: restApi,
     deployment: deployment,
-    stageName: stageName
+    stageName: stageName,
 });
 
 // Give permissions from API Gateway to invoke the Lambda
