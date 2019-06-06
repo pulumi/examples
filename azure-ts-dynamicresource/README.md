@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-Prior to running this example, ensure that the custom domain, you will be adding to your CDN endpoint, has a CNAME record in your domain registrar's DNS management portal. The dynamic provider will validate that the mapping exists and will fail the deployment if the CDN endpoint is not reachable through your custom domain.
+Prior to running this example, ensure that the custom domain you will be adding to your CDN endpoint has a CNAME record in your domain registrar's DNS management portal. The dynamic provider will validate that the mapping exists and will fail the deployment if the CDN endpoint is not reachable through your custom domain.
 
 ## Usage
 

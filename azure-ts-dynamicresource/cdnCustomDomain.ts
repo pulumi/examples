@@ -57,7 +57,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
 
         // If at least one of them is empty, try looking at the env vars.
         if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
-            console.log("Checking env vars for ARM credentials.");
+            await pulumi.log.info("Checking env vars for ARM credentials.", undefined, undefined, true);
             clientID = process.env["ARM_CLIENT_ID"];
             clientSecret = process.env["ARM_CLIENT_SECRET"];
             tenantID = process.env["ARM_TENANT_ID"];
@@ -110,8 +110,9 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         let deleteBeforeReplace = false;
 
         if (previousOutput.customDomainHostName !== news.customDomainHostName || previousOutput.name !== this.name) {
-            console.warn("Changing the domain name properties will cause a downtime.")
+            await pulumi.log.warn("Changing the domain name properties will cause downtime.", undefined, undefined, true);
 
+            changes = true;
             deleteBeforeReplace = true;
             if (previousOutput.customDomainHostName !== news.customDomainHostName) {
                 replaces.push("customDomainHostName");
@@ -122,6 +123,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         }
 
         if (previousOutput.endpointName !== news.endpointName) {
+            changes = true;
             deleteBeforeReplace = true;
             replaces.push("endpointName");
         }
@@ -150,7 +152,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
                 inputs.customDomainHostName);
 
         if (inputs.httpsEnabled) {
-            console.log("Enabling HTTPS for the custom domain");
+            await pulumi.log.info("Enabling HTTPS for the custom domain", undefined, undefined, true);
 
             await cdnClient.customDomains.enableCustomHttps(
                 inputs.resourceGroupName,
@@ -194,7 +196,11 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
             throw new Error(`Provisioning state of the custom domain was expected to be 'Deleting', but was ${result.resourceState}.`);
         }
 
-        console.log("The request to delete was successful. However, it can take a minute or two to fully complete deletion.");
+        await pulumi.log.info(
+            "The request to delete was successful. However, it can take a minute or two to fully complete deletion.",
+            undefined,
+            undefined,
+            true);
     }
 
     /**
