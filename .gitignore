@@ -12,3 +12,4 @@ Pulumi.*.yaml
 .idea/
 *.iml
 key.rsa*
+obj/

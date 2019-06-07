@@ -1,0 +1,8 @@
+name: azure-cdn-custom-domain
+runtime: nodejs
+description: Creates Azure CDN with a custom domain.
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
