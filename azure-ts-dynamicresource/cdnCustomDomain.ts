@@ -246,7 +246,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
             newInputs.endpointName,
             this.name);
 
-        currentOutputs.httpsEnabled = true;
+        currentOutputs.httpsEnabled = false;
         return { outs: currentOutputs };
     }
 }
