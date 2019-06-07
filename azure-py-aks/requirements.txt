@@ -1,2 +1,4 @@
-pulumi>=0.16.4
-pulumi_azure>=0.16.4
+pulumi
+pulumi_azure
+pulumi_azuread
+pulumi_kubernetes
