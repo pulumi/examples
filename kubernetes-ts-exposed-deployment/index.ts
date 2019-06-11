@@ -15,9 +15,9 @@ const nginx = new k8s.apps.v1beta1.Deployment(appName, {
         replicas: 1,
         template: {
             metadata: { labels: appLabels },
-            spec: { containers: [{ name: appName, image: "nginx:1.15-alpine" }] }
-        }
-    }
+            spec: { containers: [{ name: appName, image: "nginx:1.15-alpine" }] },
+        },
+    },
 });
 
 // Allocate an IP to the nginx Deployment.
@@ -26,8 +26,8 @@ const frontend = new k8s.core.v1.Service(appName, {
     spec: {
         type: isMinikube === "true" ? "ClusterIP" : "LoadBalancer",
         ports: [{ port: 80, targetPort: 80, protocol: "TCP" }],
-        selector: appLabels
-    }
+        selector: appLabels,
+    },
 });
 
 // When "done", this will print the public IP.

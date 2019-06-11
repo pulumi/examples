@@ -1,0 +1,4 @@
+#!/bin/sh
+
+#node ./node_modules/@pulumi/pulumi/cmd/analyzer $@
+node /Users/alex/src/pulumi/pulumi-policy/nodejs/policy/examples/s3/bin/index.js $@
