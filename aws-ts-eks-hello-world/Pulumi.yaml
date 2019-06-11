@@ -6,3 +6,5 @@ template:
     aws:region:
       description: The AWS region to deploy into
       default: us-west-2
+    hostedZoneName:
+      description: (Optional) The Route53 Zone to CNAME to the service load balancer

@@ -1,13 +1,17 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 import * as awsx from "@pulumi/awsx";
+import * as aws from "@pulumi/aws";
 import * as eks from "@pulumi/eks";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 
+const config = new pulumi.Config();
+const hostedZoneName = config.get("hostedZoneName");
+
 const name = "helloworld";
 
 // Create an EKS cluster with non-default configuration
-const vpc = new awsx.Network("vpc", { usePrivateSubnets: false });
+const vpc = new awsx.Network(name, { usePrivateSubnets: false });
 const cluster = new eks.Cluster(name, {
     vpcId: vpc.vpcId,
     subnetIds: vpc.subnetIds,
@@ -68,6 +72,13 @@ const service = new k8s.core.v1.Service(name,
         metadata: {
             labels: appLabels,
             namespace: namespaceName,
+            annotations: {
+                /**
+                 * Remove this annotation to use Classic Load Balancer.
+                 * https://docs.aws.amazon.com/eks/latest/userguide/load-balancing.html
+                 */
+                "service.beta.kubernetes.io/aws-load-balancer-type": "nlb",
+            }
         },
         spec: {
             type: "LoadBalancer",
@@ -80,6 +91,20 @@ const service = new k8s.core.v1.Service(name,
     }
 );
 
+let dnsRecord = undefined;
+if (hostedZoneName != undefined) {
+    const zoneId = aws.route53.getZone({ name: hostedZoneName }).then(z => z.id);
+    const record = new aws.route53.Record(name, {
+        zoneId: zoneId,
+        type: "CNAME",
+        ttl: 300,
+        name: service.metadata.name,
+        records: [service.status.loadBalancer.ingress[0].hostname],
+    });
+    dnsRecord = pulumi.interpolate`http://${record.fqdn}/`;
+}
+
 // Export the Service name and public LoadBalancer Endpoint
 export const serviceName = service.metadata.name;
 export const serviceHostname = service.status.apply(s => s.loadBalancer.ingress[0].hostname)
+export const serviceDnsName = dnsRecord;
