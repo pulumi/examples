@@ -13,7 +13,7 @@ from pulumi_azuread import Application, ServicePrincipal, ServicePrincipalPasswo
 config = pulumi.Config("azure-py-aks")
 
 PREFIX = config.require("prefix")
-PASSWORD = config.require("password")
+PASSWORD = config.require_secret("password")
 SSHKEY = config.require("sshkey")
 LOCATION = config.get("location") or "east us"
 
