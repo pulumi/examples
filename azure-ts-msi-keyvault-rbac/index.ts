@@ -1,6 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
-import { signedBlobReadUrl } from "./sas";
 import { execSync} from "child_process";
 
 // Create a resource group
@@ -100,7 +99,7 @@ const vault = new azure.keyvault.KeyVault("vault", {
 // Put the URL of the zip Blob to KV
 const secret = new azure.keyvault.Secret("deployment-zip", {
     keyVaultId: vault.id,
-    value: signedBlobReadUrl(blob, storageAccount, storageContainer),
+    value: azure.storage.signedBlobReadUrl(blob, storageAccount),
 });
 const secretUri = pulumi.interpolate`${secret.vaultUri}secrets/${secret.name}/${secret.version}`;
 
