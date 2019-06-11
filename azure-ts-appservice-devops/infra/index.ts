@@ -1,6 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
-import { signedBlobReadUrl } from "./sas";
 
 // use first 10 characters of the stackname as prefix for resource names
 const prefix = pulumi.getStack().substring(0, 9);
@@ -53,7 +52,7 @@ const blob = new azure.storage.ZipBlob(`${prefix}-b`, {
     content: new pulumi.asset.FileArchive("../src/bin/Debug/netcoreapp2.1/publish")
 });
 
-const codeBlobUrl = signedBlobReadUrl(blob, storageAccount, storageContainer);
+const codeBlobUrl = azure.storage.signedBlobReadUrl(blob, storageAccount);
 
 const appInsights = new azure.appinsights.Insights(`${prefix}-ai`, {
     ...resourceGroupArgs,

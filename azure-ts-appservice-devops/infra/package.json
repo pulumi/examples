@@ -9,7 +9,6 @@
     },
     "dependencies": {
         "@pulumi/pulumi": "latest",
-        "@pulumi/azure": "latest",
-        "azure-storage": "^2.9.0-preview"
+        "@pulumi/azure": "latest"
     }
 }
