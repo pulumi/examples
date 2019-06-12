@@ -108,7 +108,7 @@ async function onEventCallback(request: types.EventCallbackRequest) {
 }
 
 // Hook up a lambda that will then process the topic when possible.
-const messageTopicSubscription = messageTopic.onEvent("processTopicMessage", async ev => {
+const topicSubscription = messageTopic.onEvent("processTopicMessage", async ev => {
     for (const record of ev.Records) {
         try {
             const request = <types.EventCallbackRequest>JSON.parse(record.Sns.Message);
@@ -127,6 +127,90 @@ const messageTopicSubscription = messageTopic.onEvent("processTopicMessage", asy
         }
     }
 });
+
+const endpointFunc = endpoint.getFunction();
+const topicFunc = topicSubscription.func;
+
+const endpointFuncDuration = awsx.lambda.metrics.duration({ function: endpointFunc });
+const topicFuncDuration = awsx.lambda.metrics.duration({ function: topicFunc });
+
+const topicAlarm = topicFuncDuration.withUnit("Milliseconds").createAlarm("TooLong", {
+    evaluationPeriods: 5,
+    threshold: 5000,
+});
+
+const dashboard = new awsx.cloudwatch.Dashboard("mentionbot", {
+    widgets: [
+        new awsx.cloudwatch.LineGraphMetricWidget({
+            width: 12,
+            title: "Receiving duration",
+            metrics: [
+                endpointFuncDuration.with({ extendedStatistic: 90, label: "Duration p90" }),
+                endpointFuncDuration.with({ extendedStatistic: 95, label: "Duration p95" }),
+                endpointFuncDuration.with({ extendedStatistic: 98, label: "Duration p99" }),
+            ],
+        }),
+        new awsx.cloudwatch.LineGraphMetricWidget({
+            width: 12,
+            title: "Processing duration",
+            metrics: [
+                topicFuncDuration.with({ extendedStatistic: 90, label: "Duration p90" }),
+                topicFuncDuration.with({ extendedStatistic: 95, label: "Duration p95" }),
+                topicFuncDuration.with({ extendedStatistic: 98, label: "Duration p99" }),
+            ],
+            annotations: new awsx.cloudwatch.HorizontalAnnotation(topicAlarm),
+        }),
+    ],
+});
+
+export const url = endpoint.url;
+export const dashboardUrl = pulumi.interpolate
+    `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#dashboards:name=${dashboard.dashboardName}`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Called when we hear about a message posted to slack.
 async function onMessageEventCallback(request: types.EventCallbackRequest) {
@@ -220,43 +304,3 @@ async function subscribeToMentions(event: types.Event) {
     const text = `Hi <@${event.user}>.  You've been subscribed to @ mentions. Send me an message containing 'unsubscribe' to stop receiving these notifications.`;
     await sendChannelMessage(event.channel, text);
 }
-
-const endpointFunc = endpoint.getFunction();
-const topicFunc = messageTopicSubscription.func;
-
-const endpointFuncDuration = awsx.lambda.metrics.duration({ function: endpointFunc });
-const topicFuncDuration = awsx.lambda.metrics.duration({ function: topicFunc });
-
-const topicAlarm = topicFuncDuration.withUnit("Milliseconds").createAlarm("TooLong", {
-    evaluationPeriods: 5,
-    threshold: 5000,
-});
-
-const dashboard = new awsx.cloudwatch.Dashboard("mentionbot", {
-    widgets: [
-        new awsx.cloudwatch.LineGraphMetricWidget({
-            width: 12,
-            title: "Receiving duration",
-            metrics: [
-                endpointFuncDuration.with({ extendedStatistic: 90, label: "Duration p90" }),
-                endpointFuncDuration.with({ extendedStatistic: 95, label: "Duration p95" }),
-                endpointFuncDuration.with({ extendedStatistic: 98, label: "Duration p99" }),
-            ],
-        }),
-        new awsx.cloudwatch.LineGraphMetricWidget({
-            width: 12,
-            title: "Processing duration",
-            metrics: [
-                topicFuncDuration.with({ extendedStatistic: 90, label: "Duration p90" }),
-                topicFuncDuration.with({ extendedStatistic: 95, label: "Duration p95" }),
-                topicFuncDuration.with({ extendedStatistic: 98, label: "Duration p99" }),
-            ],
-            annotations: new awsx.cloudwatch.HorizontalAnnotation(topicAlarm),
-        }),
-    ],
-});
-
-export const url = endpoint.url;
-export const dashboardUrl = pulumi.interpolate
-    `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#dashboards:name=${dashboard.dashboardName}`;
-
