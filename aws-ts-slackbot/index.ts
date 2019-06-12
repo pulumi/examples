@@ -10,6 +10,8 @@ import * as superagent from "superagent";
 // A simple slack bot that, when requested, will monitor for @mentions of your name and post them to
 // the channel you contacted the bot from.
 
+const region = aws.config.region;
+
 const config = new pulumi.Config("mentionbot");
 const slackToken = config.get("slackToken");
 const verificationToken = config.get("verificationToken");
@@ -17,10 +19,7 @@ const verificationToken = config.get("verificationToken");
 // Make a simple table that keeps track of which users have requested to be notified when their name
 // is mentioned, and which channel they'll be notified in.
 const subscriptionsTable = new aws.dynamodb.Table("subscriptions", {
-    attributes: [{
-        name: "id",
-        type: "S",
-    }],
+    attributes: [{ name: "id", type: "S", }],
     hashKey: "id",
     billingMode: "PAY_PER_REQUEST"
 });
@@ -222,4 +221,42 @@ async function subscribeToMentions(event: types.Event) {
     await sendChannelMessage(event.channel, text);
 }
 
+const endpointFunc = endpoint.getFunction();
+const topicFunc = messageTopicSubscription.func;
+
+const endpointFuncDuration = awsx.lambda.metrics.duration({ function: endpointFunc });
+const topicFuncDuration = awsx.lambda.metrics.duration({ function: topicFunc });
+
+const topicAlarm = topicFuncDuration.withUnit("Milliseconds").createAlarm("TooLong", {
+    evaluationPeriods: 5,
+    threshold: 5000,
+});
+
+const dashboard = new awsx.cloudwatch.Dashboard("mentionbot", {
+    widgets: [
+        new awsx.cloudwatch.LineGraphMetricWidget({
+            width: 12,
+            title: "Receiving duration",
+            metrics: [
+                endpointFuncDuration.with({ extendedStatistic: 90, label: "Duration p90" }),
+                endpointFuncDuration.with({ extendedStatistic: 95, label: "Duration p95" }),
+                endpointFuncDuration.with({ extendedStatistic: 98, label: "Duration p99" }),
+            ],
+        }),
+        new awsx.cloudwatch.LineGraphMetricWidget({
+            width: 12,
+            title: "Processing duration",
+            metrics: [
+                topicFuncDuration.with({ extendedStatistic: 90, label: "Duration p90" }),
+                topicFuncDuration.with({ extendedStatistic: 95, label: "Duration p95" }),
+                topicFuncDuration.with({ extendedStatistic: 98, label: "Duration p99" }),
+            ],
+            annotations: new awsx.cloudwatch.HorizontalAnnotation(topicAlarm),
+        }),
+    ],
+});
+
 export const url = endpoint.url;
+export const dashboardUrl = pulumi.interpolate
+    `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#dashboards:name=${dashboard.dashboardName}`;
+
