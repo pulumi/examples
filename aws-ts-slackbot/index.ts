@@ -2,15 +2,13 @@ import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 
-import * as types from "./types";
-
 import * as qs from "qs";
 import * as superagent from "superagent";
 
+import * as types from "./types";
+
 // A simple slack bot that, when requested, will monitor for @mentions of your name and post them to
 // the channel you contacted the bot from.
-
-const region = aws.config.region;
 
 const config = new pulumi.Config("mentionbot");
 const slackToken = config.get("slackToken");
@@ -27,7 +25,7 @@ const subscriptionsTable = new aws.dynamodb.Table("subscriptions", {
 // Slack has strict requirements on how fast you must be when responding to their messages. In order
 // to ensure we don't respond too slowly, all we do is enqueue messages to this topic, and then
 // return immediately.
-const messageTopic = new aws.sns.Topic("messages");
+const topic = new aws.sns.Topic("messages");
 
 // Create an API endpoint that slack will use to push events to us with.
 const endpoint = new awsx.apigateway.API("mentionbot", {
@@ -36,14 +34,6 @@ const endpoint = new awsx.apigateway.API("mentionbot", {
         method: "POST",
         eventHandler: async (event) => {
             try {
-                if (!slackToken) {
-                    throw new Error("mentionbot:slackToken was not provided");
-                }
-
-                if (!verificationToken) {
-                    throw new Error("mentionbot:verificationToken was not provided")
-                }
-
                 if (event.body === null || event.body === undefined) {
                     console.log("Unexpected content received");
                     console.log(JSON.stringify(event));
@@ -91,6 +81,10 @@ const endpoint = new awsx.apigateway.API("mentionbot", {
     }],
 });
 
+
+
+
+
 async function onEventCallback(request: types.EventCallbackRequest) {
     const event = request.event;
     if (!event) {
@@ -103,12 +97,13 @@ async function onEventCallback(request: types.EventCallbackRequest) {
     const client = new aws.sdk.SNS();
     await client.publish({
         Message: JSON.stringify(request),
-        TopicArn: messageTopic.arn.get(),
+        TopicArn: topic.arn.get(),
     }).promise();
 }
 
-// Hook up a lambda that will then process the topic when possible.
-const topicSubscription = messageTopic.onEvent("processTopicMessage", async ev => {
+
+
+const subscription = topic.onEvent("processTopicMessage", async ev => {
     for (const record of ev.Records) {
         try {
             const request = <types.EventCallbackRequest>JSON.parse(record.Sns.Message);
@@ -128,16 +123,24 @@ const topicSubscription = messageTopic.onEvent("processTopicMessage", async ev =
     }
 });
 
-const endpointFunc = endpoint.getFunction();
-const topicFunc = topicSubscription.func;
+export const url = endpoint.url;
+
+
+
+
+const endpointFunc = endpoint.getFunction("/events");
+const topicFunc = subscription.func;
 
 const endpointFuncDuration = awsx.lambda.metrics.duration({ function: endpointFunc });
-const topicFuncDuration = awsx.lambda.metrics.duration({ function: topicFunc });
+const topicProcessDuration = awsx.lambda.metrics.duration({ function: topicFunc });
 
-const topicAlarm = topicFuncDuration.withUnit("Milliseconds").createAlarm("TooLong", {
-    evaluationPeriods: 5,
-    threshold: 5000,
+
+const alarm = endpointFuncDuration.withUnit("Seconds")
+                                  .createAlarm("toolong", {
+    threshold: 5,
+    evaluationPeriods: 3,
 });
+
 
 const dashboard = new awsx.cloudwatch.Dashboard("mentionbot", {
     widgets: [
@@ -147,32 +150,25 @@ const dashboard = new awsx.cloudwatch.Dashboard("mentionbot", {
             metrics: [
                 endpointFuncDuration.with({ extendedStatistic: 90, label: "Duration p90" }),
                 endpointFuncDuration.with({ extendedStatistic: 95, label: "Duration p95" }),
-                endpointFuncDuration.with({ extendedStatistic: 98, label: "Duration p99" }),
+                endpointFuncDuration.with({ extendedStatistic: 99, label: "Duration p99" }),
             ],
+            annotations: new awsx.cloudwatch.HorizontalAnnotation(alarm),
         }),
         new awsx.cloudwatch.LineGraphMetricWidget({
             width: 12,
             title: "Processing duration",
             metrics: [
-                topicFuncDuration.with({ extendedStatistic: 90, label: "Duration p90" }),
-                topicFuncDuration.with({ extendedStatistic: 95, label: "Duration p95" }),
-                topicFuncDuration.with({ extendedStatistic: 98, label: "Duration p99" }),
+                topicProcessDuration.with({ extendedStatistic: 90, label: "Duration p90" }),
+                topicProcessDuration.with({ extendedStatistic: 95, label: "Duration p95" }),
+                topicProcessDuration.with({ extendedStatistic: 99, label: "Duration p99" }),
             ],
-            annotations: new awsx.cloudwatch.HorizontalAnnotation(topicAlarm),
         }),
     ],
 });
 
-export const url = endpoint.url;
+export const region = aws.config.region;
 export const dashboardUrl = pulumi.interpolate
     `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#dashboards:name=${dashboard.dashboardName}`;
-
-
-
-
-
-
-
 
 
 
