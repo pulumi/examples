@@ -173,7 +173,7 @@ const dashboard = new awsx.cloudwatch.Dashboard("mentionbot", {
 });
 
 export const region = aws.config.region;
-export const dashboardUrl = pulumi.interpolate
+export const dbUrl = pulumi.interpolate
     `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#dashboards:name=${dashboard.dashboardName}`;
 
 
