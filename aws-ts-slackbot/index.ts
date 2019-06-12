@@ -2,6 +2,8 @@ import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 
+import * as types from "./types";
+
 import * as qs from "qs";
 import * as superagent from "superagent";
 
@@ -28,39 +30,6 @@ const subscriptionsTable = new aws.dynamodb.Table("subscriptions", {
 // return immediately.
 const messageTopic = new aws.sns.Topic("messages");
 
-// Shapes of the slack messages we receive.
-
-interface SlackRequest {
-    type: "url_verification" | "event_callback";
-    token: string;
-}
-
-interface UrlVerificationRequest extends SlackRequest {
-    type: "url_verification",
-    challenge: string;
-}
-
-interface EventCallbackRequest extends SlackRequest {
-    type: "event_callback";
-    team_id: string;
-    api_app_id: string;
-    event: Event;
-    event_id: string;
-    event_time: number;
-    authed_users: string[];
-}
-
-interface Event {
-    client_msg_id: string;
-    type: "message" | "app_mention";
-    text: string;
-    user: string;
-    ts: string;
-    channel: string;
-    event_ts: string;
-    channel_type: string;
-}
-
 // Create an API endpoint that slack will use to push events to us with.
 const endpoint = new awsx.apigateway.API("mentionbot", {
     routes: [{
@@ -76,24 +45,26 @@ const endpoint = new awsx.apigateway.API("mentionbot", {
                     throw new Error("mentionbot:verificationToken was not provided")
                 }
 
-                if (!event.isBase64Encoded || event.body == null) {
+                if (event.body === null || event.body === undefined) {
                     console.log("Unexpected content received");
                     console.log(JSON.stringify(event));
                 }
                 else {
-                    const parsed = JSON.parse(Buffer.from(event.body, "base64").toString());
+                    const parsed = event.isBase64Encoded
+                      ? JSON.parse(Buffer.from(event.body, "base64").toString())
+                      : JSON.parse(event.body);
 
                     switch (parsed.type) {
                         case "url_verification":
                             // url_verification is the simple message slack sends to our endpoint to
                             // just make sure we're setup properly.  All we have to do is get the
                             // challenge data they send us and return it untouched.
-                            const verificationRequest = <UrlVerificationRequest>parsed;
+                            const verificationRequest = <types.UrlVerificationRequest>parsed;
                             const challenge = verificationRequest.challenge;
                             return { statusCode: 200, body: JSON.stringify({ challenge }) };
 
                         case "event_callback":
-                            const eventRequest = <EventCallbackRequest>parsed;
+                            const eventRequest = <types.EventCallbackRequest>parsed;
 
                             if (eventRequest.token !== verificationToken) {
                                 console.log("Error: Invalid verification token");
@@ -121,7 +92,7 @@ const endpoint = new awsx.apigateway.API("mentionbot", {
     }],
 });
 
-async function onEventCallback(request: EventCallbackRequest) {
+async function onEventCallback(request: types.EventCallbackRequest) {
     const event = request.event;
     if (!event) {
         // No event in request, not processing any further.
@@ -138,10 +109,10 @@ async function onEventCallback(request: EventCallbackRequest) {
 }
 
 // Hook up a lambda that will then process the topic when possible.
-messageTopic.onEvent("processTopicMessage", async ev => {
+const messageTopicSubscription = messageTopic.onEvent("processTopicMessage", async ev => {
     for (const record of ev.Records) {
         try {
-            const request = <EventCallbackRequest>JSON.parse(record.Sns.Message);
+            const request = <types.EventCallbackRequest>JSON.parse(record.Sns.Message);
 
             switch (request.event.type) {
                 case "message":
@@ -159,7 +130,7 @@ messageTopic.onEvent("processTopicMessage", async ev => {
 });
 
 // Called when we hear about a message posted to slack.
-async function onMessageEventCallback(request: EventCallbackRequest) {
+async function onMessageEventCallback(request: types.EventCallbackRequest) {
     const event = request.event;
     if (!event.text) {
         // No text for the message, so nothing to do.
@@ -215,7 +186,7 @@ async function getPermalink(channel: string, message_ts: string) {
     return JSON.parse(result.text).permalink;
 }
 
-async function onAppMentionEventCallback(request: EventCallbackRequest) {
+async function onAppMentionEventCallback(request: types.EventCallbackRequest) {
     // Got an app_mention to @mentionbot.
     const event = request.event;
     var promise = event.text.toLowerCase().indexOf("unsubscribe") >= 0
@@ -225,7 +196,7 @@ async function onAppMentionEventCallback(request: EventCallbackRequest) {
     return await promise;
 }
 
-async function unsubscribeFromMentions(event: Event) {
+async function unsubscribeFromMentions(event: types.Event) {
     const client = new aws.sdk.DynamoDB.DocumentClient();
 
     // User is unsubscribing.  Remove them from subscription table.
@@ -238,7 +209,7 @@ async function unsubscribeFromMentions(event: Event) {
     await sendChannelMessage(event.channel, text);
 }
 
-async function subscribeToMentions(event: Event) {
+async function subscribeToMentions(event: types.Event) {
     const client = new aws.sdk.DynamoDB.DocumentClient();
 
     // User is subscribing.  Add them from subscription table.
