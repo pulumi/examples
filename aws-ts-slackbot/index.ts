@@ -103,25 +103,26 @@ async function onEventCallback(request: types.EventCallbackRequest) {
 
 
 
-const subscription = topic.onEvent("processTopicMessage", async ev => {
-    for (const record of ev.Records) {
-        try {
-            const request = <types.EventCallbackRequest>JSON.parse(record.Sns.Message);
+const subscription =
+    topic.onEvent("processTopicMessage", async ev => {
+        for (const record of ev.Records) {
+            try {
+                const request = <types.EventCallbackRequest>JSON.parse(record.Sns.Message);
 
-            switch (request.event.type) {
-                case "message":
-                    return await onMessageEventCallback(request);
-                case "app_mention":
-                    return await onAppMentionEventCallback(request);
-                default:
-                    console.log("Unknown event type: " + request.event.type);
+                switch (request.event.type) {
+                    case "message":
+                        return await onMessageEventCallback(request);
+                    case "app_mention":
+                        return await onAppMentionEventCallback(request);
+                    default:
+                        console.log("Unknown event type: " + request.event.type);
+                }
+            }
+            catch (err) {
+                console.log("Error: " + (err.stack || err.message));
             }
         }
-        catch (err) {
-            console.log("Error: " + (err.stack || err.message));
-        }
-    }
-});
+    });
 
 export const url = endpoint.url;
 
@@ -131,12 +132,17 @@ export const url = endpoint.url;
 const endpointFunc = endpoint.getFunction("/events");
 const topicFunc = subscription.func;
 
-const endpointFuncDuration = awsx.lambda.metrics.duration({ function: endpointFunc });
-const topicProcessDuration = awsx.lambda.metrics.duration({ function: topicFunc });
+const endpointFuncDuration = awsx.lambda.metrics.duration({
+    function: endpointFunc,
+});
+const topicProcessDuration = awsx.lambda.metrics.duration({
+    function: topicFunc,
+});
 
 
 const alarm = endpointFuncDuration.withUnit("Seconds")
-                                  .createAlarm("toolong", {
+                                  .withPeriod(300)
+                                  .createAlarm("TooLong", {
     threshold: 5,
     evaluationPeriods: 3,
 });
