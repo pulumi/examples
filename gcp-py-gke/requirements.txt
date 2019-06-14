@@ -1,3 +1,4 @@
 pulumi>=0.17.4
 pulumi_gcp>=0.18.2
 pulumi_kubernetes>=0.22.0
+pulumi-random>=0.5.3
