@@ -2,7 +2,7 @@
 
 # Azure Functions
 
-An example Pulumi component that deploys a TypeScript function to Azure Functions.
+An example Pulumi program that deploys a TypeScript function to Azure Functions.
 
 ## Running the App
 
