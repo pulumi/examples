@@ -17,7 +17,6 @@
         "strictNullChecks": true
     },
     "files": [
-        "azureFunction.ts",
         "index.ts"
     ]
 }
