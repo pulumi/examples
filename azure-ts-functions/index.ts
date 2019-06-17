@@ -1,6 +1,6 @@
 import * as azure from "@pulumi/azure";
 
-const resourceGroup = new azure.core.ResourceGroup('example');
+const resourceGroup = new azure.core.ResourceGroup("example");
 
 // Create an Azure function that prints a message and the request headers.
 async function handler(context: azure.appservice.Context<azure.appservice.HttpResponse>, request: azure.appservice.HttpRequest) {
