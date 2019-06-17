@@ -33,8 +33,6 @@ const service = new azure.apimanagement.Service("greeting-service", {
     publisherEmail: "api@yourcompany.com",    
 });
 
-//const service = azure.apimanagement.Service.get("apiservice80627074", "/subscriptions/ebca75f3-9e5e-4a96-a777-aeeb2777dbde/resourceGroups/resourcegroup8153ae21/providers/Microsoft.ApiManagement/service/apiservice80627074");
-
 // Create the API definition and map it to the HTTP Function backend
 const api = new azure.apimanagement.Api("greeting-api", {
     resourceGroupName: resourceGroup.name,
@@ -43,7 +41,7 @@ const api = new azure.apimanagement.Api("greeting-api", {
     path: "hello",
     protocols: ["https"],
     revision: "1",
-    serviceUrl: httpFunction.url, //pulumi.interpolate`https://${httpFunction.functionApp.defaultHostname}/api`,
+    serviceUrl: httpFunction.url,
 });
 
 // Create an operation with templated URL which will accept the name in the path
