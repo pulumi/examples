@@ -74,7 +74,7 @@ new azure.apimanagement.ApiOperationPolicy("hello-policy", {
     `<policies>
         <inbound>
             <base />
-            <rewrite-uri template="greeting?name={name}" />
+            <rewrite-uri template="?name={name}" />
             <cache-lookup vary-by-developer="false" vary-by-developer-groups="false" />
         </inbound>
         <backend>
@@ -119,12 +119,13 @@ const user = new azure.apimanagement.User("bot", {
 });
 
 // Create a subscription to the product for the user
-const subscription = new azure.apimanagement.Subscription("bot-sub", {
+const subscription = new azure.apimanagement.Subscription("bot-subscription", {
    resourceGroupName: resourceGroup.name,
    apiManagementName: service.name,
    displayName: "Bot Subscription",
    productId: product.id,
    userId: user.id,
+   state: "active",
 });
 
 export const endpoint = pulumi.interpolate`${service.gatewayUrl}/${api.path}/Pulumi`;
