@@ -51,7 +51,7 @@ let fullAccess = new aws.iam.RolePolicyAttachment("mylambda-access", {
 
 // Create a Lambda function, using code from the `./app` folder.
 let lambda = new aws.lambda.Function("mylambda", {
-    runtime: aws.lambda.DotnetCore2d0Runtime,
+    runtime: aws.lambda.DotnetCore2d1Runtime,
     code: new pulumi.asset.AssetArchive({
         ".": new pulumi.asset.FileArchive(dotNetApplicationPublishFolder),
     }),
