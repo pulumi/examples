@@ -1,0 +1,10 @@
+name: azure-ts-api-management
+runtime: nodejs
+description: Example of using Azure API Management
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    azure:location:
+      description: The Azure location to deploy to (e.g., `eastus`, or `westeurope`)
