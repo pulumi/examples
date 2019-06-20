@@ -9,13 +9,13 @@ import * as config from "./config";
 const aksClusterConfig = [
     {
         name: 'east',
-        location: "East US",
+        location: azure.Locations.EastUS,
         nodeCount: 2,
         nodeSize: "Standard_D2_v2",
     },
     {
         name: 'west',
-        location: "West US",
+        location: azure.Locations.WestUS,
         nodeCount: 5,
         nodeSize: "Standard_D2_v2",
     },
@@ -47,11 +47,11 @@ const k8sClusters = aksClusterConfig.map((perClusterConfig, index) => {
         },
         // Per-cluster config arguments
         location: perClusterConfig.location,
-        agentPoolProfile: {
+        agentPoolProfiles: [{
             name: "aksagentpool",
             count: perClusterConfig.nodeCount,
             vmSize: perClusterConfig.nodeSize,
-        },
+        }],
         dnsPrefix: `${pulumi.getStack()}-kube`,
     });
     return cluster;

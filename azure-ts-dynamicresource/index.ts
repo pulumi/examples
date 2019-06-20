@@ -11,7 +11,7 @@ import { CDNCustomDomainResource } from "./cdnCustomDomain";
  * To externalize this value, and make this configurable across environments/stacks,
  * learn more at https://pulumi.io/reference/config/.
  */
-const location = "West US";
+const location = azure.Locations.WestUS;
 
 // Create an Azure Resource Group
 const resourceGroup = new azure.core.ResourceGroup("resourceGroup", {

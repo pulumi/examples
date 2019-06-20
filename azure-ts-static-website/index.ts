@@ -6,7 +6,7 @@ import { StorageStaticWebsite } from "./staticWebsite";
 
 // Create an Azure Resource Group
 const resourceGroup = new azure.core.ResourceGroup("website-rg", {
-    location: "West US",
+    location: azure.Locations.WestUS,
 });
 
 // Create a Storage Account for our static website
