@@ -39,13 +39,13 @@ Provisions Azure SQL Database and Azure Application Insights to be used in combi
 1. Define SQL Server username:
 
     ```
-    pulumi config set azure-appservice-devops:sqlUsername <value>
+    pulumi config set sqlUsername <value>
     ```
 
 1. Define SQL Server password (make it complex enough to satisfy Azure policy):
 
     ```
-    pulumi config set --secret azure-appservice-devops:sqlPassword <value>
+    pulumi config set --secret sqlPassword <value>
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
