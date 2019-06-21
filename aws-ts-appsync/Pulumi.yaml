@@ -1,0 +1,8 @@
+name: aws-ts-appsync
+runtime: nodejs
+description: Basic example of defining an AWS AppSync endpoint from Pulumi
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2
