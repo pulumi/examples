@@ -1,4 +1,4 @@
-name: azure-appservice
+name: azure-appservice-devops
 runtime: nodejs
 description: Creates a Todo App on Azure App Service with SQL Database and Application Insights and deploys it to Azure DevOps
 template:
