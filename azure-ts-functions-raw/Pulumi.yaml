@@ -1,0 +1,10 @@
+name: azure-functions-raw
+runtime: nodejs
+description: Azure Functions created from raw deployment packages in all supported languages
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    azure:location:
+      description: The Azure location to deploy resources to (e.g., `eastus` or `westeurope`)
