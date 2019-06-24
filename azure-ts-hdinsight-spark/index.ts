@@ -7,7 +7,7 @@ const password = config.require("password");
 
 // Create an Azure Resource Group
 const resourceGroup = new azure.core.ResourceGroup("spark-rg", {
-    location: "West US",
+    location: azure.Locations.WestUS,
 });
 
 // Create a storage account and a container for Spark

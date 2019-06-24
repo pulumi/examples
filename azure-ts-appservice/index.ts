@@ -5,7 +5,7 @@ import * as azure from "@pulumi/azure";
 const prefix = pulumi.getStack().substring(0, 9);
 
 const resourceGroup = new azure.core.ResourceGroup(`${prefix}-rg`, {
-        location: "West US 2",
+        location: azure.Locations.WestUS2,
     });
 
 const resourceGroupArgs = {

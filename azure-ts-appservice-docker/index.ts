@@ -4,7 +4,7 @@ import * as docker from "@pulumi/docker";
 
 // Create an Azure Resource Group
 const resourceGroup = new azure.core.ResourceGroup("samples", {
-    location: "West US",
+    location: azure.Locations.WestUS,
 });
 
 // Create a dedicated App Service Plan for Linux App Services
