@@ -109,7 +109,7 @@ if (config.certificateArn === undefined) {
     const certificateValidationDomain = new aws.route53.Record(`${config.targetDomain}-validation`, {
         name: certificate.domainValidationOptions[0].resourceRecordName,
         zoneId: hostedZoneId,
-        type: certificate.domainValidationOptions[0].resourceRecordType,
+        type: certificate.domainValidationOptions[0].resourceRecordType.apply(v => <aws.route53.RecordType>v),
         records: [certificate.domainValidationOptions[0].resourceRecordValue],
         ttl: tenMinutes,
     });
@@ -140,33 +140,45 @@ if (config.certificateArn === undefined) {
 let cacheBehaviours = [];
 if (config.languageRedirect) {
     const languageRedirectRole = new aws.iam.Role("language-redirect", {
-        assumeRolePolicy: JSON.stringify({
-            Version: "2012-10-17",
-            Statement: [
-                {
-                    Action: "sts:AssumeRole",
-                    Principal: {
-                        Service: [
-                            "lambda.amazonaws.com",
-                            "edgelambda.amazonaws.com",
-                        ],
-                    },
-                    Effect: "Allow",
-                    Sid: "",
-                },
-            ],
-        }),
+        assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: ["lambda.amazonaws.com", "edgelambda.amazonaws.com"] })
     });
+    const languageRedirectAccessLogs = new aws.iam.RolePolicy("language-redirect-policy", {
+        role: languageRedirectRole,
+        policy: {
+            Version: "2012-10-17",
+            Statement: [{
+                Action: ["logs:*", "cloudwatch:*"],
+                Resource: "*",
+                Effect: "Allow",
+            }],
+        },
+    });
+    const languageRedirectLambda = new aws.lambda.CallbackFunction<any, any>("language-redirect", {
+        role: languageRedirectRole,
+        callback: async event => {
+            const request = event.Records[0].cf.request;
+            const languageHeader = request.headers['accept-language'];
 
-    const languageRedirectLambda = new aws.lambda.Function("language-redirect", {
-        code: new pulumi.asset.AssetArchive({
-            "index.js": new pulumi.asset.FileAsset("./src/lambda-language-redirect.js"),
-        }),
-        role: languageRedirectRole.arn,
-        handler: "index.handler",
-        publish: true,
-        runtime: aws.lambda.NodeJS8d10Runtime,
-    }, { provider: eastRegion });
+            // shortcut invalid requests
+            if (request.uri != '/' || typeof languageHeader === 'undefined') {
+                return request;
+            }
+
+            const clientLanguages = languageHeader[0].value;
+            console.log('accept-language header from client:', clientLanguages);
+            if (clientLanguages.startsWith('es')) {
+                return {
+                    status: '301',
+                    statusDescription: 'Redirect to language specified by client.',
+                    headers: {
+                        location: [{ key: 'Location', value: '/es/' }],
+                    },
+                };
+            }
+
+            return request;
+        },
+    }, { provider: eastRegion, dependsOn: languageRedirectAccessLogs });
 
     const cacheBehavior = {
         targetOriginId: contentBucket.arn,
