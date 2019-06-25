@@ -3,8 +3,6 @@ import * as azure from "@pulumi/azure";
 
 import * as azurefunctions from "azure-functions-ts-essentials";
 
-import { signedBlobReadUrl } from "./sas";
-
 export type Context = azurefunctions.Context;
 export type HttpRequest = azurefunctions.HttpRequest;
 export * from "azure-functions-ts-essentials";
@@ -92,7 +90,7 @@ export class HttpFunction extends pulumi.ComponentResource {
             content: new pulumi.asset.AssetArchive(blobContent(name, handler)),
         }, parentArgs);
 
-        this.codeBlobUrl = signedBlobReadUrl(this.blob, this.storageAccount, this.storageContainer);
+        this.codeBlobUrl = azure.storage.signedBlobReadUrl(this.blob, this.storageAccount);
 
         this.appServicePlan = new azure.appservice.Plan(`${name}-p`, {
             ...resourceGroupArgs,

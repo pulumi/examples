@@ -1,6 +1,7 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
+import * as azuread from "@pulumi/azuread";
 import * as pulumi from "@pulumi/pulumi";
 import * as config from "./config";
 
@@ -8,22 +9,22 @@ import * as config from "./config";
 const aksClusterConfig = [
     {
         name: 'east',
-        location: "East US",
+        location: azure.Locations.EastUS,
         nodeCount: 2,
         nodeSize: "Standard_D2_v2",
     },
     {
         name: 'west',
-        location: "West US",
+        location: azure.Locations.WestUS,
         nodeCount: 5,
         nodeSize: "Standard_D2_v2",
     },
 ];
 
 // Create the AD service principal for the K8s cluster.
-const adApp = new azure.ad.Application("aks");
-const adSp = new azure.ad.ServicePrincipal("aksSp", {applicationId: adApp.applicationId});
-const adSpPassword = new azure.ad.ServicePrincipalPassword("aksSpPassword", {
+const adApp = new azuread.Application("aks");
+const adSp = new azuread.ServicePrincipal("aksSp", {applicationId: adApp.applicationId});
+const adSpPassword = new azuread.ServicePrincipalPassword("aksSpPassword", {
     servicePrincipalId: adSp.id,
     value: config.password,
     endDate: "2099-01-01T00:00:00Z",
@@ -36,9 +37,9 @@ const k8sClusters = aksClusterConfig.map((perClusterConfig, index) => {
         resourceGroupName: config.resourceGroup.name,
         linuxProfile: {
             adminUsername: "aksuser",
-            sshKeys: [{
+            sshKey: {
                 keyData: config.sshPublicKey,
-            }],
+            },
         },
         servicePrincipal: {
             clientId: adApp.applicationId,
@@ -46,11 +47,11 @@ const k8sClusters = aksClusterConfig.map((perClusterConfig, index) => {
         },
         // Per-cluster config arguments
         location: perClusterConfig.location,
-        agentPoolProfile: {
+        agentPoolProfiles: [{
             name: "aksagentpool",
             count: perClusterConfig.nodeCount,
             vmSize: perClusterConfig.nodeSize,
-        },
+        }],
         dnsPrefix: `${pulumi.getStack()}-kube`,
     });
     return cluster;

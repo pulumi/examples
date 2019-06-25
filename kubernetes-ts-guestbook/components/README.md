@@ -21,7 +21,7 @@ Create a new stack:
 
 ```sh
 $ pulumi stack init
-Enter a stack name: testbook
+Enter a stack name: guestbook
 ```
 
 This example will attempt to expose the Guestbook application to the Internet with a `Service` of
@@ -30,34 +30,52 @@ already knows to use type `ClusterIP` instead; all you need to do is to tell it 
 deploying to minikube:
 
 ```sh
-pulumi config set guestbook:isMinikube <value>
+pulumi config set isMinikube <value>
 ```
 
 Perform the deployment:
 
 ```sh
 $ pulumi up
-Updating stack 'k8sjs-guestbook'
-Performing changes:
+Previewing update (guestbook):
 
-     Type                                Name                Status      Info
- +   pulumi:pulumi:Stack                 guestbook-testbook  created
- +   ├─ k8sjs:service:ServiceDeployment  redis-master        created
- +   │  ├─ kubernetes:apps:Deployment    redis-master        created
- +   │  └─ kubernetes:core:Service       redis-master        created
- +   ├─ k8sjs:service:ServiceDeployment  redis-replica       created
- +   │  ├─ kubernetes:apps:Deployment    redis-replica       created
- +   │  └─ kubernetes:core:Service       redis-replica       created
- +   └─ k8sjs:service:ServiceDeployment  frontend            created
- +      ├─ kubernetes:apps:Deployment    frontend            created
- +      └─ kubernetes:core:Service       frontend            created
+     Type                                Name                      Plan       
+ +   pulumi:pulumi:Stack                 guestbook-easy-guestbook  create     
+ +   ├─ k8sjs:service:ServiceDeployment  frontend                  create     
+ +   │  ├─ kubernetes:apps:Deployment    frontend                  create     
+ +   │  └─ kubernetes:core:Service       frontend                  create     
+ +   ├─ k8sjs:service:ServiceDeployment  redis-replica             create     
+ +   │  ├─ kubernetes:apps:Deployment    redis-replica             create     
+ +   │  └─ kubernetes:core:Service       redis-replica             create     
+ +   └─ k8sjs:service:ServiceDeployment  redis-master              create     
+ +      ├─ kubernetes:apps:Deployment    redis-master              create     
+ +      └─ kubernetes:core:Service       redis-master              create     
+ 
+Resources:
+    + 10 to create
 
----outputs:---
-frontendIp: "35.232.147.18"
+Do you want to perform this update? yes
+Updating (guestbook):
 
-info: 10 changes performed:
-    + 10 resources created
-Update duration: 18.829381902s
+     Type                                Name                      Status      
+ +   pulumi:pulumi:Stack                 guestbook-easy-guestbook  created     
+ +   ├─ k8sjs:service:ServiceDeployment  redis-master              created     
+ +   │  ├─ kubernetes:apps:Deployment    redis-master              created     
+ +   │  └─ kubernetes:core:Service       redis-master              created     
+ +   ├─ k8sjs:service:ServiceDeployment  frontend                  created     
+ +   │  ├─ kubernetes:apps:Deployment    frontend                  created     
+ +   │  └─ kubernetes:core:Service       frontend                  created     
+ +   └─ k8sjs:service:ServiceDeployment  redis-replica             created     
+ +      ├─ kubernetes:apps:Deployment    redis-replica             created     
+ +      └─ kubernetes:core:Service       redis-replica             created     
+ 
+Outputs:
+    frontendIp: "10.105.48.30"
+
+Resources:
+    + 10 created
+
+Duration: 21s
 
 Permalink: https://app.pulumi.com/acmecorp/k8sjs-guestbook/updates/1
 ```

@@ -10,7 +10,6 @@ import { k8sCluster, k8sProvider } from "./cluster";
 const cosmosdb = new azure.cosmosdb.Account("cosmosDb", {
     kind: "MongoDB",
     resourceGroupName: config.resourceGroup.name,
-    location: config.location,
     consistencyPolicy: {
         consistencyLevel: "BoundedStaleness",
         maxIntervalInSeconds: 10,

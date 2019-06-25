@@ -1,0 +1,11 @@
+{
+    "name": "slss-tps",
+    "devDependencies": {
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^0.17.0",
+        "@pulumi/pulumi": "latest",
+        "adm-zip": "^0.4.13"
+    }
+}

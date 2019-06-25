@@ -1,0 +1,8 @@
+name: aws-ts-eks-hello-world
+description: EKS + Kubernetes Hello World example
+runtime: nodejs
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2

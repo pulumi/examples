@@ -1,0 +1,8 @@
+{
+    "name": "aws-ts-appsync",
+    "version": "0.1.0",
+    "dependencies": {
+        "@pulumi/aws": "latest",
+        "@pulumi/pulumi": "latest"
+    }
+}

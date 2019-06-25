@@ -1,0 +1,8 @@
+name: gcp-ts-slack
+runtime: nodejs
+description: Basic example of creating a slackbot
+template:
+  config:
+    gcp:region:
+      description: The GCP region to deploy into
+      default: us-central1

@@ -1,5 +1,6 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
+import * as pulumi from "@pulumi/pulumi";
 import * as cloud from "@pulumi/cloud";
 import * as cache from "./cache";
 import * as express from "express";
@@ -131,4 +132,4 @@ function staticRoutes(app: express.Express, path: string, root: string) {
     }
 }
 
-export let endpointUrl = endpoint.url.apply(u => u + "index.html");
+export let endpointUrl = pulumi.interpolate `${endpoint.url}index.html`;

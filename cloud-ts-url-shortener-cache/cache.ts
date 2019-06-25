@@ -23,7 +23,7 @@ export class Cache {
             },
         });
 
-        let endpoint = this.redis.endpoints.apply(endpoints => endpoints.redis[6379]);
+        let endpoint = this.redis.endpoints.redis[6379];
         this.get = async (key: string) => {
             let ep = (await endpoint).get();
             console.log(`Getting key '${key}' on Redis@${ep.hostname}:${ep.port}`);

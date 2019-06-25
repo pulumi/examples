@@ -2,7 +2,7 @@ FROM jrottenberg/ffmpeg
 
 RUN apt-get update && \
     apt-get install python-dev python-pip -y && \
-    apt-get clean
+    apt-get clean && pip install --upgrade pip
 
 RUN pip install awscli
 

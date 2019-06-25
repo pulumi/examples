@@ -2,22 +2,15 @@
 
 # GCP Functions
 
-An example Pulumi component that deploys a TypeScript function to Google Cloud Functions.
+An example of deploying an HTTP Google Cloud Function endpoint using TypeScript.
+
+## Prerequisites
+
+0. [Ensure you have the latest Node.js and NPM](https://nodejs.org/en/download/)
+2. [Install the Pulumi CLI](https://pulumi.io/quickstart/install.html)
+3. [Configure Pulumi to access your GCP account](https://pulumi.io/quickstart/gcp/setup.html)
 
 ## Running the App
-
-1.  Create a new stack:
-
-    ```
-    $ pulumi stack init gcp-fn
-    ```
-
-1.  Configure GCP project and region:
-
-    ```
-    $ pulumi config set gcp:project <projectname> 
-    $ pulumi config set gcp:region <region>
-    ```
 
 1.  Restore NPM dependencies:
 
@@ -25,7 +18,20 @@ An example Pulumi component that deploys a TypeScript function to Google Cloud F
     $ npm install
     ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+2.  Create a new stack:
+
+    ```
+    $ pulumi stack init gcp-fn
+    ```
+
+3.  Configure your GCP project and region:
+
+    ```
+    $ pulumi config set gcp:project <projectname> 
+    $ pulumi config set gcp:region <region>
+    ```
+
+4.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
     $ pulumi up
@@ -39,12 +45,20 @@ An example Pulumi component that deploys a TypeScript function to Google Cloud F
     Update duration: 39.65130324s
     ```
 
-1.  Check the deployed function endpoint:
+5.  Check the deployed function endpoint:
 
     ```
     $ pulumi stack output url
     https://us-central1-pulumi-development.cloudfunctions.net/greeting-function-7f95447
     $ curl "$(pulumi stack output url)"
     Greetings from Google Cloud Functions!
+    ```
+
+6. Clean up your GCP and Pulumi resources:
+
+    ```
+    $ pulumi destroy
+    ...
+    $ pulumi stack rm
     ...
     ```

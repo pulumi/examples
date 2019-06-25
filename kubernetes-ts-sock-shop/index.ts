@@ -22,7 +22,7 @@ const cartsDb = new k8s.apps.v1beta1.Deployment("carts-db", {
         labels: {
             name: "carts-db"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -80,7 +80,7 @@ const cartsDbService = new k8s.core.v1.Service("carts-db", {
         labels: {
             name: "carts-db"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -89,7 +89,7 @@ const cartsDbService = new k8s.core.v1.Service("carts-db", {
                 targetPort: 27017
             }
         ],
-        selector: cartsDb.spec.apply(s => s.template.metadata.labels)
+        selector: cartsDb.spec.template.metadata.labels
     }
 });
 
@@ -99,7 +99,7 @@ const carts = new k8s.apps.v1beta1.Deployment("carts", {
         labels: {
             name: "carts"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -169,7 +169,7 @@ const cartsService = new k8s.core.v1.Service("carts", {
         labels: {
             name: "carts"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -178,7 +178,7 @@ const cartsService = new k8s.core.v1.Service("carts", {
                 targetPort: 80
             }
         ],
-        selector: carts.spec.apply(s => s.template.metadata.labels)
+        selector: carts.spec.template.metadata.labels
     }
 });
 
@@ -192,7 +192,7 @@ const catalogDb = new k8s.apps.v1beta1.Deployment("catalog-db", {
         labels: {
             name: "catalogue-db"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -239,7 +239,7 @@ const catalogDbService = new k8s.core.v1.Service("catalog-db", {
         labels: {
             name: "catalogue-db"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -248,7 +248,7 @@ const catalogDbService = new k8s.core.v1.Service("catalog-db", {
                 targetPort: 3306
             }
         ],
-        selector: catalogDb.spec.apply(s => s.template.metadata.labels)
+        selector: catalogDb.spec.template.metadata.labels
     }
 });
 
@@ -258,7 +258,7 @@ const catalog = new k8s.apps.v1beta1.Deployment("catalog", {
         labels: {
             name: "catalogue"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -303,7 +303,7 @@ const catalogService = new k8s.core.v1.Service("catalog", {
         labels: {
             name: "catalogue"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -312,7 +312,7 @@ const catalogService = new k8s.core.v1.Service("catalog", {
                 targetPort: 80
             }
         ],
-        selector: catalog.spec.apply(s => s.template.metadata.labels)
+        selector: catalog.spec.template.metadata.labels
     }
 });
 
@@ -323,7 +323,7 @@ const catalogService = new k8s.core.v1.Service("catalog", {
 const frontend = new k8s.apps.v1beta1.Deployment("front-end", {
     metadata: {
         name: "front-end",
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -373,7 +373,7 @@ const frontendService = new k8s.core.v1.Service("front-end", {
         labels: {
             name: "front-end"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         type: "NodePort",
@@ -384,7 +384,7 @@ const frontendService = new k8s.core.v1.Service("front-end", {
                 nodePort: 30001
             }
         ],
-        selector: frontend.spec.apply(s => s.template.metadata.labels)
+        selector: frontend.spec.template.metadata.labels
     }
 });
 
@@ -398,7 +398,7 @@ const ordersDb = new k8s.apps.v1beta1.Deployment("orders-db", {
         labels: {
             name: "orders-db"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -456,7 +456,7 @@ const ordersDbService = new k8s.core.v1.Service("orders-db", {
         labels: {
             name: "orders-db"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -465,7 +465,7 @@ const ordersDbService = new k8s.core.v1.Service("orders-db", {
                 targetPort: 27017
             }
         ],
-        selector: ordersDb.spec.apply(s => s.template.metadata.labels)
+        selector: ordersDb.spec.template.metadata.labels
     }
 });
 
@@ -475,7 +475,7 @@ const orders = new k8s.apps.v1beta1.Deployment("orders", {
         labels: {
             name: "orders"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -545,7 +545,7 @@ const ordersService = new k8s.core.v1.Service("orders", {
         labels: {
             name: "orders"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -554,7 +554,7 @@ const ordersService = new k8s.core.v1.Service("orders", {
                 targetPort: 80
             }
         ],
-        selector: orders.spec.apply(s => s.template.metadata.labels)
+        selector: orders.spec.template.metadata.labels
     }
 });
 
@@ -568,7 +568,7 @@ const payment = new k8s.apps.v1beta1.Deployment("payment", {
         labels: {
             name: "payment"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -613,7 +613,7 @@ const paymentService = new k8s.core.v1.Service("payment", {
         labels: {
             name: "payment"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -622,7 +622,7 @@ const paymentService = new k8s.core.v1.Service("payment", {
                 targetPort: 80
             }
         ],
-        selector: payment.spec.apply(s => s.template.metadata.labels)
+        selector: payment.spec.template.metadata.labels
     }
 });
 
@@ -636,7 +636,7 @@ const queueMaster = new k8s.apps.v1beta1.Deployment("queue-master", {
         labels: {
             name: "queue-master"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -675,7 +675,7 @@ const queueMasterService = new k8s.core.v1.Service("queue-master", {
         annotations: {
             "prometheus.io/path": "/prometheus"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -684,7 +684,7 @@ const queueMasterService = new k8s.core.v1.Service("queue-master", {
                 targetPort: 80
             }
         ],
-        selector: queueMaster.spec.apply(s => s.template.metadata.labels)
+        selector: queueMaster.spec.template.metadata.labels
     }
 });
 
@@ -694,7 +694,7 @@ const rabbitmq = new k8s.apps.v1beta1.Deployment("rabbitmq", {
         labels: {
             name: "rabbitmq"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -737,7 +737,7 @@ const rabbitmqService = new k8s.core.v1.Service("rabbitmq", {
         labels: {
             name: "rabbitmq"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -746,7 +746,7 @@ const rabbitmqService = new k8s.core.v1.Service("rabbitmq", {
                 targetPort: 5672
             }
         ],
-        selector: rabbitmq.spec.apply(s => s.template.metadata.labels)
+        selector: rabbitmq.spec.template.metadata.labels
     }
 });
 
@@ -760,7 +760,7 @@ const shipping = new k8s.apps.v1beta1.Deployment("shipping", {
         labels: {
             name: "shipping"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -830,7 +830,7 @@ const shippingService = new k8s.core.v1.Service("shipping", {
         labels: {
             name: "shipping"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -839,7 +839,7 @@ const shippingService = new k8s.core.v1.Service("shipping", {
                 targetPort: 80
             }
         ],
-        selector: shipping.spec.apply(s => s.template.metadata.labels)
+        selector: shipping.spec.template.metadata.labels
     }
 });
 
@@ -853,7 +853,7 @@ const userDb = new k8s.apps.v1beta1.Deployment("user-db", {
         labels: {
             name: "user-db"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -911,7 +911,7 @@ const userDbService = new k8s.core.v1.Service("user-db", {
         labels: {
             name: "user-db"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -920,7 +920,7 @@ const userDbService = new k8s.core.v1.Service("user-db", {
                 targetPort: 27017
             }
         ],
-        selector: userDb.spec.apply(s => s.template.metadata.labels)
+        selector: userDb.spec.template.metadata.labels
     }
 });
 
@@ -930,7 +930,7 @@ const user = new k8s.apps.v1beta1.Deployment("user", {
         labels: {
             name: "user"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         replicas: 1,
@@ -981,7 +981,7 @@ const userService = new k8s.core.v1.Service("user", {
         labels: {
             name: "user"
         },
-        namespace: sockShopNs.metadata.apply(m => m.name)
+        namespace: sockShopNs.metadata.name
     },
     spec: {
         ports: [
@@ -990,6 +990,6 @@ const userService = new k8s.core.v1.Service("user", {
                 targetPort: 80
             }
         ],
-        selector: user.spec.apply(s => s.template.metadata.labels)
+        selector: user.spec.template.metadata.labels
     }
 });

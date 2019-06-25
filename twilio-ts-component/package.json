@@ -4,8 +4,8 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/pulumi": "^0.16.8",
-        "@pulumi/aws-serverless": "^0.15.1",
+        "@pulumi/pulumi": "latest",
+        "@pulumi/aws-serverless": "latest",
         "twilio": "latest"
     }
 }

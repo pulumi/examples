@@ -1,0 +1,18 @@
+{
+    "name": "gcp-ts-slackbot",
+    "version": "0.1.0",
+    "dependencies": {
+        "@pulumi/gcp": "^0.18.3",
+        "@pulumi/pulumi": "latest",
+        "@google-cloud/firestore": "^1.2.0",
+        "@google-cloud/pubsub": "^0.28.1",
+        "body-parser": "^1.18.3",
+        "express": "^4.16.4",
+        "qs": "^6.7.0",
+        "superagent": "^5.0.2"
+    },
+    "devDependencies": {
+        "@types/qs": "^6.5.2",
+        "@types/superagent": "^4.1.1"
+    }
+}

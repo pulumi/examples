@@ -1,0 +1,2 @@
+twilio>=6.26.0
+googlemaps>=3.0.2

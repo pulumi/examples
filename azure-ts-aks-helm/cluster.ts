@@ -1,14 +1,15 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
+import * as azuread from "@pulumi/azuread";
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as config from "./config";
 
 // Create the AD service principal for the K8s cluster.
-let adApp = new azure.ad.Application("aks");
-let adSp = new azure.ad.ServicePrincipal("aksSp", { applicationId: adApp.applicationId });
-let adSpPassword = new azure.ad.ServicePrincipalPassword("aksSpPassword", {
+let adApp = new azuread.Application("aks");
+let adSp = new azuread.ServicePrincipal("aksSp", { applicationId: adApp.applicationId });
+let adSpPassword = new azuread.ServicePrincipalPassword("aksSpPassword", {
     servicePrincipalId: adSp.id,
     value: config.password,
     endDate: "2099-01-01T00:00:00Z",
@@ -18,23 +19,23 @@ let adSpPassword = new azure.ad.ServicePrincipalPassword("aksSpPassword", {
 export const k8sCluster = new azure.containerservice.KubernetesCluster("aksCluster", {
     resourceGroupName: config.resourceGroup.name,
     location: config.location,
-    agentPoolProfile: {
+    agentPoolProfiles: [{
         name: "aksagentpool",
         count: config.nodeCount,
         vmSize: config.nodeSize,
-    },
+    }],
     dnsPrefix: `${pulumi.getStack()}-kube`,
     linuxProfile: {
         adminUsername: "aksuser",
-        sshKeys: [{
+        sshKey: {
             keyData: config.sshPublicKey,
-        }],
+        },
     },
     servicePrincipal: {
         clientId: adApp.applicationId,
         clientSecret: adSpPassword.value,
     },
-}); 
+});
 
 // Expose a K8s provider instance using our custom cluster instance.
 export const k8sProvider = new k8s.Provider("aksK8s", {

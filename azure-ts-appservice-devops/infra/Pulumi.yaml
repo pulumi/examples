@@ -1,0 +1,14 @@
+name: azure-appservice-devops
+runtime: nodejs
+description: Creates a Todo App on Azure App Service with SQL Database and Application Insights and deploys it to Azure DevOps
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    sqlUsername:
+      description: Azure SQL Server username
+      secret: true
+    sqlPassword:
+      description: Azure SQL Server password (complex enough to satisfy Azure policy)
+      secret: true

@@ -1,0 +1,75 @@
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+.flex {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+.flex .thumbnail {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.flex .caption:last-child {
+    margin-top: auto;
+    padding: 9px !important; /* overwrite inline style injected by JS */
+}
+.no-flexbox .hero-feature {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+.no-flexbox .flex .thumbnail {
+    height: auto !important;
+    padding-bottom: 50px;
+}
+.no-flexbox .flex .caption:last-child {
+    position: absolute;
+    bottom: 0;
+    width: 80%;
+}

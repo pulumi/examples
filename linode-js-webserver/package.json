@@ -1,0 +1,9 @@
+{
+    "name": "webserver-linode",
+    "version": "0.1.0",
+    "main": "index.js",
+    "dependencies": {
+        "@pulumi/pulumi": "latest",
+        "@pulumi/linode": "latest"
+    }
+}

@@ -4,7 +4,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
 
 // Create a resource group to deploy all ARM template resources into.
-const resourceGroup = new azure.core.ResourceGroup("test", { location: "WestUS" });
+const resourceGroup = new azure.core.ResourceGroup("test", { location: azure.Locations.WestUS });
 
 // Create an ARM template deployment using an ordinary JSON ARM template. This could be read from disk, of course.
 const armDeployment = new azure.core.TemplateDeployment("test-dep", {
@@ -71,4 +71,4 @@ const armDeployment = new azure.core.TemplateDeployment("test-dep", {
 });
 
 // Finally, export the allocated storage account name.
-export const storageAccountName = armDeployment.outputs.apply(outs => outs["storageAccountName"]);
+export const storageAccountName = armDeployment.outputs["storageAccountName"];

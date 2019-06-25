@@ -30,7 +30,7 @@ with App Service.
 1. Define SQL Server password (make it complex enough to satisfy Azure policy):
 
     ```
-    pulumi config set --secret azure-appservice:sqlPassword <value>
+    pulumi config set --secret sqlPassword <value>
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:

@@ -1,0 +1,4 @@
+pulumi
+pulumi_azure
+pulumi_azuread
+pulumi_kubernetes

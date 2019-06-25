@@ -5,7 +5,7 @@ import * as cloud from "@pulumi/cloud";
 
 // Get the password to use for Redis from config.
 let config = new pulumi.Config();
-let redisPassword = config.require("redisPassword"); 
+let redisPassword = config.require("redisPassword");
 let redisPort = 6379;
 
 // The data layer for the application
@@ -21,7 +21,7 @@ let redisCache = new cloud.Service("voting-app-cache", {
     },
 });
 
-let redisEndpoint = redisCache.endpoints.apply(endpoints => endpoints.redis[redisPort]);
+let redisEndpoint = redisCache.endpoints.redis[redisPort];
 
 // A custom container for the frontend, which is a Python Flask app
 // Use the 'build' property to specify a folder that contains a Dockerfile.
@@ -31,10 +31,10 @@ let frontend = new cloud.Service("voting-app-frontend", {
         votingAppFrontend: {
             build: "./frontend",   // path to the folder containing the Dockerfile
             memory: 512,
-            ports: [{ port: 80 }],            
-            environment: { 
+            ports: [{ port: 80 }],
+            environment: {
                 // pass the Redis container info in environment variables
-                "REDIS":      redisEndpoint.apply(e => e.hostname),
+                "REDIS":      redisEndpoint.hostname,
                 "REDIS_PORT": redisEndpoint.apply(e => e.port.toString()),
                 "REDIS_PWD":  redisPassword
             }
@@ -43,4 +43,4 @@ let frontend = new cloud.Service("voting-app-frontend", {
 });
 
 // Export a variable that will be displayed during 'pulumi up'
-export let frontendURL = frontend.endpoints.apply(e => e["votingAppFrontend"][80].hostname);
+export let frontendURL = frontend.endpoints["votingAppFrontend"][80].hostname;

@@ -33,11 +33,11 @@ let redisMasterDeployment = new k8s.apps.v1.Deployment("redis-master", {
 });
 let redisMasterService = new k8s.core.v1.Service("redis-master", {
     metadata: {
-        labels: redisMasterDeployment.metadata.apply(meta => meta.labels)
+        labels: redisMasterDeployment.metadata.labels
     },
     spec: {
         ports: [{ port: 6379, targetPort: 6379 }],
-        selector: redisMasterDeployment.spec.apply(spec => spec.template.metadata.labels)
+        selector: redisMasterDeployment.spec.template.metadata.labels,
     }
 });
 
@@ -68,10 +68,10 @@ let redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-replica", {
     }
 });
 let redisReplicaService = new k8s.core.v1.Service("redis-replica", {
-    metadata: { labels: redisReplicaDeployment.metadata.apply(meta => meta.labels) },
+    metadata: { labels: redisReplicaDeployment.metadata.labels },
     spec: {
         ports: [{ port: 6379, targetPort: 6379 }],
-        selector: redisReplicaDeployment.spec.apply(spec => spec.template.metadata.labels)
+        selector: redisReplicaDeployment.spec.template.metadata.labels,
     }
 });
 
@@ -103,18 +103,18 @@ let frontendDeployment = new k8s.apps.v1.Deployment("frontend", {
     }
 });
 let frontendService = new k8s.core.v1.Service("frontend", {
-    metadata: { labels: frontendDeployment.metadata.apply(meta => meta.labels) },
+    metadata: { labels: frontendDeployment.metadata.labels },
     spec: {
         type: isMinikube ? "ClusterIP" : "LoadBalancer",
         ports: [{ port: 80 }],
-        selector: frontendDeployment.spec.apply(spec => spec.template.metadata.labels)
+        selector: frontendDeployment.spec.template.metadata.labels,
     }
 });
 
 // Export the frontend IP.
 export let frontendIp: pulumi.Output<string>;
 if (isMinikube) {
-    frontendIp = frontendService.spec.apply(spec => spec.clusterIP);
+    frontendIp = frontendService.spec.clusterIP;
 } else {
     frontendIp = frontendService.status.apply(status => status.loadBalancer.ingress[0].ip);
 }

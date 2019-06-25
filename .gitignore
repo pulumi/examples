@@ -11,3 +11,5 @@ package-lock.json
 Pulumi.*.yaml
 .idea/
 *.iml
+key.rsa*
+obj/

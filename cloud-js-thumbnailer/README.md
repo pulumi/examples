@@ -68,7 +68,7 @@ with `***`.
     +   │  ├─ aws:lambda:Permission               onNewThumbnail                         created
     +   │  ├─ aws:lambda:Permission               onNewVideo                             created
     +   │  └─ aws:s3:BucketNotification           bucket                                 created
-    +   ├─ aws-infra:network:Network              default-vpc                            created
+    +   ├─ awsx:network:Network              default-vpc                            created
     +   ├─ aws:ecr:Repository                     pulum-dc8d99de-container               created
     +   ├─ cloud:global:infrastructure            global-infrastructure                  created
     +   │  ├─ aws:iam:Role                        pulumi-thumbnailer--task               created
@@ -79,7 +79,7 @@ with `***`.
     +   ├─ cloud:task:Task                        ffmpegThumbTask                        created
     +   │  ├─ aws:cloudwatch:LogGroup             ffmpegThumbTask                        created
     +   │  └─ aws:ecs:TaskDefinition              ffmpegThumbTask                        created
-    +   └─ aws-infra:cluster:Cluster              pulumi-thumbnaile-global               created
+    +   └─ awsx:cluster:Cluster              pulumi-thumbnaile-global               created
     +      ├─ aws:ecs:Cluster                     pulumi-thumbnaile-global               created
     +      └─ aws:ec2:SecurityGroup               pulumi-thumbnaile-global               created
     ...

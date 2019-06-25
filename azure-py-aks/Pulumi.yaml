@@ -1,0 +1,3 @@
+name: azure-py-aks
+runtime: python
+description: A minimal Azure Python Pulumi program

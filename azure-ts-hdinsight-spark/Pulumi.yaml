@@ -1,0 +1,14 @@
+name: azure-ts-hdinsight-spark
+runtime: nodejs
+description: Spark on Azure HDInsight example
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    username:
+      description: Spark username
+      secret: true
+    password:
+      description: "Spark password (complex enough to satisfy Azure policy: 8+ chars of lowercase, uppercase, digits, and special symbols)"
+      secret: true

@@ -1,0 +1,9 @@
+name: aws-ts-stackreference-department
+runtime: nodejs
+description: An AWS TypeScript Pulumi program demonstrating sharing configuration
+  via StackReference resources
+template:
+  description: A minimal AWS TypeScript Pulumi program
+  config:
+    departmentName:
+      description: The department name to use
