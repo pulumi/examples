@@ -1,13 +1,16 @@
 "use strict";
 
+const pulumi = require("@pulumi/pulumi");
 const aws = require("@pulumi/aws");
 
-// let ami  = "ami-7172b611" // AMI for Amazon Linux in us-west-2 (Oregon)
-let ami  = "ami-c55673a0" // AMI for us-east-2 (Ohio)
-// let ami  = "ami-6869aa05" // AMI for us-east-1 (Virginia)
-// let ami  = "ami-31490d51" // AMI for us-west-1 (California)
-// let ami  = "ami-f9dd458a" // AMI for eu-west-1 (Ireland)
-// let ami  = "ami-ea26ce85" // AMI for eu-central-1 (Frankfurt)
+// Get the id for the latest Amazon Linux AMI
+let ami = pulumi.output(aws.getAmi({
+    filters: [
+        { name: "name", values: ["amzn-ami-hvm-*-x86_64-ebs"] },
+    ],
+    owners: ["137112412989"], // Amazon
+    mostRecent: true,
+})).apply(result => result.id);
 
 // create a new security group for port 80
 let group = new aws.ec2.SecurityGroup("web-secgrp", {
