@@ -4,66 +4,41 @@ import * as pulumi from "@pulumi/pulumi";
 const region = aws.config.requireRegion();
 
 const lambdaRole = new aws.iam.Role("lambdaRole", {
-    assumeRolePolicy: JSON.stringify({
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Action": "sts:AssumeRole",
-                "Principal": {
-                    "Service": "lambda.amazonaws.com",
-                },
-                "Effect": "Allow",
-                "Sid": "",
-            },
-        ],
-    })
+    assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: "lambda.amazonaws.com" }),
 });
 
 const lambdaRolePolicy = new aws.iam.RolePolicy("lambdaRolePolicy", {
     role: lambdaRole.id,
-    policy: JSON.stringify({
-        "Version": "2012-10-17",
-        "Statement": [{
-            "Effect": "Allow",
-            "Action": [
+    policy: {
+        Version: "2012-10-17",
+        Statement: [{
+            Effect: "Allow",
+            Action: [
                 "logs:CreateLogGroup",
                 "logs:CreateLogStream",
                 "logs:PutLogEvents"
             ],
-            "Resource": "arn:aws:logs:*:*:*"
-        }]
-    })
+            Resource: "arn:aws:logs:*:*:*",
+        }],
+    },
 });
 
 const sfnRole = new aws.iam.Role("sfnRole", {
-    assumeRolePolicy: JSON.stringify({
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Effect": "Allow",
-                "Principal": {
-                    "Service": `states.${region}.amazonaws.com`
-                },
-                "Action": "sts:AssumeRole"
-            }
-        ]
-    })
+    assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: `states.${region}.amazonaws.com` }),
 });
 
 const sfnRolePolicy = new aws.iam.RolePolicy("sfnRolePolicy", {
     role: sfnRole.id,
-    policy: JSON.stringify({
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Effect": "Allow",
-                "Action": [
-                    "lambda:InvokeFunction"
-                ],
-                "Resource": "*"
-            }
-        ]
-    })
+    policy: {
+        Version: "2012-10-17",
+        Statement: [{
+            Effect: "Allow",
+            Action: [
+                "lambda:InvokeFunction",
+            ],
+            Resource: "*",
+        }],
+    },
 });
 
 const helloFunction = new aws.serverless.Function(
