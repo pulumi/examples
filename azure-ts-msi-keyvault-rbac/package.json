@@ -6,6 +6,7 @@
     },
     "dependencies": {
         "@pulumi/azure": "latest",
-        "@pulumi/pulumi": "latest"
+        "@pulumi/pulumi": "latest",
+        "@pulumi/random": "latest"
     }
 }

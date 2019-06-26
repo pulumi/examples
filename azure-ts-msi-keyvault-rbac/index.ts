@@ -1,5 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
+import * as random from "@pulumi/random";
 import { execSync} from "child_process";
 
 // Create a resource group
@@ -22,11 +23,12 @@ const storageContainer = new azure.storage.Container("files", {
 });
 
 // Azure SQL Server that we want to access from the application
+const administratorLoginPassword = new random.RandomString("password", { length: 16 }).result;
 const sqlServer = new azure.sql.SqlServer("sqlserver", {
     resourceGroupName: resourceGroup.name,
-
+    // The login and password are required but won't be used in our application
     administratorLogin: "manualadmin",
-    administratorLoginPassword: "WeWontUseTh1sPwd",
+    administratorLoginPassword,
     version: "12.0",
 });
 
@@ -34,12 +36,11 @@ const sqlServer = new azure.sql.SqlServer("sqlserver", {
 const database = new azure.sql.Database("sqldb", {
     resourceGroupName: resourceGroup.name,
     serverName: sqlServer.name,
-    requestedServiceObjectiveName: "S0"
+    requestedServiceObjectiveName: "S0",
 });
 
 // The connection string that has no credentials in it: authertication will come through MSI
-const connectionString = pulumi.all([sqlServer.name, database.name]).apply(([server, db]) => 
-    `Server=tcp:${server}.database.windows.net;Database=${db};`);
+const connectionString = pulumi.interpolate`Server=tcp:${sqlServer.name}.database.windows.net;Database=${database.name};`;
 
 // A file in Blob Storage that we want to access from the application
 const textBlob = new azure.storage.Blob("text", {
@@ -74,11 +75,12 @@ const clientConfig = pulumi.output(azure.core.getClientConfig({}));
 const tenantId = clientConfig.apply(c => c.tenantId);
 
 // Determine the ID of the current user or service principal
-const currentPrincipal = clientConfig.apply(c => 
-    c.servicePrincipalObjectId !== "" 
+const currentPrincipal = clientConfig.apply(c =>
+    c.servicePrincipalObjectId !== ""
     // Current, only service principal ID is available in the context
     ? c.servicePrincipalObjectId
     // If logged in with a user, find their ID via Azure CLI
+    // see https://github.com/terraform-providers/terraform-provider-azurerm/issues/3234
     : <string>JSON.parse(execSync("az ad signed-in-user show --query objectId").toString()));
 
 // Key Vault to store secrets (e.g. Blob URL with SAS)
@@ -88,12 +90,13 @@ const vault = new azure.keyvault.KeyVault("vault", {
         name: "standard",
     },
     tenantId: tenantId,
-    // It won't setup any access if pulumi is executed under user account
     accessPolicies: [{
         tenantId,
+        // The current principal has to be granted permissions to Key Vault so that it can actually add and then remove
+        // secrets to/from the Key Vault. Otherwise, 'pulumi up' and 'pulumi destroy' operations will fail.
         objectId: currentPrincipal,
         secretPermissions: ["delete", "get", "list", "set"],
-    }]        
+    }]
 });
 
 // Put the URL of the zip Blob to KV
