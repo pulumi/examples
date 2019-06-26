@@ -4,9 +4,7 @@ import * as random from "@pulumi/random";
 import { execSync} from "child_process";
 
 // Create a resource group
-const resourceGroup = new azure.core.ResourceGroup("resourceGroup", {
-    location: "West US",
-});
+const resourceGroup = new azure.core.ResourceGroup("resourceGroup");
 
 // Create a storage account for Blobs
 const storageAccount = new azure.storage.Account("storage", {

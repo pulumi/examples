@@ -2,7 +2,7 @@
 
 # Managing Secrets and Secure Access in Azure Applications
 
-[Managed identities](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/) for Azure resources provides Azure services with an automatically managed identity in Azure Active Directory (Azure AD). 
+[Managed identities](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/) for Azure resources provides Azure services with an automatically managed identity in Azure Active Directory (Azure AD).
 
 This example demostrates using a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
 
@@ -40,9 +40,15 @@ The application consists of several parts:
     $ dotnet publish webapp
     ```
 
+1. Set an appropriate Azure location like:
+
+    ```
+    $ pulumi config set azure:location westus
+    ```
+
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...
