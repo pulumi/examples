@@ -16,7 +16,7 @@ let siteDir = "www"; // directory for content files
 // For each file in the directory, create an S3 object stored in `siteBucket`
 for (let item of require("fs").readdirSync(siteDir)) {
     let filePath = require("path").join(siteDir, item);
-    let object = new aws.s3.BucketObject(item, { 
+    let object = new aws.s3.BucketObject(item, {
         bucket: siteBucket,                               // reference the s3.Bucket object
         source: new pulumi.asset.FileAsset(filePath),     // use FileAsset to point to a file
         contentType: mime.getType(filePath) || undefined, // set the MIME type of the file
@@ -25,7 +25,7 @@ for (let item of require("fs").readdirSync(siteDir)) {
 
 // Create an S3 Bucket Policy to allow public read of all objects in bucket
 function publicReadPolicyForBucket(bucketName) {
-    return JSON.stringify({
+    return {
         Version: "2012-10-17",
         Statement: [{
             Effect: "Allow",
@@ -37,7 +37,7 @@ function publicReadPolicyForBucket(bucketName) {
                 `arn:aws:s3:::${bucketName}/*` // policy refers to bucket name explicitly
             ]
         }]
-    })
+    };
 }
 
 // Set the access policy for the bucket so all objects are readable
@@ -48,4 +48,4 @@ let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
 
 // Stack exports
 exports.bucketName = siteBucket.bucket;
-exports.websiteUrl = siteBucket.websiteEndpoint; 
+exports.websiteUrl = siteBucket.websiteEndpoint;

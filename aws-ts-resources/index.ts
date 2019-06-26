@@ -188,42 +188,32 @@ const cluster = new aws.ecs.Cluster("mycluster");
 
 // IAM
 const role = new aws.iam.Role("myrole", {
-    assumeRolePolicy: JSON.stringify({
-        Version: "2012-10-17",
-        Statement: [{
-            Action: "sts:AssumeRole",
-            Principal: {
-                Service: "ec2.amazonaws.com"
-            },
-            Effect: "Allow",
-            Sid: ""
-        }]
-    })
+    assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: "ec2.amazonaws.com" }),
 });
 
 const rolePolicy = new aws.iam.RolePolicy("myrolepolicy", {
     role: role.id,
-    policy: JSON.stringify({
+    policy: {
         Version: "2012-10-17",
         Statement: [{
             Action: [ "ec2:Describe*" ],
             Effect: "Allow",
-            Resource: "*"
-        }]
-    })
+            Resource: "*",
+        }],
+    },
 });
 
 const policy = new aws.iam.Policy("mypolicy", {
-    policy: JSON.stringify({
+    policy: {
         Version: "2012-10-17",
         Statement: [{
             Action: [
               "ec2:Describe*"
             ],
             Effect: "Allow",
-            Resource: "*"
-        }]
-    })
+            Resource: "*",
+        }],
+    },
 });
 
 const rolePolicyAttachment = new aws.iam.RolePolicyAttachment("myrolepolicyattachment", {
@@ -269,7 +259,7 @@ const stream = new aws.kinesis.Stream("mystream", {
 // })
 
 // function publicReadPolicyForBucket(bucketName: string) {
-//     return JSON.stringify({
+//     return {
 //         Version: "2012-10-17",
 //         Statement: [{
 //             Effect: "Allow",
@@ -281,7 +271,7 @@ const stream = new aws.kinesis.Stream("mystream", {
 //                 `arn:aws:s3:::${bucketName}/*` // policy refers to bucket name explicitly
 //             ]
 //         }]
-//     });
+//     };
 // }
 
 // SQS
