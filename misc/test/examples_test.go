@@ -28,6 +28,11 @@ func TestExamples(t *testing.T) {
 		azureEnviron = "public"
 		fmt.Println("Defaulting ARM_ENVIRONMENT to 'public'.  You can override using the ARM_ENVIRONMENT variable")
 	}
+	azureLocation := os.Getenv("AZURE_LOCATION")
+	if azureLocation == "" {
+		azureLocation = "westus"
+		fmt.Println("Defaulting AZURE_LOCATION to 'westus'.  You can override using the AZURE_LOCATION variable")
+	}
 	cwd, err := os.Getwd()
 	if !assert.NoError(t, err, "expected a valid working directory: %v", err) {
 		return
@@ -271,6 +276,7 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
+				"azure:location": azureLocation,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
