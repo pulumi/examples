@@ -2,8 +2,7 @@
     "name": "azure-ts-functions",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "^10.3.3",
-        "azure-functions-ts-essentials": "^1.3.2"
+        "@types/node": "^10.3.3"
     },
     "dependencies": {
         "@pulumi/azure": "latest",

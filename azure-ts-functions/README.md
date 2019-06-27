@@ -2,7 +2,7 @@
 
 # Azure Functions
 
-An example Pulumi component that deploys a TypeScript function to Azure Functions.
+An example Pulumi program that deploys a TypeScript function to Azure Functions.
 
 ## Running the App
 
@@ -22,6 +22,12 @@ An example Pulumi component that deploys a TypeScript function to Azure Function
 
     ```
     $ npm install
+    ```
+
+1.  Configure the location to deploy the example to:
+
+    ```
+    $ pulumi config set azure:location <location>
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
