@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace webapp
 {
-
     public class Startup
     {
         public Startup(IConfiguration configuration)

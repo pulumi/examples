@@ -72,14 +72,13 @@ const blob = new azure.storage.ZipBlob("zip", {
 const clientConfig = pulumi.output(azure.core.getClientConfig({}));
 const tenantId = clientConfig.apply(c => c.tenantId);
 
-// Determine the ID of the current user or service principal
 const currentPrincipal = clientConfig.apply(c =>
-    c.servicePrincipalObjectId !== ""
-    // Current, only service principal ID is available in the context
-    ? c.servicePrincipalObjectId
-    // If logged in with a user, find their ID via Azure CLI
+    // Currently, only service principal ID is available in the context.  If we are provided the principle in the config, then
+    // just use it.  Otherwise, if logged in with a user, find their ID via Azure CLI.
     // see https://github.com/terraform-providers/terraform-provider-azurerm/issues/3234
-    : <string>JSON.parse(execSync("az ad signed-in-user show --query objectId").toString()));
+    c.servicePrincipalObjectId !== ""
+        ? c.servicePrincipalObjectId
+        : <string>JSON.parse(execSync("az ad signed-in-user show --query objectId").toString()));
 
 // Key Vault to store secrets (e.g. Blob URL with SAS)
 const vault = new azure.keyvault.KeyVault("vault", {
