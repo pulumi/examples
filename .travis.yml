@@ -1,6 +1,6 @@
 if: branch = master
 language: go
-go: 1.11
+go: 1.12.x
 sudo: true # give us 7.5GB and >2 bursted cores.
 git:
     depth: false
