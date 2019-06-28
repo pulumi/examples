@@ -76,17 +76,6 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-py-s3-folder"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), func(body string) bool {
-					return assert.Contains(t, body, "Hello, Pulumi!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder-component"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
@@ -120,6 +109,34 @@ func TestExamples(t *testing.T) {
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPHelloWorld(t, stack.Outputs["webUrl"])
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-py-s3-folder"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), func(body string) bool {
+					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-py-webserver"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, "http://"+stack.Outputs["public_dns"].(string), func(body string) bool {
+					return assert.Contains(t, body, "Hello, World!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-py-stepfunctions"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
 			},
 		}),
 		// base.With(integration.ProgramTestOptions{
@@ -380,19 +397,6 @@ func TestExamples(t *testing.T) {
 		// 		assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
 		// 			return assert.Contains(t, body, "<title>Node/Angular Todo App</title>>")
 		// 		})
-		// 	},
-		// }),
-		// TODO[pulumi/pulumi#1606] This test is failing in CI, disabling until this issue is resolved.
-		// base.With(integration.ProgramTestOptions{
-		// 	Dir:           path.Join(cwd, "..", "..", "aws-py-webserver"),
-		// 	Verbose:       true,
-		// 	DebugLogLevel: 8,
-		// 	DebugUpdates:  true,
-		// 	Config: map[string]string{
-		// 		"aws:region": awsRegion,
-		// 	},
-		// 	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		// 		assertHTTPHelloWorld(t, stack.Outputs["public_dns"])
 		// 	},
 		// }),
 	}
