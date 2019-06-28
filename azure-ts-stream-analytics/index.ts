@@ -1,6 +1,8 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
+import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
+import { createSharedAccessToken } from "./token";
 
 // Create an Azure Resource Group
 const resourceGroup = new azure.core.ResourceGroup("streams-rg");
@@ -93,3 +95,7 @@ outputHub.onEvent("analytics-output", {
         console.log(JSON.stringify(event));
     },
 });
+
+const url = pulumi.interpolate`https://${namespace.name}.servicebus.windows.net`;
+export const sasToken = pulumi.all([url, namespace.defaultPrimaryKey]).apply(([u, pk]) => createSharedAccessToken(u, "RootManageSharedAccessKey", pk));
+export const inputEndpoint = pulumi.interpolate`${url}/${inputHub.name}/messages?timeout=60&api-version=2014-01`;

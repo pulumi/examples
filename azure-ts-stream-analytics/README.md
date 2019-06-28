@@ -56,3 +56,11 @@ An example Pulumi program that deploys an Azure Stream Analytics job to transfor
     [{"Make":"Kia","Sales":3};{"Make":"Honda","Sales":1}]
 
     ```
+
+    You can send a message with a `curl` command:
+
+    ```
+    curl -X POST '$(pulumi stack output inputEndpoint)' -H 'Authorization: $(pulumi stack output sasToken)' -H 'Content-Type: application/atom+xml;type=entry;charset=utf-8' -d '{"Make":"Kia","Sales":2,"Time":"2019-06-26T10:22:36Z"}'
+    ```
+
+1.  [Start the Stream Analytics job](https://docs.microsoft.com/en-us/azure/stream-analytics/start-job). The job will start emitting messages to the output Event Hub once per minute. The Azure Function `analytics-output` will start printing those events into the console (you'd have to open the function console in the Azure portal to see them).
