@@ -123,6 +123,12 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-py-stepfunctions"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-py-webserver"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
@@ -134,18 +140,12 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-py-stepfunctions"),
+			Dir: path.Join(cwd, "..", "..", "aws-ts-airflow"),
 			Config: map[string]string{
-				"aws:region": awsRegion,
+				"aws:region":         awsRegion,
+				"airflow:dbPassword": "secretP4ssword",
 			},
 		}),
-		// base.With(integration.ProgramTestOptions{
-		// 	Dir: path.Join(cwd, "..", "..", "aws-ts-airflow"),
-		// 	Config: map[string]string{
-		// 		"aws:region":         awsRegion,
-		// 		"airflow:dbPassword": "secretP4ssword",
-		// 	},
-		// }),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-apigateway"),
 			Config: map[string]string{
@@ -159,6 +159,15 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
+
+		// aws-ts-apigateway-auth0 requires manual interaction with auth0
+
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-appsync"),
+			Config: map[string]string{
+				"aws:region":         awsRegion,
+			},
+		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-assume-role", "create-role"),
 			Config: map[string]string{
@@ -166,16 +175,57 @@ func TestExamples(t *testing.T) {
 				"create-role:unprivilegedUsername": "unpriv",
 			},
 		}),
+
+		// aws-ts-assume-role/assume-role requires output of aws-ts-assume-role/create-role
+
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-containers"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				maxWait := 10 * time.Minute
+				maxWait := 15 * time.Minute
 				endpoint := stack.Outputs["frontendURL"].(string)
 				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
+			},
+		}),
+
+		// Cannot run this without aws-iam-authenticator being installed on the environment
+		// this isn't something that can be done right now in our testing
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-eks"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//}),
+		//// Cannot run this without aws-iam-authenticator being installed on the environment
+		//// this isn't something that can be done right now in our testing
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-eks-hello-world"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		maxWait := 10 * time.Minute
+		//		endpoint := stack.Outputs["serviceHostname"].(string)
+		//		assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+		//			return assert.Contains(t, body, "Welcome to nginx")
+		//		})
+		//	},
+		//}),
+
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-hello-fargate"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["url"].(string)
+				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello World!")
 				})
 			},
 		}),
@@ -194,23 +244,35 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 		}),
+
+		//// NEED TO COME BACK TO THIS ONE TO GET RID OF A BAD DEP
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
+		//	Config: map[string]string{
+		//		"aws:region":     awsRegion,
+		//		"dbUser":         "testUser",
+		//		"dbPassword":     "2@Password@2",
+		//		"dbRootPassword": "2@Password@2",
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		// Due to setup time on the vm this output does not show up for several minutes so
+		//		// increase wait time a bit
+		//		maxWait := 10 * time.Minute
+		//		assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], maxWait, func(body string) bool {
+		//			return assert.Contains(t, body, "New Note")
+		//		})
+		//	},
+		//}),
+
 		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
+			Dir: path.Join(cwd, "..", "..", "aws-ts-s3-lambda-copyzip"),
 			Config: map[string]string{
-				"aws:region":     awsRegion,
-				"dbUser":         "testUser",
-				"dbPassword":     "2@Password@2",
-				"dbRootPassword": "2@Password@2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				// Due to setup time on the vm this output does not show up for several minutes so
-				// increase wait time a bit
-				maxWait := 10 * time.Minute
-				assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], maxWait, func(body string) bool {
-					return assert.Contains(t, body, "New Note")
-				})
+				"aws:region": awsRegion,
 			},
 		}),
+
+		// aws-ts-serverless-raw requires dotnet installed and a command ran pre-testing
+
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-slackbot"),
 			Config: map[string]string{
@@ -219,6 +281,10 @@ func TestExamples(t *testing.T) {
 				"mentionbot:verificationToken": "YYY",
 			},
 		}),
+
+		// aws-ts-stackreference is an intermingled example that requires inputs from other stacks
+		// aws-ts-static-website needs reworked to include a ACM cert
+
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-stepfunctions"),
 			Config: map[string]string{
@@ -231,202 +297,196 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 		}),
-		// base.With(integration.ProgramTestOptions{
-		// 	Dir: path.Join(cwd, "..", "..", "aws-ts-twitter-athena"),
-		// 	Config: map[string]string{
-		// 		"aws:region": awsRegion,
-		// 		"aws-ts-twitter-athena:twitterConsumerKey":       "12345",
-		// 		"aws-ts-twitter-athena:twitterConsumerSecret":    "xyz",
-		// 		"aws-ts-twitter-athena:twitterAccessTokenKey":    "12345",
-		// 		"aws-ts-twitter-athena:twitterAccessTokenSecret": "xyz",
-		// 		"aws-ts-twitter-athena:twitterQuery":             "smurfs",
-		// 	},
-		// }),
-
-		// Test disabled due to flakiness (often times out when destroying)
-		// https://github.com/pulumi/examples/issues/260
-		/*
-			base.With(integration.ProgramTestOptions{
-				Dir: path.Join(cwd, "..", "..", "aws-ts-url-shortener-cache-http"),
-				Config: map[string]string{
-					"aws:region":    awsRegion,
-					"redisPassword": "s3cr7Password",
-				},
-			}),
-		*/
-
-		// Test disabled due to flakiness (often times out when destroying)
-		// https://github.com/pulumi/examples/issues/260
-		/*
-			base.With(integration.ProgramTestOptions{
-				Dir: path.Join(cwd, "..", "..", "aws-ts-voting-app"),
-				Config: map[string]string{
-					"aws:region":    awsRegion,
-					"redisPassword": "s3cr7Password",
-				},
-			}),
-		*/
 		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
-			Config: map[string]string{
-				"azure:environment": azureEnviron,
-				"username":          "testuser",
-				"password":          "testTEST1234+-*/",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["publicIP"])
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "azure-ts-appservice"),
-			Config: map[string]string{
-				"azure:environment": azureEnviron,
-				"sqlPassword":       "2@Password@2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
-			Config: map[string]string{
-				"azure:environment": azureEnviron,
-				"azure:location": azureLocation,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure Functions!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "cloud-js-api"),
+			Dir: path.Join(cwd, "..", "..", "aws-ts-twitter-athena"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", func(body string) bool {
-					return assert.Contains(t, body, "{\"route\":\"hello\",\"count\":1}")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "cloud-js-containers"),
-			Config: map[string]string{
-				"aws:region":           awsRegion,
-				"cloud-aws:useFargate": "true",
+				"aws-ts-twitter-athena:twitterConsumerKey":       "12345",
+				"aws-ts-twitter-athena:twitterConsumerSecret":    "xyz",
+				"aws-ts-twitter-athena:twitterAccessTokenKey":    "12345",
+				"aws-ts-twitter-athena:twitterAccessTokenSecret": "xyz",
+				"aws-ts-twitter-athena:twitterQuery":             "smurfs",
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "cloud-js-httpserver"),
+			Dir: path.Join(cwd, "..", "..", "aws-ts-url-shortener-cache-http"),
 			Config: map[string]string{
-				"cloud:provider": "aws",
-				"aws:region":     awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", func(body string) bool {
-					return assert.Contains(t, body, "{\"route\":\"/hello\",\"count\":1}")
-				})
+				"aws:region":    awsRegion,
+				"redisPassword": "s3cr7Password",
 			},
 		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "cloud-js-thumbnailer"),
-			Config: map[string]string{
-				// use us-west-2 to assure fargate
-				"aws:region":           awsRegion,
-				"cloud-aws:useFargate": "true",
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener"),
-			Config: map[string]string{
-				"aws:region":           awsRegion,
-				"redisPassword":        "s3cr7Password",
-				"cloud:provider":       "aws",
-				"cloud-aws:useFargate": "true",
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache"),
-			Config: map[string]string{
-				"aws:region":           awsRegion,
-				"redisPassword":        "s3cr7Password",
-				"cloud:provider":       "aws",
-				"cloud-aws:useFargate": "true",
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache-http"),
-			Config: map[string]string{
-				"aws:region":           awsRegion,
-				"redisPassword":        "s3cr7Password",
-				"cloud:provider":       "aws",
-				"cloud-aws:useFargate": "true",
-			},
-			// TODO: This test is not returning a valid payload see issue: https://github.com/pulumi/examples/issues/155
-			// ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			// 	assertHTTPResult(t, stack.Outputs["endpointUrl"], func(body string) bool {
-			// 		return assert.Contains(t, body, "<title>Short URL Manager</title>")
-			// 	})
-			// },
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "azure-py-webserver"),
-			Config: map[string]string{
-				"azure:environment":  azureEnviron,
-				"azure-web:username": "myusername",
-				"azure-web:password": "Hunter2hunter2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["public_ip"])
-			},
-		}),
-		// TODO: This test fails due to a bug in the Terraform Azure provider in which the
-		// service principal is not available when attempting to create the K8s cluster.
-		// See the azure-ts-aks-example readme for more detail.
-		// base.With(integration.ProgramTestOptions{
-		// 	Dir:       path.Join(cwd, "..", "..", "azure-ts-aks-mean"),
-		// 	Config: map[string]string{
-		// 		"azure:environment": azureEnviron,
-		// 		"password":          "testTEST1234+_^$",
-		// 		"sshPublicKey":      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
-		// 	},
-		// 	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		// 		assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
-		// 			return assert.Contains(t, body, "<title>Node/Angular Todo App</title>>")
-		// 		})
-		// 	},
-		// }),
+
+		// Test disabled due to flakiness (often times out when destroying)
+		//// https://github.com/pulumi/examples/issues/260
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-voting-app"),
+		//	Config: map[string]string{
+		//		"aws:region":    awsRegion,
+		//		"redisPassword": "s3cr7Password",
+		//	},
+		//}),
+
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
+		//	Config: map[string]string{
+		//		"azure:environment": azureEnviron,
+		//		"username":          "testuser",
+		//		"password":          "testTEST1234+-*/",
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPHelloWorld(t, stack.Outputs["publicIP"])
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "azure-ts-appservice"),
+		//	Config: map[string]string{
+		//		"azure:environment": azureEnviron,
+		//		"sqlPassword":       "2@Password@2",
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+		//			return assert.Contains(t, body, "Greetings from Azure App Service!")
+		//		})
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
+		//	Config: map[string]string{
+		//		"azure:environment": azureEnviron,
+		//		"azure:location": azureLocation,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+		//			return assert.Contains(t, body, "Greetings from Azure Functions!")
+		//		})
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "cloud-js-api"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", func(body string) bool {
+		//			return assert.Contains(t, body, "{\"route\":\"hello\",\"count\":1}")
+		//		})
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "cloud-js-containers"),
+		//	Config: map[string]string{
+		//		"aws:region":           awsRegion,
+		//		"cloud-aws:useFargate": "true",
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "cloud-js-httpserver"),
+		//	Config: map[string]string{
+		//		"cloud:provider": "aws",
+		//		"aws:region":     awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", func(body string) bool {
+		//			return assert.Contains(t, body, "{\"route\":\"/hello\",\"count\":1}")
+		//		})
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "cloud-js-thumbnailer"),
+		//	Config: map[string]string{
+		//		// use us-west-2 to assure fargate
+		//		"aws:region":           awsRegion,
+		//		"cloud-aws:useFargate": "true",
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener"),
+		//	Config: map[string]string{
+		//		"aws:region":           awsRegion,
+		//		"redisPassword":        "s3cr7Password",
+		//		"cloud:provider":       "aws",
+		//		"cloud-aws:useFargate": "true",
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache"),
+		//	Config: map[string]string{
+		//		"aws:region":           awsRegion,
+		//		"redisPassword":        "s3cr7Password",
+		//		"cloud:provider":       "aws",
+		//		"cloud-aws:useFargate": "true",
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "cloud-ts-url-shortener-cache-http"),
+		//	Config: map[string]string{
+		//		"aws:region":           awsRegion,
+		//		"redisPassword":        "s3cr7Password",
+		//		"cloud:provider":       "aws",
+		//		"cloud-aws:useFargate": "true",
+		//	},
+		//	// TODO: This test is not returning a valid payload see issue: https://github.com/pulumi/examples/issues/155
+		//	// ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//	// 	assertHTTPResult(t, stack.Outputs["endpointUrl"], func(body string) bool {
+		//	// 		return assert.Contains(t, body, "<title>Short URL Manager</title>")
+		//	// 	})
+		//	// },
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "azure-py-webserver"),
+		//	Config: map[string]string{
+		//		"azure:environment":  azureEnviron,
+		//		"azure-web:username": "myusername",
+		//		"azure-web:password": "Hunter2hunter2",
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPHelloWorld(t, stack.Outputs["public_ip"])
+		//	},
+		//}),
+		//// TODO: This test fails due to a bug in the Terraform Azure provider in which the
+		//// service principal is not available when attempting to create the K8s cluster.
+		//// See the azure-ts-aks-example readme for more detail.
+		//// base.With(integration.ProgramTestOptions{
+		//// 	Dir:       path.Join(cwd, "..", "..", "azure-ts-aks-mean"),
+		//// 	Config: map[string]string{
+		//// 		"azure:environment": azureEnviron,
+		//// 		"password":          "testTEST1234+_^$",
+		//// 		"sshPublicKey":      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
+		//// 	},
+		//// 	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//// 		assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+		//// 			return assert.Contains(t, body, "<title>Node/Angular Todo App</title>>")
+		//// 		})
+		//// 	},
+		//// }),
 	}
 
 	longTests := []integration.ProgramTestOptions{
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "azure-ts-aks-helm"),
-			Config: map[string]string{
-				"azure:environment": azureEnviron,
-				"password":          "testTEST1234+_^$",
-				"sshPublicKey":      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["serviceIP"], func(body string) bool {
-					return assert.Contains(t, body, "It works!")
-				})
-			},
-		}),
-		// TODO: This test fails due to a bug in the Terraform Azure provider in which the
-		// service principal is not available when attempting to create the K8s cluster.
-		// See the azure-ts-aks-multicluster readme for more detail and
-		// https://github.com/terraform-providers/terraform-provider-azurerm/issues/1635.
-		// base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "azure-ts-aks-multicluster"),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "azure-ts-aks-helm"),
 		//	Config: map[string]string{
 		//		"azure:environment": azureEnviron,
 		//		"password":          "testTEST1234+_^$",
 		//		"sshPublicKey":      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
 		//	},
-		// }),
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPResult(t, stack.Outputs["serviceIP"], func(body string) bool {
+		//			return assert.Contains(t, body, "It works!")
+		//		})
+		//	},
+		//}),
+		//// TODO: This test fails due to a bug in the Terraform Azure provider in which the
+		//// service principal is not available when attempting to create the K8s cluster.
+		//// See the azure-ts-aks-multicluster readme for more detail and
+		//// https://github.com/terraform-providers/terraform-provider-azurerm/issues/1635.
+		//// base.With(integration.ProgramTestOptions{
+		////	Dir: path.Join(cwd, "..", "..", "azure-ts-aks-multicluster"),
+		////	Config: map[string]string{
+		////		"azure:environment": azureEnviron,
+		////		"password":          "testTEST1234+_^$",
+		////		"sshPublicKey":      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
+		////	},
+		//// }),
 	}
 
 	tests := shortTests
