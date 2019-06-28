@@ -1,8 +1,13 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
 
+// use first 10 characters of the stackname as prefix for resource names
+const prefix = pulumi.getStack().substring(0, 9);
+
 // Create an Azure Resource Group
-const resourceGroup = new azure.core.ResourceGroup("resourceGroup");
+const resourceGroup = new azure.core.ResourceGroup(`${prefix}-rg`, {
+    location: azure.Locations.WestUS2,
+});
 
 // Create an HTTP Azure Function which will be the "backend" of our API.
 // It accepts a name in the query string and returns a JSON back with the greeting and timestamp.

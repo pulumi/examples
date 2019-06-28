@@ -28,10 +28,10 @@ func TestExamples(t *testing.T) {
 		azureEnviron = "public"
 		fmt.Println("Defaulting ARM_ENVIRONMENT to 'public'.  You can override using the ARM_ENVIRONMENT variable")
 	}
-	azureLocation := os.Getenv("AZURE_LOCATION")
+	azureLocation := os.Getenv("ARM_LOCATION")
 	if azureLocation == "" {
 		azureLocation = "westus"
-		fmt.Println("Defaulting AZURE_LOCATION to 'westus'.  You can override using the AZURE_LOCATION variable")
+		fmt.Println("Defaulting ARM_LOCATION to 'westus'.  You can override using the ARM_LOCATION variable")
 	}
 	cwd, err := os.Getwd()
 	if !assert.NoError(t, err, "expected a valid working directory: %v", err) {
@@ -51,316 +51,411 @@ func TestExamples(t *testing.T) {
 	}
 
 	shortTests := []integration.ProgramTestOptions{
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-js-containers"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				maxWait := 10 * time.Minute
-				endpoint := stack.Outputs["frontendURL"].(string)
-				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
-					return assert.Contains(t, body, "Hello, Pulumi!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), func(body string) bool {
-					return assert.Contains(t, body, "Hello, Pulumi!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder-component"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["websiteUrl"].(string), func(body string) bool {
-					return assert.Contains(t, body, "Hello, Pulumi!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-js-sqs-slack"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-				"slackToken": "token",
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-js-webserver"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["publicHostName"])
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-js-webserver-component"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["webUrl"])
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-py-s3-folder"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), func(body string) bool {
-					return assert.Contains(t, body, "Hello, Pulumi!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-py-stepfunctions"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-py-webserver"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["public_dns"].(string), func(body string) bool {
-					return assert.Contains(t, body, "Hello, World!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-airflow"),
-			Config: map[string]string{
-				"aws:region":         awsRegion,
-				"airflow:dbPassword": "secretP4ssword",
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-apigateway"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				maxWait := 10 * time.Minute
-				endpoint := stack.Outputs["endpoint"].(string)
-				assertHTTPResultWithRetry(t, endpoint+"hello", maxWait, func(body string) bool {
-					return assert.Contains(t, body, "route")
-				})
-			},
-		}),
-
-		// aws-ts-apigateway-auth0 requires manual interaction with auth0
-
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-appsync"),
-			Config: map[string]string{
-				"aws:region":         awsRegion,
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-assume-role", "create-role"),
-			Config: map[string]string{
-				"aws:region":                       awsRegion,
-				"create-role:unprivilegedUsername": "unpriv",
-			},
-		}),
-
-		// aws-ts-assume-role/assume-role requires output of aws-ts-assume-role/create-role
-
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-containers"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				maxWait := 15 * time.Minute
-				endpoint := stack.Outputs["frontendURL"].(string)
-				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
-					return assert.Contains(t, body, "Hello, Pulumi!")
-				})
-			},
-		}),
-
-		// Cannot run this without aws-iam-authenticator being installed on the environment
-		// this isn't something that can be done right now in our testing
 		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "aws-ts-eks"),
+		//	Dir: path.Join(cwd, "..", "..", "aws-js-containers"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		maxWait := 10 * time.Minute
+		//		endpoint := stack.Outputs["frontendURL"].(string)
+		//		assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+		//			return assert.Contains(t, body, "Hello, Pulumi!")
+		//		})
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), func(body string) bool {
+		//			return assert.Contains(t, body, "Hello, Pulumi!")
+		//		})
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-js-s3-folder-component"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPResult(t, stack.Outputs["websiteUrl"].(string), func(body string) bool {
+		//			return assert.Contains(t, body, "Hello, Pulumi!")
+		//		})
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-js-sqs-slack"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//		"slackToken": "token",
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-js-webserver"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPHelloWorld(t, stack.Outputs["publicHostName"])
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-js-webserver-component"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPHelloWorld(t, stack.Outputs["webUrl"])
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-py-s3-folder"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), func(body string) bool {
+		//			return assert.Contains(t, body, "Hello, Pulumi!")
+		//		})
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-py-stepfunctions"),
 		//	Config: map[string]string{
 		//		"aws:region": awsRegion,
 		//	},
 		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-py-webserver"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		assertHTTPResult(t, "http://"+stack.Outputs["public_dns"].(string), func(body string) bool {
+		//			return assert.Contains(t, body, "Hello, World!")
+		//		})
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-airflow"),
+		//	Config: map[string]string{
+		//		"aws:region":         awsRegion,
+		//		"airflow:dbPassword": "secretP4ssword",
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-apigateway"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		maxWait := 10 * time.Minute
+		//		endpoint := stack.Outputs["endpoint"].(string)
+		//		assertHTTPResultWithRetry(t, endpoint+"hello", maxWait, func(body string) bool {
+		//			return assert.Contains(t, body, "route")
+		//		})
+		//	},
+		//}),
+		//
+		//// aws-ts-apigateway-auth0 requires manual interaction with auth0
+		//
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-appsync"),
+		//	Config: map[string]string{
+		//		"aws:region":         awsRegion,
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-assume-role", "create-role"),
+		//	Config: map[string]string{
+		//		"aws:region":                       awsRegion,
+		//		"create-role:unprivilegedUsername": "unpriv",
+		//	},
+		//}),
+		//
+		//// aws-ts-assume-role/assume-role requires output of aws-ts-assume-role/create-role
+		//
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-containers"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		maxWait := 15 * time.Minute
+		//		endpoint := stack.Outputs["frontendURL"].(string)
+		//		assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+		//			return assert.Contains(t, body, "Hello, Pulumi!")
+		//		})
+		//	},
+		//}),
+		//
 		//// Cannot run this without aws-iam-authenticator being installed on the environment
 		//// this isn't something that can be done right now in our testing
+		////base.With(integration.ProgramTestOptions{
+		////	Dir: path.Join(cwd, "..", "..", "aws-ts-eks"),
+		////	Config: map[string]string{
+		////		"aws:region": awsRegion,
+		////	},
+		////}),
+		////// Cannot run this without aws-iam-authenticator being installed on the environment
+		////// this isn't something that can be done right now in our testing
+		////base.With(integration.ProgramTestOptions{
+		////	Dir: path.Join(cwd, "..", "..", "aws-ts-eks-hello-world"),
+		////	Config: map[string]string{
+		////		"aws:region": awsRegion,
+		////	},
+		////	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		////		maxWait := 10 * time.Minute
+		////		endpoint := stack.Outputs["serviceHostname"].(string)
+		////		assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+		////			return assert.Contains(t, body, "Welcome to nginx")
+		////		})
+		////	},
+		////}),
+		//
 		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "aws-ts-eks-hello-world"),
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-hello-fargate"),
 		//	Config: map[string]string{
 		//		"aws:region": awsRegion,
 		//	},
 		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 		//		maxWait := 10 * time.Minute
-		//		endpoint := stack.Outputs["serviceHostname"].(string)
+		//		endpoint := stack.Outputs["url"].(string)
 		//		assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
-		//			return assert.Contains(t, body, "Welcome to nginx")
+		//			return assert.Contains(t, body, "Hello World!")
 		//		})
 		//	},
 		//}),
-
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-hello-fargate"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				maxWait := 10 * time.Minute
-				endpoint := stack.Outputs["url"].(string)
-				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
-					return assert.Contains(t, body, "Hello World!")
-				})
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-pulumi-webhooks"),
-			Config: map[string]string{
-				"cloud:provider":                      "aws",
-				"aws:region":                          awsRegion,
-				"aws-ts-pulumi-webhooks:slackChannel": "general",
-				"aws-ts-pulumi-webhooks:slackToken":   "12345",
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-resources"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-		}),
-
-		//// NEED TO COME BACK TO THIS ONE TO GET RID OF A BAD DEP
 		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-pulumi-webhooks"),
 		//	Config: map[string]string{
-		//		"aws:region":     awsRegion,
-		//		"dbUser":         "testUser",
-		//		"dbPassword":     "2@Password@2",
-		//		"dbRootPassword": "2@Password@2",
-		//	},
-		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		//		// Due to setup time on the vm this output does not show up for several minutes so
-		//		// increase wait time a bit
-		//		maxWait := 10 * time.Minute
-		//		assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], maxWait, func(body string) bool {
-		//			return assert.Contains(t, body, "New Note")
-		//		})
+		//		"cloud:provider":                      "aws",
+		//		"aws:region":                          awsRegion,
+		//		"aws-ts-pulumi-webhooks:slackChannel": "general",
+		//		"aws-ts-pulumi-webhooks:slackToken":   "12345",
 		//	},
 		//}),
-
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-s3-lambda-copyzip"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-		}),
-
-		// aws-ts-serverless-raw requires dotnet installed and a command ran pre-testing
-
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-slackbot"),
-			Config: map[string]string{
-				"aws:region":                   awsRegion,
-				"mentionbot:slackToken":        "XXX",
-				"mentionbot:verificationToken": "YYY",
-			},
-		}),
-
-		// aws-ts-stackreference is an intermingled example that requires inputs from other stacks
-		// aws-ts-static-website needs reworked to include a ACM cert
-
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-stepfunctions"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-thumbnailer"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-twitter-athena"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-				"aws-ts-twitter-athena:twitterConsumerKey":       "12345",
-				"aws-ts-twitter-athena:twitterConsumerSecret":    "xyz",
-				"aws-ts-twitter-athena:twitterAccessTokenKey":    "12345",
-				"aws-ts-twitter-athena:twitterAccessTokenSecret": "xyz",
-				"aws-ts-twitter-athena:twitterQuery":             "smurfs",
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-url-shortener-cache-http"),
-			Config: map[string]string{
-				"aws:region":    awsRegion,
-				"redisPassword": "s3cr7Password",
-			},
-		}),
-
-		// Test disabled due to flakiness (often times out when destroying)
-		//// https://github.com/pulumi/examples/issues/260
 		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "aws-ts-voting-app"),
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-resources"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//}),
+		//
+		////// NEED TO COME BACK TO THIS ONE TO GET RID OF A BAD DEP
+		////base.With(integration.ProgramTestOptions{
+		////	Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
+		////	Config: map[string]string{
+		////		"aws:region":     awsRegion,
+		////		"dbUser":         "testUser",
+		////		"dbPassword":     "2@Password@2",
+		////		"dbRootPassword": "2@Password@2",
+		////	},
+		////	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		////		// Due to setup time on the vm this output does not show up for several minutes so
+		////		// increase wait time a bit
+		////		maxWait := 10 * time.Minute
+		////		assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], maxWait, func(body string) bool {
+		////			return assert.Contains(t, body, "New Note")
+		////		})
+		////	},
+		////}),
+		//
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-s3-lambda-copyzip"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//}),
+		//
+		//// aws-ts-serverless-raw requires dotnet installed and a command ran pre-testing
+		//
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-slackbot"),
+		//	Config: map[string]string{
+		//		"aws:region":                   awsRegion,
+		//		"mentionbot:slackToken":        "XXX",
+		//		"mentionbot:verificationToken": "YYY",
+		//	},
+		//}),
+		//
+		//// aws-ts-stackreference is an intermingled example that requires inputs from other stacks
+		//// aws-ts-static-website needs reworked to include a ACM cert
+		//
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-stepfunctions"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-thumbnailer"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-twitter-athena"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//		"aws-ts-twitter-athena:twitterConsumerKey":       "12345",
+		//		"aws-ts-twitter-athena:twitterConsumerSecret":    "xyz",
+		//		"aws-ts-twitter-athena:twitterAccessTokenKey":    "12345",
+		//		"aws-ts-twitter-athena:twitterAccessTokenSecret": "xyz",
+		//		"aws-ts-twitter-athena:twitterQuery":             "smurfs",
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-url-shortener-cache-http"),
 		//	Config: map[string]string{
 		//		"aws:region":    awsRegion,
 		//		"redisPassword": "s3cr7Password",
 		//	},
 		//}),
+		//
+		//// Test disabled due to flakiness (often times out when destroying)
+		////// https://github.com/pulumi/examples/issues/260
+		////base.With(integration.ProgramTestOptions{
+		////	Dir: path.Join(cwd, "..", "..", "aws-ts-voting-app"),
+		////	Config: map[string]string{
+		////		"aws:region":    awsRegion,
+		////		"redisPassword": "s3cr7Password",
+		////	},
+		////}),
+
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"username":          "testuser",
+				"password":          "testTEST1234+-*/",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPHelloWorld(t, stack.Outputs["publicIP"])
+			},
+		}),
+
+		// azure-py-aks
 
 		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "azure-js-webserver"),
+		//	Dir: path.Join(cwd, "..", "..", "azure-py-webserver"),
 		//	Config: map[string]string{
-		//		"azure:environment": azureEnviron,
-		//		"username":          "testuser",
-		//		"password":          "testTEST1234+-*/",
+		//		"azure:environment":  azureEnviron,
+		//		"azure-web:username": "testuser",
+		//		"azure-web:password": "testTEST1234+-*/",
 		//	},
 		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 		//		assertHTTPHelloWorld(t, stack.Outputs["publicIP"])
 		//	},
 		//}),
+
+		// azure-ts-aks-helm
+		// azure-ts-aks-mean
+		// azure-ts-aks-multicluster
+
 		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "azure-ts-appservice"),
+		//	Dir: path.Join(cwd, "..", "..", "azure-ts-api-management"),
 		//	Config: map[string]string{
 		//		"azure:environment": azureEnviron,
-		//		"sqlPassword":       "2@Password@2",
 		//	},
 		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		//		assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
-		//			return assert.Contains(t, body, "Greetings from Azure App Service!")
+		//		assertHTTPResult(t, stack.Outputs["endpoint"].(string), func(body string) bool {
+		//			return assert.Contains(t, body, "Hello Pulumi!")
 		//		})
 		//	},
 		//}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-appservice"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"sqlPassword":       "2@Password@2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Azure App Service!")
+				})
+			},
+		}),
+
+		// azure-ts-appservice-devops
+
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-appservice-docker"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["getStartedEndpoint"], func(body string) bool {
+					return assert.Contains(t, body, "Azure App Service")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-arm-template"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+			},
+		}),
 		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
+		//	Dir: path.Join(cwd, "..", "..", "azure-ts-dynamicresource"),
 		//	Config: map[string]string{
 		//		"azure:environment": azureEnviron,
+		//	},
+		//}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"azure:location":    azureLocation,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Azure Functions!")
+				})
+			},
+		}),
+
+		// azure-ts-functions-raw require specific language setups for tests
+
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "azure-ts-hdinsight-spark"),
+		//	Config: map[string]string{
+		//		"azure:location": azureLocation,
+		//		"username":       "testuser",
+		//		"password":       "MyPassword123+-*/",
+		//	},
+		//}),
+
+		// azure-ts-msi-keyvault-rbac requires DotNet setup
+
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "azure-ts-serverless-url-shortener-global"),
+		//	Config: map[string]string{
+		//		"locations": "westus,eastus,westeurope",
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "azure-ts-static-website"),
+		//	Config: map[string]string{
 		//		"azure:location": azureLocation,
 		//	},
 		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		//		assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
-		//			return assert.Contains(t, body, "Greetings from Azure Functions!")
+		//		maxWait := 15 * time.Minute
+		//		assertHTTPResultWithRetry(t, stack.Outputs["cdnEndpoint"], maxWait, func(body string) bool {
+		//			return assert.Contains(t, body, "This file is served from Blob Storage")
 		//		})
 		//	},
 		//}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-stream-analytics"),
+			Config: map[string]string{
+				"azure:location": azureLocation,
+			},
+		}),
+
 		//base.With(integration.ProgramTestOptions{
 		//	Dir: path.Join(cwd, "..", "..", "cloud-js-api"),
 		//	Config: map[string]string{
