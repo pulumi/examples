@@ -265,11 +265,12 @@ After cloning this repo, from this working directory, run these commands:
     $ kubectl delete deployment my-nginx
     ```
 
-    Of course, by doing so, resources are outside of Pulumi's purview, but this simply
+    By deploying this nginx image in this way, it is outside of Pulumi's control. But this is simply to show that we can
+    control our cluster via the CLI as well. 
 
 1. Experimentation
 
-    From here on, feel free to experiment. Simply making edits and running `pulumi up` afterwords, will incrementally update your stack.
+    From here on, feel free to experiment. Simply making edits and running `pulumi up` afterwards, will incrementally update your stack.
 
     ### Running Off-the-Shelf Guestbook YAML
 
