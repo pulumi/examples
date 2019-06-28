@@ -1,0 +1,10 @@
+name: azure-msi-keyvault-rbac
+runtime: nodejs
+description: Example of managing the secrets and permissions via services and features like KeyVault, AD Managed Identity, AD RBAC
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    azure:location:
+      description: The Azure location to use (e.g., `eastus` or `westeurope`)
