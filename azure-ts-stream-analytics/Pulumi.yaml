@@ -1,0 +1,10 @@
+name: azure-ts-stream-analytics
+runtime: nodejs
+description: Uses an Azure Stream Analytics job to transform data in an Event Hub.
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    azure:location:
+      description: The Azure location to deploy to (e.g., `eastus` or `westeurope`)

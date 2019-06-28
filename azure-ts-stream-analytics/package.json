@@ -1,0 +1,14 @@
+{
+    "name": "azure-ts-stream-analytics",
+    "version": "0.1.0",
+    "devDependencies": {
+        "@types/node": "^10.3.3",
+        "@types/utf8": "^2.1.6"
+    },
+    "dependencies": {
+        "@pulumi/azure": "latest",
+        "@pulumi/pulumi": "latest",
+        "crypto": "^1.0.1",
+        "utf8": "^3.0.0"
+    }
+}
