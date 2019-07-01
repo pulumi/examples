@@ -45,7 +45,6 @@ const cdnProfile = new azure.cdn.Profile("cdnProfile", {
     sku: "Standard_Akamai",
 });
 
-const cdnSuffix = pulumi.getStack().substring(0, 9);
 const cdnEndpoint = new azure.cdn.Endpoint("cdnEndpoint", {
     /**
      * Specify a well-known name for the endpoint name,
@@ -55,7 +54,7 @@ const cdnEndpoint = new azure.cdn.Endpoint("cdnEndpoint", {
      * For example, the URL for this CDN endpoint when it is created 
      * would be `my-cdn-endpoint.azureedge.net`.
      */
-    name: `my-cdn-endpoint-${cdnSuffix}`,
+    name: "my-cdn-endpoint",
     resourceGroupName: resourceGroup.name,
     profileName: cdnProfile.name,
     isHttpsAllowed: true,
