@@ -4,6 +4,9 @@ go: 1.12.x
 sudo: true # give us 7.5GB and >2 bursted cores.
 git:
     depth: false
+cache:
+    directories:
+        - $HOME/google-cloud-sdk/
 before_install:
     - git clone https://github.com/pulumi/scripts ${GOPATH}/src/github.com/pulumi/scripts
     - source ${GOPATH}/src/github.com/pulumi/scripts/ci/prepare-environment.sh
