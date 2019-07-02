@@ -569,6 +569,17 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
+
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "linode-js-webserver"),
+			Config: map[string]string{},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["instanceIP"].(string)
+				assertHTTPResult(t, endpoint, func(body string) bool {
+					return assert.Contains(t, body, "Hello, World!")
+				})
+			},
+		}),
 	}
 
 	longTests := []integration.ProgramTestOptions{
