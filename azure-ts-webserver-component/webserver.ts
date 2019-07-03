@@ -1,6 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
-import { specialArchiveSig } from "@pulumi/pulumi/runtime";
 
 /**
  * WebServer is a reusable web server component that creates and exports a NIC, public IP, and VM.
@@ -36,7 +35,7 @@ export class WebServer extends pulumi.ComponentResource {
         // Now create the VM, using the resource group and NIC allocated above.
         this.vm = new azure.compute.VirtualMachine(`${name}-vm`, {
             resourceGroupName: args.resourceGroupName,
-            networkInterfaceIds: [ this.networkInterface.id ],
+            networkInterfaceIds: [this.networkInterface.id],
             vmSize: args.vmSize || "Standard_A0",
             deleteDataDisksOnTermination: true,
             deleteOsDiskOnTermination: true,
@@ -65,10 +64,11 @@ export class WebServer extends pulumi.ComponentResource {
     public getIpAddress(): pulumi.Output<string> {
         // The public IP address is not allocated until the VM is running, so wait for that
         // resource to create, and then lookup the IP address again to report its public IP.
-        let ready = pulumi.all({_: this.vm.id, name: this.publicIp.name, resourceGroupName: this.publicIp.resourceGroupName });
-        return ready.apply(d =>
-            azure.network.getPublicIP({
-                name: d.name, resourceGroupName: d.resourceGroupName }).then(ip => ip.ipAddress));
+        const ready = pulumi.all({ _: this.vm.id, name: this.publicIp.name, resourceGroupName: this.publicIp.resourceGroupName });
+        return ready.apply(async d => {
+            const ip = await azure.network.getPublicIP({ name: d.name, resourceGroupName: d.resourceGroupName });
+            return ip.ipAddress;
+        });
     }
 }
 
@@ -96,5 +96,5 @@ export interface WebServerArgs {
     /**
      * A required Subnet in which to deploy the VM
      */
-    subnetId: pulumi.Input<string>
+    subnetId: pulumi.Input<string>;
 }
