@@ -2,24 +2,6 @@ import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
 import { specialArchiveSig } from "@pulumi/pulumi/runtime";
 
-// All resources will share a resource group.
-let resourceGroupName = new azure.core.ResourceGroup("server").name;
-
-// Create a network and subnet for all VMs.
-let network = new azure.network.VirtualNetwork("server-network", {
-    resourceGroupName,
-    addressSpaces: [ "10.0.0.0/16" ],
-    subnets: [{
-        name: "default",
-        addressPrefix: "10.0.1.0/24",
-    }],
-});
-let subnet = new azure.network.Subnet("server-subnet", {
-    resourceGroupName,
-    virtualNetworkName: network.name,
-    addressPrefix: "10.0.2.0/24",
-});
-
 /**
  * WebServer is a reusable web server component that creates and exports a NIC, public IP, and VM.
  */
@@ -38,14 +20,14 @@ export class WebServer extends pulumi.ComponentResource {
 
         // Allocate a public IP and assign it to our NIC.
         this.publicIp = new azure.network.PublicIp(`${name}-ip`, {
-            resourceGroupName,
+            resourceGroupName: args.resourceGroupName,
             allocationMethod: "Dynamic",
         }, { parent: this });
         this.networkInterface = new azure.network.NetworkInterface(`${name}-nic`, {
-            resourceGroupName,
+            resourceGroupName: args.resourceGroupName,
             ipConfigurations: [{
                 name: "webserveripcfg",
-                subnetId: subnet.id,
+                subnetId: args.subnetId,
                 privateIpAddressAllocation: "Dynamic",
                 publicIpAddressId: this.publicIp.id,
             }],
@@ -53,7 +35,7 @@ export class WebServer extends pulumi.ComponentResource {
 
         // Now create the VM, using the resource group and NIC allocated above.
         this.vm = new azure.compute.VirtualMachine(`${name}-vm`, {
-            resourceGroupName,
+            resourceGroupName: args.resourceGroupName,
             networkInterfaceIds: [ this.networkInterface.id ],
             vmSize: args.vmSize || "Standard_A0",
             deleteDataDisksOnTermination: true,
@@ -83,8 +65,7 @@ export class WebServer extends pulumi.ComponentResource {
     public getIpAddress(): pulumi.Output<string> {
         // The public IP address is not allocated until the VM is running, so wait for that
         // resource to create, and then lookup the IP address again to report its public IP.
-        let ready = pulumi.all({
-            _: this.vm.id, name: this.publicIp.name, resourceGroupName: this.publicIp.resourceGroupName });
+        let ready = pulumi.all({_: this.vm.id, name: this.publicIp.name, resourceGroupName: this.publicIp.resourceGroupName });
         return ready.apply(d =>
             azure.network.getPublicIP({
                 name: d.name, resourceGroupName: d.resourceGroupName }).then(ip => ip.ipAddress));
@@ -108,4 +89,12 @@ export interface WebServerArgs {
      * An optional VM size; if unspecified, Standard_A0 (micro) will be used.
      */
     vmSize?: pulumi.Input<string>;
+    /**
+     * A required Resource Group in which to create the VM
+     */
+    resourceGroupName: pulumi.Input<string>;
+    /**
+     * A required Subnet in which to deploy the VM
+     */
+    subnetId: pulumi.Input<string>
 }

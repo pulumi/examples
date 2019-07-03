@@ -71,8 +71,8 @@ nohup python -m SimpleHTTPServer 80 &`,
 
 // The public IP address is not allocated until the VM is running, so wait for that
 // resource to create, and then lookup the IP address again to report its public IP.
-let done = pulumi.all({
-    _: vm.id, name: publicIp.name, resourceGroupName: publicIp.resourceGroupName });
+let done = pulumi.all({_: vm.id, name: publicIp.name, resourceGroupName: publicIp.resourceGroupName });
+
 export const ipAddress = done.apply(d =>
     azure.network.getPublicIP({
         name: d.name, resourceGroupName: d.resourceGroupName }).then(ip => ip.ipAddress));
