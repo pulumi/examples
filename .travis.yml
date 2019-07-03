@@ -12,6 +12,13 @@ install:
     - source ${PULUMI_SCRIPTS}/ci/install-common-toolchain.sh
     - curl -L https://get.pulumi.com/ | bash
     - export PATH=$HOME/.pulumi/bin:$PATH
+    # Install GCP SDK and Authenticate
+    - if [ ! -d $HOME/google-cloud-sdk ]; then curl https://sdk.cloud.google.com | bash; fi
+    - export PATH=$PATH:$HOME/google-cloud-sdk/bin
+    - export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+    - openssl aes-256-cbc -K $encrypted_9f72dfef7328_key -iv $encrypted_9f72dfef7328_iv -in gcp-credentials.json.enc -out gcp-credentials.json -d
+    - export GOOGLE_CREDENTIALS=$(cat gcp-credentials.json)
+    - gcloud auth activate-service-account --key-file gcp-credentials.json
     # Install Helm
     - curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
     - helm init -c
