@@ -456,6 +456,27 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-webserver"),
+			Config: map[string]string{
+				"azure:location": azureLocation,
+				"username": "webmaster",
+				"password": "MySuperS3cretPassw0rd",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["ipAddress"].(string), func(body string) bool {
+					return assert.Contains(t, body, "Hello, World")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-webserver-component"),
+			Config: map[string]string{
+				"azure:location": azureLocation,
+				"username": "webmaster",
+				"password": "MySuperS3cretPassw0rd",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "cloud-js-api"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
