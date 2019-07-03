@@ -1,0 +1,13 @@
+name: ws-ts-azure-comp
+runtime: nodejs
+description: Basic example of an Azure web server accessible over HTTP
+template:
+  config:
+    azure:location:
+      description: The Azure location to use
+      default: westus
+    username:
+      description: The username used to configure the Virtual Machine
+    password:
+      description: The password used to configure the Virtual Machine
+      secret: true
