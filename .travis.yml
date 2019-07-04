@@ -1,37 +1,41 @@
 if: branch = master
 language: go
 go: 1.12.x
-sudo: true # give us 7.5GB and >2 bursted cores.
+sudo: true
 git:
-    depth: false
+  depth: false
+cache:
+  directories:
+  - "$HOME/google-cloud-sdk/"
 before_install:
-    - git clone https://github.com/pulumi/scripts ${GOPATH}/src/github.com/pulumi/scripts
-    - source ${GOPATH}/src/github.com/pulumi/scripts/ci/prepare-environment.sh
-    - source ${PULUMI_SCRIPTS}/ci/keep-failed-tests.sh
+- openssl aes-256-cbc -K $encrypted_9f72dfef7328_key -iv $encrypted_9f72dfef7328_iv
+  -in gcp-credentials.json.enc -out gcp-credentials.json -d
+- git clone https://github.com/pulumi/scripts ${GOPATH}/src/github.com/pulumi/scripts
+- source ${GOPATH}/src/github.com/pulumi/scripts/ci/prepare-environment.sh
+- source ${PULUMI_SCRIPTS}/ci/keep-failed-tests.sh
 install:
-    - source ${PULUMI_SCRIPTS}/ci/install-common-toolchain.sh
-    - curl -L https://get.pulumi.com/ | bash
-    - export PATH=$HOME/.pulumi/bin:$PATH
-    # Install GCP SDK and Authenticate
-    - if [ ! -d $HOME/google-cloud-sdk ]; then curl https://sdk.cloud.google.com | bash; fi
-    - export PATH=$PATH:$HOME/google-cloud-sdk/bin
-    - export CLOUDSDK_CORE_DISABLE_PROMPTS=1
-    - openssl aes-256-cbc -K $encrypted_9f72dfef7328_key -iv $encrypted_9f72dfef7328_iv -in gcp-credentials.json.enc -out gcp-credentials.json -d
-    - export GOOGLE_CREDENTIALS=$(cat gcp-credentials.json)
-    - gcloud auth activate-service-account --key-file gcp-credentials.json
-    # Install Helm
-    - curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-    - helm init -c
-    - helm repo add bitnami https://charts.bitnami.com/bitnami
+- source ${PULUMI_SCRIPTS}/ci/install-common-toolchain.sh
+- curl -L https://get.pulumi.com/ | bash
+- export PATH=$HOME/.pulumi/bin:$PATH
+- if [ ! -d $HOME/google-cloud-sdk ]; then curl https://sdk.cloud.google.com | bash;
+  fi
+- export PATH=$PATH:$HOME/google-cloud-sdk/bin
+- export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+- export GOOGLE_CREDENTIALS=$(cat gcp-credentials.json)
+- gcloud auth activate-service-account --key-file gcp-credentials.json
+- curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get
+  | bash
+- helm init -c
+- helm repo add bitnami https://charts.bitnami.com/bitnami
 before_script:
-    - ${PULUMI_SCRIPTS}/ci/ensure-dependencies
+- "${PULUMI_SCRIPTS}/ci/ensure-dependencies"
 jobs:
-    include:
-        - script: make travis_${TRAVIS_EVENT_TYPE}
-        - stage: latest
-          if: type = cron
-          script: ${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head
+  include:
+  - script: make travis_${TRAVIS_EVENT_TYPE}
+  - stage: latest
+    if: type = cron
+    script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head"
 after_failure:
-    - ${PULUMI_SCRIPTS}/ci/upload-failed-tests
+- "${PULUMI_SCRIPTS}/ci/upload-failed-tests"
 notifications:
-    webhooks: https://ufci1w66n3.execute-api.us-west-2.amazonaws.com/stage/travis
+  webhooks: https://ufci1w66n3.execute-api.us-west-2.amazonaws.com/stage/travis

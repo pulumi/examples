@@ -14,6 +14,10 @@ firewall = compute.Firewall(
         {
             "protocol": "tcp",
             "ports": ["22"]
+        },
+        {
+            "protocol": "tcp",
+            "ports": ["80"]
         }
     ]
 )
