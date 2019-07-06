@@ -244,26 +244,23 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 		}),
-
-		//// NEED TO COME BACK TO THIS ONE TO GET RID OF A BAD DEP
-		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
-		//	Config: map[string]string{
-		//		"aws:region":     awsRegion,
-		//		"dbUser":         "testUser",
-		//		"dbPassword":     "2@Password@2",
-		//		"dbRootPassword": "2@Password@2",
-		//	},
-		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		//		// Due to setup time on the vm this output does not show up for several minutes so
-		//		// increase wait time a bit
-		//		maxWait := 10 * time.Minute
-		//		assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], maxWait, func(body string) bool {
-		//			return assert.Contains(t, body, "New Note")
-		//		})
-		//	},
-		//}),
-
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
+			Config: map[string]string{
+				"aws:region":     awsRegion,
+				"dbUser":         "testUser",
+				"dbPassword":     "2@Password@2",
+				"dbRootPassword": "2@Password@2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				// Due to setup time on the vm this output does not show up for several minutes so
+				// increase wait time a bit
+				maxWait := 20 * time.Minute
+				assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], maxWait, func(body string) bool {
+					return assert.Contains(t, body, "New Note")
+				})
+			},
+		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-s3-lambda-copyzip"),
 			Config: map[string]string{

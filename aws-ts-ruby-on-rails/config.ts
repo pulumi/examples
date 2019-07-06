@@ -3,9 +3,6 @@ import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
 
-// keyName is the name of an existing EC2 KeyPair to enable SSH access to the instances.
-export const keyName = config.get("keyName");
-
 // dbName is a MySQL database name.
 export const dbName = config.get("dbName") || "MyDatabase";
 if (!/[a-zA-Z][a-zA-Z0-9]*/.test(dbName)) {
@@ -39,16 +36,9 @@ if (!/[a-zA-Z0-9]*/.test(dbRootPassword)) {
 }
 
 // instanceType is the WebServer EC2 instance type.
-export const instanceType: aws.ec2.InstanceType = <aws.ec2.InstanceType>config.get("instanceType") || "t2.small";
+export const instanceType: aws.ec2.InstanceType = <aws.ec2.InstanceType>config.get("instanceType") || "m3.medium";
 if (false) {
     // TODO: dynamically verify the values.
     throw new Error("instanceType must be a valid EC2 instance type");
 }
 
-// sshLocation is the IP address range that can be used to SSH to the EC2 instances.
-export const sshLocation = config.get("sshLocation") || "0.0.0.0/0";
-if (!new RegExp("(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})").test(sshLocation)) {
-    throw new Error("sshLocation must be a valid IP CIDR range of the form x.x.x.x/x");
-} else if (dbName.length < 1 || dbName.length > 41) {
-    throw new Error("sshLocation is must between 9-18 characters, inclusively");
-}

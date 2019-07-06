@@ -1,7 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as config from "./config";
-import { getLinuxAmi } from "pawsami";
 import { createUserData, renderConfigFile } from "pcloudinit";
 
 const webSg = new aws.ec2.SecurityGroup("webServerSecurityGroup", {
@@ -10,16 +9,29 @@ const webSg = new aws.ec2.SecurityGroup("webServerSecurityGroup", {
         { protocol: "-1", fromPort: 0, toPort: 0, cidrBlocks: [ "0.0.0.0/0" ] },
     ],
     ingress: [
-        { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: [ config.sshLocation ] },
-        { protocol: "tcp", fromPort: 80, toPort: 80, cidrBlocks: [ "0.0.0.0/0" ] },
+        { protocol: "-1", fromPort: 0, toPort: 0, cidrBlocks: [ "0.0.0.0/0" ] },
     ],
 });
 
+const amiId = pulumi.output(aws.getAmi({
+    filters: [
+        {
+            name: "name",
+            values: ["amzn-ami-hvm-2018.03*"],
+        },
+        {
+            name: "virtualization-type",
+            values: ["hvm"]
+        }
+    ],
+    mostRecent: true,
+    owners: ["137112412989"],
+}));
+
 const webServer = new aws.ec2.Instance("webServer", {
-    ami: getLinuxAmi(<any>config.instanceType),
+    ami: amiId.id,
     instanceType: config.instanceType,
     securityGroups: [ webSg.name ],
-    keyName: config.keyName,
     userData: createUserData(
         [ "install_ruby_2_3_1", "install_mysql", "configure_mysql", "install_application" ],
         {
@@ -100,7 +112,7 @@ const webServer = new aws.ec2.Instance("webServer", {
                         command: "echo /home/ec2-user/start_application >> /etc/rc.local",
                     },
                     "03_start_application": {
-                        command: "/home/ec2-user/start_application > var/log/start_application.log",
+                        command: "/home/ec2-user/start_application > /var/log/start_application.log",
                     },
                     "04_cleanup": {
                         command: "rm /tmp/install_application",

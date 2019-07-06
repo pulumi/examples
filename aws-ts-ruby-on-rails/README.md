@@ -32,9 +32,6 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi config set dbUser [your-mysql-user-here]
     $ pulumi config set dbPassword [your-mysql-password-here] --secret
     $ pulumi config set dbRootPassword [your-mysql-root-password-here] --secret
-
-    # Optionally, if you have an AWS KMS key to use for SSH access:
-    $ pulumi config set keyName [your-aws-kms-key-name-here]
     ```
 
 3. Stand up the VM, which will also install and configure Ruby on Rails and MySQL:
@@ -57,12 +54,6 @@ After cloning this repo, from this working directory, run these commands:
 
     ```bash
     $ curl $(pulumi stack output websiteURL)
-    ```
-
-    If you've configured an SSH key, you can also SSH into the webserver VM easily:
-
-    ```bash
-    $ ssh -i <your-key>.pem ec2-user@$(pulumi stack output vmIP)
     ```
 
 6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your VM.
