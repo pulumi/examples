@@ -46,8 +46,6 @@ func TestExamples(t *testing.T) {
 		Tracing:              "https://tracing.pulumi-engineering.com/collector/api/v1/spans",
 		ExpectRefreshChanges: true,
 		Overrides:            overrides,
-		Quick:                true,
-		SkipRefresh:          true,
 	}
 
 	shortTests := []integration.ProgramTestOptions{

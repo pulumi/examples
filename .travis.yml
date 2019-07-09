@@ -1,4 +1,3 @@
-if: branch = master
 language: go
 go: 1.12.x
 sudo: true
@@ -33,7 +32,6 @@ jobs:
   include:
   - script: make travis_${TRAVIS_EVENT_TYPE}
   - stage: latest
-    if: type = cron
     script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head"
 after_failure:
 - "${PULUMI_SCRIPTS}/ci/upload-failed-tests"
