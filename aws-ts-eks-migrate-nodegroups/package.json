@@ -1,0 +1,16 @@
+{
+    "name": "update-nodegroups",
+    "devDependencies": {
+        "typescript": "^3.0.0",
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@pulumi/aws": "latest",
+        "@pulumi/awsx": "latest",
+        "@pulumi/kubernetes": "latest",
+        "@pulumi/pulumi": "latest"
+    },
+    "peerDependencies": {
+        "@pulumi/eks": "latest"
+    }
+}
