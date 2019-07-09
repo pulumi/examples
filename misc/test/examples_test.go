@@ -348,21 +348,42 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 
-		// azure-py-aks
-
 		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "azure-py-webserver"),
+		//	Dir: path.Join(cwd, "..", "..", "azure-py-aks"),
 		//	Config: map[string]string{
 		//		"azure:environment":  azureEnviron,
-		//		"azure-web:username": "testuser",
-		//		"azure-web:password": "testTEST1234+-*/",
-		//	},
-		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		//		assertHTTPHelloWorld(t, stack.Outputs["publicIP"])
+		//		"prefix": "example",
+		//		"sshkey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
+		//		"password": "testTEST1234+-*/",
 		//	},
 		//}),
 
-		// azure-ts-aks-helm
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-py-webserver"),
+			Config: map[string]string{
+				"azure:environment":  azureEnviron,
+				"azure-web:username": "testuser",
+				"azure-web:password": "testTEST1234+-*/",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPHelloWorld(t, stack.Outputs["public_ip"])
+			},
+		}),
+
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-aks-helm"),
+			Config: map[string]string{
+				"azure:environment":  azureEnviron,
+				"password": "testTEST1234+-*/",
+				"sshkey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["serviceIP"], func(body string) bool {
+					return assert.Contains(t, body, "It works!")
+				})
+			},
+		}),
+
 		// azure-ts-aks-mean
 		// azure-ts-aks-multicluster
 
