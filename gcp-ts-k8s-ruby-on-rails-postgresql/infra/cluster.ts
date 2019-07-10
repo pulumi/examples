@@ -5,11 +5,14 @@ import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import { clusterNodeCount, clusterNodeMachineType, clusterPassword, clusterUsername } from "./config";
 
+// Find the latest engine version.
+const engineVersion = gcp.container.getEngineVersions().then(v => v.latestMasterVersion);
+
 // Create the GKE cluster and export it.
 export const cluster = new gcp.container.Cluster("gke-cluster", {
     initialNodeCount: clusterNodeCount,
-    nodeVersion: "latest",
-    minMasterVersion: "latest",
+    nodeVersion: engineVersion,
+    minMasterVersion: engineVersion,
     masterAuth: { username: clusterUsername, password: clusterPassword },
     nodeConfig: {
         machineType: clusterNodeMachineType,
