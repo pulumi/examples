@@ -1,6 +1,6 @@
 from pulumi import Config, export, get_project, get_stack, Output, ResourceOptions
 from pulumi_gcp.config import project, zone
-from pulumi_gcp.container import Cluster
+from pulumi_gcp.container import Cluster, get_engine_versions
 from pulumi_kubernetes import Provider
 from pulumi_kubernetes.apps.v1 import Deployment
 from pulumi_kubernetes.core.v1 import Service
@@ -19,11 +19,13 @@ USERNAME = config.get('username') or 'admin'
 # password is the password for the admin user in the cluster.
 PASSWORD = config.get_secret('password') or RandomString("password", length=20, special=True).result
 
+engine_version = Output.from_input(get_engine_versions()).latest_master_version
+
 # Now, actually create the GKE cluster.
 k8s_cluster = Cluster('gke-cluster',
     initial_node_count=NODE_COUNT,
-    node_version='latest',
-    min_master_version='latest',
+    node_version=engine_version,
+    min_master_version=engine_version,
     master_auth={ 'username': USERNAME, 'password': PASSWORD },
     node_config={
         'machine_type': NODE_MACHINE_TYPE,
