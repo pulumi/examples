@@ -10,7 +10,7 @@ const userData =
   sudo apt-get update
   sudo apt-get install -y nginx`;
 const droplets = [];
-for (let i = 0; i < dropletCount; i ++) {
+for (let i = 0; i < dropletCount; i++) {
     let nameTag = new digitalocean.Tag(`web-${i}`);
     droplets.push(new digitalocean.Droplet(`web-${i}`, {
         image: "ubuntu-18-04-x64",
