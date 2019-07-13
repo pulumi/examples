@@ -191,31 +191,25 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
-
-		//// Cannot run this without aws-iam-authenticator being installed on the environment
-		//// this isn't something that can be done right now in our testing
-		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "aws-ts-eks"),
-		//	Config: map[string]string{
-		//		"aws:region": awsRegion,
-		//	},
-		//}),
-		//// Cannot run this without aws-iam-authenticator being installed on the environment
-		//// this isn't something that can be done right now in our testing
-		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "aws-ts-eks-hello-world"),
-		//	Config: map[string]string{
-		//		"aws:region": awsRegion,
-		//	},
-		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		//		maxWait := 10 * time.Minute
-		//		endpoint := stack.Outputs["serviceHostname"].(string)
-		//		assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
-		//			return assert.Contains(t, body, "Welcome to nginx")
-		//		})
-		//	},
-		//}),
-
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-eks"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-eks-hello-world"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["serviceHostname"].(string)
+				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Welcome to nginx")
+				})
+			},
+		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-hello-fargate"),
 			Config: map[string]string{

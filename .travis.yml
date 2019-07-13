@@ -13,6 +13,11 @@ before_install:
 - git clone https://github.com/pulumi/scripts ${GOPATH}/src/github.com/pulumi/scripts
 - source ${GOPATH}/src/github.com/pulumi/scripts/ci/prepare-environment.sh
 - source ${PULUMI_SCRIPTS}/ci/keep-failed-tests.sh
+- sudo apt-get update && sudo apt-get install -y apt-transport-https
+- curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+- echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+- sudo apt-get update
+- sudo apt-get install -y kubectl
 install:
 - source ${PULUMI_SCRIPTS}/ci/install-common-toolchain.sh
 - curl -L https://get.pulumi.com/ | bash
@@ -27,6 +32,10 @@ install:
   | bash
 - helm init -c
 - helm repo add bitnami https://charts.bitnami.com/bitnami
+- curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+- chmod +x ./aws-iam-authenticator
+- mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator
+-
 before_script:
 - "${PULUMI_SCRIPTS}/ci/ensure-dependencies"
 jobs:
