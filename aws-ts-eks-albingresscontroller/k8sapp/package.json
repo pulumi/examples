@@ -1,0 +1,11 @@
+{
+    "name": "typescript",
+    "devDependencies": {
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@pulumi/eks": "^0.18.8",
+        "@pulumi/kubernetes": "^0.25.1",
+        "@pulumi/pulumi": "latest"
+    }
+}
