@@ -1,3 +1,0 @@
-name: k8sapp
-runtime: nodejs
-description: A minimal TypeScript Pulumi program
