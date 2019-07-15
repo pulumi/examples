@@ -583,6 +583,16 @@ func TestExamples(t *testing.T) {
 		}),
 
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "digitalocean-ts-loadbalanced-droplets"),
+			Config: map[string]string{},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"].(string), func(body string) bool {
+					return assert.Contains(t, body, "Welcome to nginx!")
+				})
+			},
+		}),
+
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "linode-js-webserver"),
 			Config: map[string]string{},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {

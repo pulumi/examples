@@ -1,0 +1,3 @@
+name: digitalocean-ts-loadbalanced-droplets
+runtime: nodejs
+description: Basic example of load balanced droplets on DigitalOcean
