@@ -211,6 +211,20 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-eks-migrate-nodegroups"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := fmt.Sprintf("%s/echoserver", stack.Outputs["nginxServiceUrl"].(string))
+				headers := map[string]string{"Host": "apps.example.com"}
+				assertHTTPResultWithRetry(t, endpoint, headers, maxWait, func(body string) bool {
+					return assert.NotEmpty(t, body, "Body should not be empty")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-hello-fargate"),
 			Config: map[string]string{
 				"aws:region": awsRegion,

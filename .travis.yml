@@ -14,10 +14,6 @@ before_install:
 - source ${GOPATH}/src/github.com/pulumi/scripts/ci/prepare-environment.sh
 - source ${PULUMI_SCRIPTS}/ci/keep-failed-tests.sh
 - sudo apt-get update && sudo apt-get install -y apt-transport-https
-- curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-- echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
-- sudo apt-get update
-- sudo apt-get install -y kubectl
 install:
 - source ${PULUMI_SCRIPTS}/ci/install-common-toolchain.sh
 - curl -L https://get.pulumi.com/ | bash
@@ -32,10 +28,15 @@ install:
   | bash
 - helm init -c
 - helm repo add bitnami https://charts.bitnami.com/bitnami
+# Install aws-iam-authenticator
+# See: https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
 - curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
 - chmod +x ./aws-iam-authenticator
-- mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator
--
+- sudo mv aws-iam-authenticator /usr/local/bin
+# Install kubectl
+- curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+- chmod +x ./kubectl
+- sudo mv kubectl /usr/local/bin
 before_script:
 - "${PULUMI_SCRIPTS}/ci/ensure-dependencies"
 after_failure:
