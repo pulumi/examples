@@ -1,0 +1,3 @@
+name: aws-ts-eks-migrate-nodegroups
+description: Creates an EKS cluster with node groups and a workload. Then covers how to add an additional node group, and use it to migrate the workload with zero downtime.
+runtime: nodejs
