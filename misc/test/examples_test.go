@@ -59,7 +59,7 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["frontendURL"].(string)
-				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -70,7 +70,7 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), func(body string) bool {
+				assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -81,7 +81,7 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["websiteUrl"].(string), func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -99,7 +99,7 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["publicHostName"])
+				assertHTTPHelloWorld(t, stack.Outputs["publicHostName"], nil)
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
@@ -108,7 +108,7 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["webUrl"])
+				assertHTTPHelloWorld(t, stack.Outputs["webUrl"], nil)
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
@@ -117,7 +117,7 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), func(body string) bool {
+				assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -134,7 +134,7 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["public_dns"].(string), func(body string) bool {
+				assertHTTPResult(t, "http://"+stack.Outputs["public_dns"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World!")
 				})
 			},
@@ -154,7 +154,7 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["endpoint"].(string)
-				assertHTTPResultWithRetry(t, endpoint+"hello", maxWait, func(body string) bool {
+				assertHTTPResultWithRetry(t, endpoint+"hello", nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "route")
 				})
 			},
@@ -165,7 +165,7 @@ func TestExamples(t *testing.T) {
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-appsync"),
 			Config: map[string]string{
-				"aws:region":         awsRegion,
+				"aws:region": awsRegion,
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
@@ -186,7 +186,7 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 15 * time.Minute
 				endpoint := stack.Outputs["frontendURL"].(string)
-				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -205,7 +205,7 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["serviceHostname"].(string)
-				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Welcome to nginx")
 				})
 			},
@@ -218,7 +218,7 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["url"].(string)
-				assertHTTPResultWithRetry(t, endpoint, maxWait, func(body string) bool {
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
 				})
 			},
@@ -250,7 +250,7 @@ func TestExamples(t *testing.T) {
 				// Due to setup time on the vm this output does not show up for several minutes so
 				// increase wait time a bit
 				maxWait := 20 * time.Minute
-				assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], maxWait, func(body string) bool {
+				assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "New Note")
 				})
 			},
@@ -325,7 +325,7 @@ func TestExamples(t *testing.T) {
 				"password":          "testTEST1234+-*/",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["publicIP"])
+				assertHTTPHelloWorld(t, stack.Outputs["publicIP"], nil)
 			},
 		}),
 
@@ -365,7 +365,7 @@ func TestExamples(t *testing.T) {
 				"sqlPassword":       "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
 				})
 			},
@@ -379,7 +379,7 @@ func TestExamples(t *testing.T) {
 				"azure:environment": azureEnviron,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["getStartedEndpoint"], func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["getStartedEndpoint"], nil, func(body string) bool {
 					return assert.Contains(t, body, "Azure App Service")
 				})
 			},
@@ -403,7 +403,7 @@ func TestExamples(t *testing.T) {
 				"azure:location":    azureLocation,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure Functions!")
 				})
 			},
@@ -450,11 +450,11 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "azure-ts-webserver"),
 			Config: map[string]string{
 				"azure:location": azureLocation,
-				"username": "webmaster",
-				"password": "MySuperS3cretPassw0rd",
+				"username":       "webmaster",
+				"password":       "MySuperS3cretPassw0rd",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["ipAddress"].(string), func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["ipAddress"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World")
 				})
 			},
@@ -463,8 +463,8 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "azure-ts-webserver-component"),
 			Config: map[string]string{
 				"azure:location": azureLocation,
-				"username": "webmaster",
-				"password": "MySuperS3cretPassw0rd",
+				"username":       "webmaster",
+				"password":       "MySuperS3cretPassw0rd",
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
@@ -473,7 +473,7 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
 					return assert.Contains(t, body, "{\"route\":\"hello\",\"count\":1}")
 				})
 			},
@@ -485,7 +485,7 @@ func TestExamples(t *testing.T) {
 				"cloud-aws:useFargate": "true",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["hostname"].(string), func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["hostname"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -497,7 +497,7 @@ func TestExamples(t *testing.T) {
 				"aws:region":     awsRegion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
 					return assert.Contains(t, body, "{\"route\":\"/hello\",\"count\":1}")
 				})
 			},
@@ -532,7 +532,7 @@ func TestExamples(t *testing.T) {
 				"cloud-aws:useFargate": "true",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpointUrl"].(string), func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["endpointUrl"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Short URL Manager")
 				})
 			},
@@ -546,7 +546,7 @@ func TestExamples(t *testing.T) {
 				"cloud-aws:useFargate": "true",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpointUrl"].(string), func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["endpointUrl"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Short URL Manager")
 				})
 			},
@@ -562,7 +562,7 @@ func TestExamples(t *testing.T) {
 		//	},
 		//	// TODO: This test is not returning a valid payload see issue: https://github.com/pulumi/examples/issues/155
 		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		//		assertHTTPResult(t, stack.Outputs["endpointUrl"], func(body string) bool {
+		//		assertHTTPResult(t, stack.Outputs["endpointUrl"], nil, func(body string) bool {
 		//			return assert.Contains(t, body, "<title>Short URL Manager</title>")
 		//		})
 		//	},
@@ -576,28 +576,28 @@ func TestExamples(t *testing.T) {
 				"cloud-aws:useFargate": "true",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["frontendURL"].(string), func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["frontendURL"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Pulumi Voting App")
 				})
 			},
 		}),
 
 		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "digitalocean-ts-loadbalanced-droplets"),
+			Dir:    path.Join(cwd, "..", "..", "digitalocean-ts-loadbalanced-droplets"),
 			Config: map[string]string{},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string), func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["endpoint"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Welcome to nginx!")
 				})
 			},
 		}),
 
 		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "linode-js-webserver"),
+			Dir:    path.Join(cwd, "..", "..", "linode-js-webserver"),
 			Config: map[string]string{},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["instanceIP"].(string)
-				assertHTTPResult(t, endpoint, func(body string) bool {
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World!")
 				})
 			},
@@ -606,11 +606,11 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "gcp-js-webserver"),
 			Config: map[string]string{
 				"gcp:project": "pulumi-ci-gcp-provider",
-				"gcp:zone": "us-central1-a",
+				"gcp:zone":    "us-central1-a",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["instanceIP"].(string)
-				assertHTTPResult(t, endpoint, func(body string) bool {
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World!")
 				})
 			},
@@ -619,16 +619,16 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "gcp-py-functions"),
 			Config: map[string]string{
 				"gcp:project": "pulumi-ci-gcp-provider",
-				"gcp:zone": "us-central1-a",
+				"gcp:zone":    "us-central1-a",
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "gcp-py-gke"),
 			Config: map[string]string{
-				"gcp:project": "pulumi-ci-gcp-provider",
-				"gcp:zone": "us-central1-a",
-				"password": "S4cretPassword!",
-				"node_count": "3",
+				"gcp:project":       "pulumi-ci-gcp-provider",
+				"gcp:zone":          "us-central1-a",
+				"password":          "S4cretPassword!",
+				"node_count":        "3",
 				"node_machine_type": "n1-standard-2",
 			},
 		}),
@@ -640,7 +640,7 @@ func TestExamples(t *testing.T) {
 		//	},
 		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 		//		endpoint := stack.Outputs["external_ip"].(string)
-		//		assertHTTPResult(t, endpoint, func(body string) bool {
+		//		assertHTTPResult(t, endpoint, nil, func(body string) bool {
 		//			return assert.Contains(t, body, "Test Page for the Nginx HTTP Server on Fedora")
 		//		})
 		//	},
@@ -649,11 +649,11 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "gcp-ts-functions"),
 			Config: map[string]string{
 				"gcp:project": "pulumi-ci-gcp-provider",
-				"gcp:zone": "us-central1-a",
+				"gcp:zone":    "us-central1-a",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["url"].(string)
-				assertHTTPResult(t, endpoint, func(body string) bool {
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Google Cloud Functions!")
 				})
 			},
@@ -661,10 +661,10 @@ func TestExamples(t *testing.T) {
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "gcp-ts-gke"),
 			Config: map[string]string{
-				"gcp:project": "pulumi-ci-gcp-provider",
-				"gcp:zone": "us-central1-a",
-				"password": "S4cretPassword123!",
-				"nodeCount": "3",
+				"gcp:project":     "pulumi-ci-gcp-provider",
+				"gcp:zone":        "us-central1-a",
+				"password":        "S4cretPassword123!",
+				"nodeCount":       "3",
 				"nodeMachineType": "n1-standard-2",
 			},
 		}),
@@ -672,11 +672,11 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "gcp-ts-gke-hello-world"),
 			Config: map[string]string{
 				"gcp:project": "pulumi-ci-gcp-provider",
-				"gcp:zone": "us-central1-a",
+				"gcp:zone":    "us-central1-a",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["servicePublicIP"].(string)
-				assertHTTPResult(t, endpoint, func(body string) bool {
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Welcome to nginx")
 				})
 			},
@@ -686,11 +686,11 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "gcp-ts-serverless-raw"),
 			Config: map[string]string{
 				"gcp:project": "pulumi-ci-gcp-provider",
-				"gcp:zone": "us-central1-a",
+				"gcp:zone":    "us-central1-a",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["goEndpoint"].(string)
-				assertHTTPResult(t, endpoint, func(body string) bool {
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
 				})
 			},
@@ -713,7 +713,7 @@ func TestExamples(t *testing.T) {
 				"sshPublicKey":      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["serviceIP"], func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["serviceIP"], nil, func(body string) bool {
 					return assert.Contains(t, body, "It works!")
 				})
 			},
@@ -745,11 +745,11 @@ func TestExamples(t *testing.T) {
 	}
 }
 
-func assertHTTPResult(t *testing.T, output interface{}, check func(string) bool) bool {
-	return assertHTTPResultWithRetry(t, output, 5*time.Minute, check)
+func assertHTTPResult(t *testing.T, output interface{}, headers map[string]string, check func(string) bool) bool {
+	return assertHTTPResultWithRetry(t, output, headers, 5*time.Minute, check)
 }
 
-func assertHTTPResultWithRetry(t *testing.T, output interface{}, maxWait time.Duration, check func(string) bool) bool {
+func assertHTTPResultWithRetry(t *testing.T, output interface{}, headers map[string]string, maxWait time.Duration, check func(string) bool) bool {
 	hostname, ok := output.(string)
 	if !assert.True(t, ok, fmt.Sprintf("expected `%s` output", output)) {
 		return false
@@ -764,7 +764,23 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, maxWait time.Du
 	count, sleep := 0, 0
 	for true {
 		now := time.Now()
-		resp, err = http.Get(hostname)
+		req, err := http.NewRequest("GET", hostname, nil)
+		if !assert.NoError(t, err) {
+			return false
+		}
+
+		for k, v := range headers {
+			// Host header cannot be set via req.Header.Set(), and must be set
+			// directly.
+			if strings.ToLower(k) == "host" {
+				req.Host = v
+				continue
+			}
+			req.Header.Set(k, v)
+		}
+
+		client := &http.Client{Timeout: time.Second * 10}
+		resp, err = client.Do(req)
 		if err == nil && resp.StatusCode == 200 {
 			break
 		}
@@ -796,8 +812,8 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, maxWait time.Du
 	return check(string(body))
 }
 
-func assertHTTPHelloWorld(t *testing.T, output interface{}) bool {
-	return assertHTTPResult(t, output, func(s string) bool {
+func assertHTTPHelloWorld(t *testing.T, output interface{}, headers map[string]string) bool {
+	return assertHTTPResult(t, output, headers, func(s string) bool {
 		return assert.Equal(t, "Hello, World!\n", s)
 	})
 }
