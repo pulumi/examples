@@ -1,3 +1,8 @@
 name: aws-ts-scheduled-function
 runtime: nodejs
-description: A minimal AWS TypeScript Pulumi program
+description: Basic example of AWS Cloud Watch Scheduled Function
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
