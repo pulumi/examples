@@ -1,4 +1,9 @@
 import * as aws from "@pulumi/aws";
+import {
+  DeleteObjectRequest,
+  DeleteObjectsRequest,
+  ObjectIdentifier
+} from "aws-sdk/clients/s3";
 
 // Create an AWS resource (S3 Bucket)
 const trashBucket = new aws.s3.Bucket("trash");
@@ -13,8 +18,9 @@ const emptyTrash: aws.cloudwatch.EventRuleEventHandler = async (
   const { Contents = [] } = await s3Client
     .listObjects({ Bucket: bucket })
     .promise();
-  const objects = Contents.map(object => {
-    return { Key: object.Key };
+  const objects: ObjectIdentifier[] = Contents.map(object => {
+    const { Key = "" } = object; // object.Key is string || undefined
+    return { Key };
   });
 
   await s3Client
