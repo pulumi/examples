@@ -1,0 +1,3 @@
+name: aws-ts-scheduled-function
+runtime: nodejs
+description: A minimal AWS TypeScript Pulumi program
