@@ -1,9 +1,5 @@
 import * as aws from "@pulumi/aws";
-import {
-  DeleteObjectRequest,
-  DeleteObjectsRequest,
-  ObjectIdentifier
-} from "aws-sdk/clients/s3";
+import { ObjectIdentifier } from "aws-sdk/clients/s3";
 
 // Create an AWS resource (S3 Bucket)
 const trashBucket = new aws.s3.Bucket("trash");
@@ -19,8 +15,7 @@ const emptyTrash: aws.cloudwatch.EventRuleEventHandler = async (
     .listObjects({ Bucket: bucket })
     .promise();
   const objects: ObjectIdentifier[] = Contents.map(object => {
-    const { Key = "" } = object; // object.Key is string || undefined
-    return { Key };
+    return { Key: object.Key! };
   });
 
   await s3Client
@@ -32,7 +27,8 @@ const emptyTrash: aws.cloudwatch.EventRuleEventHandler = async (
 };
 
 // Schedule the function to run every Friday at 11:00pm UTC (6:00pm EST)
-// More info on Schedule Expressions at https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html
+// More info on Schedule Expressions at
+// https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html
 const emptyTrashSchedule: aws.cloudwatch.EventRuleEventSubscription = aws.cloudwatch.onSchedule(
   "emptyTrash",
   "cron(0 23 ? * FRI *)",
