@@ -24,6 +24,11 @@ const emptyTrash: aws.cloudwatch.EventRuleEventHandler = async (
       Delete: { Objects: objects, Quiet: false }
     })
     .promise();
+  console.log(
+    `Deleted ${Contents.length} item${
+      Contents.length === 1 ? "" : "s"
+    } from ${bucket}.`
+  );
 };
 
 // Schedule the function to run every Friday at 11:00pm UTC (6:00pm EST)
