@@ -11,7 +11,7 @@ also in this repo. It provisions the same set of resources.
 
 ## Running the App
 
-Follow the steps in [Pulumi Installation](https://pulumi.io/install/) and [Kubernetes Setup](https://pulumi.io/quickstart/kubernetes/setup.html) to get Pulumi working with Kubernetes.
+Follow the steps in [Pulumi Installation](https://www.pulumi.com/docs/reference/install/) and [Kubernetes Setup](https://www.pulumi.com/docs/reference/clouds/kubernetes/setup/) to get Pulumi working with Kubernetes.
 
 Install dependencies:
 

@@ -12,8 +12,8 @@ To deploy your Ruby on Rails application, follow the below steps.
 
 ### Prerequisites
 
-1. [Install Pulumi](https://pulumi.io/install)
-2. [Configure AWS Credentials](https://pulumi.io/install/aws.html)
+1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/reference/clouds/aws/setup/)
 
 ### Steps
 

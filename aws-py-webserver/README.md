@@ -9,13 +9,13 @@ To get the correct Amazon Linux AMI for the instance size and region, a mapping 
 
 ## Prerequisites
 
-1. [Install Pulumi](https://pulumi.io/install/)
-1. [Configure Pulumi for AWS](https://pulumi.io/quickstart/aws/setup.html)
-1. [Configure Pulumi for Python](https://pulumi.io/reference/python.html)
+1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
+1. [Configure Pulumi for AWS](https://www.pulumi.com/docs/reference/clouds/aws/setup/)
+1. [Configure Pulumi for Python](https://www.pulumi.com/docs/reference/python/)
 
 ## Deploying and running the program
 
-1. Install dependencies (a `virtualenv` is recommended - see [Pulumi Python docs](https://pulumi.io/reference/python.html)):
+1. Install dependencies (a `virtualenv` is recommended - see [Pulumi Python docs](https://www.pulumi.com/docs/reference/python/)):
 
     ```
     $ pip install -r requirements.txt

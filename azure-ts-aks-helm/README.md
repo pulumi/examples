@@ -7,11 +7,11 @@ all in one Pulumi program. Please see https://docs.microsoft.com/en-us/azure/aks
 
 # Prerequisites
 
-Ensure you have [downloaded and installed the Pulumi CLI](https://pulumi.io/install).
+Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/reference/install/).
 
 We will be deploying to Azure, so you will need an Azure account. If you don't have an account,
 [sign up for free here](https://azure.microsoft.com/en-us/free/).
-[Follow the instructions here](https://pulumi.io/install/azure.html) to connect Pulumi to your Azure account.
+[Follow the instructions here](https://www.pulumi.com/docs/reference/clouds/azure/setup/) to connect Pulumi to your Azure account.
 
 This example deploys a Helm Chart from [Bitnami's Helm chart repository](https://github.com/bitnami/charts), so you
 will need to [install the Helm CLI](https://docs.helm.sh/using_helm/#installing-helm) and configure it:

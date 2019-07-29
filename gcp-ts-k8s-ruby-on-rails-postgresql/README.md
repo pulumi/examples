@@ -13,11 +13,11 @@ All of these happen behind a single `pulumi up` command, and are expressed in ju
 
 # Prerequisites
 
-Ensure you have [downloaded and installed the Pulumi CLI](https://pulumi.io/install).
+Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/reference/install/).
 
 We will be deploying to Google Cloud Platform (GCP), so you will need an account. If you don't have an account,
 [sign up for free here](https://cloud.google.com/free/). In either case,
-[follow the instructions here](https://pulumi.io/quickstart/gcp/setup.html) to connect Pulumi to your GCP account.
+[follow the instructions here](https://www.pulumi.com/docs/reference/clouds/gcp/setup/) to connect Pulumi to your GCP account.
 
 This example assumes that you have GCP's `gcloud` CLI on your path. This is installed as part of the
 [GCP SDK](https://cloud.google.com/sdk/).

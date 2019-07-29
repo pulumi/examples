@@ -9,9 +9,9 @@ you write serverless code as ordinary JavaScript functions.
 ## Prerequisites
 
 This program requires the Pulumi CLI.  If you don't have it installed already,
-[get it here](https://pulumi.io/install) or simply run `curl -fsSL https://get.pulumi.com | sh`.
+[get it here](https://www.pulumi.com/docs/reference/install/) or simply run `curl -fsSL https://get.pulumi.com | sh`.
 
-After that, you'll need to [configure your AWS credentials](https://pulumi.io/install/aws.html) so that Pulumi can
+After that, you'll need to [configure your AWS credentials](https://www.pulumi.com/docs/reference/clouds/aws/setup/) so that Pulumi can
 deploy into your account.  If your AWS CLI is already configured, everything should just work.
 
 Since this example uses Slack, you'll also need
@@ -80,5 +80,5 @@ After installing the CLI and cloning the repo, `cd` into the directory, and run 
 
 ## Learning More
 
-To learn more about Pulumi, try checking out the [Tutorials](https://pulumi.io/quickstart) and
-[Tour](https://pulumi.io/tour) sections of [pulumi.io](https://pulumi.io).
+To learn more about Pulumi, try checking out the [Get Started](https://www.pulumi.com/docs/quickstart/) guide and
+[Docs](https://www.pulumi.com/docs/).

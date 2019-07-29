@@ -9,7 +9,7 @@ Platform](https://github.com/pulumi/pulumi-gcp), `kubernetes` for
 [Kubernetes](https://github.com/pulumi/pulumi-kubernetes), or `cloud` for
 [Pulumi's cross-cloud programming framework](https://github.com/pulumi/pulumi-cloud).
 
-See the [Pulumi documentation](https://pulumi.io) for more details on getting started with Pulumi.
+See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on getting started with Pulumi.
 
 ### Cloud Infrastructure
 

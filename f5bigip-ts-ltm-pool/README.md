@@ -12,7 +12,7 @@ All of these happen behind a single `pulumi up` command, and are expressed in ju
 
 # Prerequisites
 
-Ensure you have [downloaded and installed the Pulumi CLI](https://pulumi.io/install).
+Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/reference/install/).
 
 If you **_already_** have an F5 BigIP appliance available, you only need administrative credentials to it and 
 at least one backend HTTP instance to load balance to.
@@ -25,7 +25,7 @@ Pool Attachments.
 
 # Running the Example
 
-If you need to deploy an F5 BigIP appliance or backend HTTP instances as described above, first [Configure Pulumi for AWS](https://pulumi.io/quickstart/aws/setup.html).
+If you need to deploy an F5 BigIP appliance or backend HTTP instances as described above, first [Configure Pulumi for AWS](https://www.pulumi.com/docs/reference/clouds/aws/setup/).
 
 ## (Optional) Provision an F5 BigIP appliance on AWS
 

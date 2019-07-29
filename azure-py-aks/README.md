@@ -10,9 +10,9 @@ To deploy your infrastructure, follow the below steps.
 
 ### Prerequisites
 
-1. [Install Pulumi](https://pulumi.io/install)
+1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
 2. [Install Python 3.6](https://www.python.org/downloads/)
-3. [Configure Azure Credentials](https://pulumi.io/install/azure.html)
+3. [Configure Azure Credentials](https://www.pulumi.com/docs/reference/clouds/azure/setup/)
 4. [Generate SSH Key](https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key)
 
 ### Steps
