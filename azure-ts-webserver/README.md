@@ -7,8 +7,8 @@ This example provisions a Linux web server in an Azure Virtual Machine and gives
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/en/download/)
-- [Download and install the Pulumi CLI](https://pulumi.io/install)
-- [Connect Pulumi with your Azure account](https://pulumi.io/quickstart/azure/setup.html) (if your `az` CLI is
+- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/reference/install/)
+- [Connect Pulumi with your Azure account](https://www.pulumi.com/docs/reference/clouds/azure/setup/) (if your `az` CLI is
       configured, this will just work)
 
 ## Running the App

@@ -74,7 +74,7 @@ That's it! The dynamic provider will automatically use the underlying Azure prov
 
 ## Dynamic Providers
 
-Learn more about dynamic providers [here](https://pulumi.io/reference/programming-model/#dynamicproviders).
+Learn more about dynamic providers [here](https://www.pulumi.com/docs/reference/programming-model/#dynamicproviders).
 
 ## Known Issues
 

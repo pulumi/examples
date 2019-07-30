@@ -12,11 +12,11 @@ https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-ove
 
 ## Prerequisites
 
-Ensure you have [downloaded and installed the Pulumi CLI](https://pulumi.io/install).
+Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/reference/install/).
 
 We will be deploying to Azure, so you will need an Azure account. If you don't have an account,
 [sign up for free here](https://azure.microsoft.com/en-us/free/). [Follow the instructions
-here](https://pulumi.io/install/azure.html) to connect Pulumi to your Azure account.
+here](https://www.pulumi.com/docs/reference/clouds/azure/setup/) to connect Pulumi to your Azure account.
 
 Now, install dependencies:
 
@@ -73,4 +73,4 @@ npm install
 # Next Steps
 
 For more Azure examples, please [check out the Azure Getting Started Guide](
-https://pulumi.io/quickstart/azure/).
+https://www.pulumi.com/docs/quickstart/azure/).

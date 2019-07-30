@@ -6,9 +6,9 @@ This example deploys an Azure Virtual Machine and starts a HTTP server on it.
 
 ## Prerequisites
 
-1. [Install Pulumi](https://pulumi.io/install/)
-1. [Configure Pulumi for Azure](https://pulumi.io/quickstart/azure/setup.html)
-1. [Configure Pulumi for Python](https://pulumi.io/reference/python.html)
+1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
+1. [Configure Pulumi for Azure](https://www.pulumi.com/docs/reference/clouds/azure/setup/)
+1. [Configure Pulumi for Python](https://www.pulumi.com/docs/reference/python/)
 
 ## Deploying and running the program
 

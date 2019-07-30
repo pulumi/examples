@@ -78,7 +78,7 @@ Please confirm that this is what you'd like to do by typing ("testing"): testing
 
 ## About the code
 
-At the start of the program, the following lines retrieve the value for the Redis password by reading a [configuration value](https://pulumi.io/reference/config.html). This is the same value that was set above with the command `pulumi config set redisPassword <value>`:
+At the start of the program, the following lines retrieve the value for the Redis password by reading a [configuration value](https://www.pulumi.com/docs/reference/config/). This is the same value that was set above with the command `pulumi config set redisPassword <value>`:
 
 ```typescript
 let config = new pulumi.Config();
