@@ -64,7 +64,7 @@ let environment = hosts.apply(([postgresHost, redisHost]) => [
     { name: "EXECUTOR", value: "Celery" }
 ]);
 
-let airflowControllerListener = new awsx.elasticloadbalancingv2.ApplicationListener("airflowcontroller", {
+let airflowControllerListener = new awsx.lb.ApplicationListener("airflowcontroller", {
     external: true,
     port: 8080,
     protocol: "HTTP",
@@ -93,7 +93,7 @@ let airflowController = new awsx.ecs.EC2Service("airflowcontroller", {
     },
 });
 
-let airflowerListener = new awsx.elasticloadbalancingv2.ApplicationListener("airflower", {
+let airflowerListener = new awsx.lb.ApplicationListener("airflower", {
     port: 5555,
     external: true,
     protocol: "HTTP"

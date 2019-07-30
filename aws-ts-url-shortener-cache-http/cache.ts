@@ -8,11 +8,11 @@ import * as config from "./config";
 // A simple cache abstraction that wraps Redis.
 export class Cache {
     private readonly redis: awsx.ecs.FargateService;
-    private readonly endpoint: pulumi.Output<awsx.elasticloadbalancingv2.ListenerEndpoint>;
+    private readonly endpoint: pulumi.Output<awsx.lb.ListenerEndpoint>;
 
     constructor(name: string, memory: number = 128) {
         let pw = config.redisPassword;
-        let listener = new awsx.elasticloadbalancingv2.NetworkListener(name, { port: 6379 });
+        let listener = new awsx.lb.NetworkListener(name, { port: 6379 });
         this.redis = new awsx.ecs.FargateService(name, {
             taskDefinitionArgs: {
                 containers: {

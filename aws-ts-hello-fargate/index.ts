@@ -4,7 +4,7 @@ import * as awsx from "@pulumi/awsx";
 const cluster = new awsx.ecs.Cluster("cluster");
 
 // Step 2: Define the Networking for our service.
-const alb = new awsx.elasticloadbalancingv2.ApplicationLoadBalancer(
+const alb = new awsx.lb.ApplicationLoadBalancer(
     "net-lb", { external: true, securityGroups: cluster.securityGroups });
 const web = alb.createListener("web", { port: 80, external: true });
 
