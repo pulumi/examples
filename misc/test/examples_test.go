@@ -768,6 +768,7 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, headers map[str
 	if !assert.True(t, ok, fmt.Sprintf("expected `%s` output", output)) {
 		return false
 	}
+
 	if !(strings.HasPrefix(hostname, "http://") || strings.HasPrefix(hostname, "https://")) {
 		hostname = fmt.Sprintf("http://%s", hostname)
 	}
@@ -816,6 +817,11 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, headers map[str
 	if !assert.NoError(t, err) {
 		return false
 	}
+
+	if !assert.NotNil(t, resp, "resp was nil") && !assert.NotNil(t, resp.Body, "resp.body was nil") {
+		return false
+	}
+
 	// Read the body
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
