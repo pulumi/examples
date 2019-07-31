@@ -1,5 +1,11 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
+// Note: @pulumi/cloud is a preview package demonstrating how to create cross-cloud pulumi
+// components.  Users targetting a specific cloud like AWS, Azure, or GCP, are recommend to
+// platform-specific packages like @pulumi/aws, @pulumi/azure or @pulumi/gcp.  These packages give
+// full access to the breadth of capabilities of those specific platforms and come with many
+// platform-specific abstractions to make development easier.
+
 import * as pulumi from "@pulumi/pulumi";
 import * as cloud from "@pulumi/cloud";
 import * as cache from "./cache";
@@ -8,7 +14,7 @@ import * as cache from "./cache";
 let endpoint = new cloud.HttpEndpoint("urlshortener");
 
 // Create a table `urls`, with `name` as primary key.
-let urlTable = new cloud.Table("urls", "name"); 
+let urlTable = new cloud.Table("urls", "name");
 
 // Create a cache of frequently accessed urls.
 let urlCache = new cache.Cache("urlcache");
