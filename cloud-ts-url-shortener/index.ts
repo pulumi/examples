@@ -1,10 +1,10 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
-// Note: @pulumi/cloud is a preview package demonstrating how to create cross-cloud pulumi
-// components.  Users targetting a specific cloud like AWS, Azure, or GCP, are recommend to
-// platform-specific packages like @pulumi/aws, @pulumi/azure or @pulumi/gcp.  These packages give
-// full access to the breadth of capabilities of those specific platforms and come with many
-// platform-specific abstractions to make development easier.
+// Note: @pulumi/cloud is a preview package demonstrating how to create cross-cloud Pulumi
+// components. If you are targeting a specific cloud like AWS, Azure, or GCP, we recommend you use
+// platform-specific packages like @pulumi/aws, @pulumi/azure or @pulumi/gcp. These packages give
+// you full access to the breadth of the platform's capabilities and comes with many abstractions to
+// make developing against that platform easier.
 
 import * as cloud from "@pulumi/cloud-aws";
 import { Output } from "@pulumi/pulumi"; // for output property
