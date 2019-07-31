@@ -4,8 +4,9 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/cloud-aws": "latest",
         "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "latest",
+        "@pulumi/awsx": "latest",
         "@slack/client": "latest"
     }
 }
