@@ -2,12 +2,9 @@
 
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/awsx";
 import * as cloud from "@pulumi/cloud-aws";
 import * as cache from "./cache";
 import * as express from "express";
-import * as fs from "fs";
-import * as mime from "mime-types";
 
 type AsyncRequestHandler = (req: express.Request, res: express.Response, next: express.NextFunction) => Promise<void>;
 
@@ -18,7 +15,36 @@ const asyncMiddleware = (fn: AsyncRequestHandler) => {
 }
 
 // Create a table `urls`, with `name` as primary key.
-let urlTable = new cloud.Table("urls", "name");
+let urlTable = new aws.dynamodb.Table("urls", {
+    attributes: [{
+        name: "name",
+        type: "S",
+    }],
+    hashKey: "name",
+    billingMode: "PAY_PER_REQUEST",
+})
+
+async function scanTable() {
+    const items: any[] = [];
+    const db = new aws.sdk.DynamoDB.DocumentClient();
+    let params = {
+        TableName: urlTable.name.get(),
+        ConsistentRead: true,
+        ExclusiveStartKey: undefined,
+    };
+
+    do {
+        const result = await db.scan(params).promise();
+        if (result.Items) {
+            items.push(...result.Items);
+        }
+
+        params.ExclusiveStartKey = <any>result.LastEvaluatedKey;
+    }
+    while (params.ExclusiveStartKey !== undefined);
+
+    return items;
+}
 
 // Create a cache of frequently accessed urls.
 let urlCache = new cache.Cache("urlcache");
@@ -30,7 +56,7 @@ let httpServer = new cloud.HttpServer("urlshortener", () => {
     // GET /url lists all URLs currently registered.
     app.get("/url", asyncMiddleware(async (req, res) => {
         try {
-            let items = await urlTable.scan();
+            let items = await scanTable();
             res.status(200).json(items);
             console.log(`GET /url retrieved ${items.length} items`);
         } catch (err) {
@@ -51,7 +77,14 @@ let httpServer = new cloud.HttpServer("urlshortener", () => {
             }
             else {
                 // If we didn't find it in the cache, consult the table.
-                let value = await urlTable.get({name});
+                const db = new aws.sdk.DynamoDB.DocumentClient();
+                const result = await db.get({
+                    TableName: urlTable.name.get(),
+                    Key: {name},
+                    ConsistentRead: true,
+                }).promise();
+
+                let value = result.Item;
                 url = value && value.url;
                 if (url) {
                     urlCache.set(name, url); // cache it for next time.
@@ -81,7 +114,11 @@ let httpServer = new cloud.HttpServer("urlshortener", () => {
         const url = <string>req.query["url"];
         const name = <string>req.query["name"];
         try {
-            await urlTable.insert({ name, url });
+            const db = new aws.sdk.DynamoDB.DocumentClient();
+            await db.put({
+                TableName: urlTable.name.get(),
+                Item: { name, url },
+            }).promise();
             await urlCache.set(name, url);
             res.json({ shortenedURLName: name });
             console.log(`POST /url/${name} => ${url}`);

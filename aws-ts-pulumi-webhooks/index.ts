@@ -1,5 +1,7 @@
+// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+
 import * as pulumi from "@pulumi/pulumi";
-import * as cloud from "@pulumi/cloud";
+import * as awsx from "@pulumi/awsx";
 
 import * as crypto from "crypto";
 
@@ -18,62 +20,73 @@ const stackConfig = {
     slackChannel: config.require("slackChannel"),
 };
 
-// Just logs information aincomming webhook request.
-async function logRequest(req: cloud.Request, _: cloud.Response, next: () => void) {
+// Just logs information from an incoming webhook request.
+function logRequest(req: awsx.apigateway.Request) {
     const webhookID = req.headers["pulumi-webhook-id"];
     const webhookKind = req.headers["pulumi-webhook-kind"];
     console.log(`Received webhook from Pulumi ${webhookID} [${webhookKind}]`);
-    next();
 }
 
 // Webhooks can optionally be configured with a shared secret, so that webhook handlers like this app can authenticate
-// message integrity. Rejects any incomming requests that don't have a valid "pulumi-webhook-signature" header.
-async function authenticateRequest(req: cloud.Request, res: cloud.Response, next: () => void) {
-    const webhookSig = req.headers["pulumi-webhook-signature"] as string;  // headers[] returns (string | string[]).
+// message integrity. Rejects any incoming requests that don't have a valid "pulumi-webhook-signature" header.
+function authenticateRequest(req: awsx.apigateway.Request): awsx.apigateway.Response | undefined {
+    const webhookSig = req.headers["pulumi-webhook-signature"];
     if (!stackConfig.sharedSecret || !webhookSig) {
-        next();
-        return;
+        return undefined;
     }
 
-    const payload = req.body.toString();
+    const payload = req.body!.toString();
     const hmacAlg = crypto.createHmac("sha256", stackConfig.sharedSecret);
     const hmac = hmacAlg.update(payload).digest("hex");
 
     const result = crypto.timingSafeEqual(Buffer.from(webhookSig), Buffer.from(hmac));
     if (!result) {
         console.log(`Mismatch between expected signature and HMAC: '${webhookSig}' vs. '${hmac}'.`);
-        res.status(400).end("Unable to authenticate message: Mismatch between signature and HMAC");
-        return;
+        return { statusCode: 400, body: "Unable to authenticate message: Mismatch between signature and HMAC" };
     }
-    next();
+
+    return undefined;
 }
 
-const webhookHandler = new cloud.HttpEndpoint("pulumi-webhook-handler");
+const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
+    routes: [{
+        path: "/",
+        method: "GET",
+        eventHandler: async () => ({
+            statusCode: 200,
+            body: "🍹 Pulumi Webhook Responder🍹\n"
+        }),
+    }, {
+        path: "/",
+        method: "POST",
+        eventHandler: async (req) => {
+            logRequest(req);
+            const authenticateResult = authenticateRequest(req);
+            if (authenticateResult) {
+                return authenticateResult;
+            }
 
-webhookHandler.get("/", async (_, res) => {
-    res.status(200).end("🍹 Pulumi Webhook Responder🍹\n");
+            const webhookKind = req.headers["pulumi-webhook-kind"];
+            const payload = req.body!.toString();
+            const parsedPayload = JSON.parse(payload);
+            const prettyPrintedPayload = JSON.stringify(parsedPayload, null, 2);
+
+            const client = new slack.WebClient(stackConfig.slackToken);
+
+            const fallbackText = `Pulumi Service Webhook (\`${webhookKind}\`)\n` + "```\n" + prettyPrintedPayload + "```\n";
+            const messageArgs: slack.ChatPostMessageArguments = {
+                channel: stackConfig.slackChannel,
+                text: fallbackText,
+                as_user: true,
+            }
+
+            // Format the Slack message based on the kind of webhook received.
+            const formattedMessageArgs = formatSlackMessage(webhookKind, parsedPayload, messageArgs);
+
+            await client.chat.postMessage(formattedMessageArgs);
+            return { statusCode: 200, body: `posted to Slack channel ${stackConfig.slackChannel}\n` };
+        },
+    }],
 });
 
-webhookHandler.post("/", logRequest, authenticateRequest, async (req, res) => {
-    const webhookKind = req.headers["pulumi-webhook-kind"] as string;  // headers[] returns (string | string[]).
-    const payload = <string>req.body.toString();
-    const parsedPayload = JSON.parse(payload);
-    const prettyPrintedPayload = JSON.stringify(parsedPayload, null, 2);
-
-    const client = new slack.WebClient(stackConfig.slackToken);
-
-    const fallbackText = `Pulumi Service Webhook (\`${webhookKind}\`)\n` + "```\n" + prettyPrintedPayload + "```\n";
-    const messageArgs: slack.ChatPostMessageArguments = {
-        channel: stackConfig.slackChannel,
-        text: fallbackText,
-        as_user: true,
-    }
-
-    // Format the Slack message based on the kind of webhook received.
-    const formattedMessageArgs = formatSlackMessage(webhookKind, parsedPayload, messageArgs);
-
-    await client.chat.postMessage(formattedMessageArgs);
-    res.status(200).end(`posted to Slack channel ${stackConfig.slackChannel}\n`);
-});
-
-export const url = webhookHandler.publish().url;
+export const url = webhookHandler.url;
