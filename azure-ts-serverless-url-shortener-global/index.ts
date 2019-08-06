@@ -1,21 +1,21 @@
-import * as pulumi from "@pulumi/pulumi";
-import * as azure from "@pulumi/azure";
 import { Container } from "@azure/cosmos";
+import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 import { getContainer } from "./cosmosclient";
 
 const config = new pulumi.Config();
 // Read a list of target locations from the config file:
 // Expecting a comma-separated list, e.g., "westus,eastus,westeurope"
-const locations = config.require("locations").split(',');
+const locations = config.require("locations").split(",");
 // The first location is considered primary
 const primaryLocation = locations[0];
 
-let resourceGroup = new azure.core.ResourceGroup("UrlShorterner", {
+const resourceGroup = new azure.core.ResourceGroup("UrlShorterner", {
     location: primaryLocation,
 });
 
 // Cosmos DB with a single write region (primary location) and multiple read replicas
-let cosmosdb = new azure.cosmosdb.Account("UrlStore", {
+const cosmosdb = new azure.cosmosdb.Account("UrlStore", {
     resourceGroupName: resourceGroup.name,
     location: primaryLocation,
     geoLocations: locations.map((location, failoverPriority) => ({ location, failoverPriority })),
@@ -27,19 +27,26 @@ let cosmosdb = new azure.cosmosdb.Account("UrlStore", {
     },
 });
 
+// Define a database under the Cosmos DB Account
+const database = new azure.cosmosdb.SqlDatabase("Database", {
+    resourceGroupName: resourceGroup.name,
+    accountName: cosmosdb.name,
+    name: "thedb",
+});
+
 // Traffic Manager as a global HTTP endpoint
 const profile = new azure.trafficmanager.Profile("UrlShortEndpoint", {
     resourceGroupName: resourceGroup.name,
-    trafficRoutingMethod: 'Performance',
+    trafficRoutingMethod: "Performance",
     dnsConfigs: [{
         // Subdomain must be globally unique, so we default it with the full resource group name
         relativeName: resourceGroup.name,
         ttl: 60,
     }],
     monitorConfigs: [{
-        protocol: 'HTTP',
+        protocol: "HTTP",
         port: 80,
-        path: '/api/ping',
+        path: "/api/ping",
     }]
 });
 
@@ -57,7 +64,7 @@ const fn = new azure.appservice.HttpEventSubscription("AddUrl", {
             container = container || await getContainer(endpoint, masterKey, primaryLocation);
 
             await container.items.create(request.body);
-            return { status: 200, body: 'Short URL saved' };
+            return { status: 200, body: "Short URL saved" };
         };
     }
 });
@@ -78,23 +85,22 @@ for (const location of locations) {
             return async (_, request: azure.appservice.HttpRequest) => {
                 container = container || await getContainer(endpoint, masterKey, location);
 
-                const key = request.params['key'];
-                if (key === 'ping') {
+                const key = request.params["key"];
+                if (key === "ping") {
                     // Handle traffic manager live pings
-                    return { status: 200, body: 'Ping ACK' };
+                    return { status: 200, body: "Ping ACK" };
                 }
 
                 try {
-                    const response = await container.item(key.toString()).read();
-
-                    return response.body && response.body.url
+                    const response = await container.item(key, undefined).read();
+                    return response.resource && response.resource.url
                             // HTTP redirect for known URLs
-                            ? { status: 301, headers: { "location": response.body.url }, body: '' }
+                            ? { status: 301, headers: { location: response.resource.url }, body: "" }
                             // 404 for malformed documents
-                            : { status: 404, body: '' };
+                            : { status: 404, body: "" };
                 } catch (e) {
                     // Cosmos SDK throws an error for non-existing documents
-                    return { status: 404, body: '' }
+                    return { status: 404, body: "" }
                 }
             };
         }
