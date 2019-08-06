@@ -1,0 +1,11 @@
+name: kubernetes-ts-multicloud
+description: Multi-cloud Kubernetes example
+runtime: nodejs
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    azure:location:
+      description: The Azure location to deploy into
+      default: westus2
