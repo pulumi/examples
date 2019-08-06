@@ -1,7 +1,7 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 
 const config = new pulumi.Config();
@@ -9,8 +9,9 @@ const adminUser = config.get("adminUser") || "azureuser";
 const adminPassword = config.getSecret("adminPassword") || new random.RandomString("pwd", {
     length: 20,
 }).result;
-const domain = config.getSecret("domain") || new random.RandomString("domain", {
+const domain = config.get("domain") || new random.RandomString("domain", {
     length: 10,
+    number: false,
     special: false,
     upper: false,
 }).result;
