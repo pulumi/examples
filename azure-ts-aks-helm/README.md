@@ -19,6 +19,7 @@ will need to [install the Helm CLI](https://docs.helm.sh/using_helm/#installing-
 ```bash
 $ helm init --client-only
 $ helm repo add bitnami https://charts.bitnami.com/bitnami
+$ helm repo update
 ```
 
 # Running the Example

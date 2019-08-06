@@ -18,6 +18,7 @@ will need to [install the Helm CLI](https://docs.helm.sh/using_helm/#installing-
 ```bash
 $ helm init --client-only
 $ helm repo add kedacore https://kedacore.azureedge.net/helm
+$ helm repo update
 ```
 
 # Running the Example
@@ -30,13 +31,10 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi stack init
     ```
 
-2. Set the required configuration variables for this program:
+2. Set the Azure region to deploy to:
 
     ```bash
-    $ pulumi config set azure:location westus
-    $ pulumi config set password --secret [your-cluster-password-here]
-    $ ssh-keygen -t rsa -f key.rsa
-    $ pulumi config set sshPublicKey < key.rsa.pub
+    $ pulumi config set azure:location <value>
     ```
 
 3. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including an Active Directory service principal, AKS cluster, and then deploys the Apache Helm Chart, and an Azure Function managed by KEDA, all in a single gesture:

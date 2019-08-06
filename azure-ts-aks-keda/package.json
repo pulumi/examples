@@ -9,7 +9,9 @@
         "@pulumi/azuread": "latest",
         "@pulumi/docker": "latest",
         "@pulumi/kubernetes": "latest",
-        "@pulumi/pulumi": "latest"
+        "@pulumi/pulumi": "latest",
+        "@pulumi/random": "latest",
+        "@pulumi/tls": "latest"
     },
     "license": "Apache-2.0"
 }

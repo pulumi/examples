@@ -1,4 +1,4 @@
-// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
 import * as docker from "@pulumi/docker";
@@ -15,6 +15,7 @@ export interface KedaEdgeArgs {
 export class KedaEdge extends pulumi.ComponentResource {
     public registry: azure.containerservice.Registry;
     public k8sProvider: k8s.Provider;
+    public registrySecretName: pulumi.Output<string>;
 
     constructor(name: string,
                 args: KedaEdgeArgs,
@@ -41,10 +42,6 @@ export class KedaEdge extends pulumi.ComponentResource {
 
         // Storage the docker registry credentials as a secret
         const secretRegistry = new k8s.core.v1.Secret("registry-secret", {
-            metadata: {
-                name: "registry",
-                namespace: "default",
-            },
             data: {
                 ".dockercfg": dockercfg.apply(c => Buffer.from(JSON.stringify(c)).toString("base64")),
             },
@@ -54,7 +51,6 @@ export class KedaEdge extends pulumi.ComponentResource {
 
         // Deploy a KEDA Edge Helm chart
         const keda = new k8s.helm.v2.Chart("keda-edge", {
-            namespace: "default",
             repo: "kedacore",
             chart: "keda-edge",
             version: "0.0.1-2019.07.24.21.37.42-8ffd9a3",
@@ -65,6 +61,7 @@ export class KedaEdge extends pulumi.ComponentResource {
 
         this.k8sProvider = args.k8sProvider;
         this.registry = registry;
+        this.registrySecretName = secretRegistry.metadata.name;
         this.registerOutputs();
     }
 }
@@ -101,12 +98,7 @@ export class KedaStorageQueueHandler extends pulumi.ComponentResource {
         }, { parent: this });
 
         // Put the storage account connection string into a secret
-        const secretName = `${name}-connection`;
         const secretQueue = new k8s.core.v1.Secret("queue-secret", {
-            metadata: {
-                name: secretName,
-                namespace: "default",
-            },
             data: {
                 queueConnectionString:
                     args.storageAccount.primaryConnectionString.apply(c => Buffer.from(c).toString("base64")),
@@ -115,12 +107,10 @@ export class KedaStorageQueueHandler extends pulumi.ComponentResource {
 
         // Deploy the Function App from the image
         const appLabels = { app: name };
-        const deployment = new k8s.apps.v1.Deployment("deployment", {
+        const deployment = new k8s.apps.v1.Deployment(name, {
             apiVersion: "apps/v1",
             kind: "Deployment",
             metadata: {
-                name,
-                namespace: "default",
                 labels: appLabels,
             },
             spec: {
@@ -134,9 +124,9 @@ export class KedaStorageQueueHandler extends pulumi.ComponentResource {
                             name,
                             image: dockerImage.imageName,
                             env: [{ name: "queuename", value: args.queue.name }],
-                            envFrom: [{ secretRef: {name: secretName } }],
+                            envFrom: [{ secretRef: {name: secretQueue.metadata.name } }],
                         }],
-                        imagePullSecrets: [{ name: "registry" }],
+                        imagePullSecrets: [{ name: args.edge.registrySecretName }],
                     },
                 },
             },
@@ -147,8 +137,6 @@ export class KedaStorageQueueHandler extends pulumi.ComponentResource {
             apiVersion: "keda.k8s.io/v1alpha1",
             kind: "ScaledObject",
             metadata: {
-                name,
-                namespace: "default",
                 labels: { deploymentName: name },
             },
             spec: {

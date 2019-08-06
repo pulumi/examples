@@ -1,11 +1,13 @@
-// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
 import * as azuread from "@pulumi/azuread";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
+import * as random from "@pulumi/random";
+import * as tls from "@pulumi/tls";
 
-// Arguments for an AKS cluster. We use almost all defaults for this examples, but the
+// Arguments for an AKS cluster. We use almost all defaults for this example, but the
 // interface could be extended with e.g. agent pool settings.
 export interface AksClusterArgs {
     resourceGroup: azure.core.ResourceGroup;
@@ -20,9 +22,14 @@ export class AksCluster extends pulumi.ComponentResource {
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("examples:keda:AksCluster", name, args, opts);
 
-        const config = new pulumi.Config();
-        const password = config.require("password");
-        const sshPublicKey = config.require("sshPublicKey");
+        const password = new random.RandomString("password", {
+            length: 20,
+            special: true,
+        }).result;
+        const sshPublicKey = new tls.PrivateKey("keda", {
+            algorithm: "RSA",
+            rsaBits: 4096,
+        }).publicKeyOpenssh;
 
         // Create the AD service principal for the K8s cluster.
         const adApp = new azuread.Application("aks", undefined, { parent: this });
