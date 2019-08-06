@@ -641,7 +641,7 @@ func TestExamples(t *testing.T) {
 			Config: map[string]string{
 				"gcp:project":       "pulumi-ci-gcp-provider",
 				"gcp:zone":          "us-central1-a",
-				"password":          "S4cretPassword!",
+				"password":          "S4cretPassword!$",
 				"node_count":        "3",
 				"node_machine_type": "n1-standard-2",
 			},
