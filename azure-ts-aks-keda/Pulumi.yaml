@@ -1,0 +1,8 @@
+name: azure-ts-aks-keda
+runtime: nodejs
+description: Create an Azure Kubernetes Service (AKS) cluster and deploy an Azure Function App with KEDA (Kubernetes-based Event Driven Autoscaling)
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
