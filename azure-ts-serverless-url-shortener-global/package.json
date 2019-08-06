@@ -6,7 +6,7 @@
         "typescript": "^3.1.1"
     },
     "dependencies": {
-        "@azure/cosmos": "latest",
+        "@azure/cosmos": "^3.1.0",
         "@pulumi/pulumi": "latest",
         "@pulumi/azure": "latest"
     }
