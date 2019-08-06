@@ -1,0 +1,8 @@
+name: azure-ts-vm-scaleset
+runtime: nodejs
+description: Basic example of nginx deployed in Azure VM Scale Sets
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public

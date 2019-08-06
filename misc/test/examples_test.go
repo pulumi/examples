@@ -461,6 +461,17 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-vm-scaleset"),
+			Config: map[string]string{
+				"azure:location": azureLocation,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["publicAddress"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "nginx")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-ts-webserver"),
 			Config: map[string]string{
 				"azure:location": azureLocation,
