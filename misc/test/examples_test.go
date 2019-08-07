@@ -33,6 +33,11 @@ func TestExamples(t *testing.T) {
 		azureLocation = "westus"
 		fmt.Println("Defaulting ARM_LOCATION to 'westus'.  You can override using the ARM_LOCATION variable")
 	}
+	gkeEngineVersion := os.Getenv("GKE_ENGINE_VERSION")
+	if gkeEngineVersion == "" {
+		gkeEngineVersion = ""
+		fmt.Println("Defaulting GKE_ENGINE_VERSION to '1.13.7-gke.8'. You can override using the GKE_ENGINE_VERSION variable")
+	}
 	cwd, err := os.Getwd()
 	if !assert.NoError(t, err, "expected a valid working directory: %v", err) {
 		return
@@ -655,6 +660,7 @@ func TestExamples(t *testing.T) {
 				"password":          "S4cretPassword!$",
 				"node_count":        "3",
 				"node_machine_type": "n1-standard-2",
+				"master_version":    gkeEngineVersion,
 			},
 		}),
 		//base.With(integration.ProgramTestOptions{
@@ -691,13 +697,15 @@ func TestExamples(t *testing.T) {
 				"password":        "S4cretPassword123!",
 				"nodeCount":       "3",
 				"nodeMachineType": "n1-standard-2",
+				"masterVersion":   gkeEngineVersion,
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "gcp-ts-gke-hello-world"),
 			Config: map[string]string{
-				"gcp:project": "pulumi-ci-gcp-provider",
-				"gcp:zone":    "us-central1-a",
+				"gcp:project":   "pulumi-ci-gcp-provider",
+				"gcp:zone":      "us-central1-a",
+				"masterVersion": gkeEngineVersion,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["servicePublicIP"].(string)

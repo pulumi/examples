@@ -18,14 +18,14 @@ NODE_MACHINE_TYPE = config.get('node_machine_type') or 'n1-standard-1'
 USERNAME = config.get('username') or 'admin'
 # password is the password for the admin user in the cluster.
 PASSWORD = config.get_secret('password') or RandomString("password", length=20, special=True).result
-
-engine_version = Output.from_input(get_engine_versions()).latest_master_version
+# master version of GKE engine
+MASTER_VERSION = config.get('master_version')
 
 # Now, actually create the GKE cluster.
 k8s_cluster = Cluster('gke-cluster',
     initial_node_count=NODE_COUNT,
-    node_version=engine_version,
-    min_master_version=engine_version,
+    node_version=MASTER_VERSION,
+    min_master_version=MASTER_VERSION,
     master_auth={ 'username': USERNAME, 'password': PASSWORD },
     node_config={
         'machine_type': NODE_MACHINE_TYPE,

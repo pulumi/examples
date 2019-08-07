@@ -16,3 +16,6 @@ export const username = config.get("username") || "admin";
 
 // password is the password for the admin user in the cluster.
 export const password = config.require("password");
+
+// GKE master version
+export const masterVersion = config.require("masterVersion");

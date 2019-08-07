@@ -5,14 +5,14 @@ import * as gcp from "@pulumi/gcp";
 
 const name = "helloworld";
 
-// Find the latest engine version.
-const engineVersion = gcp.container.getEngineVersions().then(v => v.latestMasterVersion);
+const config = new pulumi.Config();
+export const masterVersion = config.require("masterVersion");
 
 // Create a GKE cluster
 const cluster = new gcp.container.Cluster(name, {
     initialNodeCount: 2,
-    minMasterVersion: engineVersion,
-    nodeVersion: engineVersion,
+    minMasterVersion: masterVersion,
+    nodeVersion: masterVersion,
     nodeConfig: {
         machineType: "n1-standard-1",
         oauthScopes: [
