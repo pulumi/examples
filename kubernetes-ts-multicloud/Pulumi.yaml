@@ -1,0 +1,16 @@
+name: kubernetes-ts-multicloud
+description: Single application deployed to multiple Kubernetes clusters
+runtime: nodejs
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    azure:location:
+      description: The Azure location to deploy into
+      default: westus2
+    gcp:project:
+      description: The GCP project to deploy into
+    gcp:zone:
+      description: The GCP zone to deploy into
+      default: us-west1-a
