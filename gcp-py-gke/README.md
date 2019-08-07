@@ -34,6 +34,7 @@ After cloning this repo, `cd` into it and run these commands. A GKE Kubernetes c
     $ pulumi config set gcp:project [your-gcp-project-here]
     $ pulumi config set gcp:zone us-west1-a # any valid GCP zone here
     $ pulumi config set password --secret [your-cluster-password-here]
+    $ pulumi config set master_version #any valid master version
     ```
 
    By default, your cluster will have 3 nodes of type `n1-standard-1`. This is configurable, however; for instance

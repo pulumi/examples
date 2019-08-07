@@ -42,6 +42,7 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
     $ pulumi config set dbPassword --secret [your-new-db-password-here]
     $ pulumi config set dockerUsername [your-dockerhub-username-here]
     $ pulumi config set dockerPassword --secret [your-dockerhub-password-here]
+    $ pulumi config set masterVersion # any valid master version
     ```
 
    By default, your cluster will have 3 nodes of type `n1-standard-1`. This is configurable, however; for instance

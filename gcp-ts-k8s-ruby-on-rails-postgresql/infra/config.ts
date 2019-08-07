@@ -17,3 +17,4 @@ export const clusterNodeCount = config.getNumber("clusterNodeCount") || 3;
 export const clusterNodeMachineType = config.get("clusterNodeMachineType") || "n1-standard-1";
 export const clusterUsername = config.get("clusterUsername") || "admin";
 export const clusterPassword = config.require("clusterPassword");
+export const masterVersion = config.require("masterVersion");
