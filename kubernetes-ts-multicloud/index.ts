@@ -47,10 +47,14 @@ interface appUrl {
 }
 export let appUrls: appUrl[] = [];
 
+const kuardImageTag = "blue";
+// const kuardImageTag = "green";
+
 // Create the application on each of the selected clusters.
 for (const cluster of clusters) {
     const instance = new app.DemoApp(cluster.name, {
         provider: cluster.provider,
+        imageTag: kuardImageTag,
         staticAppIP: cluster.staticAppIP
     });
 

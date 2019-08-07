@@ -18,6 +18,7 @@ import * as pulumi from "@pulumi/pulumi";
 // Arguments for the demo app.
 export interface DemoAppArgs {
     provider: k8s.Provider // Provider resource for the target Kubernetes cluster.
+    imageTag: string // Tag for the kuard image to deploy.
     staticAppIP?: pulumi.Input<string> // Optional static IP to use for the service. (Required for AKS).
 }
 
@@ -41,7 +42,7 @@ export class DemoApp extends pulumi.ComponentResource {
                         containers: [
                             {
                                 name: "kuard",
-                                image: "gcr.io/kuar-demo/kuard-amd64:blue",
+                                image: `gcr.io/kuar-demo/kuard-amd64:${args.imageTag}`,
                                 ports: [{containerPort: 8080, name: "http"}],
                                 livenessProbe: {
                                     httpGet: {path: "/healthy", port: "http"},
