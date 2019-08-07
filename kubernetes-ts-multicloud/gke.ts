@@ -29,10 +29,10 @@ export class GkeCluster extends pulumi.ComponentResource {
         const engineVersion = gcp.container.getEngineVersions().then(v => v.latestMasterVersion);
 
         // Generate a strong password for the Kubernetes cluster.
-        const password = pulumi.secret(new random.RandomString("password", {
+        const password = new random.RandomString("password", {
             length: 20,
             special: true
-        }, {parent: this}).result);
+        }, {parent: this, additionalSecretOutputs: ["result"]}).result;
 
         // Create the GKE cluster.
         const k8sCluster = new gcp.container.Cluster("cluster", {
