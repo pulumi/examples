@@ -1,8 +1,8 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Kubernetes Multi-cloud Example
+# Kubernetes Application Deployed To Multiple Clusters
 
-This example creates managed Kubernetes clusters using AKS, EKS, and GKE, and deploys an application
+This example creates managed Kubernetes clusters using AKS, EKS, and GKE, and deploys the application
 on each cluster.
 
 ## Deploying the App
@@ -37,26 +37,19 @@ After cloning this repo, from this working directory, run these commands:
 3. Set the required configuration variables for this program:
 
     ```bash
-    $ pulumi config set aws:region us-west-2
-    $ pulumi config set azure:location westus2
+    $ pulumi config set aws:region us-west-2                # Any valid AWS region here.
+    $ pulumi config set azure:location westus2              # Any valid Azure location here.
+    $ pulumi config set gcp:project [your-gcp-project-here]
+    $ pulumi config set gcp:zone us-west1-a                 # Any valid GCP zone here.
     ```
    
    Note that you can choose different regions here.
 
    We recommend using `us-west-2` to host your EKS cluster as other regions (notably `us-east-1`) may have capacity
-   issues that prevent EKS clusters from creating:
+   issues that prevent EKS clusters from creating.
 
-    ```
-    Diagnostics:
-      aws:eks:Cluster: eksCluster
-        error: Plan apply failed: creating urn:pulumi:aws-ts-eks-example::aws-ts-eks::EKSCluster$aws:eks/cluster:Cluster::eksCluster: error creating EKS Cluster (eksCluster-233c968): UnsupportedAvailabilityZoneException: Cannot create cluster 'eksCluster-233c968' because us-east-1a, the targeted availability zone, does not currently have sufficient capacity to support the cluster. Retry and choose from these availability zones: us-east-1b, us-east-1c, us-east-1d
-            status code: 400, request id: 9f031e89-a0b0-11e8-96f8-534c1d26a353
-    ```
-
-    We are tracking enabling the creation of VPCs limited to specific AZs to unblock this in `us-east-1`: pulumi/pulumi-awsx#32
-
-4. (Optional) Choose which clusters to deploy, and uncomment the corresponding lines in the `index.ts` file. None of the
-   clusters are enabled by default.
+4. (Optional) Disable any clusters you do not want to deploy by commenting out the corresponding lines in
+   the `index.ts` file. All clusters are enabled by default.
 
 5. Bring up the stack, which will create the selected managed Kubernetes clusters, and deploy an application to each of
    them.
@@ -80,3 +73,7 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi destroy --yes
     $ pulumi stack rm --yes
     ```
+   
+   Note: The static IP workaround required for the AKS Service can cause a destroy failure if the IP has not
+   finished detaching from the LoadBalancer. If you encounter this error, simply rerun `pulumi destroy --yes`,
+   and it should succeed.

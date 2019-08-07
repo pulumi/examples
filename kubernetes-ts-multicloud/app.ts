@@ -80,7 +80,7 @@ export class DemoApp extends pulumi.ComponentResource {
             address = service.status.loadBalancer.ingress[0].ip;
         }
 
-        this.appUrl = pulumi.interpolate`http://${address}:${service.spec.ports[0].port}/-/env`;
+        this.appUrl = pulumi.interpolate`http://${address}:${service.spec.ports[0].port}`;
 
         this.registerOutputs();
     }

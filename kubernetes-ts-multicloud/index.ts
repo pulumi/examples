@@ -21,10 +21,10 @@ import * as gke from "./gke";
 import * as local from "./local";
 
 // Create Kubernetes clusters.
-// Note: Uncomment lines for the desired cloud providers.
-// const aksCluster = new aks.AksCluster("multicloud", {});
-// const eksCluster = new eks.EksCluster("multicloud", {});
-// const gkeCluster = new gke.GkeCluster("multicloud", {});
+// Note: Comment out lines for any cluster you don't want to deploy.
+const aksCluster = new aks.AksCluster("multicloud", {});
+const eksCluster = new eks.EksCluster("multicloud", {});
+const gkeCluster = new gke.GkeCluster("multicloud", {});
 
 // Create a list of named clusters where the demo app will be deployed.
 interface Cluster {
@@ -33,11 +33,11 @@ interface Cluster {
     staticAppIP?: pulumi.Output<string>
 }
 const clusters: Cluster[] = [
-    // Note: Uncomment lines for the desired clusters.
-    // {name: "aks", provider: aksCluster.provider, staticAppIP: aksCluster.staticAppIP},
-    // {name: "eks", provider: eksCluster.provider},
-    // {name: "gke", provider: gkeCluster.provider},
-    // {name: "local", provider: local.provider},
+    // Note: Comment out lines for any cluster you don't want to deploy.
+    {name: "aks", provider: aksCluster.provider, staticAppIP: aksCluster.staticAppIP},
+    {name: "eks", provider: eksCluster.provider},
+    {name: "gke", provider: gkeCluster.provider},
+    {name: "local", provider: local.provider},
 ];
 
 // Export a list of URLs to access the demo app.

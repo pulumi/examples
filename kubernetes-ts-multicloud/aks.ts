@@ -19,25 +19,24 @@ import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 import * as tls from "@pulumi/tls";
 
-// Arguments for an AKS cluster. We use almost all defaults for this example, but the
-// interface could be extended with e.g. agent pool settings.
-export interface AksClusterArgs {
-}
-
 export class AksCluster extends pulumi.ComponentResource {
     public cluster: azure.containerservice.KubernetesCluster;
     public provider: k8s.Provider;
     public staticAppIP: pulumi.Output<string>;
 
     constructor(name: string,
-                args: AksClusterArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
-        super("examples:kubernetes-ts-multicloud:AksCluster", name, args, opts);
+        super("examples:kubernetes-ts-multicloud:AksCluster", name, {}, opts);
 
-        const password = new random.RandomString("password", {
+        // Generate a strong password for the Service Principal.
+        const password = pulumi.secret(new random.RandomString("password", {
             length: 20,
             special: true,
-        }, {parent: this}).result;
+        }, {parent: this}).result);
+
+        // Create an SSH public key that will be used by the Kubernetes cluster.
+        // Note: We create one here to simplify the demo, but a production deployment would probably pass
+        // an existing key in as a variable.
         const sshPublicKey = new tls.PrivateKey("sshKey", {
             algorithm: "RSA",
             rsaBits: 4096,
@@ -82,7 +81,7 @@ export class AksCluster extends pulumi.ComponentResource {
             resourceGroupName: resourceGroup.name,
             agentPoolProfiles: [{
                 name: "aksagentpool",
-                count: 3,
+                count: 2,
                 vmSize: "Standard_B2s",
                 osType: "Linux",
                 osDiskSizeGb: 30,

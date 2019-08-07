@@ -17,18 +17,13 @@ import * as eks from "@pulumi/eks";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 
-// Arguments for an EKS cluster.
-export interface EksClusterArgs {
-}
-
 export class EksCluster extends pulumi.ComponentResource {
     public cluster: eks.Cluster;
     public provider: k8s.Provider;
 
     constructor(name: string,
-                args: EksClusterArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
-        super("examples:kubernetes-ts-multicloud:EksCluster", name, args, opts);
+        super("examples:kubernetes-ts-multicloud:EksCluster", name, {}, opts);
 
         // Create a VPC for our cluster.
         const vpc = new awsx.ec2.Vpc("vpc");

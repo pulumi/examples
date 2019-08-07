@@ -17,30 +17,26 @@ import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 
-// Arguments for a GKE cluster.
-export interface GkeClusterArgs {
-}
-
 export class GkeCluster extends pulumi.ComponentResource {
     public cluster: gcp.container.Cluster;
     public provider: k8s.Provider;
 
     constructor(name: string,
-                args: GkeClusterArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
-        super("examples:kubernetes-ts-multicloud:GkeCluster", name, args, opts);
+        super("examples:kubernetes-ts-multicloud:GkeCluster", name, {}, opts);
 
         // Find the latest engine version.
         const engineVersion = gcp.container.getEngineVersions().then(v => v.latestMasterVersion);
 
-        const password = new random.RandomString("password", {
+        // Generate a strong password for the Kubernetes cluster.
+        const password = pulumi.secret(new random.RandomString("password", {
             length: 20,
             special: true
-        }, {parent: this}).result;
+        }, {parent: this}).result);
 
-        // Create the GKE cluster and export it.
+        // Create the GKE cluster.
         const k8sCluster = new gcp.container.Cluster("cluster", {
-            initialNodeCount: 3,
+            initialNodeCount: 2,
             nodeVersion: engineVersion,
             minMasterVersion: engineVersion,
             masterAuth: {username: "example-user", password: password},
@@ -58,7 +54,8 @@ export class GkeCluster extends pulumi.ComponentResource {
 
         // Manufacture a GKE-style Kubeconfig. Note that this is slightly "different" because of the way GKE requires
         // gcloud to be in the picture for cluster authentication (rather than using the client cert/key directly).
-        const k8sConfig = pulumi.all([k8sCluster.name, k8sCluster.endpoint, k8sCluster.masterAuth]).apply(([name, endpoint, auth]) => {
+        const k8sConfig = pulumi.all([k8sCluster.name, k8sCluster.endpoint, k8sCluster.masterAuth]).apply(
+            ([name, endpoint, auth]) => {
             const context = `${gcp.config.project}_${gcp.config.zone}_${name}`;
             return `apiVersion: v1
 clusters:
