@@ -25,7 +25,7 @@ const amiId = aws.getAmi({
         { name: "owner-id", values: ["099720109477"] }, // Ubuntu
         { name: "name", values: ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"] },
     ],
-}).then(x => x.id);
+}).id;
 
 const instance = new aws.ec2.Instance("tagged", {
     ami: amiId,

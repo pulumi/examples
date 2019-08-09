@@ -65,8 +65,8 @@ export class WebServer extends pulumi.ComponentResource {
         // The public IP address is not allocated until the VM is running, so wait for that
         // resource to create, and then lookup the IP address again to report its public IP.
         const ready = pulumi.all({ _: this.vm.id, name: this.publicIp.name, resourceGroupName: this.publicIp.resourceGroupName });
-        return ready.apply(async d => {
-            const ip = await azure.network.getPublicIP({ name: d.name, resourceGroupName: d.resourceGroupName });
+        return ready.apply(d => {
+            const ip = azure.network.getPublicIP({ name: d.name, resourceGroupName: d.resourceGroupName });
             return ip.ipAddress;
         });
     }

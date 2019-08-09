@@ -74,7 +74,7 @@ nohup python -m SimpleHTTPServer 80 &`,
 // resource to create, and then lookup the IP address again to report its public IP.
 const done = pulumi.all({ _: vm.id, name: publicIp.name, resourceGroupName: publicIp.resourceGroupName });
 
-export const ipAddress = done.apply(async d => {
-    const ip = await azure.network.getPublicIP({ name: d.name, resourceGroupName: d.resourceGroupName });
+export const ipAddress = done.apply(d => {
+    const ip = azure.network.getPublicIP({ name: d.name, resourceGroupName: d.resourceGroupName });
     return ip.ipAddress;
 });
