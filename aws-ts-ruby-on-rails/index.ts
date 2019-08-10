@@ -13,7 +13,7 @@ const webSg = new aws.ec2.SecurityGroup("webServerSecurityGroup", {
     ],
 });
 
-const amiId = pulumi.output(aws.getAmi({
+const amiId = aws.getAmi({
     filters: [
         {
             name: "name",
@@ -26,7 +26,7 @@ const amiId = pulumi.output(aws.getAmi({
     ],
     mostRecent: true,
     owners: ["137112412989"],
-}));
+});
 
 const webServer = new aws.ec2.Instance("webServer", {
     ami: amiId.id,

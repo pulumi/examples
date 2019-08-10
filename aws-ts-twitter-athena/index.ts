@@ -35,7 +35,7 @@ let handler = eventRule.onEvent("on-timer-event", async() => {
         access_token_key: accessTokenKey,
         access_token_secret: accessTokenSecret,
     });
-    
+
     const tweets = await new Promise<string[]>((resolve, reject) => {
         client.get('search/tweets', {q: twitterQuery, count: 100}, function(error: any, tweets: any, response: any) {
             if (error) {
@@ -44,17 +44,17 @@ let handler = eventRule.onEvent("on-timer-event", async() => {
 
             let statuses = tweets.statuses;
             console.log(`Got ${statuses.length} statuses.`);
-    
+
             let results = statuses.map((s: any) => {
                 let user = s.user.screen_name;
-        
-                return JSON.stringify({ 
+
+                return JSON.stringify({
                     created_at: s.created_at,
-                    id: s.id_str, 
-                    text: s.text, 
+                    id: s.id_str,
+                    text: s.text,
                     user: user,
                     hashtags: s.entities.hashtags,
-                    followers: s.user.followers_count, 
+                    followers: s.user.followers_count,
                     isVerified: s.user.verified,
                     isRetweet: s.retweeted_status != null,
                     url: `https://twitter.com/${user}/status/${s.id_str}`,
@@ -66,7 +66,7 @@ let handler = eventRule.onEvent("on-timer-event", async() => {
     });
 
     console.log(`Got ${tweets.length} tweets from Twitter for query ${twitterQuery}`);
-    
+
     let filename = `${outputFolder}/${Date.now()}`;
     let contents = Buffer.from(tweets.join("\n"), "utf8");
 
@@ -79,11 +79,11 @@ let handler = eventRule.onEvent("on-timer-event", async() => {
 });
 
 // athena setup
-let athena = new aws.athena.Database("tweets_database", 
-    { name: "tweets_database", bucket: bucket.id, forceDestroy: true } 
+let athena = new aws.athena.Database("tweets_database_1",
+    { name: "tweets_database_1", bucket: bucket.id, forceDestroy: true }
 );
 
-// Sadly, there isn't support for Athena tables in Terraform. 
+// Sadly, there isn't support for Athena tables in Terraform.
 // See https://github.com/terraform-providers/terraform-provider-aws/pull/1893#issuecomment-351300973
 // So, we'll instead create a query for the table definition
 function createTableQuery(bucket: string) {
@@ -101,9 +101,9 @@ function createTableQuery(bucket: string) {
     LOCATION 's3://${bucket}/${outputFolder}/';`;
 }
 
-let topUsersQuery = 
-    `select distinct user, followers, text, url 
-    from tweets 
+let topUsersQuery =
+    `select distinct user, followers, text, url
+    from tweets
     where isRetweet = false and followers > 1000
     order by followers desc`;
 
@@ -121,4 +121,4 @@ function getQueryUri(queryId: string) {
 exports.bucketName = bucketName
 exports.athenaDatabase = athena.id;
 exports.topUsersQueryUri = topUsersAthenaQuery.id.apply(getQueryUri);
-exports.createTableQueryUri = createTableAthenaQuery.id.apply(getQueryUri); 
+exports.createTableQueryUri = createTableAthenaQuery.id.apply(getQueryUri);

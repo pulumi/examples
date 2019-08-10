@@ -3,18 +3,16 @@ import * as aws from "@pulumi/aws";
 
 export function createIamRole(name: string, table: aws.dynamodb.Table) {
     const role = new aws.iam.Role(`${name}-role`, {
-        assumeRolePolicy: pulumi.output(
-            aws.iam.getPolicyDocument({
+        assumeRolePolicy: aws.iam.getPolicyDocument({
                 statements: [{
                     actions: ["sts:AssumeRole"],
                     principals: [{
-                        identifiers: ["appsync.amazonaws.com"], 
+                        identifiers: ["appsync.amazonaws.com"],
                         type: "Service",
                     }],
                     effect: "Allow",
                 }],
-            })
-        ).apply(r => r.json),
+            }).json,
     });
 
     const policy = new aws.iam.Policy(`${name}-policy`, {
@@ -24,8 +22,8 @@ export function createIamRole(name: string, table: aws.dynamodb.Table) {
                 resources: [arn],
                 effect: "Allow",
             }],
-       })).apply(r => r.json),
-    });       
+       })).json,
+    });
 
     new aws.iam.RolePolicyAttachment(`${name}-rpa`, {
         role: role,
