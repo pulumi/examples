@@ -4,8 +4,12 @@ pipeline {
     stages {
         stage ("Checkout code") {
             steps {
-                git url: "git@github.com:your-repo/jenkins-springboot-pulumi.git",
-                    credentialsId: "praneetloke",
+                // The examples repo contains several repos. To avoid checking out every single project under it,
+                // upload this project into your own repo.
+                git url: "git@github.com:your-repo/azure-ts-appservice-springboot.git",
+                    // Set your credentials id value here.
+                    // See https://jenkins.io/doc/book/using/using-credentials/#adding-new-global-credentials
+                    credentialsId: "youCredentialsId",
                     // You could define a new stage that specifically runs for, say, feature/* branches
                     // and run only "pulumi preview" for those.
                     branch: "master"
