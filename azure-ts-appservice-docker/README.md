@@ -31,7 +31,7 @@ The example shows two scenarios:
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...
@@ -55,9 +55,9 @@ The example shows two scenarios:
     $ pulumi stack output getStartedEndpoint
     http://get-started15da1348.azurewebsites.net
     $ curl "$(pulumi stack output getStartedEndpoint)"
-    <!DOCTYPE html>
     <html>
-      <head>
-        <title>Azure App Service</title>
-    ...
+    <body>
+    <h1>Your custom docker image is running in Azure App Service!</h1>
+    </body>
+    </html>
     ```
