@@ -243,6 +243,7 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 		}),
+		// See https://github.com/pulumi/examples/pull/366 for details on why this was disabled.
 		// base.With(integration.ProgramTestOptions{
 		// 	Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
 		// 	Config: map[string]string{
@@ -483,7 +484,7 @@ func TestExamples(t *testing.T) {
 				"password":       "MySuperS3cretPassw0rd",
 			},
 		}),
-		// See PR #<> for details on why this was disabled.
+		// See https://github.com/pulumi/examples/pull/366 for details on why this was disabled.
 		// base.With(integration.ProgramTestOptions{
 		// 	Dir: path.Join(cwd, "..", "..", "cloud-js-api"),
 		// 	Config: map[string]string{
