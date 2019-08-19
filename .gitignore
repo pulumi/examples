@@ -1,6 +1,7 @@
 /.pulumi/
 /.vscode/
 bin/
+build/
 node_modules/
 *.pyc
 .Python
@@ -13,3 +14,9 @@ Pulumi.*.yaml
 *.iml
 key.rsa*
 obj/
+
+# Java app
+.gradle/
+.settings/
+.project
+.classpath

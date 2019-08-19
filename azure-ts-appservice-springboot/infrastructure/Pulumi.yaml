@@ -1,0 +1,3 @@
+name: jenkins-tutorial
+runtime: nodejs
+description: A Pulumi app to deploy a SpringBoot app on Azure. 
