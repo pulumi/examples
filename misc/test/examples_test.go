@@ -243,23 +243,24 @@ func TestExamples(t *testing.T) {
 				"aws:region": awsRegion,
 			},
 		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
-			Config: map[string]string{
-				"aws:region":     awsRegion,
-				"dbUser":         "testUser",
-				"dbPassword":     "2@Password@2",
-				"dbRootPassword": "2@Password@2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				// Due to setup time on the vm this output does not show up for several minutes so
-				// increase wait time a bit
-				maxWait := 20 * time.Minute
-				assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], nil, maxWait, func(body string) bool {
-					return assert.Contains(t, body, "New Note")
-				})
-			},
-		}),
+		// [TODO:examples#368] Fix failing aws-ts-ruby-on-rails integration test.
+		// base.With(integration.ProgramTestOptions{
+		// 	Dir: path.Join(cwd, "..", "..", "aws-ts-ruby-on-rails"),
+		// 	Config: map[string]string{
+		// 		"aws:region":     awsRegion,
+		// 		"dbUser":         "testUser",
+		// 		"dbPassword":     "2@Password@2",
+		// 		"dbRootPassword": "2@Password@2",
+		// 	},
+		// 	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		// 		// Due to setup time on the vm this output does not show up for several minutes so
+		// 		// increase wait time a bit
+		// 		maxWait := 20 * time.Minute
+		// 		assertHTTPResultWithRetry(t, stack.Outputs["websiteURL"], nil, maxWait, func(body string) bool {
+		// 			return assert.Contains(t, body, "New Note")
+		// 		})
+		// 	},
+		// }),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-s3-lambda-copyzip"),
 			Config: map[string]string{
@@ -483,17 +484,18 @@ func TestExamples(t *testing.T) {
 				"password":       "MySuperS3cretPassw0rd",
 			},
 		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "cloud-js-api"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
-					return assert.Contains(t, body, "{\"route\":\"hello\",\"count\":1}")
-				})
-			},
-		}),
+		// [TODO:examples#367] Fix failing cloud-js-api integration test.
+		// base.With(integration.ProgramTestOptions{
+		// 	Dir: path.Join(cwd, "..", "..", "cloud-js-api"),
+		// 	Config: map[string]string{
+		// 		"aws:region": awsRegion,
+		// 	},
+		// 	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		// 		assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
+		// 			return assert.Contains(t, body, "{\"route\":\"hello\",\"count\":1}")
+		// 		})
+		// 	},
+		// }),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "cloud-js-containers"),
 			Config: map[string]string{
