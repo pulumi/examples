@@ -39,15 +39,13 @@ const helloApp = new azure.appservice.AppService("hello-app", {
     httpsOnly: true,
 });
 
-export const helloEndpoint = pulumi.interpolate`http://${helloApp.name}.azurewebsites.net/hello`;
+export const helloEndpoint = pulumi.interpolate`https://${helloApp.defaultSiteHostname}/hello`;
 
 
 /**
  * Scenario 2: deploying a custom image from Azure Container Registry.
- * The example expects a docker application in 'docker-django-webapp-linux' folder.
- * Please check it out from https://github.com/Azure-Samples/docker-django-webapp-linux
  */
-const customImage = "docker-django-webapp-linux";
+const customImage = "node-app";
 
 const registry = new azure.containerservice.Registry("myregistry", {
     resourceGroupName: resourceGroup.name,
@@ -75,7 +73,7 @@ const getStartedApp = new azure.appservice.AppService("get-started", {
       DOCKER_REGISTRY_SERVER_URL: pulumi.interpolate`https://${registry.loginServer}`,
       DOCKER_REGISTRY_SERVER_USERNAME: registry.adminUsername,
       DOCKER_REGISTRY_SERVER_PASSWORD: registry.adminPassword,
-      WEBSITES_PORT: 8000, // Our custom image exposes port 8000. Adjust for your app as needed.
+      WEBSITES_PORT: 80, // Our custom image exposes port 80. Adjust for your app as needed.
     },
     siteConfig: {
         alwaysOn: true,
@@ -84,4 +82,4 @@ const getStartedApp = new azure.appservice.AppService("get-started", {
     httpsOnly: true,
 });
 
-export const getStartedEndpoint = pulumi.interpolate`http://${getStartedApp.name}.azurewebsites.net`;
+export const getStartedEndpoint = pulumi.interpolate`https://${getStartedApp.defaultSiteHostname}`;
