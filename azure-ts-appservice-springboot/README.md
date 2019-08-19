@@ -9,7 +9,7 @@ This example shows how you can deploy a Spring Boot app to an Azure App Service 
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init azure-springboot-appservice
+    $ pulumi stack init dev
     ```
 
 1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
@@ -38,9 +38,7 @@ This example shows how you can deploy a Spring Boot app to an Azure App Service 
     +  azure:appservice:AppService spring-boot-greeting-app create 
     +  pulumi:pulumi:Stack jenkins-tutorial-dev create 
 
-    Performing changes:
     ...
-    Update duration: ...
     ```
 
 1.  Check the deployed website endpoint:

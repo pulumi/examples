@@ -52,4 +52,4 @@ const appService = new azure.appservice.AppService(customImage, {
     httpsOnly: true,
 });
 
-export const appServiceEndpoint = pulumi.interpolate`https://${appService.name}.azurewebsites.net`;
+export const appServiceEndpoint = pulumi.interpolate`https://${appService.defaultSiteHostname}`;
