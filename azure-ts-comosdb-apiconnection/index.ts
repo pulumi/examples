@@ -2,7 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
 import { CosmosContainer } from "./cosmosContainer";
 
-const locations = ['westeurope', 'northeurope'];
+const locations = ["westeurope", "northeurope"];
 
 // use first 10 characters of the stackname as prefix for resource names
 const prefix = pulumi.getStack().substring(0, 9);
@@ -20,7 +20,7 @@ const resourceGroup = new azure.core.ResourceGroup(`${prefix}-rg`, {
 });
 
 const subscriptionId = resourceGroup.id.apply(id => {
-    let splitId = id.split('/')
+    const splitId = id.split("/")
     return `/${splitId[1]}/${splitId[2]}`;
 });
 
@@ -56,7 +56,7 @@ const dbContainer = new CosmosContainer(`${prefix}-db-container`, {
     region: locations[0],
     endpoint: cosmosdbAccount.endpoint,
     masterKey: cosmosdbAccount.primaryMasterKey,
-    collectionName: 'urls',
+    collectionName: "urls",
     dbName: db.name
 });
 
