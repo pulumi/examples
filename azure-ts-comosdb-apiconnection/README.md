@@ -2,8 +2,8 @@
 
 # Deploy an Azure CosmosDB container and an API Connection
 
-At the time of this writting, there was no API support from either Terraform or Azure (or both)
-to handle CosmosDB containers and API Connections. Therefore, this is a how-to:
+At the time of this writting, there is no native Pulumi resources to define CosmosDB containers and API Connections
+Therefore, this is a how-to:
  - Levarage Azure's CosmosDB SDK to create a CosmosDB container
  - Use an ARM template to create an API Connection
 
@@ -26,6 +26,7 @@ to handle CosmosDB containers and API Connections. Therefore, this is a how-to:
 
     ```bash
     $ pulumi config set azure:environment public
+    $ pulumi config set azure:location westeurope
     $ az login
     ```
 
