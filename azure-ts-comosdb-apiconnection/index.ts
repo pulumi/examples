@@ -2,8 +2,6 @@ import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
 import { CosmosContainer } from "./cosmosContainer";
 
-const locations = ["westeurope", "northeurope"];
-
 // use first 10 characters of the stackname as prefix for resource names
 const prefix = pulumi.getStack().substring(0, 9);
 
@@ -15,9 +13,7 @@ const simplePrefix = prefix.toLowerCase().replace(/-/g, "")
 /********************/
 
 // Create an Azure Resource Group
-const resourceGroup = new azure.core.ResourceGroup(`${prefix}-rg`, {
-    location: locations[0],
-});
+const resourceGroup = new azure.core.ResourceGroup(`${prefix}-rg`);
 
 const subscriptionId = resourceGroup.id.apply(id => {
     const splitId = id.split("/")
@@ -35,7 +31,7 @@ const storageAccount = new azure.storage.Account(`${simplePrefix}sa`, {
 // Cosmos DB Account
 const cosmosdbAccount = new azure.cosmosdb.Account(`${prefix}-db-acc`, {
     resourceGroupName: resourceGroup.name,
-    location: locations[0],
+    location: resourceGroup.location,
     offerType: "Standard",
     kind: "GlobalDocumentDB",
     consistencyPolicy: {
@@ -43,7 +39,6 @@ const cosmosdbAccount = new azure.cosmosdb.Account(`${prefix}-db-acc`, {
         maxIntervalInSeconds: 5,
         maxStalenessPrefix: 100,
     },
-    geoLocations: locations.map((location, failoverPriority) => ({ location, failoverPriority })),
 });
 
 // DB
@@ -53,11 +48,11 @@ const db = new azure.cosmosdb.SqlDatabase(`${prefix}-db`, {
 });
 
 const dbContainer = new CosmosContainer(`${prefix}-db-container`, {
-    region: locations[0],
+    region: resourceGroup.location,
     endpoint: cosmosdbAccount.endpoint,
     masterKey: cosmosdbAccount.primaryMasterKey,
     collectionName: "urls",
-    dbName: db.name
+    dbName: db.name,
 });
 
 // API Connection for later usage by LogicApps
@@ -68,11 +63,11 @@ const connectionTemplate = {
         "type": "Microsoft.Web/connections",
         "apiVersion": "2016-06-01",
         "name": "cosmosdb-connection",
-        "location": `${locations[0]}`,
+        "location": pulumi.interpolate`${resourceGroup.location}`,
         "properties": {
             "displayName": "cosmosdb_connection",
             "api": {
-                "id": pulumi.interpolate`${subscriptionId}/providers/Microsoft.Web/locations/${locations[0]}/managedApis/documentdb`
+                "id": pulumi.interpolate`${subscriptionId}/providers/Microsoft.Web/locations/${resourceGroup.location}/managedApis/documentdb`
             },
             "parameterValues": {
                 "databaseAccount": pulumi.interpolate`${db.accountName}`,
