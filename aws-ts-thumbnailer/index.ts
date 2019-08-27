@@ -1,4 +1,4 @@
-// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
@@ -38,8 +38,8 @@ bucket.onObjectCreated("onNewVideo", new aws.lambda.CallbackFunction<aws.s3.Buck
             console.log(`*** New video: file ${record.s3.object.key} was uploaded at ${record.eventTime}.`);
             const file = record.s3.object.key;
 
-            const thumbnailFile = file.substring(0, file.indexOf('_')) + '.jpg';
-            const framePos = file.substring(file.indexOf('_')+1, file.indexOf('.')).replace('-',':');
+            const thumbnailFile = file.substring(0, file.indexOf("_")) + ".jpg";
+            const framePos = file.substring(file.indexOf("_")+1, file.indexOf(".")).replace("-", ":");
 
             await ffmpegThumbnailTask.run({
                 cluster,

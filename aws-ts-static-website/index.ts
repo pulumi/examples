@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 import * as fs from "fs";
 import * as mime from "mime";
@@ -28,7 +30,7 @@ const contentBucket = new aws.s3.Bucket("contentBucket",
         website: {
             indexDocument: "index.html",
             errorDocument: "404.html",
-        }
+        },
     });
 
 // crawlDirectory recursive crawls the provided directory, applying the provided function

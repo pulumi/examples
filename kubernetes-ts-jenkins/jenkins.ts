@@ -1,6 +1,8 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as k8s from "@pulumi/kubernetes";
 import * as input from "@pulumi/kubernetes/types/input";
+import * as pulumi from "@pulumi/pulumi";
 
 function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
     const image = args.image || {
@@ -21,7 +23,7 @@ function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
             selector: {
                 matchLabels:  {
                     app: args.name,
-                }
+                },
             },
             template: {
                 metadata: {
@@ -35,7 +37,7 @@ function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
                             name: "jenkins-data",
                             persistentVolumeClaim: {
                                 claimName: args.name,
-                            }
+                            },
                         },
                     ],
                     containers: [
@@ -90,7 +92,7 @@ function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
                                 {
                                     name: "jenkins-data",
                                     mountPath: "/bitnami/jenkins",
-                                }
+                                },
                             ],
                             resources: {
                                 requests: {
@@ -98,12 +100,12 @@ function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
                                     cpu: args.resources.cpu,
                                 },
                             },
-                        } // container
-                    ] // containers
-                } // spec
-            } // template
-        } // spec
-    } // deployment
+                        }, // container
+                    ], // containers
+                }, // spec
+            }, // template
+        }, // spec
+    }; // deployment
 }
 
 /**
@@ -129,7 +131,7 @@ export class Instance extends pulumi.ComponentResource {
             metadata: {
                 name: args.name,
                 annotations: {
-                    "volume.beta.kubernetes.io/storage-class": `${args.storageClass || "standard" }`
+                    "volume.beta.kubernetes.io/storage-class": `${args.storageClass || "standard" }`,
                 },
             },
             spec: {
@@ -163,12 +165,12 @@ export class Instance extends pulumi.ComponentResource {
                         name: "https",
                         port: 443,
                         targetPort: "https",
-                    }
+                    },
                 ],
                 selector: {
                     app: args.name,
-                }
-            }
+                },
+            },
         }, { parent: this });
 
         // This component resource has no outputs.
@@ -184,27 +186,27 @@ export interface JenkinsArgs {
      * The name of the instance. All Kubernetes objects will be tagged with this name
      * in their metadata.
      */
-    readonly name: string,
+    readonly name: string;
 
     /**
      * Credentials for accessing the created Jenkins instance.
      */
-    readonly credentials: JenkinsCredentials,
+    readonly credentials: JenkinsCredentials;
 
     /**
      * The Docker image to use to launch this instance of Jenkins.
      */
-    readonly image?: JenkinsImage,
+    readonly image?: JenkinsImage;
 
     /**
      * Resource requests for this instance.
      */
-    readonly resources: JenkinsResources,
+    readonly resources: JenkinsResources;
 
     /**
      * Storage class to use for the persistent volume claim.
      */
-    readonly storageClass?: string,
+    readonly storageClass?: string;
 }
 
 /**
@@ -214,12 +216,12 @@ export interface JenkinsCredentials {
     /**
      * Username for the root user.
      */
-    readonly username: string,
+    readonly username: string;
 
     /**
      * Password for the root user.
      */
-    readonly password: string,
+    readonly password: string;
 }
 
 /**
@@ -229,22 +231,22 @@ export interface JenkinsImage {
     /**
      * The registry from which to draw Docker images.
      */
-    readonly registry: string,
+    readonly registry: string;
 
     /**
      * The Docker repository name for the target image.
      */
-    readonly repository: string,
+    readonly repository: string;
 
     /**
      * The Docker image tag for the target image.
      */
-    readonly tag: string,
+    readonly tag: string;
 
     /**
      * Pull policy for this image.
      */
-    readonly pullPolicy: string,
+    readonly pullPolicy: string;
 }
 
 /**

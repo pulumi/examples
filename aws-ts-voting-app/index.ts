@@ -1,17 +1,17 @@
-// Copyright 2017, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as awsx from "@pulumi/awsx";
+import * as pulumi from "@pulumi/pulumi";
 
 // Get the password to use for Redis from config.
-let config = new pulumi.Config();
-let redisPassword = config.require("redisPassword");
-let redisPort = 6379;
+const config = new pulumi.Config();
+const redisPassword = config.require("redisPassword");
+const redisPort = 6379;
 
 // The data layer for the application
 // Use the 'image' property to point to a pre-built Docker image.
-let redisListener = new awsx.elasticloadbalancingv2.NetworkListener("voting-app-cache", { port: redisPort });
-let redisCache = new awsx.ecs.FargateService("voting-app-cache", {
+const redisListener = new awsx.elasticloadbalancingv2.NetworkListener("voting-app-cache", { port: redisPort });
+const redisCache = new awsx.ecs.FargateService("voting-app-cache", {
     taskDefinitionArgs: {
         containers: {
             redis: {
@@ -24,13 +24,13 @@ let redisCache = new awsx.ecs.FargateService("voting-app-cache", {
     },
 });
 
-let redisEndpoint = redisListener.endpoint;
+const redisEndpoint = redisListener.endpoint;
 
 // A custom container for the frontend, which is a Python Flask app
 // Use the 'build' property to specify a folder that contains a Dockerfile.
 // Pulumi builds the container for you and pushes to an ECR registry
-let frontendListener = new awsx.elasticloadbalancingv2.NetworkListener("voting-app-frontend", { port: 80 });
-let frontend = new awsx.ecs.FargateService("voting-app-frontend", {
+const frontendListener = new awsx.elasticloadbalancingv2.NetworkListener("voting-app-frontend", { port: 80 });
+const frontend = new awsx.ecs.FargateService("voting-app-frontend", {
     taskDefinitionArgs: {
         containers: {
             votingAppFrontend: {

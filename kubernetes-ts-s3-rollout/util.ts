@@ -1,5 +1,6 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as pulumi from "@pulumi/pulumi";
-import * as aws from "@pulumi/aws";
 
 // Utility function that creates a container that `curl`s a URL, placing it in a file in some shared
 // volume, namely at `${mount.mountPath}/${fileName}`. For example, `mount.mountPath` might be the
@@ -8,7 +9,7 @@ import * as aws from "@pulumi/aws";
 export function curl(
     url: pulumi.Output<string>,
     fileName: string,
-    mount: { name: pulumi.Input<string>; mountPath: pulumi.Input<string> }
+    mount: { name: pulumi.Input<string>; mountPath: pulumi.Input<string> },
 ) {
     return {
         name: "curl",
@@ -16,6 +17,6 @@ export function curl(
         args: pulumi
             .all([url, mount.mountPath])
             .apply(([url, mountPath]) => ["-o", `${mountPath}/${fileName}`, "-sL", url]),
-        volumeMounts: [mount]
+        volumeMounts: [mount],
     };
 }

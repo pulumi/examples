@@ -31,7 +31,7 @@ export class GkeCluster extends pulumi.ComponentResource {
         // Generate a strong password for the Kubernetes cluster.
         const password = new random.RandomString("password", {
             length: 20,
-            special: true
+            special: true,
         }, {parent: this, additionalSecretOutputs: ["result"]}).result;
 
         // Create the GKE cluster.
@@ -46,7 +46,7 @@ export class GkeCluster extends pulumi.ComponentResource {
                     "https://www.googleapis.com/auth/compute",
                     "https://www.googleapis.com/auth/devstorage.read_only",
                     "https://www.googleapis.com/auth/logging.write",
-                    "https://www.googleapis.com/auth/monitoring"
+                    "https://www.googleapis.com/auth/monitoring",
                 ],
             },
         }, {parent: this});

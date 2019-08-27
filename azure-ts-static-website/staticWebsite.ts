@@ -34,7 +34,7 @@ class StorageStaticWebsiteProvider implements pulumi.dynamic.ResourceProvider {
 
     public async create(inputs: any): Promise<pulumi.dynamic.CreateResult> {
         const { execSync } = require("child_process");
-        const url = require('url');
+        const url = require("url");
         const accountName = inputs[accountNameProp];
 
         // Helper function to execute a command, supress the warnings from polluting the output, and parse the result as JSON
@@ -50,15 +50,15 @@ class StorageStaticWebsiteProvider implements pulumi.dynamic.ResourceProvider {
         }
 
         // Extract the web endpoint and the hostname from the storage account
-        const endpoint = executeToJson(`az storage account show -n "${accountName}" --query "primaryEndpoints.web"`);        
+        const endpoint = executeToJson(`az storage account show -n "${accountName}" --query "primaryEndpoints.web"`);
         const hostName = url.parse(endpoint).hostname;
 
         // Files for static websites should be stored in a special built-in container called '$web', see https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website
         const webContainerName = "$web";
 
-        return { 
+        return {
             id: `${accountName}StaticWebsite`,
-            outs: { endpoint, hostName, webContainerName }
+            outs: { endpoint, hostName, webContainerName },
         };
     }
 }

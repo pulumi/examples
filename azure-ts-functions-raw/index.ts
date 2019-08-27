@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 
 // Create a resource group for Windows App Service Plan
 const resourceGroup = new azure.core.ResourceGroup("windowsrg");

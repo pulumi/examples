@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import { Container } from "@azure/cosmos";
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
@@ -47,7 +49,7 @@ const profile = new azure.trafficmanager.Profile("UrlShortEndpoint", {
         protocol: "HTTP",
         port: 80,
         path: "/api/ping",
-    }]
+    }],
 });
 
 // Azure Function to accept new URL shortcodes and save to Cosmos DB
@@ -66,7 +68,7 @@ const fn = new azure.appservice.HttpEventSubscription("AddUrl", {
             await container.items.create(request.body);
             return { status: 200, body: "Short URL saved" };
         };
-    }
+    },
 });
 export const addEndpoint = fn.url;
 
@@ -100,19 +102,19 @@ for (const location of locations) {
                             : { status: 404, body: "" };
                 } catch (e) {
                     // Cosmos SDK throws an error for non-existing documents
-                    return { status: 404, body: "" }
+                    return { status: 404, body: "" };
                 }
             };
-        }
+        },
     });
 
     const app = fn.functionApp;
 
     // An endpoint per region for Traffic Manager, link to the corresponding Function App
-    new azure.trafficmanager.Endpoint(`tme${location}`, {
+    const endpoint = new azure.trafficmanager.Endpoint(`tme${location}`, {
         resourceGroupName: resourceGroup.name,
         profileName: profile.name,
-        type: 'azureEndpoints',
+        type: "azureEndpoints",
         targetResourceId: app.id,
         target: app.defaultHostname,
         endpointLocation: app.location,

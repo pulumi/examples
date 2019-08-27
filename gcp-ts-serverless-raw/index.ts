@@ -1,7 +1,7 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import { asset } from "@pulumi/pulumi";
 import * as gcp from "@pulumi/gcp";
+import { asset } from "@pulumi/pulumi";
 
 const bucket = new gcp.storage.Bucket("bucket");
 

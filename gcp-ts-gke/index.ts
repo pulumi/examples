@@ -2,7 +2,7 @@
 
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-import { k8sProvider, k8sConfig } from "./cluster";
+import { k8sConfig, k8sProvider } from "./cluster";
 
 // Create a canary deployment to test that this cluster works.
 const name = `${pulumi.getProject()}-${pulumi.getStack()}`;

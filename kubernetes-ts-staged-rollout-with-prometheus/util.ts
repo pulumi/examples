@@ -1,10 +1,10 @@
-import * as process from "child_process";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
-import * as http from "http";
+import * as pulumi from "@pulumi/pulumi";
+
 import { spawn } from "child_process";
-import { meta } from "@pulumi/kubernetes/types/input";
+import * as http from "http";
 
 export interface PromPortForwardOpts {
     localPort: number;
@@ -22,10 +22,10 @@ export interface PromPortForwardOpts {
 export function forwardPrometheusService(
     service: pulumi.Input<k8s.core.v1.Service>,
     deployment: pulumi.Input<k8s.extensions.v1beta1.Deployment>,
-    opts: PromPortForwardOpts
+    opts: PromPortForwardOpts,
 ): pulumi.Output<() => void> {
     if (pulumi.runtime.isDryRun()) {
-        return pulumi.output(() => {});
+        return pulumi.output(() => undefined);
     }
 
     return pulumi.all([service, deployment]).apply(([s, d]) => pulumi.all([s.metadata, d.urn])).apply(([meta]) => {
@@ -33,7 +33,7 @@ export function forwardPrometheusService(
             const forwarderHandle = spawn("kubectl", [
                 "port-forward",
                 `service/${meta.name}`,
-                `${opts.localPort}:${opts.targetPort || 80}`
+                `${opts.localPort}:${opts.targetPort || 80}`,
             ]);
 
             // NOTE: we need to wrap `forwarderHandle.kill` because of JavaScript's `this`
@@ -68,7 +68,7 @@ export interface CheckLatencyOpts {
 export function checkHttpLatency(
     canary: k8s.apps.v1beta1.Deployment,
     containerName: string,
-    opts: CheckLatencyOpts
+    opts: CheckLatencyOpts,
 ): pulumi.Output<string> {
     if (pulumi.runtime.isDryRun()) {
         return pulumi.output(Promise.resolve("<computed value>"));
@@ -82,7 +82,7 @@ export function checkHttpLatency(
     // Turn an `http.get` into a `Promise<string>`.
     //
 
-    const kill = opts.forwarderHandle || (() => {});
+    const kill = opts.forwarderHandle || (() => undefined);
     return pulumi.all([canary.urn, kill]).apply(([_, kill]) => {
         console.log("Checking HTTP metrics");
 
@@ -100,7 +100,6 @@ function pollP8s(url: string, opts: CheckLatencyOpts): Promise<string> {
     setTimeout(_ => {
         timedOut = true;
     }, opts.durationSeconds * 1000);
-    let count = 1;
 
     function pollRecursive(): Promise<string> {
         return getHttpLatency(url).then(bodyText => {
@@ -113,12 +112,12 @@ function pollP8s(url: string, opts: CheckLatencyOpts): Promise<string> {
                 return new Promise<string>(resolve =>
                     setTimeout(_ => {
                         resolve(microseconds);
-                    }, (opts.periodSeconds || 1) * 1000)
+                    }, (opts.periodSeconds || 1) * 1000),
                 ).then(pollRecursive);
             };
 
             const body = JSON.parse(bodyText);
-            if (body.data.result.length == 0) {
+            if (body.data.result.length === 0) {
                 if (timedOut) {
                     throw new Error(`Failed metrics check: no HTTP latency measurements returned`);
                 }
@@ -131,11 +130,11 @@ function pollP8s(url: string, opts: CheckLatencyOpts): Promise<string> {
 
                 // Check HTTP latency metrics. Recursively poll if the metrics have not met the
                 // unacceptable latency threshold.
-                if (quantile == opts.quantile) {
-                    if (microseconds == "" || microseconds == "NaN") {
+                if (quantile === opts.quantile) {
+                    if (microseconds === "" || microseconds === "NaN") {
                         if (timedOut) {
                             throw new Error(
-                                `Failed metrics check: querying HTTP latency got '${microseconds}'`
+                                `Failed metrics check: querying HTTP latency got '${microseconds}'`,
                             );
                         }
                         // Ignore invalid data.
@@ -144,10 +143,10 @@ function pollP8s(url: string, opts: CheckLatencyOpts): Promise<string> {
 
                     if (parseFloat(microseconds) > opts.thresholdMicroseconds) {
                         console.error(
-                            `Failed metrics check: required < ${opts.thresholdMicroseconds.toString()} microseconds, got '${microseconds}'`
+                            `Failed metrics check: required < ${opts.thresholdMicroseconds.toString()} microseconds, got '${microseconds}'`,
                         );
                         throw new Error(
-                            `Failed metrics check: required < ${opts.thresholdMicroseconds.toString()} microseconds, got '${microseconds}'`
+                            `Failed metrics check: required < ${opts.thresholdMicroseconds.toString()} microseconds, got '${microseconds}'`,
                         );
                     }
 
@@ -158,7 +157,7 @@ function pollP8s(url: string, opts: CheckLatencyOpts): Promise<string> {
                 }
             }
             throw new Error(
-                `Failed metrics check: required < 20000 microseconds, got '${microseconds}'`
+                `Failed metrics check: required < 20000 microseconds, got '${microseconds}'`,
             );
         });
     }

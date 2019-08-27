@@ -1,15 +1,17 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
+import * as pulumi from "@pulumi/pulumi";
 
-let config = new pulumi.Config("airflow");
+const config = new pulumi.Config("airflow");
 const dbPassword = config.require("dbPassword");
 
-let vpc = awsx.ec2.Vpc.getDefault();
+const vpc = awsx.ec2.Vpc.getDefault();
 
 // Create a basic cluster and autoscaling group
-let cluster = new awsx.ecs.Cluster("airflow", { vpc });
-let autoScalingGroup = cluster.createAutoScalingGroup("airflow", {
+const cluster = new awsx.ecs.Cluster("airflow", { vpc });
+const autoScalingGroup = cluster.createAutoScalingGroup("airflow", {
     subnetIds: vpc.publicSubnetIds,
     templateParameters: {
         minSize: 20,
@@ -19,13 +21,13 @@ let autoScalingGroup = cluster.createAutoScalingGroup("airflow", {
     },
 });
 
-let securityGroupIds = cluster.securityGroups.map(g => g.id);
+const securityGroupIds = cluster.securityGroups.map(g => g.id);
 
-let dbSubnets = new aws.rds.SubnetGroup("dbsubnets", {
+const dbSubnets = new aws.rds.SubnetGroup("dbsubnets", {
     subnetIds: vpc.publicSubnetIds,
 });
 
-let db = new aws.rds.Instance("postgresdb", {
+const db = new aws.rds.Instance("postgresdb", {
     engine: "postgres",
 
     instanceClass: "db.t2.micro",
@@ -41,11 +43,11 @@ let db = new aws.rds.Instance("postgresdb", {
     skipFinalSnapshot: true,
 });
 
-let cacheSubnets = new aws.elasticache.SubnetGroup("cachesubnets", {
+const cacheSubnets = new aws.elasticache.SubnetGroup("cachesubnets", {
     subnetIds: vpc.publicSubnetIds,
 });
 
-let cacheCluster = new aws.elasticache.Cluster("cachecluster", {
+const cacheCluster = new aws.elasticache.Cluster("cachecluster", {
     clusterId: `cache-${pulumi.getStack()}`.substr(0, 20),
     engine: "redis",
 
@@ -56,21 +58,21 @@ let cacheCluster = new aws.elasticache.Cluster("cachecluster", {
     securityGroupIds: securityGroupIds,
 });
 
-let hosts = pulumi.all([db.endpoint.apply(e => e.split(":")[0]), cacheCluster.cacheNodes[0].address]);
-let environment = hosts.apply(([postgresHost, redisHost]) => [
+const hosts = pulumi.all([db.endpoint.apply(e => e.split(":")[0]), cacheCluster.cacheNodes[0].address]);
+const environment = hosts.apply(([postgresHost, redisHost]) => [
     { name: "POSTGRES_HOST", value: postgresHost },
     { name: "POSTGRES_PASSWORD", value: dbPassword },
     { name: "REDIS_HOST", value: redisHost },
-    { name: "EXECUTOR", value: "Celery" }
+    { name: "EXECUTOR", value: "Celery" },
 ]);
 
-let airflowControllerListener = new awsx.elasticloadbalancingv2.ApplicationListener("airflowcontroller", {
+const airflowControllerListener = new awsx.elasticloadbalancingv2.ApplicationListener("airflowcontroller", {
     external: true,
     port: 8080,
     protocol: "HTTP",
 });
 
-let airflowController = new awsx.ecs.EC2Service("airflowcontroller", {
+const airflowController = new awsx.ecs.EC2Service("airflowcontroller", {
     cluster,
     desiredCount: 1,
     taskDefinitionArgs: {
@@ -93,13 +95,13 @@ let airflowController = new awsx.ecs.EC2Service("airflowcontroller", {
     },
 });
 
-let airflowerListener = new awsx.elasticloadbalancingv2.ApplicationListener("airflower", {
+const airflowerListener = new awsx.elasticloadbalancingv2.ApplicationListener("airflower", {
     port: 5555,
     external: true,
-    protocol: "HTTP"
+    protocol: "HTTP",
 });
 
-let airflower = new awsx.ecs.EC2Service("airflower", {
+const airflower = new awsx.ecs.EC2Service("airflower", {
     cluster,
     taskDefinitionArgs: {
         containers: {
@@ -116,7 +118,7 @@ let airflower = new awsx.ecs.EC2Service("airflower", {
     },
 });
 
-let airflowWorkers = new awsx.ecs.EC2Service("airflowworkers", {
+const airflowWorkers = new awsx.ecs.EC2Service("airflowworkers", {
     cluster,
     desiredCount: 3,
     taskDefinitionArgs: {

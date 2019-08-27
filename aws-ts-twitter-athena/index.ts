@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 const bucket = new aws.s3.Bucket("tweet-bucket", {
     serverSideEncryptionConfiguration: {
@@ -11,25 +13,25 @@ const bucket = new aws.s3.Bucket("tweet-bucket", {
     },
     forceDestroy: true, // We require this in the example as we are not managing the contents of the bucket via Pulumi
 });
-let bucketName = bucket.id;
+export const bucketName = bucket.id;
 
-let config = new pulumi.Config();
-let consumerKey = config.require("twitterConsumerKey");
-let consumerSecret = config.require("twitterConsumerSecret");
-let accessTokenKey = config.require("twitterAccessTokenKey");
-let accessTokenSecret = config.require("twitterAccessTokenSecret");
+const config = new pulumi.Config();
+const consumerKey = config.require("twitterConsumerKey");
+const consumerSecret = config.require("twitterConsumerSecret");
+const accessTokenKey = config.require("twitterAccessTokenKey");
+const accessTokenSecret = config.require("twitterAccessTokenSecret");
 
-let twitterQuery = config.require("twitterQuery");
+const twitterQuery = config.require("twitterQuery");
 const outputFolder = "tweets";
 
-let eventRule = new aws.cloudwatch.EventRule("twitter-search-timer", {
-    scheduleExpression: "rate(1 minute)"
+const eventRule = new aws.cloudwatch.EventRule("twitter-search-timer", {
+    scheduleExpression: "rate(1 minute)",
 });
 
-let handler = eventRule.onEvent("on-timer-event", async() => {
+const handler = eventRule.onEvent("on-timer-event", async() => {
     console.log("Timer fired.");
-    let twitterClient = require("twitter");
-    var client = new twitterClient({
+    const twitterClient = require("twitter");
+    const client = new twitterClient({
         consumer_key: consumerKey,
         consumer_secret: consumerSecret,
         access_token_key: accessTokenKey,
@@ -37,16 +39,16 @@ let handler = eventRule.onEvent("on-timer-event", async() => {
     });
 
     const tweets = await new Promise<string[]>((resolve, reject) => {
-        client.get('search/tweets', {q: twitterQuery, count: 100}, function(error: any, tweets: any, response: any) {
+        client.get("search/tweets", {q: twitterQuery, count: 100}, function(error: any, tweets: any, response: any) {
             if (error) {
                 return reject(error);
             }
 
-            let statuses = tweets.statuses;
+            const statuses = tweets.statuses;
             console.log(`Got ${statuses.length} statuses.`);
 
-            let results = statuses.map((s: any) => {
-                let user = s.user.screen_name;
+            const results = statuses.map((s: any) => {
+                const user = s.user.screen_name;
 
                 return JSON.stringify({
                     created_at: s.created_at,
@@ -67,10 +69,10 @@ let handler = eventRule.onEvent("on-timer-event", async() => {
 
     console.log(`Got ${tweets.length} tweets from Twitter for query ${twitterQuery}`);
 
-    let filename = `${outputFolder}/${Date.now()}`;
-    let contents = Buffer.from(tweets.join("\n"), "utf8");
+    const filename = `${outputFolder}/${Date.now()}`;
+    const contents = Buffer.from(tweets.join("\n"), "utf8");
 
-    let s3 = new aws.sdk.S3();
+    const s3 = new aws.sdk.S3();
     await s3.putObject({
         Bucket: bucket.id.get(),
         Key: filename,
@@ -79,8 +81,8 @@ let handler = eventRule.onEvent("on-timer-event", async() => {
 });
 
 // athena setup
-let athena = new aws.athena.Database("tweets_database_1",
-    { name: "tweets_database_1", bucket: bucket.id, forceDestroy: true }
+const athena = new aws.athena.Database("tweets_database_1",
+    { name: "tweets_database_1", bucket: bucket.id, forceDestroy: true },
 );
 
 // Sadly, there isn't support for Athena tables in Terraform.
@@ -101,24 +103,23 @@ function createTableQuery(bucket: string) {
     LOCATION 's3://${bucket}/${outputFolder}/';`;
 }
 
-let topUsersQuery =
+const topUsersQuery =
     `select distinct user, followers, text, url
     from tweets
     where isRetweet = false and followers > 1000
     order by followers desc`;
 
-let createTableAthenaQuery = new aws.athena.NamedQuery(
+const createTableAthenaQuery = new aws.athena.NamedQuery(
     "createTable", { database: athena.id, query: bucketName.apply(createTableQuery)});
 
-let topUsersAthenaQuery = new aws.athena.NamedQuery("topUsers", { database: athena.id, query: topUsersQuery});
+const topUsersAthenaQuery = new aws.athena.NamedQuery("topUsers", { database: athena.id, query: topUsersQuery});
 
 function getQueryUri(queryId: string) {
-    let config = new pulumi.Config("aws");
-    let region = config.require("region");
+    const config = new pulumi.Config("aws");
+    const region = config.require("region");
     return `https://${region}.console.aws.amazon.com/athena/home?force#query/saved/${queryId}`;
 }
 
-exports.bucketName = bucketName
-exports.athenaDatabase = athena.id;
-exports.topUsersQueryUri = topUsersAthenaQuery.id.apply(getQueryUri);
-exports.createTableQueryUri = createTableAthenaQuery.id.apply(getQueryUri);
+export const athenaDatabase = athena.id;
+export const topUsersQueryUri = topUsersAthenaQuery.id.apply(getQueryUri);
+export const createTableQueryUri = createTableAthenaQuery.id.apply(getQueryUri);

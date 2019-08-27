@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
@@ -16,7 +18,7 @@ const lambdaRolePolicy = new aws.iam.RolePolicy("lambdaRolePolicy", {
             Action: [
                 "logs:CreateLogGroup",
                 "logs:CreateLogStream",
-                "logs:PutLogEvents"
+                "logs:PutLogEvents",
             ],
             Resource: "arn:aws:logs:*:*:*",
         }],
@@ -46,7 +48,7 @@ const helloFunction = new aws.serverless.Function(
     { role: lambdaRole },
     (event, context, callback) => {
         callback(null, "Hello");
-    }
+    },
 );
 
 const worldFunction = new aws.serverless.Function(
@@ -54,7 +56,7 @@ const worldFunction = new aws.serverless.Function(
   {role: lambdaRole},
   (event, context, callback) => {
     callback(null, `${event} World!`);
-  }
+  },
 );
 
 const stateMachine = new aws.sfn.StateMachine("stateMachine", {
@@ -68,16 +70,16 @@ const stateMachine = new aws.sfn.StateMachine("stateMachine", {
           "Hello": {
             "Type": "Task",
             "Resource": helloArn,
-            "Next": "World"
+            "Next": "World",
           },
           "World": {
             "Type": "Task",
             "Resource": worldArn,
-            "End": true
-          }
-        }
+            "End": true,
+          },
+        },
       });
-    })
+    }),
 });
 
-exports.stateMachineArn = stateMachine.id;
+export const stateMachineArn = stateMachine.id;

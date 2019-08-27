@@ -6,18 +6,17 @@
 // you full access to the breadth of the platform's capabilities and comes with many abstractions to
 // make developing against that platform easier.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as cloud from "@pulumi/cloud";
 import * as cache from "./cache";
 
 // Create a web server.
-let endpoint = new cloud.HttpEndpoint("urlshortener");
+const endpoint = new cloud.HttpEndpoint("urlshortener");
 
 // Create a table `urls`, with `name` as primary key.
-let urlTable = new cloud.Table("urls", "name");
+const urlTable = new cloud.Table("urls", "name");
 
 // Create a cache of frequently accessed urls.
-let urlCache = new cache.Cache("urlcache");
+const urlCache = new cache.Cache("urlcache");
 
 // Serve all files in the www directory to the root.
 endpoint.static("/", "www");
@@ -25,7 +24,7 @@ endpoint.static("/", "www");
 // GET /url lists all URLs currently registered.
 endpoint.get("/url", async (req, res) => {
     try {
-        let items = await urlTable.scan();
+        const items = await urlTable.scan();
         res.status(200).json(items);
         console.log(`GET /url retrieved ${items.length} items`);
     } catch (err) {
@@ -36,7 +35,7 @@ endpoint.get("/url", async (req, res) => {
 
 // GET /url/{name} redirects to the target URL based on a short-name.
 endpoint.get("/url/{name}", async (req, res) => {
-    let name = req.params["name"];
+    const name = req.params["name"];
     try {
         // First try the Redis cache.
         let url = await urlCache.get(name);
@@ -46,7 +45,7 @@ endpoint.get("/url/{name}", async (req, res) => {
         }
         else {
             // If we didn't find it in the cache, consult the table.
-            let value = await urlTable.get({name});
+            const value = await urlTable.get({name});
             url = value && value.url;
             if (url) {
                 urlCache.set(name, url); // cache it for next time.
@@ -58,12 +57,12 @@ endpoint.get("/url/{name}", async (req, res) => {
             res.setHeader("Location", url);
             res.status(302);
             res.end("");
-            console.log(`GET /url/${name} => ${url}`)
+            console.log(`GET /url/${name} => ${url}`);
         }
         else {
             res.status(404);
             res.end("");
-            console.log(`GET /url/${name} is missing (404)`)
+            console.log(`GET /url/${name} is missing (404)`);
         }
     } catch (err) {
         res.status(500).json(err.stack);
@@ -73,8 +72,8 @@ endpoint.get("/url/{name}", async (req, res) => {
 
 // POST /url registers a new URL with a given short-name.
 endpoint.post("/url", async (req, res) => {
-    let url = <string>req.query["url"];
-    let name = <string>req.query["name"];
+    const url = <string>req.query["url"];
+    const name = <string>req.query["name"];
     try {
         await urlTable.insert({ name, url });
         await urlCache.set(name, url);

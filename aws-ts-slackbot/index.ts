@@ -1,6 +1,8 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
+import * as pulumi from "@pulumi/pulumi";
 
 import * as qs from "qs";
 import * as superagent from "superagent";
@@ -20,7 +22,7 @@ const subscriptionsTable = new aws.dynamodb.Table("subscriptions", {
         type: "S",
     }],
     hashKey: "id",
-    billingMode: "PAY_PER_REQUEST"
+    billingMode: "PAY_PER_REQUEST",
 });
 
 // Slack has strict requirements on how fast you must be when responding to their messages. In order
@@ -36,7 +38,7 @@ interface SlackRequest {
 }
 
 interface UrlVerificationRequest extends SlackRequest {
-    type: "url_verification",
+    type: "url_verification";
     challenge: string;
 }
 
@@ -73,7 +75,7 @@ const endpoint = new awsx.apigateway.API("mentionbot", {
                 }
 
                 if (!verificationToken) {
-                    throw new Error("mentionbot:verificationToken was not provided")
+                    throw new Error("mentionbot:verificationToken was not provided");
                 }
 
                 if (!event.isBase64Encoded || event.body == null) {
@@ -97,7 +99,7 @@ const endpoint = new awsx.apigateway.API("mentionbot", {
 
                             if (eventRequest.token !== verificationToken) {
                                 console.log("Error: Invalid verification token");
-                                return { statusCode: 401, body: "Invalid verification token" }
+                                return { statusCode: 401, body: "Invalid verification token" };
                             }
 
                             await onEventCallback(eventRequest);
@@ -198,7 +200,7 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
         }
 
         const permaLink = await getPermalink(event.channel, event.event_ts);
-        const text = `New mention at: ${permaLink}`
+        const text = `New mention at: ${permaLink}`;
 
         await sendChannelMessage(getResult.Item.channel, text);
     }
@@ -206,19 +208,19 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
 
 async function sendChannelMessage(channel: string, text: string) {
     const message = { token: slackToken, channel, text };
-    await superagent.get(`https://slack.com/api/chat.postMessage?${qs.stringify(message)}`)
+    await superagent.get(`https://slack.com/api/chat.postMessage?${qs.stringify(message)}`);
 }
 
-async function getPermalink(channel: string, message_ts: string) {
-    const message = { token: slackToken, channel, message_ts };
-    const result = await superagent.get(`https://slack.com/api/chat.getPermalink?${qs.stringify(message)}`)
+async function getPermalink(channel: string, timestamp: string) {
+    const message = { token: slackToken, channel, message_ts: timestamp };
+    const result = await superagent.get(`https://slack.com/api/chat.getPermalink?${qs.stringify(message)}`);
     return JSON.parse(result.text).permalink;
 }
 
 async function onAppMentionEventCallback(request: EventCallbackRequest) {
     // Got an app_mention to @mentionbot.
     const event = request.event;
-    var promise = event.text.toLowerCase().indexOf("unsubscribe") >= 0
+    const promise = event.text.toLowerCase().indexOf("unsubscribe") >= 0
         ? unsubscribeFromMentions(event)
         : subscribeToMentions(event);
 

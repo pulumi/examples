@@ -1,7 +1,7 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 import { StorageStaticWebsite } from "./staticWebsite";
 
 // Create an Azure Resource Group
@@ -24,7 +24,7 @@ const staticWebsite = new StorageStaticWebsite("website-static", {
 });
 
 // Upload the files
-["index.html", "404.html"].map(name => 
+["index.html", "404.html"].map(name =>
     new azure.storage.Blob(name, {
         name,
         resourceGroupName: resourceGroup.name,
@@ -33,7 +33,7 @@ const staticWebsite = new StorageStaticWebsite("website-static", {
         type: "block",
         source: `./wwwroot/${name}`,
         contentType: "text/html",
-    })
+    }),
 );
 
 // Web endpoint to the website
@@ -55,6 +55,6 @@ const endpoint = new azure.cdn.Endpoint("website-cdn-ep", {
     }],
 });
 
-// CDN endpoint to the website. 
+// CDN endpoint to the website.
 // Allow it some time after the deployment to get ready.
 export const cdnEndpoint = pulumi.interpolate`https://${endpoint.hostName}/`;

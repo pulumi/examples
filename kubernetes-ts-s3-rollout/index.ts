@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as k8s from "@pulumi/kubernetes";
 import * as s3Helpers from "./s3Helpers";
 import * as util from "./util";
@@ -5,7 +7,7 @@ import * as util from "./util";
 // Generate S3 bucket; put the local file `default.conf` inside it.
 const nginxConfigBucket = new s3Helpers.FileBucket("nginx-configs", {
     files: ["default.conf"],
-    policy: s3Helpers.publicReadPolicy
+    policy: s3Helpers.publicReadPolicy,
 });
 const bucketId = nginxConfigBucket.fileIdFromHashedContents("default.conf");
 
@@ -33,13 +35,13 @@ const nginx = new k8s.apps.v1beta1.Deployment("nginx", {
                     {
                         image: "nginx:1.13.6-alpine",
                         name: "nginx",
-                        volumeMounts: [nginxConfigMount]
-                    }
+                        volumeMounts: [nginxConfigMount],
+                    },
                 ],
-                volumes: [nginxConfigVol]
-            }
-        }
-    }
+                volumes: [nginxConfigVol],
+            },
+        },
+    },
 });
 
 // Expose proxy to the public Internet.
@@ -49,7 +51,7 @@ const frontend = new k8s.core.v1.Service("nginx", {
         type: "LoadBalancer",
         ports: [{ port: 80, targetPort: 80, protocol: "TCP" }],
         selector: nginx.spec.template.metadata.labels,
-    }
+    },
 });
 
 // Export the frontend IP.

@@ -1,4 +1,5 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as k8s from "@pulumi/kubernetes";
 import * as util from "./util";
 
@@ -6,7 +7,7 @@ import * as util from "./util";
 const prometheus = new k8s.helm.v2.Chart("p8s", {
     repo: "stable",
     chart: "prometheus",
-    version: "6.10.0"
+    version: "6.10.0",
 });
 
 const containerName = "example-app";
@@ -20,30 +21,30 @@ const instrumentedPod = {
                 name: containerName,
                 // Prometheus-instrumented app that generates artificial load on itself.
                 image: "fabxc/instrumented_app",
-                ports: [{ name: "web", containerPort: 8080 }]
-            }
-        ]
-    }
+                ports: [{ name: "web", containerPort: 8080 }],
+            },
+        ],
+    },
 };
 
 const p8sService = prometheus.getResource("v1/Service", "p8s-prometheus-server");
 const p8sDeployment = prometheus.getResource(
     "extensions/v1beta1/Deployment",
-    "p8s-prometheus-server"
+    "p8s-prometheus-server",
 );
 
 // IMPORTANT: This forwards the Prometheus service to localhost, so we can check it. If you are
 // running in-cluster, you probably don't need this!
 const localPort = 9090;
 const forwarderHandle = util.forwardPrometheusService(p8sService, p8sDeployment, {
-    localPort: localPort
+    localPort,
 });
 
 // Canary ring. Replicate instrumented Pod 3 times.
 const canary = new k8s.apps.v1beta1.Deployment(
     "canary-example-app",
     { spec: { replicas: 1, template: instrumentedPod } },
-    { dependsOn: p8sDeployment }
+    { dependsOn: p8sDeployment },
 );
 
 // Staging ring. Replicate instrumented Pod 10 times.
@@ -58,11 +59,11 @@ const staging = new k8s.apps.v1beta1.Deployment("staging-example-app", {
                 quantile: 0.9,
                 thresholdMicroseconds: 100000,
                 prometheusEndpoint: `localhost:${localPort}`,
-                forwarderHandle: forwarderHandle
-            })
-        }
+                forwarderHandle,
+            }),
+        },
     },
-    spec: { replicas: 1, template: instrumentedPod }
+    spec: { replicas: 1, template: instrumentedPod },
 });
 
 export const p90ResponseTime = staging.metadata.annotations["example.com/p90ResponseTime"];

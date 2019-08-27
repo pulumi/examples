@@ -1,10 +1,11 @@
-// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as cloud from "@pulumi/cloud-aws";
-import * as cache from "./cache";
+import * as pulumi from "@pulumi/pulumi";
+
 import * as express from "express";
+import * as cache from "./cache";
 
 type AsyncRequestHandler = (req: express.Request, res: express.Response, next: express.NextFunction) => Promise<void>;
 
@@ -12,22 +13,22 @@ const asyncMiddleware = (fn: AsyncRequestHandler) => {
     return (req: express.Request, res: express.Response, next: express.NextFunction) => {
         Promise.resolve(fn(req, res, next)).catch(next);
     };
-}
+};
 
 // Create a table `urls`, with `name` as primary key.
-let urlTable = new aws.dynamodb.Table("urls", {
+const urlTable = new aws.dynamodb.Table("urls", {
     attributes: [{
         name: "name",
         type: "S",
     }],
     hashKey: "name",
     billingMode: "PAY_PER_REQUEST",
-})
+});
 
 async function scanTable() {
     const items: any[] = [];
     const db = new aws.sdk.DynamoDB.DocumentClient();
-    let params = {
+    const params = {
         TableName: urlTable.name.get(),
         ConsistentRead: true,
         ExclusiveStartKey: undefined,
@@ -47,16 +48,16 @@ async function scanTable() {
 }
 
 // Create a cache of frequently accessed urls.
-let urlCache = new cache.Cache("urlcache");
+const urlCache = new cache.Cache("urlcache");
 
 // Create a web server.
-let httpServer = new cloud.HttpServer("urlshortener", () => {
-    let app = express();
+const httpServer = new cloud.HttpServer("urlshortener", () => {
+    const app = express();
 
     // GET /url lists all URLs currently registered.
     app.get("/url", asyncMiddleware(async (req, res) => {
         try {
-            let items = await scanTable();
+            const items = await scanTable();
             res.status(200).json(items);
             console.log(`GET /url retrieved ${items.length} items`);
         } catch (err) {
@@ -67,7 +68,7 @@ let httpServer = new cloud.HttpServer("urlshortener", () => {
 
     // GET /url/{name} redirects to the target URL based on a short-name.
     app.get("/url/:name", asyncMiddleware(async (req, res) => {
-        let name = req.params.name
+        const name = req.params.name;
         try {
             // First try the Redis cache.
             let url = await urlCache.get(name);
@@ -84,7 +85,7 @@ let httpServer = new cloud.HttpServer("urlshortener", () => {
                     ConsistentRead: true,
                 }).promise();
 
-                let value = result.Item;
+                const value = result.Item;
                 url = value && value.url;
                 if (url) {
                     urlCache.set(name, url); // cache it for next time.
@@ -96,12 +97,12 @@ let httpServer = new cloud.HttpServer("urlshortener", () => {
                 res.setHeader("Location", url);
                 res.status(302);
                 res.end("");
-                console.log(`GET /url/${name} => ${url}`)
+                console.log(`GET /url/${name} => ${url}`);
             }
             else {
                 res.status(404);
                 res.end("");
-                console.log(`GET /url/${name} is missing (404)`)
+                console.log(`GET /url/${name} is missing (404)`);
             }
         } catch (err) {
             res.status(500).json(err.stack);

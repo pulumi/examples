@@ -6,8 +6,8 @@
 // you full access to the breadth of the platform's capabilities and comes with many abstractions to
 // make developing against that platform easier.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as cloud from "@pulumi/cloud";
+import * as pulumi from "@pulumi/pulumi";
 import * as config from "./config";
 
 // A simple cache abstraction that wraps Redis.
@@ -16,7 +16,7 @@ export class Cache {
     private readonly endpoint: pulumi.Output<cloud.Endpoint>;
 
     constructor(name: string, memory: number = 128) {
-        let pw = config.redisPassword;
+        const pw = config.redisPassword;
         this.redis = new cloud.Service(name, {
             containers: {
                 redis: {
@@ -32,10 +32,10 @@ export class Cache {
     }
 
     public get(key: string): Promise<string> {
-        let ep = this.endpoint.get();
+        const ep = this.endpoint.get();
         console.log(`Getting key '${key}' on Redis@${ep.hostname}:${ep.port}`);
 
-        let client = require("redis").createClient(ep.port, ep.hostname, { password: config.redisPassword });
+        const client = require("redis").createClient(ep.port, ep.hostname, { password: config.redisPassword });
         return new Promise<string>((resolve, reject) => {
             client.get(key, (err: any, v: any) => {
                 if (err) {
@@ -48,19 +48,19 @@ export class Cache {
     }
 
     public set(key: string, value: string): Promise<void> {
-        let ep = this.endpoint.get();
+        const ep = this.endpoint.get();
         console.log(`Setting key '${key}' to '${value}' on Redis@${ep.hostname}:${ep.port}`);
 
-        let client = require("redis").createClient(ep.port, ep.hostname, { password: config.redisPassword });
+        const client = require("redis").createClient(ep.port, ep.hostname, { password: config.redisPassword });
         return new Promise<void>((resolve, reject) => {
             client.set(key, value, (err: any, v: any) => {
                 if (err) {
                     reject(err);
                 } else {
-                    console.log("Set succeeed: " + JSON.stringify(v))
+                    console.log("Set succeeed: " + JSON.stringify(v));
                     resolve();
                 }
             });
         });
-    };
+    }
 }

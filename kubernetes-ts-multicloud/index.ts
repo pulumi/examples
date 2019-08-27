@@ -28,9 +28,9 @@ const gkeCluster = new gke.GkeCluster("multicloud", {});
 
 // Create a list of named clusters where the demo app will be deployed.
 interface Cluster {
-    name: string
-    provider: k8s.Provider
-    staticAppIP?: pulumi.Output<string>
+    name: string;
+    provider: k8s.Provider;
+    staticAppIP?: pulumi.Output<string>;
 }
 const clusters: Cluster[] = [
     // Note: Comment out lines for any cluster you don't want to deploy.
@@ -41,11 +41,11 @@ const clusters: Cluster[] = [
 ];
 
 // Export a list of URLs to access the demo app.
-interface appUrl {
-    name: string,
-    url: pulumi.Output<string>
+interface AppUrl {
+    name: string;
+    url: pulumi.Output<string>;
 }
-export let appUrls: appUrl[] = [];
+export let appUrls: AppUrl[] = [];
 
 const kuardImageTag = "blue";
 // const kuardImageTag = "green";
@@ -55,9 +55,9 @@ for (const cluster of clusters) {
     const instance = new app.DemoApp(cluster.name, {
         provider: cluster.provider,
         imageTag: kuardImageTag,
-        staticAppIP: cluster.staticAppIP
+        staticAppIP: cluster.staticAppIP,
     });
 
-    let instanceUrl: appUrl = {name: cluster.name, url: instance.appUrl};
+    const instanceUrl: AppUrl = {name: cluster.name, url: instance.appUrl};
     appUrls = appUrls.concat(instanceUrl);
 }

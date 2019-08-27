@@ -1,7 +1,7 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 import { createSharedAccessToken } from "./token";
 
 // Create an Azure Resource Group
@@ -54,7 +54,7 @@ FROM
 GROUP BY
     Make,
     TumblingWindow(minute, 1)
-`
+`,
 });
 
 // Input of the job: the Event Hub with raw events

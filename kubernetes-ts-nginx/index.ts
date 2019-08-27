@@ -1,12 +1,12 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
+import * as pulumi from "@pulumi/pulumi";
 
-let config = new pulumi.Config();
+const config = new pulumi.Config();
 
-let nginxLabels = { app: "nginx" };
-let nginxDeployment = new k8s.apps.v1.Deployment("nginx-deployment", {
+const nginxLabels = { app: "nginx" };
+const nginxDeployment = new k8s.apps.v1.Deployment("nginx-deployment", {
     spec: {
         selector: { matchLabels: nginxLabels },
         replicas: config.getNumber("replicas") || 2,
@@ -16,11 +16,11 @@ let nginxDeployment = new k8s.apps.v1.Deployment("nginx-deployment", {
                 containers: [{
                     name: "nginx",
                     image: "nginx:1.7.9",
-                    ports: [{ containerPort: 80 }]
+                    ports: [{ containerPort: 80 }],
                 }],
             },
         },
     },
 });
 
-export let nginx = nginxDeployment.metadata.name;
+export const nginx = nginxDeployment.metadata.name;
