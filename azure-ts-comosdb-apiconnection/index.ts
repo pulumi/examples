@@ -84,5 +84,3 @@ const cosmosdbConnection = new azure.core.TemplateDeployment("db-connection", {
     templateBody: pulumi.output(connectionTemplate).apply(JSON.stringify),
     deploymentMode: "Incremental",
 }, { dependsOn: [cosmosdbAccount, db, dbContainer] });
-
-export const a = cosmosdbConnection.templateBody;
