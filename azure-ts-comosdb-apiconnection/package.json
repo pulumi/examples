@@ -1,5 +1,5 @@
 {
-    "name": "azure-cosmosdb-with-apiconnection",
+    "name": "azure-cosmosdb-apiconnection",
     "devDependencies": {
         "@types/node": "latest"
     },

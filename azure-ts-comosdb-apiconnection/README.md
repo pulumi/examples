@@ -3,7 +3,7 @@
 # Deploy an Azure CosmosDB container and an API Connection
 
 At the time of this writting, there was no API support from either Terraform or Azure (or both)
-to handle CosmosDB contaiers and API Connections. Therefore, this is a how-to:
+to handle CosmosDB containers and API Connections. Therefore, this is a how-to:
  - Levarage Azure's CosmosDB SDK to create a CosmosDB container
  - Use an ARM template to create an API Connection
 
@@ -36,7 +36,7 @@ to handle CosmosDB contaiers and API Connections. Therefore, this is a how-to:
     Updating (dev):
 
         Type                               Name                                   Status      Info
-        pulumi:pulumi:Stack                azure-cosmosdb-wtih-apiconnection-dev              3 messages
+        pulumi:pulumi:Stack                azure-cosmosdb-apiconnection-dev                   3 messages
     +   ├─ azure:core:ResourceGroup        dev-rg                                 created
     +   ├─ azure:storage:Account           devsa                                  created
     +   ├─ azure:cosmosdb:Account          dev-db-acc                             created
