@@ -746,6 +746,13 @@ func TestExamples(t *testing.T) {
 				"azure:location":    azureLocation,
 			},
 		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-cosmosdb-logicapp"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"azure:location":    azureLocation,
+			},
+		}),
 		// TODO: This test fails due to a bug in the Terraform Azure provider in which the
 		// service principal is not available when attempting to create the K8s cluster.
 		// See the azure-ts-aks-multicluster readme for more detail and
