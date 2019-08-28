@@ -1,5 +1,5 @@
 {
-    "name": "azure-cosmosdb-apiconnection",
+    "name": "azure-cosmosdb-logicapp",
     "devDependencies": {
         "@types/node": "latest"
     },
