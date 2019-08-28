@@ -104,7 +104,7 @@ This error will occurr when the state of the ETag get out of sync between the Pu
 and AWS. (Which can happen when inspecting the CloudFront distribution in the AWS console.)
 
 This will get fixed in Pulumi soon, but for the time being you can find workaround steps in
-the [issue on GitHub](pulumi/pulumi/issues/1449).
+the [issue on GitHub](https://github.com/pulumi/pulumi/issues/1449).
 
 ## Deployment Speed
 

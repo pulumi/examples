@@ -11,8 +11,6 @@ directory; this program reads that file and puts it into an S3 bucket. Hence, ch
 file will cause register as a change in the S3 bucket's data, which will trigger a rollout of the
 nginx `Deployment`.
 
-![configmapRollout](images/rollout.gif "ConfigMap-induced Rollout")
-
 ## Running the App
 
 Follow the steps in [Pulumi Installation and Setup](https://docs.pulumi.com/install/) and
