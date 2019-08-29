@@ -36,6 +36,12 @@ install:
   - sudo mv kubectl /usr/local/bin
 before_script:
   - "${PULUMI_SCRIPTS}/ci/ensure-dependencies"
+jobs:
+  include:
+  - script: make travis_${TRAVIS_EVENT_TYPE}
+  - stage: latest
+    if: type = cron
+    script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head"
 after_failure:
   - "${PULUMI_SCRIPTS}/ci/upload-failed-tests"
 notifications:
