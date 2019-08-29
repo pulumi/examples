@@ -2,7 +2,6 @@
 
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
-import { CosmosContainer } from "./cosmosContainer";
 
 // Create an Azure Resource Group
 const resourceGroup = new azure.core.ResourceGroup("logicappdemo-rg");
@@ -35,12 +34,10 @@ const db = new azure.cosmosdb.SqlDatabase("db", {
 });
 
 // Cosmos DB SQL Container
-const dbContainer = new CosmosContainer("container", {
-    region: resourceGroup.location,
-    endpoint: cosmosdbAccount.endpoint,
-    masterKey: cosmosdbAccount.primaryMasterKey,
-    collectionName: "items",
-    dbName: db.name,
+const dbContainer = new azure.cosmosdb.SqlContainer("container", {
+    resourceGroupName: resourceGroup.name,
+    accountName: cosmosdbAccount.name,
+    databaseName: db.name,
 });
 
 /*
@@ -173,7 +170,7 @@ const insertActionBody = {
             },
         },
         method: "post",
-        path: pulumi.interpolate`/dbs/${db.name}/colls/${dbContainer.collectionName}/docs`,
+        path: pulumi.interpolate`/dbs/${db.name}/colls/${dbContainer.name}/docs`,
     },
 };
 

@@ -2,11 +2,7 @@
 
 # Deploy an Azure Cosmos DB container, an API Connection, and a Logic App
 
-At the time of this writting, there are no native Pulumi resources to define Cosmos DB containers and API Connections.
-
-This example shows how to
- - Levarage a dynamic provider and the Azure Cosmos DB SDK to create a Cosmos DB container
- - Use an ARM templates to create an API Connection and a Logic App
+At the time of this writting, there is no native Pulumi resource to define API Connections and to link it to a Logic App. This example shows how to use an ARM templates to create an API Connection and a Logic App.
 
 ## Prerequisites
 
@@ -39,7 +35,7 @@ This example shows how to
      +   ├─ azure:cosmosdb:Account          logicappdemo-cdb             created
      +   ├─ azure:storage:Account           logicappdemosa               created
      +   ├─ azure:cosmosdb:SqlDatabase      db                           created
-     +   ├─ pulumi-nodejs:dynamic:Resource  container                    created
+     +   ├─ azure:cosmosdb:SqlContainer     container                    created
      +   ├─ azure:core:TemplateDeployment   db-connection                created
      +   ├─ azure:core:TemplateDeployment   logic-app                    created
      +   └─ azure:logicapps:ActionCustom    Create_or_update_document    created
