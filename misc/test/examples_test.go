@@ -197,6 +197,20 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-containers"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			CloudURL: "s3://ci-remote-state-bucket",
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 15 * time.Minute
+				endpoint := stack.Outputs["frontendURL"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, Pulumi!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-eks"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
@@ -404,6 +418,19 @@ func TestExamples(t *testing.T) {
 		//}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"azure:location":    azureLocation,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Azure Functions!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-functions"),
+			CloudURL: "azblob://ci-remote-state-bucket",
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
 				"azure:location":    azureLocation,
@@ -666,6 +693,20 @@ func TestExamples(t *testing.T) {
 		//}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "gcp-ts-functions"),
+			Config: map[string]string{
+				"gcp:project": "pulumi-ci-gcp-provider",
+				"gcp:zone":    "us-central1-a",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["url"].(string)
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Google Cloud Functions!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "gcp-ts-functions"),
+			CloudURL: "gs://ci-remote-state-bucket",
 			Config: map[string]string{
 				"gcp:project": "pulumi-ci-gcp-provider",
 				"gcp:zone":    "us-central1-a",
