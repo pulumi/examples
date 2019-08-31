@@ -2,52 +2,59 @@
 
 # Deploy a Spring Boot App using Jenkins and Pulumi
 
-This example shows how you can deploy a Spring Boot app to an Azure App Service instance using Pulumi in a Jenkins Pipeline. The Spring Boot app is packaged into a container image that is automatically (and conveniently!) built as part of the Pulumi app. The container image is pushed up to a private Azure Container Registry and then used as the source for an App Service instance.
+This example shows how you can deploy a Spring Boot app to an Azure App Service instance using Pulumi in a Jenkins Pipeline. The Spring Boot app is packaged into a container image that is conveniently built as part of the Pulumi app. The container image is pushed up to a private Azure Container Registry and then used as the source for an App Service instance.
 
-## Running the App
+## Prerequisites
 
-1.  Create a new stack:
+1.  [Install Pulumi](https://www.pulumi.com/docs/get-started/install)
+1.  [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup)
 
-    ```
-    $ pulumi stack init dev
-    ```
+## Steps
 
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+### Step 1: Create a new stack
 
-    ```
-    $ az login
-    ```
+```
+$ pulumi stack init dev
+```
 
-1.  Restore NPM dependencies:
+### Step 2: Log in to the Azure CLI
 
-    ```
-    $ cd infrastructure
-    $ npm install
-    ```
+You will be prompted to do this during deployment if you forget this step.
 
-1.  Run `pulumi up` to preview and deploy changes:
+```
+$ az login
+```
 
-    ``` 
-    $ pulumi up
-    Previewing changes:
-    +  pulumi:pulumi:Stack jenkins-tutorial-dev create 
-    +  docker:image:Image spring-boot-greeting-app create 
-    +  azure:core:ResourceGroup jenkins-tutorial-group create 
-    +  azure:containerservice:Registry myacr create 
-    +  azure:appservice:Plan appservice-plan create 
-    +  azure:appservice:AppService spring-boot-greeting-app create 
-    +  pulumi:pulumi:Stack jenkins-tutorial-dev create 
+### Step 3: Install NPM dependencies
 
-    ...
-    ```
+```
+$ cd infrastructure
+$ npm install
+```
 
-1.  Check the deployed website endpoint:
+### Step 4: Deploy your changes
 
-    ```
-    $ pulumi stack output appServiceEndpoint
-    https://azpulumi-as0ef47193.azurewebsites.net
+Run `pulumi up` to preview and deploy changes:
 
-    $ curl "$(pulumi stack output appServiceEndpoint)/greeting"
-    {"id":1, "content": "Hello, World"}
-    ```
+```
+$ pulumi up
+Previewing changes:
++  pulumi:pulumi:Stack jenkins-tutorial-dev create
++  docker:image:Image spring-boot-greeting-app create
++  azure:core:ResourceGroup jenkins-tutorial-group create
++  azure:containerservice:Registry myacr create
++  azure:appservice:Plan appservice-plan create
++  azure:appservice:AppService spring-boot-greeting-app create
++  pulumi:pulumi:Stack jenkins-tutorial-dev create
+...
+```
 
+### Step 5: Check the deployed website endpoint
+
+```
+$ pulumi stack output appServiceEndpoint
+https://azpulumi-as0ef47193.azurewebsites.net
+
+$ curl "$(pulumi stack output appServiceEndpoint)/greeting"
+{"id":1, "content": "Hello, World"}
+```
