@@ -3,7 +3,7 @@
 all: only_build only_test
 
 ensure:
-	cd misc/test && dep ensure -v
+	cd misc/test && GO111MODULE=on go mod vendor
 
 only_build:
 
