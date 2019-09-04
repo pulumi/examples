@@ -4,8 +4,8 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/aws": "^0.17.0",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "^1.0.0",
+        "@pulumi/pulumi": "^1.0.0",
         "adm-zip": "^0.4.13"
     }
 }

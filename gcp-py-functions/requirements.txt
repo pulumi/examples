@@ -1,4 +1,4 @@
-pulumi>=0.16.4
-pulumi_gcp>=0.16.2
+pulumi>=1.0.0
+pulumi-gcp>=1.0.0
 twilio>=6.26.0
 googlemaps>=3.0.2

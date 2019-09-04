@@ -1,2 +1,2 @@
-pulumi
-pulumi_gcp
+pulumi>=1.0.0
+pulumi-gcp>=1.0.0

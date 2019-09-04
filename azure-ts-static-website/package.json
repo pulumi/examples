@@ -4,7 +4,7 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/pulumi": "latest",
-        "@pulumi/azure": "latest"
+        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/azure": "^1.0.0"
     }
 }
