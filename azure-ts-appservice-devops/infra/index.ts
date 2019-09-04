@@ -38,7 +38,6 @@ const appServicePlan = new azure.appservice.Plan(`${prefix}-asp`, {
 
 
 const storageContainer = new azure.storage.Container(`${prefix}-c`, {
-    resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     containerAccessType: "private",
 });

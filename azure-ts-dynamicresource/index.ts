@@ -31,7 +31,6 @@ const storageAccount = new azure.storage.Account("storageAccount", {
  * endpoint for this blob container.
  */
 const blobContainer = new azure.storage.Container("blobContainer", {
-    resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     // Make each "blob" in the container publicly accessible.
     // DO NOT set this property if you are going to store sensitive files!
