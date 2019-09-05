@@ -5,10 +5,10 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/azure": "latest",
-        "@pulumi/azuread": "latest",
-        "@pulumi/kubernetes": "latest",
-        "@pulumi/pulumi": "latest"
+        "@pulumi/azure": "^1.0.0",
+        "@pulumi/azuread": "^1.0.0",
+        "@pulumi/kubernetes": "^1.0.0",
+        "@pulumi/pulumi": "^1.0.0"
     },
     "license": "Apache-2.0"
 }

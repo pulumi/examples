@@ -4,9 +4,9 @@
         "@types/node": "^11.13.6"
     },
     "dependencies": {
-        "@pulumi/aws": "latest",
+        "@pulumi/aws": "^1.0.0",
         "@pulumi/awsx": "latest",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/pulumi": "^1.0.0",
         "@types/auth0-js": "^9.10.1",
         "@types/jsonwebtoken": "^8.3.2",
         "jsonwebtoken": "^8.5.1",

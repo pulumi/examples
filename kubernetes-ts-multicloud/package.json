@@ -5,13 +5,13 @@
     },
     "dependencies": {
         "@pulumi/awsx": "latest",
-        "@pulumi/azure": "latest",
-        "@pulumi/azuread": "latest",
+        "@pulumi/azure": "^1.0.0",
+        "@pulumi/azuread": "^1.0.0",
         "@pulumi/eks": "latest",
-        "@pulumi/gcp": "latest",
-        "@pulumi/kubernetes": "latest",
-        "@pulumi/pulumi": "latest",
-        "@pulumi/random": "latest",
+        "@pulumi/gcp": "^1.0.0",
+        "@pulumi/kubernetes": "^1.0.0",
+        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/random": "^1.0.0",
         "@pulumi/tls": "latest"
     }
 }
