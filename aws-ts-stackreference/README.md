@@ -1,5 +1,3 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
-
 # StackReference Example
 
 This example creates a "team" EC2 Instance with tags set from _upstream_ "company" and "department" 
