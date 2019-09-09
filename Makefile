@@ -1,6 +1,9 @@
 .PHONY: ensure only_build only_test all
 
-all: only_build lint only_test
+all: install only_build lint only_test
+
+install:
+	yarn global add tslint
 
 ensure:
 	cd misc/test && GO111MODULE=on go mod vendor
