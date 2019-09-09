@@ -1,7 +1,7 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 /**
  *   company
@@ -19,7 +19,7 @@ const combinedTags = {
     /* from department stack */ department: departmentStack.getOutput("departmentName"),
     /* from team config      */ team: config.require("teamName"),
     "Managed By": "Pulumi",
-}
+};
 
 const amiId = aws.getAmi({
     mostRecent: true,
