@@ -3,7 +3,7 @@
 all: install only_build lint only_test
 
 install:
-	yarn global add tslint
+	yarn global add tslint typescript
 
 ensure:
 	cd misc/test && GO111MODULE=on go mod vendor
