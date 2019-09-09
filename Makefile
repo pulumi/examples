@@ -1,11 +1,14 @@
 .PHONY: ensure only_build only_test all
 
-all: only_build only_test
+all: only_build lint only_test
 
 ensure:
 	cd misc/test && GO111MODULE=on go mod vendor
 
 only_build:
+
+lint:
+	tslint -c tslint.json **/*.ts
 
 only_test:
 	go test ./misc/test/... --timeout 4h -v -count=1 -short -parallel 40

@@ -1,7 +1,7 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 import * as fs from "fs";
 
@@ -39,7 +39,7 @@ const bigIpAmiId = aws.getAmi({
     filters: [
         { name: "product-code", values: ["8esk90vx7v713sa0muq2skw3j"] },
         { name: "name", values: ["F5 Networks BIGIP-14.0.0.1-0.0.2 PAYG - Good 25Mbps *"] },
-    ]
+    ],
 }).then(ami => ami.id);
 
 const bigIpUserData =

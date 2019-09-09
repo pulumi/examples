@@ -1,10 +1,10 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as f5bigip from "@pulumi/f5bigip";
+import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
-const backendInstances = config.require("backendInstances").split(',');
+const backendInstances = config.require("backendInstances").split(",");
 
 const baseTags = {
     project: `${pulumi.getProject()}-${pulumi.getStack()}`,

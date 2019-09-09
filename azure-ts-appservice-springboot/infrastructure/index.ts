@@ -1,8 +1,8 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
 import * as docker from "@pulumi/docker";
+import * as pulumi from "@pulumi/pulumi";
 
 // Create an Azure Resource Group
 const resourceGroup = new azure.core.ResourceGroup("jenkins-tutorial-group");
