@@ -35,7 +35,7 @@ k8s_cluster = Cluster('gke-cluster',
             'https://www.googleapis.com/auth/logging.write',
             'https://www.googleapis.com/auth/monitoring'
         ],
-    },
+    }
 )
 
 # Manufacture a GKE-style Kubeconfig. Note that this is slightly "different" because of the way GKE requires
@@ -89,7 +89,7 @@ ingress = Service('ingress',
         'type': 'LoadBalancer',
         'selector': labels,
         'ports': [{'port': 80}],
-    }, __opts__=ResourceOptions(provider=k8s_provider)
+    }, __opts__=ResourceOptions(provider=k8s_provider, custom_timeouts={"create":"15m", "delete": "15m"})
 )
 
 # Finally, export the kubeconfig so that the client can easily access the cluster.

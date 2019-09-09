@@ -123,6 +123,11 @@ const service = new k8s.core.v1.Service(name,
     },
     {
         provider: clusterProvider,
+        customTimeouts: {
+            create: "15m",
+            update: "15m",
+            delete: "15m",
+        },
     },
 );
 
