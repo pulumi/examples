@@ -1,7 +1,7 @@
 // Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 
 // Create a resource group to deploy all ARM template resources into.
 const resourceGroup = new azure.core.ResourceGroup("test", { location: azure.Locations.WestUS });
@@ -19,12 +19,12 @@ const armDeployment = new azure.core.TemplateDeployment("test-dep", {
           "allowedValues": [
             "Standard_LRS",
             "Standard_GRS",
-            "Standard_ZRS"
+            "Standard_ZRS",
           ],
           "metadata": {
-            "description": "Storage Account type"
-          }
-        }
+            "description": "Storage Account type",
+          },
+        },
       },
       "variables": {
         "location": "[resourceGroup().location]",
@@ -32,7 +32,7 @@ const armDeployment = new azure.core.TemplateDeployment("test-dep", {
         "publicIPAddressName": "[concat('myPublicIp', uniquestring(resourceGroup().id))]",
         "publicIPAddressType": "Dynamic",
         "apiVersion": "2015-06-15",
-        "dnsLabelPrefix": `${pulumi.getProject()}-${pulumi.getStack()}`
+        "dnsLabelPrefix": `${pulumi.getProject()}-${pulumi.getStack()}`,
       },
       "resources": [
         {
@@ -41,8 +41,8 @@ const armDeployment = new azure.core.TemplateDeployment("test-dep", {
           "apiVersion": "[variables('apiVersion')]",
           "location": "[variables('location')]",
           "properties": {
-            "accountType": "[parameters('storageAccountType')]"
-          }
+            "accountType": "[parameters('storageAccountType')]",
+          },
         },
         {
           "type": "Microsoft.Network/publicIPAddresses",
@@ -52,17 +52,17 @@ const armDeployment = new azure.core.TemplateDeployment("test-dep", {
           "properties": {
             "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
             "dnsSettings": {
-              "domainNameLabel": "[variables('dnsLabelPrefix')]"
-            }
-          }
-        }
+              "domainNameLabel": "[variables('dnsLabelPrefix')]",
+            },
+          },
+        },
       ],
       "outputs": {
         "storageAccountName": {
           "type": "string",
-          "value": "[variables('storageAccountName')]"
-        }
-      }
+          "value": "[variables('storageAccountName')]",
+        },
+      },
     }),
     parameters: {
         "storageAccountType": "Standard_GRS",

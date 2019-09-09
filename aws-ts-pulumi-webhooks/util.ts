@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import { ChatPostMessageArguments } from "@slack/client";
 
 // Return a formatted copy of the Slack message object, based on the kind of Pulumi webhook received.
@@ -15,9 +17,9 @@ export function formatSlackMessage(kind: string, payload: object, messageArgs: C
         case "stack_preview":
         case "stack_update":
             return formatUpdate(kind, payload, cloned);
+        default:
+            return cloned;
     }
-
-    return cloned;
 }
 
 function formatStack(payload: any, args: ChatPostMessageArguments): ChatPostMessageArguments {
@@ -40,7 +42,7 @@ function formatStack(payload: any, args: ChatPostMessageArguments): ChatPostMess
             ],
         },
     ];
-    return args
+    return args;
 }
 
 function formatTeam(payload: any, args: ChatPostMessageArguments): ChatPostMessageArguments {
@@ -133,8 +135,9 @@ function resultColor(result: string): string {
             return "#36a64f";
         case "failed":
             return "#e01563";
+        default:
+            return "#e9a820";
     }
-    return "#e9a820";
 }
 
 function resultEmoji(result: string): string {
@@ -143,8 +146,9 @@ function resultEmoji(result: string): string {
             return ":tropical_drink:";
         case "failed":
             return ":rotating_light:";
+        default:
+            return "";
     }
-    return "";
 }
 
 function titleCase(s: string): string {

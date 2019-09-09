@@ -17,7 +17,7 @@ export class Cache {
     private readonly redis: cloud.Service;
 
     constructor(name: string, memory: number = 128) {
-        let pw = config.redisPassword;
+        const pw = config.redisPassword;
         this.redis = new cloud.Service(name, {
             containers: {
                 redis: {
@@ -29,12 +29,12 @@ export class Cache {
             },
         });
 
-        let endpoint = this.redis.endpoints.redis[6379];
+        const endpoint = this.redis.endpoints.redis[6379];
         this.get = async (key: string) => {
-            let ep = (await endpoint).get();
+            const ep = (await endpoint).get();
             console.log(`Getting key '${key}' on Redis@${ep.hostname}:${ep.port}`);
 
-            let client = require("redis").createClient(ep.port, ep.hostname, { password: pw });
+            const client = require("redis").createClient(ep.port, ep.hostname, { password: pw });
             return new Promise<string>((resolve, reject) => {
                 client.get(key, (err: any, v: any) => {
                     if (err) {
@@ -47,16 +47,16 @@ export class Cache {
         };
 
         this.set = async (key: string, value: string) => {
-            let ep = (await endpoint).get();
+            const ep = (await endpoint).get();
             console.log(`Setting key '${key}' to '${value}' on Redis@${ep.hostname}:${ep.port}`);
 
-            let client = require("redis").createClient(ep.port, ep.hostname, { password: pw });
+            const client = require("redis").createClient(ep.port, ep.hostname, { password: pw });
             return new Promise<void>((resolve, reject) => {
                 client.set(key, value, (err: any, v: any) => {
                     if (err) {
                         reject(err);
                     } else {
-                        console.log("Set succeeed: " + JSON.stringify(v))
+                        console.log("Set succeeed: " + JSON.stringify(v));
                         resolve();
                     }
                 });

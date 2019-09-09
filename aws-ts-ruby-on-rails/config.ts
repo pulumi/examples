@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
@@ -8,7 +10,7 @@ export const dbName = config.get("dbName") || "MyDatabase";
 if (!/[a-zA-Z][a-zA-Z0-9]*/.test(dbName)) {
     throw new Error("dbName must begin with a letter and contain only alphanumeric characters");
 } else if (dbName.length < 1 || dbName.length > 64) {
-    throw new Error("dbName must between 1-64 characters, inclusively")
+    throw new Error("dbName must between 1-64 characters, inclusively");
 }
 
 // dbUser is the username for MySQL database access.

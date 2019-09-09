@@ -1,11 +1,11 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 
-import * as msRestAzure from "@azure/ms-rest-nodeauth";
 import * as cdnManagement from "@azure/arm-cdn";
 import { ServiceClientCredentials } from "@azure/ms-rest-js";
+import * as msRestAzure from "@azure/ms-rest-nodeauth";
 
 /**
  * CustomDomainOptions represents the inputs to the dynamic resource.
@@ -148,7 +148,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         return {
             deleteBeforeReplace: deleteBeforeReplace,
             replaces: replaces,
-            changes: changes
+            changes: changes,
         };
     }
 
@@ -213,7 +213,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         if (!result.resourceState) {
             return;
         }
-        if (result.resourceState !== 'Deleting') {
+        if (result.resourceState !== "Deleting") {
             throw new Error(`Provisioning state of the custom domain was expected to be 'Deleting', but was ${result.resourceState}.`);
         }
 
@@ -255,7 +255,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
  * CDNCustomDomainResource is a resource that can be used to create
  * custom domains against Azure CDN resources.
  * The Azure CDN resource itself must exist in order to create a custom domain for it.
- * 
+ *
  * Outputs from the dynamic resource provider must be declared in the dynamic resource itself
  * as `public readonly` members with the type `Output<T>`. These are automatically set by the dynamic
  * provider engine. The names of these properties must match the names of the properties exactly as

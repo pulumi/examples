@@ -1,8 +1,10 @@
-import * as pulumi from "@pulumi/pulumi";
-import * as gcp from "@pulumi/gcp";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as gpubsub from "@google-cloud/pubsub";
+import * as gcp from "@pulumi/gcp";
+import * as pulumi from "@pulumi/pulumi";
+
 import * as gfirestore from "@google-cloud/firestore";
+import * as gpubsub from "@google-cloud/pubsub";
 
 import * as bodyParser from "body-parser";
 import * as express from "express";
@@ -31,7 +33,7 @@ interface SlackRequest {
 }
 
 interface UrlVerificationRequest extends SlackRequest {
-    type: "url_verification",
+    type: "url_verification";
     challenge: string;
 }
 
@@ -73,7 +75,7 @@ const endpoint = new gcp.cloudfunctions.HttpCallbackFunction("mentionbot", {
         app.post("/events", asyncMiddleware(handleIncomingHttpRequest));
 
         return app;
-    }
+    },
 });
 
 async function handleIncomingHttpRequest(req: express.Request, res: express.Response) {
@@ -96,7 +98,7 @@ async function handleIncomingHttpRequest(req: express.Request, res: express.Resp
                 }
 
                 if (!verificationToken) {
-                    throw new Error("mentionbot:verificationToken was not provided")
+                    throw new Error("mentionbot:verificationToken was not provided");
                 }
 
                 if (eventRequest.token !== verificationToken) {
@@ -201,7 +203,7 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
         }
 
         const permaLink = await getPermalink(event.channel, event.event_ts);
-        const text = `New mention at: ${permaLink}`
+        const text = `New mention at: ${permaLink}`;
 
         await sendChannelMessage(snapshotData.channel, text);
     }
@@ -209,19 +211,19 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
 
 async function sendChannelMessage(channel: string, text: string) {
     const message = { token: slackToken, channel, text };
-    await superagent.get(`https://slack.com/api/chat.postMessage?${qs.stringify(message)}`)
+    await superagent.get(`https://slack.com/api/chat.postMessage?${qs.stringify(message)}`);
 }
 
-async function getPermalink(channel: string, message_ts: string) {
-    const message = { token: slackToken, channel, message_ts };
-    const result = await superagent.get(`https://slack.com/api/chat.getPermalink?${qs.stringify(message)}`)
+async function getPermalink(channel: string, timestamp: string) {
+    const message = { token: slackToken, channel, message_ts: timestamp };
+    const result = await superagent.get(`https://slack.com/api/chat.getPermalink?${qs.stringify(message)}`);
     return JSON.parse(result.text).permalink;
 }
 
 async function onAppMentionEventCallback(request: EventCallbackRequest) {
     // Got an app_mention to @mentionbot.
     const event = request.event;
-    var promise = event.text.toLowerCase().indexOf("unsubscribe") >= 0
+    const promise = event.text.toLowerCase().indexOf("unsubscribe") >= 0
         ? unsubscribeFromMentions(event)
         : subscribeToMentions(event);
 
@@ -246,7 +248,7 @@ async function subscribeToMentions(event: Event) {
 
     // User is subscribing.  Add them from subscription table.
     await firestore.collection(firestoreMentionUsersCollectionName).doc(event.user).set({
-        channel: event.channel
+        channel: event.channel,
     });
 
     const text = `Hi <@${event.user}>.  You've been subscribed to @ mentions. Send me an message containing 'unsubscribe' to stop receiving these notifications.`;

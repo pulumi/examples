@@ -1,10 +1,12 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as k8s from "@pulumi/kubernetes";
+import * as pulumi from "@pulumi/pulumi";
 
 // Minikube does not implement services of type `LoadBalancer`; require the user to specify if we're
 // running on minikube, and if so, create only services of type ClusterIP.
-let config = new pulumi.Config();
-let isMinikube = config.require("isMinikube");
+const config = new pulumi.Config();
+const isMinikube = config.require("isMinikube");
 
 // nginx container, replicated 1 time.
 const appName = "nginx";
@@ -15,9 +17,9 @@ const nginx = new k8s.apps.v1beta1.Deployment(appName, {
         replicas: 1,
         template: {
             metadata: { labels: appLabels },
-            spec: { containers: [{ name: appName, image: "nginx:1.15-alpine" }] }
-        }
-    }
+            spec: { containers: [{ name: appName, image: "nginx:1.15-alpine" }] },
+        },
+    },
 });
 
 // Allocate an IP to the nginx Deployment.
@@ -26,8 +28,8 @@ const frontend = new k8s.core.v1.Service(appName, {
     spec: {
         type: isMinikube === "true" ? "ClusterIP" : "LoadBalancer",
         ports: [{ port: 80, targetPort: 80, protocol: "TCP" }],
-        selector: appLabels
-    }
+        selector: appLabels,
+    },
 });
 
 // When "done", this will print the public IP.

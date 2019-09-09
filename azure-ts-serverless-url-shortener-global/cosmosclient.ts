@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as cosmos from "@azure/cosmos";
 
 export async function getContainer(endpoint: string, masterKey: string, region: string) {
