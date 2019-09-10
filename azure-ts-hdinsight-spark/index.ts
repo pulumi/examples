@@ -20,7 +20,6 @@ const storageAccount = new azure.storage.Account("sparksa", {
 });
 
 const storageContainer = new azure.storage.Container("spark", {
-    resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     containerAccessType: "private",
 });

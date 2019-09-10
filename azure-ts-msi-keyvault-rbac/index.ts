@@ -17,7 +17,6 @@ const storageAccount = new azure.storage.Account("storage", {
 
 // The container to put our files into
 const storageContainer = new azure.storage.Container("files", {
-    resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     containerAccessType: "private",
 });

@@ -23,7 +23,6 @@ const storageAccount = new azure.storage.Account("kedapulumi", {
     accountReplicationType: "LRS",
 });
 const queue = new azure.storage.Queue("kedaqueue", {
-    resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
 });
 
