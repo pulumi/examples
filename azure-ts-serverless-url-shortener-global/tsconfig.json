@@ -17,7 +17,6 @@
         "strictNullChecks": true
     },
     "files": [
-        "cosmosclient.ts",
         "index.ts",
     ]
 }
