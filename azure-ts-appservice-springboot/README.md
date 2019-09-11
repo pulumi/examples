@@ -12,6 +12,7 @@ This example shows how you can deploy a Spring Boot app to an Azure App Service 
 ### Step 1: Create a new stack
 
 ```
+$ cd infrastructure
 $ pulumi stack init dev
 ```
 
@@ -26,7 +27,6 @@ $ az login
 ### Step 3: Install NPM dependencies
 
 ```
-$ cd infrastructure
 $ npm install
 ```
 
