@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 const pulumi = require("@pulumi/pulumi");
 const linode = require("@pulumi/linode");
 const debian9 = "linode/debian9";

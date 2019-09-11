@@ -1,9 +1,11 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as k8s from "@pulumi/kubernetes";
+import * as pulumi from "@pulumi/pulumi";
 
 // Minikube does not implement services of type `LoadBalancer`; require the user to specify if we're
 // running on minikube, and if so, create only services of type ClusterIP.
-let config = new pulumi.Config();
+const config = new pulumi.Config();
 if (config.require("isMinikube") === "true") {
     throw new Error("This example does not yet support minikube");
 }
@@ -12,7 +14,7 @@ if (config.require("isMinikube") === "true") {
 const wordpress = new k8s.helm.v2.Chart("wpdev", {
     repo: "stable",
     version: "2.1.3",
-    chart: "wordpress"
+    chart: "wordpress",
 });
 
 // Export the public IP for Wordpress.

@@ -1,6 +1,7 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as crypto from "crypto";
 import * as fs from "fs";
-import * as path from "path";
 import * as mime from "mime";
 
 import * as aws from "@pulumi/aws";
@@ -27,7 +28,7 @@ export class FileBucket {
             this.files[file] = new aws.s3.BucketObject(file, {
                 bucket: this.bucket,
                 source: new pulumi.asset.FileAsset(file),
-                contentType: mime.getType(file) || undefined
+                contentType: mime.getType(file) || undefined,
             });
         }
 
@@ -36,7 +37,7 @@ export class FileBucket {
             this.policy = new aws.s3.BucketPolicy(`bucketPolicy`, {
                 bucket: this.bucket.bucket,
                 // policy: this.bucket.bucket.apply(publicReadPolicyForBucket)
-                policy: opts.policy(this.bucket)
+                policy: opts.policy(this.bucket),
             });
         }
     }
@@ -72,10 +73,10 @@ export function publicReadPolicy(bucket: aws.s3.Bucket): pulumi.Output<string> {
                     Principal: "*",
                     Action: ["s3:GetObject"],
                     Resource: [
-                        `arn:aws:s3:::${bucketName}/*` // policy refers to bucket name explicitly
-                    ]
-                }
-            ]
-        })
+                        `arn:aws:s3:::${bucketName}/*`, // policy refers to bucket name explicitly
+                    ],
+                },
+            ],
+        }),
     );
 }

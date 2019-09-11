@@ -1,8 +1,10 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 
 // Create a mapping from 'route' to a count
-let counterTable = new aws.dynamodb.Table("counterTable", {
+const counterTable = new aws.dynamodb.Table("counterTable", {
     attributes: [{
         name: "id",
         type: "S",
@@ -13,12 +15,12 @@ let counterTable = new aws.dynamodb.Table("counterTable", {
 });
 
 // Create an API endpoint
-let endpoint = new awsx.apigateway.API("hello-world", {
+const endpoint = new awsx.apigateway.API("hello-world", {
     routes: [{
         path: "/{route+}",
         method: "GET",
         eventHandler: async (event) => {
-            let route = event.pathParameters!["route"];
+            const route = event.pathParameters!["route"];
             console.log(`Getting count for '${route}'`);
 
             const client = new aws.sdk.DynamoDB.DocumentClient();

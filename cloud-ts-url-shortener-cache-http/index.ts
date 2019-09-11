@@ -6,12 +6,11 @@
 // you full access to the breadth of the platform's capabilities and comes with many abstractions to
 // make developing against that platform easier.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as cloud from "@pulumi/cloud";
-import * as cache from "./cache";
+import * as pulumi from "@pulumi/pulumi";
+
 import * as express from "express";
-import * as fs from "fs";
-import * as mime from "mime-types";
+import * as cache from "./cache";
 
 type AsyncRequestHandler = (req: express.Request, res: express.Response, next: express.NextFunction) => Promise<void>;
 
@@ -19,22 +18,22 @@ const asyncMiddleware = (fn: AsyncRequestHandler) => {
     return (req: express.Request, res: express.Response, next: express.NextFunction) => {
         Promise.resolve(fn(req, res, next)).catch(next);
     };
-}
+};
 
 // Create a table `urls`, with `name` as primary key.
-let urlTable = new cloud.Table("urls", "name");
+const urlTable = new cloud.Table("urls", "name");
 
 // Create a cache of frequently accessed urls.
-let urlCache = new cache.Cache("urlcache");
+const urlCache = new cache.Cache("urlcache");
 
 // Create a web server.
-let endpoint = new cloud.HttpServer("urlshortener", () => {
-    let app = express();
+const endpoint = new cloud.HttpServer("urlshortener", () => {
+    const app = express();
 
     // GET /url lists all URLs currently registered.
     app.get("/url", asyncMiddleware(async (req, res) => {
         try {
-            let items = await urlTable.scan();
+            const items = await urlTable.scan();
             res.status(200).json(items);
             console.log(`GET /url retrieved ${items.length} items`);
         } catch (err) {
@@ -45,7 +44,7 @@ let endpoint = new cloud.HttpServer("urlshortener", () => {
 
     // GET /url/{name} redirects to the target URL based on a short-name.
     app.get("/url/:name", asyncMiddleware(async (req, res) => {
-        let name = req.params.name
+        const name = req.params.name;
         try {
             // First try the Redis cache.
             let url = await urlCache.get(name);
@@ -55,7 +54,7 @@ let endpoint = new cloud.HttpServer("urlshortener", () => {
             }
             else {
                 // If we didn't find it in the cache, consult the table.
-                let value = await urlTable.get({name});
+                const value = await urlTable.get({name});
                 url = value && value.url;
                 if (url) {
                     urlCache.set(name, url); // cache it for next time.
@@ -67,12 +66,12 @@ let endpoint = new cloud.HttpServer("urlshortener", () => {
                 res.setHeader("Location", url);
                 res.status(302);
                 res.end("");
-                console.log(`GET /url/${name} => ${url}`)
+                console.log(`GET /url/${name} => ${url}`);
             }
             else {
                 res.status(404);
                 res.end("");
-                console.log(`GET /url/${name} is missing (404)`)
+                console.log(`GET /url/${name} is missing (404)`);
             }
         } catch (err) {
             res.status(500).json(err.stack);
@@ -109,33 +108,5 @@ let endpoint = new cloud.HttpServer("urlshortener", () => {
 
     return app;
 });
-
-function staticRoutes(app: express.Express, path: string, root: string) {
-    for (const child of fs.readdirSync("./" + root)) {
-        app.get(path + child, (req, res) => {
-            try
-            {
-                // console.log("Trying to serve: " + path + child)
-                // res.json({ serving: child });
-                const localPath = "./" + root + "/" + child;
-                const contents = fs.readFileSync(localPath);
-
-                var type = mime.contentType(child)
-                if (type) {
-                    res.setHeader('Content-Type', type);
-                }
-
-                const stat = fs.statSync(path);
-
-                res.setHeader("Content-Length", stat.size);
-                res.end(contents);
-            }
-            catch (err) {
-                console.log(JSON.stringify({ message: err.message, stack: err.stack }));
-                res.json({ message: err.message, stack: err.stack });
-            }
-        });
-    }
-}
 
 export let endpointUrl = pulumi.interpolate `${endpoint.url}index.html`;

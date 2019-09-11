@@ -17,9 +17,9 @@ import * as pulumi from "@pulumi/pulumi";
 
 // Arguments for the demo app.
 export interface DemoAppArgs {
-    provider: k8s.Provider // Provider resource for the target Kubernetes cluster.
-    imageTag: string // Tag for the kuard image to deploy.
-    staticAppIP?: pulumi.Input<string> // Optional static IP to use for the service. (Required for AKS).
+    provider: k8s.Provider; // Provider resource for the target Kubernetes cluster.
+    imageTag: string; // Tag for the kuard image to deploy.
+    staticAppIP?: pulumi.Input<string>; // Optional static IP to use for the service. (Required for AKS).
 }
 
 export class DemoApp extends pulumi.ComponentResource {
@@ -49,20 +49,20 @@ export class DemoApp extends pulumi.ComponentResource {
                                     initialDelaySeconds: 5,
                                     timeoutSeconds: 1,
                                     periodSeconds: 10,
-                                    failureThreshold: 3
+                                    failureThreshold: 3,
                                 },
                                 readinessProbe: {
                                     httpGet: {path: "/ready", port: "http"},
                                     initialDelaySeconds: 5,
                                     timeoutSeconds: 1,
                                     periodSeconds: 10,
-                                    failureThreshold: 3
-                                }
-                            }
+                                    failureThreshold: 3,
+                                },
+                            },
                         ],
                     },
                 },
-            }
+            },
         }, {provider: args.provider, parent: this});
 
         // Create a LoadBalancer Service to expose the kuard Deployment.
@@ -71,8 +71,8 @@ export class DemoApp extends pulumi.ComponentResource {
                 loadBalancerIP: args.staticAppIP, // Required for AKS - automatic LoadBalancer still in preview.
                 selector: appLabels,
                 ports: [{port: 80, targetPort: 8080}],
-                type: "LoadBalancer"
-            }
+                type: "LoadBalancer",
+            },
         }, {provider: args.provider, parent: this});
 
         // The address appears in different places depending on the Kubernetes service provider.

@@ -7,13 +7,12 @@
 // make developing against that platform easier.
 
 import * as cloud from "@pulumi/cloud-aws";
-import { Output } from "@pulumi/pulumi"; // for output property
 
 // Create a web server.
-let endpoint = new cloud.API("urlshortener");
+const endpoint = new cloud.API("urlshortener");
 
 // Create a table `urls`, with `name` as primary key.
-let urlTable = new cloud.Table("urls", "name");
+const urlTable = new cloud.Table("urls", "name");
 
 // Serve all files in the www directory to the root.
 endpoint.static("/", "www");
@@ -21,7 +20,7 @@ endpoint.static("/", "www");
 // GET /url lists all URLs currently registered.
 endpoint.get("/url", async (req, res) => {
     try {
-        let items = await urlTable.scan();
+        const items = await urlTable.scan();
         res.status(200).json(items);
         console.log(`GET /url retrieved ${items.length} items`);
     } catch (err) {
@@ -32,22 +31,22 @@ endpoint.get("/url", async (req, res) => {
 
 // GET /url/{name} redirects to the target URL based on a short-name.
 endpoint.get("/url/{name}", async (req, res) => {
-    let name = req.params["name"];
+    const name = req.params["name"];
     try {
-        let value = await urlTable.get({name});
-        let url = value && value.url;
+        const value = await urlTable.get({name});
+        const url = value && value.url;
 
         // If we found an entry, 301 redirect to it; else, 404.
         if (url) {
             res.setHeader("Location", url);
             res.status(301);
             res.end("");
-            console.log(`GET /url/${name} => ${url}`)
+            console.log(`GET /url/${name} => ${url}`);
         }
         else {
             res.status(404);
             res.end("");
-            console.log(`GET /url/${name} is missing (404)`)
+            console.log(`GET /url/${name} is missing (404)`);
         }
     } catch (err) {
         res.status(500).json(err.stack);
@@ -57,8 +56,8 @@ endpoint.get("/url/{name}", async (req, res) => {
 
 // POST /url registers a new URL with a given short-name.
 endpoint.post("/url", async (req, res) => {
-    let url = req.query["url"];
-    let name = req.query["name"];
+    const url = req.query["url"];
+    const name = req.query["name"];
     try {
         await urlTable.insert({ name, url });
         res.json({ shortenedURLName: name });

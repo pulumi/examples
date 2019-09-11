@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import * as awsx from "@pulumi/awsx";
-import * as pulumi from '@pulumi/pulumi';
+import * as pulumi from "@pulumi/pulumi";
 
-import * as jwksClient from 'jwks-rsa';
-import * as jwt from 'jsonwebtoken';
-import * as util from 'util';
+import * as jwt from "jsonwebtoken";
+import * as jwksClient from "jwks-rsa";
+import * as util from "util";
 
 const config = new pulumi.Config();
 const jwksUri = config.require("jwksUri");
@@ -66,7 +66,7 @@ export const url = api.url;
 
 // Extract and return the Bearer Token from the Lambda event parameters
 function getToken(event: awsx.apigateway.AuthorizerEvent): string {
-    if (!event.type || event.type !== 'TOKEN') {
+    if (!event.type || event.type !== "TOKEN") {
         throw new Error('Expected "event.type" parameter to have value "TOKEN"');
     }
 
@@ -89,31 +89,31 @@ async function authenticate(event: awsx.apigateway.AuthorizerEvent): Promise<aws
 
     const decoded = jwt.decode(token, { complete: true });
     if (!decoded || typeof decoded === "string" || !decoded.header || !decoded.header.kid) {
-        throw new Error('invalid token');
+        throw new Error("invalid token");
     }
 
     const client = jwksClient({
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 10, // Default value
-        jwksUri: jwksUri
+        jwksUri: jwksUri,
     });
 
     const key = await util.promisify(client.getSigningKey)(decoded.header.kid);
     const signingKey = key.publicKey || key.rsaPublicKey;
     if (!signingKey) {
-        throw new Error('could not get signing key');
+        throw new Error("could not get signing key");
     }
 
     const verifiedJWT = await jwt.verify(token, signingKey, { audience, issuer });
     if (!verifiedJWT || typeof verifiedJWT === "string" || !isVerifiedJWT(verifiedJWT)) {
-        throw new Error('could not verify JWT');
+        throw new Error("could not verify JWT");
     }
-    return awsx.apigateway.authorizerResponse(verifiedJWT.sub, 'Allow', event.methodArn);
+    return awsx.apigateway.authorizerResponse(verifiedJWT.sub, "Allow", event.methodArn);
 }
 
 interface VerifiedJWT {
-    sub: string,
+    sub: string;
 }
 
 function isVerifiedJWT(toBeDetermined: VerifiedJWT | Object): toBeDetermined is VerifiedJWT {

@@ -1,4 +1,4 @@
-// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
 import * as azuread from "@pulumi/azuread";
@@ -8,13 +8,13 @@ import * as config from "./config";
 // Per-cluster config
 const aksClusterConfig = [
     {
-        name: 'east',
+        name: "east",
         location: azure.Locations.EastUS,
         nodeCount: 2,
         nodeSize: "Standard_D2_v2",
     },
     {
-        name: 'west',
+        name: "west",
         location: azure.Locations.WestUS,
         nodeCount: 5,
         nodeSize: "Standard_D2_v2",

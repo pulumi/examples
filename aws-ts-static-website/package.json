@@ -5,8 +5,8 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/aws": "latest",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "^1.0.0",
+        "@pulumi/pulumi": "^1.0.0",
         "mime": "^2.0.3"
     }
 }

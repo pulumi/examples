@@ -1,11 +1,10 @@
-// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as awsx from "@pulumi/awsx";
-
-import * as crypto from "crypto";
+import * as pulumi from "@pulumi/pulumi";
 
 import * as slack from "@slack/client";
+import * as crypto from "crypto";
 
 import { formatSlackMessage } from "./util";
 
@@ -54,7 +53,7 @@ const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
         method: "GET",
         eventHandler: async () => ({
             statusCode: 200,
-            body: "🍹 Pulumi Webhook Responder🍹\n"
+            body: "🍹 Pulumi Webhook Responder🍹\n",
         }),
     }, {
         path: "/",
@@ -78,7 +77,7 @@ const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
                 channel: stackConfig.slackChannel,
                 text: fallbackText,
                 as_user: true,
-            }
+            };
 
             // Format the Slack message based on the kind of webhook received.
             const formattedMessageArgs = formatSlackMessage(webhookKind, parsedPayload, messageArgs);

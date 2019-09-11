@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as azure from "@pulumi/azure";
 
 const resourceGroup = new azure.core.ResourceGroup("example");
@@ -6,7 +8,7 @@ const resourceGroup = new azure.core.ResourceGroup("example");
 async function handler(context: azure.appservice.Context<azure.appservice.HttpResponse>, request: azure.appservice.HttpRequest) {
     let body = "";
     const headers = request.headers;
-    for (const h in request.headers) {
+    for (const h of Object.keys(request.headers)) {
         body = body + `${h} = ${headers[h]}\n`;
     }
 
@@ -19,9 +21,9 @@ async function handler(context: azure.appservice.Context<azure.appservice.HttpRe
     };
 }
 
-let fn = new azure.appservice.HttpEventSubscription("fn", {
+const fn = new azure.appservice.HttpEventSubscription("fn", {
     resourceGroup,
-    callback: handler
+    callback: handler,
 });
 
 export let endpoint = fn.url;

@@ -1,7 +1,9 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
-import { execSync} from "child_process";
+import { execSync } from "child_process";
 
 // Create a resource group
 const resourceGroup = new azure.core.ResourceGroup("resourceGroup");
@@ -15,7 +17,6 @@ const storageAccount = new azure.storage.Account("storage", {
 
 // The container to put our files into
 const storageContainer = new azure.storage.Container("files", {
-    resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     containerAccessType: "private",
 });
@@ -66,7 +67,7 @@ const blob = new azure.storage.ZipBlob("zip", {
     storageContainerName: storageContainer.name,
     type: "block",
 
-    content: new pulumi.asset.FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish")
+    content: new pulumi.asset.FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish"),
 });
 
 const clientConfig = azure.core.getClientConfig({});
@@ -92,7 +93,7 @@ const vault = new azure.keyvault.KeyVault("vault", {
         // secrets to/from the Key Vault. Otherwise, 'pulumi up' and 'pulumi destroy' operations will fail.
         objectId: currentPrincipal,
         secretPermissions: ["delete", "get", "list", "set"],
-    }]
+    }],
 });
 
 // Put the URL of the zip Blob to KV
@@ -109,7 +110,7 @@ const app = new azure.appservice.AppService("app", {
 
     // A system-assigned managed service identity to be used for authentication and authorization to the SQL Database and the Blob Storage
     identity: {
-        type: "SystemAssigned"
+        type: "SystemAssigned",
     },
 
     appSettings: {
@@ -124,15 +125,15 @@ const app = new azure.appservice.AppService("app", {
     connectionStrings: [{
         name: "db",
         value: connectionString,
-        type: "SQLAzure"
-    }]
+        type: "SQLAzure",
+    }],
 });
 
 // Work around a preview issue https://github.com/pulumi/pulumi-azure/issues/192
 const principalId = app.identity.apply(id => id.principalId || "11111111-1111-1111-1111-111111111111");
 
 // Grant App Service access to KV secrets
-new azure.keyvault.AccessPolicy("app-policy", {
+const policy = new azure.keyvault.AccessPolicy("app-policy", {
     keyVaultId: vault.id,
     tenantId: tenantId,
     objectId: principalId,
@@ -157,13 +158,13 @@ const blobPermission = new azure.role.Assignment("readblob", {
 
 // Add SQL firewall exceptions
 const firewallRules = app.outboundIpAddresses.apply(
-    ips => ips.split(',').map(
+    ips => ips.split(",").map(
         ip => new azure.sql.FirewallRule(`FR${ip}`, {
             resourceGroupName: resourceGroup.name,
             startIpAddress: ip,
             endIpAddress: ip,
             serverName: sqlServer.name,
-        })
+        }),
     ));
 
 export const endpoint = pulumi.interpolate `https://${app.defaultSiteHostname}`;

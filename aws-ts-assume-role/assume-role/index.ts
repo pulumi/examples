@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
 const roleToAssumeARN = config.require("roleToAssumeARN");

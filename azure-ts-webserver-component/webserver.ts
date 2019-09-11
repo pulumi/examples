@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 
 /**
  * WebServer is a reusable web server component that creates and exports a NIC, public IP, and VM.

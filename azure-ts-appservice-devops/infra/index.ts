@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 
 // use first 10 characters of the stackname as prefix for resource names
 const prefix = pulumi.getStack().substring(0, 9);
@@ -38,7 +40,6 @@ const appServicePlan = new azure.appservice.Plan(`${prefix}-asp`, {
 
 
 const storageContainer = new azure.storage.Container(`${prefix}-c`, {
-    resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     containerAccessType: "private",
 });
@@ -49,7 +50,7 @@ const blob = new azure.storage.ZipBlob(`${prefix}-b`, {
     storageContainerName: storageContainer.name,
     type: "block",
 
-    content: new pulumi.asset.FileArchive("../src/bin/Debug/netcoreapp2.1/publish")
+    content: new pulumi.asset.FileArchive("../src/bin/Debug/netcoreapp2.1/publish"),
 });
 
 const codeBlobUrl = azure.storage.signedBlobReadUrl(blob, storageAccount);
@@ -57,7 +58,7 @@ const codeBlobUrl = azure.storage.signedBlobReadUrl(blob, storageAccount);
 const appInsights = new azure.appinsights.Insights(`${prefix}-ai`, {
     ...resourceGroupArgs,
 
-    applicationType: "Web"
+    applicationType: "Web",
 });
 
 
@@ -77,7 +78,7 @@ const sqlServer = new azure.sql.SqlServer(`${prefix}-sql`, {
 const database = new azure.sql.Database(`${prefix}-db`, {
     ...resourceGroupArgs,
     serverName: sqlServer.name,
-    requestedServiceObjectiveName: "S0"
+    requestedServiceObjectiveName: "S0",
 });
 
 const app = new azure.appservice.AppService(`${prefix}-as`, {
@@ -90,7 +91,7 @@ const app = new azure.appservice.AppService(`${prefix}-as`, {
         "WEBSITE_RUN_FROM_ZIP": codeBlobUrl,
         "ApplicationInsights:InstrumentationKey": appInsights.instrumentationKey,
         "APPINSIGHTS_INSTRUMENTATIONKEY": appInsights.instrumentationKey,
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
     },
 
     connectionStrings: [{
@@ -98,18 +99,18 @@ const app = new azure.appservice.AppService(`${prefix}-as`, {
         value:
             pulumi.all([sqlServer.name, database.name]).apply(([server, db]) =>
                 `Server=tcp:${server}.database.windows.net;initial catalog=${db};user ID=${username};password=${pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;`),
-        type: "SQLAzure"
-    }]
+        type: "SQLAzure",
+    }],
 });
 
 const firewallRules = app.outboundIpAddresses.apply(
-    ips => ips.split(',').map(
+    ips => ips.split(",").map(
         ip => new azure.sql.FirewallRule(`FR${ip}`, {
             endIpAddress: ip,
             resourceGroupName: resourceGroup.name,
             serverName: sqlServer.name,
             startIpAddress: ip,
-        })
+        }),
     ));
 
 export const endpoint = pulumi.interpolate `https://${app.defaultSiteHostname}`;

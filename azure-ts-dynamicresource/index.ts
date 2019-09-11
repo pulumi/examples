@@ -1,7 +1,7 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 
 import { CDNCustomDomainResource } from "./cdnCustomDomain";
 
@@ -31,7 +31,6 @@ const storageAccount = new azure.storage.Account("storageAccount", {
  * endpoint for this blob container.
  */
 const blobContainer = new azure.storage.Container("blobContainer", {
-    resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     // Make each "blob" in the container publicly accessible.
     // DO NOT set this property if you are going to store sensitive files!
@@ -51,7 +50,7 @@ const cdnEndpoint = new azure.cdn.Endpoint("cdnEndpoint", {
      * so you can add a CNAME record for your custom domain
      * pointing to this CDN endpoint to it.
      *
-     * For example, the URL for this CDN endpoint when it is created 
+     * For example, the URL for this CDN endpoint when it is created
      * would be `my-cdn-endpoint.azureedge.net`.
      */
     name: "my-cdn-endpoint",
@@ -78,8 +77,8 @@ const cdnEndpoint = new azure.cdn.Endpoint("cdnEndpoint", {
             name: "cdn-origin",
             hostName: storageAccount.primaryBlobHost,
             httpsPort: 443,
-        }
-    ]
+        },
+    ],
 });
 
 export const cdnEndpointUrl = pulumi.interpolate`https://${cdnEndpoint.hostName}`;
@@ -93,7 +92,7 @@ export const cdnCustomDomainResource = new CDNCustomDomainResource("cdnCustomDom
     endpointName: cdnEndpoint.name,
     /**
      * This will enable HTTPS through Azure's one-click
-     * automated certificate deployment. The certificate is 
+     * automated certificate deployment. The certificate is
      * fully managed by Azure from provisioning to automatic renewal
      * at no additional cost to you.
      */

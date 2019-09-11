@@ -1,7 +1,8 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
+import * as gcp from "@pulumi/gcp";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-import * as gcp from "@pulumi/gcp";
 
 const name = "helloworld";
 
@@ -19,7 +20,7 @@ const cluster = new gcp.container.Cluster(name, {
             "https://www.googleapis.com/auth/compute",
             "https://www.googleapis.com/auth/devstorage.read_only",
             "https://www.googleapis.com/auth/logging.write",
-            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring",
         ],
     },
 });
@@ -92,16 +93,16 @@ const deployment = new k8s.apps.v1.Deployment(name,
                         {
                             name: name,
                             image: "nginx:latest",
-                            ports: [{ name: "http", containerPort: 80 }]
-                        }
+                            ports: [{ name: "http", containerPort: 80 }],
+                        },
                     ],
-                }
-            }
+                },
+            },
         },
     },
     {
         provider: clusterProvider,
-    }
+    },
 );
 
 // Export the Deployment name
@@ -122,9 +123,9 @@ const service = new k8s.core.v1.Service(name,
     },
     {
         provider: clusterProvider,
-    }
+    },
 );
 
 // Export the Service name and public LoadBalancer endpoint
 export const serviceName = service.metadata.name;
-export const servicePublicIP = service.status.apply(s => s.loadBalancer.ingress[0].ip)
+export const servicePublicIP = service.status.apply(s => s.loadBalancer.ingress[0].ip);

@@ -1,7 +1,9 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as pulumi from "@pulumi/pulumi";
 
 export function parseConnString(
-    conns: pulumi.Output<string[]>
+    conns: pulumi.Output<string[]>,
 ): pulumi.Output<{ [key: string]: string }> {
     // Per the official docs[1], the format of this connection string is:
     //
@@ -47,7 +49,7 @@ export function parseConnString(
             port: toBase64(port),
             username: toBase64(username),
             password: toBase64(encodeURIComponent(password)),
-            database: toBase64(database == "" ? "test" : database)
+            database: toBase64(database === "" ? "test" : database),
         };
     });
 }

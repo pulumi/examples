@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as awsx from "@pulumi/awsx";
 
 // Step 1: Create an ECS Fargate cluster.

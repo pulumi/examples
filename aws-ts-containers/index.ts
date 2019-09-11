@@ -1,14 +1,16 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as awsx from "@pulumi/awsx";
+import * as pulumi from "@pulumi/pulumi";
 
 // Create an elastic network listener to listen for requests and route them to the container.
 // See https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html
 // for more details.
-let listener = new awsx.elasticloadbalancingv2.NetworkListener("nginx", { port: 80 });
+const listener = new awsx.elasticloadbalancingv2.NetworkListener("nginx", { port: 80 });
 
 // Define the service to run.  We pass in the listener to hook up the network load balancer
 // to the containers the service will launch.
-let service = new awsx.ecs.FargateService("nginx", {
+const service = new awsx.ecs.FargateService("nginx", {
     desiredCount: 2,
     taskDefinitionArgs: {
         containers: {

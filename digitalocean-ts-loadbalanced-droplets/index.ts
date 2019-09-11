@@ -1,4 +1,5 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as digitalocean from "@pulumi/digitalocean";
 
 const dropletCount = 3;
@@ -11,7 +12,7 @@ const userData =
   sudo apt-get install -y nginx`;
 const droplets = [];
 for (let i = 0; i < dropletCount; i++) {
-    let nameTag = new digitalocean.Tag(`web-${i}`);
+    const nameTag = new digitalocean.Tag(`web-${i}`);
     droplets.push(new digitalocean.Droplet(`web-${i}`, {
         image: "ubuntu-18-04-x64",
         region: region,

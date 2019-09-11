@@ -45,7 +45,7 @@ export class AksCluster extends pulumi.ComponentResource {
         // Create the AD service principal for the K8s cluster.
         const adApp = new azuread.Application("aks", undefined, {parent: this});
         const adSp = new azuread.ServicePrincipal("aksSp", {
-            applicationId: adApp.applicationId
+            applicationId: adApp.applicationId,
         }, {parent: this});
         const adSpPassword = new azuread.ServicePrincipalPassword("aksSpPassword", {
             servicePrincipalId: adSp.id,
@@ -60,7 +60,7 @@ export class AksCluster extends pulumi.ComponentResource {
         const rgNetworkRole = new azure.role.Assignment("spRole", {
             principalId: adSp.id,
             scope: resourceGroup.id,
-            roleDefinitionName: "Network Contributor"
+            roleDefinitionName: "Network Contributor",
         }, {parent: this});
 
         // Create a Virtual Network for the cluster
@@ -115,7 +115,7 @@ export class AksCluster extends pulumi.ComponentResource {
 
         this.staticAppIP = new azure.network.PublicIp("staticAppIP", {
             resourceGroupName: this.cluster.nodeResourceGroup,
-            allocationMethod: "Static"
+            allocationMethod: "Static",
         }, {parent: this}).ipAddress;
 
         this.registerOutputs();

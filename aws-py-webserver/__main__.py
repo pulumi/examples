@@ -1,12 +1,15 @@
 # Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
 import pulumi
-from pulumi_aws import ec2
-from ami import get_linux_ami
+import pulumi_aws as aws
 
 size = 't2.micro'
 
-group = ec2.SecurityGroup('web-secgrp',
+ami = aws.get_ami(most_recent="true",
+                  owners=["137112412989"],
+                  filters=[{"name":"name","values":["amzn-ami-hvm-*"]}])
+
+group = aws.ec2.SecurityGroup('web-secgrp',
     description='Enable HTTP access',
     ingress=[
         { 'protocol': 'tcp', 'from_port': 80, 'to_port': 80, 'cidr_blocks': ['0.0.0.0/0'] }
@@ -18,11 +21,11 @@ echo "Hello, World!" > index.html
 nohup python -m SimpleHTTPServer 80 &
 """
 
-server = ec2.Instance('web-server-www',
+server = aws.ec2.Instance('web-server-www',
     instance_type=size,
     security_groups=[group.name],
     user_data=user_data,
-    ami=get_linux_ami(size))
+    ami=ami.id)
 
 pulumi.export('public_ip', server.public_ip)
 pulumi.export('public_dns', server.public_dns)

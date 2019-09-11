@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 
 // Create an Azure Resource Group
 const resourceGroup = new azure.core.ResourceGroup("resourceGroup");
@@ -30,7 +32,7 @@ const service = new azure.apimanagement.Service("greeting-service", {
         capacity: 1,
     },
     publisherName: "YourCompany",
-    publisherEmail: "api@yourcompany.com",    
+    publisherEmail: "api@yourcompany.com",
 });
 
 // Create the API definition and map it to the HTTP Function backend
@@ -63,12 +65,12 @@ const operation = new azure.apimanagement.ApiOperation("hello", {
 // Define the operation policy that does two things:
 //   1. Rewrites the URL to put the name from the path segment to a query parameter
 //   2. Caches the response for 30 seconds
-new azure.apimanagement.ApiOperationPolicy("hello-policy", {
+const policy = new azure.apimanagement.ApiOperationPolicy("hello-policy", {
     resourceGroupName: resourceGroup.name,
     apiManagementName: service.name,
     apiName: api.name,
     operationId: operation.operationId,
-    xmlContent: 
+    xmlContent:
     `<policies>
         <inbound>
             <base />
@@ -85,7 +87,7 @@ new azure.apimanagement.ApiOperationPolicy("hello-policy", {
         <on-error>
             <base />
         </on-error>
-    </policies>`
+    </policies>`,
 });
 
 // Create an API Management product
@@ -99,11 +101,11 @@ const product = new azure.apimanagement.Product("greeting-product", {
 });
 
 // Link the API to the Product
-new azure.apimanagement.ProductApi("greeting-product-api", {
+const productApi = new azure.apimanagement.ProductApi("greeting-product-api", {
    resourceGroupName: resourceGroup.name,
    apiManagementName: service.name,
    apiName: api.name,
-   productId: product.productId,    
+   productId: product.productId,
 });
 
 // Create a first user for our API
