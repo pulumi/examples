@@ -1,7 +1,7 @@
 {
     "name": "azure-ts-static-website",
     "devDependencies": {
-        "@types/node": "latest"
+        "@types/node": "^8.0.0"
     },
     "dependencies": {
         "@pulumi/pulumi": "^1.0.0",
