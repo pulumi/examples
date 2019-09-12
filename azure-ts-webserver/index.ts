@@ -20,11 +20,6 @@ const network = new azure.network.VirtualNetwork("server-network", {
         addressPrefix: "10.0.1.0/24",
     }],
 });
-const subnet = new azure.network.Subnet("server-subnet", {
-    resourceGroupName,
-    virtualNetworkName: network.name,
-    addressPrefix: "10.0.2.0/24",
-});
 
 // Now allocate a public IP and assign it to our NIC.
 const publicIp = new azure.network.PublicIp("server-ip", {
@@ -36,7 +31,7 @@ const networkInterface = new azure.network.NetworkInterface("server-nic", {
     resourceGroupName,
     ipConfigurations: [{
         name: "webserveripcfg",
-        subnetId: subnet.id,
+        subnetId: network.subnets[0].id,
         privateIpAddressAllocation: "Dynamic",
         publicIpAddressId: publicIp.id,
     }],

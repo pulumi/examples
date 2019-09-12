@@ -14,19 +14,10 @@ let resourceGroup = new azure.core.ResourceGroup("server", {
 let network = new azure.network.VirtualNetwork("server-network", {
     resourceGroupName: resourceGroup.name,
     addressSpaces: ["10.0.0.0/16"],
-    // Workaround two issues:
-    // (1) The Azure API recently regressed and now fails when no subnets are defined at Network creation time.
-    // (2) The Azure Terraform provider does not return the ID of the created subnets - so this cannot actually be used.
     subnets: [{
         name: "default",
         addressPrefix: "10.0.1.0/24",
     }],
-});
-
-let subnet = new azure.network.Subnet("server-subnet", {
-    resourceGroupName: resourceGroup.name,
-    virtualNetworkName: network.name,
-    addressPrefix: "10.0.2.0/24",
 });
 
 let publicIP = new azure.network.PublicIp("server-ip", {
@@ -38,7 +29,7 @@ let networkInterface = new azure.network.NetworkInterface("server-nic", {
     resourceGroupName: resourceGroup.name,
     ipConfigurations: [{
         name: "webserveripcfg",
-        subnetId: subnet.id,
+        subnetId: network.subnets[0].id,
         privateIpAddressAllocation: "Dynamic",
         publicIpAddressId: publicIP.id,
     }],
