@@ -22,11 +22,6 @@ const network = new azure.network.VirtualNetwork("server-network", {
         addressPrefix: "10.0.1.0/24",
     }],
 });
-const subnet = new azure.network.Subnet("server-subnet", {
-    resourceGroupName,
-    virtualNetworkName: network.name,
-    addressPrefix: "10.0.2.0/24",
-});
 
 // Now, allocate a few websever VMs -- by default, just 2, but this is configurable.
 export const ipAddresses = [];
@@ -38,7 +33,7 @@ for (let i = 0; i < count; i++) {
 echo "Hello, from Server #{i+1}!" > index.html
 nohup python -m SimpleHTTPServer 80 &`,
         resourceGroupName: resourceGroupName,
-        subnetId: subnet.id,
+        subnetId: network.subnets[0].id,
     });
     ipAddresses.push(server.getIpAddress());
 }
