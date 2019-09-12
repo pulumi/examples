@@ -25,27 +25,24 @@ app = Application("aks-app", name=PREFIX + "aks-app")
 sp = ServicePrincipal(
     "aks-app-sp",
     application_id=app.application_id,
-    __opts__=ResourceOptions(parent=app),
 )
 
 # create service principal password
 sppwd = ServicePrincipalPassword(
     "aks-app-sp-pwd",
     service_principal_id=sp.id,
-    end_date="2025-01-01T01:02:03Z",
+    end_date="2099-01-01T00:00:00Z",
     value=PASSWORD,
-    __opts__=ResourceOptions(parent=sp),
 )
 
 aks = KubernetesCluster(
-    "aks",
-    name=PREFIX + "aks",
+    "aksCluster",
     location=resource_group.location,
     resource_group_name=resource_group.name,
     kubernetes_version="1.14.6",
     dns_prefix="dns",
-    linux_profile={"adminUsername": "azureuser", "ssh_key": {"keyData": SSHKEY}},
-    service_principal={"clientId": app.application_id, "clientSecret": sppwd.value},
+    linux_profile={"adminUsername": "aksuser", "ssh_key": {"keyData": SSHKEY}},
+    service_principal={"client_id": app.application_id, "client_secret": sppwd.value},
     agent_pool_profiles=[
         {
             "name": "type1",
@@ -56,7 +53,7 @@ aks = KubernetesCluster(
 )
 
 k8s_provider = Provider(
-    "k8s", kubeconfig=aks.kube_config_raw, __opts__=ResourceOptions(parent=aks)
+    "k8s", kubeconfig=aks.kube_config_raw,
 )
 
 labels = {"app": "nginx"}
