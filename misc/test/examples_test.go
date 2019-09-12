@@ -346,17 +346,17 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 
-		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "azure-py-webserver"),
-		//	Config: map[string]string{
-		//		"azure:environment":  azureEnviron,
-		//		"azure-web:username": "testuser",
-		//		"azure-web:password": "testTEST1234+-*/",
-		//	},
-		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		//		assertHTTPHelloWorld(t, stack.Outputs["publicIP"])
-		//	},
-		//}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-py-webserver"),
+			Config: map[string]string{
+				"azure:environment":  azureEnviron,
+				"azure-web:username": "testuser",
+				"azure-web:password": "testTEST1234+-*/",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPHelloWorld(t, stack.Outputs["public_ip"], nil)
+			},
+		}),
 
 		// azure-ts-aks-helm
 		// azure-ts-aks-mean
