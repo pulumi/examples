@@ -22,7 +22,7 @@ export class AksCluster extends pulumi.ComponentResource {
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("examples:keda:AksCluster", name, args, opts);
 
-        const password = new random.RandomString("password", {
+        const password = new random.RandomPassword("password", {
             length: 20,
             special: true,
         }).result;

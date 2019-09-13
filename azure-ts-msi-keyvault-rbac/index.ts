@@ -22,7 +22,7 @@ const storageContainer = new azure.storage.Container("files", {
 });
 
 // Azure SQL Server that we want to access from the application
-const administratorLoginPassword = new random.RandomString("password", { length: 16 }).result;
+const administratorLoginPassword = new random.RandomPassword("password", { length: 16, special: true }).result;
 const sqlServer = new azure.sql.SqlServer("sqlserver", {
     resourceGroupName: resourceGroup.name,
     // The login and password are required but won't be used in our application
