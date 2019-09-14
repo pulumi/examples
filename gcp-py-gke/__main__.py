@@ -4,7 +4,7 @@ from pulumi_gcp.container import Cluster, get_engine_versions
 from pulumi_kubernetes import Provider
 from pulumi_kubernetes.apps.v1 import Deployment
 from pulumi_kubernetes.core.v1 import Service
-from pulumi_random import RandomString
+from pulumi_random import RandomPassword
 
 # Read in some configurable settings for our cluster:
 config = Config(None)
@@ -17,7 +17,7 @@ NODE_MACHINE_TYPE = config.get('node_machine_type') or 'n1-standard-1'
 # username is the admin username for the cluster.
 USERNAME = config.get('username') or 'admin'
 # password is the password for the admin user in the cluster.
-PASSWORD = config.get_secret('password') or RandomString("password", length=20, special=True).result
+PASSWORD = config.get_secret('password') or RandomPassword("password", length=20, special=True).result
 # master version of GKE engine
 MASTER_VERSION = config.get('master_version')
 

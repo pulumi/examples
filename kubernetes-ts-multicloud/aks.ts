@@ -29,10 +29,10 @@ export class AksCluster extends pulumi.ComponentResource {
         super("examples:kubernetes-ts-multicloud:AksCluster", name, {}, opts);
 
         // Generate a strong password for the Service Principal.
-        const password = new random.RandomString("password", {
+        const password = new random.RandomPassword("password", {
             length: 20,
             special: true,
-        }, {parent: this, additionalSecretOutputs: ["result"]}).result;
+        }, {parent: this}).result;
 
         // Create an SSH public key that will be used by the Kubernetes cluster.
         // Note: We create one here to simplify the demo, but a production deployment would probably pass
