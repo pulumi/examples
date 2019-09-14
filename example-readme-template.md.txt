@@ -82,7 +82,7 @@ In this article you [configured/set up/built/deployed] [something]. Now you can.
 
 <!-- Give a quick recap of what the readers have learned and optionally provide places for further exploration. -->
 
-## Next steps
+## Next Steps
 
 <!-- Optionally include an unordered list of relevant Pulumi tutorials. -->
 
