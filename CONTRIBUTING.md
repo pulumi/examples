@@ -57,10 +57,10 @@ Each example should include a README to give the readers a good walkthrough. It 
 - Overview paragraph
 - Prerequisites
 - Deploy the App
-   - Step 1 — Doing the First Thing
-   - Step 2 — Doing the Next Thing
+   - Step 1: Doing the First Thing
+   - Step 2: Doing the Next Thing
    …
-   - Step n — Doing the Last Thing
+   - Step n: Doing the Last Thing
 - Clean Up
 - Summary
 - Next Steps (Optional)
