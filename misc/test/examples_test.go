@@ -243,9 +243,9 @@ func TestExamples(t *testing.T) {
 				"aws:region":                            awsRegion,
 				"aws-ts-pulumi-miniflux:db_name":        "miniflux",
 				"aws-ts-pulumi-miniflux:db_username":    "minifluxuser",
-				"aws-ts-pulumi-miniflux:db_password":    "2@Password@2",
+				"aws-ts-pulumi-miniflux:db_password":    "2Password2",
 				"aws-ts-pulumi-miniflux:admin_username": "adminuser",
-				"aws-ts-pulumi-miniflux:admin_password": "2@Password@2",
+				"aws-ts-pulumi-miniflux:admin_password": "2Password2",
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
