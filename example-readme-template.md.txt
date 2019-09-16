@@ -1,7 +1,7 @@
 <!--
 Use this template as a quick starting point when writing a README for your Pulumi example. To start, copy this file to your example folder and rename it to `README.md`. Once you've reviewed the template, delete the comments and begin writing your accompanying README for your example Pulumi application.
 
-Use GitHub's "Preview Changes" to make sure everything is formatted correctly in Markdown.
+Use GitHub's "Preview Changes" functionality to make sure everything is formatted correctly in Markdown.
 
 Readers should be able to follow your example from beginning to end. Please be sure to list all prerequisites, and test your guide from start to finish. Cut and paste commands from the README into your terminal to make sure there aren't typos or inaccuracies. If you find yourself executing a command that isn't in the README, make sure to add it so the readers end up with a complete tutorial.
 -->
@@ -12,7 +12,7 @@ Readers should be able to follow your example from beginning to end. Please be s
 <!-- Use Title Case for all Titles -->
 <!-- All of the examples are transformed into tutorials on https://www.pulumi.com/docs/tutorials/ and are sorted by cloud and language. There is no need to include the cloud provider name or the language in the title.
 
-<!-- Our articles have a specific structure. Learn more at CONTRIBUTING.md -->
+<!-- Our examples have a specific structure. Learn more at CONTRIBUTING.md -->
 
 Introductory paragraph about the example that explains what problem it solves and why the reader should care. If possible, include use cases.
 
@@ -31,11 +31,11 @@ When you're finished, you'll be able to...
 
 <!-- Example:
 1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
-2. [Configure your AWS Credentials](https://www.pulumi.com/docs/reference/clouds/aws/setup/)
-3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+1. [Configure your AWS Credentials](https://www.pulumi.com/docs/reference/clouds/aws/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 -->
 
-## Deploying the App
+## Deploy the App
 
 ### Step 1: Create a directory and cd into it
 
@@ -78,7 +78,7 @@ Transition to the next step.
 
 ## Summary
 
-In this article you [configured/set up/built/deployed] [something]. Now you can....
+In this tutorial, you [configured/set up/built/deployed] [something]. Now you can....
 
 <!-- Give a quick recap of what the readers have learned and optionally provide places for further exploration. -->
 
