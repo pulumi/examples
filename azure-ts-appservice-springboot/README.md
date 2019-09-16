@@ -4,8 +4,8 @@ This example shows how you can deploy a Spring Boot app to an Azure App Service 
 
 ## Prerequisites
 
-1.  [Install Pulumi](https://www.pulumi.com/docs/get-started/install)
-1.  [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup)
+1.  [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1.  [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
 
 ## Steps
 
