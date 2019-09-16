@@ -32,7 +32,7 @@ When you're finished, you'll be able to...
 <!-- Example:
 1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
 2. [Configure your AWS Credentials](https://www.pulumi.com/docs/reference/clouds/aws/setup/)
-3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/nodejs/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 -->
 
 ## Deploying the App
