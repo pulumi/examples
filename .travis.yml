@@ -21,7 +21,7 @@ install:
   - export PATH=$PATH:$HOME/google-cloud-sdk/bin
   - export CLOUDSDK_CORE_DISABLE_PROMPTS=1
   - export GOOGLE_CREDENTIALS=$(cat gcp-credentials.json)
-  - gcloud auth activate-service-account --key-file gcp-credentials.json
+  - CLOUDSDK_PYTHON=/usr/bin/python gcloud auth activate-service-account --key-file gcp-credentials.json
   - curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
   - helm init -c
   - helm repo add bitnami https://charts.bitnami.com/bitnami
