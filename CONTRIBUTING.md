@@ -67,3 +67,5 @@ Each example should include a README to give the readers a good walkthrough. It 
 
 See our [example README template](example-readme-template.md.txt) for detailed explanations on each section.
 
+> The contribution guidelines have been authored in September 2019 and are subject to further refinements and tweaks. Examples prior to September 2019 do not necessarily conform to these guidelines.
+
