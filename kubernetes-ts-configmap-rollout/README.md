@@ -11,8 +11,8 @@ data, which will trigger a rollout of the nginx `Deployment`.
 
 ## Running the App
 
-Follow the steps in [Pulumi Installation and Setup](https://docs.pulumi.com/install/) and
-[Configuring Pulumi Kubernetes](https://docs.pulumi.com/reference/kubernetes.html#configuration) to
+Follow the steps in [Pulumi Installation and Setup](https://www.pulumi.com/docs/get-started/install/) and
+[Configuring Pulumi Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/) to
 get setup with Pulumi and Kubernetes.
 
 Install dependencies:

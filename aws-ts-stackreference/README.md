@@ -1,7 +1,7 @@
 # StackReference Example
 
 This example creates a "team" EC2 Instance with tags set from _upstream_ "company" and "department" 
-stacks via [StackReference](https://www.pulumi.com/docs/reference/organizing-stacks-projects/#inter-stack-dependencies).
+stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies).
 
 ```
 /**

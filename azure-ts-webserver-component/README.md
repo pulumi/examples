@@ -4,14 +4,14 @@
 
 This example provisions a configurable number of Linux web servers in an Azure Virtual Machine, and returns the
 resulting public IP addresses. This example uses a reusable [Pulumi component](
-https://www.pulumi.com/docs/reference/programming-model/#components) to simplify the creation of new virtual machines. By
+https://www.pulumi.com/docs/intro/concepts/programming-model/#components) to simplify the creation of new virtual machines. By
 defining a `WebServer` class, we can hide many details (see [here](./webserver.ts) for its definition).
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/en/download/)
-- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/reference/install/)
-- [Connect Pulumi with your Azure account](https://www.pulumi.com/docs/reference/clouds/azure/setup/) (if your `az` CLI is
+- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
+- [Connect Pulumi with your Azure account](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) (if your `az` CLI is
       configured, this will just work)
 
 ## Running the App

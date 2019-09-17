@@ -7,13 +7,13 @@ http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applicat
 
 ## Prerequisites
 
-1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
-1. [Configure Pulumi for AWS](https://www.pulumi.com/docs/reference/clouds/aws/setup/)
-1. [Configure Pulumi for Python](https://www.pulumi.com/docs/reference/python/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
 
 ## Deploying and running the program
 
-1. Install dependencies (a `virtualenv` is recommended - see [Pulumi Python docs](https://www.pulumi.com/docs/reference/python/)):
+1. Install dependencies (a `virtualenv` is recommended - see [Pulumi Python docs](https://www.pulumi.com/docs/intro/languages/python/)):
 
     ```
     $ pip install -r requirements.txt

@@ -6,7 +6,7 @@ A Pulumi program to deploy an RDS Postgres instance and containerized Airflow.
 
 ## Deploying and running the program
 
-For more information on how to run this example, see: https://www.pulumi.com/docs/reference/ and https://www.pulumi.com/docs/quickstart/
+For more information on how to run this example, see: https://www.pulumi.com/docs/ and https://www.pulumi.com/docs/get-started/
 
 1. Create a new stack:
 
