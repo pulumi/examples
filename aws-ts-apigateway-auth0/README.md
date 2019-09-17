@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Auth0 Protected Serverless REST API on AWS
+# Secure Serverless REST API Using Auth0
 
 A simple REST API that is protected by a custom AWS Lambda Authorizer. The Authorizer uses [Auth0](https://auth0.com/) to authorize requests.
 

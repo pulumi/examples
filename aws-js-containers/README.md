@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Easy container example
+# ECS Fargate Containers
 
 Companion to the tutorial [Provision containers on AWS](https://www.pulumi.com/docs/reference/tutorials/aws/tutorial-service/).
 
@@ -8,18 +8,18 @@ Companion to the tutorial [Provision containers on AWS](https://www.pulumi.com/d
 
 To run this example, make sure [Docker](https://docs.docker.com/engine/installation/) is installed and running.
 
-## Running the App
+## Deploy the App
 
 Note: some values in this example will be different from run to run.  These values are indicated
 with `***`.
 
-1.  Create a new stack:
+Step 1:  Create a new stack
 
     ```
     $ pulumi stack init containers-dev
     ```
 
-1.  Configure Pulumi to use an AWS region that supports Fargate. This is currently only available in `us-east-1`, `us-east-2`, `us-west-2`, and `eu-west-1`:
+Step 2:  Configure Pulumi to use an AWS region that supports Fargate. This is currently only available in `us-east-1`, `us-east-2`, `us-west-2`, and `eu-west-1`:
 
     ```
     $ pulumi config set aws:region us-west-2
@@ -59,7 +59,7 @@ with `***`.
     2018-05-22T15:33:22.057-07:00[                  pulumi-nginx] 172.31.13.248 - - [22/May/2018:22:33:22 +0000] "GET / HTTP/1.1" 200 189 "-" "curl/7.54.0" "-"
     ```
 
-## Clean up
+## Clean Up
 
 To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
 

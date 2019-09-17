@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# AWS RDS and Airflow example
+# RDS Postgres and Containerized Airflow
 
 A Pulumi program to deploy an RDS Postgres instance and containerized Airflow.
 
