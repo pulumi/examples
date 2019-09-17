@@ -17,8 +17,8 @@ databases, and so on.
 # Prerequisites
 
 - [Node.js](https://nodejs.org/en/download/)
-- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/reference/install/)
-- [Connect Pulumi with your AWS account](https://www.pulumi.com/docs/reference/clouds/aws/setup/) (if your AWS CLI is
+- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
+- [Connect Pulumi with your AWS account](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is
       configured, this will just work)
 
 # Running the Example

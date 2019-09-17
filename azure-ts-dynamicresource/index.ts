@@ -9,7 +9,7 @@ import { CDNCustomDomainResource } from "./cdnCustomDomain";
  * The location where our resource group and the resources under it will be created.
  *
  * To externalize this value, and make this configurable across environments/stacks,
- * learn more at https://www.pulumi.com/docs/reference/config/.
+ * learn more at https://www.pulumi.com/docs/intro/concepts/config/.
  */
 const location = azure.Locations.WestUS;
 

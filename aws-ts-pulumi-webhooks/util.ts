@@ -4,7 +4,7 @@ import { ChatPostMessageArguments } from "@slack/client";
 
 // Return a formatted copy of the Slack message object, based on the kind of Pulumi webhook received.
 // See the Pulumi and Slack webhook documentation for details.
-// https://www.pulumi.com/docs/reference/service/webhooks/
+// https://www.pulumi.com/docs/intro/console/extensions/webhooks/
 // https://api.slack.com/docs/message-attachments
 export function formatSlackMessage(kind: string, payload: object, messageArgs: ChatPostMessageArguments): ChatPostMessageArguments {
     const cloned: ChatPostMessageArguments = Object.assign({}, messageArgs) as ChatPostMessageArguments;
