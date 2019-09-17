@@ -1,9 +1,8 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# AWS EKS Cluster
+# Kubernetes Dashboard on an Amazon EKS Cluster
 
-This example deploys an EKS Kubernetes cluster with an EBS-backed StorageClass and deploys the Kubernetes Dashboard
-into the cluster.
+This example deploys an EKS Kubernetes cluster with an EBS-backed StorageClass and deploys the Kubernetes Dashboard into the cluster.
 
 ## Deploying the App
 
@@ -113,10 +112,10 @@ After cloning this repo, from this working directory, run these commands:
       browser.
     - Choose `Token` authentication, paste the token retrieved earlier into the `Token` field, and sign in.
 
-7. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
-   For example, in order to deploy a Helm chart into your cluster, simply import the `@pulumi/kubernetes/helm` package,
+7. From there, feel free to experiment. Make edits and run `pulumi up` to incrementally update your stack.
+   For example, in order to deploy a Helm chart into your cluster, import the `@pulumi/kubernetes/helm` package,
    add a `Chart` resource that targets the EKS cluster to `index.ts`, and run `pulumi up`. Note that the Helm client
-   must be set up in order for the chart to deploy; see the "Prerequisites" section for details.
+   must be set up in order for the chart to deploy. For more details, see the [Prerequisites](#prerequisites) list.
 
     ```typescript
     import * as helm from "@pulumi/kubernetes/helm";

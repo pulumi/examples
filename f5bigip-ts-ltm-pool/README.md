@@ -1,4 +1,4 @@
-# F5 BigIP Local Traffic Manager Example
+# F5 BigIP Local Traffic Manager
 
 This example demonstrates use of the [Pulumi F5 BigIP Provider](https://github.com/pulumi/pulumi-f5bigip)
 to provide load balancing via an F5 BigIP appliance to backend HTTP instances. The example provisions:

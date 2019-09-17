@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Easy container example
+# Containers on AWS Fargate
 
 Companion to the tutorial [Provision containers on AWS](https://www.pulumi.com/docs/reference/tutorials/aws/tutorial-service/).
 

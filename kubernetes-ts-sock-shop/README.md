@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Kubernetes Sock Shop
+# Sock Shop Pulumi Demo
 
 A version of the standard [Sock Shop microservices reference app](https://github.com/microservices-demo/microservices-demo) app using
 Pulumi and `@pulumi/kubernetes`.

@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Pulumi web server (GCP)
+# Web Server in Google Cloud
 
 Starting point for building the Pulumi web server sample in Google Cloud.
 

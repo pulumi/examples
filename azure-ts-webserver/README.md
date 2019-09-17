@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Azure Web Server Virtual Machine
+# Web Server Using Azure Virtual Machine
 
 This example provisions a Linux web server in an Azure Virtual Machine and gives it a public IP address.
 
