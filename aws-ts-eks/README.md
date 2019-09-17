@@ -11,9 +11,9 @@ To deploy your infrastructure, follow the below steps.
 
 ### Prerequisites
 
-1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 2. [Install Node.js 8.11.3](https://nodejs.org/en/download/)
-3. [Configure AWS Credentials](https://www.pulumi.com/docs/reference/clouds/aws/setup/)
+3. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 4. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html#get-started-kubectl)
 
 If you'd like to follow the optional instructions in step 7 in order to deploy a Helm chart into your cluster, you'll

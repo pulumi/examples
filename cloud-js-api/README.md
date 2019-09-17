@@ -2,7 +2,7 @@
 
 # Serverless REST API on AWS
 
-A simple REST API that counts the number of times a route has been hit. For a detailed walkthrough of this example, see the article [Create a Serverless REST API](https://www.pulumi.com/docs/reference/tutorials/aws/tutorial-rest-api/).
+A simple REST API that counts the number of times a route has been hit. For a detailed walkthrough of this example, see the article [Create a Serverless REST API](https://www.pulumi.com/docs/tutorials/aws/rest-api/).
 
 > Note: this example uses JavaScript promises, but if you're using Node 8, you can change the code to use `async` and `await`.
 

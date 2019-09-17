@@ -10,7 +10,7 @@ This example provisions a new DigitalOcean Kubernetes cluster, deploys a load-ba
 
 To follow this example, you will need:
 
-1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 1. [Register for a DigitalOcean Account](https://cloud.digitalocean.com/registrations/new)
 1. [Generate a DigitalOcean personal access token](https://www.digitalocean.com/docs/api/create-personal-access-token/)
 1. [Install `kubectl` for accessing your cluster](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
@@ -25,7 +25,7 @@ After cloning this repo, from this working directory, run these commands:
 
 1. Install the required Node.js packages:
 
-    This installs the dependent packages [needed](https://www.pulumi.com/docs/reference/how/) for our Pulumi program.
+    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
 
     ```bash
     $ npm install

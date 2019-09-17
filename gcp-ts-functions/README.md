@@ -7,8 +7,8 @@ An example of deploying an HTTP Google Cloud Function endpoint using TypeScript.
 ## Prerequisites
 
 0. [Ensure you have the latest Node.js and NPM](https://nodejs.org/en/download/)
-2. [Install the Pulumi CLI](https://www.pulumi.com/docs/reference/install/)
-3. [Configure Pulumi to access your GCP account](https://www.pulumi.com/docs/reference/clouds/gcp/setup/)
+2. [Install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
+3. [Configure Pulumi to access your GCP account](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
 
 ## Running the App
 
