@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# AWS and GCP Resources Using TypeScript
+# AWS and GCP Resources
 
 This example uses a single Pulumi program to provision resources in both AWS and GCP. It was
 prepared by starting with the `aws-typescript` template, and then installing the `@pulumi/gcp`

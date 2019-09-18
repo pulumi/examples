@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Pulumi Nginx Server in Google Cloud
+# Nginx Server Using Compute Engine
 
 Starting point for building the Pulumi nginx server sample in Google Cloud Platform.
 

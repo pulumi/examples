@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Azure Cosmos DB container, an API Connection, and a Logic App
+# Azure Cosmos DB, an API Connection, and a Logic App
 
 At the time of writing, there is no native Pulumi resource for defining an API Connection and linking it to a Logic App. This example shows how to use an ARM templates to create an API Connection and a Logic App.
 

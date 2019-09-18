@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Google Cloud Functions in TypeScript
+# Google Cloud Functions
 
 An example of deploying an HTTP Google Cloud Function endpoint using TypeScript.
 

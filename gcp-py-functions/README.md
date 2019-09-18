@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Google Cloud Functions in Python
+# Google Cloud Functions
 
 This example shows how to deploy a Python-based Google Cloud Function.
 

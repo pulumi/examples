@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Pulumi Web Server
+# Web Server Using Azure Virtual Machine
 
 Starting point for building the Pulumi web server sample in Azure.
 

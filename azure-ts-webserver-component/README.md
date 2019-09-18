@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Azure Web Server Component
+# Web Server Component Using Azure Virtual Machine
 
 This example provisions a configurable number of Linux web servers in an Azure Virtual Machine, and returns the
 resulting public IP addresses. This example uses a reusable [Pulumi component](

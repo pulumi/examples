@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Docker on AWS Fargate
+# Dockerized App Using ECS, ECR, and Fargate
 
 This example, inspired by the [Docker Getting Started Tutorial](https://docs.docker.com/get-started/), builds, deploys,
 and runs a simple containerized application to a private container registry, and scales out five load balanced replicas,

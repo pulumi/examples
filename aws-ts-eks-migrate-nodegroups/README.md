@@ -1,4 +1,4 @@
-# Migrating EKS Node Groups with Zero Downtime
+# Zero Downtime Migration of EKS Node Groups
 
 Creates an EKS cluster with node groups and a workload, and showcases adding a
 node group to use for workload migration with zero downtime.

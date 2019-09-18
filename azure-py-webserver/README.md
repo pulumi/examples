@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Python Web Server Using Azure Virtual Machine
+# Web Server Using Azure Virtual Machine
 
 This example deploys an Azure Virtual Machine and starts a HTTP server on it.
 
