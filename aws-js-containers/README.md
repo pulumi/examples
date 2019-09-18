@@ -2,7 +2,7 @@
 
 # ECS Fargate Containers
 
-Companion to the tutorial [Provision containers on AWS](https://www.pulumi.com/docs/reference/tutorials/aws/tutorial-service/).
+Companion to the tutorial [Provision containers on AWS](https://www.pulumi.com/docs/tutorials/aws/ecs-fargate/).
 
 ## Prerequisites
 

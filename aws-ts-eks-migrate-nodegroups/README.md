@@ -1,8 +1,9 @@
-# EKS - Migrating Node Groups with Zero Downtime
+# Migrating EKS Node Groups with Zero Downtime
 
 Creates an EKS cluster with node groups and a workload, and showcases adding a
 node group to use for workload migration with zero downtime.
 
 For step-by-step instructions, check out the [tutorial][tutorial-migrate-nodegroups].
 
-[tutorial-migrate-nodegroups]: https://www.pulumi.com/docs/reference/tutorials/kubernetes/tutorial-eks-migrate-nodegroups/
+[tutorial-migrate-nodegroups]: https://www.pulumi.com/docs/tutorials/kubernetes/eks-migrate-nodegroups/
+

@@ -7,8 +7,8 @@ At the time of writing, there is no native Pulumi resource for defining an API C
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/en/download/)
-- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/reference/install/)
-- [Connect Pulumi with your Azure account](https://www.pulumi.com/docs/reference/clouds/azure/setup/) (if your `az` CLI is configured, this will just work)
+- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
+- [Connect Pulumi with your Azure account](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) (if your `az` CLI is configured, this will just work)
 
 ## Running the App
 

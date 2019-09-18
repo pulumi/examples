@@ -24,14 +24,14 @@ When you're finished, you'll be able to...
 
 <!-- The Prerequisites section includes an ordered list of required installation and configuration steps before the reader can deploy the Pulumi example. -->
 
-1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
-1. Configure [cloud] <!-- We have setup pages for our popular cloud providers at https://www.pulumi.com/docs/reference/clouds/<cloud-provider>/setup/ -->
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. Configure [cloud] <!-- We have setup pages for our popular cloud providers at https://www.pulumi.com/docs/intro/cloud-providers/<cloud-provider>/setup/ -->
 1. Install [language runtime] <!-- We have setup pages for our supported language runtimes at https://www.pulumi.com/docs/intro/languages/<language>/ -->
 1. (Optional) List any other accounts needed, such as Twitter, Slack, or other services.
 
 <!-- Example:
-1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
-1. [Configure your AWS Credentials](https://www.pulumi.com/docs/reference/clouds/aws/setup/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure your AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 -->
 
@@ -47,7 +47,7 @@ Next...
 
 Finally...
 
-![Alt text for screen readers](/path/to/img.png) 
+![Alt text for screen readers](/path/to/img.png)
 
 <!--
 If showing a command, explain the command first by talking about what it does. Then show the command and its output. If the output is too long, you can clip it with `...` and only show the relevant parts. If your README includes images, make sure to include an alt text.

@@ -10,10 +10,10 @@ To deploy your infrastructure, follow the below steps.
 
 ### Prerequisites
 
-1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 1. [Install Node.js version 6 or later](https://nodejs.org/en/download/)
 1. Install a package manager for Node.js, such as [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/en/docs/install).
-1. [Configure AWS Credentials](https://www.pulumi.com/docs/reference/clouds/aws/setup/)
+1. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html#get-started-kubectl)
 
 ### Steps
@@ -22,7 +22,7 @@ After cloning this repo, from this working directory, run these commands:
 
 1. Install the required Node.js packages:
 
-    This installs the dependent packages [needed](https://www.pulumi.com/docs/reference/how/) for our Pulumi program.
+    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
 
     ```bash
     $ npm install
@@ -218,7 +218,7 @@ After cloning this repo, from this working directory, run these commands:
     the minimally disruptive change to achieve the desired state.
 
 	> **Note:** Pulumi auto-generates a suffix for all objects.
-    > See the [Pulumi Programming Model](https://pulumi.com/docs/intro/concepts/programming-model#autonaming) for more info.
+    > See the [Pulumi Programming Model](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming) for more info.
     >
     > ```
     > deploymentName : "helloworld-58jkmc7c"

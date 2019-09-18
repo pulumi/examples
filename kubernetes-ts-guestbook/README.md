@@ -10,7 +10,7 @@ Docker, and consists of three components:
 * Multiple replicated Redis instances to serve reads
 * Multiple web frontend instances
 
-There is an [interactive Tutorial available](https://www.pulumi.com/docs/reference/tutorials/kubernetes/tutorial-guestbook/) for
+There is an [interactive Tutorial available](https://www.pulumi.com/docs/tutorials/kubernetes/guestbook/) for
 this example. If this is your first time using Pulumi for Kubernetes, we recommend starting there.
 
 In this directory, you will find two variants of the Guestbook:

@@ -8,7 +8,7 @@ object arriving in it, zips it up and copies it to the second bucket. Its archit
 ![Architecture](./arch.png)
 
 This example is also featured in the blog post [Easy Serverless Apps and Infrastructure --
-Real Events, Real Code](https://blog.pulumi.com/easy-serverless-apps-and-infrastructure-real-events-real-code).
+Real Events, Real Code](https://www.pulumi.com/blog/easy-serverless-apps-and-infrastructure-real-events-real-code/).
 
 ## Deploying the App
 
@@ -17,8 +17,8 @@ To deploy your new serverless application, follow the below steps.
 ### Prerequisites
 
 0. [Ensure you have Node.js](https://nodejs.org/en/download/)
-1. [Install Pulumi](https://www.pulumi.com/docs/reference/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/reference/clouds/aws/setup/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 
 ### Steps
 

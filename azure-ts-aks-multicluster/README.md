@@ -7,11 +7,11 @@ different node counts. Please see https://docs.microsoft.com/en-us/azure/aks/ fo
 
 # Prerequisites
 
-Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/reference/install/).
+Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
 
 We will be deploying to Azure, so you will need an Azure account. If you don't have an account,
 [sign up for free here](https://azure.microsoft.com/en-us/free/).
-[Follow the instructions here](https://www.pulumi.com/docs/reference/clouds/azure/setup/) to connect Pulumi to your Azure account.
+[Follow the instructions here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect Pulumi to your Azure account.
 
 # Running the Example
 
