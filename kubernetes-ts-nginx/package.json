@@ -2,7 +2,7 @@
   "name": "k8s-nginx",
   "version": "0.1.0",
   "devDependencies": {
-    "@types/node": "^9.3.0"
+    "@types/node": "^8.0.0"
   },
   "dependencies": {
     "@pulumi/kubernetes": "^1.0.0",

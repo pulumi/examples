@@ -1,7 +1,7 @@
 {
     "name": "airflow",
     "devDependencies": {
-        "@types/node": "^10.1.2"
+        "@types/node": "^8.0.0"
     },
     "dependencies": {
         "@pulumi/pulumi": "^1.0.0",

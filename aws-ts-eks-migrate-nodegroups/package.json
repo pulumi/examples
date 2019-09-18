@@ -2,7 +2,7 @@
     "name": "aws-ts-eks-migrate-nodegroups",
     "devDependencies": {
         "typescript": "^3.0.0",
-        "@types/node": "latest"
+        "@types/node": "^8.0.0"
     },
     "dependencies": {
         "@pulumi/aws": "^1.0.0",
