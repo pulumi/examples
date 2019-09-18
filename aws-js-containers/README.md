@@ -6,34 +6,43 @@ Companion to the tutorial [Provision containers on AWS](https://www.pulumi.com/d
 
 ## Prerequisites
 
-To run this example, make sure [Docker](https://docs.docker.com/engine/installation/) is installed and running.
+To run this example, make sure [Docker Engine - Community](https://docs.docker.com/engine/installation/) is installed and running.
 
 ## Deploy the App
 
 Note: some values in this example will be different from run to run.  These values are indicated
 with `***`.
 
-Step 1:  Create a new stack
+### Step 1:  Create a new stack
 
     ```
     $ pulumi stack init containers-dev
     ```
 
-Step 2:  Configure Pulumi to use an AWS region that supports Fargate. This is currently only available in `us-east-1`, `us-east-2`, `us-west-2`, and `eu-west-1`:
+### Step 2:  Configure AWS region for Pulumi
+
+For this example, you need to set an AWS region that supports Fargate. Refer to the [AWS Region Table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) for product availability.
 
     ```
     $ pulumi config set aws:region us-west-2
     ```
 
-1.  Restore NPM modules via `npm install` or `yarn install`.
+### Step 3: Restore NPM modules
 
-1.  Preview and deploy the app via `pulumi up`. The preview will take a few minutes, as it builds a Docker container. A total of 19 resources are created.
+You can do this via `npm install` or `yarn install`.
+
+### Step 4:.  Preview and deploy the app
+
+Run the following command:
 
     ```
     $ pulumi up
     ```
+The preview will take a few minutes, as it builds a Docker container. A total of 19 resources are created.
 
-1.  View the endpoint URL, and run curl:
+### Step 5:  View the endpoint URL
+
+Run [`pulumi stack output`](https://www.pulumi.com/docs/reference/cli/pulumi_stack_output/) to view your stack's output properties, and then `curl` the command to view the resulting page. `$(pulumi stack output url)` evaluates to the load balancer’s URL.
 
     ```bash
     $ pulumi stack output
@@ -51,7 +60,9 @@ Step 2:  Configure Pulumi to use an AWS region that supports Fargate. This is cu
     </body></html>
     ```
 
-1.  To view the runtime logs from the container, use the `pulumi logs` command. To get a log stream, use `pulumi logs --follow`.
+### Step 6: View runtime logs from the container
+
+Use the [`pulumi logs`](https://www.pulumi.com/docs/reference/cli/pulumi_logs/) command. To get a log stream, use `pulumi logs --follow`.
 
     ```
     $ pulumi logs --follow
@@ -61,5 +72,5 @@ Step 2:  Configure Pulumi to use an AWS region that supports Fargate. This is cu
 
 ## Clean Up
 
-To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+To clean up resources, run [`pulumi destroy`](https://www.pulumi.com/docs/reference/cli/pulumi_destroy/) to avoid incurring any costs. Select `yes` on the confirmation prompt so Pulumi will remove all of the resources that you've created. To delete the stack itself, run [`pulumi stack rm`](https://www.pulumi.com/docs/reference/cli/pulumi_stack_rm/). Note that this command deletes all deployment history from the Pulumi Console, unless you've explicitly [chosen a different backend](https://www.pulumi.com/docs/intro/concepts/state/) for storing your infrastructure state.
 
