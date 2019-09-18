@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Deploy an Azure Resource Manager (ARM) Template in Pulumi
+# Azure Resource Manager (ARM) Template
 
 This example simply deploys an existing Azure Resource Manager (ARM) template using Pulumi. This accepts
 any existing valid ARM template, enabling easy migration from existing JSON templates and towards infrastructure

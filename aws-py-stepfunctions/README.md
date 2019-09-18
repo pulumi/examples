@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# AWS Step Functions (Python)
+# AWS Step Functions
 
 A basic example that demonstrates using AWS Step Functions with a Lambda function, written in Python.
 
