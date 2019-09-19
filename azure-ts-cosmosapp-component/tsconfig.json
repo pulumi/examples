@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "outDir": "bin",
+        "target": "es6",
+        "lib": [
+            "es6"
+        ],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "pretty": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "forceConsistentCasingInFileNames": true,
+        "strictNullChecks": true
+    },
+    "files": [
+        "aci.ts",
+        "cosmosApp.ts",
+        "functionApp.ts",
+        "index.ts",
+        "vms.ts"
+    ]
+}
