@@ -11,7 +11,7 @@ const isMinikube = config.require("isMinikube");
 // nginx container, replicated 1 time.
 const appName = "nginx";
 const appLabels = { app: appName };
-const nginx = new k8s.apps.v1beta1.Deployment(appName, {
+const nginx = new k8s.apps.v1.Deployment(appName, {
     spec: {
         selector: { matchLabels: appLabels },
         replicas: 1,

@@ -22,7 +22,7 @@ const nginxConfigName = nginxConfig.metadata.apply(m => m.name);
 
 // Deploy 1 nginx replica, mounting the configuration data into the nginx
 // container.
-const nginx = new k8s.apps.v1beta1.Deployment(appName, {
+const nginx = new k8s.apps.v1.Deployment(appName, {
     metadata: { labels: appLabels },
     spec: {
         replicas: 1,
