@@ -50,8 +50,8 @@ export class ServiceDeployment extends pulumi.ComponentResource {
 
         if (args.allocateIpAddress) {
             this.ipAddress = args.isMinikube ?
-                this.service.spec.apply(spec => spec.clusterIP) :
-                this.service.status.apply(status => status.loadBalancer.ingress[0].ip);
+                this.service.spec.clusterIP :
+                this.service.status.loadBalancer.ingress[0].ip;
         }
     }
 }

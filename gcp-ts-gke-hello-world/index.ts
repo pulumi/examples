@@ -128,4 +128,4 @@ const service = new k8s.core.v1.Service(name,
 
 // Export the Service name and public LoadBalancer endpoint
 export const serviceName = service.metadata.name;
-export const servicePublicIP = service.status.apply(s => s.loadBalancer.ingress[0].ip);
+export const servicePublicIP = service.status.loadBalancer.ingress[0].ip;

@@ -37,5 +37,5 @@ export let frontendIp: pulumi.Output<string>;
 if (isMinikube === "true") {
     frontendIp = frontend.spec.clusterIP;
 } else {
-    frontendIp = frontend.status.apply(status => status.loadBalancer.ingress[0].ip);
+    frontendIp = frontend.status.loadBalancer.ingress[0].ip;
 }

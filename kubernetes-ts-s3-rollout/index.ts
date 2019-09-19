@@ -55,4 +55,4 @@ const frontend = new k8s.core.v1.Service("nginx", {
 });
 
 // Export the frontend IP.
-export const frontendIp = frontend.status.apply(status => status.loadBalancer.ingress[0].ip);
+export const frontendIp = frontend.status.loadBalancer.ingress[0].ip;

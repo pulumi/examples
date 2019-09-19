@@ -83,4 +83,4 @@ const service = new k8s.core.v1.Service(name,
 
 // Export the Service name and public LoadBalancer Endpoint
 export const serviceName = service.metadata.name;
-export const serviceHostname = service.status.apply(s => s.loadBalancer.ingress[0].hostname);
+export const serviceHostname = service.status.loadBalancer.ingress[0].hostname;
