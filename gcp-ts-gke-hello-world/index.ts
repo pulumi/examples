@@ -7,7 +7,8 @@ import * as pulumi from "@pulumi/pulumi";
 const name = "helloworld";
 
 const config = new pulumi.Config();
-export const masterVersion = config.require("masterVersion");
+export const masterVersion = config.get("masterVersion") ||
+    gcp.container.getEngineVersions().latestMasterVersion;
 
 // Create a GKE cluster
 const cluster = new gcp.container.Cluster(name, {
@@ -128,4 +129,4 @@ const service = new k8s.core.v1.Service(name,
 
 // Export the Service name and public LoadBalancer endpoint
 export const serviceName = service.metadata.name;
-export const servicePublicIP = service.status.apply(s => s.loadBalancer.ingress[0].ip);
+export const servicePublicIP = service.status.loadBalancer.ingress[0].ip;

@@ -11,7 +11,7 @@ const isMinikube = config.require("isMinikube");
 // nginx container, replicated 1 time.
 const appName = "nginx";
 const appLabels = { app: appName };
-const nginx = new k8s.apps.v1beta1.Deployment(appName, {
+const nginx = new k8s.apps.v1.Deployment(appName, {
     spec: {
         selector: { matchLabels: appLabels },
         replicas: 1,
@@ -37,5 +37,5 @@ export let frontendIp: pulumi.Output<string>;
 if (isMinikube === "true") {
     frontendIp = frontend.spec.clusterIP;
 } else {
-    frontendIp = frontend.status.apply(status => status.loadBalancer.ingress[0].ip);
+    frontendIp = frontend.status.loadBalancer.ingress[0].ip;
 }

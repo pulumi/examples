@@ -16,7 +16,7 @@ const sockShopNs = new k8s.core.v1.Namespace("sock-shop", { metadata: { name: "s
 // Carts microservice.
 // -------------------------------------------------------------------------
 
-const cartsDb = new k8s.apps.v1beta1.Deployment("carts-db", {
+const cartsDb = new k8s.apps.v1.Deployment("carts-db", {
     metadata: {
         name: "carts-db",
         labels: {
@@ -93,7 +93,7 @@ const cartsDbService = new k8s.core.v1.Service("carts-db", {
     },
 });
 
-const carts = new k8s.apps.v1beta1.Deployment("carts", {
+const carts = new k8s.apps.v1.Deployment("carts", {
     metadata: {
         name: "carts",
         labels: {
@@ -186,7 +186,7 @@ const cartsService = new k8s.core.v1.Service("carts", {
 // Catalog microservice.
 // --------------------------------------------------------------------------
 
-const catalogDb = new k8s.apps.v1beta1.Deployment("catalog-db", {
+const catalogDb = new k8s.apps.v1.Deployment("catalog-db", {
     metadata: {
         name: "catalogue-db",
         labels: {
@@ -252,7 +252,7 @@ const catalogDbService = new k8s.core.v1.Service("catalog-db", {
     },
 });
 
-const catalog = new k8s.apps.v1beta1.Deployment("catalog", {
+const catalog = new k8s.apps.v1.Deployment("catalog", {
     metadata: {
         name: "catalogue",
         labels: {
@@ -320,7 +320,7 @@ const catalogService = new k8s.core.v1.Service("catalog", {
 // Frontend microservice.
 // --------------------------------------------------------------------------
 
-const frontend = new k8s.apps.v1beta1.Deployment("front-end", {
+const frontend = new k8s.apps.v1.Deployment("front-end", {
     metadata: {
         name: "front-end",
         namespace: sockShopNs.metadata.name,
@@ -392,7 +392,7 @@ const frontendService = new k8s.core.v1.Service("front-end", {
 // Orders microservice.
 // --------------------------------------------------------------------------
 
-const ordersDb = new k8s.apps.v1beta1.Deployment("orders-db", {
+const ordersDb = new k8s.apps.v1.Deployment("orders-db", {
     metadata: {
         name: "orders-db",
         labels: {
@@ -469,7 +469,7 @@ const ordersDbService = new k8s.core.v1.Service("orders-db", {
     },
 });
 
-const orders = new k8s.apps.v1beta1.Deployment("orders", {
+const orders = new k8s.apps.v1.Deployment("orders", {
     metadata: {
         name: "orders",
         labels: {
@@ -562,7 +562,7 @@ const ordersService = new k8s.core.v1.Service("orders", {
 // Payment microservice.
 // --------------------------------------------------------------------------
 
-const payment = new k8s.apps.v1beta1.Deployment("payment", {
+const payment = new k8s.apps.v1.Deployment("payment", {
     metadata: {
         name: "payment",
         labels: {
@@ -630,7 +630,7 @@ const paymentService = new k8s.core.v1.Service("payment", {
 // Queue microservice.
 // --------------------------------------------------------------------------
 
-const queueMaster = new k8s.apps.v1beta1.Deployment("queue-master", {
+const queueMaster = new k8s.apps.v1.Deployment("queue-master", {
     metadata: {
         name: "queue-master",
         labels: {
@@ -688,7 +688,7 @@ const queueMasterService = new k8s.core.v1.Service("queue-master", {
     },
 });
 
-const rabbitmq = new k8s.apps.v1beta1.Deployment("rabbitmq", {
+const rabbitmq = new k8s.apps.v1.Deployment("rabbitmq", {
     metadata: {
         name: "rabbitmq",
         labels: {
@@ -754,7 +754,7 @@ const rabbitmqService = new k8s.core.v1.Service("rabbitmq", {
 // Shipping microservice.
 // --------------------------------------------------------------------------
 
-const shipping = new k8s.apps.v1beta1.Deployment("shipping", {
+const shipping = new k8s.apps.v1.Deployment("shipping", {
     metadata: {
         name: "shipping",
         labels: {
@@ -847,7 +847,7 @@ const shippingService = new k8s.core.v1.Service("shipping", {
 // User microservice.
 // --------------------------------------------------------------------------
 
-const userDb = new k8s.apps.v1beta1.Deployment("user-db", {
+const userDb = new k8s.apps.v1.Deployment("user-db", {
     metadata: {
         name: "user-db",
         labels: {
@@ -924,7 +924,7 @@ const userDbService = new k8s.core.v1.Service("user-db", {
     },
 });
 
-const user = new k8s.apps.v1beta1.Deployment("user", {
+const user = new k8s.apps.v1.Deployment("user", {
     metadata: {
         name: "user",
         labels: {

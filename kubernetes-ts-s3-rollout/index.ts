@@ -21,7 +21,7 @@ const nginxConfigMount = { name: nginxConfigVol.name, mountPath: "/etc/nginx/con
 
 // Deploy 1 replica of nginx. Use `curl` to get `default.conf` from a public S3 bucket, which
 // configures nginx to act as a proxy for `pulumi.github.io`.
-const nginx = new k8s.apps.v1beta1.Deployment("nginx", {
+const nginx = new k8s.apps.v1.Deployment("nginx", {
     spec: {
         replicas: 1,
         template: {
@@ -55,4 +55,4 @@ const frontend = new k8s.core.v1.Service("nginx", {
 });
 
 // Export the frontend IP.
-export const frontendIp = frontend.status.apply(status => status.loadBalancer.ingress[0].ip);
+export const frontendIp = frontend.status.loadBalancer.ingress[0].ip;
