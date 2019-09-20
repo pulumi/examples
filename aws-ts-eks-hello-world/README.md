@@ -1,9 +1,8 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# AWS EKS Cluster
+# Amazon EKS Cluster: Hello World!
 
-This example deploys an EKS Kubernetes cluster with an EBS-backed StorageClass, and deploys a Kubernetes Namespace and Deployment of NGINX
-into the cluster.
+This example deploys an EKS Kubernetes cluster with an EBS-backed StorageClass, and deploys a Kubernetes Namespace and Deployment of NGINX into the cluster.
 
 ## Deploying the App
 
@@ -215,7 +214,7 @@ After cloning this repo, from this working directory, run these commands:
     the NGINX app, and a LoadBalancer `Service` to publicly access NGINX.
 
     Pulumi understands which changes to a given cloud resource can be made
-    in-place, and which require replacement, and computes
+    in place, and which require replacement, and computes
     the minimally disruptive change to achieve the desired state.
 
 	> **Note:** Pulumi auto-generates a suffix for all objects.
@@ -230,12 +229,12 @@ After cloning this repo, from this working directory, run these commands:
     > ```
 
     If you visit the FQDN listed in `serviceHostname` you should land on the
-    NGINX welcome page. Note, that it may take a minute or so for the
+    NGINX welcome page. Note that it may take a minute or so for the
     LoadBalancer to become active on AWS.
 
 1. Access the Kubernetes Cluster using `kubectl`
 
-    To access your new Kubernetes cluster using `kubectl`, we need to setup the
+    To access your new Kubernetes cluster using `kubectl`, we need to set up the
     `kubeconfig` file and download `kubectl`. We can leverage the Pulumi
     stack output in the CLI, as Pulumi faciliates exporting these objects for us.
 
@@ -265,12 +264,11 @@ After cloning this repo, from this working directory, run these commands:
     $ kubectl delete deployment my-nginx
     ```
 
-    By deploying this nginx image in this way, it is outside of Pulumi's control. But this is simply to show that we can
-    control our cluster via the CLI as well. 
+    By deploying the NGINX image in this way, it is outside of Pulumi's control. But this is simply to show that we can control our cluster via the CLI as well.
 
 1. Experimentation
 
-    From here on, feel free to experiment. Simply making edits and running `pulumi up` afterwards, will incrementally update your stack.
+    From here on, feel free to experiment. Make edits and run `pulumi up` afterwards to incrementally update your stack.
 
     ### Running Off-the-Shelf Guestbook YAML
 

@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# AWS EC2 Web Server
+# Web Server Using Amazon EC2
 
 This example deploys a simple AWS EC2 virtual machine running a Python web server.
 

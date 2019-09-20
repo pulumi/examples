@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# A simple Slackbot running in GCP using Pulumi.
+# Slackbot for Posting Slack Mention Notifications
 
 A simple Slackbot (called '@mentionbot') that sends a message to specific channel to notifiy you any time you're @mentioned anywhere.  Very helpful if you want a time-ordered list of @mentions to go through at a later point.
 

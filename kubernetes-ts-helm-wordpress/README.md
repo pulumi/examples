@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Kubernetes: Deploying the Wordpress Helm chart
+# Wordpress Helm Chart
 
 Uses the Helm API of `@pulumi/kubernetes` to deploy `v2.1.3` of the Wordpress Helm Chart to a
 Kubernetes cluster. **The Tiller server is not required to be installed.** Pulumi will expand the

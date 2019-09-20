@@ -1,8 +1,8 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# A simple Slackbot running in AWS using Pulumi.
+# Slackbot for Posting Slack Mention Notifications
 
-A simple Slackbot (called '@mentionbot') that sends a message to specific channel to notifiy you any time you're @mentioned anywhere.  Very helpful if you want a time-ordered list of @mentions to go through at a later point.
+A simple Slackbot (called '@mentionbot') that sends a message to specific channel to notify you any time you're @mentioned anywhere.  This bot is useful for when you need a time-ordered list of @mentions to go through at a later point.
 
 Slack users can subscribe/unsubscribe from notifications easily.  Simply add `@mentionbot` to a channel you want to be notified in.  Then send any message to `@mentionbot` to subscribe.  To stop getting messages send a message to `@mentionbot` containing the word `unsubscribe`.
 

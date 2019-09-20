@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Kubernetes: Triggering a rollout of an app by changing ConfigMap data
+# App Rollout via ConfigMap Data Change
 
 Uses nginx to reverse-proxy traffic to `pulumi.github.io`. The nginx configuration is contained in
 the file `default.conf` in this directory; this program reads that file and puts it in a

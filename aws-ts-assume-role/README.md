@@ -1,9 +1,9 @@
-# AWS AssumeRole Example
+# AWS Resources Using AssumeRole
 
 This example demonstrates how to use the AssumeRole functionality of the AWS provider in order to create resources in
 the security context of an IAM Role assumed by the IAM User running the Pulumi program.
 
-## Deploying the Example 
+## Deploying the Example
 
 These instructions assume you are familiar with running Pulumi programs written in TypeScript. Some other examples which
 describe each step in more detail are:

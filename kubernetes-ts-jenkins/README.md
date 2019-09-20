@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Kubernetes Jenkins
+# Continuous Integration with Jenkins
 
 This example deploys a container running the Jenkins continuous integration system onto a running
 Kubernetes cluster using Pulumi and `@pulumi/kubernetes`.

@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Kubernetes: Triggering a rollout of an app by changing data in S3
+# App Rollout via Data Change in Amazon S3
 
 This example is similar in principle to the [`ConfigMap`-based rollout example][rollout], except a
 rollout is triggered any time the data in S3 changes.

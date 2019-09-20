@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Globally distributed serverless URL-shortener
+# Globally Distributed Serverless URL Shortener Using Azure Functions and Cosmos DB
 
 Multi-region deployment of Azure Functions and Cosmos DB with Traffic Manager
 

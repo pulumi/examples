@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Pulumi web server (Linode)
+# Web Server on Linode
 
 Starting point for building a Pulumi sample webserver on Linode.
 

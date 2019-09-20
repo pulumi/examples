@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Video Thumbnailer
+# Video Thumbnailer Using AWS Fargate
 
 A video thumbnail extractor using serverless functions and containers.
 

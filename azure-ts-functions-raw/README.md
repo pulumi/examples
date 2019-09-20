@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Azure Functions
+# Azure Functions in All Supported Languages
 
 Azure Functions created from raw deployment packages in all supported languages.
 

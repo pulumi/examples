@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Run a Stateless Application Using a Deployment
+# Stateless Application Using a Deployment
 
 A version of the [Kubernetes Stateless Application Deployment](
 https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/) example that uses Pulumi.
