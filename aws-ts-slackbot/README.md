@@ -2,44 +2,48 @@
 
 # Slackbot for Posting Slack Mention Notifications
 
-A simple Slackbot (called '@mentionbot') that sends a message to specific channel to notify you any time you're @mentioned anywhere.  This bot is useful for when you need a time-ordered list of @mentions to go through at a later point.
+This is an example of a simple Slackbot (called '@mentionbot') that posts a notification to a specific channel any time you're @mentioned anywhere. This bot is useful for when you need a time-ordered list of @mentions to go through at a later point.
 
-Slack users can subscribe/unsubscribe from notifications easily.  Simply add `@mentionbot` to a channel you want to be notified in.  Then send any message to `@mentionbot` to subscribe.  To stop getting messages send a message to `@mentionbot` containing the word `unsubscribe`.
+Slack users can subscribe/unsubscribe from notifications easily.  To receive notifications, add `@mentionbot` to a channel you want to be notified in.  Then send any message to `@mentionbot` to subscribe.  To stop getting messages, send a message to `@mentionbot` containing the word `unsubscribe`.
 
-The example contains a few useful patterns that show how to build a good Slackbot while taking advantage of a lot of conveniences that Pulumi and the `aws` and `awsx` packages provide.
+The example contains a few useful patterns showing you how to build a good Slackbot while taking advantage of a lot of conveniences that Pulumi and the `aws` and `awsx` packages provide.
 
 1. we set up an ApiGateway API to receive push notifications from Slack whenever important events happen.
-2. Slack has strict requirements on how quickly the push endpoint must respond with `200` notifications before they consider the message not-received, triggering back-off and resending of those same messages.  Because of this, this example does not process Slack `event` messages as they come in.  Instead, they are immediately added to an [AWS SNS Topic](https://aws.amazon.com/sns/) to be processed at a later point in time.  This allows the ApiGateway call to return quickly, satisfying Slack's requirements.
-3. Two [AWS Lambdas](https://aws.amazon.com/lambda/) are created naturally and simply using simple JavaScript functions.  One function is used to create the Lambda that is called when Slack pushes notifications.  The other is used to specify the Lamdba that will process the messages added to the Topic.  These JavaScript functions can easily access the other Pulumi resources created, avoiding the need to figure out ways to pass Resource ARNs/IDs/etc. to the Lambdas to ensure they can talk to the right resources.  If these resources were swapped out in the future (for example, using RDS instead of DynamoDB, or SQS instead of SNS), Pulumi would ensure the Lambdas were updated properly.
-4. Pulumi [Secrets](https://www.pulumi.com/docs/intro/concepts/config/) provides a simple way to pass important credentials (like your Slack tokens) without having to directly embed them in your application code.
+2. Slack has strict requirements on how quickly the push endpoint must respond with `200` notifications before they consider the message as "not received", triggering back-off and resending of those same messages.  For this reason, our example does not process Slack `event` messages as they come in.  Instead, they are immediately added to an [AWS SNS Topic](https://aws.amazon.com/sns/) to be processed at a later point in time. This allows the ApiGateway call to return quickly, satisfying Slack's requirements.
+3. Two [AWS Lambdas](https://aws.amazon.com/lambda/) are created naturally using simple JavaScript functions.  One function is used to create the Lambda that is called when Slack pushes a notification.  The other is used to specify the Lamdba that will process the messages added to the Topic.  These JavaScript functions can easily access the other Pulumi resources created, avoiding the need to figure out ways to pass Resource ARNs/IDs/etc. to the Lambdas to ensure they can talk to the right resources.  If these resources were swapped out in the future (for example, using RDS instead of DynamoDB, or SQS instead of SNS), Pulumi will make sure that the Lambdas were updated properly.
+4. [Pulumi Secrets](https://www.pulumi.com/docs/intro/concepts/config/) provides a simple way to pass important credentials (like your Slack tokens) without having to directly embed them in your application code.
 
-First, we'll setup the Pulumi App.  Then, we'll go create and configure a Slack App and Bot to interact with our Pulumi App.
+First, we'll set up the Pulumi App.  Then, we'll go create and configure a Slack App and Bot to interact with our Pulumi App.
 
-## Deploying and running the Pulumi App
+## Deploy the App
 
-Note: some values in this example will be different from run to run.  These values are indicated
+> **Note:** Some values in this example will be different from run to run.  These values are indicated
 with `***`.
 
-1.  Create a new stack:
+### Step 1: Create a new stack
 
-    ```bash
-    $ pulumi stack init mentionbot
-    ```
+```bash
+$ pulumi stack init mentionbot
+```
 
-1.  Set the AWS region:
+### Step 2: Set the AWS region
 
-    ```
-    $ pulumi config set aws:region us-east-2
-    ```
+```
+$ pulumi config set aws:region us-east-2
+```
 
-1.  Restore NPM modules via `npm install` or `yarn install`.
+### Step 3: Restore NPM modules 
 
-1.  Run `pulumi up` to preview and deploy changes:
+Run `npm install` or `yarn install` to restore your NPM modules.
 
-    ```
-    $ pulumi up
-    Previewing update (mentionbot):
-    ...
+### Step 4: Preview and deploy your app
+
+Run `pulumi up` to preview and deploy your AWS resources.
+
+```
+$ pulumi up
+Previewing update (mentionbot):
+...
 
     Do you want to perform this update? yes
     Updating (mentionbot):
@@ -72,11 +76,9 @@ with `***`.
     Duration: 25s
 
     Permalink: https://app.pulumi.com/***/mentionbot/updates/1
-    ```
+```
 
-
-
-## Creating a new Slackbot
+### Step 5: Create a new Slackbot
 
 To create a new Slackbot, first go to https://api.slack.com/apps and create an account if necessary.  Next, click on 'Create New App' here:
 
@@ -135,10 +137,10 @@ Now, we're almost done.  The only thing left to do is supply your Pulumi App wit
 
 Supply these both like so:
 
-    ```
-    $ pulumi config set --secret mentionbot:slackToken xoxb-...
-    $ pulumi config set --secret mentionbot:verificationToken d...
-    ```
+```
+$ pulumi config set --secret mentionbot:slackToken xoxb-...
+$ pulumi config set --secret mentionbot:verificationToken d...
+```
 
 Next, install the Slack App into your workspace:
 
@@ -148,7 +150,7 @@ Next, install the Slack App into your workspace:
 
 And we're done!
 
-## Interacting with the Slack Bot
+### Step 6: Interact with the Slackbot
 
 From Slack you can now create your own private channel:
 
@@ -162,7 +164,7 @@ Invite the bot to the channel:
 <img src=https://user-images.githubusercontent.com/4564579/55647722-40c56c80-5793-11e9-8a97-5ce087d2bfe3.png>
 </p>
 
-Then send it a message.  Note, it may take several seconds for the bot to respond due to Slack push notification delays, SNS Topic delays, and Slack incoming message delays.
+Then send it a message.  Note that it may take several seconds for the bot to respond due to Slack push notification delays, SNS Topic delays, and Slack incoming message delays.
 
 <p align=center>
 <img src=https://user-images.githubusercontent.com/4564579/55648466-3e641200-5795-11e9-9917-e64cdf45b63e.png>
