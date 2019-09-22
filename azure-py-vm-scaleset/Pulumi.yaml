@@ -1,0 +1,8 @@
+name: azure-py-vm-scaleset
+runtime: python
+description: Basic example of nginx deployed in Azure VM Scale Sets written in Python
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
