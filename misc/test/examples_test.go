@@ -621,6 +621,36 @@ func TestExamples(t *testing.T) {
 		}),
 
 		base.With(integration.ProgramTestOptions{
+			Dir:    path.Join(cwd, "..", "..", "digitalocean-py-k8s"),
+			Config: map[string]string{},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["ingress_ip"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Welcome to nginx!")
+				})
+			},
+		}),
+
+		base.With(integration.ProgramTestOptions{
+			Dir:    path.Join(cwd, "..", "..", "digitalocean-py-loadbalanced-droplets"),
+			Config: map[string]string{},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Welcome to nginx!")
+				})
+			},
+		}),
+
+		base.With(integration.ProgramTestOptions{
+			Dir:    path.Join(cwd, "..", "..", "digitalocean-ts-k8s"),
+			Config: map[string]string{},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["ingressIp"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Welcome to nginx!")
+				})
+			},
+		}),
+
+		base.With(integration.ProgramTestOptions{
 			Dir:    path.Join(cwd, "..", "..", "digitalocean-ts-loadbalanced-droplets"),
 			Config: map[string]string{},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
