@@ -701,6 +701,22 @@ func TestExamples(t *testing.T) {
 				"master_version":    gkeEngineVersion,
 			},
 		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "gcp-py-serverless-raw"),
+			Config: map[string]string{
+				"gcp:project": "pulumi-ci-gcp-provider",
+				"gcp:zone":    "us-central1-a",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["go_endpoint"].(string)
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello World!")
+				})
+				assertHTTPResult(t, stack.Outputs["python_endpoint"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello World!")
+				})
+			},
+		}),
 		//base.With(integration.ProgramTestOptions{
 		//	Dir: path.Join(cwd, "..", "..", "gcp-py-instance-nginx"),
 		//	Config: map[string]string{
@@ -762,6 +778,9 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["goEndpoint"].(string)
 				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello World!")
+				})
+				assertHTTPResult(t, stack.Outputs["pythonEndpoint"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
 				})
 			},

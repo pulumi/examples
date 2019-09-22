@@ -1,0 +1,9 @@
+name: serverless-py
+runtime: python
+description: Basic example of a serverless Python and Go GCP functions (in Python)
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:region:
+      description: The Google Cloud region
