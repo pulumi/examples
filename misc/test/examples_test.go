@@ -717,19 +717,20 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
-		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "gcp-py-instance-nginx"),
-		//	Config: map[string]string{
-		//		"gcp:project": "pulumi-ci-gcp-provider",
-		//		"gcp:zone": "us-central1-a",
-		//	},
-		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		//		endpoint := stack.Outputs["external_ip"].(string)
-		//		assertHTTPResult(t, endpoint, nil, func(body string) bool {
-		//			return assert.Contains(t, body, "Test Page for the Nginx HTTP Server on Fedora")
-		//		})
-		//	},
-		//}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "gcp-py-instance-nginx"),
+			Config: map[string]string{
+				"gcp:project": "pulumi-ci-gcp-provider",
+				"gcp:zone": "us-central1-a",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["external_ip"].(string)
+				maxWait := time.Minute * 5
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Test Page for the Nginx HTTP Server on Fedora")
+				})
+			},
+		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "gcp-ts-functions"),
 			Config: map[string]string{
