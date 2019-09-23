@@ -55,8 +55,6 @@ export class CosmosApp extends pulumi.ComponentResource {
             offerType: "Standard",
             consistencyPolicy: {
                 consistencyLevel: "Session",
-                maxIntervalInSeconds: 5,
-                maxStalenessPrefix: 100,
             },
             enableMultipleWriteLocations: args.enableMultiMaster,
         }, parentOpts);
