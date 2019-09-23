@@ -1,0 +1,8 @@
+name: azure-py-appservice-docker
+runtime: python
+description: Creates Azure App Service running Docker containers on Linux in Python
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
