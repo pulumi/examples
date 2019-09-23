@@ -22,8 +22,6 @@ const cosmosdbAccount = new azure.cosmosdb.Account("logicappdemo-cdb", {
     geoLocations: [{ location: resourceGroup.location, failoverPriority: 0 }],
     consistencyPolicy: {
         consistencyLevel: "Session",
-        maxIntervalInSeconds: 5,
-        maxStalenessPrefix: 100,
     },
 });
 
