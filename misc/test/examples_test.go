@@ -382,6 +382,14 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-py-hdinsight-spark"),
+			Config: map[string]string{
+				"azure:location": azureLocation,
+				"username":       "testuser",
+				"password":       "MyPassword123+-*/",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-py-vm-scaleset"),
 			Config: map[string]string{
 				"azure:location": azureLocation,
@@ -472,14 +480,14 @@ func TestExamples(t *testing.T) {
 
 		// azure-ts-functions-raw require specific language setups for tests
 
-		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "azure-ts-hdinsight-spark"),
-		//	Config: map[string]string{
-		//		"azure:location": azureLocation,
-		//		"username":       "testuser",
-		//		"password":       "MyPassword123+-*/",
-		//	},
-		//}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-hdinsight-spark"),
+			Config: map[string]string{
+				"azure:location": azureLocation,
+				"username":       "testuser",
+				"password":       "MyPassword123+-*/",
+			},
+		}),
 
 		// azure-ts-msi-keyvault-rbac requires DotNet setup
 
