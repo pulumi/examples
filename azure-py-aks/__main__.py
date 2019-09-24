@@ -10,16 +10,15 @@ from pulumi_azuread import Application, ServicePrincipal, ServicePrincipalPasswo
 # read and set config values
 config = pulumi.Config("azure-py-aks")
 
-PREFIX = config.require("prefix")
 PASSWORD = config.require_secret("password")
 SSHKEY = config.require("sshkey")
 LOCATION = config.get("location") or "east us"
 
 # create a Resource Group and Network for all resources
-resource_group = ResourceGroup("rg", name=PREFIX + "rg", location=LOCATION)
+resource_group = ResourceGroup("aksrg")
 
 # create Azure AD Application for AKS
-app = Application("aks-app", name=PREFIX + "aks-app")
+app = Application("aks-app")
 
 # create service principal for the application so AKS can act on behalf of the application
 sp = ServicePrincipal(
