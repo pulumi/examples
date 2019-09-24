@@ -23,6 +23,8 @@ const account = new azure.cosmosdb.Account("UrlStore", {
     offerType: "Standard",
     consistencyPolicy: {
         consistencyLevel: "Session",
+        maxIntervalInSeconds: 300,
+        maxStalenessPrefix: 100000,
     },
 });
 
