@@ -62,6 +62,12 @@ const service = new awsx.ecs.FargateService("service", {
             },
         },
     },
+}, {
+    customTimeouts: {
+        create: "20m",
+        update: "20m",
+        delete: "20m",
+    },
 });
 
 // Export the publicly accessible URL.
