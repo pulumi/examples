@@ -1,7 +1,5 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-import { getLinuxAmi } from "pawsami";
-import { Provisioner } from "./provisioner";
 import { CopyFile, RemoteExec } from "./provisioners";
 
 // Get the config ready to go.
@@ -19,12 +17,22 @@ const secgrp = new aws.ec2.SecurityGroup("secgrp", {
     ],
 });
 
+// Get the AMI
+const ami = aws.getAmi({
+    owners: ["amazon"],
+    mostRecent: true,
+    filters: [{
+        name: "name",
+        values: ["amzn2-ami-hvm-2.0.????????-x86_64-gp2"],
+    }],
+});
+
 // Create an EC2 server that we'll then provision stuff onto.
 const size = "t2.micro";
 const key = new aws.ec2.KeyPair("key", { publicKey });
 const server = new aws.ec2.Instance("server", {
     instanceType: size,
-    ami: getLinuxAmi(size),
+    ami: ami.id,
     keyName: key.keyName,
     securityGroups: [ secgrp.name ],
     // userData: userData,

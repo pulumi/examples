@@ -70,18 +70,27 @@ function copyFile(conn: pulumi.Unwrap<ConnectionArgs>, src: string, dest: string
     }
 
     const scp2 = require("scp2");
+    let connectionFailCount = 0;
     return new Promise((resolve, reject) => {
-        scp2.scp(
-            src,
-            { path: dest, ...connToSsh2(conn) },
-            (err) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve();
-            },
-        );
+        function scp() {
+            scp2.scp(
+                src,
+                { path: dest, ...connToSsh2(conn) },
+                (err) => {
+                    if (err) {
+                        connectionFailCount++;
+                        if (connectionFailCount > 10) {
+                            reject(err);
+                        } else {
+                            setTimeout(scp, connectionFailCount * 500);
+                        }
+                        return;
+                    }
+                    resolve();
+                },
+            );
+        }
+        scp();
     });
 }
 
@@ -93,30 +102,39 @@ function runCommand(conn: pulumi.Unwrap<ConnectionArgs>, cmd: string): Promise<s
 
     const ssh2 = require("ssh2");
     const sshConn = connToSsh2(conn);
+    let connectionFailCount = 0;
     return new Promise((resolve, reject) => {
         const conn = new ssh2.Client();
-        conn.on("ready", () => {
-            conn.exec(cmd, (err, stream) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-
-                stream.on("close", (code, signal) => {
-                    conn.end();
-                    // TODO(joe): check code/signal for errors?
-                    resolve();
-                }).on("data", (data) => {
-                    console.log(data.toString("utf8"));
-                }).stderr.on("data", (data) => {
-                    console.error(data.toString("utf8"));
+        function connect() {
+            conn.on("ready", () => {
+                conn.exec(cmd, (err, stream) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    stream.on("close", (code, signal) => {
+                        conn.end();
+                        // TODO(joe): check code/signal for errors?
+                        resolve();
+                    }).on("data", (data) => {
+                        console.log(data.toString("utf8"));
+                    }).stderr.on("data", (data) => {
+                        console.error(data.toString("utf8"));
+                    });
                 });
-            });
-        }).on("error", (err) => {
-            reject(err);
-        }).connect(sshConn);
+            }).on("error", (err) => {
+                connectionFailCount++;
+                if (connectionFailCount > 10) {
+                    reject(err);
+                } else {
+                    setTimeout(connect, connectionFailCount * 500);
+                }   
+            }).connect(sshConn);
+        }
+        connect();
     });
 }
+
 
 // CopyFile is a provisioner step that can copy a file from the machine running Pulumi to the newly created resource.
 export class CopyFile extends pulumi.ComponentResource {

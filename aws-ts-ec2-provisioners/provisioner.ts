@@ -1,12 +1,10 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as uuid from "uuid";
 
-// BUGBUG(joe): when versioning the provisioner, due to the fact that __provider will change, we will
-//     re-execute commands against the target VM (it will create a replacement). This is incorrect.
-
 // Provisioner lets a custom action run the first time a resource has been created. It takes as input
 // a dependent property. Anytime its value changes, the resource is replaced and will re-run its logic.
 export class Provisioner<T> extends pulumi.dynamic.Resource {
+    dep: pulumi.Output<any>;
     constructor(name: string, props: ProvisionerProperties<T>, opts?: pulumi.CustomResourceOptions) {
         const provider = {
             check: async (state: any, inputs: any) => inputs,
@@ -17,7 +15,7 @@ export class Provisioner<T> extends pulumi.dynamic.Resource {
                 if (props.equals) {
                     replace = !(await props.equals(olds.dep as pulumi.Unwrap<T>, news.dep as pulumi.Unwrap<T>));
                 } else {
-                    replace = olds.dep !== news.dep;
+                    replace = JSON.stringify(olds.dep) !== JSON.stringify(news.dep);
                 }
                 return {
                     changes: replace,
@@ -33,10 +31,10 @@ export class Provisioner<T> extends pulumi.dynamic.Resource {
                 await props.onCreate(dep);
 
                 // Now return a UUID as the unique ID for the resulting provisioner.
-                return { id: uuid.v4() };
+                return { id: uuid.v4(), outs: inputs };
             },
         };
-        super(provider, name, props, opts);
+        super(provider, name, {dep: undefined, ...props}, opts);
     }
 }
 
