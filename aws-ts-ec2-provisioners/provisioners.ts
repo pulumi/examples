@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as pulumi from "@pulumi/pulumi";
 import { Provisioner } from "./provisioner";
 
@@ -114,8 +116,11 @@ function runCommand(conn: pulumi.Unwrap<ConnectionArgs>, cmd: string): Promise<s
                     }
                     stream.on("close", (code, signal) => {
                         conn.end();
-                        // TODO(joe): check code/signal for errors?
-                        resolve();
+                        if (code) {
+                            reject(new Error("Command exited with " + code));
+                        } else {
+                            resolve();
+                        }
                     }).on("data", (data) => {
                         console.log(data.toString("utf8"));
                     }).stderr.on("data", (data) => {
@@ -128,7 +133,7 @@ function runCommand(conn: pulumi.Unwrap<ConnectionArgs>, cmd: string): Promise<s
                     reject(err);
                 } else {
                     setTimeout(connect, connectionFailCount * 500);
-                }   
+                }
             }).connect(sshConn);
         }
         connect();
@@ -160,10 +165,10 @@ export interface CopyFileArgs {
     // src is the source of the file or directory to copy. It can be specified as relative to the current
     // working directory or as an absolute path. This cannot be specified if content is set.
     src: string;
-    // dest is the in-memory content to copy to the destination. If the destination is a file, the content
-    // will be written on that file, whereas if it's a directory, a file named `pulumi-content` is created.
-    // TODO(joe): content?: Input<string>;
-    // destination is required and specifies the absolute path on the target where the file will be copied to.
+    // // content is the in-memory content to copy to the destination. If the destination is a file, the content
+    // // will be written on that file, whereas if it's a directory, a file named `pulumi-content` is created.
+    // content?: pulumi.Input<string>;
+    // dest is required and specifies the absolute path on the target where the file will be copied to.
     dest: string;
 }
 
@@ -188,7 +193,6 @@ export class RemoteExec extends pulumi.ComponentResource {
                             await runCommand(conn, cmd);
                         }
                     }
-                    // TODO: copy scripts.
                 },
             },
             { parent: this, ...opts || {} },
@@ -200,7 +204,5 @@ export interface RemoteExecArgs {
     conn: ConnectionArgs;
     command?: string;
     commands?: string[];
-    // TODO: script?: string;
-    // TODO: scripts?: string[];
 }
 

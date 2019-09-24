@@ -1,3 +1,5 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as pulumi from "@pulumi/pulumi";
 import * as uuid from "uuid";
 
@@ -7,39 +9,28 @@ export class Provisioner<T> extends pulumi.dynamic.Resource {
     dep: pulumi.Output<any>;
     constructor(name: string, props: ProvisionerProperties<T>, opts?: pulumi.CustomResourceOptions) {
         const provider = {
-            check: async (state: any, inputs: any) => inputs,
-            diff: async (id: pulumi.ID, olds: any, news: any) => {
-                // Check to see if the dependent property has changed in value. If a custom differ has been
-                // supplied, use that, otherwise just rely on JavaScript triple-equality checking.
-                let replace: boolean;
-                if (props.equals) {
-                    replace = !(await props.equals(olds.dep as pulumi.Unwrap<T>, news.dep as pulumi.Unwrap<T>));
-                } else {
-                    replace = JSON.stringify(olds.dep) !== JSON.stringify(news.dep);
-                }
+            diff: async (id: pulumi.ID, olds: State<T>, news: State<T>) => {
+                const replace = JSON.stringify(olds.dep) !== JSON.stringify(news.dep);
                 return {
                     changes: replace,
                     replaces: replace ? [ "dep" ] : undefined,
                     deleteBeforeReplace: true,
                 };
             },
-            create: async (inputs: any) => {
-                // Await the dependencies. They should have been resolved by now.
-                const dep = (await (<any>pulumi.Output.create(inputs.dep)).promise()) as pulumi.Unwrap<T>;
-
-                // Pass those to the callback.
-                await props.onCreate(dep);
-
-                // Now return a UUID as the unique ID for the resulting provisioner.
+            create: async (inputs: State<T>) => {
+                await props.onCreate(inputs.dep);
                 return { id: uuid.v4(), outs: inputs };
             },
         };
-        super(provider, name, {dep: undefined, ...props}, opts);
+        super(provider, name, props, opts);
     }
 }
 
 export interface ProvisionerProperties<T> {
     dep: pulumi.Input<T>;
-    equals?: (olddep: pulumi.Unwrap<T>, newdep: pulumi.Unwrap<T>) => Promise<boolean>;
     onCreate: (dep: pulumi.Unwrap<T>) => Promise<void>;
+}
+
+interface State<T> {
+    dep: pulumi.Unwrap<T>;
 }
