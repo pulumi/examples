@@ -1,6 +1,9 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
 import * as pulumi from "@pulumi/pulumi";
+import * as scp2 from "scp2";
+import * as ssh2 from "ssh2";
+
 import { Provisioner } from "./provisioner";
 
 // ConnectionArgs tells a provisioner how to access a remote resource. For example, it may need to use
@@ -71,7 +74,6 @@ function copyFile(conn: pulumi.Unwrap<ConnectionArgs>, src: string, dest: string
         throw new Error("only SSH connection types currently supported");
     }
 
-    const scp2 = require("scp2");
     let connectionFailCount = 0;
     return new Promise((resolve, reject) => {
         function scp() {
@@ -102,7 +104,6 @@ function runCommand(conn: pulumi.Unwrap<ConnectionArgs>, cmd: string): Promise<s
         throw new Error("only SSH connection types currently supported");
     }
 
-    const ssh2 = require("ssh2");
     const sshConn = connToSsh2(conn);
     let connectionFailCount = 0;
     return new Promise((resolve, reject) => {
