@@ -11,7 +11,6 @@ resource_group = core.ResourceGroup("appservicerg")
 storage_account = storage.Account(
     "appservicesa",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
     account_kind="StorageV2",
     account_tier="Standard",
     account_replication_type="LRS")
@@ -19,7 +18,6 @@ storage_account = storage.Account(
 app_service_plan = appservice.Plan(
     "appservice-asp",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
     kind="App",
     sku={
         "tier": "Basic",
@@ -75,7 +73,6 @@ app_insights = appinsights.Insights(
 sql_server = sql.SqlServer(
     "appservice-sql",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
     administrator_login=username,
     administrator_login_password=pwd,
     version="12.0")
@@ -83,7 +80,6 @@ sql_server = sql.SqlServer(
 database = sql.Database(
     "appservice-db",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
     server_name=sql_server.name,
     requested_service_objective_name="S0")
 
@@ -95,7 +91,6 @@ connection_string = Output.all(sql_server.name, database.name, username, pwd) \
 app=appservice.AppService(
     "appservice-as",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
     app_service_plan_id=app_service_plan.id,
     app_settings={
         "WEBSITE_RUN_FROM_ZIP": signed_blob_url,

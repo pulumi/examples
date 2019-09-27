@@ -25,7 +25,7 @@ After cloning this repo, `cd` into it and run these commands.
 1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init
+    $ pulumi stack init dev
     ```
    
 1.  Create a Python virtualenv, activate it, and install dependencies:

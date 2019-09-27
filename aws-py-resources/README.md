@@ -6,7 +6,7 @@ A Pulumi program that demonstrates creating various AWS resources in Python
 
 ```bash
 # Create and configure a new stack
-$ pulumi stack init aws-resources-dev
+$ pulumi stack init dev
 $ pulumi config set aws:region us-east-2
 
 # Install dependencies

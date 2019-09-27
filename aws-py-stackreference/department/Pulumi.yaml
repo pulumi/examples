@@ -3,7 +3,6 @@ runtime: python
 description: An AWS TypeScript Pulumi program demonstrating sharing configuration
   via StackReference resources in Python
 template:
-  description: A minimal AWS Python Pulumi program
   config:
     departmentName:
       description: The department name to use

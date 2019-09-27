@@ -1,6 +1,6 @@
 name: azure-py-functions-raw
 runtime: python
-description: Azure Functions created from raw deployment packages in all supported languages (written in Python)
+description: Azure Functions created from raw deployment packages in C# (written in Python)
 template:
   config:
     azure:environment:

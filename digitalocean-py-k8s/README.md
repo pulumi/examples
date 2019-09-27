@@ -1,8 +1,8 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# DigitalOcean Kubernetes Cluster and Application (in Python)
+# DigitalOcean Kubernetes Cluster and Application
 
-This example provisions a new DigitalOcean Kubernetes cluster, deploys a load-balanced application into it, and then optionally configures DigitalOcean DNS records to give the resulting application a stable domain-based URL.
+This example provisions a new DigitalOcean Kubernetes cluster, deploys a load-balanced application into it, and then optionally configures DigitalOcean DNS records to give the resulting application a stable domain-based URL. This is demonstrated in Python.
 
 ## Deploying the Example
 

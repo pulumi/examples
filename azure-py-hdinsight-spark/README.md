@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Spark on Azure HDInsight example
+# Spark on Azure HDInsight
 
 An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
 

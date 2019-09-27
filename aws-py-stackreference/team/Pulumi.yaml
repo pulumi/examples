@@ -3,7 +3,6 @@ runtime: python
 description: An AWS Python Pulumi program demonstrating sharing configuration
   via StackReference resources
 template:
-  description: A minimal AWS Python Pulumi program
   config:
     aws:region:
       description: The AWS region to deploy into

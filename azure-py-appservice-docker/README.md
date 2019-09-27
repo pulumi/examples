@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Azure App Service running Docker container on Linux
+# Azure App Service Cunning Docker Containers on Linux
 
 Starting point for building web application hosted in Azure App Service from Docker images.
 
@@ -11,7 +11,7 @@ The example deploys an existing image from Docker Hub
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init azure-py-appservice-docker
+    $ pulumi stack init dev
     ```
 
 1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):

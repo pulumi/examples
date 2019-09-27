@@ -2,15 +2,13 @@
 
 # Azure Functions
 
-Azure Functions created from raw deployment packages in dotnet.
+Azure Functions created from raw deployment packages in C#.
 
-.NET is a precompiled language, and the deployment artifact contains compiled binaries. You will need the following tool to build this projects:
+C# is a precompiled language, and the deployment artifact contains compiled binaries. You will need the following tool to build this projects:
 
 - [.NET Core SDK](https://dotnet.microsoft.com/download) for the .NET Function App
 
 Please remove the corresponding resources from the program in case you don't need those runtimes.
-
-Known issue: [#2784](https://github.com/pulumi/pulumi/issues/2784)&mdash;Python deployment package gets corrupted if deployed from Windows. Workaround: deploy from WSL (Windows Subsystem for Linux), Mac OS, or Linux.
 
 ## Running the App
 

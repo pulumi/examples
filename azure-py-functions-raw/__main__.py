@@ -9,7 +9,6 @@ httpdotnet_storage_account = storage.Account(
     account_tier="Standard",
     account_replication_type="LRS",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
 )
 
 httpdotnet_container=storage.Container(
@@ -59,7 +58,6 @@ httpdotnet_signed_blob_url = Output.all(httpdotnet_storage_account.name, httpdot
 
 httpdotnet_plan=appservice.Plan(
     "http-dotnet",
-    location=resource_group.location,
     resource_group_name=resource_group.name,
     kind="FunctionApp",
     sku={
@@ -70,7 +68,6 @@ httpdotnet_plan=appservice.Plan(
 
 httpdotnet_function_app=appservice.FunctionApp(
     "http-dotnet",
-    location=resource_group.location,
     resource_group_name=resource_group.name,
     app_service_plan_id=httpdotnet_plan.id,
     storage_connection_string=httpdotnet_storage_account.primary_connection_string,

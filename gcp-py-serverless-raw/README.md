@@ -1,8 +1,8 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Google Cloud Functions in Python and Go deployed with TypeScript
+# Google Cloud Functions in Python and Go deployed
 
-This example deploys two Google Cloud Functions. "Hello World" functions are implemented in Python and Go. Pulumi program is implemented in TypeScript.
+This example deploys two Google Cloud Functions. "Hello World" functions are implemented in Python and Go. Pulumi program is implemented in Python.
 
 ```bash
 # Create and configure a new stack

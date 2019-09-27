@@ -1,4 +1,4 @@
 pulumi>=1.0.0
 pulumi-azure>=1.0.0
-pulumi-azuread>=1.0.0s
+pulumi-azuread>=1.0.0
 pulumi-random>=1.0.0
