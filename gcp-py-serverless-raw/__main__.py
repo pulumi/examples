@@ -1,0 +1,42 @@
+from pulumi_gcp import storage, cloudfunctions
+from pulumi import export, asset
+
+bucket = storage.Bucket("bucket")
+
+py_bucket_object = storage.BucketObject(
+    "python-zip",
+    bucket=bucket.name,
+    source=asset.AssetArchive({
+        ".": asset.FileArchive("./pythonfunc")
+    }))
+
+py_function = cloudfunctions.Function(
+    "python-func",
+    source_archive_bucket=bucket.name,
+    runtime="python37",
+    source_archive_object=py_bucket_object.name,
+    entry_point="handler",
+    trigger_http="true",
+    available_memory_mb=128,
+)
+
+export("python_endpoint", py_function.https_trigger_url)
+
+go_bucket_object = storage.BucketObject(
+    "go-zip",
+    bucket=bucket.name,
+    source=asset.AssetArchive({
+        ".": asset.FileArchive("./gofunc")
+    }))
+
+go_function = cloudfunctions.Function(
+    "go-func",
+    source_archive_bucket=bucket.name,
+    runtime="go111",
+    source_archive_object=go_bucket_object.name,
+    entry_point="Handler",
+    trigger_http="true",
+    available_memory_mb=128,
+)
+
+export("go_endpoint", go_function.https_trigger_url)

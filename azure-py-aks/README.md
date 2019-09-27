@@ -34,7 +34,6 @@ After cloning this repo, from this working directory, run these commands:
 3. Set the configuration variables for this program:
 
     ```bash
-    $ pulumi config set prefix all_resources_will_be_prefixed_with_this_value
     $ pulumi config set password service_principal_password
     $ pulumi config set sshkey < ~/.ssh/id_rsa.pub
     $ # this has a default value, so you can skip it

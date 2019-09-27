@@ -8,9 +8,7 @@ const username = config.require("username");
 const password = config.require("password");
 
 // Create an Azure Resource Group
-const resourceGroup = new azure.core.ResourceGroup("spark-rg", {
-    location: azure.Locations.WestUS,
-});
+const resourceGroup = new azure.core.ResourceGroup("spark-rg");
 
 // Create a storage account and a container for Spark
 const storageAccount = new azure.storage.Account("sparksa", {
@@ -44,18 +42,18 @@ const sparkCluster = new azure.hdinsight.SparkCluster("myspark", {
     },
     roles: {
         headNode: {
-            vmSize: "Standard_A3",
+            vmSize: "Standard_D12_v2",
             username,
             password,
         },
         workerNode: {
             targetInstanceCount: 3,
-            vmSize: "Standard_A3",
+            vmSize: "Standard_D12_v2",
             username,
             password,
         },
         zookeeperNode: {
-            vmSize: "Standard_A3",
+            vmSize: "Standard_D12_v2",
             username,
             password,
         },

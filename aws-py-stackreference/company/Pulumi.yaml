@@ -1,0 +1,8 @@
+name: aws-py-stackreference-company
+runtime: python
+description: An AWS Python Pulumi program demonstrating sharing configuration
+  via StackReference resources
+template:
+  config:
+    companyName:
+      description: The company name to use

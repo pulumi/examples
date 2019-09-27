@@ -17,8 +17,15 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
 
     ```bash
     $ cd company
-    $ npm install
     ````
+   
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+   ```
+   $ virtualenv -p python3 venv
+   $ source venv/bin/activate
+   $ pip3 install -r requirements.txt
+   ```
 
 1. Create a new stack:
 
@@ -39,7 +46,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Previewing update (dev):
 
         Type                 Name                               Plan
-    +   pulumi:pulumi:Stack  aws-ts-stackreference-company-dev  create
+    +   pulumi:pulumi:Stack  aws-py-stackreference-company-dev  create
 
     Resources:
         + 1 to create
@@ -48,7 +55,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Updating (dev):
 
         Type                 Name                               Status
-    +   pulumi:pulumi:Stack  aws-ts-stackreference-company-dev  created
+    +   pulumi:pulumi:Stack  aws-py-stackreference-company-dev  created
 
     Outputs:
         companyName: "ACME Widget Company"
@@ -58,15 +65,22 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
 
     Duration: 1s
 
-    Permalink: https://app.pulumi.com/clstokes/aws-ts-stackreference-company/dev/updates/1
+    Permalink: https://app.pulumi.com/clstokes/aws-py-stackreference-company/dev/updates/1
     ```
 
 1. Change directory to `department` and install dependencies.
 
     ```bash
     $ cd ../company
-    $ npm install
     ````
+   
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+   ```
+   $ virtualenv -p python3 venv
+   $ source venv/bin/activate
+   $ pip3 install -r requirements.txt
+   ```
 
 1. Create a new stack:
 
@@ -87,7 +101,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Previewing update (dev):
 
         Type                 Name                                  Plan
-    +   pulumi:pulumi:Stack  aws-ts-stackreference-department-dev  create
+    +   pulumi:pulumi:Stack  aws-py-stackreference-department-dev  create
 
     Resources:
         + 1 to create
@@ -96,7 +110,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Updating (dev):
 
         Type                 Name                                  Status
-    +   pulumi:pulumi:Stack  aws-ts-stackreference-department-dev  created
+    +   pulumi:pulumi:Stack  aws-py-stackreference-department-dev  created
 
     Outputs:
         departmentName: "E-Commerce"
@@ -106,15 +120,22 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
 
     Duration: 1s
 
-    Permalink: https://app.pulumi.com/clstokes/aws-ts-stackreference-department/dev/updates/1
+    Permalink: https://app.pulumi.com/clstokes/aws-py-stackreference-department/dev/updates/1
     ```
 
 1. Change directory to `team` and install dependencies.
 
     ```bash
     $ cd ../team
-    $ npm install
     ````
+
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+   ```
+   $ virtualenv -p python3 venv
+   $ source venv/bin/activate
+   $ pip3 install -r requirements.txt
+   ```
 
 1. Create a new stack:
 
@@ -125,8 +146,8 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
 1. Set the required configuration variables, replacing `YOUR_ORG` with the name of your Pulumi organization:
 
     ```bash
-    $ pulumi config set companyStack YOUR_ORG/aws-ts-stackreference-company/dev
-    $ pulumi config set departmentStack YOUR_ORG/aws-ts-stackreference-department/dev
+    $ pulumi config set companyStack YOUR_ORG/aws-py-stackreference-company/dev
+    $ pulumi config set departmentStack YOUR_ORG/aws-py-stackreference-department/dev
     $ pulumi config set teamName 'Frontend Dev'
     $ pulumi config set aws:region us-west-2 # any valid AWS zone works
     ```
@@ -138,9 +159,9 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Previewing update (dev):
 
         Type                             Name                                           Plan
-    +   pulumi:pulumi:Stack              aws-ts-stackreference-team-dev                 create
-    >-  ├─ pulumi:pulumi:StackReference  clstokes/aws-ts-stackreference-department/dev  read
-    >-  ├─ pulumi:pulumi:StackReference  clstokes/aws-ts-stackreference-company/dev     read
+    +   pulumi:pulumi:Stack              aws-py-stackreference-team-dev                 create
+    >-  ├─ pulumi:pulumi:StackReference  clstokes/aws-py-stackreference-department/dev  read
+    >-  ├─ pulumi:pulumi:StackReference  clstokes/aws-py-stackreference-company/dev     read
     +   └─ aws:ec2:Instance              tagged                                         create
 
     Resources:
@@ -150,9 +171,9 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Updating (dev):
 
         Type                             Name                                           Status
-    +   pulumi:pulumi:Stack              aws-ts-stackreference-team-dev                 created
-    >-  ├─ pulumi:pulumi:StackReference  clstokes/aws-ts-stackreference-company/dev     read
-    >-  ├─ pulumi:pulumi:StackReference  clstokes/aws-ts-stackreference-department/dev  read
+    +   pulumi:pulumi:Stack              aws-py-stackreference-team-dev                 created
+    >-  ├─ pulumi:pulumi:StackReference  clstokes/aws-py-stackreference-company/dev     read
+    >-  ├─ pulumi:pulumi:StackReference  clstokes/aws-py-stackreference-department/dev  read
     +   └─ aws:ec2:Instance              tagged                                         created
 
     Outputs:
@@ -169,7 +190,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
 
     Duration: 28s
 
-    Permalink: https://app.pulumi.com/clstokes/aws-ts-stackreference-team/dev/updates/1
+    Permalink: https://app.pulumi.com/clstokes/aws-py-stackreference-team/dev/updates/1
     ```
 
 

@@ -1,0 +1,3 @@
+name: digitalocean-py-loadbalanced-droplets
+runtime: python
+description: Basic example of load balanced droplets on DigitalOcean in Python

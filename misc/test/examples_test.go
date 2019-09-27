@@ -117,6 +117,18 @@ func TestExamples(t *testing.T) {
 			},
 		}),
 		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-py-appsync"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-py-resources"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-py-s3-folder"),
 			Config: map[string]string{
 				"aws:region": awsRegion,
@@ -352,11 +364,53 @@ func TestExamples(t *testing.T) {
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
 				"password":          "testTEST1234+_^$",
-				"prefix":            "acctest",
 				"sshkey":            "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
 			},
 		}),
-
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-py-appservice"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"azure:location":    azureLocation,
+				"sqlPassword":       "2@Password@2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Azure App Service!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-py-appservice-docker"),
+			Config: map[string]string{
+				"azure:environment": azureEnviron,
+				"azure:location":    azureLocation,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["hello_endpoint"], nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello, world!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-py-hdinsight-spark"),
+			Config: map[string]string{
+				"azure:location": azureLocation,
+				"username":       "testuser",
+				"password":       "MyPassword123+-*/",
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-py-vm-scaleset"),
+			Config: map[string]string{
+				"azure:location": azureLocation,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["public_address"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "nginx")
+				})
+			},
+		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-py-webserver"),
 			Config: map[string]string{
@@ -437,14 +491,14 @@ func TestExamples(t *testing.T) {
 
 		// azure-ts-functions-raw require specific language setups for tests
 
-		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "azure-ts-hdinsight-spark"),
-		//	Config: map[string]string{
-		//		"azure:location": azureLocation,
-		//		"username":       "testuser",
-		//		"password":       "MyPassword123+-*/",
-		//	},
-		//}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "azure-ts-hdinsight-spark"),
+			Config: map[string]string{
+				"azure:location": azureLocation,
+				"username":       "testuser",
+				"password":       "MyPassword123+-*/",
+			},
+		}),
 
 		// azure-ts-msi-keyvault-rbac requires DotNet setup
 
@@ -621,6 +675,36 @@ func TestExamples(t *testing.T) {
 		}),
 
 		base.With(integration.ProgramTestOptions{
+			Dir:    path.Join(cwd, "..", "..", "digitalocean-py-k8s"),
+			Config: map[string]string{},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["ingress_ip"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Welcome to nginx!")
+				})
+			},
+		}),
+
+		base.With(integration.ProgramTestOptions{
+			Dir:    path.Join(cwd, "..", "..", "digitalocean-py-loadbalanced-droplets"),
+			Config: map[string]string{},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Welcome to nginx!")
+				})
+			},
+		}),
+
+		base.With(integration.ProgramTestOptions{
+			Dir:    path.Join(cwd, "..", "..", "digitalocean-ts-k8s"),
+			Config: map[string]string{},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["ingressIp"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Welcome to nginx!")
+				})
+			},
+		}),
+
+		base.With(integration.ProgramTestOptions{
 			Dir:    path.Join(cwd, "..", "..", "digitalocean-ts-loadbalanced-droplets"),
 			Config: map[string]string{},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -671,19 +755,36 @@ func TestExamples(t *testing.T) {
 				"master_version":    gkeEngineVersion,
 			},
 		}),
-		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "gcp-py-instance-nginx"),
-		//	Config: map[string]string{
-		//		"gcp:project": "pulumi-ci-gcp-provider",
-		//		"gcp:zone": "us-central1-a",
-		//	},
-		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		//		endpoint := stack.Outputs["external_ip"].(string)
-		//		assertHTTPResult(t, endpoint, nil, func(body string) bool {
-		//			return assert.Contains(t, body, "Test Page for the Nginx HTTP Server on Fedora")
-		//		})
-		//	},
-		//}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "gcp-py-serverless-raw"),
+			Config: map[string]string{
+				"gcp:project": "pulumi-ci-gcp-provider",
+				"gcp:zone":    "us-central1-a",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["go_endpoint"].(string)
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello World!")
+				})
+				assertHTTPResult(t, stack.Outputs["python_endpoint"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello World!")
+				})
+			},
+		}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "gcp-py-instance-nginx"),
+			Config: map[string]string{
+				"gcp:project": "pulumi-ci-gcp-provider",
+				"gcp:zone": "us-central1-a",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["external_ip"].(string)
+				maxWait := time.Minute * 5
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Test Page for the Nginx HTTP Server on Fedora")
+				})
+			},
+		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "gcp-ts-functions"),
 			Config: map[string]string{
@@ -732,6 +833,9 @@ func TestExamples(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["goEndpoint"].(string)
 				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello World!")
+				})
+				assertHTTPResult(t, stack.Outputs["pythonEndpoint"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
 				})
 			},
