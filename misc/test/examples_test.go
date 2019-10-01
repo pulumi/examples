@@ -558,18 +558,17 @@ func TestExamples(t *testing.T) {
 				"password":       "MySuperS3cretPassw0rd",
 			},
 		}),
-		// [TODO:examples#367] Fix failing cloud-js-api integration test.
-		// base.With(integration.ProgramTestOptions{
-		// 	Dir: path.Join(cwd, "..", "..", "cloud-js-api"),
-		// 	Config: map[string]string{
-		// 		"aws:region": awsRegion,
-		// 	},
-		// 	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		// 		assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
-		// 			return assert.Contains(t, body, "{\"route\":\"hello\",\"count\":1}")
-		// 		})
-		// 	},
-		// }),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "cloud-js-api"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
+					return assert.Contains(t, body, "{\"route\":\"hello\",\"count\":1}")
+				})
+			},
+		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "cloud-js-containers"),
 			Config: map[string]string{
