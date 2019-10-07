@@ -1,0 +1,3 @@
+name: aws-ts-global-rds-cluster
+runtime: nodejs
+description: A multi-region global RDS Cluster deployment in AWS.
