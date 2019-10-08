@@ -1,7 +1,6 @@
 from pulumi_azure import core, storage, sql, appservice, keyvault, role
 from pulumi import export, Output, asset
 import pulumi_random as random
-import json, os
 
 def createFirewallRules(arg):
     ips = arg.split(",")
@@ -52,7 +51,6 @@ connection_string = Output.all(sql_server.name, database.name) \
 
 text_blob = storage.Blob(
     "text",
-    resource_group_name=resource_group.name,
     storage_account_name=storage_account.name,
     storage_container_name=container.name,
     type="block",
@@ -71,7 +69,6 @@ app_service_plan = appservice.Plan(
 
 blob = storage.ZipBlob(
     "zip",
-    resource_group_name=resource_group.name,
     storage_account_name=storage_account.name,
     storage_container_name=container.name,
     type="block",
@@ -80,7 +77,7 @@ blob = storage.ZipBlob(
 
 client_config = core.get_client_config()
 tenant_id = client_config.tenant_id
-current_principal = client_config.service_principal_object_id or json.loads(os.popen("az ad signed-in-user show --query objectId").read())
+current_principal = client_config.object_id
 
 vault = keyvault.KeyVault(
     "vault",
