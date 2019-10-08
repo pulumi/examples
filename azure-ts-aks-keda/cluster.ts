@@ -10,7 +10,10 @@ import * as tls from "@pulumi/tls";
 // Arguments for an AKS cluster. We use almost all defaults for this example, but the
 // interface could be extended with e.g. agent pool settings.
 export interface AksClusterArgs {
-    resourceGroup: azure.core.ResourceGroup;
+    resourceGroupName: pulumi.Input<string>;
+    kubernetesVersion: pulumi.Input<string>;
+    vmSize: pulumi.Input<string>;
+    vmCount: pulumi.Input<number>;
 }
 
 export class AksCluster extends pulumi.ComponentResource {
@@ -42,24 +45,24 @@ export class AksCluster extends pulumi.ComponentResource {
 
         // Create a Virtual Network for the cluster
         const vnet = new azure.network.VirtualNetwork("keda", {
-            resourceGroupName: args.resourceGroup.name,
+            resourceGroupName: args.resourceGroupName,
             addressSpaces: ["10.2.0.0/16"],
         }, { parent: this });
 
         // Create a Subnet for the cluster
         const subnet = new azure.network.Subnet("keda", {
-            resourceGroupName: args.resourceGroup.name,
+            resourceGroupName: args.resourceGroupName,
             virtualNetworkName: vnet.name,
             addressPrefix: "10.2.1.0/24",
         }, { parent: this });
 
         // Now allocate an AKS cluster.
         this.cluster = new azure.containerservice.KubernetesCluster("aksCluster", {
-            resourceGroupName: args.resourceGroup.name,
+            resourceGroupName: args.resourceGroupName,
             agentPoolProfiles: [{
                 name: "aksagentpool",
-                count: 3,
-                vmSize: "Standard_B2s",
+                count: args.vmCount,
+                vmSize: args.vmSize,
                 osType: "Linux",
                 osDiskSizeGb: 30,
                 vnetSubnetId: subnet.id,
@@ -75,7 +78,7 @@ export class AksCluster extends pulumi.ComponentResource {
                 clientId: adApp.applicationId,
                 clientSecret: adSpPassword.value,
             },
-            kubernetesVersion: "1.13.5",
+            kubernetesVersion: args.kubernetesVersion,
             roleBasedAccessControl: { enabled: true },
             networkProfile: {
                 networkPlugin: "azure",
