@@ -6,19 +6,19 @@ import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 
 // Arguments for a KEDA deployment.
-export interface KedaEdgeArgs {
+export interface KedaServiceArgs {
     resourceGroup: azure.core.ResourceGroup;
     k8sProvider: k8s.Provider;
 }
 
 // A component to deploy shared parts of KEDA (container registry, kedacore/keda-edge Helm chart)
-export class KedaEdge extends pulumi.ComponentResource {
+export class KedaService extends pulumi.ComponentResource {
     public registry: azure.containerservice.Registry;
     public k8sProvider: k8s.Provider;
     public registrySecretName: pulumi.Output<string>;
 
     constructor(name: string,
-                args: KedaEdgeArgs,
+                args: KedaServiceArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("examples:keda:KedaEdge", name, args, opts);
 
@@ -69,7 +69,7 @@ export class KedaEdge extends pulumi.ComponentResource {
 // Arguments for an Azure Function App that processes messages from a given storage queue.
 export interface KedaStorageQueueHandlerArgs {
     resourceGroup: azure.core.ResourceGroup;
-    edge: KedaEdge;
+    service: KedaService;
     storageAccount: azure.storage.Account;
     queue: azure.storage.Queue;
     path: pulumi.Input<string>;
@@ -82,7 +82,7 @@ export class KedaStorageQueueHandler extends pulumi.ComponentResource {
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("examples:keda:KedaStorageQueueHandler", name, args, opts);
 
-        const registry = args.edge.registry;
+        const registry = args.service.registry;
 
         // Deploy the docker image of the Function App
         const dockerImage = new docker.Image("image", {
@@ -103,7 +103,7 @@ export class KedaStorageQueueHandler extends pulumi.ComponentResource {
                 queueConnectionString:
                     args.storageAccount.primaryConnectionString.apply(c => Buffer.from(c).toString("base64")),
             },
-        }, { provider: args.edge.k8sProvider, parent: this });
+        }, { provider: args.service.k8sProvider, parent: this });
 
         // Deploy the Function App from the image
         const appLabels = { app: name };
@@ -126,11 +126,11 @@ export class KedaStorageQueueHandler extends pulumi.ComponentResource {
                             env: [{ name: "queuename", value: args.queue.name }],
                             envFrom: [{ secretRef: {name: secretQueue.metadata.name } }],
                         }],
-                        imagePullSecrets: [{ name: args.edge.registrySecretName }],
+                        imagePullSecrets: [{ name: args.service.registrySecretName }],
                     },
                 },
             },
-        }, { provider: args.edge.k8sProvider, parent: this });
+        }, { provider: args.service.k8sProvider, parent: this });
 
         // Deploy a custom resource Scale Object and point it to the queue
         const scaledObject = new k8s.apiextensions.CustomResource("scaleobject", {
@@ -151,7 +151,7 @@ export class KedaStorageQueueHandler extends pulumi.ComponentResource {
                     },
                 }],
             },
-        }, { provider: args.edge.k8sProvider, parent: this });
+        }, { provider: args.service.k8sProvider, parent: this });
 
         this.registerOutputs();
     }
