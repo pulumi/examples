@@ -48,7 +48,6 @@ const cacheSubnets = new aws.elasticache.SubnetGroup("cachesubnets", {
 });
 
 const cacheCluster = new aws.elasticache.Cluster("cachecluster", {
-    clusterId: `cache-${pulumi.getStack()}`.substr(0, 20),
     engine: "redis",
 
     nodeType: "cache.t2.micro",
