@@ -249,17 +249,17 @@ func TestExamples(t *testing.T) {
 				"aws-ts-pulumi-webhooks:slackToken":   "12345",
 			},
 		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-pulumi-miniflux"),
-			Config: map[string]string{
-				"aws:region":                            awsRegion,
-				"aws-ts-pulumi-miniflux:db_name":        "miniflux",
-				"aws-ts-pulumi-miniflux:db_username":    "minifluxuser",
-				"aws-ts-pulumi-miniflux:db_password":    "2Password2",
-				"aws-ts-pulumi-miniflux:admin_username": "adminuser",
-				"aws-ts-pulumi-miniflux:admin_password": "2Password2",
-			},
-		}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-pulumi-miniflux"),
+		//	Config: map[string]string{
+		//		"aws:region":                            awsRegion,
+		//		"aws-ts-pulumi-miniflux:db_name":        "miniflux",
+		//		"aws-ts-pulumi-miniflux:db_username":    "minifluxuser",
+		//		"aws-ts-pulumi-miniflux:db_password":    "2Password2",
+		//		"aws-ts-pulumi-miniflux:admin_username": "adminuser",
+		//		"aws-ts-pulumi-miniflux:admin_password": "2Password2",
+		//	},
+		//}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-resources"),
 			Config: map[string]string{
@@ -357,17 +357,15 @@ func TestExamples(t *testing.T) {
 				assertHTTPHelloWorld(t, stack.Outputs["publicIP"], nil)
 			},
 		}),
-
-		// azure-py-aks
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "azure-py-aks"),
-			Config: map[string]string{
-				"azure:environment": azureEnviron,
-				"azure:location":    azureLocation,
-				"password":          "testTEST1234+_^$",
-				"sshkey":            "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
-			},
-		}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "azure-py-aks"),
+		//	Config: map[string]string{
+		//		"azure:environment": azureEnviron,
+		//		"azure:location":    azureLocation,
+		//		"password":          "testTEST1234+_^$",
+		//		"sshkey":            "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
+		//	},
+		//}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "azure-py-appservice"),
 			Config: map[string]string{
@@ -747,17 +745,17 @@ func TestExamples(t *testing.T) {
 				"gcp:zone":    "us-central1-a",
 			},
 		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "gcp-py-gke"),
-			Config: map[string]string{
-				"gcp:project":       "pulumi-ci-gcp-provider",
-				"gcp:zone":          "us-central1-a",
-				"password":          "S4cretPassword!$",
-				"node_count":        "3",
-				"node_machine_type": "n1-standard-2",
-				"master_version":    gkeEngineVersion,
-			},
-		}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "gcp-py-gke"),
+		//	Config: map[string]string{
+		//		"gcp:project":       "pulumi-ci-gcp-provider",
+		//		"gcp:zone":          "us-central1-a",
+		//		"password":          "S4cretPassword!$",
+		//		"node_count":        "3",
+		//		"node_machine_type": "n1-standard-2",
+		//		"master_version":    gkeEngineVersion,
+		//	},
+		//}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "gcp-py-serverless-raw"),
 			Config: map[string]string{
@@ -801,31 +799,31 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "gcp-ts-gke"),
-			Config: map[string]string{
-				"gcp:project":     "pulumi-ci-gcp-provider",
-				"gcp:zone":        "us-central1-a",
-				"password":        "S4cretPassword123!",
-				"nodeCount":       "3",
-				"nodeMachineType": "n1-standard-2",
-				"masterVersion":   gkeEngineVersion,
-			},
-		}),
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "gcp-ts-gke-hello-world"),
-			Config: map[string]string{
-				"gcp:project":   "pulumi-ci-gcp-provider",
-				"gcp:zone":      "us-central1-a",
-				"masterVersion": gkeEngineVersion,
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				endpoint := stack.Outputs["servicePublicIP"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
-					return assert.Contains(t, body, "Welcome to nginx")
-				})
-			},
-		}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "gcp-ts-gke"),
+		//	Config: map[string]string{
+		//		"gcp:project":     "pulumi-ci-gcp-provider",
+		//		"gcp:zone":        "us-central1-a",
+		//		"password":        "S4cretPassword123!",
+		//		"nodeCount":       "3",
+		//		"nodeMachineType": "n1-standard-2",
+		//		"masterVersion":   gkeEngineVersion,
+		//	},
+		//}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "gcp-ts-gke-hello-world"),
+		//	Config: map[string]string{
+		//		"gcp:project":   "pulumi-ci-gcp-provider",
+		//		"gcp:zone":      "us-central1-a",
+		//		"masterVersion": gkeEngineVersion,
+		//	},
+		//	ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		//		endpoint := stack.Outputs["servicePublicIP"].(string)
+		//		assertHTTPResult(t, endpoint, nil, func(body string) bool {
+		//			return assert.Contains(t, body, "Welcome to nginx")
+		//		})
+		//	},
+		//}),
 		// gcp-ts-k8s-ruby-on-rails-postgresql we need to think about what we do with dockerhub password
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "gcp-ts-serverless-raw"),
