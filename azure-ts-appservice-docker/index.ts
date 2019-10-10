@@ -74,7 +74,7 @@ const getStartedApp = new azure.appservice.AppService("get-started", {
       DOCKER_REGISTRY_SERVER_URL: pulumi.interpolate`https://${registry.loginServer}`,
       DOCKER_REGISTRY_SERVER_USERNAME: registry.adminUsername,
       DOCKER_REGISTRY_SERVER_PASSWORD: registry.adminPassword,
-      WEBSITES_PORT: 80, // Our custom image exposes port 80. Adjust for your app as needed.
+      WEBSITES_PORT: "80", // Our custom image exposes port 80. Adjust for your app as needed.
     },
     siteConfig: {
         alwaysOn: true,
