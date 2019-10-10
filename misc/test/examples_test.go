@@ -35,8 +35,8 @@ func TestExamples(t *testing.T) {
 	}
 	gkeEngineVersion := os.Getenv("GKE_ENGINE_VERSION")
 	if gkeEngineVersion == "" {
-		gkeEngineVersion = ""
-		fmt.Println("Defaulting GKE_ENGINE_VERSION to '1.13.7-gke.8'. You can override using the GKE_ENGINE_VERSION variable")
+		gkeEngineVersion = "1.13.7-gke.24"
+		fmt.Println("Defaulting GKE_ENGINE_VERSION to '1.13.7-gke.24'. You can override using the GKE_ENGINE_VERSION variable")
 	}
 	cwd, err := os.Getwd()
 	if !assert.NoError(t, err, "expected a valid working directory: %v", err) {
