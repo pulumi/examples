@@ -37,6 +37,7 @@ npm install
 
     ```bash
     $ pulumi config set azure:environment public
+    $ pulumi config set azure:location westus2
     $ az login
     ```
 

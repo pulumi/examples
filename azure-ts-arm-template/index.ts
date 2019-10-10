@@ -4,7 +4,7 @@ import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
 
 // Create a resource group to deploy all ARM template resources into.
-const resourceGroup = new azure.core.ResourceGroup("test", { location: azure.Locations.WestUS });
+const resourceGroup = new azure.core.ResourceGroup("test");
 
 // Create an ARM template deployment using an ordinary JSON ARM template. This could be read from disk, of course.
 const armDeployment = new azure.core.TemplateDeployment("test-dep", {

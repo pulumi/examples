@@ -443,6 +443,7 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "azure-ts-appservice"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
+				"azure:location":    azureLocation,
 				"sqlPassword":       "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -458,6 +459,7 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "azure-ts-appservice-docker"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
+				"azure:location":    azureLocation,
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["getStartedEndpoint"], nil, func(body string) bool {
@@ -469,6 +471,7 @@ func TestExamples(t *testing.T) {
 			Dir: path.Join(cwd, "..", "..", "azure-ts-arm-template"),
 			Config: map[string]string{
 				"azure:environment": azureEnviron,
+				"azure:location":    azureLocation,
 			},
 		}),
 		//base.With(integration.ProgramTestOptions{
