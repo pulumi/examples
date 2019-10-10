@@ -45,7 +45,7 @@ const appService = new azure.appservice.AppService(customImage, {
       DOCKER_REGISTRY_SERVER_USERNAME: registry.adminUsername,
       DOCKER_REGISTRY_SERVER_PASSWORD: registry.adminPassword,
       // Our custom image exposes port 9000.
-      WEBSITES_PORT: 9000,
+      WEBSITES_PORT: "9000",
     },
     siteConfig: {
         alwaysOn: true,
