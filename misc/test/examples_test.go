@@ -179,12 +179,12 @@ func TestExamples(t *testing.T) {
 
 		// aws-ts-apigateway-auth0 requires manual interaction with auth0
 
-		base.With(integration.ProgramTestOptions{
-			Dir: path.Join(cwd, "..", "..", "aws-ts-appsync"),
-			Config: map[string]string{
-				"aws:region": awsRegion,
-			},
-		}),
+		//base.With(integration.ProgramTestOptions{
+		//	Dir: path.Join(cwd, "..", "..", "aws-ts-appsync"),
+		//	Config: map[string]string{
+		//		"aws:region": awsRegion,
+		//	},
+		//}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-assume-role", "create-role"),
 			Config: map[string]string{
