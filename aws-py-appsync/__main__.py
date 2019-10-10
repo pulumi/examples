@@ -1,11 +1,11 @@
 import json
+import pulumi_random as random
 from pulumi import export
 from pulumi_aws import dynamodb, iam, appsync
 
 ## Dynamo DB table to hold data for the GraphQL endpoint
 table = dynamodb.Table(
     "tenants",
-    name="Tenant",
     hash_key="id",
     attributes=[{
         "name": "id",
@@ -79,10 +79,16 @@ api_key = appsync.ApiKey(
     "key",
     api_id=api.id)
 
+random_string = random.RandomString(
+    "random-datasource-name",
+    length=15,
+    special="false",
+)
+
 ## Link a data source to the Dynamo DB Table
 data_source = appsync.DataSource(
     "tenants-ds",
-    name="TenantsDataSource",
+    name=random_string.result,
     api_id=api.id,
     type="AMAZON_DYNAMODB",
     dynamodb_config={

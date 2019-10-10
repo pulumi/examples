@@ -176,15 +176,12 @@ func TestExamples(t *testing.T) {
 				})
 			},
 		}),
-
-		// aws-ts-apigateway-auth0 requires manual interaction with auth0
-
-		//base.With(integration.ProgramTestOptions{
-		//	Dir: path.Join(cwd, "..", "..", "aws-ts-appsync"),
-		//	Config: map[string]string{
-		//		"aws:region": awsRegion,
-		//	},
-		//}),
+		base.With(integration.ProgramTestOptions{
+			Dir: path.Join(cwd, "..", "..", "aws-ts-appsync"),
+			Config: map[string]string{
+				"aws:region": awsRegion,
+			},
+		}),
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-assume-role", "create-role"),
 			Config: map[string]string{
@@ -192,9 +189,6 @@ func TestExamples(t *testing.T) {
 				"create-role:unprivilegedUsername": "unpriv",
 			},
 		}),
-
-		// aws-ts-assume-role/assume-role requires output of aws-ts-assume-role/create-role
-
 		base.With(integration.ProgramTestOptions{
 			Dir: path.Join(cwd, "..", "..", "aws-ts-containers"),
 			Config: map[string]string{
