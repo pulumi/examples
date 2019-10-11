@@ -52,4 +52,4 @@ jobs:
 after_failure:
   - "${PULUMI_SCRIPTS}/ci/upload-failed-tests"
 notifications:
-  webhooks: https://ufci1w66n3.execute-api.us-west-2.amazonaws.com/stage/travis
+  webhooks: https://zlmgkhmhjc.execute-api.us-west-2.amazonaws.com/stage/travis
