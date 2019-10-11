@@ -38,15 +38,12 @@ before_script:
   - "${PULUMI_SCRIPTS}/ci/ensure-dependencies"
 jobs:
   include:
-  - script: make travis_${TRAVIS_EVENT_TYPE}
-  - stage: latest-all
-    if: type = cron
+  - os: linux
+    script: make travis_${TRAVIS_EVENT_TYPE}
+  - os: linux
+    #if: type = cron
     script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head"
-  - stage: latest-cli
-    if: type = cron
     script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --no-latest-packages"
-  - stage: latest-packages
-    if: type = cron
     script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --no-latest-cli"
 after_failure:
   - "${PULUMI_SCRIPTS}/ci/upload-failed-tests"
