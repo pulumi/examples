@@ -11,8 +11,6 @@ Azure Functions created from raw deployment packages in all supported languages.
 
 Please remove the corresponding resources from the program in case you don't need those runtimes.
 
-Known issue: [#2784](https://github.com/pulumi/pulumi/issues/2784)&mdash;Python deployment package gets corrupted if deployed from Windows. Workaround: deploy from WSL (Windows Subsystem for Linux), Mac OS, or Linux.
-
 ## Running the App
 
 1.  Build and publish the .NET Function App project:
