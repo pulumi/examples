@@ -42,13 +42,13 @@ jobs:
     name: released
   - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head"
     name: latest-all
-    #if: type = cron
+    if: type = cron
   - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --no-latest-packages"
     name: latest-cli
-    #if: type = cron
+    if: type = cron
   - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --no-latest-cli"
     name: latest-packages
-    #if: type = cron
+    if: type = cron
 after_failure:
   - "${PULUMI_SCRIPTS}/ci/upload-failed-tests"
 notifications:
