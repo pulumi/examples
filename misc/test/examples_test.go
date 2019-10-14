@@ -1014,7 +1014,7 @@ func getCwd(t *testing.T) string {
 func getBaseOptions(t *testing.T) integration.ProgramTestOptions {
 	overrides, err := integration.DecodeMapString(os.Getenv("PULUMI_TEST_NODE_OVERRIDES"))
 	if err != nil {
-		t.Error("expected valid override map: %v", err)
+		t.Error("expected valid override map:", err.Error())
 	}
 
 	base := integration.ProgramTestOptions{
