@@ -1,0 +1,14 @@
+{
+    "name": "example-policy-set",
+    "version": "0.1.0",
+    "dependencies": {
+        "@pulumi/pulumi": "0.17.21",
+        "@pulumi/kubernetes": "0.25.0",
+        "@pulumi/policy": "dev"
+    },
+    "devDependencies": {
+        "@types/mocha": "^2.2.42",
+        "@types/node": "^10.12.7",
+        "tslint": "^5.11.0"
+    }
+}

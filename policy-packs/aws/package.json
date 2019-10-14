@@ -1,0 +1,12 @@
+{
+    "name": "aws-policies",
+    "version": "0.1.0",
+    "devDependencies": {
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "0.17.21",
+        "@pulumi/aws": "0.18.16",
+        "@pulumi/policy": "dev"
+    }
+}
