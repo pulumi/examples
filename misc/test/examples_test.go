@@ -370,6 +370,7 @@ func TestAccAzureJsWebserver(t *testing.T) {
 }
 
 func TestAccAzurePyAks(t *testing.T) {
+	t.Skip("Skipping due to ServicePrincipalNotFound error")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-aks"),
@@ -457,6 +458,7 @@ func TestAccAzurePyWebserver(t *testing.T) {
 }
 
 func TestAccAzureTsAppService(t *testing.T) {
+	t.Skip("Skipping due to ResourceGroupNotFound errors")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-appservice"),
@@ -533,6 +535,7 @@ func TestAccAzureTsStreamAnalytics(t *testing.T) {
 }
 
 func TestAccAzureTsVmScaleset(t *testing.T) {
+	t.Skip("Skipping due to ResourceGroupNotFound errors")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-vm-scaleset"),
