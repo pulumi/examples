@@ -1,6 +1,7 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
+import * as random from "@pulumi/random";
 import { createIamRole } from "./iam";
 
 // Dynamo DB table to hold data for the GraphQL endpoint
@@ -43,8 +44,14 @@ const apiKey = new aws.appsync.ApiKey("key", {
     apiId: api.id,
 });
 
+const randomString = new random.RandomString("random-datasource-name", {
+    length: 15,
+    special: false,
+});
+
 // Link a data source to the Dynamo DB Table
 const dataSource = new aws.appsync.DataSource("tenants-ds", {
+    name: randomString.result,
     apiId: api.id,
     type: "AMAZON_DYNAMODB",
     dynamodbConfig: {
