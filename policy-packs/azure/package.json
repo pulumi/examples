@@ -2,7 +2,7 @@
     "name": "azure-policies",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/azure": "latest",
+        "@pulumi/azure": "feature-synchronousInvokes2",
         "@pulumi/pulumi": "dev",
         "@pulumi/policy": "dev"
     },

@@ -7,7 +7,7 @@
     },
     "dependencies": {
         "@azure/cosmos": "latest",
-        "@pulumi/azure": "^1.0.0",
+        "@pulumi/azure": "feature-synchronousInvokes2",
         "@pulumi/docker": "feature-synchronousInvokes2",
         "@pulumi/pulumi": "dev",
         "@pulumi/random": "feature-synchronousInvokes2"

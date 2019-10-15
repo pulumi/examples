@@ -6,7 +6,7 @@
         "@types/utf8": "^2.1.6"
     },
     "dependencies": {
-        "@pulumi/azure": "^1.0.0",
+        "@pulumi/azure": "feature-synchronousInvokes2",
         "@pulumi/pulumi": "dev",
         "crypto": "^1.0.1",
         "utf8": "^3.0.0"

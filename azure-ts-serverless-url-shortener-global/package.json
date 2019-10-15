@@ -8,6 +8,6 @@
     "dependencies": {
         "@azure/cosmos": "^3.1.0",
         "@pulumi/pulumi": "dev",
-        "@pulumi/azure": "^1.0.0"
+        "@pulumi/azure": "feature-synchronousInvokes2"
     }
 }

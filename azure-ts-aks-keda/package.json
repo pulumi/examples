@@ -5,7 +5,7 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/azure": "^1.0.0",
+        "@pulumi/azure": "feature-synchronousInvokes2",
         "@pulumi/azuread": "^1.0.0",
         "@pulumi/docker": "feature-synchronousInvokes2",
         "@pulumi/kubernetes": "^1.0.0",

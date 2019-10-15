@@ -16,7 +16,7 @@
     },
     "dependencies": {
         "@pulumi/pulumi": "dev",
-        "@pulumi/azure": "latest",
+        "@pulumi/azure": "feature-synchronousInvokes2",
         "@pulumi/azure-serverless": "latest",
         "@pulumi/cloud": "latest",
         "@pulumi/cloud-aws": "latest",
