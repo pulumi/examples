@@ -4,7 +4,7 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/docker": "latest",
+        "@pulumi/docker": "feature-synchronousInvokes2",
         "@pulumi/gcp": "^1.0.0",
         "@pulumi/kubernetes": "^1.0.0",
         "@pulumi/pulumi": "dev"

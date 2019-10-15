@@ -8,8 +8,8 @@
     "dependencies": {
         "@azure/cosmos": "latest",
         "@pulumi/azure": "^1.0.0",
-        "@pulumi/docker": "latest",
+        "@pulumi/docker": "feature-synchronousInvokes2",
         "@pulumi/pulumi": "dev",
-        "@pulumi/random": "latest"
+        "@pulumi/random": "feature-synchronousInvokes2"
     }
 }

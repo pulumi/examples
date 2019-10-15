@@ -5,7 +5,7 @@
     },
     "dependencies": {
         "@pulumi/azure": "^1.0.0",
-        "@pulumi/docker": "latest",
+        "@pulumi/docker": "feature-synchronousInvokes2",
         "@pulumi/pulumi": "dev"
     }
 }

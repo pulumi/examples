@@ -4,6 +4,6 @@
     "dependencies": {
         "@pulumi/aws": "feature-synchronousInvokes2",
         "@pulumi/pulumi": "dev",
-        "@pulumi/random": "^1.0.0"
+        "@pulumi/random": "feature-synchronousInvokes2"
     }
 }

@@ -7,10 +7,10 @@
     "dependencies": {
         "@pulumi/azure": "^1.0.0",
         "@pulumi/azuread": "^1.0.0",
-        "@pulumi/docker": "latest",
+        "@pulumi/docker": "feature-synchronousInvokes2",
         "@pulumi/kubernetes": "^1.0.0",
         "@pulumi/pulumi": "dev",
-        "@pulumi/random": "^1.0.0",
+        "@pulumi/random": "feature-synchronousInvokes2",
         "@pulumi/tls": "latest"
     },
     "license": "Apache-2.0"

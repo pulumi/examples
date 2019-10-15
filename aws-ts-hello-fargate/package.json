@@ -6,7 +6,7 @@
     "dependencies": {
         "@pulumi/aws": "feature-synchronousInvokes2",
         "@pulumi/awsx": "feature-synchronousInvokes2",
-        "@pulumi/docker": "latest",
+        "@pulumi/docker": "feature-synchronousInvokes2",
         "@pulumi/pulumi": "dev"
     }
 }

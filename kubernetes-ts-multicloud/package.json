@@ -11,7 +11,7 @@
         "@pulumi/gcp": "^1.0.0",
         "@pulumi/kubernetes": "^1.0.0",
         "@pulumi/pulumi": "dev",
-        "@pulumi/random": "^1.0.0",
+        "@pulumi/random": "feature-synchronousInvokes2",
         "@pulumi/tls": "latest"
     }
 }
