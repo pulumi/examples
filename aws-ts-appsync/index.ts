@@ -47,6 +47,7 @@ const apiKey = new aws.appsync.ApiKey("key", {
 const randomString = new random.RandomString("random-datasource-name", {
     length: 15,
     special: false,
+    number: false,
 });
 
 // Link a data source to the Dynamo DB Table
