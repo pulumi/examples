@@ -9,7 +9,7 @@
         "@pulumi/azuread": "^1.0.0",
         "@pulumi/docker": "latest",
         "@pulumi/kubernetes": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/pulumi": "dev",
         "@pulumi/random": "^1.0.0",
         "@pulumi/tls": "latest"
     },

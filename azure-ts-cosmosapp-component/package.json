@@ -9,7 +9,7 @@
         "@azure/cosmos": "latest",
         "@pulumi/azure": "^1.0.0",
         "@pulumi/docker": "latest",
-        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/pulumi": "dev",
         "@pulumi/random": "latest"
     }
 }

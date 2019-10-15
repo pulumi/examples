@@ -4,7 +4,7 @@
     "main": "index.js",
     "dependencies": {
         "@pulumi/cloud-aws": "latest",
-        "@pulumi/aws": "latest",
+        "@pulumi/aws": "feature-synchronousInvokes2",
         "aws-sdk": "^2.238.1"
     }
 }

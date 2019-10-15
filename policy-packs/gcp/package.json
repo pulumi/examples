@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "dependencies": {
         "@pulumi/gcp": "latest",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/pulumi": "dev",
         "@pulumi/policy": "dev"
     },
     "devDependencies": {

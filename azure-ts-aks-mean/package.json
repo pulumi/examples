@@ -7,7 +7,7 @@
         "@pulumi/azure": "^1.0.0",
         "@pulumi/azuread": "^1.0.0",
         "@pulumi/kubernetes": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/pulumi": "dev",
         "@types/mongoose": "^5.2.11",
         "mongoose": "^5.2.13"
     }

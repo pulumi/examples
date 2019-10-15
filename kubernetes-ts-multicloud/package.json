@@ -4,13 +4,13 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/awsx": "latest",
+        "@pulumi/awsx": "feature-synchronousInvokes2",
         "@pulumi/azure": "^1.0.0",
         "@pulumi/azuread": "^1.0.0",
         "@pulumi/eks": "latest",
         "@pulumi/gcp": "^1.0.0",
         "@pulumi/kubernetes": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/pulumi": "dev",
         "@pulumi/random": "^1.0.0",
         "@pulumi/tls": "latest"
     }

@@ -4,8 +4,8 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/pulumi": "^1.0.0",
-        "@pulumi/awsx": "latest",
+        "@pulumi/pulumi": "dev",
+        "@pulumi/awsx": "feature-synchronousInvokes2",
         "@pulumi/eks": "latest"
     }
 }

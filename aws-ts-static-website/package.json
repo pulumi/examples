@@ -5,8 +5,8 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/aws": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/aws": "feature-synchronousInvokes2",
+        "@pulumi/pulumi": "dev",
         "mime": "^2.0.3"
     }
 }

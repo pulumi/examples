@@ -8,7 +8,7 @@
         "@pulumi/azure": "^1.0.0",
         "@pulumi/azuread": "^1.0.0",
         "@pulumi/kubernetes": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0"
+        "@pulumi/pulumi": "dev"
     },
     "license": "Apache-2.0"
 }

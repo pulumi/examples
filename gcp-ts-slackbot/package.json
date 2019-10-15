@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "dependencies": {
         "@pulumi/gcp": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/pulumi": "dev",
         "@google-cloud/firestore": "^1.2.0",
         "@google-cloud/pubsub": "^0.28.1",
         "body-parser": "^1.18.3",

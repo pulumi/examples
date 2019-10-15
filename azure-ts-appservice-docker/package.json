@@ -6,7 +6,7 @@
     },
     "dependencies": {
         "@pulumi/azure": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/pulumi": "dev",
         "@pulumi/docker": "latest"
     }
 }
