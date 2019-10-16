@@ -859,9 +859,9 @@ func TestAccGcpPyFunctions(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-py-functions"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				endpoint := stack.Outputs["instanceIP"].(string)
+				endpoint := stack.Outputs["fxn_url"].(string)
 				assertHTTPResult(t, endpoint, nil, func(body string) bool {
-					return assert.Contains(t, body, "Hello, World!")
+					return assert.Contains(t, body, "Space Needle, Seattle, WA")
 				})
 			},
 		})
