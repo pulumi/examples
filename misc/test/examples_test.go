@@ -1024,7 +1024,7 @@ func getGkeVersion() string {
 func getCwd(t *testing.T) string {
 	cwd, err := os.Getwd()
 	if err != nil {
-		t.Error("expected a valid working directory", err)
+		t.FailNow()
 	}
 
 	return cwd
@@ -1033,7 +1033,7 @@ func getCwd(t *testing.T) string {
 func getBaseOptions(t *testing.T) integration.ProgramTestOptions {
 	overrides, err := integration.DecodeMapString(os.Getenv("PULUMI_TEST_NODE_OVERRIDES"))
 	if err != nil {
-		t.Error("expected valid override map:", err.Error())
+		t.FailNow()
 	}
 
 	base := integration.ProgramTestOptions{
