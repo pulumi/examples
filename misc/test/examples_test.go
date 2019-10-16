@@ -354,6 +354,7 @@ func TestAccAwsTsTwitterAthena(t *testing.T) {
 }
 
 func TestAccAzureJsWebserver(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-js-webserver"),
@@ -370,7 +371,7 @@ func TestAccAzureJsWebserver(t *testing.T) {
 }
 
 func TestAccAzurePyAks(t *testing.T) {
-	t.Skip("Skipping due to ServicePrincipalNotFound error")
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-aks"),
@@ -384,6 +385,7 @@ func TestAccAzurePyAks(t *testing.T) {
 }
 
 func TestAccAzurePyAppService(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-appservice"),
@@ -401,6 +403,7 @@ func TestAccAzurePyAppService(t *testing.T) {
 }
 
 func TestAccAzurePyAppServiceDocker(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-appservice-docker"),
@@ -415,6 +418,7 @@ func TestAccAzurePyAppServiceDocker(t *testing.T) {
 }
 
 func TestAccAzurePyHdInsightSpark(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-hdinsight-spark"),
@@ -428,6 +432,7 @@ func TestAccAzurePyHdInsightSpark(t *testing.T) {
 }
 
 func TestAccAzurePyVmScaleSet(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-vm-scaleset"),
@@ -442,6 +447,7 @@ func TestAccAzurePyVmScaleSet(t *testing.T) {
 }
 
 func TestAccAzurePyWebserver(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-webserver"),
@@ -458,7 +464,7 @@ func TestAccAzurePyWebserver(t *testing.T) {
 }
 
 func TestAccAzureTsAppService(t *testing.T) {
-	t.Skip("Skipping due to ResourceGroupNotFound errors")
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-appservice"),
@@ -476,6 +482,7 @@ func TestAccAzureTsAppService(t *testing.T) {
 }
 
 func TestAccAzureTsAppServiceDocker(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-appservice-docker"),
@@ -490,6 +497,7 @@ func TestAccAzureTsAppServiceDocker(t *testing.T) {
 }
 
 func TestAccAzureTsArmTemplate(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-arm-template"),
@@ -499,6 +507,7 @@ func TestAccAzureTsArmTemplate(t *testing.T) {
 }
 
 func TestAccAzureTsFunctions(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-functions"),
@@ -513,6 +522,7 @@ func TestAccAzureTsFunctions(t *testing.T) {
 }
 
 func TestAccAzureTsHdInsightSpark(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-hdinsight-spark"),
@@ -526,6 +536,7 @@ func TestAccAzureTsHdInsightSpark(t *testing.T) {
 }
 
 func TestAccAzureTsStreamAnalytics(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-stream-analytics"),
@@ -535,7 +546,7 @@ func TestAccAzureTsStreamAnalytics(t *testing.T) {
 }
 
 func TestAccAzureTsVmScaleset(t *testing.T) {
-	t.Skip("Skipping due to ResourceGroupNotFound errors")
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-vm-scaleset"),
@@ -550,6 +561,7 @@ func TestAccAzureTsVmScaleset(t *testing.T) {
 }
 
 func TestAccAzureTsWebserver(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-webserver"),
@@ -569,6 +581,7 @@ func TestAccAzureTsWebserver(t *testing.T) {
 
 func TestAccAzureTsAksHelm(t *testing.T) {
 	skipIfShort(t)
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-aks-helm"),
@@ -588,6 +601,7 @@ func TestAccAzureTsAksHelm(t *testing.T) {
 
 func TestAccAzureTsAksKeda(t *testing.T) {
 	skipIfShort(t)
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-aks-keda"),
@@ -598,6 +612,7 @@ func TestAccAzureTsAksKeda(t *testing.T) {
 
 func TestAccAzureTsAksMulticluster(t *testing.T) {
 	skipIfShort(t)
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-aks-multicluster"),
@@ -612,6 +627,7 @@ func TestAccAzureTsAksMulticluster(t *testing.T) {
 
 func TestAccAzureTsCosmosDbLogicApp(t *testing.T) {
 	skipIfShort(t)
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-cosmosdb-logicapp"),
@@ -621,6 +637,7 @@ func TestAccAzureTsCosmosDbLogicApp(t *testing.T) {
 }
 
 func TestAccAzureTsWebserverComponent(t *testing.T) {
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-webserver-component"),
