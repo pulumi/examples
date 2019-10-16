@@ -912,7 +912,7 @@ func TestAccGcpPyInstanceNginx(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-py-instance-nginx"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["external_ip"].(string)
-				maxWait := time.Minute * 5
+				maxWait := time.Minute * 10
 				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Test Page for the Nginx HTTP Server on Fedora")
 				})
