@@ -801,6 +801,7 @@ func TestAccDigitalOceanPyK8s(t *testing.T) {
 }
 
 func TestAccDigitalOceanPyLoadbalancedDroplets(t *testing.T) {
+	t.Skip("Skip due to 'Error waiting for Load Balancer' failures")
 	test := getBaseOptions(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "digitalocean-py-loadbalanced-droplets"),
