@@ -1,0 +1,17 @@
+name: database-layer
+runtime: nodejs
+description: Database layer for the aws-stackreference-architecture
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into.
+      default: us-west-2
+    dbUsername:
+      description: (Required) The username to use for the database
+    dbPassword:
+      description: (Required) The password to use for the database- stored as a secret
+    dbName:
+      description: (Required) The name of the database to create when the DB instance is created
+    networkingStack:
+      description: "(Required) The reference to the networking stack on which the database will be deployed
+        (in the form <organization_or_user>/<projectName>/<stackName> e.g. myUsername/multicloud/dev)"
