@@ -1,0 +1,15 @@
+name: application-layer
+runtime: nodejs
+description: Application layer for the aws-stackreference-architecture
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into.
+      default: us-west-2
+    networkingStack:
+      description: "(Required) The reference to the networking stack on which the database will be deployed
+        (in the form <organization_or_user>/<projectName>/<stackName> e.g. myUsername/multicloud/dev)"
+    databaseStack:
+      description: "(Required) The reference to the database so that the Application Instance can get the correct credentials
+        and database information for application startup (in the form <organization_or_user>/<projectName>/<stackName>
+        e.g. myUsername/multicloud/dev)"

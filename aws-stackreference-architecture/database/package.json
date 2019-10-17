@@ -1,0 +1,20 @@
+{
+  "name": "aws-typescript",
+  "main": "src/index.ts",
+  "devDependencies": {
+    "@types/mime": "^2.0.1",
+    "@types/node": "latest"
+  },
+  "dependencies": {
+    "@pulumi/aws": "latest",
+    "@pulumi/awsx": "latest",
+    "@pulumi/random": "latest",
+    "@pulumi/pulumi": "latest",
+    "ip-address": "^5.9.2",
+    "jsbn": "^1.1.0",
+    "mime": "^2.4.4"
+  },
+  "scripts": {
+    "tslint-fix": "tslint --fix -p tsconfig.json"
+  }
+}
