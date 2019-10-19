@@ -227,6 +227,7 @@ func TestAccAwsTsEks(t *testing.T) {
 }
 
 func TestAccAwsTsEksHelloWorld(t *testing.T) {
+	t.Skip("Skip due to frequent failures: `timeout while waiting for state to become 'ACTIVE'`")
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-eks-hello-world"),
@@ -907,6 +908,7 @@ func TestAccGcpPyServerlessRaw(t *testing.T) {
 }
 
 func TestAccGcpPyInstanceNginx(t *testing.T) {
+	t.Skip("Skip due to frequent failures: `35.239.87.214:80: connect: connection refused`")
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-py-instance-nginx"),
