@@ -1,0 +1,3 @@
+name: aws-ts-cypress-website-monitor
+runtime: nodejs
+description: An example of using Cypress to periodic specs against a website.
