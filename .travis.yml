@@ -36,6 +36,9 @@ install:
   - sudo mv kubectl /usr/local/bin
 before_script:
   - "${PULUMI_SCRIPTS}/ci/ensure-dependencies"
+  # Attempt to work around issues with cross-region replication of resource group state in Azure.
+  # See https://github.com/pulumi/pulumi-azure/issues/373#issuecomment-545158789.
+  - echo "$(getent hosts $ARM_LOCATION.management.azure.com | awk '{ print $1 }') management.azure.com" | sudo tee --append /etc/hosts
 jobs:
   include:
   - script: make travis_${TRAVIS_EVENT_TYPE}
