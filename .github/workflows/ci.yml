@@ -1,0 +1,38 @@
+name: CI
+on: [pull_request]
+
+jobs:
+  build:
+    name: Run Examples
+    strategy:
+      matrix:
+        go-version: [1.12.x]
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Install Go 1.12.x
+        uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Install Helm
+        run: |
+          curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+          helm init -c
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+      - name: Install aws-iam-authenticator
+        run: |
+          curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+          chmod +x ./aws-iam-authenticator
+          sudo mv aws-iam-authenticator /usr/local/bin
+      - name: Install KubeCtl
+        run: |
+          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+          chmod +x ./kubectl
+          sudo mv kubectl /usr/local/bin
+      - name: Check out source code
+        uses: actions/checkout@master
+      - name: Download module dependencies
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          GO111MODULE: on
+        run: cd misc/test && go mod download
