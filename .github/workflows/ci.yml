@@ -14,25 +14,50 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: ${{ matrix.go-version }}
-      - name: Install Helm
+      - name: Install Pulumi
+        uses: jen20/action-install-pulumi-cli@releases/v1
+      - name: Setup Example Dependencies
         run: |
+          #Setup dependencies directory
+          mkdir -p /home/runner/bin
+          #Install Helm
           curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
           helm init -c
           helm repo add bitnami https://charts.bitnami.com/bitnami
-      - name: Install aws-iam-authenticator
-        run: |
+          #Install AWS Iam Authenticator
           curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
           chmod +x ./aws-iam-authenticator
-          sudo mv aws-iam-authenticator /usr/local/bin
-      - name: Install KubeCtl
-        run: |
+          sudo mv aws-iam-authenticator /home/runner/bin
+          #Install Kubectl
           curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
           chmod +x ./kubectl
-          sudo mv kubectl /usr/local/bin
+          sudo mv kubectl /home/runner/bin
+          #Install Yarn
+          curl -o- -L https://yarnpkg.com/install.sh | bash
+          #Manipulate PATH
+          echo "::add-path::/home/runner/bin"
+          echo "::add-path::/home/runner/.yarn/bin"
+      - name: Yarn Install tslint && typescript
+        run: yarn global add tslint typescript
       - name: Check out source code
         uses: actions/checkout@master
       - name: Download module dependencies
         env:
           GOPROXY: "https://proxy.golang.org"
           GO111MODULE: on
-        run: cd misc/test && go mod download
+        run: cd misc/test && go mod vendor
+      - name: Lint
+        run: tslint -c tslint.json **/*.ts
+      - name: Run AWS Tests
+        run: go test ./misc/test/... -run=TestAccAws --timeout 4h -v -count=1 -short -parallel 40
+      - name: Run Azure Tests
+        run: go test ./misc/test/... -run=TestAccAzure --timeout 4h -v -count=1 -short -parallel 40
+      - name: Run CloudJS Tests
+        run: go test ./misc/test/... -run=TestAccCloudJs --timeout 4h -v -count=1 -short -parallel 40
+      - name: Run DigitalOcean Tests
+        run: go test ./misc/test/... -run=TestAccDigitalOcean --timeout 4h -v -count=1 -short -parallel 40
+      - name: Run Linode Tests
+        run: go test ./misc/test/... -run=TestAccLinode --timeout 4h -v -count=1 -short -parallel 40
+      - name: Run GCP Tests
+        run: go test ./misc/test/... -run=TestAccGcp --timeout 4h -v -count=1 -short -parallel 40
+
