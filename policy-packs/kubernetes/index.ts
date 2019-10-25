@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as k8s from "@pulumi/kubernetes";
-import { assert, PolicyPack, typedRule } from "@pulumi/policy";
+import { PolicyPack, validateTypedResource } from "@pulumi/policy";
 
 const policies = new PolicyPack("kubernetes", {
     policies: [
@@ -21,15 +21,13 @@ const policies = new PolicyPack("kubernetes", {
             name: "no-public-services",
             description: "Kubernetes Services should be cluster-private",
             enforcementLevel: "mandatory",
-            rules: typedRule(k8s.core.v1.Service.isInstance, svc => {
-                assert.isNotEqual(
-                    "LoadBalancer",
-                    svc.spec.type,
-                    `Kubernetes Services that have .type === "LoadBalancer" are exposed to ` +
+            validateResource: validateTypedResource(k8s.core.v1.Service.isInstance, (svc, args, reportViolation) => {
+                if (svc.spec.type == "LoadBalancer") {
+                    reportViolation(`Kubernetes Services that have .type === "LoadBalancer" are exposed to ` +
                         `anything that can reach the Kubernetes cluster, likely including the ` +
                         `public Internet. The security team has disallowed this to prevent ` +
-                        `unauthorized access.`,
-                );
+                        `unauthorized access.`);
+                }
             }),
         },
     ],
