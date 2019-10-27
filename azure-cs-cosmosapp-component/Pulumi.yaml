@@ -1,0 +1,8 @@
+name: azure-cs-cosmosapp-component
+description: Reusable Component to Create Globally-distributed Applications with Azure Cosmos DB
+runtime: dotnet
+template:
+  config:
+    locations:
+      description: Comma-separated list of Azure regions
+      default: westus,westeurope

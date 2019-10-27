@@ -1,5 +1,6 @@
 /.pulumi/
 /.vscode/
+/.vs/
 bin/
 build/
 node_modules/

@@ -1,0 +1,69 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - nginx
+  - nodejs
+  - npm
+write_files:
+  - owner: www-data:www-data
+  - path: /etc/nginx/sites-available/default
+    content: |
+      server {
+        listen 80;
+        location / {
+          proxy_pass http://localhost:3000;
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection keep-alive;
+          proxy_set_header Host $host;
+          proxy_cache_bypass $http_upgrade;
+        }
+      }
+  - owner: azureuser:azureuser
+  - path: /home/azureuser/myapp/index.js
+    content: |
+      var express = require('express')
+      var app = express()
+      var os = require('os');
+      const cosmos = require('@azure/cosmos');
+      const endpoint = process.env.ENDPOINT;
+      const key = process.env.MASTER_KEY;
+      const database = process.env.DATABASE;
+      const collection = process.env.COLLECTION;
+      const preferredLocations = [process.env.LOCATION];
+      const connectionPolicy = { preferredLocations };
+      const client = new cosmos.CosmosClient({ endpoint, key, connectionPolicy });
+      app.get('/', function (req, res) {
+        res.send('Hello World1 from host ' + os.hostname() + '!')
+      })
+      app.get('/node', function (req, res) {
+        const version = require('child_process').execSync('nodejs --version');
+        res.send(version.toString());
+      })
+      app.get('/cosmos', (req, res) => {
+        client
+          .database(database)
+          .container(collection)
+          .item('test', undefined)
+          .read()
+          .then(r => res.send(r.resource))
+          .catch(err => res.status(500).send(err));
+      })
+      app.get('/api/ping', (req, res) => {
+        res.send('Ack')
+      })
+      app.listen(3000, function () {
+        console.log('Hello world app listening on port 3000!')
+      })
+runcmd:
+  - export ENDPOINT="${ENDPOINT}"
+  - export MASTER_KEY="${MASTER_KEY}"
+  - export DATABASE="${DATABASE}"
+  - export COLLECTION="${COLLECTION}"
+  - export LOCATION="${LOCATION}"
+  - service nginx restart
+  - cd "/home/azureuser/myapp"
+  - npm init
+  - npm install express -y
+  - npm install @azure/cosmos -y
+  - nodejs index.js
