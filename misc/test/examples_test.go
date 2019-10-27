@@ -372,6 +372,7 @@ func TestAccAzureJsWebserver(t *testing.T) {
 }
 
 func TestAccAzurePyAks(t *testing.T) {
+	t.Skip("The credentials in ServicePrincipalProfile were invalid")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-aks"),
