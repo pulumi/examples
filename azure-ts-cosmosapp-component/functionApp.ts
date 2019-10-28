@@ -59,21 +59,3 @@ export const functions = new CosmosApp("functions", {
     containerName: "products",
     factory: buildFunctionApp,
 });
-
-export function buildProductApp({ resourceGroup, cosmosAccount, opts }: GlobalContext) {
-    return ({ location }: RegionalContext) => {
-        const app = new azure.appservice.ArchiveFunctionApp("function-app", {
-            resourceGroupName: resourceGroup.name,
-            archive: new pulumi.asset.FileArchive("./app"),
-            appSettings: {
-                COSMOSDB_ENDPOINT: cosmosAccount.endpoint,
-                COSMOSDB_KEY: cosmosAccount.primaryMasterKey,
-                COSMOSDB_LOCATION: location,
-            },
-        }, opts);
-
-        return {
-            id: app.functionApp.id,
-        };
-    };
-}
