@@ -19,16 +19,18 @@ function buildVMScaleSetApp({ cosmosAccount, database, container, opts }: Global
     const file = readFileSync("./vm/vmCustomData.yaml").toString();
 
     return ({ location }: RegionalContext) => {
-        const domainName = new random.RandomString(`pipdns${location}`, { length: 10, special: false, upper: false }).result;
+        const domainName = new random.RandomString(`pipdns${location}`, { length: 10, special: false, upper: false, number: false }).result;
 
         const publicIp = new azure.network.PublicIp(`pip-${location}`, {
             resourceGroupName: resourceGroup.name,
+            location,
             allocationMethod: "Static",
             domainNameLabel: domainName,
         }, opts);
 
         const loadBalancer = new azure.lb.LoadBalancer(`lb-${location}`, {
             resourceGroupName: resourceGroup.name,
+            location,
             frontendIpConfigurations: [{
                 name: "PublicIPAddress",
                 publicIpAddressId: publicIp.id,
@@ -59,6 +61,7 @@ function buildVMScaleSetApp({ cosmosAccount, database, container, opts }: Global
 
         const vnet = new azure.network.VirtualNetwork(`vnet-${location}`, {
             resourceGroupName: resourceGroup.name,
+            location,
             addressSpaces: ["10.0.0.0/16"],
         }, opts);
 
@@ -80,6 +83,7 @@ function buildVMScaleSetApp({ cosmosAccount, database, container, opts }: Global
 
         const scaleSet = new azure.compute.ScaleSet(`vmss-${location}`, {
             resourceGroupName: resourceGroup.name,
+            location,
             networkProfiles: [{
                 ipConfigurations: [{
                     loadBalancerBackendAddressPoolIds: [bpepool.id],
