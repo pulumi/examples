@@ -77,7 +77,7 @@ class Program
                 {
                     { "WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl },
                 },
-                ConnectionStrings = new[]
+                ConnectionStrings =
                 {
                     new AppServiceConnectionStringsArgs
                     {

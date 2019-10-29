@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,8 +10,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Pulumi" Version="1.5.0-*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\..\Users\shilk\go\src\github.com\pulumi\pulumi-azure\sdk\dotnet\Pulumi.Azure.csproj" />
-    <ProjectReference Include="..\..\..\..\Users\shilk\go\src\github.com\pulumi\pulumi\sdk\dotnet\Pulumi\Pulumi.csproj" />
     <ProjectReference Include="..\..\..\..\Users\shilk\go\src\github.com\pulumi\pulumi\sdk\dotnet\Pulumi.FSharp\Pulumi.FSharp.fsproj" />
   </ItemGroup>
 
