@@ -1,0 +1,8 @@
+name: azure-cs-aks
+description: Creates an Azure Kubernetes Service (AKS) cluster
+runtime: dotnet
+template:
+  config:
+    sqlPassword:
+      description: SQL Server password (complex enough to satisfy Azure policy)
+      secret: true

@@ -13,6 +13,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CosmosAppComponent", "azure
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AppServiceFs", "azure-fs-appservice\AppServiceFs.fsproj", "{F420C993-DAE7-49DD-8D4D-C908C6842636}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulumi.Azuread", "..\pulumi-azuread\sdk\dotnet\Pulumi.Azuread.csproj", "{28701674-C58C-4F3C-9E29-BF22211A56FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulumi.Random", "..\pulumi-random\sdk\dotnet\Pulumi.Random.csproj", "{999D7390-46D6-4DA8-8457-357E397F2F65}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AKS", "azure-cs-aks\AKS.csproj", "{87A11F4D-063D-4374-9D22-156F04C767BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulumi.Tls", "..\..\..\Users\shilk\go\src\github.com\pulumi\pulumi-tls\sdk\dotnet\Pulumi.Tls.csproj", "{9999C9AF-A91D-431F-8F10-74D182464447}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyVault", "azure-cs-msi-keyvault-rbac\KeyVault.csproj", "{79319396-C17A-4DBB-92B2-7291D39E0B70}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulumi", "..\..\..\Users\shilk\go\src\github.com\pulumi\pulumi\sdk\dotnet\Pulumi\Pulumi.csproj", "{E87C3F1E-AF96-4D50-B26F-5F1127ED155E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +51,30 @@ Global
 		{F420C993-DAE7-49DD-8D4D-C908C6842636}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F420C993-DAE7-49DD-8D4D-C908C6842636}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F420C993-DAE7-49DD-8D4D-C908C6842636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28701674-C58C-4F3C-9E29-BF22211A56FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28701674-C58C-4F3C-9E29-BF22211A56FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28701674-C58C-4F3C-9E29-BF22211A56FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28701674-C58C-4F3C-9E29-BF22211A56FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{999D7390-46D6-4DA8-8457-357E397F2F65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{999D7390-46D6-4DA8-8457-357E397F2F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{999D7390-46D6-4DA8-8457-357E397F2F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{999D7390-46D6-4DA8-8457-357E397F2F65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87A11F4D-063D-4374-9D22-156F04C767BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87A11F4D-063D-4374-9D22-156F04C767BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87A11F4D-063D-4374-9D22-156F04C767BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87A11F4D-063D-4374-9D22-156F04C767BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9999C9AF-A91D-431F-8F10-74D182464447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9999C9AF-A91D-431F-8F10-74D182464447}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9999C9AF-A91D-431F-8F10-74D182464447}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9999C9AF-A91D-431F-8F10-74D182464447}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79319396-C17A-4DBB-92B2-7291D39E0B70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79319396-C17A-4DBB-92B2-7291D39E0B70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79319396-C17A-4DBB-92B2-7291D39E0B70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79319396-C17A-4DBB-92B2-7291D39E0B70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E87C3F1E-AF96-4D50-B26F-5F1127ED155E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E87C3F1E-AF96-4D50-B26F-5F1127ED155E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E87C3F1E-AF96-4D50-B26F-5F1127ED155E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E87C3F1E-AF96-4D50-B26F-5F1127ED155E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
