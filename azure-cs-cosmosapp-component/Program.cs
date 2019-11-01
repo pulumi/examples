@@ -3,7 +3,6 @@
 using System.Threading.Tasks;
 
 using Pulumi;
-using Pulumi.Azure.Core;
 
 class Program
 {

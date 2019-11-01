@@ -15,9 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AKS", "azure-cs-aks\A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.KeyVault", "azure-cs-msi-keyvault-rbac\Azure.KeyVault.csproj", "{79319396-C17A-4DBB-92B2-7291D39E0B70}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.FunctionsRaw.Functions", "azure-cs-functions-raw\functions\Azure.FunctionsRaw.Functions.csproj", "{F06F14D4-8BE0-4DB8-84BB-93AD65177EED}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.FunctionsRaw.Infra", "azure-cs-functions-raw\infra\Azure.FunctionsRaw.Infra.csproj", "{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.FunctionsRaw", "azure-cs-functions-raw\Azure.FunctionsRaw.csproj", "{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

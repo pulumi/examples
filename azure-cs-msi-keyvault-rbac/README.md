@@ -14,7 +14,16 @@ The application consists of several parts:
 - The identify is granted access to the SQL Server, Blob Storage, and Key Vault
 - No secret information is placed in App Service configuration: all access rights are derived from Active Directory
 
-## Running the App
+## Deploying the App
+
+To deploy your infrastructure, follow the below steps.
+
+### Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Install .NET Core 3.0+](https://dotnet.microsoft.com/download)
+
+### Steps
 
 1.  Create a new stack:
 
@@ -26,12 +35,6 @@ The application consists of several parts:
 
     ```
     $ az login
-    ```
-
-1.  Restore NPM dependencies:
-
-    ```
-    $ npm install
     ```
 
 1.  Build and publish the ASP.NET Core project:
@@ -67,4 +70,13 @@ The application consists of several parts:
     https://app129968b8.azurewebsites.net/
     $ curl "$(pulumi stack output endpoint)"
     Hello 311378b3-16b7-4889-a8d7-2eb77478beba@50f73f6a-e8e3-46b6-969c-bf026712a650! Here is your...
+    ```
+
+1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
+
+1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+
+    ```bash
+    $ pulumi destroy --yes
+    $ pulumi stack rm --yes
     ```
