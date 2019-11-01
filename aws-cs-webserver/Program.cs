@@ -4,104 +4,60 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Pulumi;
-using Pulumi.Azure.Compute;
-using Pulumi.Azure.Compute.Inputs;
-using Pulumi.Azure.Core;
-using Pulumi.Azure.Network;
-using Pulumi.Azure.Network.Inputs;
+using Pulumi.Aws;
+using Pulumi.Aws.Ec2;
+using Pulumi.Aws.Ec2.Inputs;
+using Pulumi.Aws.Inputs;
 
 class Program
 {
+    private const string size = "t2.micro";
+
     static Task<int> Main(string[] args)
     {
-        return Deployment.RunAsync(() => {
-            var resourceGroup = new ResourceGroup("server-rg");
+        return Deployment.RunAsync(async () => {
 
-            var network = new VirtualNetwork("server-network",
-                new VirtualNetworkArgs
+            var ami = await Pulumi.Aws.Invokes.GetAmi(new GetAmiArgs
+            {
+                MostRecent = true,
+                Owners = { "137112412989" },
+                Filters = { new GetAmiFiltersArgs { Name = "name", Values = { "amzn-ami-hvm-*" } } },
+            });
+
+
+            var group = new SecurityGroup("web-secgrp", new SecurityGroupArgs
+            {
+                Description = "Enable HTTP access",
+                Ingress =
+            {
+                new SecurityGroupIngressArgs
                 {
-                    ResourceGroupName = resourceGroup.Name,
-                    AddressSpaces = { "10.0.0.0/16" },
-                    Subnets =
-                    {
-                        new VirtualNetworkSubnetsArgs { Name = "default",  AddressPrefix = "10.0.1.0/24" }
-                    },
+                    Protocol = "tcp",
+                    FromPort = 80,
+                    ToPort = 80,
+                    CidrBlocks = { "0.0.0.0/0" }
                 }
-            );
+            }
+            });
 
-            var publicIp = new PublicIp("server-ip",
-                new PublicIpArgs
-                {
-                    ResourceGroupName = resourceGroup.Name,
-                    AllocationMethod = "Dynamic",
-                });
-
-            var networkInterface = new NetworkInterface("server-nic",
-                new NetworkInterfaceArgs
-                {
-                    ResourceGroupName = resourceGroup.Name,
-                    IpConfigurations =
-                    {
-                        new NetworkInterfaceIpConfigurationsArgs
-                        {
-                            Name = "webserveripcfg",
-                            SubnetId = network.Subnets.Apply(subnets => subnets[0].Id),
-                            PrivateIpAddressAllocation = "dynamic",
-                            PublicIpAddressId = publicIp.Id,
-                        },
-                    }
-                });
-
-            var vm = new VirtualMachine("server-vm",
-                new VirtualMachineArgs
-                {
-                    ResourceGroupName = resourceGroup.Name,
-                    NetworkInterfaceIds = { networkInterface.Id },
-                    VmSize = "Standard_A0",
-                    DeleteDataDisksOnTermination = true,
-                    DeleteOsDiskOnTermination = true,
-                    OsProfile = new VirtualMachineOsProfileArgs
-                    {
-                        ComputerName = "hostname",
-                        AdminUsername = "testadmin",
-                        AdminPassword = "Password1234!",
-                        CustomData = 
-@"#!/bin/bash\n
+            var userData = @"
+#!/bin/bash
 echo ""Hello, World!"" > index.html
-nohup python -m SimpleHTTPServer 80 &",
-                    },
-                    OsProfileLinuxConfig = new VirtualMachineOsProfileLinuxConfigArgs
-                    {
-                        DisablePasswordAuthentication = false,
-                    },
-                    StorageOsDisk = new VirtualMachineStorageOsDiskArgs
-                    {
-                        CreateOption = "FromImage",
-                        Name = "myosdisk1",
-                    },
-                    StorageImageReference = new VirtualMachineStorageImageReferenceArgs
-                    {
-                        Publisher = "canonical",
-                        Offer = "UbuntuServer",
-                        Sku = "16.04-LTS",
-                        Version = "latest",
-                    },
-                }, new CustomResourceOptions { DeleteBeforeReplace = true });
+nohup python -m SimpleHTTPServer 80 &
+";
 
-
-            // The public IP address is not allocated until the VM is running, so wait for that
-            // resource to create, and then lookup the IP address again to report its public IP.
-            var ipAddress = Output
-                .Tuple<string, string, string>(vm.Id, publicIp.Name, resourceGroup.Name)
-                .Apply<string>(async t => {
-                    (_, string name, string resourceGroupName) = t;
-                    var ip = await Pulumi.Azure.Network.Invokes.GetPublicIP(new GetPublicIPArgs{ Name = name, ResourceGroupName = resourceGroupName });
-                    return ip.IpAddress;
-                });
+            var server = new Instance("web-server-www", new InstanceArgs
+            {
+                InstanceType = size,
+                SecurityGroups = { group.Name },
+                UserData = userData,
+                Ami = ami.Id,
+            });
 
             return new Dictionary<string, object>
             {
-                { "ipAddress",  ipAddress }
+                { "publicIp",  server.PublicIp },
+                { "publicDns",  server.PublicDns }
             };
         });
     }

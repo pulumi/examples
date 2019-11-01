@@ -8,7 +8,7 @@ Stands up an [Azure Kubernetes Service](https://azure.microsoft.com/en-us/servic
 
 To deploy your infrastructure, follow the below steps.
 
-## Prerequisites
+### Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 2. [Install .NET Core 3.0+](https://dotnet.microsoft.com/download)
