@@ -11,11 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="Pulumi" Version="1.5.0-*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Users\shilk\go\src\github.com\pulumi\pulumi-azure\sdk\dotnet\Pulumi.Azure.csproj" />
-    <ProjectReference Include="..\..\..\..\Users\shilk\go\src\github.com\pulumi\pulumi\sdk\dotnet\Pulumi.FSharp\Pulumi.FSharp.fsproj" />
+    <PackageReference Include="Pulumi.FSharp" Version="1.5.0-*" />
+    <PackageReference Include="Pulumi.Azure" Version="1.4.0-*" />
   </ItemGroup>
 
 </Project>

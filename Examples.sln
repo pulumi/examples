@@ -3,29 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29411.138
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulumi.Azure", "..\..\..\Users\shilk\go\src\github.com\pulumi\pulumi-azure\sdk\dotnet\Pulumi.Azure.csproj", "{5074730E-7D67-433F-B1B6-C7FCDC000EB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.WebServer", "azure-cs-webserver\Azure.WebServer.csproj", "{0BE49450-B90C-4CC5-BEA5-4D5A74C7C7DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebServer", "azure-cs-webserver\WebServer.csproj", "{0BE49450-B90C-4CC5-BEA5-4D5A74C7C7DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AppService", "azure-cs-appservice\Azure.AppService.csproj", "{80AAC51F-54AE-4344-99D0-E2F2B6A959E8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppService", "azure-cs-appservice\AppService.csproj", "{80AAC51F-54AE-4344-99D0-E2F2B6A959E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CosmosAppComponent", "azure-cs-cosmosapp-component\Azure.CosmosAppComponent.csproj", "{FA754E4A-319E-4E9A-A3CC-2E35C94115A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CosmosAppComponent", "azure-cs-cosmosapp-component\CosmosAppComponent.csproj", "{FA754E4A-319E-4E9A-A3CC-2E35C94115A7}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Azure.AppServiceFs", "azure-fs-appservice\Azure.AppService.fsproj", "{F420C993-DAE7-49DD-8D4D-C908C6842636}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AppServiceFs", "azure-fs-appservice\AppServiceFs.fsproj", "{F420C993-DAE7-49DD-8D4D-C908C6842636}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AKS", "azure-cs-aks\Azure.AKS.csproj", "{87A11F4D-063D-4374-9D22-156F04C767BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulumi.Azuread", "..\pulumi-azuread\sdk\dotnet\Pulumi.Azuread.csproj", "{28701674-C58C-4F3C-9E29-BF22211A56FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.KeyVault", "azure-cs-msi-keyvault-rbac\Azure.KeyVault.csproj", "{79319396-C17A-4DBB-92B2-7291D39E0B70}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulumi.Random", "..\pulumi-random\sdk\dotnet\Pulumi.Random.csproj", "{999D7390-46D6-4DA8-8457-357E397F2F65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.FunctionsRaw.Functions", "azure-cs-functions-raw\functions\Azure.FunctionsRaw.Functions.csproj", "{F06F14D4-8BE0-4DB8-84BB-93AD65177EED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AKS", "azure-cs-aks\AKS.csproj", "{87A11F4D-063D-4374-9D22-156F04C767BE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulumi.Tls", "..\..\..\Users\shilk\go\src\github.com\pulumi\pulumi-tls\sdk\dotnet\Pulumi.Tls.csproj", "{9999C9AF-A91D-431F-8F10-74D182464447}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyVault", "azure-cs-msi-keyvault-rbac\KeyVault.csproj", "{79319396-C17A-4DBB-92B2-7291D39E0B70}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulumi", "..\..\..\Users\shilk\go\src\github.com\pulumi\pulumi\sdk\dotnet\Pulumi\Pulumi.csproj", "{E87C3F1E-AF96-4D50-B26F-5F1127ED155E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Functions", "azure-cs-functions-raw\Functions.csproj", "{9ED365CF-C6C9-4876-8135-CEC119D521B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.FunctionsRaw.Infra", "azure-cs-functions-raw\infra\Azure.FunctionsRaw.Infra.csproj", "{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5074730E-7D67-433F-B1B6-C7FCDC000EB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5074730E-7D67-433F-B1B6-C7FCDC000EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5074730E-7D67-433F-B1B6-C7FCDC000EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5074730E-7D67-433F-B1B6-C7FCDC000EB5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0BE49450-B90C-4CC5-BEA5-4D5A74C7C7DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0BE49450-B90C-4CC5-BEA5-4D5A74C7C7DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BE49450-B90C-4CC5-BEA5-4D5A74C7C7DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,34 +41,22 @@ Global
 		{F420C993-DAE7-49DD-8D4D-C908C6842636}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F420C993-DAE7-49DD-8D4D-C908C6842636}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F420C993-DAE7-49DD-8D4D-C908C6842636}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28701674-C58C-4F3C-9E29-BF22211A56FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28701674-C58C-4F3C-9E29-BF22211A56FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28701674-C58C-4F3C-9E29-BF22211A56FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28701674-C58C-4F3C-9E29-BF22211A56FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{999D7390-46D6-4DA8-8457-357E397F2F65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{999D7390-46D6-4DA8-8457-357E397F2F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{999D7390-46D6-4DA8-8457-357E397F2F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{999D7390-46D6-4DA8-8457-357E397F2F65}.Release|Any CPU.Build.0 = Release|Any CPU
 		{87A11F4D-063D-4374-9D22-156F04C767BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{87A11F4D-063D-4374-9D22-156F04C767BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87A11F4D-063D-4374-9D22-156F04C767BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87A11F4D-063D-4374-9D22-156F04C767BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9999C9AF-A91D-431F-8F10-74D182464447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9999C9AF-A91D-431F-8F10-74D182464447}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9999C9AF-A91D-431F-8F10-74D182464447}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9999C9AF-A91D-431F-8F10-74D182464447}.Release|Any CPU.Build.0 = Release|Any CPU
 		{79319396-C17A-4DBB-92B2-7291D39E0B70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79319396-C17A-4DBB-92B2-7291D39E0B70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79319396-C17A-4DBB-92B2-7291D39E0B70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79319396-C17A-4DBB-92B2-7291D39E0B70}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E87C3F1E-AF96-4D50-B26F-5F1127ED155E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E87C3F1E-AF96-4D50-B26F-5F1127ED155E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E87C3F1E-AF96-4D50-B26F-5F1127ED155E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E87C3F1E-AF96-4D50-B26F-5F1127ED155E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9ED365CF-C6C9-4876-8135-CEC119D521B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9ED365CF-C6C9-4876-8135-CEC119D521B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9ED365CF-C6C9-4876-8135-CEC119D521B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9ED365CF-C6C9-4876-8135-CEC119D521B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F06F14D4-8BE0-4DB8-84BB-93AD65177EED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F06F14D4-8BE0-4DB8-84BB-93AD65177EED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F06F14D4-8BE0-4DB8-84BB-93AD65177EED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F06F14D4-8BE0-4DB8-84BB-93AD65177EED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

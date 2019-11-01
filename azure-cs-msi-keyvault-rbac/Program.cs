@@ -17,7 +17,7 @@ using Pulumi.Random;
 
 class Program
 {
-    static Task<int> Main(string[] args)
+    static Task<int> Main()
     {
         return Deployment.RunAsync(async () => {
             var resourceGroup = new ResourceGroup("keyvault-rg");

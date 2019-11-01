@@ -8,10 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Pulumi" Version="1.5.0-*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Users\shilk\go\src\github.com\pulumi\pulumi-azure\sdk\dotnet\Pulumi.Azure.csproj" />
+    <PackageReference Include="Pulumi.Azure" Version="1.4.0-*" />
+    <PackageReference Include="Pulumi.Azuread" Version="1.1.0-*" />
+    <PackageReference Include="Pulumi.Random" Version="1.2.0-*" />
+    <PackageReference Include="Pulumi.Tls" Version="1.1.0-*" />
   </ItemGroup>
 
 </Project>
