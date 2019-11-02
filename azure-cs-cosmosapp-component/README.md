@@ -39,14 +39,20 @@ You will be prompted to do this during deployment if you forget this step.
 $ az login
 ```
 
-#### Step 3: Configure the list of regions to deploy to
+#### Step 3: Build and publish the Azure Functions project:
+
+    ```
+    $ dotnet publish app
+    ```
+
+#### Step 4: Configure the list of regions to deploy to
 
 ```
 $ pulumi config set azure:location westus
 $ pulumi config set locations westus,westeurope
 ```
 
-#### Step 4: Deploy your changes
+#### Step 5: Deploy your changes
 
 Run `pulumi up` to preview and deploy changes:
 
@@ -63,7 +69,7 @@ Previewing changes:
 ...
 ```
 
-### Step 5: Check the deployed website endpoints
+### Step 6: Check the deployed website endpoints
 
 Three endpoints are now available. For example,
 
@@ -77,7 +83,7 @@ Document 'cosmos' not found
 
 Go to the Azure portal and add a document with the ID "cosmos" to receive a non-empty response.
 
-### Step 6: Clean up
+### Step 7: Clean up
 
 Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
