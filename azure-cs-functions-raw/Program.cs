@@ -45,7 +45,7 @@ class Program
                 StorageAccountName = storageAccount.Name,
                 StorageContainerName = container.Name,
                 Type = "block",
-                Content = new FileArchive("../functions/bin/Debug/netcoreapp3.0/publish"),
+                Content = new FileArchive("./functions/bin/Debug/netcoreapp3.0/publish"),
             });
 
             var codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount);

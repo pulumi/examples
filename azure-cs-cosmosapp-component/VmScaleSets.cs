@@ -21,19 +21,18 @@ public static class VmScaleSets
     {
         // Read a list of target locations from the config file:
         // Expecting a comma-separated list, e.g., "westus,eastus,westeurope"
-        var locations = ImmutableList.Create(new Config().Require("locations").Split(","));
+        var locations = new Config().Require("locations").Split(",");
 
         var resourceGroup = new ResourceGroup("cosmosvms-rg", new ResourceGroupArgs { Location = locations[0] });
 
-        var vmss = new CosmosApp("vmss",
-            new CosmosAppArgs
-            {
-                ResourceGroup = resourceGroup,
-                Locations = locations,
-                DatabaseName = "pricedb",
-                ContainerName = "prices",
-                Factory = new Builder(resourceGroup).BuildVMScaleSetApp,
-            });
+        var vmss = new CosmosApp("vmss", new CosmosAppArgs
+        {
+            ResourceGroup = resourceGroup,
+            Locations = locations,
+            DatabaseName = "pricedb",
+            ContainerName = "prices",
+            Factory = new Builder(resourceGroup).BuildVMScaleSetApp,
+        });
 
         return new Dictionary<string, object>
         {
@@ -59,80 +58,73 @@ public static class VmScaleSets
                 var location = region.Location;
                 var domainName = $"rnddnplm{location}"; //TODO: random
 
-                var publicIp = new PublicIp($"pip-{location}",
-                    new PublicIpArgs
-                    {
-                        ResourceGroupName = resourceGroup.Name,
-                        Location = location,
-                        AllocationMethod = "Static",
-                        DomainNameLabel = domainName,
-                    },
-                    options);
+                var publicIp = new PublicIp($"pip-{location}", new PublicIpArgs
+                {
+                    ResourceGroupName = resourceGroup.Name,
+                    Location = location,
+                    AllocationMethod = "Static",
+                    DomainNameLabel = domainName,
+                },
+                options);
 
-                var loadBalancer = new LoadBalancer($"lb-{location}",
-                    new LoadBalancerArgs
-                    {
-                        ResourceGroupName = resourceGroup.Name,
-                        Location = location,
-                        FrontendIpConfigurations = 
-                        { 
-                            new LoadBalancerFrontendIpConfigurationsArgs 
-                            {
-                                Name = "PublicIPAddress",
-                                PublicIpAddressId = publicIp.Id,
-                            }
-                        }
-                    },
-                    options);
-
-                var bpepool = new BackendAddressPool($"bap-{location}",
-                    new BackendAddressPoolArgs
-                    {
-                        ResourceGroupName = resourceGroup.Name,
-                        LoadbalancerId = loadBalancer.Id,
-                    },
-                    options);
-
-                var probe = new Probe($"ssh-probe-{location}".Truncate(16),
-                    new ProbeArgs
-                    {
-                        ResourceGroupName = resourceGroup.Name,
-                        LoadbalancerId = loadBalancer.Id,
-                        Port = 80,
-                    },
-                    options);
-
-                var rule = new Rule($"rule-{location}",
-                    new RuleArgs
-                    {
-                        ResourceGroupName = resourceGroup.Name,
-                        BackendAddressPoolId = bpepool.Id,
-                        BackendPort = 80,
-                        FrontendIpConfigurationName = "PublicIPAddress",
-                        FrontendPort = 80,
-                        LoadbalancerId = loadBalancer.Id,
-                        ProbeId = probe.Id,
-                        Protocol = "Tcp",
-                    },
-                    options);
-
-                var vnet = new VirtualNetwork($"vnet-{location}",
-                    new VirtualNetworkArgs
+                var loadBalancer = new LoadBalancer($"lb-{location}", new LoadBalancerArgs
+                {
+                    ResourceGroupName = resourceGroup.Name,
+                    Location = location,
+                    FrontendIpConfigurations = 
                     { 
-                        ResourceGroupName = resourceGroup.Name,
-                        Location = location,
-                        AddressSpaces = { "10.0.0.0/16" },
-                    },
-                    options);
+                        new LoadBalancerFrontendIpConfigurationsArgs 
+                        {
+                            Name = "PublicIPAddress",
+                            PublicIpAddressId = publicIp.Id,
+                        }
+                    }
+                },
+                options);
 
-                var subnet = new Subnet($"subnet-{location}",
-                    new SubnetArgs
-                    {
-                        ResourceGroupName = resourceGroup.Name,
-                        AddressPrefix = "10.0.2.0/24",
-                        VirtualNetworkName = vnet.Name,
-                    },
-                    options);
+                var bpepool = new BackendAddressPool($"bap-{location}", new BackendAddressPoolArgs
+                {
+                    ResourceGroupName = resourceGroup.Name,
+                    LoadbalancerId = loadBalancer.Id,
+                },
+                options);
+
+                var probe = new Probe($"ssh-probe-{location}".Truncate(16), new ProbeArgs
+                {
+                    ResourceGroupName = resourceGroup.Name,
+                    LoadbalancerId = loadBalancer.Id,
+                    Port = 80,
+                },
+                options);
+
+                var rule = new Rule($"rule-{location}", new RuleArgs
+                {
+                    ResourceGroupName = resourceGroup.Name,
+                    BackendAddressPoolId = bpepool.Id,
+                    BackendPort = 80,
+                    FrontendIpConfigurationName = "PublicIPAddress",
+                    FrontendPort = 80,
+                    LoadbalancerId = loadBalancer.Id,
+                    ProbeId = probe.Id,
+                    Protocol = "Tcp",
+                },
+                options);
+
+                var vnet = new VirtualNetwork($"vnet-{location}", new VirtualNetworkArgs
+                { 
+                    ResourceGroupName = resourceGroup.Name,
+                    Location = location,
+                    AddressSpaces = { "10.0.0.0/16" },
+                },
+                options);
+
+                var subnet = new Subnet($"subnet-{location}", new SubnetArgs
+                {
+                    ResourceGroupName = resourceGroup.Name,
+                    AddressPrefix = "10.0.2.0/24",
+                    VirtualNetworkName = vnet.Name,
+                },
+                options);
 
                 var customData = Output.All<string>(context.CosmosAccount.Endpoint, context.CosmosAccount.PrimaryMasterKey, context.Database.Name, context.Container.Name)
                     .Apply(values =>
@@ -144,146 +136,144 @@ public static class VmScaleSets
                                    .Replace("${LOCATION}", location);
                     });
 
-                var scaleSet = new ScaleSet($"vmss-{location}",
-                    new ScaleSetArgs
+                var scaleSet = new ScaleSet($"vmss-{location}", new ScaleSetArgs
+                {
+                    ResourceGroupName = resourceGroup.Name,
+                    Location = location,
+                    NetworkProfiles = 
                     {
-                        ResourceGroupName = resourceGroup.Name,
-                        Location = location,
-                        NetworkProfiles = 
+                        new ScaleSetNetworkProfilesArgs
                         {
-                            new ScaleSetNetworkProfilesArgs
+                            IpConfigurations =
                             {
-                                IpConfigurations =
+                                new ScaleSetNetworkProfilesIpConfigurationsArgs
                                 {
-                                    new ScaleSetNetworkProfilesIpConfigurationsArgs
-                                    {
-                                        LoadBalancerBackendAddressPoolIds = { bpepool.Id },
-                                        Name = "IPConfiguration",
-                                        Primary = true,
-                                        SubnetId = subnet.Id,
-                                    }
-                                },
-                                Name = "networkprofile",
-                                Primary = true,
-                            }
-                        },
-                        OsProfile = new ScaleSetOsProfileArgs
-                        {
-                            AdminUsername = "neo",
-                            AdminPassword = "SEcurePwd$3",
-                            ComputerNamePrefix = "lab",
-                            CustomData = customData,
-                        },
-                        OsProfileLinuxConfig = new ScaleSetOsProfileLinuxConfigArgs { DisablePasswordAuthentication = false },
-                        Sku = new ScaleSetSkuArgs
-                        {
-                            Capacity = 1,
-                            Name = "Standard_DS1_v2",
-                            Tier = "Standard",
-                        },
-                        StorageProfileDataDisks =
-                        {
-                            new ScaleSetStorageProfileDataDisksArgs
-                            {
-                                Caching = "ReadWrite",
-                                CreateOption = "Empty",
-                                DiskSizeGb = 10,
-                                Lun = 0,
-                            }
-                        },
-                        StorageProfileImageReference = new ScaleSetStorageProfileImageReferenceArgs
-                        {
-                            Offer = "UbuntuServer",
-                            Publisher = "Canonical",
-                            Sku = "18.04-LTS",
-                            Version = "latest",
-                        },
-                        StorageProfileOsDisk = new ScaleSetStorageProfileOsDiskArgs
+                                    LoadBalancerBackendAddressPoolIds = { bpepool.Id },
+                                    Name = "IPConfiguration",
+                                    Primary = true,
+                                    SubnetId = subnet.Id,
+                                }
+                            },
+                            Name = "networkprofile",
+                            Primary = true,
+                        }
+                    },
+                    OsProfile = new ScaleSetOsProfileArgs
+                    {
+                        AdminUsername = "neo",
+                        AdminPassword = "SEcurePwd$3",
+                        ComputerNamePrefix = "lab",
+                        CustomData = customData,
+                    },
+                    OsProfileLinuxConfig = new ScaleSetOsProfileLinuxConfigArgs { DisablePasswordAuthentication = false },
+                    Sku = new ScaleSetSkuArgs
+                    {
+                        Capacity = 1,
+                        Name = "Standard_DS1_v2",
+                        Tier = "Standard",
+                    },
+                    StorageProfileDataDisks =
+                    {
+                        new ScaleSetStorageProfileDataDisksArgs
                         {
                             Caching = "ReadWrite",
-                            CreateOption = "FromImage",
-                            ManagedDiskType = "Standard_LRS",
-                            Name = "",
-                        },
-                        UpgradePolicyMode = "Automatic",
+                            CreateOption = "Empty",
+                            DiskSizeGb = 10,
+                            Lun = 0,
+                        }
                     },
-                    (CustomResourceOptions)ResourceOptions.Merge(options, new ResourceOptions { DependsOn = { bpepool, rule } }));
-
-                var autoscale = new AutoscaleSetting($"as-{location}",
-                    new AutoscaleSettingArgs
+                    StorageProfileImageReference = new ScaleSetStorageProfileImageReferenceArgs
                     {
-                        ResourceGroupName = resourceGroup.Name,
-                        Location = location,
-                        Notification = new AutoscaleSettingNotificationArgs
-                        {
-                            Email = new AutoscaleSettingNotificationEmailArgs
-                            {
-                                CustomEmails = { "admin@contoso.com" },
-                                SendToSubscriptionAdministrator = true,
-                                SendToSubscriptionCoAdministrator = true,
-                            },
-                        },
-                        Profiles =
-                        {
-                            new AutoscaleSettingProfilesArgs
-                            {
-                                Capacity = new AutoscaleSettingProfilesCapacityArgs
-                                {
-                                    Default = 1,
-                                    Maximum = 10,
-                                    Minimum = 1,
-                                },
-                                Name = "defaultProfile",
-                                Rules =
-                                {
-                                    new AutoscaleSettingProfilesRulesArgs
-                                    {
-                                        MetricTrigger = new AutoscaleSettingProfilesRulesMetricTriggerArgs
-                                        {
-                                            MetricName = "Percentage CPU",
-                                            MetricResourceId = scaleSet.Id,
-                                            Operator =  "GreaterThan",
-                                            Statistic = "Average",
-                                            Threshold = 75,
-                                            TimeAggregation = "Average",
-                                            TimeGrain = "PT1M",
-                                            TimeWindow = "PT5M",
-                                        },
-                                        ScaleAction= new AutoscaleSettingProfilesRulesScaleActionArgs
-                                        {
-                                            Cooldown = "PT1M",
-                                            Direction = "Increase",
-                                            Type = "ChangeCount",
-                                            Value = 1,
-                                        },
-                                    },
-                                    new AutoscaleSettingProfilesRulesArgs
-                                    {
-                                        MetricTrigger = new AutoscaleSettingProfilesRulesMetricTriggerArgs
-                                        {
-                                            MetricName = "Percentage CPU",
-                                            MetricResourceId = scaleSet.Id,
-                                            Operator =  "LessThan",
-                                            Statistic = "Average",
-                                            Threshold = 25,
-                                            TimeAggregation = "Average",
-                                            TimeGrain = "PT1M",
-                                            TimeWindow = "PT5M",
-                                        },
-                                        ScaleAction= new AutoscaleSettingProfilesRulesScaleActionArgs
-                                        {
-                                            Cooldown = "PT1M",
-                                            Direction = "Decrease",
-                                            Type = "ChangeCount",
-                                            Value = 1,
-                                        },
-                                    },
-                                }
-                            }
-                        },
-                        TargetResourceId = scaleSet.Id,
+                        Offer = "UbuntuServer",
+                        Publisher = "Canonical",
+                        Sku = "18.04-LTS",
+                        Version = "latest",
                     },
-                    options);
+                    StorageProfileOsDisk = new ScaleSetStorageProfileOsDiskArgs
+                    {
+                        Caching = "ReadWrite",
+                        CreateOption = "FromImage",
+                        ManagedDiskType = "Standard_LRS",
+                        Name = "",
+                    },
+                    UpgradePolicyMode = "Automatic",
+                },
+                (CustomResourceOptions)ResourceOptions.Merge(options, new ResourceOptions { DependsOn = { bpepool, rule } }));
+
+                var autoscale = new AutoscaleSetting($"as-{location}", new AutoscaleSettingArgs
+                {
+                    ResourceGroupName = resourceGroup.Name,
+                    Location = location,
+                    Notification = new AutoscaleSettingNotificationArgs
+                    {
+                        Email = new AutoscaleSettingNotificationEmailArgs
+                        {
+                            CustomEmails = { "admin@contoso.com" },
+                            SendToSubscriptionAdministrator = true,
+                            SendToSubscriptionCoAdministrator = true,
+                        },
+                    },
+                    Profiles =
+                    {
+                        new AutoscaleSettingProfilesArgs
+                        {
+                            Capacity = new AutoscaleSettingProfilesCapacityArgs
+                            {
+                                Default = 1,
+                                Maximum = 10,
+                                Minimum = 1,
+                            },
+                            Name = "defaultProfile",
+                            Rules =
+                            {
+                                new AutoscaleSettingProfilesRulesArgs
+                                {
+                                    MetricTrigger = new AutoscaleSettingProfilesRulesMetricTriggerArgs
+                                    {
+                                        MetricName = "Percentage CPU",
+                                        MetricResourceId = scaleSet.Id,
+                                        Operator =  "GreaterThan",
+                                        Statistic = "Average",
+                                        Threshold = 75,
+                                        TimeAggregation = "Average",
+                                        TimeGrain = "PT1M",
+                                        TimeWindow = "PT5M",
+                                    },
+                                    ScaleAction= new AutoscaleSettingProfilesRulesScaleActionArgs
+                                    {
+                                        Cooldown = "PT1M",
+                                        Direction = "Increase",
+                                        Type = "ChangeCount",
+                                        Value = 1,
+                                    },
+                                },
+                                new AutoscaleSettingProfilesRulesArgs
+                                {
+                                    MetricTrigger = new AutoscaleSettingProfilesRulesMetricTriggerArgs
+                                    {
+                                        MetricName = "Percentage CPU",
+                                        MetricResourceId = scaleSet.Id,
+                                        Operator =  "LessThan",
+                                        Statistic = "Average",
+                                        Threshold = 25,
+                                        TimeAggregation = "Average",
+                                        TimeGrain = "PT1M",
+                                        TimeWindow = "PT5M",
+                                    },
+                                    ScaleAction= new AutoscaleSettingProfilesRulesScaleActionArgs
+                                    {
+                                        Cooldown = "PT1M",
+                                        Direction = "Decrease",
+                                        Type = "ChangeCount",
+                                        Value = 1,
+                                    },
+                                },
+                            }
+                        }
+                    },
+                    TargetResourceId = scaleSet.Id,
+                },
+                options);
 
                 return new AzureEndpoint(publicIp.Id);
             };

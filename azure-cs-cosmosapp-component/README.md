@@ -6,7 +6,7 @@ The application shows several notable features:
 
 1. Easy global deployments - a config setting provides a list of all the regions to deploy and a single execution deploys across them all.
 2. Abstraction - the `CosmosApp` component - abstracts away all the common logic for a global app with Cosmos DB multi-region data distribution and Traffic Manager for routing the traffic.
-3. Multi-model - an implementation example is currently provided for virtual machines.
+3. Multi-model - an implementation example is currently provided for serverless functions and virtual machines.
 
 ## `CosmosApp` component
 

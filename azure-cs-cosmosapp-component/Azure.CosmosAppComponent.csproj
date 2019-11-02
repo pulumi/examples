@@ -11,4 +11,8 @@
     <PackageReference Include="Pulumi.Azure" Version="1.4.0-*" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);app\**\*</DefaultItemExcludes>
+  </PropertyGroup>
+
 </Project>

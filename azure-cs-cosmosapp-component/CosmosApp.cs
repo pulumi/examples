@@ -80,7 +80,7 @@ public class ExternalEndpoint : IRegionalEndpoint
 public class CosmosAppArgs
 {
     public ResourceGroup ResourceGroup { get; set; }
-    public ImmutableList<string> Locations { get; set; }
+    public string[] Locations { get; set; }
     public Func<GlobalContext, Func<RegionalContext, IRegionalEndpoint>> Factory { get; set; }
     public Input<string> DatabaseName { get; set; }
     public Input<string> ContainerName { get; set; }
@@ -127,6 +127,7 @@ public class CosmosApp : ComponentResource
                 ResourceGroupName = resourceGroup.Name,
                 AccountName = cosmosAccount.Name,
                 DatabaseName = database.Name,
+                Name = args.ContainerName,
             },
             parentOptions);
 
