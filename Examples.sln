@@ -9,13 +9,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AppService", "azure-c
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CosmosAppComponent", "azure-cs-cosmosapp-component\Azure.CosmosAppComponent.csproj", "{FA754E4A-319E-4E9A-A3CC-2E35C94115A7}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Azure.AppServiceFs", "azure-fs-appservice\Azure.AppService.fsproj", "{F420C993-DAE7-49DD-8D4D-C908C6842636}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Azure.AppService", "azure-fs-appservice\Azure.AppService.fsproj", "{F420C993-DAE7-49DD-8D4D-C908C6842636}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.AKS", "azure-cs-aks\Azure.AKS.csproj", "{87A11F4D-063D-4374-9D22-156F04C767BE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.KeyVault", "azure-cs-msi-keyvault-rbac\Azure.KeyVault.csproj", "{79319396-C17A-4DBB-92B2-7291D39E0B70}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.FunctionsRaw", "azure-cs-functions-raw\Azure.FunctionsRaw.csproj", "{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.WebServer", "aws-cs-webserver\AWS.WebServer.csproj", "{C0F20B39-07D0-4118-A48F-6D3911673424}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GCP.Functions", "gcp-cs-functions\GCP.Functions.csproj", "{EAA745CE-CB4E-4F33-B373-051DE1C154B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,14 +51,18 @@ Global
 		{79319396-C17A-4DBB-92B2-7291D39E0B70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79319396-C17A-4DBB-92B2-7291D39E0B70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79319396-C17A-4DBB-92B2-7291D39E0B70}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F06F14D4-8BE0-4DB8-84BB-93AD65177EED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F06F14D4-8BE0-4DB8-84BB-93AD65177EED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F06F14D4-8BE0-4DB8-84BB-93AD65177EED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F06F14D4-8BE0-4DB8-84BB-93AD65177EED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0F20B39-07D0-4118-A48F-6D3911673424}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0F20B39-07D0-4118-A48F-6D3911673424}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0F20B39-07D0-4118-A48F-6D3911673424}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0F20B39-07D0-4118-A48F-6D3911673424}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAA745CE-CB4E-4F33-B373-051DE1C154B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAA745CE-CB4E-4F33-B373-051DE1C154B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAA745CE-CB4E-4F33-B373-051DE1C154B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAA745CE-CB4E-4F33-B373-051DE1C154B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
