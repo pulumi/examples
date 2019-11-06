@@ -33,7 +33,7 @@ To deploy your infrastructure, follow the below steps.
 1.  Configure the location to deploy the resources to:
 
     ```
-    $ pulumi config set azure:location <location>
+    $ pulumi config set azure:location centralus
     ```
 
 1. Define SQL Server password (make it complex enough to satisfy Azure policy):
