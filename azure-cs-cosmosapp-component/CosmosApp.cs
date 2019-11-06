@@ -6,8 +6,8 @@ using System.Linq;
 
 using Pulumi;
 using Pulumi.Azure.Core;
-using Pulumi.Azure.Cosmosdb;
-using Pulumi.Azure.Cosmosdb.Inputs;
+using Pulumi.Azure.CosmosDB;
+using Pulumi.Azure.CosmosDB.Inputs;
 using Pulumi.Azure.Trafficmanager;
 using Pulumi.Azure.Trafficmanager.Inputs;
 

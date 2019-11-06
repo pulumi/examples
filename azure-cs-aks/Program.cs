@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Pulumi;
-using Pulumi.Azuread;
-using Pulumi.Azure.Containerservice;
-using Pulumi.Azure.Containerservice.Inputs;
+using Pulumi.AzureAD;
+using Pulumi.Azure.ContainerService;
+using Pulumi.Azure.ContainerService.Inputs;
 using Pulumi.Azure.Core;
 using Pulumi.Azure.Network;
 using Pulumi.Random;

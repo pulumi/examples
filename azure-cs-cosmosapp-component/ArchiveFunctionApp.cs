@@ -1,8 +1,11 @@
-﻿using Pulumi;
-using Pulumi.Azure.Appservice;
-using Pulumi.Azure.Appservice.Inputs;
-using Pulumi.Azure.Storage;
+﻿// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+
 using System.Collections.Generic;
+
+using Pulumi;
+using Pulumi.Azure.AppService;
+using Pulumi.Azure.AppService.Inputs;
+using Pulumi.Azure.Storage;
 
 public class ArchiveFunctionApp : ComponentResource
 {

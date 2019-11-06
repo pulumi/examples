@@ -5,12 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Pulumi;
-using Pulumi.Azure.Appservice;
-using Pulumi.Azure.Appservice.Inputs;
+using Pulumi.Azure.AppService;
+using Pulumi.Azure.AppService.Inputs;
 using Pulumi.Azure.Authorization;
 using Pulumi.Azure.Core;
-using Pulumi.Azure.Keyvault;
-using Pulumi.Azure.Keyvault.Inputs;
+using Pulumi.Azure.KeyVault;
+using Pulumi.Azure.KeyVault.Inputs;
 using Pulumi.Azure.Sql;
 using Pulumi.Azure.Storage;
 using Pulumi.Random;

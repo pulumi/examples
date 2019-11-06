@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Pulumi;
-using Pulumi.Azure.Appservice;
-using Pulumi.Azure.Appservice.Inputs;
+using Pulumi.Azure.AppService;
+using Pulumi.Azure.AppService.Inputs;
 using Pulumi.Azure.Core;
 using Pulumi.Azure.Storage;
 

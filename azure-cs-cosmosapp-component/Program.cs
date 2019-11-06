@@ -12,11 +12,11 @@ class Program
         return Deployment.RunAsync(() =>
         {
             var functions = Functions.Run();
-            var vmss = VmScaleSets.Run();
+//            var vmss = VmScaleSets.Run();
             return new Dictionary<string, object>
             {
                 { "functionsEndpoint", functions["functionsEndpoint"] },
-                { "vmssEndpoint", vmss["vmssEndpoint"] },
+  //              { "vmssEndpoint", vmss["vmssEndpoint"] },
             };
         });
     }

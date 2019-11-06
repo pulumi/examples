@@ -2,8 +2,8 @@
 
 open Pulumi
 open Pulumi.FSharp
-open Pulumi.Azure.Appservice
-open Pulumi.Azure.Appservice.Inputs
+open Pulumi.Azure.AppService
+open Pulumi.Azure.AppService.Inputs
 open Pulumi.Azure.Core
 open Pulumi.Azure.Sql
 open Pulumi.Azure.Storage
