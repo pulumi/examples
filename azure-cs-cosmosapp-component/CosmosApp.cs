@@ -8,8 +8,8 @@ using Pulumi;
 using Pulumi.Azure.Core;
 using Pulumi.Azure.CosmosDB;
 using Pulumi.Azure.CosmosDB.Inputs;
-using Pulumi.Azure.Trafficmanager;
-using Pulumi.Azure.Trafficmanager.Inputs;
+using Pulumi.Azure.Network;
+using Pulumi.Azure.Network.Inputs;
 
 public class GlobalContext
 {
@@ -132,14 +132,14 @@ public class CosmosApp : ComponentResource
             parentOptions);
 
         // Traffic Manager as a global HTTP endpoint
-        var profile = new Profile($"tm{name}",
-            new ProfileArgs
+        var profile = new TrafficManagerProfile($"tm{name}",
+            new TrafficManagerProfileArgs
             {
                 ResourceGroupName = resourceGroup.Name,
                 TrafficRoutingMethod = "Performance",
                 DnsConfigs =
                 {
-                    new ProfileDnsConfigsArgs
+                    new TrafficManagerProfileDnsConfigsArgs
                     {
                         // Subdomain must be globally unique, so we default it with the full resource group name
                         RelativeName = Output.Format($"{name}{resourceGroup.Name}"),
@@ -148,7 +148,7 @@ public class CosmosApp : ComponentResource
                 },
                 MonitorConfigs =
                 {
-                    new ProfileMonitorConfigsArgs
+                    new TrafficManagerProfileMonitorConfigsArgs
                     {
                         Protocol = "HTTP",
                         Port = 80,
@@ -166,8 +166,8 @@ public class CosmosApp : ComponentResource
         {
             var app = buildLocation(new RegionalContext(location));
 
-            return new Endpoint($"tm{name}{location}".Truncate(16),
-                new EndpointArgs
+            return new TrafficManagerEndpoint($"tm{name}{location}".Truncate(16),
+                new TrafficManagerEndpointArgs
                 {
                     ResourceGroupName = resourceGroup.Name,
                     ProfileName = profile.Name,
