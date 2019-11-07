@@ -1,6 +1,5 @@
 import * as gcp from "@pulumi/gcp";
-import { PolicyPack, typedRule } from "@pulumi/policy";
-import * as assert from "assert";
+import { PolicyPack, validateTypedResource } from "@pulumi/policy";
 
 const policies = new PolicyPack("gcp", {
     policies: [
@@ -8,29 +7,32 @@ const policies = new PolicyPack("gcp", {
             name: "discouraged-gcp-public-ip-address",
             description: "Associating public IP addresses is discouraged.",
             enforcementLevel: "advisory",
-            rules: typedRule(gcp.compute.Instance.isInstance, it => {
-                const publicIps = it.networkInterfaces.find(net =>
-                    net.accessConfigs !== undefined)
-                assert(publicIps === undefined);
+            validateResource: validateTypedResource(gcp.compute.Instance.isInstance, (instance, args, reportViolation) => {
+                const publicIps = instance.networkInterfaces.find(net => net.accessConfigs !== undefined);
+                if (publicIps !== undefined) {
+                    reportViolation("Associating public IP addresses is discouraged.");
+                }
             }),
         },
         {
             name: "prohibited-public-internet",
             description: "Ingress rules with public internet access are prohibited.",
             enforcementLevel: "mandatory",
-            rules: typedRule(gcp.compute.Firewall.isInstance, it => {
-                const publicInternetRules = (it.sourceRanges || []).find(ranges =>
-                    ranges === "0.0.0.0/0"
-                );
-                assert(publicInternetRules === undefined);
+            validateResource: validateTypedResource(gcp.compute.Firewall.isInstance, (firewall, args, reportViolation) => {
+                const publicInternetRules = (firewall.sourceRanges || []).find(ranges => ranges === "0.0.0.0/0");
+                if (publicInternetRules !== undefined) {
+                    reportViolation("Ingress rules with public internet access are prohibited.");
+                }
             }),
         },
         {
             name: "prohibited-bigtable",
             description: "Use of Bigtable is prohibited.",
             enforcementLevel: "mandatory",
-            rules: (type: string) => {
-                assert(type.startsWith("gcp:bigtable") === false);
+            validateResource: (args, reportViolation) => {
+                if (args.type.startsWith("gcp:bigtable")) {
+                    reportViolation("Use of Bigtable is prohibited.");
+                }
             },
         },
     ],

@@ -4,7 +4,7 @@
     "dependencies": {
         "@pulumi/pulumi": "0.17.21",
         "@pulumi/aws": "0.18.16",
-        "@pulumi/policy": "https://pac-releases-0db9dae.s3.us-east-2.amazonaws.com/pulumi-policy-v0.0.1-dev.1565715379.tgz",
+        "@pulumi/policy": "dev"
     },
     "devDependencies": {
         "@types/mocha": "^2.2.42",

@@ -1,6 +1,5 @@
 import * as aws from "@pulumi/aws";
-import { PolicyPack, typedRule } from "@pulumi/policy";
-import * as assert from "assert";
+import { PolicyPack, ReportViolation, validateTypedResource } from "@pulumi/policy";
 
 const policies = new PolicyPack("aws", {
     policies: [
@@ -8,47 +7,52 @@ const policies = new PolicyPack("aws", {
             name: "discouraged-ec2-public-ip-address",
             description: "Associating public IP addresses is discouraged.",
             enforcementLevel: "advisory",
-            rules: typedRule(aws.ec2.Instance.isInstance, it => {
-                assert(it.associatePublicIpAddress === false);
+            validateResource: validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+                if (instance.associatePublicIpAddress) {
+                    reportViolation("Consider not setting associatePublicIpAddress to true.");
+                }
             }),
         },
         {
             name: "required-name-tag",
             description: "A 'Name' tag is required.",
             enforcementLevel: "mandatory",
-            rules: [
-                typedRule(aws.ec2.Instance.isInstance, it => {
-                    requireNameTag(it.tags);
+            validateResource: [
+                validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+                    requireNameTag(instance.tags, reportViolation);
                 }),
-                typedRule(aws.ec2.Vpc.isInstance, it => {
-                    requireNameTag(it.tags);
+                validateTypedResource(aws.ec2.Vpc.isInstance, (vpc, args, reportViolation) => {
+                    requireNameTag(vpc.tags, reportViolation);
                 }),
-            ]
+            ],
         },
         {
             name: "prohibited-public-internet",
             description: "Ingress rules with public internet access are prohibited.",
             enforcementLevel: "mandatory",
-            rules: typedRule(aws.ec2.SecurityGroup.isInstance, it => {
-                const publicInternetRules = it.ingress.find(ingressRule =>
-                    (ingressRule.cidrBlocks || []).find(cidr =>
-                        cidr === "0.0.0.0/0"
-                    )
-                );
-                assert(publicInternetRules === undefined);
+            validateResource: validateTypedResource(aws.ec2.SecurityGroup.isInstance, (sg, args, reportViolation) => {
+                const publicInternetRules = sg.ingress.find(ingressRule =>
+                    (ingressRule.cidrBlocks || []).find(cidr => cidr === "0.0.0.0/0"));
+                if (publicInternetRules) {
+                    reportViolation("Ingress rules with public internet access are prohibited.");
+                }
             }),
         },
         {
             name: "prohibited-elasticbeanstalk",
             description: "Use of Elastic Beanstalk is prohibited.",
             enforcementLevel: "mandatory",
-            rules: (type: string) => {
-                assert(type.startsWith("aws:elasticbeanstalk") === false);
+            validateResource: (args, reportViolation) => {
+                if (args.type.startsWith("aws:elasticbeanstalk")) {
+                    reportViolation("Use of Elastic Beanstalk is prohibited.");
+                }
             },
         },
     ],
 });
 
-const requireNameTag = function (tags: any) {
-    assert((tags || {})["Name"] !== undefined);
+const requireNameTag = function (tags: any, reportViolation: ReportViolation) {
+    if ((tags || {})["Name"] === undefined) {
+        reportViolation("A 'Name' tag is required.");
+    }
 };

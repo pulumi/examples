@@ -1,5 +1,5 @@
 import * as azure from "@pulumi/azure";
-import { PolicyPack, typedRule } from "@pulumi/policy";
+import { PolicyPack, validateTypedResource } from "@pulumi/policy";
 import * as assert from "assert";
 
 const policies = new PolicyPack("azure", {
@@ -8,25 +8,31 @@ const policies = new PolicyPack("azure", {
             name: "discouraged-public-ip-address",
             description: "Associating public IP addresses is discouraged.",
             enforcementLevel: "advisory",
-            rules: typedRule(azure.network.NetworkInterface.isInstance, it => {
-                const publicIpAssociations = it.ipConfigurations.find(cfg => cfg.publicIpAddressId !== undefined);
-                assert(publicIpAssociations === undefined);
+            validateResource: validateTypedResource(azure.network.NetworkInterface.isInstance, (ni, args, reportViolation) => {
+                const publicIpAssociations = ni.ipConfigurations.find(cfg => cfg.publicIpAddressId !== undefined);
+                if (publicIpAssociations !== undefined) {
+                    reportViolation("Associating public IP addresses is discouraged.");
+                }
             }),
         },
         {
             name: "prohibited-public-internet",
             description: "Inbound rules with public internet access are prohibited.",
             enforcementLevel: "mandatory",
-            rules: typedRule(azure.network.NetworkSecurityRule.isInstance, it => {
-                assert(it.sourceAddressPrefix !== "*");
+            validateResource: validateTypedResource(azure.network.NetworkSecurityRule.isInstance, (securityRule, args, reportViolation) => {
+                if (securityRule.sourceAddressPrefix === "*") {
+                    reportViolation("Inbound rules with public internet access are prohibited.");
+                }
             }),
         },
         {
             name: "prohibited-iot",
             description: "Use of IOT services is prohibited.",
             enforcementLevel: "mandatory",
-            rules: (type: string) => {
-                assert(type.startsWith("azure:iot") === false);
+            validateResource: (args, reportViolation) => {
+                if (args.type.startsWith("azure:iot")) {
+                    reportViolation("Use of IOT services is prohibited.");
+                }
             },
         },
     ],

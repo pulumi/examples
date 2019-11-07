@@ -13,32 +13,39 @@
 // limitations under the License.
 
 import * as aws from "@pulumi/aws";
-import { Policy, typedRule } from "@pulumi/policy";
-import * as assert from "assert";
+import {
+    ReportViolation,
+    ResourceValidationArgs,
+    ResourceValidationPolicy,
+    validateTypedResource,
+} from "@pulumi/policy";
 
 export function requireApprovedAmisById(
     name: string,
     approvedAmis: string | Iterable<string>,
-): Policy {
+): ResourceValidationPolicy {
     const amis = toStringSet(approvedAmis);
 
     return {
         name: name,
-        description: "Instances should use approved AMIs",
+        description: "Instances should use approved AMIs.",
         enforcementLevel: "mandatory",
-        rules: [
-            typedRule(
-                aws.ec2.Instance.isInstance,
-                it => amis && assert.ok(amis.has(it.ami), "foo"),
-            ),
-            typedRule(
-                aws.ec2.LaunchConfiguration.isInstance,
-                it => amis && assert.ok(amis.has(it.imageId)),
-            ),
-            typedRule(
-                aws.ec2.LaunchTemplate.isInstance,
-                it => amis && assert.ok(it.imageId === undefined || amis.has(it.imageId)),
-            ),
+        validateResource: [
+            validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+                if (amis && !amis.has(instance.ami)) {
+                    reportViolation("EC2 Instances should use approved AMIs.");
+                }
+            }),
+            validateTypedResource(aws.ec2.LaunchConfiguration.isInstance, (lc, args, reportViolation) => {
+                if (amis && !amis.has(lc.imageId)) {
+                    reportViolation("EC2 LaunchConfigurations should use approved AMIs.");
+                }
+            }),
+            validateTypedResource(aws.ec2.LaunchTemplate.isInstance, (lt, args, reportViolation) => {
+                if (amis && lt.imageId && !amis.has(lt.imageId)) {
+                    reportViolation("EC2 LaunchTemplates should use approved AMIs.");
+                }
+            }),
         ],
     };
 }
@@ -46,18 +53,20 @@ export function requireApprovedAmisById(
 // TODO: approved-amis-by-tag
 // https://docs.aws.amazon.com/config/latest/developerguide/approved-amis-by-tag.html
 
-export function requireHealthChecksOnAsgElb(name: string): Policy {
+export function requireHealthChecksOnAsgElb(name: string): ResourceValidationPolicy {
     return {
         name: name,
         description:
             "Auto Scaling groups that are associated with a load balancer should use Elastic " +
             "Load Balancing health checks",
         enforcementLevel: "mandatory",
-        rules: typedRule(aws.autoscaling.Group.isInstance, it => {
-            const classicLbAttached = it.loadBalancers.length > 0;
-            const albAttached = it.targetGroupArns.length > 0;
+        validateResource: validateTypedResource(aws.autoscaling.Group.isInstance, (group, args, reportViolation) => {
+            const classicLbAttached = group.loadBalancers.length > 0;
+            const albAttached = group.targetGroupArns.length > 0;
             if (classicLbAttached || albAttached) {
-                assert.strictEqual("ELB", it.healthCheckType);
+                if (group.healthCheckType !== "ELB") {
+                    reportViolation("Auto Scaling groups that are associated with a load balancer should use");
+                }
             }
         }),
     };
@@ -68,7 +77,7 @@ export function requireInstanceTenancy(
     tenancy: "DEDICATED" | "HOST" | "DEFAULT",
     imageIds?: string | Iterable<string>,
     hostIds?: string | Iterable<string>,
-): Policy {
+): ResourceValidationPolicy {
     const images = toStringSet(imageIds);
     const hosts = toStringSet(hostIds);
 
@@ -78,17 +87,23 @@ export function requireInstanceTenancy(
             hosts,
         )} should use tenancy '${tenancy}'`,
         enforcementLevel: "mandatory",
-        rules: [
-            typedRule(aws.ec2.Instance.isInstance, it => {
-                if (hosts !== undefined && hosts.has(it.hostId)) {
-                    assert.strictEqual(it.tenancy, tenancy);
-                } else if (images !== undefined && images.has(it.ami)) {
-                    assert.strictEqual(it.tenancy, tenancy);
+        validateResource: [
+            validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+                if (hosts !== undefined && hosts.has(instance.hostId)) {
+                    if (instance.tenancy !== tenancy) {
+                        reportViolation(`EC2 Instance with host ID '${instance.hostId}' not using tenancy '${tenancy}'.`);
+                    }
+                } else if (images !== undefined && images.has(instance.ami)) {
+                    if (instance.tenancy !== tenancy) {
+                        reportViolation(`EC2 Instance with AMI '${instance.ami}' not using tenancy '${tenancy}'.`);
+                    }
                 }
             }),
-            typedRule(aws.ec2.LaunchConfiguration.isInstance, it => {
-                if (images !== undefined && images.has(it.imageId)) {
-                    assert.strictEqual(it.placementTenancy, tenancy);
+            validateTypedResource(aws.ec2.LaunchConfiguration.isInstance, (lc, args, reportViolation) => {
+                if (images !== undefined && images.has(lc.imageId)) {
+                    if (lc.placementTenancy !== tenancy) {
+                        reportViolation(`EC2 LaunchConfiguration with image ID '${lc.imageId}' not using tenancy '${tenancy}'.`);
+                    }
                 }
             }),
         ],
@@ -98,41 +113,57 @@ export function requireInstanceTenancy(
 export function requireInstanceType(
     name: string,
     instanceTypes: aws.ec2.InstanceType | Iterable<aws.ec2.InstanceType>,
-): Policy {
+): ResourceValidationPolicy {
     const types = toStringSet(instanceTypes);
 
     return {
         name: name,
         description: "EC2 instances should use approved instance types.",
         enforcementLevel: "mandatory",
-        rules: [
-            typedRule(aws.ec2.Instance.isInstance, it => assert.ok(types.has(it.instanceType))),
-            typedRule(aws.ec2.LaunchConfiguration.isInstance, it =>
-                assert.ok(types.has(it.instanceType)),
-            ),
-            typedRule(aws.ec2.LaunchTemplate.isInstance, it =>
-                assert.ok(it.instanceType !== undefined && types.has(it.instanceType)),
-            ),
+        validateResource: [
+            validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+                if (!types.has(instance.instanceType)) {
+                    reportViolation("EC2 Instance should use the approved instance types.")
+                }
+            }),
+            validateTypedResource(aws.ec2.LaunchConfiguration.isInstance, (lc, args, reportViolation) => {
+                if (!types.has(lc.instanceType)) {
+                    reportViolation("EC2 LaunchConfiguration should use the approved instance types.")
+                }
+            }),
+            validateTypedResource(aws.ec2.LaunchTemplate.isInstance, (lt, args, reportViolation) => {
+                if (!lt.instanceType || !types.has(lt.instanceType)) {
+                    reportViolation("EC2 LaunchTemplate should use the approved instance types.")
+                }
+            }),
         ],
     };
 }
 
-export function requireEbsOptimization(name: string): Policy {
+export function requireEbsOptimization(name: string): ResourceValidationPolicy {
     // TODO: Enable optimization only for EC2 instances that can be optimized.
     return {
         name: name,
         description: "EBS optimization should be enabled for all EC2 instances",
         enforcementLevel: "mandatory",
-        rules: typedRule(aws.ec2.Instance.isInstance, it => assert.ok(it.ebsOptimized === true)),
+        validateResource: validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+            if (instance.ebsOptimized !== true) {
+                reportViolation("EC2 Instance should have EBS optimization enabled.");
+            }
+        }),
     };
 }
 
-export function requireDetailedMonitoring(name: string): Policy {
+export function requireDetailedMonitoring(name: string): ResourceValidationPolicy {
     return {
         name: name,
         description: "Detailed monitoring should be enabled for all EC2 instances",
         enforcementLevel: "mandatory",
-        rules: typedRule(aws.ec2.Instance.isInstance, it => assert.ok(it.monitoring === true)),
+        validateResource: validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+            if (instance.monitoring !== true) {
+                reportViolation("EC2 Instance should have monitoring enabled.");
+            }
+        }),
     };
 }
 
@@ -160,30 +191,34 @@ export function requireDetailedMonitoring(name: string): Policy {
 // TODO: ec2-managedinstance-platform-check
 // https://docs.aws.amazon.com/config/latest/developerguide/ec2-managedinstance-platform-check.html
 
-export function requireEbsVolumesOnEc2Instances(name: string): Policy {
+export function requireEbsVolumesOnEc2Instances(name: string): ResourceValidationPolicy {
     // TODO: Check if EBS volumes are marked for deletion.
     return {
         name: name,
         description: "EBS volumes should be attached to all EC2 instances",
         enforcementLevel: "mandatory",
-        rules: typedRule(aws.ec2.Instance.isInstance, it =>
-            assert.ok(it.ebsBlockDevices === undefined || it.ebsBlockDevices.length > 0),
-        ),
+        validateResource: validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+            if (instance.ebsBlockDevices !== undefined && instance.ebsBlockDevices.length === 0) {
+                reportViolation("EC2 Instance should have EBS volumes attached.");
+            }
+        }),
     };
 }
 
 // TODO: eip-attached
 // https://docs.aws.amazon.com/config/latest/developerguide/eip-attached.html
 
-export function requireEbsEncryption(name: string, kmsKeyId?: string): Policy {
+export function requireEbsEncryption(name: string, kmsKeyId?: string): ResourceValidationPolicy {
     return {
         name: name,
         description: "EBS volumes should be encrypted",
         enforcementLevel: "mandatory",
-        rules: typedRule(aws.ebs.Volume.isInstance, it => {
-            assert.ok(it.encrypted);
-            if (kmsKeyId !== undefined) {
-                assert.strictEqual(it.kmsKeyId, kmsKeyId);
+        validateResource: validateTypedResource(aws.ebs.Volume.isInstance, (volume, args, reportViolation) => {
+            if (!volume.encrypted) {
+                reportViolation("EBS volumes should be encrypted.");
+            }
+            if (kmsKeyId !== undefined && volume.kmsKeyId !== kmsKeyId) {
+                reportViolation(`EBS volumes should be encrypted with KMS ID '${kmsKeyId}'.`);
             }
         }),
     };
@@ -195,21 +230,27 @@ export function requireEbsEncryption(name: string, kmsKeyId?: string): Policy {
 // TODO: elb-custom-security-policy-ssl-check
 // https://docs.aws.amazon.com/config/latest/developerguide/elb-custom-security-policy-ssl-check.html
 
-export function requireElbLogging(name: string, bucketName?: string): Policy {
-    const assertElbLogs = (lb: {
-        accessLogs?: {
-            bucket: string;
-            bucketPrefix?: string;
-            enabled?: boolean;
-            interval?: number;
-        };
-    }) => {
-        assert.ok(lb.accessLogs !== undefined && lb.accessLogs.enabled === true);
-        assert.ok(
-            bucketName !== undefined &&
-                lb.accessLogs !== undefined &&
-                bucketName === lb.accessLogs.bucket,
-        );
+export function requireElbLogging(name: string, bucketName?: string): ResourceValidationPolicy {
+    const assertElbLogs = (
+        lb: {
+            accessLogs?: {
+                bucket: string;
+                bucketPrefix?: string;
+                enabled?: boolean;
+                interval?: number;
+            };
+        },
+        args: ResourceValidationArgs,
+        reportViolation: ReportViolation,
+    ) => {
+        if (lb.accessLogs === undefined || lb.accessLogs.enabled !== true) {
+            reportViolation("Load Balancer should have logging enabled.");
+        }
+        if (bucketName !== undefined) {
+            if (lb.accessLogs === undefined || bucketName !== lb.accessLogs.bucket) {
+                reportViolation(`Load Balancer should have logging enabled with bucket '${bucketName}'.`);
+            }
+        }
     };
 
     return {
@@ -218,9 +259,9 @@ export function requireElbLogging(name: string, bucketName?: string): Policy {
             "All Application Load Balancers and the Classic Load Balancers should have " +
             "logging enabled.",
         enforcementLevel: "mandatory",
-        rules: [
-            typedRule(aws.elasticloadbalancing.LoadBalancer.isInstance, assertElbLogs),
-            typedRule(aws.elasticloadbalancingv2.LoadBalancer.isInstance, assertElbLogs),
+        validateResource: [
+            validateTypedResource(aws.elasticloadbalancing.LoadBalancer.isInstance, assertElbLogs),
+            validateTypedResource(aws.elasticloadbalancingv2.LoadBalancer.isInstance, assertElbLogs),
         ],
     };
 }
