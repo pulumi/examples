@@ -1,0 +1,3 @@
+name: evanDotnetAws
+runtime: dotnet
+description: A minimal AWS C# Pulumi program
