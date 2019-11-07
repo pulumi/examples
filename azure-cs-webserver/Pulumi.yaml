@@ -1,0 +1,3 @@
+name: azure-cs-webserver
+description: "Basic C# example of an Azure web server accessible over HTTP."
+runtime: dotnet

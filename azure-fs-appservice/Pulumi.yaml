@@ -1,0 +1,8 @@
+name: azure-fs-appservice
+description: Creates Azure App Service with SQL Database and Application Insights
+runtime: dotnet
+template:
+  config:
+    sqlPassword:
+      description: SQL Server password (complex enough to satisfy Azure policy)
+      secret: true
