@@ -2,8 +2,7 @@
     "name": "azure-ts-cosmosapp-component",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "^10.3.3",
-        "typescript": "^3.1.1"
+        "@types/node": "^10.3.3"
     },
     "dependencies": {
         "@azure/cosmos": "latest",
