@@ -17,22 +17,22 @@ After cloning this repo, from this working directory, run these commands:
 1. Build and publish the lambda function, making the output available to our Pulumi program. 
 
 ```bash
-cd dotnetLambda/src/dotnetLambda/ && dotnet restore && dotnet build && dotnet publish && cd ../../../
+dotnet publish ./DotnetLambda/src/DotnetLambda/
 ```
 
 2. Execute our Pulumi program to archive our published function output, and create our lambda. 
 ```bash
-cd ./pulumi/ && pulumi up
+pulumi up -C ./pulumi
 ```
 
 3. Call our lambda function from the aws cli.
 ```bash
 aws lambda invoke \
---function-name $(pulumi stack output lambda) \
---region $(pulumi config get aws:region) \
+--function-name $(pulumi stack output lambda -C ./pulumi) \
+--region $(pulumi config get aws:region -C ./pulumi) \
 --payload '"foo"' \
 output.json
 
-cat output.json
+cat output.json # view the output file with your tool of choice
 # "FOO"
 ```

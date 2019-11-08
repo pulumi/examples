@@ -2,18 +2,28 @@
 using System.Threading.Tasks;
 
 using Pulumi;
-using Pulumi.Aws.Lambda;
 using Pulumi.Aws.Iam;
+using Pulumi.Aws.Lambda;
 
-class LambdaUtil
+class Program
 {
-    public static Pulumi.AssetArchive buildArchive(string lambdaArchivePath)
+    static Task<int> Main()
     {
-        var immutableDictBuilder = System.Collections.Immutable.ImmutableDictionary.CreateBuilder<string, AssetOrArchive>();
-        immutableDictBuilder.Add(".", new FileArchive(lambdaArchivePath));
-        return new Pulumi.AssetArchive(immutableDictBuilder.ToImmutable());
+        return Deployment.RunAsync(() =>
+        {
+            var lambda = new Function("basicLambda", new FunctionArgs
+            {
+                Runtime = "dotnetcore2.1",
+                Code = new FileArchive("../DotnetLambda/src/DotnetLambda/bin/Debug/netcoreapp2.1/publish"),
+                Handler = "DotnetLambda::DotnetLambda.Function::FunctionHandler",
+                Role = CreateLambdaRole().Arn
+            });
+
+            return new Dictionary<string, object> { { "lambda", lambda.Arn } };
+        });
     }
-    public static Role createLambdaRole()
+
+    public static Role CreateLambdaRole()
     {
         var lambdaRole = new Role("lambdaRole", new RoleArgs
         {
@@ -52,26 +62,5 @@ class LambdaUtil
         });
 
         return lambdaRole;
-    }
-}
-
-class Program
-{
-    static Task<int> Main()
-    {
-        return Deployment.RunAsync(() =>
-        {
-            var lambda = new Function("basicLambda", new FunctionArgs
-            {
-                Runtime = "dotnetcore2.1",
-                Code = LambdaUtil.buildArchive("../dotnetLambda/src/dotnetLambda//bin/Debug/netcoreapp2.1/publish"),
-                Handler = "dotnetLambda::dotnetLambda.Function::FunctionHandler",
-                Role = LambdaUtil.createLambdaRole().Arn
-            });
-
-            return new Dictionary<string, object>{
-                {"lambda", lambda.Arn}
-            };
-        });
     }
 }

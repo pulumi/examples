@@ -1,10 +1,9 @@
 # AWS Lambda Starter Function
 This starter function takes a string input, and returns the `toUpper` of it.
 
-This project must be built and published prior to running `pulumi up` so that our pulumi program can create an [Archive](https://www.pulumi.com/docs/reference/pkg/nodejs/pulumi/pulumi/asset/#Archive).
+This project must be published prior to running `pulumi up` so that our pulumi program can create an [Archive](https://www.pulumi.com/docs/reference/pkg/nodejs/pulumi/pulumi/asset/#Archive).
 
 ```bash
-dotnet build
 dotnet publish
 ```
 
