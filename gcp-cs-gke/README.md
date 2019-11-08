@@ -81,9 +81,9 @@ After cloning this repo, from this working directory, run these commands:
     +   pulumi:pulumi:Stack       gcp-cs-gke-dev  created
     +   └─ gcp:container:Cluster  helloworld      created
 
-	Outputs:
+    Outputs:
         clusterName: "helloworld-9b9530f"
-		kubeconfig : "<KUBECONFIG_CONTENTS>"
+        kubeconfig : "<KUBECONFIG_CONTENTS>"
 
 	Resources:
 		+ 2 created
