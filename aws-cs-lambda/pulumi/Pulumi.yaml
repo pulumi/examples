@@ -1,0 +1,3 @@
+name: lambda
+runtime: dotnet
+description: Basic example of an AWS lambda using C#
