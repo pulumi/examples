@@ -22,7 +22,7 @@ cd dotnetLambda/src/dotnetLambda/ && dotnet restore && dotnet build && dotnet pu
 
 2. Execute our Pulumi program to archive our published function output, and create our lambda. 
 ```bash
-cd ./pulumi/ && pulumi up && cd ../
+cd ./pulumi/ && pulumi up
 ```
 
 3. Call our lambda function from the aws cli.
