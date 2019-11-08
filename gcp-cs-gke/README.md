@@ -73,7 +73,7 @@ After cloning this repo, from this working directory, run these commands:
     +   └─ gcp:container:Cluster  helloworld      create
 
 	Resources:
-		+ 2 to create
+        + 2 to create
 
 	Updating (dev):
 
@@ -86,7 +86,7 @@ After cloning this repo, from this working directory, run these commands:
         kubeconfig : "<KUBECONFIG_CONTENTS>"
 
 	Resources:
-		+ 2 created
+        + 2 created
 
     Duration: 3m3s
     ```
