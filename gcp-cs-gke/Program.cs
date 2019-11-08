@@ -12,12 +12,11 @@ class Program
     {
         return Deployment.RunAsync(async () =>
         {
-
             var name = "helloworld";
 
             var config = new Config();
 
-            var latestMasterVersion = await Pulumi.Gcp.Container.Invokes.GetEngineVersions(new GetEngineVersionsArgs { });
+            var latestMasterVersion = await Invokes.GetEngineVersions(new GetEngineVersionsArgs { });
             var masterVersion = config.Get("masterVersion") ?? latestMasterVersion.LatestMasterVersion;
 
             var cluster = new Cluster(name, new ClusterArgs
