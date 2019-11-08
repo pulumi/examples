@@ -49,11 +49,11 @@ let inputMap<'a> (items: seq<string * Input<'a>>) =
 let signedBlobReadUrl(blob: ZipBlob) (account: Account): Output<string> =
     let getSasToken (accountName, connectionString, containerName, blobName) = async {
         let permissions = 
-            new GetAccountBlobContainerSASPermissionsArgs
+            GetAccountBlobContainerSASPermissionsArgs
                 (Read = input true, Write = input false, Delete = input false,
                 List = input false, Add = input false, Create = input false)
         let args = 
-            new GetAccountBlobContainerSASArgs
+            GetAccountBlobContainerSASArgs
                 (ConnectionString = input connectionString,
                 ContainerName = input containerName,
                 Start = input "2019-01-01",
@@ -67,33 +67,33 @@ let signedBlobReadUrl(blob: ZipBlob) (account: Account): Output<string> =
     |> Outputs.applyAsync getSasToken
 
 let infra () =
-    let resourceGroup = new ResourceGroup "appservice-rg"
+    let resourceGroup = ResourceGroup "appservice-rg"
 
     let storageAccount =
-        new Account("sa",
-            new AccountArgs
+        Account("sa",
+            AccountArgs
                (ResourceGroupName = io resourceGroup.Name,
                 AccountReplicationType = input "LRS",
                 AccountTier = input "Standard"))
 
-    let sku = new PlanSkuArgs(Tier = input "Basic", Size = input "B1")
+    let sku = PlanSkuArgs(Tier = input "Basic", Size = input "B1")
     let appServicePlan = 
-        new Plan("asp", 
-            new PlanArgs
+        Plan("asp", 
+            PlanArgs
                (ResourceGroupName = io resourceGroup.Name,
                 Kind = input "App",
                 Sku = input sku))
 
     let container = 
-        new Container("zips", 
-            new ContainerArgs
+        Container("zips", 
+            ContainerArgs
                (StorageAccountName = io storageAccount.Name,
                 ContainerAccessType = input "private"))
 
-    let archive = new FileArchive("wwwroot") :> Archive
+    let archive = FileArchive("wwwroot") :> Archive
     let blob =
-        new ZipBlob("zip", 
-            new ZipBlobArgs
+        ZipBlob("zip", 
+            ZipBlobArgs
                (StorageAccountName = io storageAccount.Name,
                 StorageContainerName = io container.Name,
                 Type = input "block",
@@ -101,20 +101,20 @@ let infra () =
 
     let codeBlobUrl = signedBlobReadUrl blob storageAccount
 
-    let config = new Config()
+    let config = Config()
     let username = config.Get "sqlAdmin"
     let password = config.RequireSecret "sqlPassword"
     let sqlServer = 
-        new SqlServer("sql", 
-            new SqlServerArgs
+        SqlServer("sql", 
+            SqlServerArgs
                (ResourceGroupName = io resourceGroup.Name,
-                AdministratorLogin = input (if username <> null then username else "pulumi"),
+                AdministratorLogin = input (if not(isNull username) then username else "pulumi"),
                 AdministratorLoginPassword = io password,
                 Version = input "12.0"))
 
     let database =
-        new Database("db",
-            new DatabaseArgs
+        Database("db",
+            DatabaseArgs
                (ResourceGroupName = io resourceGroup.Name,
                 ServerName = io sqlServer.Name,
                 RequestedServiceObjectiveName = input "S0"))
@@ -127,14 +127,14 @@ let infra () =
                 server database username pwd)
 
     let connectionStringSetting =
-        new AppServiceConnectionStringsArgs
+        AppServiceConnectionStringsArgs
            (Name = input "db",
             Type = input "SQLAzure",
             Value = io connectionString)
 
     let app = 
-        new AppService("app", 
-            new AppServiceArgs
+        AppService("app", 
+            AppServiceArgs
                (ResourceGroupName = io resourceGroup.Name,
                 AppServicePlanId = io appServicePlan.Id,
                 AppSettings = inputMap ["WEBSITE_RUN_FROM_PACKAGE", io codeBlobUrl],
