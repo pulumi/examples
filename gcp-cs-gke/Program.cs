@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Pulumi;
 using Pulumi.Gcp.Container;
 using Pulumi.Gcp.Container.Inputs;
+using Pulumi.Gcp.Container.Outputs;
 
 class Program
 {
@@ -35,17 +36,28 @@ class Program
                         "https://www.googleapis.com/auth/monitoring",
                     },
                 }
-
             });
 
-            var kubeconfig = Output.Tuple<string,string,Pulumi.Gcp.Container.Outputs.ClusterMasterAuth>(cluster.Name, cluster.Endpoint, cluster.MasterAuth).Apply(t =>
-             {
-                 var context = $"{Pulumi.Gcp.Config.Config.Project}_{Pulumi.Gcp.Config.Config.Zone}_{t.Item1}";
-                 return $@"apiVersion: v1
+            var kubeconfig = Output.Tuple<string, string, ClusterMasterAuth>(cluster.Name, cluster.Endpoint, cluster.MasterAuth).Apply(
+                t => GetKubeconfig(t.Item1, t.Item2, t.Item3)
+            );
+
+            return new Dictionary<string, object>
+            {
+                {"clusterName", cluster.Name},
+                {"kubeconfig", kubeconfig},
+            };
+        });
+    }
+
+    private static string GetKubeconfig(string clusterName, string clusterEndpoint, ClusterMasterAuth clusterMasterAuth)
+    {
+        var context = $"{Pulumi.Gcp.Config.Config.Project}_{Pulumi.Gcp.Config.Config.Zone}_{clusterName}";
+        return $@"apiVersion: v1
 clusters:
 - cluster:
-    certificate-authority-data: {t.Item3.ClusterCaCertificate}
-    server: https://{t.Item2}
+    certificate-authority-data: {clusterMasterAuth.ClusterCaCertificate}
+    server: https://{clusterEndpoint}
   name: {context}
 contexts:
 - context:
@@ -65,13 +77,6 @@ users:
         expiry-key: '{{.credential.token_expiry}}'
         token-key: '{{.credential.access_token}}'
       name: gcp";
-             });
-
-            return new Dictionary<string, object>
-            {
-                {"clusterName", cluster.Name},
-                {"kubeconfig", kubeconfig},
-            };
-        });
     }
+
 }
