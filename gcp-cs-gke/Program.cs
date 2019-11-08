@@ -40,12 +40,12 @@ class Program
 
             var kubeconfig = Output.Tuple<string,string,Pulumi.Gcp.Container.Outputs.ClusterMasterAuth>(cluster.Name, cluster.Endpoint, cluster.MasterAuth).Apply(t =>
              {
-                 var context = $"{Pulumi.Gcp.Config.Config.Project}_{Pulumi.Gcp.Config.Config.Zone}_{t.Item1[0]}";
+                 var context = $"{Pulumi.Gcp.Config.Config.Project}_{Pulumi.Gcp.Config.Config.Zone}_{t.Item1}";
                  return $@"apiVersion: v1
 clusters:
 - cluster:
     certificate-authority-data: {t.Item3.ClusterCaCertificate}
-    server: https://{t.Item2[1]}
+    server: https://{t.Item2}
   name: {context}
 contexts:
 - context:
