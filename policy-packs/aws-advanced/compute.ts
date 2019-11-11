@@ -31,17 +31,17 @@ export function requireApprovedAmisById(
         description: "Instances should use approved AMIs.",
         enforcementLevel: "mandatory",
         validateResource: [
-            validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+            validateTypedResource(aws.ec2.Instance, (instance, args, reportViolation) => {
                 if (amis && !amis.has(instance.ami)) {
                     reportViolation("EC2 Instances should use approved AMIs.");
                 }
             }),
-            validateTypedResource(aws.ec2.LaunchConfiguration.isInstance, (lc, args, reportViolation) => {
+            validateTypedResource(aws.ec2.LaunchConfiguration, (lc, args, reportViolation) => {
                 if (amis && !amis.has(lc.imageId)) {
                     reportViolation("EC2 LaunchConfigurations should use approved AMIs.");
                 }
             }),
-            validateTypedResource(aws.ec2.LaunchTemplate.isInstance, (lt, args, reportViolation) => {
+            validateTypedResource(aws.ec2.LaunchTemplate, (lt, args, reportViolation) => {
                 if (amis && lt.imageId && !amis.has(lt.imageId)) {
                     reportViolation("EC2 LaunchTemplates should use approved AMIs.");
                 }
@@ -60,12 +60,13 @@ export function requireHealthChecksOnAsgElb(name: string): ResourceValidationPol
             "Auto Scaling groups that are associated with a load balancer should use Elastic " +
             "Load Balancing health checks",
         enforcementLevel: "mandatory",
-        validateResource: validateTypedResource(aws.autoscaling.Group.isInstance, (group, args, reportViolation) => {
-            const classicLbAttached = group.loadBalancers.length > 0;
-            const albAttached = group.targetGroupArns.length > 0;
+        validateResource: validateTypedResource(aws.autoscaling.Group, (group, args, reportViolation) => {
+            const classicLbAttached = group.loadBalancers && group.loadBalancers.length > 0;
+            const albAttached = group.targetGroupArns && group.targetGroupArns.length > 0;
             if (classicLbAttached || albAttached) {
                 if (group.healthCheckType !== "ELB") {
-                    reportViolation("Auto Scaling groups that are associated with a load balancer should use");
+                    reportViolation("Auto Scaling groups that are associated with a load balancer should use Elastic " +
+                        "Load Balancing health checks");
                 }
             }
         }),
@@ -88,8 +89,8 @@ export function requireInstanceTenancy(
         )} should use tenancy '${tenancy}'`,
         enforcementLevel: "mandatory",
         validateResource: [
-            validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
-                if (hosts !== undefined && hosts.has(instance.hostId)) {
+            validateTypedResource(aws.ec2.Instance, (instance, args, reportViolation) => {
+                if (hosts !== undefined && instance.hostId && hosts.has(instance.hostId)) {
                     if (instance.tenancy !== tenancy) {
                         reportViolation(`EC2 Instance with host ID '${instance.hostId}' not using tenancy '${tenancy}'.`);
                     }
@@ -99,7 +100,7 @@ export function requireInstanceTenancy(
                     }
                 }
             }),
-            validateTypedResource(aws.ec2.LaunchConfiguration.isInstance, (lc, args, reportViolation) => {
+            validateTypedResource(aws.ec2.LaunchConfiguration, (lc, args, reportViolation) => {
                 if (images !== undefined && images.has(lc.imageId)) {
                     if (lc.placementTenancy !== tenancy) {
                         reportViolation(`EC2 LaunchConfiguration with image ID '${lc.imageId}' not using tenancy '${tenancy}'.`);
@@ -121,17 +122,17 @@ export function requireInstanceType(
         description: "EC2 instances should use approved instance types.",
         enforcementLevel: "mandatory",
         validateResource: [
-            validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+            validateTypedResource(aws.ec2.Instance, (instance, args, reportViolation) => {
                 if (!types.has(instance.instanceType)) {
                     reportViolation("EC2 Instance should use the approved instance types.")
                 }
             }),
-            validateTypedResource(aws.ec2.LaunchConfiguration.isInstance, (lc, args, reportViolation) => {
+            validateTypedResource(aws.ec2.LaunchConfiguration, (lc, args, reportViolation) => {
                 if (!types.has(lc.instanceType)) {
                     reportViolation("EC2 LaunchConfiguration should use the approved instance types.")
                 }
             }),
-            validateTypedResource(aws.ec2.LaunchTemplate.isInstance, (lt, args, reportViolation) => {
+            validateTypedResource(aws.ec2.LaunchTemplate, (lt, args, reportViolation) => {
                 if (!lt.instanceType || !types.has(lt.instanceType)) {
                     reportViolation("EC2 LaunchTemplate should use the approved instance types.")
                 }
@@ -146,7 +147,7 @@ export function requireEbsOptimization(name: string): ResourceValidationPolicy {
         name: name,
         description: "EBS optimization should be enabled for all EC2 instances",
         enforcementLevel: "mandatory",
-        validateResource: validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+        validateResource: validateTypedResource(aws.ec2.Instance, (instance, args, reportViolation) => {
             if (instance.ebsOptimized !== true) {
                 reportViolation("EC2 Instance should have EBS optimization enabled.");
             }
@@ -159,7 +160,7 @@ export function requireDetailedMonitoring(name: string): ResourceValidationPolic
         name: name,
         description: "Detailed monitoring should be enabled for all EC2 instances",
         enforcementLevel: "mandatory",
-        validateResource: validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+        validateResource: validateTypedResource(aws.ec2.Instance, (instance, args, reportViolation) => {
             if (instance.monitoring !== true) {
                 reportViolation("EC2 Instance should have monitoring enabled.");
             }
@@ -197,7 +198,7 @@ export function requireEbsVolumesOnEc2Instances(name: string): ResourceValidatio
         name: name,
         description: "EBS volumes should be attached to all EC2 instances",
         enforcementLevel: "mandatory",
-        validateResource: validateTypedResource(aws.ec2.Instance.isInstance, (instance, args, reportViolation) => {
+        validateResource: validateTypedResource(aws.ec2.Instance, (instance, args, reportViolation) => {
             if (instance.ebsBlockDevices !== undefined && instance.ebsBlockDevices.length === 0) {
                 reportViolation("EC2 Instance should have EBS volumes attached.");
             }
@@ -213,7 +214,7 @@ export function requireEbsEncryption(name: string, kmsKeyId?: string): ResourceV
         name: name,
         description: "EBS volumes should be encrypted",
         enforcementLevel: "mandatory",
-        validateResource: validateTypedResource(aws.ebs.Volume.isInstance, (volume, args, reportViolation) => {
+        validateResource: validateTypedResource(aws.ebs.Volume, (volume, args, reportViolation) => {
             if (!volume.encrypted) {
                 reportViolation("EBS volumes should be encrypted.");
             }
@@ -260,8 +261,8 @@ export function requireElbLogging(name: string, bucketName?: string): ResourceVa
             "logging enabled.",
         enforcementLevel: "mandatory",
         validateResource: [
-            validateTypedResource(aws.elasticloadbalancing.LoadBalancer.isInstance, assertElbLogs),
-            validateTypedResource(aws.elasticloadbalancingv2.LoadBalancer.isInstance, assertElbLogs),
+            validateTypedResource(aws.elasticloadbalancing.LoadBalancer, assertElbLogs),
+            validateTypedResource(aws.elasticloadbalancingv2.LoadBalancer, assertElbLogs),
         ],
     };
 }

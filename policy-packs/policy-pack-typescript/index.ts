@@ -20,7 +20,7 @@ new PolicyPack("policy-pack-typescript", {
         name: "s3-no-public-read",
         description: "Prohibits setting the publicRead or publicReadWrite permission on AWS S3 buckets.",
         enforcementLevel: "mandatory",
-        validateResource: validateTypedResource(aws.s3.Bucket.isInstance, (bucket, args, reportViolation) => {
+        validateResource: validateTypedResource(aws.s3.Bucket, (bucket, args, reportViolation) => {
             if (bucket.acl === "public-read" || bucket.acl === "public-read-write") {
                 reportViolation(
                     "You cannot set public-read or public-read-write on an S3 bucket. " +
