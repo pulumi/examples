@@ -51,7 +51,7 @@ Multi-region deployment of Azure Functions and Cosmos DB with Traffic Manager
     https://urlshort-add94ac80f8.azurewebsites.net/api/urlshort-add
     $ curl -H "Content-Type: application/json" \
         --request POST \
-        -D '{"id":"pulumi","url":"https://pulumi.com"}' \
+        -d '{"id":"pulumi","url":"https://pulumi.com"}' \
         "$(pulumi stack output addEndpoint)"    
     Short URL saved
     ```
