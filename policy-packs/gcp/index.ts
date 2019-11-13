@@ -7,7 +7,7 @@ const policies = new PolicyPack("gcp", {
             name: "discouraged-gcp-public-ip-address",
             description: "Associating public IP addresses is discouraged.",
             enforcementLevel: "advisory",
-            validateResource: validateTypedResource(gcp.compute.Instance.isInstance, (instance, args, reportViolation) => {
+            validateResource: validateTypedResource(gcp.compute.Instance, (instance, args, reportViolation) => {
                 const publicIps = instance.networkInterfaces.find(net => net.accessConfigs !== undefined);
                 if (publicIps !== undefined) {
                     reportViolation("Associating public IP addresses is discouraged.");
@@ -18,7 +18,7 @@ const policies = new PolicyPack("gcp", {
             name: "prohibited-public-internet",
             description: "Ingress rules with public internet access are prohibited.",
             enforcementLevel: "mandatory",
-            validateResource: validateTypedResource(gcp.compute.Firewall.isInstance, (firewall, args, reportViolation) => {
+            validateResource: validateTypedResource(gcp.compute.Firewall, (firewall, args, reportViolation) => {
                 const publicInternetRules = (firewall.sourceRanges || []).find(ranges => ranges === "0.0.0.0/0");
                 if (publicInternetRules !== undefined) {
                     reportViolation("Ingress rules with public internet access are prohibited.");

@@ -1,6 +1,5 @@
 import * as azure from "@pulumi/azure";
 import { PolicyPack, validateTypedResource } from "@pulumi/policy";
-import * as assert from "assert";
 
 const policies = new PolicyPack("azure", {
     policies: [
@@ -8,7 +7,7 @@ const policies = new PolicyPack("azure", {
             name: "discouraged-public-ip-address",
             description: "Associating public IP addresses is discouraged.",
             enforcementLevel: "advisory",
-            validateResource: validateTypedResource(azure.network.NetworkInterface.isInstance, (ni, args, reportViolation) => {
+            validateResource: validateTypedResource(azure.network.NetworkInterface, (ni, args, reportViolation) => {
                 const publicIpAssociations = ni.ipConfigurations.find(cfg => cfg.publicIpAddressId !== undefined);
                 if (publicIpAssociations !== undefined) {
                     reportViolation("Associating public IP addresses is discouraged.");
@@ -19,7 +18,7 @@ const policies = new PolicyPack("azure", {
             name: "prohibited-public-internet",
             description: "Inbound rules with public internet access are prohibited.",
             enforcementLevel: "mandatory",
-            validateResource: validateTypedResource(azure.network.NetworkSecurityRule.isInstance, (securityRule, args, reportViolation) => {
+            validateResource: validateTypedResource(azure.network.NetworkSecurityRule, (securityRule, args, reportViolation) => {
                 if (securityRule.sourceAddressPrefix === "*") {
                     reportViolation("Inbound rules with public internet access are prohibited.");
                 }
