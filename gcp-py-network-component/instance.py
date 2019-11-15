@@ -5,12 +5,13 @@ from pulumi_gcp import compute
 class ServerArgs:
 
     def __init__(self,
-                 machine_type=None,
+                 machine_type="f1-micro",
                  service_name=None,
                  metadata_startup_script=None,
                  ports=None,
                  subnet=None,
-                 metadata=None):
+                 metadata=None,
+                 ):
         self.machine_type = machine_type
         self.service_name = service_name
         self.metadata_startup_script = metadata_startup_script
@@ -26,9 +27,9 @@ class Server(ComponentResource):
                  args: ServerArgs,
                  opts: ResourceOptions = None):
 
-        super().__init__("my:modules:Instance", name, {}, opts)
+        super().__init__("my:modules:Server", name, {}, opts)
 
-        firewall = compute.Firewall(f"{name}-{args.service_name}",
+        firewall = compute.Firewall(name,
                                     network=args.subnet.network,
                                     allows=[{
                                         "protocol": "tcp",
@@ -38,11 +39,11 @@ class Server(ComponentResource):
                                     opts=ResourceOptions(parent=self)
                                     )
 
-        addr = compute.address.Address(f"{name}-{args.service_name}",
+        addr = compute.address.Address(name,
                                        opts=ResourceOptions(parent=self)
                                        )
 
-        self.instance = compute.Instance(f"{name}-{args.service_name}",
+        self.instance = compute.Instance(name,
                                          machine_type=args.machine_type,
                                          boot_disk={
                                              "initializeParams": {

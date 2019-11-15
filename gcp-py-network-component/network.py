@@ -6,7 +6,7 @@ class VpcArgs:
 
     def __init__(self,
                  subnet_cidr_blocks=None,
-                 metadata=None):
+                 ):
         self.subnet_cidr_blocks = subnet_cidr_blocks
 
 

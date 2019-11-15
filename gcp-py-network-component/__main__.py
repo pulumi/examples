@@ -14,10 +14,10 @@ network = network.Vpc(project,
                           subnet_cidr_blocks=subnet_cidr_blocks,
                       ))
 
-nginx_instance = instance.Server(project,
+nginx_service_name = "nginx"
+nginx_instance = instance.Server(f"{project}-{nginx_service_name}",
                                  instance.ServerArgs(
-                                     machine_type="f1-micro",
-                                     service_name="nginx",
+                                     service_name=nginx_service_name,
                                      metadata_startup_script=nginx_install_script,
                                      ports=["80"],
                                      subnet=network.subnets[0],
@@ -25,5 +25,5 @@ nginx_instance = instance.Server(project,
                                  ))
 
 export('network', network.network.name)
-export('public_ip',
+export('nginx_public_ip',
        nginx_instance.instance.network_interfaces[0]["accessConfigs"][0]["natIp"])
