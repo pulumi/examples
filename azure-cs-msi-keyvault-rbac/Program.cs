@@ -189,7 +189,7 @@ class Program
                         EndIpAddress = ip,
                         ServerName = sqlServer.Name,
                     })
-                ));
+                ).ToList());
 
             return new Dictionary<string, object>
             {
