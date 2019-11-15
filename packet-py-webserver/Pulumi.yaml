@@ -1,0 +1,3 @@
+name: packet-py-webserver
+description: A simple server on Packet.
+runtime: python

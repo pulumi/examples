@@ -943,6 +943,24 @@ func TestAccGcpTsServerlessRaw(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccPacketPyWebserver(t *testing.T) {
+	test := getBaseOptions(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "packet-py-webserver"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccPacketTsWebserver(t *testing.T) {
+	test := getBaseOptions(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "packet-ts-webserver"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func skipIfShort(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping long-running test in short mode")
