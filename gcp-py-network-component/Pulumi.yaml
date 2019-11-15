@@ -1,0 +1,13 @@
+name: gcp-py-network-component
+runtime: python
+description: A Google Cloud Python Pulumi program using ComponentResource
+template:
+  config:
+    gcp:project:
+      description: The GCP project to use
+    gcp:zone:
+      description: The GCP zone to use
+    project:
+      description: A project name used for naming/tagging resources
+    owner:
+      description: An owner name used for tagging resources
