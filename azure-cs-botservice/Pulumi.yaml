@@ -8,8 +8,3 @@ template:
       default: North Europe 
     botName:
       description: Microsoft Azure Bot Name
-    botApplicationId:
-      description: Microsoft AD Application ID
-    botApplicationPassword:
-      description: Microsoft AD Application Secret
-      secret: true

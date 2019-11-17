@@ -5,7 +5,7 @@
 Starting point for building Azure Bot Service hosted in Azure App Service.
 
 Provisions Azure Bot Service, Azure Bot Channel registration and Azure Application Insights to be used in combination
-with App Service - registering Azure AD Microsoft Application with secret.  This will deploy the echo bot within the ~/bot/bot.zip file - you can replace the contents with your own bot.  Simply publish the bot to a local folder, zipping the contents and replacing this file.
+with App Service - registering Azure AD Microsoft Application with secret.  This will deploy the echo bot code within the ~/bot directory - you can tweak the contents or replace the contents with your own bot.
 
 ## Deploying the App
 
@@ -42,13 +42,7 @@ To deploy your infrastructure, follow the below steps.
     $ pulumi config set botName "PulumiBot1"
     ```
 
-5.  Configure the MS AD Application Secret (ensure this is complex enough eg. 16 characters long and contain at least 1 numeric and special character):
-
-    ```bash
-	$ pulumi config set botSecret "MySuperS3cr3tPassword:)" --secret
-    ```
-
-6.  Run `pulumi up` to preview and deploy changes:
+5.  Run `pulumi up` to preview and deploy changes:
 
     ```bash
     $ pulumi up
@@ -57,12 +51,12 @@ To deploy your infrastructure, follow the below steps.
 
     Performing changes:
     ...
-    info: 13 changes performed:
-        + 13 resources created
+    info: 14 changes performed:
+        + 14 resources created
     Update duration: 1m22s
     ```
 
-7.  Check the deployed bot using either:
+6.  Check the deployed bot using either:
   
    * Azure Portal Azure Bot Service - [Test in Webchat feature](https://docs.microsoft.com/en-us/azure/bot-service/abs-quickstart?view=azure-bot-service-4.0#test-the-bot)
    * [Bot Framework Emulator](https://github.com/Microsoft/BotFramework-Emulator) pointing to the output bot endpoint and Microsoft Application Id and the secret you supplied:
@@ -70,10 +64,10 @@ To deploy your infrastructure, follow the below steps.
       ```bash
       $ Bot Endpoint: "https://app8asdf.azurewebsites.net/api/messages"
       $ MicrosoftAppId: "b5e65403-923c-4568-z2f6-a6f41b258azz"
-      $ Secret: "MySuperS3cr3tPassword:)"    
+      $ MicrosoftAppPassword: "<secret>"    
       ```
 
-8.  Once you've finished, you can tear down your stack's resources by destroying and removing it:
+7.  Once you've finished, you can tear down your stack's resources by destroying and removing it:
 
     ```bash
     $ pulumi destroy -y

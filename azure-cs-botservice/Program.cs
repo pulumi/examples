@@ -17,11 +17,8 @@ class Program
         {
             var config = new Config();
             var botName = config.Require("botName");
-            var botSecret = config.GetSecret("botSecret");
 
-            var resourceGroup = new ResourceGroup("botservice-rg", new ResourceGroupArgs
-            {
-            });
+            var resourceGroup = new ResourceGroup("botservice-rg");
 
             var storageAccount = new Pulumi.Azure.Storage.Account("sa", new Pulumi.Azure.Storage.AccountArgs
             {
@@ -52,7 +49,7 @@ class Program
                 StorageAccountName = storageAccount.Name,
                 StorageContainerName = container.Name,
                 Type = "block",
-                Content = new FileArchive("bot/bot.zip")
+                Content = new FileArchive("bot")
             });
 
             var codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount);
@@ -83,11 +80,20 @@ class Program
                 PublicClient = true
             });
 
-            var msaSecret = new ApplicationPassword("msapp", new ApplicationPasswordArgs
+            var pwd = new Pulumi.Random.RandomPassword("password", new Pulumi.Random.RandomPasswordArgs
+            {
+                Length = 16,
+                MinNumeric = 1,
+                MinSpecial = 1,
+                MinUpper = 1,
+                MinLower = 1
+            });
+
+            var msaSecret = new ApplicationPassword("msasecret", new ApplicationPasswordArgs
             {
                 ApplicationObjectId = msa.ObjectId,
                 EndDateRelative = "8640h",
-                Value = botSecret
+                Value = pwd.Result
             });
 
             var app = new AppService("app", new AppServiceArgs
@@ -111,7 +117,7 @@ class Program
                 ResourceGroupName = resourceGroup.Name,
                 Sku = "F0",
                 Location = "global",
-                Endpoint = app.DefaultSiteHostname.Apply(a => $"https://{a}/api/messages"),
+                Endpoint = Output.Format($"https://{app.DefaultSiteHostname}/api/messages"),
                 DeveloperAppInsightsApiKey = appInsightApiKey.Key,
                 DeveloperAppInsightsApplicationId = appInsights.AppId,
                 DeveloperAppInsightsKey = appInsights.InstrumentationKey
@@ -120,7 +126,8 @@ class Program
             return new Dictionary<string, object>
             {
                 { "Bot Endpoint", Output.Format($"https://{app.DefaultSiteHostname}/api/messages") },
-                { "MicrosoftAppId", Output.Format($"{msa.ApplicationId}") }
+                { "MicrosoftAppId", Output.Format($"{msa.ApplicationId}") },
+                { "MicrosoftAppPassword", Output.Format($"{msaSecret.Value}") }
             };
         });
     }
