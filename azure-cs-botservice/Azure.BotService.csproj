@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Pulumi.Azure" Version="1.5.0-preview-alpha.1573228289" />
+    <PackageReference Include="Pulumi.AzureAD" Version="1.2.0-preview-alpha.1573913580" />
+  </ItemGroup>
+
+</Project>
