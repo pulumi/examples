@@ -66,7 +66,6 @@ class Program
             var appInsightApiKey = new Pulumi.Azure.AppInsights.ApiKey("ai", new Pulumi.Azure.AppInsights.ApiKeyArgs
             {
                 ApplicationInsightsId = appInsights.Id,
-                //ApplicationInsightsId = appInsights.Id.Apply(ai => ai),
                 ReadPermissions = "api",
             });
 
@@ -80,7 +79,6 @@ class Program
             var msa = new Application("msapp", new ApplicationArgs
             {
                 Oauth2AllowImplicitFlow = false,
-                //Oauth2Permissions = null,
                 AvailableToOtherTenants = true,
                 PublicClient = true
             });
@@ -89,9 +87,7 @@ class Program
             {
                 ApplicationObjectId = msa.ObjectId,
                 EndDateRelative = "8640h",
-                //EndDate = DateTime.Now.AddYears(1).ToUniversalTime().ToString("o"),
                 Value = botSecret
-                //Value = "sbc!ABD@1234-1234234adfasdfasdf"
             });
 
             var app = new AppService("app", new AppServiceArgs
@@ -117,7 +113,6 @@ class Program
                 Location = "global",
                 Endpoint = app.DefaultSiteHostname.Apply(a => $"https://{a}/api/messages"),
                 DeveloperAppInsightsApiKey = appInsightApiKey.Key,
-                //DeveloperAppInsightsApiKey = appInsightApiKey.Key.Apply(k => k),
                 DeveloperAppInsightsApplicationId = appInsights.AppId,
                 DeveloperAppInsightsKey = appInsights.InstrumentationKey
             });
