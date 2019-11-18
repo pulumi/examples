@@ -9,43 +9,6 @@ open Pulumi.Azure.Sql
 open Pulumi.Azure.Storage
 open Pulumi.Azure.Storage.Inputs
 
-module Outputs =
-    
-    let apply<'a, 'b> (f: 'a -> 'b) (output: Output<'a>) : Output<'b> =
-        output.Apply f
-
-    let applyAsync<'a, 'b> (f: 'a -> Async<'b>) (output: Output<'a>) : Output<'b> =
-        output.Apply<'b> (f >> Async.StartAsTask)
-
-    let bind<'a, 'b> (f: 'a -> Output<'b>) (output: Output<'a>) : Output<'b> =
-        output.Apply<'b> f
-    
-    let pair<'a, 'b> (a: Output<'a>) (b: Output<'b>) =
-        Output.Tuple (a, b) 
-        |> apply (fun struct (a, b) -> (a, b))
-
-    let pair3<'a, 'b, 'c> (a: Output<'a>) (b: Output<'b>) (c: Output<'c>) =
-        Output.Tuple (io a, io b, io c) 
-        |> apply (fun struct (a,b,c) -> (a,b,c))
-
-    let pair4<'a, 'b, 'c, 'd> (a: Output<'a>) (b: Output<'b>) (c: Output<'c>) (d: Output<'d>) =
-        pair (pair a b) (pair c d)
-        |> apply(fun ((e, f), (g, h)) -> e, f, g, h)
-
-    let all<'a> (values: List<Output<'a>>) : Output<List<'a>> = 
-        Output.All (values |> List.map io |> List.toArray)
-        |> apply List.ofSeq
-
-let inputList<'a> (items: seq<Input<'a>>) =
-    let result = new InputList<'a> ()
-    for item in items do result.Add item
-    result
-
-let inputMap<'a> (items: seq<string * Input<'a>>) =
-    let result = new InputMap<'a> ()
-    for item in items do result.Add item
-    result
-
 let signedBlobReadUrl(blob: ZipBlob) (account: Account): Output<string> =
     let getSasToken (accountName, connectionString, containerName, blobName) = async {
         let permissions = 
