@@ -18,8 +18,11 @@ will need to [install the Helm CLI](https://docs.helm.sh/using_helm/#installing-
 If you are using Helm v2:
 ```bash
 $ helm init --client-only
+$ helm repo add kedacore https://kedacore.azureedge.net/helm
+$ helm repo update
 ```
 
+If you are using Helm v3:
 ```
 $ helm repo add kedacore https://kedacore.azureedge.net/helm
 $ helm repo update
