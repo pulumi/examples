@@ -5,13 +5,13 @@ using Pulumi.Azure.AppInsights;
 using Pulumi.Azure.AppService;
 using Pulumi.Azure.AppService.Inputs;
 using Pulumi.Azure.Bot;
-using Pulumi.Azure.Cognitive;
 using Pulumi.Azure.Cognitive.Inputs;
 using Pulumi.Azure.Core;
 using Pulumi.AzureAD;
 using Pulumi.Random;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cognitive = Pulumi.Azure.Cognitive;
 using Storage = Pulumi.Azure.Storage;
 
 class Program
@@ -71,7 +71,7 @@ class Program
                 ReadPermissions = "api",
             });
 
-            var luis = new Account("cs", new AccountArgs
+            var luis = new Cognitive.Account("cs", new Cognitive.AccountArgs
             {
                 Kind = "CognitiveServices", // includes LUIS
                 ResourceGroupName = resourceGroup.Name,
