@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bot\**" />
+    <EmbeddedResource Remove="bot\**" />
+    <None Remove="bot\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Pulumi.Azure" Version="1.4.0-preview" />
     <PackageReference Include="Pulumi.AzureAD" Version="1.2.0-preview" />
     <PackageReference Include="Pulumi.Random" Version="1.2.0-preview" />

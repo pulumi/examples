@@ -5,7 +5,9 @@
 Starting point for building Azure Bot Service hosted in Azure App Service.
 
 Provisions Azure Bot Service, Azure Bot Channel registration and Azure Application Insights to be used in combination
-with App Service - registering Azure AD Microsoft Application with secret.  This will deploy the echo bot code within the ~/bot directory - you can tweak the contents or replace the contents with your own bot.
+with App Service - registering Azure AD Microsoft Application with secret.  
+
+This will deploy the echo bot code within the ~/bot directory - you can tweak the contents or replace the contents with your own bot.  Please ensure you publish the bot first to the ~/bot/publish subfolder - following the instructions for `Publish Bot Steps`.
 
 ## Deploying the App
 
@@ -16,9 +18,17 @@ To deploy your infrastructure, follow the below steps.
 * [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 * [Install .NET Core 3.0+](https://dotnet.microsoft.com/download)
 
-### Steps
+### Publish Bot Steps
 
-1.  Create a new stack:
+1.  Within the /bot subfolder, publish the bot to subfolder called publish:
+
+    ```bash
+    $ dotnet publish -o publish
+    ```
+
+### Pulumi Steps
+
+1.  Within the azure-cs-botservice folder, create a new stack:
 
     ```bash
     $ pulumi stack init dev

@@ -49,7 +49,7 @@ class Program
                 StorageAccountName = storageAccount.Name,
                 StorageContainerName = container.Name,
                 Type = "block",
-                Content = new FileArchive("bot")
+                Content = new FileArchive("bot/publish")
             });
 
             var codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount);
