@@ -49,7 +49,7 @@ To deploy your infrastructure, follow the below steps.
 4.  Configure the Bot Name:
 
     ```bash
-    $ pulumi config set botName "PulumiBot1"
+    $ pulumi config set botName PulumiBot1
     ```
 
 5.  Run `pulumi up` to preview and deploy changes:
