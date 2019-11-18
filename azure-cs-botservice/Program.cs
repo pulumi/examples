@@ -1,13 +1,18 @@
 ﻿// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
 using Pulumi;
+using Pulumi.Azure.AppInsights;
 using Pulumi.Azure.AppService;
 using Pulumi.Azure.AppService.Inputs;
+using Pulumi.Azure.Bot;
+using Pulumi.Azure.Cognitive;
+using Pulumi.Azure.Cognitive.Inputs;
 using Pulumi.Azure.Core;
-using Pulumi.Azure.Storage;
 using Pulumi.AzureAD;
+using Pulumi.Random;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Storage = Pulumi.Azure.Storage;
 
 class Program
 {
@@ -20,7 +25,7 @@ class Program
 
             var resourceGroup = new ResourceGroup("botservice-rg");
 
-            var storageAccount = new Pulumi.Azure.Storage.Account("sa", new Pulumi.Azure.Storage.AccountArgs
+            var storageAccount = new Storage.Account("sa", new Storage.AccountArgs
             {
                 ResourceGroupName = resourceGroup.Name,
                 AccountReplicationType = "LRS",
@@ -38,13 +43,13 @@ class Program
                 },
             });
 
-            var container = new Container("zips", new ContainerArgs
+            var container = new Storage.Container("zips", new Storage.ContainerArgs
             {
                 StorageAccountName = storageAccount.Name,
                 ContainerAccessType = "private",
             });
 
-            var blob = new ZipBlob("zip", new ZipBlobArgs
+            var blob = new Storage.ZipBlob("zip", new Storage.ZipBlobArgs
             {
                 StorageAccountName = storageAccount.Name,
                 StorageContainerName = container.Name,
@@ -54,23 +59,23 @@ class Program
 
             var codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount);
 
-            var appInsights = new Pulumi.Azure.AppInsights.Insights("ai", new Pulumi.Azure.AppInsights.InsightsArgs
+            var appInsights = new Insights("ai", new InsightsArgs
             {
                 ApplicationType = "web",
                 ResourceGroupName = resourceGroup.Name
             });
 
-            var appInsightApiKey = new Pulumi.Azure.AppInsights.ApiKey("ai", new Pulumi.Azure.AppInsights.ApiKeyArgs
+            var appInsightApiKey = new ApiKey("ai", new ApiKeyArgs
             {
                 ApplicationInsightsId = appInsights.Id,
                 ReadPermissions = "api",
             });
 
-            var luis = new Pulumi.Azure.Cognitive.Account("cs", new Pulumi.Azure.Cognitive.AccountArgs
+            var luis = new Account("cs", new AccountArgs
             {
                 Kind = "CognitiveServices", // includes LUIS
                 ResourceGroupName = resourceGroup.Name,
-                Sku = new Pulumi.Azure.Cognitive.Inputs.AccountSkuArgs() { Name = "S0", Tier = "Standard" }
+                Sku = new AccountSkuArgs { Name = "S0", Tier = "Standard" }
             });
 
             var msa = new Application("msapp", new ApplicationArgs
@@ -80,7 +85,7 @@ class Program
                 PublicClient = true
             });
 
-            var pwd = new Pulumi.Random.RandomPassword("password", new Pulumi.Random.RandomPasswordArgs
+            var pwd = new RandomPassword("password", new RandomPasswordArgs
             {
                 Length = 16,
                 MinNumeric = 1,
@@ -110,7 +115,7 @@ class Program
                 HttpsOnly = true
             });
 
-            var bot = new Pulumi.Azure.Bot.WebApp(botName, new Pulumi.Azure.Bot.WebAppArgs
+            var bot = new WebApp(botName, new WebAppArgs
             {
                 DisplayName = botName,
                 MicrosoftAppId = msa.ApplicationId,
@@ -125,9 +130,9 @@ class Program
 
             return new Dictionary<string, object>
             {
-                { "Bot Endpoint", Output.Format($"https://{app.DefaultSiteHostname}/api/messages") },
-                { "MicrosoftAppId", Output.Format($"{msa.ApplicationId}") },
-                { "MicrosoftAppPassword", Output.Format($"{msaSecret.Value}") }
+                { "Bot Endpoint", bot.Endpoint },
+                { "MicrosoftAppId", msa.ApplicationId },
+                { "MicrosoftAppPassword", msaSecret.Value }
             };
         });
     }

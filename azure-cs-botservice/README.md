@@ -20,7 +20,7 @@ To deploy your infrastructure, follow the below steps.
 
 ### Publish Bot Steps
 
-1.  Within the /bot subfolder, publish the bot to subfolder called publish:
+1.  Within the **/bot** subfolder, publish the bot to subfolder called publish:
 
     ```bash
     $ dotnet publish -o publish
@@ -28,7 +28,7 @@ To deploy your infrastructure, follow the below steps.
 
 ### Pulumi Steps
 
-1.  Within the azure-cs-botservice folder, create a new stack:
+1.  Within the **azure-cs-botservice** folder, create a new stack:
 
     ```bash
     $ pulumi stack init dev
