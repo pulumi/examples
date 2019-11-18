@@ -15,8 +15,12 @@ We will be deploying to Azure, so you will need an Azure account. If you don't h
 This example deploys a Helm Chart from Kedacore Helm chart repository, so you
 will need to [install the Helm CLI](https://docs.helm.sh/using_helm/#installing-helm) and configure it:
 
+If you are using Helm v2:
 ```bash
 $ helm init --client-only
+```
+
+```
 $ helm repo add kedacore https://kedacore.azureedge.net/helm
 $ helm repo update
 ```
