@@ -19,8 +19,14 @@ This example deploys a Helm Chart from [Bitnami's Helm chart
 repository](https://github.com/bitnami/charts), so you will need to [install the Helm
 CLI](https://docs.helm.sh/using_helm/#installing-helm) and configure it:
 
+For Helm v2 users:
 ```bash
 $ helm init --client-only
+$ helm repo add bitnami https://charts.bitnami.com/bitnami
+```
+
+For Helm v3 users:
+```bash
 $ helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
