@@ -944,6 +944,8 @@ func TestAccGcpTsServerlessRaw(t *testing.T) {
 }
 
 func TestAccPacketPyWebserver(t *testing.T) {
+	t.Skipf("skipping temporarily due to Packet auth failures")
+
 	test := getBaseOptions(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "packet-py-webserver"),
@@ -953,6 +955,8 @@ func TestAccPacketPyWebserver(t *testing.T) {
 }
 
 func TestAccPacketTsWebserver(t *testing.T) {
+	t.Skipf("skipping temporarily due to Packet auth failures")
+
 	test := getBaseOptions(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "packet-ts-webserver"),
