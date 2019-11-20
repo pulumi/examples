@@ -1052,6 +1052,7 @@ func getBaseOptions(t *testing.T) integration.ProgramTestOptions {
 		Overrides:            overrides,
 		Quick:                true,
 		SkipRefresh:          true,
+		RetryFailedSteps:     true,
 	}
 
 	return base
