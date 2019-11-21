@@ -377,7 +377,9 @@ func TestAccAzureCsWebserver(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-cs-webserver"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["ipAddress"], nil)
+				assertHTTPResult(t, stack.Outputs["ipAddress"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello, World")
+				})
 			},
 		})
 
