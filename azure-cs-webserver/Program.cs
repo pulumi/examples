@@ -46,7 +46,7 @@ class Program
                         {
                             Name = "webserveripcfg",
                             SubnetId = network.Subnets.Apply(subnets => subnets[0].Id),
-                            PrivateIpAddressAllocation = "dynamic",
+                            PrivateIpAddressAllocation = "Dynamic",
                             PublicIpAddressId = publicIp.Id,
                         },
                     }
@@ -66,7 +66,7 @@ class Program
                         AdminUsername = "testadmin",
                         AdminPassword = "Password1234!",
                         CustomData = 
-@"#!/bin/bash\n
+@"#!/bin/bash
 echo ""Hello, World!"" > index.html
 nohup python -m SimpleHTTPServer 80 &",
                     },
