@@ -27,13 +27,13 @@ const powershellApp = new azure.appservice.ArchiveFunctionApp("http-powershell",
     },
 });
 
-// const javaApp = new azure.appservice.ArchiveFunctionApp("http-java", {
-//     resourceGroupName: resourceGroup.name,
-//     archive: new pulumi.asset.FileArchive("./java/target/azure-functions/fabrikam-functions"),
-//     appSettings: {
-//         "runtime": "java",
-//     },
-// });
+const javaApp = new azure.appservice.ArchiveFunctionApp("http-java", {
+    resourceGroupName: resourceGroup.name,
+    archive: new pulumi.asset.FileArchive("./java/target/azure-functions/fabrikam-functions"),
+    appSettings: {
+        "runtime": "java",
+    },
+});
 
 // Create a dedicated resoure group for Linux App Service Plan - require for Python
 const linuxResourceGroup = new azure.core.ResourceGroup("linuxrg");
@@ -79,6 +79,6 @@ const premiumApp = new azure.appservice.ArchiveFunctionApp("http-premium", {
 export const dotnetEndpoint = dotnetApp.endpoint.apply(ep => `${ep}HelloDotnet?name=Pulumi`);
 export const nodeEndpoint = nodeApp.endpoint.apply(ep => `${ep}HelloNode?name=Pulumi`);
 export const powershellEndpoint = powershellApp.endpoint.apply(ep => `${ep}HelloPS?name=Pulumi`);
-//export const javaEndpoint = javaApp.endpoint.apply(ep => `${ep}HelloJava?name=Pulumi`);
+export const javaEndpoint = javaApp.endpoint.apply(ep => `${ep}HelloJava?name=Pulumi`);
 export const pythonEndpoint = pythonApp.endpoint.apply(ep => `${ep}HelloPython?name=Pulumi`);
 export const premiumEndpoint = premiumApp.endpoint.apply(ep => `${ep}HelloDotnet?name=PulumiOnPremium`);
