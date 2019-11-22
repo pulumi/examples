@@ -55,8 +55,30 @@ const pythonApp = new azure.appservice.ArchiveFunctionApp("http-python", {
     },
 });
 
+// Azure Functions on Premium Plan
+const premiumPlan = new azure.appservice.Plan("premium-asp", {
+    resourceGroupName: resourceGroup.name,
+    kind: "elastic",
+    sku: {
+        tier: "ElasticPremium",
+        size: "EP1",
+    },
+    maximumElasticWorkerCount: 20,
+});
+
+const premiumApp = new azure.appservice.ArchiveFunctionApp("http-premium", {
+    resourceGroup,
+    plan: premiumPlan,
+    archive: new pulumi.asset.FileArchive("./dotnet/bin/Debug/netcoreapp2.1/publish"),
+    appSettings: {
+        "runtime": "dotnet",
+    },
+});
+
+
 export const dotnetEndpoint = dotnetApp.endpoint.apply(ep => `${ep}HelloDotnet?name=Pulumi`);
 export const nodeEndpoint = nodeApp.endpoint.apply(ep => `${ep}HelloNode?name=Pulumi`);
 export const powershellEndpoint = powershellApp.endpoint.apply(ep => `${ep}HelloPS?name=Pulumi`);
 export const javaEndpoint = javaApp.endpoint.apply(ep => `${ep}HelloJava?name=Pulumi`);
 export const pythonEndpoint = pythonApp.endpoint.apply(ep => `${ep}HelloPython?name=Pulumi`);
+export const premiumEndpoint = premiumApp.endpoint.apply(ep => `${ep}HelloDotnet?name=PulumiOnPremium`);
