@@ -27,8 +27,8 @@ class Program
             // REDIS MASTER.
             //
 
-            var redisMasterLables = new InputMap<string>{
-                {"app", "redis-master"},
+            var redisMasterLabels = new InputMap<string>{
+                { "app", "redis-master" },
             };
 
             var redisMasterDeployment = new Pulumi.Kubernetes.Apps.V1.Deployment("redis-master", new DeploymentArgs
@@ -37,29 +37,32 @@ class Program
                 {
                     Selector = new LabelSelectorArgs
                     {
-                        MatchLabels = redisMasterLables,
+                        MatchLabels = redisMasterLabels,
                     },
                     Template = new PodTemplateSpecArgs
                     {
                         Metadata = new ObjectMetaArgs
                         {
-                            Labels = redisMasterLables,
+                            Labels = redisMasterLabels,
                         },
                         Spec = new PodSpecArgs
                         {
-                            Containers = {
+                            Containers =
+                            {
                                 new ContainerArgs
                                 {
                                     Name = "master",
                                     Image = "k8s.gcr.io/redis:e2e",
                                     Resources = new ResourceRequirementsArgs
                                     {
-                                        Requests = {
-                                            { "cpu", "100m"},
-                                            { "memory", "100Mi"},
+                                        Requests =
+                                        {
+                                            { "cpu", "100m" },
+                                            { "memory", "100Mi" },
                                         },
                                     },
-                                    Ports = {
+                                    Ports =
+                                    {
                                         new ContainerPortArgs { ContainerPortValue = 6379 }
                                     },
                                 },
@@ -77,7 +80,8 @@ class Program
                 },
                 Spec = new ServiceSpecArgs
                 {
-                    Ports = {
+                    Ports =
+                    {
                         new ServicePortArgs
                         {
                             Port = 6379,
@@ -92,8 +96,8 @@ class Program
             // REDIS REPLICA.
             //
 
-            var redisReplicaLables = new InputMap<string>{
-                {"app", "redis-replica"},
+            var redisReplicaLabels = new InputMap<string>{
+                { "app", "redis-replica" },
             };
 
             var redisReplicaDeployment = new Pulumi.Kubernetes.Apps.V1.Deployment("redis-replica", new DeploymentArgs
@@ -102,38 +106,42 @@ class Program
                 {
                     Selector = new LabelSelectorArgs
                     {
-                        MatchLabels = redisReplicaLables,
+                        MatchLabels = redisReplicaLabels,
                     },
                     Template = new PodTemplateSpecArgs
                     {
                         Metadata = new ObjectMetaArgs
                         {
-                            Labels = redisReplicaLables,
+                            Labels = redisReplicaLabels,
                         },
                         Spec = new PodSpecArgs
                         {
-                            Containers = {
+                            Containers =
+                            {
                                 new ContainerArgs
                                 {
                                     Name = "replica",
                                     Image = "gcr.io/google_samples/gb-redisslave:v1",
                                     Resources = new ResourceRequirementsArgs
                                     {
-                                        Requests = {
-                                            { "cpu", "100m"},
-                                            { "memory", "100Mi"},
+                                        Requests =
+                                        {
+                                            { "cpu", "100m" },
+                                            { "memory", "100Mi" },
                                         },
                                     },
                                     // If your cluster config does not include a dns service, then to instead access an environment
                                     // variable to find the master service's host, change `value: "dns"` to read `value: "env"`.
-                                    Env = {
+                                    Env =
+                                    {
                                         new EnvVarArgs
                                         {
                                             Name = "GET_HOSTS_FROM",
                                             Value = "dns"
                                         },
                                     },
-                                    Ports = {
+                                    Ports =
+                                    {
                                         new ContainerPortArgs { ContainerPortValue = 6379 }
                                     },
                                 },
@@ -151,7 +159,8 @@ class Program
                 },
                 Spec = new ServiceSpecArgs
                 {
-                    Ports = {
+                    Ports =
+                    {
                         new ServicePortArgs
                         {
                             Port = 6379,
@@ -167,7 +176,7 @@ class Program
             //
 
             var frontendLabels = new InputMap<string>{
-                {"app", "frontend"},
+                { "app", "frontend" },
             };
 
             var frontendDeployment = new Pulumi.Kubernetes.Apps.V1.Deployment("frontend", new DeploymentArgs
@@ -187,7 +196,8 @@ class Program
                         },
                         Spec = new PodSpecArgs
                         {
-                            Containers = {
+                            Containers =
+                            {
                                 new ContainerArgs
                                 {
                                     Name = "php-redis",
@@ -195,20 +205,22 @@ class Program
                                     Resources = new ResourceRequirementsArgs
                                     {
                                         Requests = {
-                                            { "cpu", "100m"},
-                                            { "memory", "100Mi"},
+                                            { "cpu", "100m" },
+                                            { "memory", "100Mi" },
                                         },
                                     },
                                     // If your cluster config does not include a dns service, then to instead access an environment
                                     // variable to find the master service's host, change `value: "dns"` to read `value: "env"`.
-                                    Env = {
+                                    Env =
+                                    {
                                         new EnvVarArgs
                                         {
                                             Name = "GET_HOSTS_FROM",
                                             Value = "dns", /* Value = "env"*/
                                         },
                                     },
-                                    Ports = {
+                                    Ports =
+                                    {
                                         new ContainerPortArgs { ContainerPortValue = 80 }
                                     },
                                 },
@@ -227,7 +239,8 @@ class Program
                 Spec = new ServiceSpecArgs
                 {
                     Type = isMiniKube ? "ClusterIP" : "LoadBalancer",
-                    Ports = {
+                    Ports =
+                    {
                         new ServicePortArgs
                         {
                             Port = 80,
@@ -239,9 +252,12 @@ class Program
             });
 
             Output<string> frontendIP;
-            if (isMiniKube) {
+            if (isMiniKube)
+            {
                 frontendIP = frontendService.Spec.Apply(spec => spec.ClusterIP);
-            } else {
+            }
+            else
+            {
                 frontendIP = frontendService.Status.Apply(status => status.LoadBalancer.Ingress[0].Hostname);
             }
 
