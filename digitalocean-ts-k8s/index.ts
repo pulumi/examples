@@ -17,7 +17,7 @@ const cluster = new digitalocean.KubernetesCluster("do-cluster", {
     version: "latest",
     nodePool: {
         name: "default",
-        size: digitalocean.DropletSlugs.DropletS2VPCU2GB,
+        size: digitalocean.DropletSlugs.DropletS2VCPU2GB,
         nodeCount: nodeCount,
     },
 });
