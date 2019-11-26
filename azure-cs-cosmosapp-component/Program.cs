@@ -12,10 +12,12 @@ class Program
         return Deployment.RunAsync(() =>
         {
             var functions = Functions.Run();
+            var containers = Containers.Run();
             var vmss = VmScaleSets.Run();
             return new Dictionary<string, object?>
             {
                 { "functionsEndpoint", functions["functionsEndpoint"] },
+                { "containersEndpoint", containers["containersEndpoint"] },
                 { "vmssEndpoint", vmss["vmssEndpoint"] },
             };
         });
