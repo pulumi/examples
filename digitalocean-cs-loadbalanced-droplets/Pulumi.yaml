@@ -1,0 +1,3 @@
+name: digitalocean-cs-loadbalanced-droplets
+runtime: dotnet
+description: Basic example of load balanced droplets on DigitalOcean

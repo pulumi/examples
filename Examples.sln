@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GCP.Functions", "gcp-cs-fun
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.BotService", "azure-cs-botservice\Azure.BotService.csproj", "{BF0F5532-EDDE-4AD4-8FA2-2D11CDED65D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digitalocean.LoadbalancedDroplets", "digitalocean-cs-loadbalanced-droplets\Digitalocean.LoadbalancedDroplets.csproj", "{C21DF417-3E59-45D0-911F-772E3793E0A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digitalocean.K8s", "digitalocean-cs-k8s\Digitalocean.K8s.csproj", "{CA1DB6A6-4B5D-41D7-AED6-43C096F5C7F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,14 @@ Global
 		{BF0F5532-EDDE-4AD4-8FA2-2D11CDED65D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF0F5532-EDDE-4AD4-8FA2-2D11CDED65D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF0F5532-EDDE-4AD4-8FA2-2D11CDED65D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C21DF417-3E59-45D0-911F-772E3793E0A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C21DF417-3E59-45D0-911F-772E3793E0A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C21DF417-3E59-45D0-911F-772E3793E0A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C21DF417-3E59-45D0-911F-772E3793E0A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA1DB6A6-4B5D-41D7-AED6-43C096F5C7F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA1DB6A6-4B5D-41D7-AED6-43C096F5C7F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA1DB6A6-4B5D-41D7-AED6-43C096F5C7F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA1DB6A6-4B5D-41D7-AED6-43C096F5C7F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
