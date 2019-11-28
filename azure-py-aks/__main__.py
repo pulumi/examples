@@ -42,13 +42,11 @@ aks = KubernetesCluster(
     dns_prefix="dns",
     linux_profile={"adminUsername": "aksuser", "ssh_key": {"keyData": SSHKEY}},
     service_principal={"client_id": app.application_id, "client_secret": sppwd.value},
-    agent_pool_profiles=[
-        {
-            "name": "type1",
-            "count": 2,
-            "vmSize": "Standard_B2ms",
-        }
-    ],
+    default_node_pool={
+        "name": "type1",
+        "node_count": 2,
+        "vm_size": "Standard_B2ms",
+    },
 )
 
 k8s_provider = Provider(
