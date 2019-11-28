@@ -4,7 +4,6 @@ import * as events from "@aws-cdk/aws-events";
 import * as targets from "@aws-cdk/aws-events-targets";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as cdk from "@aws-cdk/core";
-import * as aws from "@pulumi/aws";
 import * as fs from "fs";
 import { CDKStack } from "./cdk";
 
