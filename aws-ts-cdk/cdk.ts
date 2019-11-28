@@ -5,8 +5,19 @@ import * as cx from "@aws-cdk/cx-api";
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
+/**
+ * CDKStack is a Pulumi component which can deploy a CDK Stack as part of a Pulumi program.  This
+ * enables using any component from the CDK Construct Library from within a Pulumi program.  The CDK
+ * Stack is deployed as a CloudFormation template within the Pulumi-managed deployment.
+ */
 export class CDKStack extends pulumi.ComponentResource {
+    /**
+     * The CloudFormation stack containg the resources defined by the CDK Stack.
+     */
     cloudformationStack: aws.cloudformation.Stack;
+    /**
+     * Constuct a CDKStack instance.
+     */
     constructor(name: string, stackClass: typeof cdk.Stack, opts?: pulumi.ComponentResourceOptions) {
         const app = new cdk.App({ outdir: "./cdk.out" });
         const stack = new stackClass(app, name);
@@ -50,6 +61,6 @@ export class CDKStack extends pulumi.ComponentResource {
             capabilities: ["CAPABILITY_IAM"],
         }, { parent: this });
 
-        this.registerOutputs({});
+        this.registerOutputs(this.cloudformationStack.outputs);
     }
 }
