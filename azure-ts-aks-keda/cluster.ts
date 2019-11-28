@@ -59,14 +59,13 @@ export class AksCluster extends pulumi.ComponentResource {
         // Now allocate an AKS cluster.
         this.cluster = new azure.containerservice.KubernetesCluster("aksCluster", {
             resourceGroupName: args.resourceGroupName,
-            agentPoolProfiles: [{
+            defaultNodePool: {
                 name: "aksagentpool",
-                count: args.vmCount,
+                nodeCount: args.vmCount,
                 vmSize: args.vmSize,
-                osType: "Linux",
                 osDiskSizeGb: 30,
                 vnetSubnetId: subnet.id,
-            }],
+            },
             dnsPrefix: name,
             linuxProfile: {
                 adminUsername: "aksuser",

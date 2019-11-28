@@ -60,17 +60,13 @@ class Program
             var cluster = new KubernetesCluster("aksCluster", new KubernetesClusterArgs
             {
                 ResourceGroupName = resourceGroup.Name,
-                AgentPoolProfiles =
+                DefaultNodePool = new KubernetesClusterDefaultNodePoolArgs
                 {
-                    new KubernetesClusterAgentPoolProfilesArgs
-                    {
-                        Name = "aksagentpool",
-                        Count = 3,
-                        VmSize = "Standard_B2s",
-                        OsType = "Linux",
-                        OsDiskSizeGb = 30,
-                        VnetSubnetId = subnet.Id,
-                    }
+                    Name = "aksagentpool",
+                    NodeCount = 3,
+                    VmSize = "Standard_B2s",
+                    OsDiskSizeGb = 30,
+                    VnetSubnetId = subnet.Id,
                 },
                 DnsPrefix = "sampleaks",
                 LinuxProfile = new KubernetesClusterLinuxProfileArgs 

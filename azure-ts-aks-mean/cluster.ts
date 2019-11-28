@@ -19,11 +19,11 @@ const adSpPassword = new azuread.ServicePrincipalPassword("aksSpPassword", {
 export const k8sCluster = new azure.containerservice.KubernetesCluster("aksCluster", {
     resourceGroupName: config.resourceGroup.name,
     location: config.location,
-    agentPoolProfiles: [{
+    defaultNodePool: {
         name: "aksagentpool",
-        count: config.nodeCount,
+        nodeCount: config.nodeCount,
         vmSize: config.nodeSize,
-    }],
+    },
     dnsPrefix: `${pulumi.getStack()}-kube`,
     linuxProfile: {
         adminUsername: "aksuser",

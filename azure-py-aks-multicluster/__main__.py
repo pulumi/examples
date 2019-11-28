@@ -44,11 +44,11 @@ for config in aks_cluster_config:
             "client_secret": ad_sp_password.value
         },
         location=config["location"],
-        agent_pool_profiles=[{
+        default_node_pool={
             "name": "aksagentpool",
-            "count": config["node_count"],
+            "node_count": config["node_count"],
             "vm_size": config["node_size"],
-        }],
+        },
         dns_prefix="sample-kube",
     )
     cluster_names.append(cluster.name)
