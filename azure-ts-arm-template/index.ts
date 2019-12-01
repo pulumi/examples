@@ -31,22 +31,21 @@ const armDeployment = new azure.core.TemplateDeployment("test-dep", {
         "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'storage')]",
         "publicIPAddressName": "[concat('myPublicIp', uniquestring(resourceGroup().id))]",
         "publicIPAddressType": "Dynamic",
-        "apiVersion": "2015-06-15",
         "dnsLabelPrefix": `${pulumi.getProject()}-${pulumi.getStack()}`,
       },
       "resources": [
         {
           "type": "Microsoft.Storage/storageAccounts",
           "name": "[variables('storageAccountName')]",
-          "apiVersion": "[variables('apiVersion')]",
+          "apiVersion": "2019-04-01",
           "location": "[variables('location')]",
-          "properties": {
-            "accountType": "[parameters('storageAccountType')]",
+          "sku": {
+            "name": "[parameters('storageAccountType')]",
           },
         },
         {
           "type": "Microsoft.Network/publicIPAddresses",
-          "apiVersion": "[variables('apiVersion')]",
+          "apiVersion": "2019-09-01",
           "name": "[variables('publicIPAddressName')]",
           "location": "[variables('location')]",
           "properties": {
