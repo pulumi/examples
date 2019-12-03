@@ -11,7 +11,7 @@ This example is a full end to end example of delivering a containerized Ruby on 
 
 All of these happen behind a single `pulumi up` command, and are expressed in just a handful of TypeScript.
 
-# Prerequisites
+## Prerequisites
 
 Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
 
@@ -22,7 +22,7 @@ We will be deploying to Google Cloud Platform (GCP), so you will need an account
 This example assumes that you have GCP's `gcloud` CLI on your path. This is installed as part of the
 [GCP SDK](https://cloud.google.com/sdk/).
 
-# Running the Example
+## Running the Example
 
 After cloning this repo, `cd infra/` and run these commands. After 8 minutes, you'll have a fully functioning GKE
 cluster and containerized Ruby on Rails application deployed into it, using a hosted PostgreSQL instance!

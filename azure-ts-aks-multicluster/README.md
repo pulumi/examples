@@ -5,7 +5,7 @@
 This example demonstrates creating multiple Azure Kubernetes Service (AKS) clusters in different regions and with
 different node counts. Please see https://docs.microsoft.com/en-us/azure/aks/ for more information about AKS.
 
-# Prerequisites
+## Prerequisites
 
 Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
 
@@ -13,7 +13,7 @@ We will be deploying to Azure, so you will need an Azure account. If you don't h
 [sign up for free here](https://azure.microsoft.com/en-us/free/).
 [Follow the instructions here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect Pulumi to your Azure account.
 
-# Running the Example
+## Running the Example
 
 > **Note**: Due to an issue in the Azure Terraform Provider (https://github.com/terraform-providers/terraform-provider-azurerm/issues/1635) the
 > creation of an Azure Service Principal, which is needed to create the Kubernetes cluster (see index.ts), is delayed and may not
