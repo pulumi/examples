@@ -14,14 +14,14 @@ a scaled-out [Fargate](https://aws.amazon.com/fargate/) service behind an
 on port 80. Because this example using AWS services directly, you can mix in other resources, like S3 buckets, RDS
 databases, and so on.
 
-# Prerequisites
+## Prerequisites
 
 - [Node.js](https://nodejs.org/en/download/)
 - [Download and install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
 - [Connect Pulumi with your AWS account](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is
       configured, this will just work)
 
-# Running the Example
+## Running the Example
 
 After cloning this repo, `cd` into it and run these commands:
 

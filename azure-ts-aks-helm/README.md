@@ -5,7 +5,7 @@
 This example demonstrates creating an Azure Kubernetes Service (AKS) Cluster, and deploying a Helm Chart into it,
 all in one Pulumi program. Please see https://docs.microsoft.com/en-us/azure/aks/ for more information about AKS.
 
-# Prerequisites
+## Prerequisites
 
 Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
 
@@ -29,7 +29,7 @@ $ helm repo add bitnami https://charts.bitnami.com/bitnami
 $ helm repo update
 ```
 
-# Running the Example
+## Running the Example
 
 After cloning this repo, `cd` into it and run these commands. A Kubernetes cluster and Apache web server will appear!
 

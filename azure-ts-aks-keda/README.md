@@ -4,7 +4,7 @@
 
 This example demonstrates creating an Azure Kubernetes Service (AKS) Cluster, and deploying an Azure Function App with Kubernetes-based Event Driven Autoscaling (KEDA) into it, all in one Pulumi program. Please see https://docs.microsoft.com/en-us/azure/aks/ for more information about AKS and https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda for more information about KEDA.
 
-# Prerequisites
+## Prerequisites
 
 Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
 
@@ -28,7 +28,7 @@ $ helm repo add kedacore https://kedacore.azureedge.net/helm
 $ helm repo update
 ```
 
-# Running the Example
+## Running the Example
 
 After cloning this repo, `cd` into it and run these commands.
 
