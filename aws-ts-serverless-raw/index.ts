@@ -48,6 +48,10 @@ const policy = new aws.iam.RolePolicy("mylambda-policy", {
     }),
 });
 
+// Read the config of whether to provision fixed concurrency for Lambda
+const config = new pulumi.Config();
+const provisionedConcurrentExecutions = config.getNumber("provisionedConcurrency");
+
 // Create a Lambda function, using code from the `./app` folder.
 const lambda = new aws.lambda.Function("mylambda", {
     runtime: aws.lambda.DotnetCore2d1Runtime,
@@ -57,12 +61,21 @@ const lambda = new aws.lambda.Function("mylambda", {
     timeout: 300,
     handler: dotNetApplicationEntryPoint,
     role: role.arn,
+    publish: !!provisionedConcurrentExecutions, // Versioning required for provisioned concurrency
     environment: {
         variables: {
             "COUNTER_TABLE": counterTable.name,
         },
     },
 }, { dependsOn: [policy] });
+
+if (provisionedConcurrentExecutions) {
+    new aws.lambda.ProvisionedConcurrencyConfig("concurrency", {
+        functionName: lambda.name,
+        qualifier: lambda.version,
+        provisionedConcurrentExecutions,
+    });
+}
 
 ///////////////////
 // APIGateway RestAPI
