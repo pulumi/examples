@@ -70,7 +70,7 @@ const lambda = new aws.lambda.Function("mylambda", {
 }, { dependsOn: [policy] });
 
 if (provisionedConcurrentExecutions) {
-    new aws.lambda.ProvisionedConcurrencyConfig("concurrency", {
+    const concurrency = new aws.lambda.ProvisionedConcurrencyConfig("concurrency", {
         functionName: lambda.name,
         qualifier: lambda.version,
         provisionedConcurrentExecutions,
