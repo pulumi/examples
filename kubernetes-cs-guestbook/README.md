@@ -1,66 +1,19 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/kubernetes-cs-guestbook/components)
 
-# Kubernetes Guestbook (Simple Variant)
+# Simple and Component-based Kubernetes Guestbook Apps
 
-A version of the [Kubernetes Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/)
-application using Pulumi.
+A port of the standard [Kubernetes Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/)
+to Pulumi. This example shows you how to build and deploy a simple, multi-tier web application using Kubernetes and
+Docker, and consists of three components:
 
-## Running the App
+* A single-instance Redis master to store guestbook entries
+* Multiple replicated Redis instances to serve reads
+* Multiple web frontend instances
 
-Follow the steps in [Pulumi Installation](https://www.pulumi.com/docs/get-started/install/) and [Kubernetes Setup](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/) to get Pulumi working with Kubernetes.
+In this directory, you will find two variants of the Guestbook:
 
-Create a new stack:
+1. [simple/](./simple) is a straight port of the original YAML.
+2. [components](./components) demonstrates benefits of using a real language, namely eliminating boilerplate through
+   the use of real component abstractions.
 
-```sh
-$ pulumi stack init
-Enter a stack name: testbook
-```
-
-This example will attempt to expose the Guestbook application to the Internet with a `Service` of
-type `LoadBalancer`. Since minikube does not support `LoadBalancer`, the Guestbook application
-already knows to use type `ClusterIP` instead; all you need to do is to tell it whether you're
-deploying to minikube:
-
-```sh
-pulumi config set isMinikube <value>
-```
-
-Perform the deployment:
-
-```sh
-$ pulumi up
-Updating stack 'testbook'
-Performing changes:
-
-     Type                           Name                       Status      
- +   pulumi:pulumi:Stack            guestbook-csharp-testbook  created     
- +   ├─ kubernetes:apps:Deployment  redis-replica              created     
- +   ├─ kubernetes:apps:Deployment  frontend                   created     
- +   ├─ kubernetes:apps:Deployment  redis-master               created     
- +   ├─ kubernetes:core:Service     redis-master               created     
- +   ├─ kubernetes:core:Service     redis-replica              created     
- +   └─ kubernetes:core:Service     frontend                   created     
-
-Outputs:
-  + frontendIp: "35.232.147.18"
-
-Resources:
-    + 7 created
-
-Duration: 17s
-
-Permalink: https://app.pulumi.com/lukehoban/guestbook-csharp/testbook/updates/1
-```
-
-And finally - open the application in your browser to see the running application. If you're running
-macOS you can simply run:
-
-```sh
-open $(pulumi stack output frontendIp)
-```
-
-> _Note_: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure
-> to run `kubectl port-forward svc/frontend 8080:80` to forward the cluster port to the local
-> machine and access the service via `localhost:8080`.
-
-![Guestbook in browser](./imgs/guestbook.png)
+Both examples provision the exact same Kubernetes Guestbook application, but showcase different aspects of Pulumi.

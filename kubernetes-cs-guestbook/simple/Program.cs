@@ -76,6 +76,7 @@ class Program
             {
                 Metadata = new ObjectMetaArgs
                 {
+                    Name = "redis-master",
                     Labels = redisMasterDeployment.Metadata.Apply(metadata => metadata.Labels),
                 },
                 Spec = new ServiceSpecArgs
@@ -155,6 +156,7 @@ class Program
             {
                 Metadata = new ObjectMetaArgs
                 {
+                    Name = "redis-slave",
                     Labels = redisReplicaDeployment.Metadata.Apply(metadata => metadata.Labels),
                 },
                 Spec = new ServiceSpecArgs
@@ -234,6 +236,7 @@ class Program
             {
                 Metadata = new ObjectMetaArgs
                 {
+                    Name = "frontend",
                     Labels = frontendDeployment.Metadata.Apply(metadata => metadata.Labels),
                 },
                 Spec = new ServiceSpecArgs
