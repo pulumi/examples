@@ -13,12 +13,12 @@ using Pulumi.Kubernetes.Types.Inputs.ApiExtensions.V1Beta1;
 
 class ServiceDeploymentArgs
 {
-    public string Image { get; set; } = null!;
-    public int? Replicas { get; set; }
-    public ResourceRequirementsArgs? Resources { get; set; }
+    public Input<string> Image { get; set; } = null!;
+    public Input<int>? Replicas { get; set; }
+    public Input<ResourceRequirementsArgs>? Resources { get; set; }
     public InputList<int> Ports { get; set; } = new InputList<int>();
-    public bool AllocateIPAddress { get; set; }
-    public string? ServiceType { get; set; }
+    public Input<bool>? AllocateIPAddress { get; set; }
+    public Input<string>? ServiceType { get; set; }
     public InputList<EnvVarArgs> Env { get; set; } = new InputList<EnvVarArgs>();
 }
 
@@ -93,7 +93,7 @@ class ServiceDeployment : Pulumi.ComponentResource
             },
             Spec = new ServiceSpecArgs
             {
-                Type = args.AllocateIPAddress ? (args.ServiceType ?? "LoadBalancer") : null,
+                Type = args.AllocateIPAddress.Apply(hasIp => hasIp ? (args.ServiceType ?? "LoadBalancer") : null),
                 Ports = servicePorts,
                 Selector = this.Deployment.Spec.Apply(spec => spec.Template.Metadata.Labels),
             },
@@ -102,15 +102,20 @@ class ServiceDeployment : Pulumi.ComponentResource
             Parent = this,
         });
 
-        if (args.AllocateIPAddress ) {
-            this.IpAddress = 
-                args.ServiceType == "ClusterIP" 
-                ? this.Service.Spec.Apply(s => s.ClusterIP)
-                : this.Service.Status.Apply(status => {
-                    var ingress = status.LoadBalancer.Ingress[0];
-                    // Return the ip address if populated or else the hostname
-                    return ingress.Ip ?? ingress.Hostname;
-                });
-        }
+        this.IpAddress = args.AllocateIPAddress.Apply(hasIp => {
+            if (hasIp) {
+                return args.ServiceType.Apply(serviceType => 
+                    serviceType == "ClusterIP" 
+                    ? this.Service.Spec.Apply(s => s.ClusterIP)
+                    : this.Service.Status.Apply(status => {
+                        var ingress = status.LoadBalancer.Ingress[0];
+                        // Return the ip address if populated or else the hostname
+                        return ingress.Ip ?? ingress.Hostname;
+                    })
+                );
+            } else {
+                return null;
+            }
+        });
     }
 }
