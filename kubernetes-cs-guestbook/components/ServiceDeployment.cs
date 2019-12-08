@@ -16,9 +16,10 @@ class ServiceDeploymentArgs
     public string Image { get; set; } = null!;
     public int? Replicas { get; set; }
     public ResourceRequirementsArgs? Resources { get; set; }
-    public int[]? Ports { get; set; }
+    public InputList<int> Ports { get; set; } = new InputList<int>();
     public bool AllocateIPAddress { get; set; }
     public string? ServiceType { get; set; }
+    public InputList<EnvVarArgs> Env { get; set; } = new InputList<EnvVarArgs>();
 }
 
 class ServiceDeployment : Pulumi.ComponentResource
@@ -33,11 +34,10 @@ class ServiceDeployment : Pulumi.ComponentResource
             { "app", name },
         };
 
-        var deploymentPorts =
-            args.Ports != null
-            ? args.Ports.Select(p => new ContainerPortArgs { ContainerPortValue = 6379 }).ToArray()
-            : Array.Empty<ContainerPortArgs>();
-
+        var deploymentPorts = args.Ports.ToOutput().Apply(ports => 
+            from p in ports select new ContainerPortArgs { ContainerPortValue = 6379 }
+        );
+        
         var container = new ContainerArgs
         {
             Name = name,
@@ -50,11 +50,7 @@ class ServiceDeployment : Pulumi.ComponentResource
                     { "memory", "100Mi" },
                 },
             },
-            Env = new EnvVarArgs
-            {
-                Name = "GET_HOSTS_FROM",
-                Value = "dns"
-            },
+            Env = args.Env,
             Ports = deploymentPorts,
         };
 
@@ -84,11 +80,9 @@ class ServiceDeployment : Pulumi.ComponentResource
             Parent = this,
         });
 
-        var servicePorts =
-            args.Ports != null
-            ? args.Ports.Select(p => new ServicePortArgs { Port = p, TargetPort = p }).ToArray()
-            : Array.Empty<ServicePortArgs>();
-
+        var servicePorts = args.Ports.ToOutput().Apply(ports => 
+            from p in ports select new ServicePortArgs { Port = p, TargetPort = p }
+        );
 
         this.Service = new Pulumi.Kubernetes.Core.V1.Service(name, new ServiceArgs
         {

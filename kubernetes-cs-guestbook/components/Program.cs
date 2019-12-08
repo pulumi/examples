@@ -23,24 +23,24 @@ class Program
             var redisMaster = new ServiceDeployment("redis-master", new ServiceDeploymentArgs
             {
                 Image = "k8s.gcr.io/redis:e2e",
-                Ports = new [] { 6379 },
+                Ports = { 6379 },
             });
 
             var redisReplica = new ServiceDeployment("redis-slave", new ServiceDeploymentArgs
             {
                 Image = "gcr.io/google_samples/gb-redisslave:v1",
-                Ports = new [] { 6379 },
+                Ports = { 6379 },
             });
 
             var frontend = new ServiceDeployment("frontend", new ServiceDeploymentArgs
             {
                 Replicas = 3,
                 Image = "gcr.io/google-samples/gb-frontend:v4",
-                Ports = new [] { 80 },
+                Ports = { 80 },
                 AllocateIPAddress = true,
                 ServiceType = isMiniKube ? "ClusterIP" : "LoadBalancer",
             });
-            
+
             return new Dictionary<string, object?>{
                 { "frontendIp", frontend.IpAddress },
             };
