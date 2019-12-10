@@ -28,16 +28,18 @@ class ServiceDeployment : Pulumi.ComponentResource
     public Pulumi.Kubernetes.Core.V1.Service Service;
     public Output<string>? IpAddress;
 
-    public ServiceDeployment(string name, ServiceDeploymentArgs args, ComponentResourceOptions? opts = null) : base(name, "k8sx:serice:ServiceDeployment", opts)
+    public ServiceDeployment(string name, ServiceDeploymentArgs args, ComponentResourceOptions? opts = null)
+        : base(name, "k8sx:service:ServiceDeployment", opts)
     {
-        var labels = new InputMap<string>{
+        var labels = new InputMap<string>
+        {
             { "app", name },
         };
 
-        var deploymentPorts = args.Ports.ToOutput().Apply(ports => 
+        var deploymentPorts = args.Ports.ToOutput().Apply(ports =>
             from p in ports select new ContainerPortArgs { ContainerPortValue = 6379 }
         );
-        
+
         var container = new ContainerArgs
         {
             Name = name,
@@ -75,12 +77,10 @@ class ServiceDeployment : Pulumi.ComponentResource
                     },
                 },
             },
-        }, new CustomResourceOptions
-        {
-            Parent = this,
-        });
+        }, 
+        new CustomResourceOptions { Parent = this });
 
-        var servicePorts = args.Ports.ToOutput().Apply(ports => 
+        var servicePorts = args.Ports.ToOutput().Apply(ports =>
             from p in ports select new ServicePortArgs { Port = p, TargetPort = p }
         );
 
@@ -97,23 +97,26 @@ class ServiceDeployment : Pulumi.ComponentResource
                 Ports = servicePorts,
                 Selector = this.Deployment.Spec.Apply(spec => spec.Template.Metadata.Labels),
             },
-        }, new CustomResourceOptions
-        {
-            Parent = this,
-        });
+        }, 
+        new CustomResourceOptions { Parent = this });
 
-        this.IpAddress = args.AllocateIPAddress.Apply(hasIp => {
-            if (hasIp) {
-                return args.ServiceType.Apply(serviceType => 
-                    serviceType == "ClusterIP" 
+        this.IpAddress = args.AllocateIPAddress.Apply(hasIp =>
+        {
+            if (hasIp)
+            {
+                return args.ServiceType.Apply(serviceType =>
+                    serviceType == "ClusterIP"
                     ? this.Service.Spec.Apply(s => s.ClusterIP)
-                    : this.Service.Status.Apply(status => {
+                    : this.Service.Status.Apply(status =>
+                    {
                         var ingress = status.LoadBalancer.Ingress[0];
                         // Return the ip address if populated or else the hostname
                         return ingress.Ip ?? ingress.Hostname;
                     })
                 );
-            } else {
+            }
+            else
+            {
                 return null;
             }
         });
