@@ -63,7 +63,8 @@ subnet = network.Subnet(
     "subnet",
     resource_group_name=resource_group.name,
     address_prefix="10.0.2.0/24",
-    virtual_network_name=vnet.name)
+    virtual_network_name=vnet.name,
+    enforce_private_link_endpoint_network_policies="false")
 
 scale_set = compute.ScaleSet(
     "vmscaleset",
