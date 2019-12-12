@@ -79,11 +79,11 @@ public class ExternalEndpoint : IRegionalEndpoint
 
 public class CosmosAppArgs
 {
-	public ResourceGroup ResourceGroup { get; set; } = null!;
-	public string[] Locations { get; set; } = null!;
-	public Func<GlobalContext, Func<RegionalContext, IRegionalEndpoint>> Factory { get; set; } = null!;
-	public Input<string> DatabaseName { get; set; } = null!;
-	public Input<string> ContainerName { get; set; } = null!;
+    public ResourceGroup ResourceGroup { get; set; } = null!;
+    public string[] Locations { get; set; } = null!;
+    public Func<GlobalContext, Func<RegionalContext, IRegionalEndpoint>> Factory { get; set; } = null!;
+    public Input<string> DatabaseName { get; set; } = null!;
+    public Input<string> ContainerName { get; set; } = null!;
     public Input<bool>? EnableMultiMaster { get; set; }
 }
 
