@@ -142,9 +142,6 @@ export interface CopyFileArgs {
     // src is the source of the file or directory to copy. It can be specified as relative to the current
     // working directory or as an absolute path. This cannot be specified if content is set.
     src: string;
-    // // content is the in-memory content to copy to the destination. If the destination is a file, the content
-    // // will be written on that file, whereas if it's a directory, a file named `pulumi-content` is created.
-    // content?: pulumi.Input<string>;
     // dest is required and specifies the absolute path on the target where the file will be copied to.
     dest: string;
 }
