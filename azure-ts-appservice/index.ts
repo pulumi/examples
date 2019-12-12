@@ -6,9 +6,7 @@ import * as pulumi from "@pulumi/pulumi";
 // use first 10 characters of the stackname as prefix for resource names
 const prefix = pulumi.getStack().substring(0, 9);
 
-const resourceGroup = new azure.core.ResourceGroup(`${prefix}-rg`, {
-        location: azure.Locations.WestUS2,
-    });
+const resourceGroup = new azure.core.ResourceGroup(`${prefix}-rg`);
 
 const resourceGroupArgs = {
     resourceGroupName: resourceGroup.name,

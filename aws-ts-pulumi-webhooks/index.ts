@@ -21,15 +21,15 @@ const stackConfig = {
 
 // Just logs information from an incoming webhook request.
 function logRequest(req: awsx.apigateway.Request) {
-    const webhookID = req.headers["pulumi-webhook-id"];
-    const webhookKind = req.headers["pulumi-webhook-kind"];
+    const webhookID = req.headers !== undefined ? req.headers["pulumi-webhook-id"] : "";
+    const webhookKind = req.headers !== undefined ? req.headers["pulumi-webhook-kind"] : "";
     console.log(`Received webhook from Pulumi ${webhookID} [${webhookKind}]`);
 }
 
 // Webhooks can optionally be configured with a shared secret, so that webhook handlers like this app can authenticate
 // message integrity. Rejects any incoming requests that don't have a valid "pulumi-webhook-signature" header.
 function authenticateRequest(req: awsx.apigateway.Request): awsx.apigateway.Response | undefined {
-    const webhookSig = req.headers["pulumi-webhook-signature"];
+    const webhookSig = req.headers !== undefined ? req.headers["pulumi-webhook-signature"] : "";
     if (!stackConfig.sharedSecret || !webhookSig) {
         return undefined;
     }
@@ -65,7 +65,7 @@ const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
                 return authenticateResult;
             }
 
-            const webhookKind = req.headers["pulumi-webhook-kind"];
+            const webhookKind = req.headers !== undefined ? req.headers["pulumi-webhook-kind"] : "";
             const payload = req.body!.toString();
             const parsedPayload = JSON.parse(payload);
             const prettyPrintedPayload = JSON.stringify(parsedPayload, null, 2);

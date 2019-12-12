@@ -34,7 +34,6 @@ After cloning this repo, from this working directory, run these commands:
 3. Set the configuration variables for this program:
 
     ```bash
-    $ pulumi config set prefix all_resources_will_be_prefixed_with_this_value
     $ pulumi config set password service_principal_password
     $ pulumi config set sshkey < ~/.ssh/id_rsa.pub
     $ # this has a default value, so you can skip it
@@ -42,6 +41,13 @@ After cloning this repo, from this working directory, run these commands:
     ```
 
 4. Stand up the AKS cluster:
+
+    > **Note**: Due to an [issue](https://github.com/terraform-providers/terraform-provider-azuread/issues/156) in Azure Terraform Provider, the
+    > creation of an Azure Service Principal, which is needed to create the Kubernetes cluster, is delayed and may not
+    > be available when the cluster is created.  If you get a "Service Principal not found" error, as a work around, you should be able to run `pulumi up`
+    > again, at which time the Service Principal replication should have been completed. See [this issue](https://github.com/Azure/AKS/issues/1206) and
+    > [this doc](https://docs.microsoft.com/en-us/azure/aks/troubleshooting#im-receiving-errors-that-my-service-principal-was-not-found-when-i-try-to-create-a-new-cluster-without-passing-in-an-existing-one)
+    > for further details.
 
     ```bash
     $ pulumi up

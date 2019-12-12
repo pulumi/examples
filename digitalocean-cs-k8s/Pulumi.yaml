@@ -1,0 +1,3 @@
+name: digitalocean-cs-k8s
+runtime: dotnet
+description: Provision a DigitalOcean Kubernetes cluster and deploy to it

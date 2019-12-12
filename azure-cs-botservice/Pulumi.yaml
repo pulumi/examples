@@ -1,0 +1,10 @@
+name: azure-cs-botservice
+description: Creates Azure Bot Service with Application Insights
+runtime: dotnet
+template:
+  config:
+    azure:location: 
+      description: Azure DC region
+      default: North Europe 
+    botName:
+      description: Microsoft Azure Bot Name

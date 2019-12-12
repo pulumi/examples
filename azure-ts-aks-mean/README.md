@@ -19,8 +19,14 @@ This example deploys a Helm Chart from [Bitnami's Helm chart
 repository](https://github.com/bitnami/charts), so you will need to [install the Helm
 CLI](https://docs.helm.sh/using_helm/#installing-helm) and configure it:
 
+For Helm v2 users:
 ```bash
 $ helm init --client-only
+$ helm repo add bitnami https://charts.bitnami.com/bitnami
+```
+
+For Helm v3 users:
+```bash
 $ helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
@@ -51,10 +57,12 @@ npm install
 
 1. Perform the deployment:
 
-    > **Note**: Due to an issue in the Azure Terraform Provider (https://github.com/terraform-providers/terraform-provider-azurerm/issues/1635) the
-    > creation of an Azure Service Principal, which is needed to create the Kubernetes cluster (see cluster.ts), is delayed and may not 
-    > be available when the cluster is created.  If you get a Service Principal not found error, as a work around, you should be able to run `pulumi up`
-    > again, at which time the Service Principal should have been created.
+    > **Note**: Due to an [issue](https://github.com/terraform-providers/terraform-provider-azuread/issues/156) in Azure Terraform Provider, the
+    > creation of an Azure Service Principal, which is needed to create the Kubernetes cluster (see cluster.ts), is delayed and may not
+    > be available when the cluster is created.  If you get a "Service Principal not found" error, as a work around, you should be able to run `pulumi up`
+    > again, at which time the Service Principal replication should have been completed. See [this issue](https://github.com/Azure/AKS/issues/1206) and
+    > [this doc](https://docs.microsoft.com/en-us/azure/aks/troubleshooting#im-receiving-errors-that-my-service-principal-was-not-found-when-i-try-to-create-a-new-cluster-without-passing-in-an-existing-one)
+    > for further details.
 
     ```sh
     $ pulumi up

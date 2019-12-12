@@ -1,0 +1,3 @@
+name: azure-cs-msi-keyvault-rbac
+description: Example of managing the secrets and permissions via services and features like KeyVault, AD Managed Identity, AD RBAC
+runtime: dotnet

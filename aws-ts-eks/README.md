@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Kubernetes Dashboard on an Amazon EKS Cluster
+# Amazon EKS Cluster
 
 This example deploys an EKS Kubernetes cluster with an EBS-backed StorageClass and deploys the Kubernetes Dashboard into the cluster.
 
@@ -19,7 +19,7 @@ If you'd like to follow the optional instructions in step 7 in order to deploy a
 also need to set up the Helm client:
 
 1. [Install the Helm client binaries](https://docs.helm.sh/using_helm/#installing-helm)
-2. Initialize the Helm client:
+2. If you are using Helm v2, initialize the Helm client:
 
     ```bash
     $ helm init --client-only

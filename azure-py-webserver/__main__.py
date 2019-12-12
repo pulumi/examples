@@ -21,7 +21,8 @@ subnet = network.Subnet(
     "server-subnet",
     resource_group_name=resource_group.name,
     virtual_network_name=net.name,
-    address_prefix="10.0.2.0/24")
+    address_prefix="10.0.2.0/24",
+    enforce_private_link_endpoint_network_policies="false")
 public_ip = network.PublicIp(
     "server-ip",
     resource_group_name=resource_group.name,

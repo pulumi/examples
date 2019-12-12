@@ -4,7 +4,7 @@
 
 This example demonstrates creating an Azure Kubernetes Service (AKS) Cluster, and deploying an Azure Function App with Kubernetes-based Event Driven Autoscaling (KEDA) into it, all in one Pulumi program. Please see https://docs.microsoft.com/en-us/azure/aks/ for more information about AKS and https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda for more information about KEDA.
 
-# Prerequisites
+## Prerequisites
 
 Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
 
@@ -15,13 +15,20 @@ We will be deploying to Azure, so you will need an Azure account. If you don't h
 This example deploys a Helm Chart from Kedacore Helm chart repository, so you
 will need to [install the Helm CLI](https://docs.helm.sh/using_helm/#installing-helm) and configure it:
 
+If you are using Helm v2:
 ```bash
 $ helm init --client-only
 $ helm repo add kedacore https://kedacore.azureedge.net/helm
 $ helm repo update
 ```
 
-# Running the Example
+If you are using Helm v3:
+```
+$ helm repo add kedacore https://kedacore.azureedge.net/helm
+$ helm repo update
+```
+
+## Running the Example
 
 After cloning this repo, `cd` into it and run these commands.
 
@@ -38,6 +45,13 @@ After cloning this repo, `cd` into it and run these commands.
     ```
 
 3. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including an Active Directory service principal, AKS cluster, and then deploys the Apache Helm Chart, and an Azure Function managed by KEDA, all in a single gesture:
+
+    > **Note**: Due to an [issue](https://github.com/terraform-providers/terraform-provider-azuread/issues/156) in Azure Terraform Provider, the
+    > creation of an Azure Service Principal, which is needed to create the Kubernetes cluster (see cluster.ts), is delayed and may not
+    > be available when the cluster is created.  If you get a "Service Principal not found" error, as a work around, you should be able to run `pulumi up`
+    > again, at which time the Service Principal replication should have been completed. See [this issue](https://github.com/Azure/AKS/issues/1206) and
+    > [this doc](https://docs.microsoft.com/en-us/azure/aks/troubleshooting#im-receiving-errors-that-my-service-principal-was-not-found-when-i-try-to-create-a-new-cluster-without-passing-in-an-existing-one)
+    > for further details.
 
     ```bash
     $ pulumi up

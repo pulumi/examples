@@ -37,6 +37,7 @@ npm install
 
     ```bash
     $ pulumi config set azure:environment public
+    $ pulumi config set azure:location westus2
     $ az login
     ```
 
@@ -70,7 +71,7 @@ npm install
     $ pulumi stack rm -y --skip-preview
     ```
 
-# Next Steps
+## Next Steps
 
 For more Azure examples, please [check out the Azure Getting Started Guide](
 https://www.pulumi.com/docs/intro/cloud-providers/azure/).

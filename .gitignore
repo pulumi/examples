@@ -1,5 +1,6 @@
 /.pulumi/
 /.vscode/
+/.vs/
 bin/
 build/
 node_modules/
@@ -11,6 +12,7 @@ yarn.lock
 package-lock.json
 Pulumi.*.yaml
 .idea/
+.ionide/
 *.iml
 key.rsa*
 obj/

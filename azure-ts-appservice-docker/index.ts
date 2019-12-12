@@ -4,10 +4,9 @@ import * as azure from "@pulumi/azure";
 import * as docker from "@pulumi/docker";
 import * as pulumi from "@pulumi/pulumi";
 
+
 // Create an Azure Resource Group
-const resourceGroup = new azure.core.ResourceGroup("samples", {
-    location: azure.Locations.WestUS,
-});
+const resourceGroup = new azure.core.ResourceGroup("samples");
 
 // Create a dedicated App Service Plan for Linux App Services
 const plan = new azure.appservice.Plan("linux-apps", {
@@ -75,7 +74,7 @@ const getStartedApp = new azure.appservice.AppService("get-started", {
       DOCKER_REGISTRY_SERVER_URL: pulumi.interpolate`https://${registry.loginServer}`,
       DOCKER_REGISTRY_SERVER_USERNAME: registry.adminUsername,
       DOCKER_REGISTRY_SERVER_PASSWORD: registry.adminPassword,
-      WEBSITES_PORT: 80, // Our custom image exposes port 80. Adjust for your app as needed.
+      WEBSITES_PORT: "80", // Our custom image exposes port 80. Adjust for your app as needed.
     },
     siteConfig: {
         alwaysOn: true,

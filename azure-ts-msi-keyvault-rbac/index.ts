@@ -3,7 +3,6 @@
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
-import { execSync } from "child_process";
 
 // Create a resource group
 const resourceGroup = new azure.core.ResourceGroup("resourceGroup");
@@ -43,7 +42,6 @@ const connectionString = pulumi.interpolate`Server=tcp:${sqlServer.name}.databas
 
 // A file in Blob Storage that we want to access from the application
 const textBlob = new azure.storage.Blob("text", {
-    resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     storageContainerName: storageContainer.name,
     type: "block",
@@ -62,7 +60,6 @@ const appServicePlan = new azure.appservice.Plan("asp", {
 
 // ASP.NET deployment package
 const blob = new azure.storage.ZipBlob("zip", {
-    resourceGroupName: resourceGroup.name,
     storageAccountName: storageAccount.name,
     storageContainerName: storageContainer.name,
     type: "block",
@@ -72,20 +69,12 @@ const blob = new azure.storage.ZipBlob("zip", {
 
 const clientConfig = azure.core.getClientConfig({});
 const tenantId = clientConfig.tenantId;
-
-// Currently, only service principal ID is available in the context.  If we are provided the
-// principle in the config, then just use it.  Otherwise, if logged in with a user, find their ID
-// via Azure CLI. see https://github.com/terraform-providers/terraform-provider-azurerm/issues/3234
-const currentPrincipal = clientConfig.servicePrincipalObjectId !== ""
-        ? clientConfig.servicePrincipalObjectId
-        : <string>JSON.parse(execSync("az ad signed-in-user show --query objectId").toString());
+const currentPrincipal = clientConfig.objectId;
 
 // Key Vault to store secrets (e.g. Blob URL with SAS)
 const vault = new azure.keyvault.KeyVault("vault", {
     resourceGroupName: resourceGroup.name,
-    sku: {
-        name: "standard",
-    },
+    skuName: "standard",
     tenantId: tenantId,
     accessPolicies: [{
         tenantId,

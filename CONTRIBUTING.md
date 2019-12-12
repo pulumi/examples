@@ -27,6 +27,7 @@ The language prefix can be one of:
 - `js` for JavaScript
 - `py` for Python
 - `go` for Golang
+- `cs` for csharp
 
 If you would like to add an example in a different language, see the FAQ section for [adding support for your favorite language](https://www.pulumi.com/docs/troubleshooting/faq/#how-can-i-add-support-for-my-favorite-language).
 

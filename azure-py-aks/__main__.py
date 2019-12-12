@@ -10,16 +10,15 @@ from pulumi_azuread import Application, ServicePrincipal, ServicePrincipalPasswo
 # read and set config values
 config = pulumi.Config("azure-py-aks")
 
-PREFIX = config.require("prefix")
 PASSWORD = config.require_secret("password")
 SSHKEY = config.require("sshkey")
 LOCATION = config.get("location") or "east us"
 
 # create a Resource Group and Network for all resources
-resource_group = ResourceGroup("rg", name=PREFIX + "rg", location=LOCATION)
+resource_group = ResourceGroup("aks-rg")
 
 # create Azure AD Application for AKS
-app = Application("aks-app", name=PREFIX + "aks-app")
+app = Application("aks-app")
 
 # create service principal for the application so AKS can act on behalf of the application
 sp = ServicePrincipal(
@@ -43,13 +42,11 @@ aks = KubernetesCluster(
     dns_prefix="dns",
     linux_profile={"adminUsername": "aksuser", "ssh_key": {"keyData": SSHKEY}},
     service_principal={"client_id": app.application_id, "client_secret": sppwd.value},
-    agent_pool_profiles=[
-        {
-            "name": "type1",
-            "count": 2,
-            "vmSize": "Standard_B2ms",
-        }
-    ],
+    default_node_pool={
+        "name": "type1",
+        "node_count": 2,
+        "vm_size": "Standard_B2ms",
+    },
 )
 
 k8s_provider = Provider(

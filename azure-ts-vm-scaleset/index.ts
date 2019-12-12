@@ -62,6 +62,7 @@ const vnet = new azure.network.VirtualNetwork("vnet", {
 });
 
 const subnet = new azure.network.Subnet("subnet", {
+    enforcePrivateLinkEndpointNetworkPolicies: false,
     resourceGroupName: resourceGroup.name,
     addressPrefix: "10.0.2.0/24",
     virtualNetworkName: vnet.name,

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="bot\**" />
+    <EmbeddedResource Remove="bot\**" />
+    <None Remove="bot\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Pulumi.Azure" Version="1.4.0-preview" />
+    <PackageReference Include="Pulumi.AzureAD" Version="1.2.0-preview" />
+    <PackageReference Include="Pulumi.Random" Version="1.2.0-preview" />
+  </ItemGroup>
+
+</Project>

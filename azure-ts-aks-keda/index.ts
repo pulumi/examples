@@ -2,16 +2,21 @@
 
 import * as azure from "@pulumi/azure";
 import { AksCluster } from "./cluster";
-import { KedaEdge, KedaStorageQueueHandler } from "./keda";
+import { KedaService, KedaStorageQueueHandler } from "./keda";
 
 // Define the resource group to contain all resources
 const resourceGroup = new azure.core.ResourceGroup("keda-pulumi");
 
 // Create an AKS K8s cluster
-const aks = new AksCluster("keda-cluster", { resourceGroup });
+const aks = new AksCluster("keda-cluster", {
+    resourceGroupName: resourceGroup.name,
+    kubernetesVersion: "1.13.5",
+    vmSize: "Standard_B2s",
+    vmCount: 3,
+});
 
 // Deploy shared components of KEDA (container registry, kedacore/keda-edge Helm chart)
-const edge = new KedaEdge("keda-edge", {
+const service = new KedaService("keda-edge", {
     resourceGroup,
     k8sProvider: aks.provider,
 });
@@ -29,7 +34,7 @@ const queue = new azure.storage.Queue("kedaqueue", {
 // Deploy a Function App which subscribes to the Storage Queue
 const app = new KedaStorageQueueHandler("queue-handler", {
     resourceGroup,
-    edge,
+    service,
     storageAccount,
     queue,
     path: "./functionapp",

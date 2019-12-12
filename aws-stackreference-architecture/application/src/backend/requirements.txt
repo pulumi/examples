@@ -1,0 +1,9 @@
+Click==7.0
+dnspython==1.15.0
+Flask==1.0.2
+itsdangerous==0.24
+Jinja2==2.10
+MarkupSafe==1.0
+Werkzeug==0.14.1
+requests==2.20.0
+pg8000==1.13.2

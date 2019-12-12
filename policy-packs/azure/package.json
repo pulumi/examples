@@ -1,0 +1,13 @@
+{
+    "name": "azure-policies",
+    "version": "0.1.0",
+    "dependencies": {
+        "@pulumi/azure": "^1.0.0",
+        "@pulumi/policy": "^0.2.0",
+        "@pulumi/pulumi": "^1.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "latest",
+        "tslint": "latest"
+    }
+}
