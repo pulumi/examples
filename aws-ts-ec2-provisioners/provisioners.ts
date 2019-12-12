@@ -37,7 +37,7 @@ function connPortOrDefault(conn: pulumi.Unwrap<ConnectionArgs>): number {
         case "winrm":
             return 5985;
         default:
-            throw new Error(`unrecognized connectiont ype ${connType}`);
+            throw new Error(`unrecognized connection type ${connType}`);
     }
 }
 
@@ -53,7 +53,7 @@ function connUsernameOrDefault(conn: pulumi.Unwrap<ConnectionArgs>): string {
         case "winrm":
             return "Administrator";
         default:
-            throw new Error(`unrecognized connectiont ype ${connType}`);
+            throw new Error(`unrecognized connection type ${connType}`);
     }
 }
 
@@ -68,7 +68,7 @@ function connToSsh2(conn: pulumi.Unwrap<ConnectionArgs>): any {
     };
 }
 
-function copyFile(conn: pulumi.Unwrap<ConnectionArgs>, src: string, dest: string): Promise<void> {
+function copyFile(conn: pulumi.Unwrap<ConnectionArgs>, src: string, dest: string): Promise<never> {
     const connType = connTypeOrDefault(conn);
     if (connType !== "ssh") {
         throw new Error("only SSH connection types currently supported");
@@ -98,7 +98,17 @@ function copyFile(conn: pulumi.Unwrap<ConnectionArgs>, src: string, dest: string
     });
 }
 
-function runCommand(conn: pulumi.Unwrap<ConnectionArgs>, cmd: string): Promise<string> {
+// RunCommandResult is the result of running a command.
+export interface RunCommandResult {
+    // The stdout of the command that was executed.
+    stdout: string;
+    // The stderr of the command that was executed.
+    stderr: string;
+    // The exit code of the command that was executed.
+    code: number;
+}
+
+function runCommand(conn: pulumi.Unwrap<ConnectionArgs>, cmd: string): Promise<RunCommandResult> {
     const connType = connTypeOrDefault(conn);
     if (connType !== "ssh") {
         throw new Error("only SSH connection types currently supported");
@@ -115,17 +125,19 @@ function runCommand(conn: pulumi.Unwrap<ConnectionArgs>, cmd: string): Promise<s
                         reject(err);
                         return;
                     }
+                    let stdout = "";
+                    let stderr = "";
                     stream.on("close", (code, signal) => {
                         conn.end();
                         if (code) {
                             reject(new Error("Command exited with " + code));
                         } else {
-                            resolve();
+                            resolve({ stdout, stderr, code });
                         }
                     }).on("data", (data) => {
-                        console.log(data.toString("utf8"));
+                        stdout += data.toString("utf8");
                     }).stderr.on("data", (data) => {
-                        console.error(data.toString("utf8"));
+                        stderr += data.toString("utf8");
                     });
                 });
             }).on("error", (err) => {
@@ -144,18 +156,18 @@ function runCommand(conn: pulumi.Unwrap<ConnectionArgs>, cmd: string): Promise<s
 
 // CopyFile is a provisioner step that can copy a file from the machine running Pulumi to the newly created resource.
 export class CopyFile extends pulumi.ComponentResource {
-    private readonly provisioner: Provisioner<ConnectionArgs>;
+    private readonly provisioner: Provisioner<ConnectionArgs, never>;
 
     constructor(name: string, args: CopyFileArgs, opts?: pulumi.ComponentResourceOptions) {
         super("pulumi:provisioners:CopyFile", name, args, opts);
 
-        this.provisioner = new Provisioner<ConnectionArgs>(
+        this.provisioner = new Provisioner<ConnectionArgs, never>(
             `${name}-provisioner`,
             {
                 dep: args.conn,
                 onCreate: (conn) => copyFile(conn, args.src, args.dest),
             },
-            { parent: this, ...opts || {} },
+            { parent: this },
         );
     }
 }
@@ -176,34 +188,47 @@ export interface CopyFileArgs {
 // RemoteExec runs remote commands and/or invokes scripts. If commands and scripts are specified, they are
 // run in the following order: command, commands, script, and finally then scripts.
 export class RemoteExec extends pulumi.ComponentResource {
-    private readonly provisioner: Provisioner<ConnectionArgs>;
+    private readonly provisioner: Provisioner<ConnectionArgs, RunCommandResult[]>;
+    // The results of all commands executed remotely.
+    public readonly results: pulumi.Output<RunCommandResult[]>;
+    // The result of the first command executed remotely.
+    public readonly result: pulumi.Output<RunCommandResult>;
 
     constructor(name: string, args: RemoteExecArgs, opts?: pulumi.ComponentResourceOptions) {
         super("pulumi:provisioners:RemoteExec", name, args, opts);
 
-        this.provisioner = new Provisioner<ConnectionArgs>(
+        if (args.command !== undefined && args.commands !== undefined) {
+            throw new Error("Exactly one of 'command' or 'commands' should be provided.");
+        }
+
+        this.provisioner = new Provisioner<ConnectionArgs, RunCommandResult[]>(
             `${name}-provisioner`,
             {
                 dep: args.conn,
                 onCreate: async (conn) => {
-                    if (args.command) {
-                        await runCommand(conn, args.command);
+                    const commands = args.commands || [args.command];
+                    const results: RunCommandResult[] = [];
+                    for (const cmd of commands) {
+                        const result = await runCommand(conn, cmd);
+                        results.push(result);
                     }
-                    if (args.commands) {
-                        for (const cmd of args.commands) {
-                            await runCommand(conn, cmd);
-                        }
-                    }
+                    return results;
                 },
             },
-            { parent: this, ...opts || {} },
+            { parent: this },
         );
+
+        this.result = this.provisioner.result[0];
+        this.results = this.provisioner.result;
     }
 }
 
 export interface RemoteExecArgs {
+    // The connection to use for the remote command execution.
     conn: ConnectionArgs;
+    // The command to execute.  Exactly one of 'command' and 'commands' is required.
     command?: string;
+    // The commands to execute.  Exactly one of 'command' and 'commands' is required.
     commands?: string[];
 }
 

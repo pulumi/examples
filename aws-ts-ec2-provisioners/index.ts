@@ -7,8 +7,8 @@ import { CopyFile, RemoteExec } from "./provisioners";
 // Get the config ready to go.
 const config = new pulumi.Config();
 const publicKey = config.require("publicKey");
-const privateKey = config.require("privateKey");
-const privateKeyPassphrase = config.get("privateKeyPassphrase");
+const privateKey = config.requireSecret("privateKey");
+const privateKeyPassphrase = config.getSecret("privateKeyPassphrase");
 
 // Create a new security group that permits SSH and web access.
 const secgrp = new aws.ec2.SecurityGroup("secgrp", {
@@ -20,24 +20,23 @@ const secgrp = new aws.ec2.SecurityGroup("secgrp", {
 });
 
 // Get the AMI
-const ami = aws.getAmi({
+const amiId = aws.getAmi({
     owners: ["amazon"],
     mostRecent: true,
     filters: [{
         name: "name",
         values: ["amzn2-ami-hvm-2.0.????????-x86_64-gp2"],
     }],
-});
+}, { async: true}).then(ami => ami.id);
 
 // Create an EC2 server that we'll then provision stuff onto.
 const size = "t2.micro";
 const key = new aws.ec2.KeyPair("key", { publicKey });
 const server = new aws.ec2.Instance("server", {
     instanceType: size,
-    ami: ami.id,
+    ami: amiId,
     keyName: key.keyName,
     securityGroups: [ secgrp.name ],
-    // userData: userData,
 });
 const conn = {
     host: server.publicIp,
@@ -51,7 +50,7 @@ const cpConfig = new CopyFile("config", {
     conn,
     src: "myapp.conf",
     dest: "myapp.conf",
-});
+}, { dependsOn: server });
 
 // Execute a basic command on our server.
 const catConfig = new RemoteExec("cat-config", {
@@ -61,3 +60,4 @@ const catConfig = new RemoteExec("cat-config", {
 
 export const publicIp = server.publicIp;
 export const publicHostName = server.publicDns;
+export const catConfigStdout = catConfig.result.stdout;
