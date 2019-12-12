@@ -1,0 +1,14 @@
+{
+    "name": "aws-ec2-provisioners",
+    "version": "0.1.0",
+    "main": "index.js",
+    "dependencies": {
+        "@pulumi/aws": "latest",
+        "@pulumi/pulumi": "latest",
+        "@types/ssh2": "^0.5.39",
+        "@types/uuid": "^3.4.4",
+        "scp2": "^0.5.0",
+        "ssh2": "^0.8.5",
+        "uuid": "^3.3.2"
+    }
+}
