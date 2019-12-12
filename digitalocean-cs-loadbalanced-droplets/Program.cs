@@ -49,7 +49,7 @@ sudo apt-get install -y nginx
 				Region = region
 			});
 
-			return new Dictionary<string, object> {
+			return new Dictionary<string, object?> {
 				{"endpoint", loadbalancer.Ip}
 			};
 		});

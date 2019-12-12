@@ -16,11 +16,11 @@ using Storage = Pulumi.Azure.Storage;
 
 class Program
 {
-    static Task<int> Main(string[] args)
+    static Task<int> Main()
     {
         return Deployment.RunAsync(() =>
         {
-            var config = new Config();
+            var config = new Pulumi.Config();
             var botName = config.Require("botName");
 
             var resourceGroup = new ResourceGroup("botservice-rg");
@@ -128,7 +128,7 @@ class Program
                 DeveloperAppInsightsKey = appInsights.InstrumentationKey
             });
 
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 { "Bot Endpoint", bot.Endpoint },
                 { "MicrosoftAppId", msa.ApplicationId },

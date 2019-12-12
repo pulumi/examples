@@ -191,7 +191,7 @@ class Program
                     })
                 ).ToList());
 
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 { "endpoint", Output.Format($"https://{app.DefaultSiteHostname}") },
             };

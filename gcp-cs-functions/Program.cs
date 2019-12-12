@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Pulumi;
-using Pulumi.Gcp.Cloudfunctions;
+using Pulumi.Gcp.CloudFunctions;
 using Pulumi.Gcp.Storage;
 
 class Program
@@ -30,7 +30,7 @@ class Program
             });
 
             // Export the URL of the function
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 { "pythonEndpoint", function.HttpsTriggerUrl },
             };

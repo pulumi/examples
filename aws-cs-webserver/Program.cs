@@ -11,7 +11,7 @@ using Pulumi.Aws.Inputs;
 
 class Program
 {
-    private const string size = "t2.micro";
+    private const string Size = "t2.micro";
 
     static Task<int> Main()
     {
@@ -48,13 +48,13 @@ nohup python -m SimpleHTTPServer 80 &
 
             var server = new Instance("web-server-www", new InstanceArgs
             {
-                InstanceType = size,
+                InstanceType = Size,
                 SecurityGroups = { group.Name },
                 UserData = userData,
                 Ami = ami.Id,
             });
 
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 { "publicIp",  server.PublicIp },
                 { "publicDns",  server.PublicDns }

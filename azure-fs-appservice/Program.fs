@@ -7,27 +7,6 @@ open Pulumi.Azure.AppService.Inputs
 open Pulumi.Azure.Core
 open Pulumi.Azure.Sql
 open Pulumi.Azure.Storage
-open Pulumi.Azure.Storage.Inputs
-
-let signedBlobReadUrl(blob: ZipBlob) (account: Account): Output<string> =
-    let getSasToken (accountName, connectionString, containerName, blobName) = async {
-        let permissions = 
-            GetAccountBlobContainerSASPermissionsArgs
-                (Read = input true, Write = input false, Delete = input false,
-                List = input false, Add = input false, Create = input false)
-        let args = 
-            GetAccountBlobContainerSASArgs
-                (ConnectionString = input connectionString,
-                ContainerName = input containerName,
-                Start = input "2019-01-01",
-                Expiry = input "2100-01-01",
-                Permissions = input permissions)
-        let! sas = Invokes.GetAccountBlobContainerSAS args |> Async.AwaitTask
-        return sprintf "https://%s.blob.core.windows.net/%s/%s%s" accountName containerName blobName sas.Sas
-    }
-
-    Outputs.pair4 account.Name account.PrimaryConnectionString blob.StorageContainerName blob.Name
-    |> Outputs.applyAsync getSasToken
 
 let infra () =
     let resourceGroup = ResourceGroup "appservice-rg"
@@ -62,7 +41,7 @@ let infra () =
                 Type = input "block",
                 Content = input archive))
 
-    let codeBlobUrl = signedBlobReadUrl blob storageAccount
+    let codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount)
 
     let config = Config()
     let username = config.Get "sqlAdmin"
