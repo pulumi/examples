@@ -12,7 +12,7 @@ using Pulumi.Azure.Network.Inputs;
 
 class Program
 {
-    static Task<int> Main(string[] args)
+    static Task<int> Main()
     {
         return Deployment.RunAsync(() => {
             var resourceGroup = new ResourceGroup("server-rg");
@@ -99,7 +99,7 @@ nohup python -m SimpleHTTPServer 80 &",
                     return ip.IpAddress;
                 });
 
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 { "ipAddress",  ipAddress }
             };

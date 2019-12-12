@@ -93,7 +93,7 @@ class Program
                 },
             });
 
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 {  "kubeconfig", cluster.KubeConfigRaw },
             };

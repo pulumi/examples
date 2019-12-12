@@ -63,7 +63,7 @@ class Program
                 Version = "~3",
             });
 
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 { "endpoint", Output.Format($"https://{app.DefaultHostname}/api/Hello?name=Pulumi") },
             };

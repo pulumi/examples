@@ -12,7 +12,7 @@ using Pulumi.Azure.Storage;
 
 class Program
 {
-    static Task<int> Main(string[] args)
+    static Task<int> Main()
     {
         return Deployment.RunAsync(() => {
             var resourceGroup = new ResourceGroup("appservice-rg");
@@ -92,7 +92,7 @@ class Program
                 },
             });
 
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 { "endpoint", app.DefaultSiteHostname },
             };

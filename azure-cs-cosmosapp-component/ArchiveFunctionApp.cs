@@ -71,9 +71,9 @@ public class ArchiveFunctionApp : ComponentResource
 
 public class ArchiveFunctionAppArgs
 {
-    public Input<string> ResourceGroupName { get; set; }
-    public string Location { get; set; }
-    public Input<Archive> Archive { get; set; }
+    public Input<string> ResourceGroupName { get; set; } = null!;
+    public string Location { get; set; } = null!;
+    public Input<Archive> Archive { get; set; } = null!;
     
     private InputMap<string>? _appSettings;
     public InputMap<string> AppSettings
