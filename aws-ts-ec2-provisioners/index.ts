@@ -2,12 +2,25 @@
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-import { CopyFile, RemoteExec } from "./provisioners";
+import * as provisioners from "./provisioners";
 
 // Get the config ready to go.
 const config = new pulumi.Config();
-const publicKey = config.require("publicKey");
-const privateKey = config.requireSecret("privateKey");
+
+// If keyName is provided, an existing KeyPair is used, else if publicKey is provided a new KeyPair
+// derived from the publicKey is created.
+let keyName: pulumi.Input<string> = config.get("keyName");
+const publicKey = config.get("publicKey");
+
+// The privateKey associated with the selected key must be provided (either directly or base64 encoded), along with an optional
+// passphrase if needed.
+const privateKey = config.requireSecret("privateKey").apply(key => {
+    if (key.startsWith("-----BEGIN RSA PRIVATE KEY-----")) {
+        return key;
+    } else {
+        return new Buffer(key, "base64").toString("ascii");
+    }
+});
 const privateKeyPassphrase = config.getSecret("privateKeyPassphrase");
 
 // Create a new security group that permits SSH and web access.
@@ -31,11 +44,14 @@ const amiId = aws.getAmi({
 
 // Create an EC2 server that we'll then provision stuff onto.
 const size = "t2.micro";
-const key = new aws.ec2.KeyPair("key", { publicKey });
+if (!keyName) {
+    const key = new aws.ec2.KeyPair("key", { publicKey });
+    keyName = key.keyName;
+}
 const server = new aws.ec2.Instance("server", {
     instanceType: size,
     ami: amiId,
-    keyName: key.keyName,
+    keyName: keyName,
     securityGroups: [ secgrp.name ],
 });
 const conn = {
@@ -46,14 +62,14 @@ const conn = {
 };
 
 // Copy a config file to our server.
-const cpConfig = new CopyFile("config", {
+const cpConfig = new provisioners.CopyFile("config", {
     conn,
     src: "myapp.conf",
     dest: "myapp.conf",
 }, { dependsOn: server });
 
 // Execute a basic command on our server.
-const catConfig = new RemoteExec("cat-config", {
+const catConfig = new provisioners.RemoteExec("cat-config", {
     conn,
     command: "cat myapp.conf",
 }, { dependsOn: cpConfig });

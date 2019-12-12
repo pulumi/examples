@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/Azure/azure-amqp-common-go v1.1.4 // indirect
 	github.com/apache/thrift v0.12.0 // indirect
+	github.com/aws/aws-sdk-go v1.19.45
 	github.com/openzipkin/zipkin-go v0.1.6 // indirect
 	github.com/prometheus/client_golang v0.9.3-0.20190127221311-3c4408c8b829 // indirect
 	github.com/pulumi/pulumi v1.6.1-0.20191120205257-a600d1652666

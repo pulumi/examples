@@ -3,6 +3,7 @@
 package test
 
 import (
+	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -12,6 +13,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/pulumi/pulumi/pkg/resource"
 	"github.com/pulumi/pulumi/pkg/testing/integration"
 	"github.com/stretchr/testify/assert"
 )
@@ -211,6 +216,44 @@ func TestAccAwsTsContainers(t *testing.T) {
 				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsTsEc2Provisioners(t *testing.T) {
+	sess, err := session.NewSession(&aws.Config{
+		Region: aws.String(getAwsRegion())},
+	)
+	assert.NoError(t, err)
+	svc := ec2.New(sess)
+	keyName, err := resource.NewUniqueHex("test-keyname", 8, 20)
+	assert.NoError(t, err)
+	t.Logf("Creating keypair %s.\n", keyName)
+	key, err := svc.CreateKeyPair(&ec2.CreateKeyPairInput{
+		KeyName: aws.String(keyName),
+	})
+	assert.NoError(t, err)
+	defer func() {
+		t.Logf("Deleting keypair %s.\n", keyName)
+		_, err := svc.DeleteKeyPair(&ec2.DeleteKeyPairInput{
+			KeyName: aws.String(keyName),
+		})
+		assert.NoError(t, err)
+	}()
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-ec2-provisioners"),
+			Config: map[string]string{
+				"keyName": aws.StringValue(key.KeyName),
+			},
+			Secrets: map[string]string{
+				"privateKey": base64.StdEncoding.EncodeToString([]byte(aws.StringValue(key.KeyMaterial))),
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				catConfigStdout := stack.Outputs["catConfigStdout"].(string)
+				assert.Equal(t, "[test]\nx = 42\n", catConfigStdout)
 			},
 		})
 

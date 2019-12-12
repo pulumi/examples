@@ -21,47 +21,11 @@ export interface ConnectionArgs {
 // ConnectionType is the set of legal connection mechanisms to use. Default is SSH.
 export type ConnectionType = "ssh" | "winrm";
 
-function connTypeOrDefault(conn: pulumi.Unwrap<ConnectionArgs>): ConnectionType {
-    return conn.type || "ssh";
-}
-
-function connPortOrDefault(conn: pulumi.Unwrap<ConnectionArgs>): number {
-    if (conn.port !== undefined) {
-        return conn.port;
-    }
-
-    const connType = connTypeOrDefault(conn);
-    switch (connType) {
-        case "ssh":
-            return 22;
-        case "winrm":
-            return 5985;
-        default:
-            throw new Error(`unrecognized connection type ${connType}`);
-    }
-}
-
-function connUsernameOrDefault(conn: pulumi.Unwrap<ConnectionArgs>): string {
-    if (conn.username) {
-        return conn.username;
-    }
-
-    const connType = connTypeOrDefault(conn);
-    switch (connType) {
-        case "ssh":
-            return "root";
-        case "winrm":
-            return "Administrator";
-        default:
-            throw new Error(`unrecognized connection type ${connType}`);
-    }
-}
-
 function connToSsh2(conn: pulumi.Unwrap<ConnectionArgs>): any {
     return {
         host: conn.host,
         port: conn.port,
-        username: connUsernameOrDefault(conn),
+        username: conn.username,
         password: conn.password,
         privateKey: conn.privateKey,
         passphrase: conn.privateKeyPassphrase,
@@ -69,7 +33,7 @@ function connToSsh2(conn: pulumi.Unwrap<ConnectionArgs>): any {
 }
 
 function copyFile(conn: pulumi.Unwrap<ConnectionArgs>, src: string, dest: string): Promise<never> {
-    const connType = connTypeOrDefault(conn);
+    const connType = conn.type || "ssh";
     if (connType !== "ssh") {
         throw new Error("only SSH connection types currently supported");
     }
@@ -109,7 +73,7 @@ export interface RunCommandResult {
 }
 
 function runCommand(conn: pulumi.Unwrap<ConnectionArgs>, cmd: string): Promise<RunCommandResult> {
-    const connType = connTypeOrDefault(conn);
+    const connType = conn.type || "ssh";
     if (connType !== "ssh") {
         throw new Error("only SSH connection types currently supported");
     }
