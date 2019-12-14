@@ -14,7 +14,7 @@ All of these happen behind a single `pulumi up` command, and are expressed in ju
 ## Prerequisites
 
 Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
-Esnure you have [downloaded and installed Docker](https://docs.docker.com/install/).
+Esnure you have [downloaded and installed Docker](https://docs.docker.com/install/)
 We will be deploying to Google Cloud Platform (GCP), so you will need an account. If you don't have an account,
 [sign up for free here](https://cloud.google.com/free/). In either case,
 [follow the instructions here](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/) to connect Pulumi to your GCP account.
@@ -38,13 +38,15 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
     ```bash
     $ pulumi config set gcp:project [your-gcp-project-here]
     $ pulumi config set gcp:zone us-west1-a # any valid GCP zone works
-    $ pulumi config set clusterPassword --secret [your-new-cluster-password-here]
+    $ pulumi config set clusterPassword --secret [your-new-cluster-password-here] # must be at least 16 characters
     $ pulumi config set dbUsername [your-new-db-username-here]
     $ pulumi config set dbPassword --secret [your-new-db-password-here]
     $ pulumi config set dockerUsername [your-dockerhub-username-here]
     $ pulumi config set dockerPassword --secret [your-dockerhub-password-here]
-    $ pulumi config set masterVersion # any valid master version
+    $ pulumi config set masterVersion # any valid master version, or latest
     ```
+
+    Config variables that use the `--secret` flag are [encrypted and not stored as plaintext](https://www.pulumi.com/docs/intro/concepts/config/#secrets).
 
     By default, your cluster will have 3 nodes of type `n1-standard-1`. This is configurable, however; for instance
     if we'd like to choose 5 nodes of type `n1-standard-2` instead, we can run these commands:
