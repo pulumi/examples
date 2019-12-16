@@ -29,7 +29,7 @@ class ServiceDeployment : Pulumi.ComponentResource
     public Output<string>? IpAddress;
 
     public ServiceDeployment(string name, ServiceDeploymentArgs args, ComponentResourceOptions? opts = null)
-        : base(name, "k8sx:service:ServiceDeployment", opts)
+        : base("k8sx:service:ServiceDeployment", name, opts)
     {
         var labels = new InputMap<string>
         {
