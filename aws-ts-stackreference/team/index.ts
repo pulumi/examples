@@ -21,16 +21,16 @@ const combinedTags = {
     "Managed By": "Pulumi",
 };
 
-const ami = aws.getAmi({
+const amiId = aws.getAmi({
     owners: ["099720109477"], // Ubuntu
     mostRecent: true,
     filters: [
         { name: "name", values: ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"] },
     ],
-});
+}, { async: true }).then(ami => ami.id);
 
 const instance = new aws.ec2.Instance("tagged", {
-    ami: ami.id,
+    ami: amiId,
     instanceType: "t2.medium",
     tags: combinedTags,
 });

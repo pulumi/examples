@@ -74,5 +74,5 @@ exports.publicIP = pulumi.all({ id: vm.id, name: publicIP.name, resourceGroupNam
     azure.network.getPublicIP({
         name: ip.name,
         resourceGroupName: ip.resourceGroupName,
-    }).then(ip => ip.ipAddress)
+    }, { async: true }).then(ip => ip.ipAddress)
 );

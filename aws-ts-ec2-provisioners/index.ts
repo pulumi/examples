@@ -40,7 +40,7 @@ const amiId = aws.getAmi({
         name: "name",
         values: ["amzn2-ami-hvm-2.0.????????-x86_64-gp2"],
     }],
-}, { async: true}).then(ami => ami.id);
+}, { async: true }).then(ami => ami.id);
 
 // Create an EC2 server that we'll then provision stuff onto.
 const size = "t2.micro";

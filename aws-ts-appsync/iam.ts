@@ -14,7 +14,7 @@ export function createIamRole(name: string, table: aws.dynamodb.Table) {
                     }],
                     effect: "Allow",
                 }],
-            }).json,
+            }, { async: true }).then(doc => doc.json),
     });
 
     const policy = new aws.iam.Policy(`${name}-policy`, {
@@ -24,7 +24,7 @@ export function createIamRole(name: string, table: aws.dynamodb.Table) {
                 resources: [arn],
                 effect: "Allow",
             }],
-       })).json,
+        }, { async: true }).then(doc => doc.json)),
     });
 
     const attachment = new aws.iam.RolePolicyAttachment(`${name}-rpa`, {

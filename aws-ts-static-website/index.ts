@@ -98,7 +98,7 @@ if (config.certificateArn === undefined) {
     }, { provider: eastRegion });
 
     const domainParts = getDomainAndSubdomain(config.targetDomain);
-    const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }).id;
+    const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
 
     /**
      *  Create a DNS record to prove that we _own_ the domain we're requesting a certificate for.
@@ -230,12 +230,12 @@ function getDomainAndSubdomain(domain: string): { subdomain: string, parentDomai
 function createAliasRecord(
     targetDomain: string, distribution: aws.cloudfront.Distribution): aws.route53.Record {
     const domainParts = getDomainAndSubdomain(targetDomain);
-    const hostedZone = aws.route53.getZone({ name: domainParts.parentDomain });
+    const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
     return new aws.route53.Record(
         targetDomain,
         {
             name: domainParts.subdomain,
-            zoneId: hostedZone.zoneId,
+            zoneId: hostedZoneId,
             type: "A",
             aliases: [
                 {

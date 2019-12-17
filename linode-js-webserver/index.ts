@@ -9,7 +9,7 @@ const startupScript = `#!/bin/bash
 echo "Hello, World!" > index.html
 nohup python -m SimpleHTTPServer 80 &`;
 
-const profile = pulumi.output(linode.getProfile());
+const profile = pulumi.output(linode.getProfile({ async: true }));
 
 const stackscript = new linode.StackScript("simple-server", {
   label: "simple-server",
