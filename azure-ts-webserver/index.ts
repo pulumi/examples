@@ -72,6 +72,8 @@ nohup python -m SimpleHTTPServer 80 &`,
 const done = pulumi.all({ _: vm.id, name: publicIp.name, resourceGroupName: publicIp.resourceGroupName });
 
 export const ipAddress = done.apply(d => {
-    const ip = azure.network.getPublicIP({ name: d.name, resourceGroupName: d.resourceGroupName });
-    return ip.ipAddress;
+    return azure.network.getPublicIP({
+        name: d.name,
+        resourceGroupName: d.resourceGroupName,
+    }, { async: true }).then(ip => ip.ipAddress);
 });

@@ -26,7 +26,7 @@ export class GkeCluster extends pulumi.ComponentResource {
         super("examples:kubernetes-ts-multicloud:GkeCluster", name, {}, opts);
 
         // Find the latest engine version.
-        const engineVersion = gcp.container.getEngineVersions().latestMasterVersion;
+        const engineVersion = gcp.container.getEngineVersions({}, { async: true }).then(v => v.latestMasterVersion);
 
         // Generate a strong password for the Kubernetes cluster.
         const password = new random.RandomPassword("password", {

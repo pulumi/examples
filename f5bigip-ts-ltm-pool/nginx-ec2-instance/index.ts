@@ -11,7 +11,7 @@ const ubuntuAmiId = aws.getAmi({
     mostRecent: true,
     nameRegex: "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*",
     owners: ["099720109477"],
-}).then(ami => ami.id);
+}, { async: true }).then(ami => ami.id);
 
 const nginxUserData =
     `#!/bin/bash

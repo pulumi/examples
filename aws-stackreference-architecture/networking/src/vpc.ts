@@ -261,7 +261,7 @@ export class Vpc extends ComponentResource {
         let autoAccept = false;
         let peerOwner = args.peerOwnerId;
         if (!args.peerOwnerId) {
-            peerOwner = output(aws.getCallerIdentity()).apply(i => i.accountId);
+            peerOwner = aws.getCallerIdentity({ async: true }).then(i => i.accountId);
             autoAccept = true;
         }
         const peerName = args.peerVpc.name;

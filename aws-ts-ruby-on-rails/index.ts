@@ -28,10 +28,10 @@ const amiId = aws.getAmi({
     ],
     mostRecent: true,
     owners: ["137112412989"],
-});
+}, { async: true }).then(ami => ami.id);
 
 const webServer = new aws.ec2.Instance("webServer", {
-    ami: amiId.id,
+    ami: amiId,
     instanceType: config.instanceType,
     securityGroups: [ webSg.name ],
     userData: createUserData(

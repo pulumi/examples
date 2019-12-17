@@ -13,7 +13,7 @@ async function main() {
     };
     const availabilityZones = aws.getAvailabilityZones({
         state: "available",
-    });
+    }, { async: true });
 
     const appVpc = new Vpc("app-vpc", {
         description: `${baseTags.ManagedBy} App VPC`,

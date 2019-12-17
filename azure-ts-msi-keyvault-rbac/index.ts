@@ -67,9 +67,9 @@ const blob = new azure.storage.ZipBlob("zip", {
     content: new pulumi.asset.FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish"),
 });
 
-const clientConfig = azure.core.getClientConfig({});
-const tenantId = clientConfig.tenantId;
-const currentPrincipal = clientConfig.objectId;
+const clientConfig = azure.core.getClientConfig({ async: true });
+const tenantId = clientConfig.then(config => config.tenantId);
+const currentPrincipal = clientConfig.then(config => config.objectId);
 
 // Key Vault to store secrets (e.g. Blob URL with SAS)
 const vault = new azure.keyvault.KeyVault("vault", {
