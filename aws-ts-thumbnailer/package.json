@@ -3,8 +3,8 @@
     "version": "0.1.0",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/pulumi": "^1.0.0",
-        "@pulumi/aws": "^1.0.0",
-        "@pulumi/awsx": "latest"
+        "@pulumi/pulumi": "feature-dedeasync6",
+        "@pulumi/aws": "feature-dedeasync6",
+        "@pulumi/awsx": "feature-dedeasync6"
     }
 }

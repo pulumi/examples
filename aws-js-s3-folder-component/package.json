@@ -2,8 +2,8 @@
     "name": "aws-js-s3-folder-component",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/aws": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/aws": "feature-dedeasync6",
+        "@pulumi/pulumi": "feature-dedeasync6",
         "mime": "^2.2.2"
     }
 }

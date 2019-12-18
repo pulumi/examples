@@ -1,8 +1,8 @@
 {
     "name": "aws-js-sqs-slack",
     "dependencies": {
-        "@pulumi/aws": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/aws": "feature-dedeasync6",
+        "@pulumi/pulumi": "feature-dedeasync6",
         "@slack/client": "^4.3.1"
     }
 }

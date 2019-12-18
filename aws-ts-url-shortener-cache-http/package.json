@@ -14,9 +14,9 @@
         "@types/mime-types": "^2.1.0"
     },
     "dependencies": {
-        "@pulumi/pulumi": "^1.0.0",
-        "@pulumi/aws": "^1.0.0",
-        "@pulumi/awsx": "latest",
+        "@pulumi/pulumi": "feature-dedeasync6",
+        "@pulumi/aws": "feature-dedeasync6",
+        "@pulumi/awsx": "feature-dedeasync6",
         "@pulumi/cloud-aws": "latest",
         "redis": "^2.8.0",
         "express": "^4.16.3",

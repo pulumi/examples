@@ -2,9 +2,9 @@
     "name": "aws-policies",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "^1.0.0",
+        "@pulumi/aws": "feature-dedeasync6",
         "@pulumi/policy": "^0.2.0",
-        "@pulumi/pulumi": "^1.0.0"
+        "@pulumi/pulumi": "feature-dedeasync6"
     },
     "devDependencies": {
         "@types/mocha": "^2.2.42",

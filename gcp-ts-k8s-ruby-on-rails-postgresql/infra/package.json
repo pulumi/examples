@@ -7,6 +7,6 @@
         "@pulumi/docker": "latest",
         "@pulumi/gcp": "^1.0.0",
         "@pulumi/kubernetes": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0"
+        "@pulumi/pulumi": "feature-dedeasync6"
     }
 }

@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@pulumi/kubernetes": "^1.0.0",
-    "@pulumi/pulumi": "^1.0.0"
+    "@pulumi/pulumi": "feature-dedeasync6"
   },
   "license": "MIT"
 }

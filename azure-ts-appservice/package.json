@@ -6,6 +6,6 @@
     },
     "dependencies": {
         "@pulumi/azure": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0"
+        "@pulumi/pulumi": "feature-dedeasync6"
     }
 }

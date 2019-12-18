@@ -4,8 +4,8 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/pulumi": "^1.0.0",
-        "@pulumi/awsx": "latest",
+        "@pulumi/pulumi": "feature-dedeasync6",
+        "@pulumi/awsx": "feature-dedeasync6",
         "@pulumi/eks": "latest"
     }
 }
