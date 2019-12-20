@@ -4,11 +4,8 @@ import * as packet from "@pulumi/packet";
 import * as random from "@pulumi/random";
 
 const randomHostName = new random.RandomPet("hostname");
-const randomProjectName = new random.RandomPet("project-name");
 
-const project = new packet.Project("project", {
-    name: randomProjectName.id,
-});
+const project = packet.getProject({name: "ci-project"});
 
 const vm = new packet.Device("vm", {
     facilities: [packet.Facilities.EWR1],
