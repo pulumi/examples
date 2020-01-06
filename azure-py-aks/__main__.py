@@ -15,7 +15,7 @@ SSHKEY = config.require("sshkey")
 LOCATION = config.get("location") or "east us"
 
 # create a Resource Group and Network for all resources
-resource_group = ResourceGroup("aks-rg")
+resource_group = ResourceGroup("aks-rg", location=LOCATION)
 
 # create Azure AD Application for AKS
 app = Application("aks-app")
