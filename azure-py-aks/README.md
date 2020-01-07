@@ -36,8 +36,8 @@ After cloning this repo, from this working directory, run these commands:
     ```bash
     $ pulumi config set password service_principal_password
     $ pulumi config set sshkey < ~/.ssh/id_rsa.pub
-    $ # this has a default value, so you can skip it
-    $ pulumi config set location any_valid_azure_location_for_aks
+    $ # set the azure location in which to run the test
+    $ pulumi config set azure:location westus2
     ```
 
 4. Stand up the AKS cluster:
