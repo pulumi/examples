@@ -35,7 +35,6 @@ sppwd = ServicePrincipalPassword(
 
 aks = KubernetesCluster(
     "aksCluster",
-    location=resource_group.location,
     resource_group_name=resource_group.name,
     kubernetes_version="1.14.6",
     dns_prefix="dns",
