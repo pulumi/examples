@@ -15,7 +15,12 @@ export interface ConnectionArgs {
     username?: pulumi.Input<string>;
     password?: pulumi.Input<string>;
     privateKey?: pulumi.Input<string>;
-    privateKeyPassphrase?: pulumi.Input<string>;
+	privateKeyPassphrase?: pulumi.Input<string>;
+	/**
+     * A string value to control the replacement of the provisioner during each update.
+     * Provide a stable value if you do not need the provisioner to run each time you run an update.
+     */
+    changeToken: string;
 }
 
 // ConnectionType is the set of legal connection mechanisms to use. Default is SSH.

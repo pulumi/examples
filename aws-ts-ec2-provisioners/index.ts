@@ -3,6 +3,7 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import * as provisioners from "./provisioners";
+import { getFileHash } from "./util";
 
 // Get the config ready to go.
 const config = new pulumi.Config();
@@ -54,11 +55,12 @@ const server = new aws.ec2.Instance("server", {
     keyName: keyName,
     securityGroups: [ secgrp.name ],
 });
-const conn = {
+const conn: provisioners.ConnectionArgs = {
     host: server.publicIp,
     username: "ec2-user",
     privateKey,
-    privateKeyPassphrase,
+	privateKeyPassphrase,
+	changeToken: getFileHash("myapp.conf"),
 };
 
 // Copy a config file to our server.
