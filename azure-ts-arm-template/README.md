@@ -8,7 +8,7 @@ as code using Pulumi. Once deployed, it is easy to incrementally refactor resour
 and into code.
 
 [Read more about ARM templates here](
-https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview#template-deployment).
+https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/overview).
 
 ## Prerequisites
 
