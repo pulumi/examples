@@ -8,10 +8,11 @@ import * as pulumi from "@pulumi/pulumi";
 const name = "helloworld";
 
 // Create an EKS cluster with non-default configuration
-const vpc = new awsx.Network("vpc", { usePrivateSubnets: false });
+const vpc = new awsx.ec2.Vpc("vpc");
+
 const cluster = new eks.Cluster(name, {
     vpcId: vpc.vpcId,
-    subnetIds: vpc.subnetIds,
+    subnetIds: vpc.publicSubnetIds,
     desiredCapacity: 2,
     minSize: 1,
     maxSize: 2,
