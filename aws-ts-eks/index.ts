@@ -8,7 +8,7 @@ const vpc = new awsx.ec2.Vpc("vpc", { numberOfAvailabilityZones: 2 });
 
 // Create the EKS cluster itself, including a "gp2"-backed StorageClass and a deployment of the Kubernetes dashboard.
 const cluster = new eks.Cluster("cluster", {
-    vpcId: vpc.vpcId,
+    vpcId: vpc.id,
     subnetIds: vpc.publicSubnetIds,
     instanceType: "t2.medium",
     desiredCapacity: 2,
