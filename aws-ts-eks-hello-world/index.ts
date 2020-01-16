@@ -8,7 +8,7 @@ import * as pulumi from "@pulumi/pulumi";
 const name = "helloworld";
 
 // Create an EKS cluster with non-default configuration
-const vpc = new awsx.ec2.Vpc("vpc");
+const vpc = new awsx.ec2.Vpc("vpc", { numberOfAvailabilityZones: 2 });
 
 const cluster = new eks.Cluster(name, {
     vpcId: vpc.vpcId,
