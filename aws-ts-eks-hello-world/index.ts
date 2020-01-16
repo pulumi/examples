@@ -11,7 +11,7 @@ const name = "helloworld";
 const vpc = new awsx.ec2.Vpc("vpc", { numberOfAvailabilityZones: 2 });
 
 const cluster = new eks.Cluster(name, {
-    vpcId: vpc.vpcId,
+    vpcId: vpc.id,
     subnetIds: vpc.publicSubnetIds,
     desiredCapacity: 2,
     minSize: 1,
