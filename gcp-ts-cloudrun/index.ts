@@ -1,8 +1,8 @@
 // Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as docker from "@pulumi/docker";
 import * as gcp from "@pulumi/gcp";
+import * as pulumi from "@pulumi/pulumi";
 
 // Location to deploy Cloud Run services
 const location = gcp.config.region || "us-central1";
@@ -16,7 +16,7 @@ const enableCloudRun = new gcp.projects.Service("EnableCloudRun", {
 // Deploy a pre-existing Hello Cloud Run container //
 // ----------------------------------------------- //
 const helloService = new gcp.cloudrun.Service("hello", {
-    location,    
+    location,
     template: {
         spec: {
             containers: [
@@ -27,7 +27,7 @@ const helloService = new gcp.cloudrun.Service("hello", {
 }, { dependsOn: enableCloudRun });
 
 // Open the service to public unrestricted access
-new gcp.cloudrun.IamMember("hello-everyone", {
+const iamHello = new gcp.cloudrun.IamMember("hello-everyone", {
     service: helloService.name,
     location,
     role: "roles/run.invoker",
@@ -54,10 +54,10 @@ const myImage = new docker.Image(imageName, {
 
 // Deploy to Cloud Run. Some extra parameters like concurrency and memory are set for illustration purpose.
 const rubyService = new gcp.cloudrun.Service("ruby", {
-    location, 
+    location,
     template: {
         spec: {
-            containers: [{ 
+            containers: [{
                 image: myImage.imageName,
                 resources: {
                     limits: {
@@ -71,7 +71,7 @@ const rubyService = new gcp.cloudrun.Service("ruby", {
 }, { dependsOn: enableCloudRun });
 
 // Open the service to public unrestricted access
-new gcp.cloudrun.IamMember("ruby-everyone", {
+const iamRuby = new gcp.cloudrun.IamMember("ruby-everyone", {
     service: rubyService.name,
     location,
     role: "roles/run.invoker",
