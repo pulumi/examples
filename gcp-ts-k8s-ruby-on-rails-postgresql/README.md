@@ -4,17 +4,17 @@
 
 This example is a full end to end example of delivering a containerized Ruby on Rails application. It
 
-* Provisions a [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) cluster
-* Provisions a fully managed Google Cloud SQL PostgreSQL database
-* Builds a containerized Ruby on Rails container image, and publishes it to Docker Hub
-* Deploys that container image as a Kubernetes Service inside of the provisioned GKE cluster
+-   Provisions a [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) cluster
+-   Provisions a fully managed Google Cloud SQL PostgreSQL database
+-   Builds a containerized Ruby on Rails container image, and publishes it to Docker Hub
+-   Deploys that container image as a Kubernetes Service inside of the provisioned GKE cluster
 
 All of these happen behind a single `pulumi up` command, and are expressed in just a handful of TypeScript.
 
 ## Prerequisites
 
 Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
-
+Esnure you have [downloaded and installed Docker](https://docs.docker.com/install/)
 We will be deploying to Google Cloud Platform (GCP), so you will need an account. If you don't have an account,
 [sign up for free here](https://cloud.google.com/free/). In either case,
 [follow the instructions here](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/) to connect Pulumi to your GCP account.
@@ -38,22 +38,25 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
     ```bash
     $ pulumi config set gcp:project [your-gcp-project-here]
     $ pulumi config set gcp:zone us-west1-a # any valid GCP zone works
-    $ pulumi config set clusterPassword --secret [your-new-cluster-password-here]
+    $ pulumi config set clusterPassword --secret [your-new-cluster-password-here] # must be at least 16 characters
+    $ pulumi config set dbUsername [your-new-db-username-here]
     $ pulumi config set dbPassword --secret [your-new-db-password-here]
     $ pulumi config set dockerUsername [your-dockerhub-username-here]
     $ pulumi config set dockerPassword --secret [your-dockerhub-password-here]
-    $ pulumi config set masterVersion # any valid master version
+    $ pulumi config set masterVersion # any valid master version, or latest
     ```
 
-   By default, your cluster will have 3 nodes of type `n1-standard-1`. This is configurable, however; for instance
-   if we'd like to choose 5 nodes of type `n1-standard-2` instead, we can run these commands:
+    Config variables that use the `--secret` flag are [encrypted and not stored as plaintext](https://www.pulumi.com/docs/intro/concepts/config/#secrets).
 
-   ```bash
-   $ pulumi config set clusterNodeCount 5
-   $ pulumi config set clusterNodeMachineType n1-standard-2
-   ```
+    By default, your cluster will have 3 nodes of type `n1-standard-1`. This is configurable, however; for instance
+    if we'd like to choose 5 nodes of type `n1-standard-2` instead, we can run these commands:
 
-   This shows how stacks can be configurable in useful ways. You can even change these after provisioning.
+    ```bash
+    $ pulumi config set clusterNodeCount 5
+    $ pulumi config set clusterNodeMachineType n1-standard-2
+    ```
+
+    This shows how stacks can be configurable in useful ways. You can even change these after provisioning.
 
 3. Deploy everything with the `pulumi up` command. This provisions all the GCP resources necessary, including
    your GKE cluster and database, as well as building and publishing your container image, all in a single gesture:
@@ -62,7 +65,7 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
     $ pulumi up
     ```
 
-   This will show you a preview, ask for confirmation, and then chug away at provisioning your cluster:
+    This will show you a preview, ask for confirmation, and then chug away at provisioning your cluster:
 
     ```
     Updating stack 'gcp-rails'
@@ -101,9 +104,9 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
     Update duration: 7m20.867501974as
     ```
 
-   After this completes, numerous outputs will show up. `appAddress` is the URL that your Rails app will be available
-   at, `appName` is the resulting Kubernetes Deployment, `dbAddress` is your PostgreSQL hostname in case you want to
-   connect to it with `psql`, and `kueConfig` is the full Kubernetes configuration that you can use with `kubectl`.
+    After this completes, numerous outputs will show up. `appAddress` is the URL that your Rails app will be available
+    at, `appName` is the resulting Kubernetes Deployment, `dbAddress` is your PostgreSQL hostname in case you want to
+    connect to it with `psql`, and `kueConfig` is the full Kubernetes configuration that you can use with `kubectl`.
 
 4. Open a browser to visit the site, `open $(pulumi stack output appAddress)/todo_lists`. Make some todo lists!
 
