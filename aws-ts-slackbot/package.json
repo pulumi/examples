@@ -2,9 +2,9 @@
     "name": "aws-ts-slackbot",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "^1.0.0",
-        "@pulumi/awsx": "latest",
-        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/aws": "feature-2.0",
+        "@pulumi/awsx": "feature-2.0",
+        "@pulumi/pulumi": "feature-2.0",
         "qs": "^6.7.0",
         "superagent": "^5.0.2"
     },

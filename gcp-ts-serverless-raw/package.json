@@ -2,7 +2,7 @@
     "name": "gcp-ts-serverless-raw",
     "version": "1.0.0",
     "dependencies": {
-        "@pulumi/gcp": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0"
+        "@pulumi/gcp": "feature-2.0",
+        "@pulumi/pulumi": "feature-2.0"
     }
 }

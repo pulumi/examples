@@ -4,7 +4,7 @@
     "dependencies": {
         "@pulumi/cloud": "latest",
         "@pulumi/cloud-aws": "latest",
-        "@pulumi/pulumi": "latest",
+        "@pulumi/pulumi": "feature-2.0",
         "twitter": "^1.7.1"
     }
 }

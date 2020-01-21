@@ -4,8 +4,8 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/aws": "^1.0.0",
-        "@pulumi/gcp": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0"
+        "@pulumi/aws": "feature-2.0",
+        "@pulumi/gcp": "feature-2.0",
+        "@pulumi/pulumi": "feature-2.0"
     }
 }

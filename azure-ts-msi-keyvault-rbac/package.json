@@ -5,8 +5,8 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/azure": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0",
-        "@pulumi/random": "^1.0.0"
+        "@pulumi/azure": "feature-2.0",
+        "@pulumi/pulumi": "feature-2.0",
+        "@pulumi/random": "feature-2.0"
     }
 }

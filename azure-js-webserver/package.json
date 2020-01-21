@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/pulumi": "^1.0.0",
-        "@pulumi/azure": "^1.0.0"
+        "@pulumi/pulumi": "feature-2.0",
+        "@pulumi/azure": "feature-2.0"
     }
 }

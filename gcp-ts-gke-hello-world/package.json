@@ -2,8 +2,8 @@
     "name": "gcp-ts-gke-hello-world",
     "dependencies": {
         "@types/node": "^8.0.0",
-        "@pulumi/gcp": "^1.0.0",
-        "@pulumi/kubernetes": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0"
+        "@pulumi/gcp": "feature-2.0",
+        "@pulumi/kubernetes": "feature-2.0",
+        "@pulumi/pulumi": "feature-2.0"
     }
 }

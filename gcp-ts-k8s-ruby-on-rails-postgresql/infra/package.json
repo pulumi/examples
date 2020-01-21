@@ -4,9 +4,9 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/docker": "latest",
-        "@pulumi/gcp": "^1.0.0",
-        "@pulumi/kubernetes": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0"
+        "@pulumi/docker": "feature-2.0",
+        "@pulumi/gcp": "feature-2.0",
+        "@pulumi/kubernetes": "feature-2.0",
+        "@pulumi/pulumi": "feature-2.0"
     }
 }

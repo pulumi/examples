@@ -5,7 +5,7 @@
     },
     "dependencies": {
         "@azure/cosmos": "^2.1.7",
-        "@pulumi/azure": "latest",
-        "@pulumi/pulumi": "latest"
+        "@pulumi/azure": "feature-2.0",
+        "@pulumi/pulumi": "feature-2.0"
     }
 }
