@@ -1,4 +1,6 @@
-import { execCommand, CommandResult } from "./execute"
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+
+import { CommandResult, execCommand } from "./execute";
 
 export class PulumiRunner {
 
@@ -20,19 +22,19 @@ export class PulumiRunner {
         try {
             const initResult = await this.stackInit();
             if (!initResult.success) {
-                return Promise.resolve({ success: false, error: initResult.error })
+                return Promise.resolve({ success: false, error: initResult.error });
             }
 
             const upResult = await this.up();
             if (!upResult.success) {
-                return Promise.resolve({ success: false, error: upResult.error })
+                return Promise.resolve({ success: false, error: upResult.error });
             }
 
             const outputResult = await this.stackOutputs();
             if (!outputResult.success) {
-                return Promise.resolve({ success: false, error: outputResult.error })
+                return Promise.resolve({ success: false, error: outputResult.error });
             }
-            return Promise.resolve({ success: true });;
+            return Promise.resolve({ success: true });
         } catch (e) {
             return Promise.resolve({ success: false, error: e });
         }
@@ -42,11 +44,11 @@ export class PulumiRunner {
         try {
             const destroyResult = await this.destroy();
             if (!destroyResult.success) {
-                return Promise.resolve({ success: false, error: destroyResult.error })
+                return Promise.resolve({ success: false, error: destroyResult.error });
             }
             const rmResult = await this.stackRemove();
             if (!rmResult.success) {
-                return Promise.resolve({ success: false, error: rmResult.error })
+                return Promise.resolve({ success: false, error: rmResult.error });
             }
             return Promise.resolve({ success: true });
         } catch (e) {
@@ -55,8 +57,8 @@ export class PulumiRunner {
     }
 
     public getStackOutput(key: string): string {
-        return this.outputs[key]
-    };
+        return this.outputs[key];
+    }
 
     public getStackOutputKeys(): string[] {
         return Object.keys(this.outputs);
@@ -81,7 +83,7 @@ export class PulumiRunner {
                 result.push(output);
             };
             const outputResult = await execCommand("pulumi", ["stack", "output", "--cwd", this.pulumiProjDir, "--json"], undefined, onStdOut);
-            if (!outputResult.success) throw new Error("Failed to get stack outputs: ${outputResult.error}");
+            if (!outputResult.success) { throw new Error("Failed to get stack outputs: ${outputResult.error}"); }
 
             const json = result.join();
             const parsedOutput = JSON.parse(json);
@@ -110,11 +112,11 @@ export class PulumiRunner {
             result.push(`${key}=${config[key]}`);
         }
 
-        return result
+        return result;
     }
 }
 
 export interface RunnerResult {
-    success: boolean
-    error?: string
+    success: boolean;
+    error?: string;
 }

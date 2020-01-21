@@ -1,10 +1,12 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
-import { CallbackFunction } from "@pulumi/aws/lambda";
 import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
+import { CallbackFunction } from "@pulumi/aws/lambda";
+import * as pulumi from "@pulumi/pulumi";
 import { getS3Location } from "../../utils";
-import { createPartitionDDLStatement } from "./partitionHelper";
 import { LambdaCronJob, LambdaCronJobArgs } from "../lambdaCron";
+import { createPartitionDDLStatement } from "./partitionHelper";
 
 export class HourlyPartitionRegistrar extends pulumi.ComponentResource {
 
@@ -25,10 +27,10 @@ export class HourlyPartitionRegistrar extends pulumi.ComponentResource {
         const partitionRegistrarFn = (event: EventRuleEvent) => {
             const athena = require("athena-client");
             const clientConfig = {
-                bucketUri: resultsBucket.get()
+                bucketUri: resultsBucket.get(),
             };
             const awsConfig = {
-                region: args.region
+                region: args.region,
             };
 
             const client = athena.createClient(clientConfig, awsConfig);
@@ -39,16 +41,16 @@ export class HourlyPartitionRegistrar extends pulumi.ComponentResource {
                 if (err) {
                     throw err;
                 }
-            })
+            });
         };
 
         const cronArgs: LambdaCronJobArgs = {
             jobFn: partitionRegistrarFn,
             scheduleExpression: schedule,
-            policyARNsToAttach
-        }
+            policyARNsToAttach,
+        };
 
-        new LambdaCronJob(name, cronArgs, { parent: this });
+        const partitionLambda = new LambdaCronJob(name, cronArgs, { parent: this });
     }
 }
 

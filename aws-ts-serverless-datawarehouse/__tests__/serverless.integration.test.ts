@@ -1,5 +1,7 @@
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+
+import * as athena from "athena-client";
 import { resolve } from "path";
-import * as athena from "athena-client"
 
 import { PulumiRunner } from "../testing/integration";
 
@@ -11,21 +13,21 @@ const region = "us-west-2";
 beforeAll(async () => {
     const config: { [key: string]: string } = {
         "aws:region": region,
-        "aws-ts-serverless-datawarehouse:dev": "true"
+        "aws-ts-serverless-datawarehouse:dev": "true",
     };
 
     const pulumiProjDir = resolve("./");
     runner = new PulumiRunner(config, pulumiProjDir);
     const setupResult = await runner.setup();
-    if(!setupResult.success) {
-        throw new Error(`Pulumi setup failed, aborting: ${setupResult.error}`)
+    if (!setupResult.success) {
+        throw new Error(`Pulumi setup failed, aborting: ${setupResult.error}`);
     }
 });
 
 afterAll(async () => {
     const teardownResult = await runner.teardown();
-    if(!teardownResult.success) {
-        throw new Error(`Pulumi teardown failed. Test stack has leaked: ${teardownResult.error}`)
+    if (!teardownResult.success) {
+        throw new Error(`Pulumi teardown failed. Test stack has leaked: ${teardownResult.error}`);
     }
 });
 
@@ -48,21 +50,21 @@ test("WithStreamingInput integrtion test", async () => {
 const verifyRecordsInTable = async (db: string, table: string, bucket: string) => {
     const bucketUri = `s3://${bucket}`;
     const clientConfig = {
-        bucketUri
+        bucketUri,
     };
     const awsConfig = {
-        region
+        region,
     };
     const athenaClient = athena.createClient(clientConfig, awsConfig);
 
     let didFindResults = false;
-    const query = `select * from ${db}.${table} limit 10;`
-    console.log(query)
+    const query = `select * from ${db}.${table} limit 10;`;
+    console.log(query);
     let retry = 0;
-    while(retry < 5) {
+    while (retry < 5) {
         const result = await athenaClient.execute(query).toPromise();
-        console.log(JSON.stringify(result))
-        if(result.records.length > 0) {
+        console.log(JSON.stringify(result));
+        if (result.records.length > 0) {
             didFindResults = true;
             break;
         }
@@ -72,5 +74,5 @@ const verifyRecordsInTable = async (db: string, table: string, bucket: string) =
         }
     }
 
-    return didFindResults
-}
+    return didFindResults;
+};

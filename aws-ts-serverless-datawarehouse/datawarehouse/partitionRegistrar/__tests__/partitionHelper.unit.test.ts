@@ -1,7 +1,9 @@
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+
 import { createPartitionDDLStatement } from "../partitionHelper";
 
-test("createPartitionDDLStatement", ()=>{
-    expect(createPartitionDDLStatement("someDatabase", "someTable","somePath", "inserted_at","2017-01-01T00:15:48Z")).toEqual(`ALTER TABLE someDatabase.someTable ADD IF NOT EXISTS
+test("createPartitionDDLStatement", ()=> {
+    expect(createPartitionDDLStatement("someDatabase", "someTable", "somePath", "inserted_at", "2017-01-01T00:15:48Z")).toEqual(`ALTER TABLE someDatabase.someTable ADD IF NOT EXISTS
 PARTITION (inserted_at = '2017/01/01/00') LOCATION 'somePath/2017/01/01/00/'
 PARTITION (inserted_at = '2017/01/01/01') LOCATION 'somePath/2017/01/01/01/'
 PARTITION (inserted_at = '2017/01/01/02') LOCATION 'somePath/2017/01/01/02/'

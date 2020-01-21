@@ -1,13 +1,15 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
+import { ARN } from "@pulumi/aws";
+import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
+import { BucketArgs } from "@pulumi/aws/s3";
 import { input } from "@pulumi/aws/types";
+import * as pulumi from "@pulumi/pulumi";
 import { getS3Location } from "../utils";
 import { InputStream, InputStreamArgs } from "./inputStream";
-import { HourlyPartitionRegistrar, PartitionRegistrarArgs } from "./partitionRegistrar";
-import { BucketArgs } from "@pulumi/aws/s3";
-import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
-import { ARN } from "@pulumi/aws";
 import { LambdaCronJob, LambdaCronJobArgs } from "./lambdaCron";
+import { HourlyPartitionRegistrar, PartitionRegistrarArgs } from "./partitionRegistrar";
 
 export class ServerlessDataWarehouse extends pulumi.ComponentResource {
 
@@ -29,7 +31,7 @@ export class ServerlessDataWarehouse extends pulumi.ComponentResource {
 
 
         const database = dwArgs.database ? dwArgs.database : new aws.glue.CatalogDatabase(name, {
-            name
+            name,
         }, { parent: this });
 
 
@@ -43,7 +45,7 @@ export class ServerlessDataWarehouse extends pulumi.ComponentResource {
             throw new Error(`Duplicate table! Name: ${name}`);
         }
 
-        let dataFormat = this.validateFormatAndGetDefault(args.dataFormat);
+        const dataFormat = this.validateFormatAndGetDefault(args.dataFormat);
 
         const table = this.createTable(name, args.columns, dataFormat, args.partitionKeys);
         this.tables[name] = table;
@@ -57,7 +59,7 @@ export class ServerlessDataWarehouse extends pulumi.ComponentResource {
 
         const partitionKeys: input.glue.CatalogTablePartitionKey[] = [{
             name: partitionKey,
-            type: "string"
+            type: "string",
         }];
 
         const tableArgs: TableArgs = {
@@ -72,7 +74,7 @@ export class ServerlessDataWarehouse extends pulumi.ComponentResource {
             shardCount: inputStreamShardCount,
             databaseName: this.database.name,
             tableName: name,
-            fileFlushIntervalSeconds
+            fileFlushIntervalSeconds,
         };
 
         const { inputStream } = new InputStream(`inputstream-${name}`, streamArgs, { parent: this });
@@ -87,7 +89,7 @@ export class ServerlessDataWarehouse extends pulumi.ComponentResource {
             table: name,
             scheduleExpression: args.partitionScheduleExpression,
         };
-        new HourlyPartitionRegistrar(`${name}-partitionregistrar`, registrarArgs, { parent: this });
+        const partitionRegistrar = new HourlyPartitionRegistrar(`${name}-partitionregistrar`, registrarArgs, { parent: this });
 
         return this;
     }
@@ -105,10 +107,10 @@ export class ServerlessDataWarehouse extends pulumi.ComponentResource {
         const lambdaCronArgs: LambdaCronJobArgs = {
             jobFn,
             scheduleExpression,
-            policyARNsToAttach
+            policyARNsToAttach,
         };
 
-        new LambdaCronJob(name, lambdaCronArgs, { parent: this });
+        const batchInputJob = new LambdaCronJob(name, lambdaCronArgs, { parent: this });
 
         return this;
     }
@@ -164,9 +166,9 @@ export class ServerlessDataWarehouse extends pulumi.ComponentResource {
             serDeInfo: {
                 parameters: { "serialization.format": "1" },
                 name: "ParquetHiveSerDe",
-                serializationLibrary: "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+                serializationLibrary: "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
             },
-            columns
+            columns,
         };
 
         const jsonStorageDescriptor = {
@@ -175,9 +177,9 @@ export class ServerlessDataWarehouse extends pulumi.ComponentResource {
             outputFormat: "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
             serDeInfo: {
                 name: "OpenXJSONSerDe",
-                serializationLibrary: "org.openx.data.jsonserde.JsonSerDe"
+                serializationLibrary: "org.openx.data.jsonserde.JsonSerDe",
             },
-            columns
+            columns,
         };
 
         const storageDescriptor = dataFormat === "JSON" ? jsonStorageDescriptor : parquetStorageDescriptor;
@@ -206,11 +208,11 @@ export interface TableArgs {
 }
 
 export interface StreamingInputTableArgs {
-    columns: input.glue.CatalogTableStorageDescriptorColumn[]
+    columns: input.glue.CatalogTableStorageDescriptorColumn[];
     inputStreamShardCount: number;
     region: string;
     partitionKeyName?: string;
-    partitionScheduleExpression?: string; 
+    partitionScheduleExpression?: string;
     fileFlushIntervalSeconds?: number;
 }
 

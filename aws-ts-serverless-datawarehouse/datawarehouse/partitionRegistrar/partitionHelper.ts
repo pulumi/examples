@@ -1,7 +1,9 @@
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+
 import * as moment from "moment-timezone";
 
 export const createPartitionDDLStatement = (dbName: string, tableName: string, locationPath: string, partitionKey: string, eventTime: string, hours = 12): string => {
-    let date = moment(eventTime);
+    const date = moment(eventTime);
 
     let query = `ALTER TABLE ${dbName}.${tableName} ADD IF NOT EXISTS`;
 
@@ -10,8 +12,8 @@ export const createPartitionDDLStatement = (dbName: string, tableName: string, l
 
         query += `\nPARTITION (${partitionKey} = '${dateString}') LOCATION '${locationPath}/${dateString}/'`;
 
-        date.add(1, 'h');
+        date.add(1, "h");
     }
 
-    return query.concat(';');
-}
+    return query.concat(";");
+};

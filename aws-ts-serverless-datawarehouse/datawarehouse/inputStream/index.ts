@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 export class InputStream extends pulumi.ComponentResource {
 
@@ -12,10 +14,10 @@ export class InputStream extends pulumi.ComponentResource {
 
         const kinesis = new aws.kinesis.Stream(`${name}-input-stream`,
             { shardCount: args.shardCount },
-            { parent: this }
+            { parent: this },
         );
 
-        let assumeRolePolicy = {
+        const assumeRolePolicy = {
             "Version": "2012-10-17",
             "Statement": [
                 {
@@ -31,23 +33,23 @@ export class InputStream extends pulumi.ComponentResource {
 
         const role = new aws.iam.Role(`${name}-firehoseRose`,
             { assumeRolePolicy: JSON.stringify(assumeRolePolicy) },
-            { parent: this }
+            { parent: this },
         );
 
-        new aws.iam.RolePolicyAttachment(`${name}-kinesis-access`,
+        const kinesisAttachment = new aws.iam.RolePolicyAttachment(`${name}-kinesis-access`,
             {
                 role,
-                policyArn: aws.iam.ManagedPolicies.AmazonKinesisFullAccess
+                policyArn: aws.iam.ManagedPolicies.AmazonKinesisFullAccess,
             },
-            { parent: this }
+            { parent: this },
         );
 
-        new aws.iam.RolePolicyAttachment(`${name}-s3-access`,
+        const s3Attachment = new aws.iam.RolePolicyAttachment(`${name}-s3-access`,
             {
                 role,
                 policyArn: aws.iam.ManagedPolicies.AmazonS3FullAccess,
             },
-            { parent: this }
+            { parent: this },
         );
 
         const gluePolicy = {
@@ -58,30 +60,30 @@ export class InputStream extends pulumi.ComponentResource {
                     "Action": [
                         "glue:*",
                     ],
-                    "Resource": "*"
-                }
-            ]
+                    "Resource": "*",
+                },
+            ],
         };
 
-        new aws.iam.RolePolicy(`${name}-glue-policy`,
+        const glueAttachment = new aws.iam.RolePolicy(`${name}-glue-policy`,
             { role: role, policy: JSON.stringify(gluePolicy) },
-            { parent: this }
+            { parent: this },
         );
 
-        let logGroup = new aws.cloudwatch.LogGroup(`/aws/firehose/${name}/parquet-stream`,
+        const logGroup = new aws.cloudwatch.LogGroup(`/aws/firehose/${name}/parquet-stream`,
             { retentionInDays: 7 },
-            { parent: this }
+            { parent: this },
         );
 
-        let logStream = new aws.cloudwatch.LogStream(`${name}-serverless-db-s3-delivery`,
+        const logStream = new aws.cloudwatch.LogStream(`${name}-serverless-db-s3-delivery`,
             { logGroupName: logGroup.name },
             { parent: this });
 
-        new aws.kinesis.FirehoseDeliveryStream(`${name}-parquet-delivery-stream`,
+        const firehose = new aws.kinesis.FirehoseDeliveryStream(`${name}-parquet-delivery-stream`,
             {
                 kinesisSourceConfiguration: {
                     kinesisStreamArn: kinesis.arn,
-                    roleArn: role.arn
+                    roleArn: role.arn,
                 },
                 destination: "extended_s3",
                 extendedS3Configuration: {
@@ -91,36 +93,36 @@ export class InputStream extends pulumi.ComponentResource {
                         logStreamName: logStream.name,
                     },
                     bucketArn: args.destinationBucket.arn,
-                    prefix: args.tableName + '/',
+                    prefix: args.tableName + "/",
                     bufferInterval,
                     bufferSize: 64,
                     roleArn: role.arn,
                     dataFormatConversionConfiguration: {
                         inputFormatConfiguration: {
                             deserializer: {
-                                openXJsonSerDe: {}
-                            }
+                                openXJsonSerDe: {},
+                            },
                         },
                         outputFormatConfiguration: {
                             serializer: {
-                                parquetSerDe: {}
-                            }
+                                parquetSerDe: {},
+                            },
                         },
                         schemaConfiguration: {
                             databaseName: args.databaseName,
                             tableName: args.tableName,
-                            roleArn: role.arn
-                        }
-                    }
-                }
+                            roleArn: role.arn,
+                        },
+                    },
+                },
             },
-            { parent: this }
+            { parent: this },
         );
 
         this.inputStream = kinesis;
         this.registerOutputs({
-            inputStream: kinesis
-        })
+            inputStream: kinesis,
+        });
     }
 }
 

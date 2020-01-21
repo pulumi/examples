@@ -1,21 +1,23 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 import { S3 } from "aws-sdk";
 
 import { ARN } from "@pulumi/aws";
 import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
 import * as moment from "moment-timezone";
 
-import { ServerlessDataWarehouse, StreamingInputTableArgs, BatchInputTableArgs, TableArgs } from "./datawarehouse";
+import { BatchInputTableArgs, ServerlessDataWarehouse, StreamingInputTableArgs, TableArgs } from "./datawarehouse";
 import { EventGenerator } from "./testing/eventGenerator";
 
 // app specific config
 const config = new pulumi.Config();
-const awsConfig = new pulumi.Config("aws")
+const awsConfig = new pulumi.Config("aws");
 const region = awsConfig.require("region");
-const isDev = config.get("dev") === 'true';
+const isDev = config.get("dev") === "true";
 
-// during development we run all of our crons 
+// during development we run all of our crons
 // at a faster cadence to expedite testing
 const cronUnit = isDev ? "minute" : "hour";
 const scheduleExpression = `rate(1 ${cronUnit})`;
@@ -25,16 +27,16 @@ const fileFlushIntervalSeconds = isDev ? 60 : 900;
 const columns = [
     {
         name: "id",
-        type: "string"
+        type: "string",
     },
     {
         name: "session_id",
-        type: "string"
+        type: "string",
     },
     {
         name: "event_time",
-        type: "string"
-    }
+        type: "string",
+    },
 ];
 
 const impressionsTableName = "impressions";
@@ -45,10 +47,10 @@ const genericTableArgs: StreamingInputTableArgs = {
     inputStreamShardCount: 1,
     region,
     partitionScheduleExpression: scheduleExpression,
-    fileFlushIntervalSeconds
-}
+    fileFlushIntervalSeconds,
+};
 
-// create two tables with kinesis input streams, writing data into hourly partitions in S3. 
+// create two tables with kinesis input streams, writing data into hourly partitions in S3.
 const dataWarehouse = new ServerlessDataWarehouse("analytics_dw", { isDev })
     .withStreamingInputTable(impressionsTableName, genericTableArgs)
     .withStreamingInputTable(clicksTableName, genericTableArgs);
@@ -65,7 +67,7 @@ export const impressionTableName = dataWarehouse.getTable(impressionsTableName).
 export const clickTableName = dataWarehouse.getTable(clicksTableName).name;
 export const athenaResultsBucket = dataWarehouse.queryResultsBucket.bucket;
 
-const dwBucket = dataWarehouse.dataWarehouseBucket.bucket
+const dwBucket = dataWarehouse.dataWarehouseBucket.bucket;
 
 // Configure batch input table 'aggregates'
 const aggregateTableName = "aggregates";
@@ -73,29 +75,29 @@ const aggregateTableName = "aggregates";
 const aggregateTableColumns = [
     {
         name: "event_type",
-        type: "string"
+        type: "string",
     },
     {
         name: "count",
-        type: "int"
+        type: "int",
     },
     {
         name: "time",
-        type: "string"
-    }
+        type: "string",
+    },
 ];
 
 const aggregationFunction = async (event: EventRuleEvent) => {
     const athena = require("athena-client");
     const bucketUri = `s3://${athenaResultsBucket.get()}`;
     const clientConfig = {
-        bucketUri
+        bucketUri,
     };
     const awsConfig = {
-        region
+        region,
     };
     const athenaClient = athena.createClient(clientConfig, awsConfig);
-    let date = moment(event.time);
+    const date = moment(event.time);
     const partitionKey = date.utc().format("YYYY/MM/DD/HH");
     const getAggregateQuery = (table: string) => `select count(*) from ${databaseName.get()}.${table} where inserted_at='${partitionKey}'`;
     const clicksPromise = athenaClient.execute(getAggregateQuery(clicksTableName)).toPromise();
@@ -103,20 +105,20 @@ const aggregationFunction = async (event: EventRuleEvent) => {
 
     const clickRows = await clicksPromise;
     const impressionRows = await impressionsPromise;
-    const clickCount = clickRows.records[0]['_col0'];
-    const impressionsCount = impressionRows.records[0]['_col0'];
+    const clickCount = clickRows.records[0]["_col0"];
+    const impressionsCount = impressionRows.records[0]["_col0"];
     const data = `{ "event_type": "${clicksTableName}", "count": ${clickCount}, "time": "${partitionKey}" }\n{ "event_type": "${impressionsTableName}", "count": ${impressionsCount}, "time": "${partitionKey}"}`;
     const s3Client = new S3();
     await s3Client.putObject({
         Bucket: dwBucket.get(),
         Key: `${aggregateTableName}/${partitionKey}/results.json`,
-        Body: data
+        Body: data,
     }).promise();
 };
 
 const policyARNsToAttach: pulumi.Input<ARN>[] = [
     aws.iam.ManagedPolicies.AmazonAthenaFullAccess,
-    aws.iam.ManagedPolicies.AmazonS3FullAccess
+    aws.iam.ManagedPolicies.AmazonS3FullAccess,
 ];
 
 const aggregateTableArgs: BatchInputTableArgs = {
@@ -125,7 +127,7 @@ const aggregateTableArgs: BatchInputTableArgs = {
     scheduleExpression,
     policyARNsToAttach,
     dataFormat: "JSON",
-}
+};
 
 dataWarehouse.withBatchInputTable(aggregateTableName, aggregateTableArgs);
 
@@ -134,17 +136,17 @@ const factTableName = "facts";
 const factColumns = [
     {
         name: "thing",
-        type: "string"
+        type: "string",
     },
     {
         name: "color",
-        type: "string"
-    }
+        type: "string",
+    },
 ];
 
 const factTableArgs: TableArgs = {
     columns: factColumns,
-    dataFormat: "JSON"
+    dataFormat: "JSON",
 };
 
 dataWarehouse.withTable("facts", factTableArgs);
@@ -152,14 +154,14 @@ dataWarehouse.withTable("facts", factTableArgs);
 // Load a static facts file into the facts table.
 const data = `{"thing": "sky", "color": "blue"}\n{ "thing": "seattle sky", "color": "grey"}\n{ "thing": "oranges", "color": "orange"}`;
 
-new aws.s3.BucketObject("factsFile", {
+const factJSON = new aws.s3.BucketObject("factsFile", {
     bucket: dataWarehouse.dataWarehouseBucket,
     content: data,
-    key: `${factTableName}/facts.json`
+    key: `${factTableName}/facts.json`,
 });
 
 // conditionally create mock data for development
 if (isDev) {
-    new EventGenerator("impressions-generator", { inputStreamName: impressionsInputStream.name, eventType: "impressions" });
-    new EventGenerator("clicks-generator", { inputStreamName: clicksInputStream.name, eventType: "clicks" });
+    const impressionsGenerator = new EventGenerator("impressions-generator", { inputStreamName: impressionsInputStream.name, eventType: "impressions" });
+    const clicksGenerator = new EventGenerator("clicks-generator", { inputStreamName: clicksInputStream.name, eventType: "clicks" });
 }
