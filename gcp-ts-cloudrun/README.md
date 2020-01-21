@@ -2,11 +2,11 @@
 
 # Google Cloud Run
 
-An example of deploying a custom Docker image into Google Cloud Run service using TypeScript. Our image builds a simple HelloWorld web application in Ruby. You can change it any language and runtime that can run on Linux and serve HTTP traffic.
+An example of deploying a custom Docker image into Google Cloud Run service using TypeScript. Our image builds a simple HelloWorld web application in Ruby. You may change it to any language and runtime that can run on Linux and serve HTTP traffic.
 
 ## Prerequisites
 
-0. [Ensure you have the latest Node.js and NPM](https://nodejs.org/en/download/)
+1. [Ensure you have the latest Node.js and NPM](https://nodejs.org/en/download/)
 2. [Install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
 3. [Configure Pulumi to access your GCP account](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
 4. [Install Docker](https://docs.docker.com/install/)

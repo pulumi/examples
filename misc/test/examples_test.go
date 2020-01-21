@@ -1062,6 +1062,22 @@ func TestAccGcpTsServerlessRaw(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccGcpTsCloudRun(t *testing.T) {
+	test := getGoogleBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "gcp-ts-cloudrun"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["rubyUrl"].(string)
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello Pulumi!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+
 func TestAccPacketPyWebserver(t *testing.T) {
 	test := getBaseOptions(t).
 		With(integration.ProgramTestOptions{
