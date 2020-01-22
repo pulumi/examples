@@ -5,7 +5,7 @@ import * as random from "@pulumi/random";
 
 const randomHostName = new random.RandomPet("hostname");
 
-const project = packet.getProject({name: "ci-project"});
+const project = packet.getProject({ name: "ci-project" }, { async: true });
 
 const vm = new packet.Device("vm", {
     facilities: [packet.Facilities.EWR1],
