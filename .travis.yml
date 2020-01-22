@@ -15,7 +15,7 @@ before_install:
   - sudo apt-get update && sudo apt-get install -y apt-transport-https
 install:
   - source ${PULUMI_SCRIPTS}/ci/install-common-toolchain.sh
-    - curl -L https://get.pulumi.com/ | bash -s -- --version 1.9.0-alpha.1579637005
+  - curl -L https://get.pulumi.com/ | bash -s -- --version 1.9.0-alpha.1579637005
   - export PATH=$HOME/.pulumi/bin:$PATH
   - if [ ! -d $HOME/google-cloud-sdk ]; then curl https://sdk.cloud.google.com | bash; fi
   - export PATH=$PATH:$HOME/google-cloud-sdk/bin
