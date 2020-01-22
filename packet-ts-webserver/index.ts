@@ -13,7 +13,7 @@ const vm = new packet.Device("vm", {
     hostname: randomHostName.id,
     operatingSystem: packet.OperatingSystems.CoreOSStable,
     plan: packet.Plans.T1SmallX86,
-    projectId:  project.id,
+    projectId:  project.then(p => p.id),
     ipAddressTypes: [packet.IpAddressTypes.PublicIPv4, packet.IpAddressTypes.PrivateIPv4, packet.IpAddressTypes.PublicIPv6],
 });
 
