@@ -12,7 +12,6 @@ config = pulumi.Config("azure-py-aks")
 
 PASSWORD = config.require_secret("password")
 SSHKEY = config.require("sshkey")
-LOCATION = config.get("location") or "east us"
 
 # create a Resource Group and Network for all resources
 resource_group = ResourceGroup("aks-rg")
@@ -36,7 +35,6 @@ sppwd = ServicePrincipalPassword(
 
 aks = KubernetesCluster(
     "aksCluster",
-    location=resource_group.location,
     resource_group_name=resource_group.name,
     kubernetes_version="1.14.6",
     dns_prefix="dns",
