@@ -19,18 +19,15 @@ export class ServerlessDataWarehouse extends pulumi.ComponentResource {
     private tables: { [key: string]: aws.glue.CatalogTable } = {};
     private inputStreams: { [key: string]: aws.kinesis.Stream } = {};
 
-    constructor(name: string, args?: DataWarehouseArgs, opts?: pulumi.ComponentResourceOptions) {
+    constructor(name: string, args: DataWarehouseArgs = {}, opts: pulumi.ComponentResourceOptions = {}) {
         super("serverless:data_warehouse", name, opts);
 
-        const bucketArgs: BucketArgs | undefined = args?.isDev ? { forceDestroy: true } : undefined;
+        const bucketArgs: BucketArgs | undefined = args.isDev ? { forceDestroy: true } : undefined;
 
         const dataWarehouseBucket = new aws.s3.Bucket("datawarehouse-bucket", bucketArgs, { parent: this });
         const queryResultsBucket = new aws.s3.Bucket("query-results-bucket", bucketArgs, { parent: this });
 
-        const dwArgs = args ? args : {};
-
-
-        const database = dwArgs.database ? dwArgs.database : new aws.glue.CatalogDatabase(name, {
+        const database =  args.database || new aws.glue.CatalogDatabase(name, {
             name,
         }, { parent: this });
 
