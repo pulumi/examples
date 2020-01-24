@@ -22,15 +22,10 @@
     <None Include="web.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="appsettings.Development.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="aws-lambda-tools-defaults.json" />
     <None Include="Readme.md" />
-    <None Include="serverless.template" />
    </ItemGroup>
 
   </Project>
