@@ -60,8 +60,8 @@ Multi-region deployment of Azure Functions and Cosmos DB with Traffic Manager
 
     ```
     $ pulumi stack output endpoint
-    http://urlshort-tm.trafficmanager.net/api/{key}
-    $ curl http://urlshort-tm.trafficmanager.net/api/pulumi
+    http://urlshort-tm.trafficmanager.net/api/
+    $ curl -L $(pulumi stack output endpoint)pulumi
     <!doctype html>
     <html lang="en-US" prefix="og: http://ogp.me/ns#">
         <head>
