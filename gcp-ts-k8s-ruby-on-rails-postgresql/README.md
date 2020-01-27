@@ -14,7 +14,7 @@ All of these happen behind a single `pulumi up` command, and are expressed in ju
 ## Prerequisites
 
 Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
-Esnure you have [downloaded and installed Docker](https://docs.docker.com/install/)
+Ensure you have [downloaded and installed Docker](https://docs.docker.com/install/)
 We will be deploying to Google Cloud Platform (GCP), so you will need an account. If you don't have an account,
 [sign up for free here](https://cloud.google.com/free/). In either case,
 [follow the instructions here](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/) to connect Pulumi to your GCP account.
