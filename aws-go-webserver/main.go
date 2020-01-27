@@ -10,12 +10,12 @@ func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Create a new security group for port 80.
 		group, err := ec2.NewSecurityGroup(ctx, "web-secgrp", &ec2.SecurityGroupArgs{
-			Ingress: []map[string]interface{}{
-				{
-					"protocol":   "tcp",
-					"fromPort":   80,
-					"toPort":     80,
-					"cidrBlocks": []string{"0.0.0.0/0"},
+			Ingress: ec2.SecurityGroupIngressArray{
+				ec2.SecurityGroupIngressArgs{
+					Protocol:   pulumi.String("tcp"),
+					FromPort:   pulumi.Int(80),
+					ToPort:     pulumi.Int(80),
+					CidrBlocks: pulumi.StringArray{pulumi.String("0.0.0.0/0")},
 				},
 			},
 		})
@@ -24,15 +24,16 @@ func main() {
 		}
 
 		// Get the ID for the latest Amazon Linux AMI.
-		ami, err := aws.LookupAmi(ctx, &aws.GetAmiArgs{
-			Filters: []interface{}{
-				map[string]interface{}{
-					"name":   "name",
-					"values": []interface{}{"amzn-ami-hvm-*-x86_64-ebs"},
+		mostRecent := true
+		ami, err := aws.GetAmi(ctx, &aws.GetAmiArgs{
+			Filters: []aws.GetAmiFilter{
+				{
+					Name:   "name",
+					Values: []string{"amzn-ami-hvm-*-x86_64-ebs"},
 				},
 			},
-			Owners:     []interface{}{"137112412989"},
-			MostRecent: true,
+			Owners:     []string{"137112412989"},
+			MostRecent: &mostRecent,
 		})
 		if err != nil {
 			return err
@@ -40,18 +41,18 @@ func main() {
 
 		// Create a simple web server using the startup script for the instance.
 		srv, err := ec2.NewInstance(ctx, "web-server-www", &ec2.InstanceArgs{
-			Tags:           map[string]interface{}{"Name": "web-server-www"},
-			InstanceType:   "t2.micro", // t2.micro is available in the AWS free tier.
-			SecurityGroups: []interface{}{group.Name()},
-			Ami:            ami.Id,
-			UserData: `#!/bin/bash
+			Tags:           pulumi.Map{"Name": pulumi.String("web-server-www")},
+			InstanceType:   pulumi.String("t2.micro"), // t2.micro is available in the AWS free tier.
+			SecurityGroups: pulumi.StringArray{group.Name},
+			Ami:            pulumi.String(ami.Id),
+			UserData: pulumi.String(`#!/bin/bash
 echo "Hello, World!" > index.html
-nohup python -m SimpleHTTPServer 80 &`,
+nohup python -m SimpleHTTPServer 80 &`),
 		})
 
 		// Export the resulting server's IP address and DNS name.
-		ctx.Export("publicIp", srv.PublicIp())
-		ctx.Export("publicHostName", srv.PublicDns())
+		ctx.Export("publicIp", srv.PublicIp)
+		ctx.Export("publicHostName", srv.PublicDns)
 		return nil
 	})
 }
