@@ -1,4 +1,4 @@
-import * as gcp from "@pulumi/gcp";
+const gcp = require("@pulumi/gcp");
 
 const computeNetwork = new gcp.compute.Network("webserver", {
     autoCreateSubnetworks: false,
