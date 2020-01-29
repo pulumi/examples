@@ -27,12 +27,12 @@ const cluster = new digitalocean.KubernetesCluster("do-cluster", {
 // initial provisioning. You'll notice that the `certificate-authority-data`
 // field changes on every `pulumi update`.
 const kubeconfig = cluster.status.apply(status => {
-	if (status === 'running') {
-		const clusterDataSource = cluster.name.apply(name => digitalocean.getKubernetesCluster({name}));
-		return clusterDataSource.kubeConfigs[0].rawConfig;
-	} else {
-		return cluster.kubeConfigs[0].rawConfig;
-	}
+    if (status === "running") {
+        const clusterDataSource = cluster.name.apply(name => digitalocean.getKubernetesCluster({name}));
+        return clusterDataSource.kubeConfigs[0].rawConfig;
+    } else {
+        return cluster.kubeConfigs[0].rawConfig;
+    }
 });
 
 // Now lets actually deploy an application to our new cluster. We begin
