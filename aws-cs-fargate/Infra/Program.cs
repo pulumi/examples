@@ -25,7 +25,8 @@ class Program
             var webSg = new Ec2.SecurityGroup("web-sg", new Ec2.SecurityGroupArgs
             {
                 VpcId = vpc.Id,
-                Egress = {
+                Egress =
+                {
                     new Ec2.Inputs.SecurityGroupEgressArgs
                     {
                         Protocol = "-1",
@@ -34,7 +35,8 @@ class Program
                         CidrBlocks = { "0.0.0.0/0" },
                     },
                 },
-                Ingress = {
+                Ingress =
+                {
                     new Ec2.Inputs.SecurityGroupIngressArgs
                     {
                         Protocol = "tcp",
@@ -86,8 +88,10 @@ class Program
             {
                 LoadBalancerArn = webLb.Arn,
                 Port = 80,
-                DefaultActions = {
-                    new Elb.Inputs.ListenerDefaultActionsArgs {
+                DefaultActions =
+                {
+                    new Elb.Inputs.ListenerDefaultActionsArgs
+                    {
                         Type = "forward",
                         TargetGroupArn = webTg.Arn,
                     },
@@ -145,7 +149,8 @@ class Program
                     Subnets = subnet.Ids,
                     SecurityGroups = { webSg.Id },
                 },
-                LoadBalancers = {
+                LoadBalancers =
+                {
                     new Ecs.Inputs.ServiceLoadBalancersArgs
                     {
                         TargetGroupArn = webTg.Arn,
