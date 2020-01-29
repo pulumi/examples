@@ -1,10 +1,20 @@
-const gcp = require("@pulumi/gcp");
+import * as gcp from "@pulumi/gcp";
 
-const computeNetwork = new gcp.compute.Network("network", {
-    autoCreateSubnetworks: true,
+const computeNetwork = new gcp.compute.Network("webserver", {
+    autoCreateSubnetworks: false,
 });
 
-const computeFirewall = new gcp.compute.Firewall("firewall", {
+const subnetwork = new gcp.compute.Subnetwork("webserver", {
+    network: computeNetwork.selfLink,
+    ipCidrRange: "10.2.0.0/16",
+    region: "us-central1",
+    secondaryIpRanges: [{
+        rangeName: "secondary-range",
+        ipCidrRange: "192.168.10.0/24",
+    }],
+});
+
+const computeFirewall = new gcp.compute.Firewall("webserver", {
     network: computeNetwork.selfLink,
     allows: [{
         protocol: "tcp",
@@ -17,7 +27,7 @@ const startupScript = `#!/bin/bash
 echo "Hello, World!" > index.html
 nohup python -m SimpleHTTPServer 80 &`;
 
-const computeInstance = new gcp.compute.Instance("instance", {
+const computeInstance = new gcp.compute.Instance("webserver", {
     machineType: "f1-micro",
     metadataStartupScript: startupScript,
     bootDisk: {
@@ -27,6 +37,7 @@ const computeInstance = new gcp.compute.Instance("instance", {
     },
     networkInterfaces: [{
         network: computeNetwork.id,
+        subnetwork: subnetwork.id,
         accessConfigs: [{}], // must be empty to request an ephemeral IP
     }],
     serviceAccount: {
