@@ -14,14 +14,26 @@ const domainName = config.get("domainName");
 // kubeconfig to make it easy to access from the kubectl command line.
 const cluster = new digitalocean.KubernetesCluster("do-cluster", {
     region: digitalocean.Regions.SFO2,
-    version: "latest",
+    version: digitalocean.getKubernetesVersions({versionPrefix: "1.16"}).then(p => p.latestVersion),
     nodePool: {
         name: "default",
         size: digitalocean.DropletSlugs.DropletS2VCPU2GB,
         nodeCount: nodeCount,
     },
 });
-export const kubeconfig = cluster.kubeConfigs[0].rawConfig;
+
+// The DigitalOcean Kubernetes cluster periodically gets a new certificate,
+// so we look up the cluster by name and get the current kubeconfig after
+// initial provisioning. You'll notice that the `certificate-authority-data`
+// field changes on every `pulumi update`.
+const kubeconfig = cluster.status.apply(status => {
+    if (status === "running") {
+        const clusterDataSource = cluster.name.apply(name => digitalocean.getKubernetesCluster({name}));
+        return clusterDataSource.kubeConfigs[0].rawConfig;
+    } else {
+        return cluster.kubeConfigs[0].rawConfig;
+    }
+});
 
 // Now lets actually deploy an application to our new cluster. We begin
 // by creating a new "Provider" object that uses our kubeconfig above,
