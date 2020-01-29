@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace dotnet_core_tutorial
+namespace BasicWebsiteExample
 {
     public class Startup
     {
@@ -32,7 +32,7 @@ namespace dotnet_core_tutorial
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello Pulumi!");
+                    await context.Response.WriteAsync("Hello World!");
                 });
             });
         }

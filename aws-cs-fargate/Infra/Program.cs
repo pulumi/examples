@@ -15,28 +15,32 @@ class Program
 {
     static Task<int> Main()
     {
-        return Deployment.RunAsync(async () => {
+        return Deployment.RunAsync(async () =>
+        {
             // Read back the default VPC and public subnets, which we will use.
             var vpc = await Ec2.Invokes.GetVpc(new Ec2.GetVpcArgs { Default = true });
             var subnet = await Ec2.Invokes.GetSubnetIds(new Ec2.GetSubnetIdsArgs { VpcId = vpc.Id });
 
             // Create a SecurityGroup that permits HTTP ingress and unrestricted egress.
-            var webSg = new Ec2.SecurityGroup("web-sg", new Ec2.SecurityGroupArgs {
+            var webSg = new Ec2.SecurityGroup("web-sg", new Ec2.SecurityGroupArgs
+            {
                 VpcId = vpc.Id,
-                Egress = new[] {
-                    new Ec2.Inputs.SecurityGroupEgressArgs {
+                Egress = {
+                    new Ec2.Inputs.SecurityGroupEgressArgs
+                    {
                         Protocol = "-1",
                         FromPort = 0,
                         ToPort = 0,
-                        CidrBlocks = new[] { "0.0.0.0/0" },
+                        CidrBlocks = { "0.0.0.0/0" },
                     },
                 },
-                Ingress = new[] {
-                    new Ec2.Inputs.SecurityGroupIngressArgs {
+                Ingress = {
+                    new Ec2.Inputs.SecurityGroupIngressArgs
+                    {
                         Protocol = "tcp",
                         FromPort = 80,
                         ToPort = 80,
-                        CidrBlocks = new[] { "0.0.0.0/0" },
+                        CidrBlocks = { "0.0.0.0/0" },
                     },
                 },
             });
@@ -45,7 +49,8 @@ class Program
             var cluster = new Ecs.Cluster("app-cluster");
 
             // Create an IAM role that can be used by our service's task.
-            var taskExecRole = new Iam.Role("task-exec-role", new Iam.RoleArgs {
+            var taskExecRole = new Iam.Role("task-exec-role", new Iam.RoleArgs
+            {
                 AssumeRolePolicy = @"{
     ""Version"": ""2008-10-17"",
     ""Statement"": [{
@@ -58,26 +63,30 @@ class Program
     }]
 }",
             });
-            var taskExecAttach = new Iam.RolePolicyAttachment("task-exec-policy", new Iam.RolePolicyAttachmentArgs {
+            var taskExecAttach = new Iam.RolePolicyAttachment("task-exec-policy", new Iam.RolePolicyAttachmentArgs
+            {
                 Role = taskExecRole.Name,
                 PolicyArn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
             });
 
             // Create a load balancer to listen for HTTP traffic on port 80.
-            var webLb = new Elb.LoadBalancer("web-lb", new Elb.LoadBalancerArgs {
+            var webLb = new Elb.LoadBalancer("web-lb", new Elb.LoadBalancerArgs
+            {
                 Subnets = subnet.Ids,
-                SecurityGroups = new[] { webSg.Id },
+                SecurityGroups = { webSg.Id },
             });
-            var webTg = new Elb.TargetGroup("web-tg", new Elb.TargetGroupArgs {
+            var webTg = new Elb.TargetGroup("web-tg", new Elb.TargetGroupArgs
+            {
                 Port = 80,
                 Protocol = "HTTP",
                 TargetType = "ip",
                 VpcId = vpc.Id,
             });
-            var webListener = new Elb.Listener("web-listener", new Elb.ListenerArgs {
+            var webListener = new Elb.Listener("web-listener", new Elb.ListenerArgs
+            {
                 LoadBalancerArn = webLb.Arn,
                 Port = 80,
-                DefaultActions = new[] {
+                DefaultActions = {
                     new Elb.Inputs.ListenerDefaultActionsArgs {
                         Type = "forward",
                         TargetGroupArn = webTg.Arn,
@@ -87,15 +96,18 @@ class Program
 
             // Create a private ECR registry and build and publish our app's container image to it.
             var appRepo = new Ecr.Repository("app-repo");
-            var appRepoCreds = appRepo.RegistryId.Apply(async rid => {
+            var appRepoCreds = appRepo.RegistryId.Apply(async rid =>
+            {
                 var creds = await Ecr.Invokes.GetCredentials(new Ecr.GetCredentialsArgs { RegistryId = rid });
                 var credsData = Convert.FromBase64String(creds.AuthorizationToken);
                 return Encoding.UTF8.GetString(credsData).Split(":");
             });
-            var image = new Docker.Image("app-img", new Docker.ImageArgs {
+            var image = new Docker.Image("app-img", new Docker.ImageArgs
+            {
                 Build = "../App",
                 ImageName = appRepo.RepositoryUrl,
-                Registry = new Docker.ImageRegistry {
+                Registry = new Docker.ImageRegistry
+                {
                     Server = appRepo.RepositoryUrl,
                     Username = appRepoCreds.Apply(creds => creds[0]),
                     Password = appRepoCreds.Apply(creds => creds[1]),
@@ -103,16 +115,17 @@ class Program
             });
 
             // Spin up a load balanced service running our container image.
-            var appTask = new Ecs.TaskDefinition("app-task", new Ecs.TaskDefinitionArgs {
+            var appTask = new Ecs.TaskDefinition("app-task", new Ecs.TaskDefinitionArgs
+            {
                 Family = "fargate-task-definition",
                 Cpu = "256",
                 Memory = "512",
                 NetworkMode = "awsvpc",
-                RequiresCompatibilities = new[] { "FARGATE" },
+                RequiresCompatibilities = { "FARGATE" },
                 ExecutionRoleArn = taskExecRole.Arn,
-                ContainerDefinitions = image.ImageName.Apply(imgName => @"[{
+                ContainerDefinitions = image.ImageName.Apply(imageName => @"[{
     ""name"": ""my-app"",
-    ""image"": """ + imgName + @""",
+    ""image"": """ + imageName + @""",
     ""portMappings"": [{
         ""containerPort"": 80,
         ""hostPort"": 80,
@@ -120,18 +133,21 @@ class Program
     }]
 }]"),
             });
-            var appSvc = new Ecs.Service("app-svc", new Ecs.ServiceArgs {
+            var appSvc = new Ecs.Service("app-svc", new Ecs.ServiceArgs
+            {
                 Cluster = cluster.Arn,
                 DesiredCount = 3,
                 LaunchType = "FARGATE",
                 TaskDefinition = appTask.Arn,
-                NetworkConfiguration = new Ecs.Inputs.ServiceNetworkConfigurationArgs {
+                NetworkConfiguration = new Ecs.Inputs.ServiceNetworkConfigurationArgs
+                {
                     AssignPublicIp = true,
                     Subnets = subnet.Ids,
-                    SecurityGroups = new[] { webSg.Id },
+                    SecurityGroups = { webSg.Id },
                 },
-                LoadBalancers = new[] {
-                    new Ecs.Inputs.ServiceLoadBalancersArgs {
+                LoadBalancers = {
+                    new Ecs.Inputs.ServiceLoadBalancersArgs
+                    {
                         TargetGroupArn = webTg.Arn,
                         ContainerName = "my-app",
                         ContainerPort = 80,
@@ -140,8 +156,9 @@ class Program
             }, new CustomResourceOptions { DependsOn = { webListener } });
 
             // Export the resulting web address.
-            return new Dictionary<string, object?>{
-                { "url", webLb.DnsName.Apply(url => $"http://{url}") },
+            return new Dictionary<string, object?>
+            {
+                { "url", Output.Format($"http://{webLb.DnsName}") },
             };
         });
     }
