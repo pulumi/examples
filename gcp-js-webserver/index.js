@@ -1,4 +1,7 @@
+const pulumi = require("@pulumi/pulumi");
 const gcp = require("@pulumi/gcp");
+
+const config = new pulumi.Config("gcp");
 
 const computeNetwork = new gcp.compute.Network("webserver", {
     autoCreateSubnetworks: false,
@@ -7,7 +10,7 @@ const computeNetwork = new gcp.compute.Network("webserver", {
 const subnetwork = new gcp.compute.Subnetwork("webserver", {
     network: computeNetwork.selfLink,
     ipCidrRange: "10.2.0.0/16",
-    region: "us-central1",
+    region: config.require("region"),
     secondaryIpRanges: [{
         rangeName: "secondary-range",
         ipCidrRange: "192.168.10.0/24",

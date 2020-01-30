@@ -968,6 +968,9 @@ func TestAccGcpJsWebserver(t *testing.T) {
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-js-webserver"),
+			Config: map[string]string{
+				"gpc:region": "us-central1",
+			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["instanceIP"].(string)
 				assertHTTPResult(t, endpoint, nil, func(body string) bool {

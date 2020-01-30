@@ -8,3 +8,6 @@ template:
     gcp:zone:
       description: The Google Cloud zone
       default: us-central1-a
+    gcp:region:
+      description: The Google Cloud region to place the subnet in
+      default: us-central1
