@@ -53,18 +53,19 @@ const server = new aws.ec2.Instance("server", {
     instanceType: size,
     ami: amiId,
     keyName: keyName,
-    securityGroups: [ secgrp.name ],
+    securityGroups: [secgrp.name],
 });
 const conn: provisioners.ConnectionArgs = {
     host: server.publicIp,
     username: "ec2-user",
     privateKey,
-	privateKeyPassphrase,
-	changeToken: getFileHash("myapp.conf"),
+    privateKeyPassphrase,
 };
 
+const changeToken = getFileHash("myapp.conf");
 // Copy a config file to our server.
 const cpConfig = new provisioners.CopyFile("config", {
+    changeToken,
     conn,
     src: "myapp.conf",
     dest: "myapp.conf",
@@ -72,6 +73,7 @@ const cpConfig = new provisioners.CopyFile("config", {
 
 // Execute a basic command on our server.
 const catConfig = new provisioners.RemoteExec("cat-config", {
+    changeToken,
     conn,
     command: "cat myapp.conf",
 }, { dependsOn: cpConfig });

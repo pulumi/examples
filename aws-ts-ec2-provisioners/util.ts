@@ -4,9 +4,7 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as path from "path";
 
-/**
- * Calculates a hash for all of the files under the scripts directory.
- */
+// getFileHash calculates a hash for all of the files under the scripts directory.
 export function getFileHash(filename: string): string {
 	const data = fs.readFileSync(path.join(__dirname, filename), {encoding: "utf8"});
 	const hash = crypto.createHash("md5").update(data, "utf8");

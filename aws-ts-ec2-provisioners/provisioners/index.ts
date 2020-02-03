@@ -15,12 +15,7 @@ export interface ConnectionArgs {
     username?: pulumi.Input<string>;
     password?: pulumi.Input<string>;
     privateKey?: pulumi.Input<string>;
-	privateKeyPassphrase?: pulumi.Input<string>;
-	/**
-     * A string value to control the replacement of the provisioner during each update.
-     * Provide a stable value if you do not need the provisioner to run each time you run an update.
-     */
-    changeToken: string;
+    privateKeyPassphrase?: pulumi.Input<string>;
 }
 
 // ConnectionType is the set of legal connection mechanisms to use. Default is SSH.
@@ -134,6 +129,7 @@ export class CopyFile extends pulumi.ComponentResource {
             `${name}-provisioner`,
             {
                 dep: args.conn,
+                changeToken: args.changeToken,
                 onCreate: (conn) => copyFile(conn, args.src, args.dest),
             },
             { parent: this },
@@ -141,7 +137,14 @@ export class CopyFile extends pulumi.ComponentResource {
     }
 }
 
-export interface CopyFileArgs {
+interface ChangeTrackingProvisioner {
+    // changeToken allows you to specify a value that controls the replacement of the dependent dynamic resources.
+    // Specifing a value that changes with the content of the file(s) allows the provisioner resources to be
+    // replaced every time the content(s) change.
+    changeToken?: string;
+}
+
+export interface CopyFileArgs extends ChangeTrackingProvisioner {
     // conn contains information on how to connect to the destination, in addition to dependency information.
     conn: pulumi.Input<ConnectionArgs>;
     // src is the source of the file or directory to copy. It can be specified as relative to the current
@@ -180,6 +183,7 @@ export class RemoteExec extends pulumi.ComponentResource {
                     }
                     return results;
                 },
+                changeToken: args.changeToken,
             },
             { parent: this },
         );
@@ -189,7 +193,7 @@ export class RemoteExec extends pulumi.ComponentResource {
     }
 }
 
-export interface RemoteExecArgs {
+export interface RemoteExecArgs extends ChangeTrackingProvisioner {
     // The connection to use for the remote command execution.
     conn: ConnectionArgs;
     // The command to execute.  Exactly one of 'command' and 'commands' is required.
