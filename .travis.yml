@@ -1,6 +1,6 @@
 if: branch = master
 language: go
-go: 1.12.x
+go: 1.13.x
 sudo: true
 git:
   depth: false
@@ -51,6 +51,9 @@ jobs:
     if: type = cron
   - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --no-latest-cli"
     name: latest-packages
+    if: type = cron
+  - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --version=feature-2.0"
+    name: feature-2.0
     if: type = cron
 after_failure:
   - "${PULUMI_SCRIPTS}/ci/upload-failed-tests"

@@ -1,6 +1,6 @@
 .PHONY: ensure only_build only_test all
 
-all: install only_build lint only_test
+all: install ensure only_build lint only_test
 
 install:
 	yarn global add tslint typescript

@@ -1,6 +1,6 @@
 module github.com/pulumi/examples
 
-go 1.12
+go 1.13
 
 require (
 	github.com/Azure/azure-amqp-common-go v1.1.4 // indirect
