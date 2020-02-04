@@ -23,6 +23,7 @@ const nginxConfigMount = { name: nginxConfigVol.name, mountPath: "/etc/nginx/con
 // configures nginx to act as a proxy for `pulumi.github.io`.
 const nginx = new k8s.apps.v1.Deployment("nginx", {
     spec: {
+        selector: {matchLabels: { app: "nginx" } },
         replicas: 1,
         template: {
             metadata: { labels: { app: "nginx" } },
