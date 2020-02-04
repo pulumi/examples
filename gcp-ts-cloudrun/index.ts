@@ -8,9 +8,10 @@ import * as pulumi from "@pulumi/pulumi";
 const location = gcp.config.region || "us-central1";
 
 // Enable Cloud Run service for the current project
-const enableCloudRun = new gcp.projects.Service("EnableCloudRun", {
-    service: "run.googleapis.com",
-});
+// Commented out not to disable the service at every destroy
+// const enableCloudRun = new gcp.projects.Service("EnableCloudRun", {
+//    service: "run.googleapis.com",
+// });
 
 // ----------------------------------------------- //
 // Deploy a pre-existing Hello Cloud Run container //
@@ -24,7 +25,7 @@ const helloService = new gcp.cloudrun.Service("hello", {
             ],
         },
     },
-}, { dependsOn: enableCloudRun });
+});
 
 // Open the service to public unrestricted access
 const iamHello = new gcp.cloudrun.IamMember("hello-everyone", {
@@ -68,7 +69,7 @@ const rubyService = new gcp.cloudrun.Service("ruby", {
             containerConcurrency: 50,
         },
     },
-}, { dependsOn: enableCloudRun });
+});
 
 // Open the service to public unrestricted access
 const iamRuby = new gcp.cloudrun.IamMember("ruby-everyone", {

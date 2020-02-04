@@ -1066,6 +1066,7 @@ func TestAccGcpTsCloudRun(t *testing.T) {
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-ts-cloudrun"),
+			RunUpdateTest: false,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["rubyUrl"].(string)
 				assertHTTPResult(t, endpoint, nil, func(body string) bool {
