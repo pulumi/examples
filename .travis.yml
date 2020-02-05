@@ -35,7 +35,7 @@ install:
   - chmod +x ./kubectl
   - sudo mv kubectl /usr/local/bin
 # Enable docker to access Google Cloud Registry
-  - cat gcp-credentials.json | docker login -u _json_key --password-stdin https:gcp.io
+  - cat gcp-credentials.json | docker login -u _json_key --password-stdin gcr.io
 before_script:
   - "${PULUMI_SCRIPTS}/ci/ensure-dependencies"
   # Attempt to work around issues with cross-region replication of resource group state in Azure.
