@@ -31,7 +31,7 @@
 
 [[constraint]]
   name = "github.com/pulumi/pulumi-aws"
-  branch = "tfgo"
+  version = "1.20.0"
 
 [prune]
   go-tests = true
