@@ -1,4 +1,4 @@
-name: networking-layet
+name: networking-layer
 runtime: nodejs
 description: Networking layer for the aws-stackreference-architecture
 template:
