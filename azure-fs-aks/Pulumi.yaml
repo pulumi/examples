@@ -1,0 +1,3 @@
+name: azure-fs-aks
+runtime: dotnet
+description: Creates an Azure Kubernetes Service (AKS) cluster using F#
