@@ -1,0 +1,3 @@
+name: LambdaWebServer
+runtime: dotnet
+description: Basic example of an AWS serverless website using F#
