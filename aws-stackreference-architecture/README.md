@@ -87,13 +87,13 @@ between the system:
    e.g. `myUsername/multicloud/dev`:
    
    ```bash
-   pulumi config set networkingStack stack72/networking-stack/dev
+   pulumi config set networkingStack stack72/networking-layer/dev
    ```
    
    If you wish to specify an initial database name in the RDS Instance, then you can do so by setting the following:
    
    ```bash
-   pulumi config set dbName myDatabseName
+   pulumi config set dbName myDatbaseName
    ```
 
 1. Deploy the database stack
