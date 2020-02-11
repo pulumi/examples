@@ -6,8 +6,8 @@ from pulumi_aws import lambda_, sfn
 
 hello_world_fn = lambda_.Function('helloWorldFunction',
     role=iam.lambda_role.arn,
-    runtime="python2.7",
-    handler="hello_step.hello",
+    runtime="python3.7",
+    handler="hello.handler",
     code=pulumi.AssetArchive({
         '.': pulumi.FileArchive('./step_hello')
     })
