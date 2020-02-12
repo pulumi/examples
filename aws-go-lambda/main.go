@@ -4,8 +4,6 @@ import (
 	"github.com/pulumi/pulumi-aws/sdk/go/aws/iam"
 	"github.com/pulumi/pulumi-aws/sdk/go/aws/lambda"
 	"github.com/pulumi/pulumi/sdk/go/pulumi"
-
-	_ "github.com/pulumi/examples/aws-go-lambda/handler"
 )
 
 func main() {
