@@ -51,7 +51,7 @@ cat output.json # view the output file with your tool of choice
 # "FOO"
 ```
 
-6. From there, feel free to experiment. Simply making edits and running `pulumi up` and `make build` will update your lambda.
+6. From there, feel free to experiment. Simply making edits and running `make build` then `pulumi up` will update your lambda.
 
 7. Afterwards, destroy your stack and remove it:
 
