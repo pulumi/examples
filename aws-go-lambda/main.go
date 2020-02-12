@@ -40,7 +40,7 @@ func main() {
 			return err
 		}
 
-		// Stack exports
+		// Export the lambda ARN.
 		ctx.Export("lambda", function.Arn)
 
 		return nil
