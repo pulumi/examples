@@ -4,6 +4,8 @@ import (
 	"github.com/pulumi/pulumi-aws/sdk/go/aws/iam"
 	"github.com/pulumi/pulumi-aws/sdk/go/aws/lambda"
 	"github.com/pulumi/pulumi/sdk/go/pulumi"
+
+	_ "github.com/pulumi/examples/aws-go-lambda/handler"
 )
 
 func main() {
@@ -28,10 +30,10 @@ func main() {
 
 		// Set arguments for constructing the function resource.
 		args := &lambda.FunctionArgs{
-			Handler: pulumi.String("function"),
+			Handler: pulumi.String("handler"),
 			Role:    role.Arn,
 			Runtime: pulumi.String("go1.x"),
-			Code:    pulumi.NewFileArchive("function"),
+			Code:    pulumi.NewFileArchive("./handler/handler.zip"),
 		}
 
 		// Create the lambda using the args.
