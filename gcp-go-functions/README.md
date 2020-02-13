@@ -42,7 +42,7 @@ To deploy your infrastructure, follow the below steps.
     # "Hello World!"
     ```
 
-1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your function.
+1. From there, feel free to experiment. Simply making edits and running `go build -o gcp-go-functions main.go` and `pulumi up` will incrementally update your function.
 
 1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
