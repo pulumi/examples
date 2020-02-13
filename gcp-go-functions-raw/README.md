@@ -16,10 +16,10 @@ To deploy your infrastructure, follow the below steps.
 
 ### Steps
 
-1.  Build `main.go`:
+1.  Create a new stack:
 
-    ```bash
-    go build -o gcp-go-functions main.go
+    ```
+    $ pulumi stack init dev
     ```
 
 1. Set the GCP project and region:
@@ -42,7 +42,7 @@ To deploy your infrastructure, follow the below steps.
     # "Hello World!"
     ```
 
-1. From there, feel free to experiment. Simply making edits, rebuilding, and running `pulumi up` will incrementally update your function.
+1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your function.
 
 1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
