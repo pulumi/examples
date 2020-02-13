@@ -18,35 +18,35 @@ To deploy your infrastructure, follow the below steps.
 
 1.  Build `main.go`:
 
-```bash
-go build -o gcp-go-functions main.go
-```
+    ```bash
+    go build -o gcp-go-functions main.go
+    ```
 
 1. Set the GCP project and region:
 
-```bash 
-pulumi config set gcp:project <gcp-project>
-pulumi config set gcp:region <gcp-region>
-```
+    ```bash 
+    pulumi config set gcp:project <gcp-project>
+    pulumi config set gcp:region <gcp-region>
+    ```
 
 1. Execute the pulumi program to deploy our function:
 
-```bash
-pulumi up
-```
+    ```bash
+    pulumi up
+    ```
 
 1. Test our function by curl-ing the trigger URL.
 
-```bash
-curl $(pulumi stack output function)
-# "Hello World!"
-```
+    ```bash
+    curl $(pulumi stack output function)
+    # "Hello World!"
+    ```
 
 1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your function.
 
 1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
-```bash
-pulumi destroy --yes
-pulumi stack rm --yes
-```
+    ```bash
+    pulumi destroy --yes
+    pulumi stack rm --yes
+    ```
