@@ -16,6 +16,8 @@ Pulumi.*.yaml
 *.iml
 key.rsa*
 obj/
+vendor
+Gopkg.lock
 
 # Java app
 .gradle/
