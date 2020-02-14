@@ -1,10 +1,11 @@
 ﻿module Program
 
-open Pulumi.Azure.AD
+open Pulumi.AzureAD
 open Pulumi.Azure.Core
 open Pulumi.Azure.ContainerService
 open Pulumi.Azure.ContainerService.Inputs
 open Pulumi.Azure.Network
+open Pulumi.Azure.Role
 open Pulumi.FSharp
 open Pulumi.Random
 open Pulumi.Tls
@@ -41,6 +42,13 @@ module Helpers =
                 Value = io password.Result,
                 EndDate = input "2099-01-01T00:00:00Z"
             ))
+
+    let assignNetworkContributorRole name (servicePrincipal: ServicePrincipal) (resourceGroup: ResourceGroup) =
+        Assignment(name,
+            AssignmentArgs(
+                PrincipalId = io servicePrincipal.Id,
+                Scope = io resourceGroup.Id,
+                RoleDefinitionName = input "Network Contributor"))
 
     let createVnet name (resourceGroup: ResourceGroup) =
         VirtualNetwork(name,
@@ -118,6 +126,7 @@ let infra () =
     let app = Helpers.createApplication "fsaks"
     let servicePrincipal = Helpers.createServicePrincipal "fsakssp" app
     let servicePrincipalPassword = Helpers.createServicePrincipalPassword "fsakssppassword" password servicePrincipal
+    let networkRole = Helpers.assignNetworkContributorRole "role-assignment" servicePrincipal resourceGroup
     let vnet = Helpers.createVnet "fsaksvnet" resourceGroup
     let subnet = Helpers.createSubnet "fsakssubnet" vnet resourceGroup
 
