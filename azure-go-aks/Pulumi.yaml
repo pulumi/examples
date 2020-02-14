@@ -1,0 +1,3 @@
+name: azure-go-aks
+description: Creates an Azure Kubernetes Service (AKS) cluster
+runtime: go
