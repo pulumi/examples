@@ -9,6 +9,7 @@ using Pulumi.Azure.ContainerService;
 using Pulumi.Azure.ContainerService.Inputs;
 using Pulumi.Azure.Core;
 using Pulumi.Azure.Network;
+using Pulumi.Azure.Role;
 using Pulumi.Random;
 using Pulumi.Tls;
 
@@ -39,6 +40,14 @@ class Program
                 ServicePrincipalId = adSp.Id,
                 Value = password,
                 EndDate = "2099-01-01T00:00:00Z",
+            });
+
+            // Grant networking permissions to the SP (needed e.g. to provision Load Balancers)
+            var assignment = new Assignment("role-assignment", new AssignmentArgs
+            {
+                PrincipalId = adSp.Id,
+                Scope = resourceGroup.Id,
+                RoleDefinitionName = "Network Contributor"
             });
 
             // Create a Virtual Network for the cluster
