@@ -10,7 +10,7 @@ export class Cache {
     private readonly endpoint: pulumi.Output<awsx.elasticloadbalancingv2.ListenerEndpoint>;
 
     public get: (key: string) => Promise<string>;
-    public set: (key: string, value: string) => Promise<void>
+    public set: (key: string, value: string) => Promise<void>;
 
     constructor(name: string, memory: number = 128) {
         const pw = config.redisPassword;
@@ -46,7 +46,7 @@ export class Cache {
                     }
                 });
             });
-        }
+        };
 
         this.set = (key, value) => {
             const ep = listener.endpoint.get();
@@ -63,7 +63,7 @@ export class Cache {
                     }
                 });
             });
-        }
+        };
     }
 }
 
