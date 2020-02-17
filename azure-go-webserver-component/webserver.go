@@ -40,11 +40,10 @@ type WebserverArgs struct {
 // NewWebserver allocates a new web server VM, NIC, and public IP address.
 func NewWebserver(ctx *pulumi.Context, name string, args *WebserverArgs, opts ...pulumi.ResourceOption) (*Webserver, error) {
 	webserver := &Webserver{}
-	reg, err := ctx.RegisterComponentResource("ws-ts-azure-comp:webserver:WebServer", name, webserver, opts...)
+	err := ctx.RegisterComponentResource("ws-ts-azure-comp:webserver:WebServer", name, webserver, opts...)
 	if err != nil {
 		return nil, err
 	}
-	defer reg.Close()
 
 	webserver.PublicIP, err = network.NewPublicIp(ctx, name+"-ip", &network.PublicIpArgs{
 		ResourceGroupName: args.ResourceGroupName,
@@ -56,10 +55,10 @@ func NewWebserver(ctx *pulumi.Context, name string, args *WebserverArgs, opts ..
 
 	webserver.NetworkInterface, err = network.NewNetworkInterface(ctx, name+"-nic", &network.NetworkInterfaceArgs{
 		ResourceGroupName: args.ResourceGroupName,
-		IpConfigurations: network.NetworkInterfaceIpConfigurationsArrayArgs{
-			network.NetworkInterfaceIpConfigurationsArgs{
+		IpConfigurations: network.NetworkInterfaceIpConfigurationArray{
+			network.NetworkInterfaceIpConfigurationArgs{
 				Name:                       pulumi.String("webserveripcfg"),
-				SubnetId:                   args.SubnetID,
+				SubnetId:                   args.SubnetID.ToStringOutput(),
 				PrivateIpAddressAllocation: pulumi.String("Dynamic"),
 				PublicIpAddressId:          webserver.PublicIP.ID(),
 			},
@@ -84,8 +83,8 @@ func NewWebserver(ctx *pulumi.Context, name string, args *WebserverArgs, opts ..
 		OsProfile: compute.VirtualMachineOsProfileArgs{
 			ComputerName:  pulumi.String("hostname"),
 			AdminUsername: args.Username,
-			AdminPassword: args.Password,
-			CustomData:    args.BootScript,
+			AdminPassword: args.Password.ToStringOutput(),
+			CustomData:    args.BootScript.ToStringOutput(),
 		},
 		OsProfileLinuxConfig: compute.VirtualMachineOsProfileLinuxConfigArgs{
 			DisablePasswordAuthentication: pulumi.Bool(false),
@@ -115,7 +114,7 @@ func (ws *Webserver) GetIPAddress(ctx *pulumi.Context) pulumi.StringOutput {
 	return ready.ApplyT(func(args []interface{}) (string, error) {
 		name := args[1].(string)
 		resourceGroupName := args[2].(string)
-		ip, err := network.LookupPublicIP(ctx, &network.GetPublicIPArgs{
+		ip, err := network.GetPublicIP(ctx, &network.GetPublicIPArgs{
 			Name:              name,
 			ResourceGroupName: resourceGroupName,
 		})
