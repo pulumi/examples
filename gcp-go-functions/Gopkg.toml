@@ -30,8 +30,8 @@
   version = "1.9.1"
 
 [[constraint]]
-  name = "github.com/pulumi/pulumi-aws"
-  version = "1.20.0"
+  name = "github.com/pulumi/pulumi-gcp"
+  version = "2.6.0"
 
 [prune]
   go-tests = true
