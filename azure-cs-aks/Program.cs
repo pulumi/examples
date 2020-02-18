@@ -91,7 +91,7 @@ class Program
                     ClientId = adApp.ApplicationId,
                     ClientSecret = adSpPassword.Value,
                 },
-                KubernetesVersion = "1.15.4",
+                KubernetesVersion = "1.15.7",
                 RoleBasedAccessControl = new KubernetesClusterRoleBasedAccessControlArgs { Enabled = true },
                 NetworkProfile = new KubernetesClusterNetworkProfileArgs 
                 {
