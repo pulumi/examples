@@ -33,8 +33,8 @@ func main() {
 		network, err := network.NewVirtualNetwork(ctx, "server-network", &network.VirtualNetworkArgs{
 			ResourceGroupName: rg.Name,
 			AddressSpaces:     pulumi.StringArray{pulumi.String("10.0.0.0/16")},
-			Subnets: network.VirtualNetworkSubnetsArrayArgs{
-				network.VirtualNetworkSubnetsArgs{
+			Subnets: network.VirtualNetworkSubnetArray{
+				network.VirtualNetworkSubnetArgs{
 					Name:          pulumi.String("default"),
 					AddressPrefix: pulumi.String("10.0.1.0/24"),
 				},
@@ -51,7 +51,7 @@ func main() {
 echo "Hello, from Server %v!" > index.html
 nohup python -m SimpleHTTPServer 80 &`, i)),
 				ResourceGroupName: rg.Name,
-				SubnetID:          network.Subnets.Index(pulumi.Int(0)).Id(),
+				SubnetID:          network.Subnets.Index(pulumi.Int(0)).Id().ToStringPtrOutput().Elem(),
 			})
 			if err != nil {
 				return err
