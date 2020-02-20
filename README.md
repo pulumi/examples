@@ -48,24 +48,23 @@ See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on
 
 Example		| Description |
 ----- 		| --------- |
-[RDS and Airflow](aws-ts-airflow) | Deploy a RDS Postgres instance and containerized Airflow.
-[Apigateway - Auth0](aws-ts-apigateway-auth0) | Deploy a simple REST API protected by Auth0.
 [API Gateway](aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
+[Apigateway - Auth0](aws-ts-apigateway-auth0) | Deploy a simple REST API protected by Auth0.
 [AppSync](aws-ts-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
 [AssumeRole](aws-ts-assume-role) | Use AssumeRole to create resources.
 [Containers](aws-ts-containers) | Provision containers on Fargate.
-[Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
+[EKS - Dashboard](aws-ts-eks) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then the Kubernetes Dashboard into the cluster.
 [EKS - Hello World](aws-ts-eks-hello-world) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then a Kubernetes namespace and nginx deployment into the cluster.
 [EKS - Migrate Node Groups](aws-ts-migrate-nodegroups) | Create an EKS cluster and node group to use for workload migration with zero downtime.
-[EKS - Dashboard](aws-ts-eks) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then the Kubernetes Dashboard into the cluster.
 [Fargate](aws-ts-hello-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
 [Miniflux](aws-ts-pulumi-miniflux) | Stand up an RSS Service using Fargate and RDS.
 [Pulumi Webhooks](aws-ts-pulumi-webhooks) | Create a Pulumi `cloud.HttpEndpoint` that receives webhook events delivered by the Pulumi Service, then echos the event to Slack.
+[RDS and Airflow](aws-ts-airflow) | Deploy a RDS Postgres instance and containerized Airflow.
 [Resources](aws-ts-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
 [Ruby on Rails](aws-ts-ruby-on-rails) | Create a single EC2 virtual machine instance with a local MySQL database.
 [S3 Lambda](aws-ts-s3-lambda-copyzip) | Set up two AWS S3 Buckets and a single Lambda that listens to one and, upon each new object arriving in it, zips it up and copies it to the second bucket.
-[Serverless Datawarehouse](aws-ts-serverless-datawarehouse) | Deploy a serverless data warehouse.
 [Serverless Application](aws-ts-serverless-raw) | Deploy a complete serverless C# application using raw resources from `@pulumi/aws`.
+[Serverless Datawarehouse](aws-ts-serverless-datawarehouse) | Deploy a serverless data warehouse.
 [Slackbot](aws-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
 [Stack Reference](aws-ts-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
 [Static Website](aws-ts-static-website) | Serve a static website using S3, CloudFront, Route53, and Certificate Manager. 
@@ -74,6 +73,7 @@ Example		| Description |
 [Twitter](aws-ts-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
 [URL Shortener](aws-ts-url-shortener-cache-http) | Create a serverless URL shortener that uses high-level components.
 [Voting App](aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
+[Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
 
 ### Javascript
 
@@ -83,7 +83,7 @@ Example		| Description |
 [S3 Folder Component](aws-js-s3-folder-component) | Serve a static website on S3 from a component.
 [S3 Folder](aws-js-s3-folder) | Serve a static website on S3.
 [Servless SQS to Slack](aws-js-sqs-slack) | Wire up a serverless AWS Lambda to an AWS SQS queue and post a message to Slack.
-[Web Server - Common Instance](aws-js-webserver-component) | Deploy an EC2 instance using a common module for creating an instance.
+[Web Server - Component](aws-js-webserver-component) | Deploy an EC2 instance using a common module for creating an instance.
 [Web Server](aws-js-webserver) | Deploy an EC2 Virtual machine running a Python web server.
 
 ### Python
@@ -144,9 +144,9 @@ Example		| Description |
 [Functions](azure-ts-functions) | Deploy a typescript function to Azure Functions.
 [HDInsight Spark](azure-ts-hdinsight-spark) | Deploy a Spark cluster on Azure HDInsight.
 [MSI KeyVault RBAC](azure-ts-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
-[URL Shortener](azure-ts-serverless-url-shortener-global) | Create a globally-distributed serverless URL shortener using Azure Functions and Cosmos DB.
 [Static Website](azure-ts-static-website) | Configure static website hosting in Azure Storage.
 [Stream Analytics](azure-ts-stream-analytics) | Deploy an Azure Stream Analytics job to transform data in an Event Hub.
+[URL Shortener](azure-ts-serverless-url-shortener-global) | Create a globally-distributed serverless URL shortener using Azure Functions and Cosmos DB.
 [VM Scaleset](azure-ts-vm-scaleset) | Provision a Scale Set of Linux web servers with nginx deployed, auto-scaling based on CPU load, a Load Balancer in front of them, and a public IP address.
 [Web Server Component](azure-ts-webserver-component) | Provision a configurable number of Linux web servers in an Azure Virtual Machine using a reusable component.
 [Web Server](azure-ts-webserver) | Provision a Linux web server in an Azure Virtual Machine.
@@ -205,11 +205,11 @@ Example		| Description |
 Example		| Description |
 ----- 		| --------- |
 [Cloud Run](gcp-ts-cloudrun) | Deploy a custom Docker image into Google Cloud Run service.
+[Functions - Raw](gcp-ts-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
 [Functions](gcp-ts-functions) | Deploy an HTTP Google Cloud Function endpoint.
 [GKE - Hello World](gcp-ts-gke-hello-world) | Deploy a GKE cluster, then a Kubernetes namespace and nginx deployment into the cluster.
 [GKE](gcp-ts-gke) | Provision a Google Kubernetes Engine (GKE) cluster, then a Kubernetes Deployment.
 [Ruby on Rails](gcp-ts-k8s-ruby-on-rails-postgresql) | Deliver a containerized Ruby on Rails application.
-[Functions - Raw](gcp-ts-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
 [Slackbot](gcp-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
 
 ### Javascript
@@ -222,11 +222,11 @@ Example		| Description |
 
 Example		| Description |
 ----- 		| --------- |
+[Functions - Raw](gcp-py-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
 [Functions](gcp-py-functions) | Deploy a Python-based Google Cloud Function.
 [GKE](gcp-py-gke) | Provision a Google Kubernetes Engine (GKE) cluster, then a Kubernetes Deployment.
-[nginx Server](gcp-py-instance-nginx) | Build a nginx server in Google Cloud.
 [Network Component](gcp-py-network-component) | Use a reusable component to create a Google Cloud Network and instance.
-[Functions - Raw](gcp-py-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
+[nginx Server](gcp-py-instance-nginx) | Build a nginx server in Google Cloud.
 
 ### Go
 
@@ -239,8 +239,8 @@ Example		| Description |
 
 Example		| Description |
 ----- 		| --------- |
-[Functions](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
-[GKE](gcp-py-gke) | Deploy a Google Cloud Platform (GCP) Google Kubernetes Engine (GKE) cluster.
+[Functions - Raw](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
+[Functions](gcp-go-functions) | Deploy a Go-based Google Cloud Function.
 
 ## Kubernetes
 
@@ -249,15 +249,15 @@ Example		| Description |
 Example		| Description |
 ----- 		| --------- |
 [App Rollout via ConfigMap](kubernetes-ts-configmap-rollout) | Enable a change in a ConfigMap to trigger a rollout of an nginx Deployment.
+[App Rollout via S3 Data Change](kubernetes-ts-s3-rollout) | Enable a change in data in S3 to trigger a rollout of an nginx deployment.
 [Expose Deployment](kubernetes-ts-exposed-deployment) | Deploy nginx to a Kubernetes cluster, and publicly explose it using a Kubernetes Service.
 [Guestbook](kubernetes-ts-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
-[Wordpress Helm Chart](kubernetes-ts-helm-wordpress) | Use the Helm API to deploy v2.1.3 of the Wordpress Helm Chart to a Kubernetes cluster.
 [Jenkins](kubernetes-ts-jenkins) | Deploy a container running the Jenkins continuous integration system onto a running Kubernetes cluster.
 [Multicloud](kubernetes-ts-multicloud) | Create managed Kubernetes clusters using AKS, EKS, and GKE, and deploy the application on each cluster.
 [nginx server](kubernetes-ts-nginx) | Deploy a replicated nginx server to a Kubernetes cluster, using TypeScript and no YAML.
-[App Rollout via S3 Data Change](kubernetes-ts-s3-rollout) | Enable a change in data in S3 to trigger a rollout of an nginx deployment.
 [Sock Shop](kubernetes-ts-sock-shop) | Deploy a version of the standard Sock Shop microservices reference app.
 [Staged App Rollout](kubernetes-ts-staged-rollout-with-prometheus) | Create a staged rollout gated by checking that the P90 response time reported by Prometheus is less than some amount. 
+[Wordpress Helm Chart](kubernetes-ts-helm-wordpress) | Use the Helm API to deploy v2.1.3 of the Wordpress Helm Chart to a Kubernetes cluster.
 
 ### C#
 
@@ -293,22 +293,22 @@ Example		| Description |
 
 Example		| Description |
 ----- 		| --------- |
-[Kubernetes](digitalocean-ts-k8s) | Provision a DigitalOcean Kubernetes cluster.
 [Droplets](digitalocean-ts-loadbalanced-droplets) | Build sample architecture.
+[Kubernetes](digitalocean-ts-k8s) | Provision a DigitalOcean Kubernetes cluster.
 
 ### Python
 
 Example		| Description |
 ----- 		| --------- |
-[Kubernetes](digitalocean-py-k8s) | Provision a DigitalOcean Kubernetes cluster.
 [Droplets](digitalocean-py-loadbalanced-droplets) | Build sample architecture.
+[Kubernetes](digitalocean-py-k8s) | Provision a DigitalOcean Kubernetes cluster.
 
 ### C#
 
 Example		| Description |
 ----- 		| --------- |
-[Kubernetes](digitalocean-cs-k8s) | Provision a DigitalOcean Kubernetes cluster.
 [Droplets](digitalocean-cs-loadbalanced-droplets) | Build sample architecture.
+[Kubernetes](digitalocean-cs-k8s) | Provision a DigitalOcean Kubernetes cluster.
 
 ## Multicloud
 
