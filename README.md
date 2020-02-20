@@ -51,7 +51,7 @@ Example		| Description |
 [Containers](aws-js-containers) | Provision containers on Fargate.
 [S3 Folder Component](aws-js-s3-folder-component) | Serve a static website on S3 from a component.
 [S3 Folder](aws-js-s3-folder) | Serve a static website on S3.
-[Servless SQS to Slack](aws-js-sqs-slack) | Wire up a serverless AWS Lambda to an AWS SQS queue and post a message to Slack
+[Servless SQS to Slack](aws-js-sqs-slack) | Wire up a serverless AWS Lambda to an AWS SQS queue and post a message to Slack.
 [Web Server - Common Instance](aws-js-webserver-component) | Deploy an EC2 instance using a common module for creating an instance.
 [Web Server](aws-js-webserver) | Deploy an EC2 Virtual machine running a Python web server.
 
@@ -89,3 +89,124 @@ Example		| Description |
 Example		| Description |
 ----- 		| --------- |
 [Lambda Web Server](aws-fs-lambda-webserver) | Create a web server in AWS lambda using the Giraffe web server.
+
+## Azure
+
+### Typescript
+
+Example		| Description |
+----- 		| --------- |
+[AKS - Helm](azure-ts-aks-helm) | Create an AKS Cluster and deploy a Helm Chart into it.
+[AKS - KEDA](azure-ts-aks-keda) | Create an AKS Cluster and deploy an Azure Function App with Kubernetes-based Event Driven Autoscaling (KEDA) into it.
+[AKS - Mean](azure-ts-aks-mean) | Stand up an AKS cluster and a MongoDB-flavored instance of CosmosDB.
+[AKS - Multicluster](azure-ts-aks-multicluster) | Create multiple AKS clusters in different regions and with different node counts.
+[API Management](azure-ts-api-management) | Deploy an instance of Azure API Management.
+[App Service - DevOps](azure-ts-appservice-devops) | Deploy a Todo App using App Service with SQL Database and integrated with DevOps.
+[App Service - Docker](azure-ts-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[App Service - Spring Boot](azure-ts-appservice-Springboot) | Deploy a Spring Boot app to an App Service instance using Jenkins.
+[App Service](azure-ts-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+[ARM Template](azure-ts-arm-template) | Deploy an existing Azure Resource Manager (ARM) template.
+[CosmosApp Component](azure-ts-cosmosapp-component) | Use a reusable component to create globally-distributed applications with Azure Cosmos DB.
+[CosmosDB LogicApp](azure-ts-cosmosdb-logicapp) | Use ARM templates to create an API Connection and a Logic App.
+[Dynamic Resource](azure-ts-dynamicresource) | Add a custom domain to a CDN endpoint.
+[Functions - Raw](azure-ts-functions-raw) | Deploy functions in multiple languages to Azure Functions.
+[Functions](azure-ts-functions) | Deploy a typescript function to Azure Functions.
+[HDInsight Spark](azure-ts-hdinsight-spark) | Deploy a Spark cluster on Azure HDInsight.
+[MSI KeyVault RBAC](azure-ts-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
+[URL Shortener](azure-ts-serverless-url-shortener-global) | Create a globally-distributed serverless URL shortener using Azure Functions and Cosmos DB.
+[Static Website](azure-ts-static-website) | Configure static website hosting in Azure Storage.
+[Stream Analytics](azure-ts-stream-analytics) | Deploy an Azure Stream Analytics job to transform data in an Event Hub.
+[VM Scaleset](azure-ts-vm-scaleset) | Provision a Scale Set of Linux web servers with nginx deployed, auto-scaling based on CPU load, a Load Balancer in front of them, and a public IP address.
+[Web Server Component](azure-ts-webserver-component) | Provision a configurable number of Linux web servers in an Azure Virtual Machine using a reusable component.
+[Web Server](azure-ts-webserver) | Provision a Linux web server in an Azure Virtual Machine.
+
+### Javascript
+
+Example		| Description |
+----- 		| --------- |
+[Web Server](azure-js-webserver) | Build the Pulumi web server sample in Azure.
+
+### Python
+
+Example		| Description |
+----- 		| --------- |
+[AKS - Multicluster](azure-py-aks-multicluster) | Create multiple AKS clusters in different regions and with different node counts.
+[AKS](azure-py-aks) | Deploy an AKS cluster, virtual network and Azure Container Registry and grant AKS permissions to access and manage those.
+[App Service - Docker](azure-py-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[App Service](azure-py-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+[Functions - Raw](azure-py-functions-raw) | Deploy a function to Azure Functions created from raw deployment packages in C#.
+[HDInsight Spark](azure-py-hdinsight-spark) | Deploy a Spark cluster on Azure HDInsight.
+[MSI Key Vault RBAC](azure-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
+[VM Scale Set](azure-vm-scaleset) | Provision a Scale Set of Linux web servers with nginx deployed, auto-scaling based on CPU load, a Load Balancer in front of them, and a public IP address.
+[Web Server Component](azure-py-webserver-component) | Deploy a Virtual Machine and start an HTTP server on it using a reusable component.
+[Web Server](azure-py-webserver) | Deploy a Virtual Machine and start an HTTP server on it.
+
+### Go
+
+Example		| Description |
+----- 		| --------- |
+[App Service](azure-go-appservice) | Build a web application hosted in Azure App Service.
+[Web Server Component](azure-go-webserver-component) | Provision a configurable number of Linux web servers in an Azure Virtual Machine using a reusable component.
+
+### C#
+
+Example		| Description |
+----- 		| --------- |
+[AKS](azure-cs-aks) | Stand up an Azure Kubernetes Service (AKS) cluster.
+[App Service](azure-cs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+[Bot Service](azure-cs-botservice) | Build an Azure Bot Service hosted in Azure App Service.
+[Cosmos App Component](azure-cs-cosmosapp-component) | Use a reusable component to create globally-distributed applications with Azure Cosmos DB.
+[Functions - Raw](azure-cs-functions-raw) | Deploy a function to Azure Functions created from raw deployment packages in C#.
+[MSI Key Vault RBAC](azure-cs-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
+[Web Server](azure-cs-webserver) | Deploy a Virtual Machine and start an HTTP server on it.
+
+### F#
+
+Example		| Description |
+----- 		| --------- |
+[AKS](azure-fs-aks) | Stand up an Azure Kubernetes Service (AKS) cluster.
+[App Service](azure-fs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+
+## GCP
+
+### Typescript
+
+Example		| Description |
+----- 		| --------- |
+[Cloud Run](gcp-ts-cloudrun) | Deploy a custom Docker image into Google Cloud Run service.
+[Functions](gcp-ts-functions) | Deploy an HTTP Google Cloud Function endpoint.
+[GKE - Hello World](gcp-ts-gke-hello-world) | Deploy a GKE cluster, then a Kubernetes namespace and NGINX deployment into the cluster.
+[GKE](gcp-ts-gke) | Provision a Google Kubernetes Engine (GKE) cluster, then a Kubernetes Deployment.
+[Ruby on Rails](gcp-ts-k8s-ruby-on-rails-postgresql) | Deliver a containerized Ruby on Rails application.
+[Functions - Raw](gcp-ts-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
+[Slackbot](gcp-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
+
+### Javascript
+
+Example		| Description |
+----- 		| --------- |
+[Web Server](gcp-js-webserver) | Build a web server in Google Cloud.
+
+### Python
+
+Example		| Description |
+----- 		| --------- |
+[Functions](gcp-py-functions) | Deploy a Python-based Google Cloud Function.
+[GKE](gcp-py-gke) | Provision a Google Kubernetes Engine (GKE) cluster, then a Kubernetes Deployment.
+[NGINX Server](gcp-py-instance-nginx) | Build a NGINX server in Google Cloud.
+[Network Component](gcp-py-network-component) | Use a reusable component to create a Google Cloud Network and instance.
+[Functions - Raw](gcp-py-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
+
+### Go
+
+Example		| Description |
+----- 		| --------- |
+[Functions](gcp-go-functions) | Deploy a Go-based Google Cloud Function.
+[Functions - Raw](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
+
+### C#
+
+Example		| Description |
+----- 		| --------- |
+[Functions](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
+[GKE](gcp-py-gke) | Deploy a Google Cloud Platform (GCP) Google Kubernetes Engine (GKE) cluster.
