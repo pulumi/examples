@@ -3,13 +3,44 @@
 This repository contains examples of using Pulumi to build and deploy cloud applications and infrastructure.
 
 Each example has a two-part prefix, `<cloud>-<language>`, to indicate which `<cloud>` and `<language>` it pertains to.
-The cloud is one of `aws` for [Amazon Web Services](https://github.com/pulumi/pulumi-aws), `azure` for [Microsoft
+For example, `<cloud>` could be `aws` for [Amazon Web Services](https://github.com/pulumi/pulumi-aws), `azure` for [Microsoft
 Azure](https://github.com/pulumi/pulumi-azure), `gcp` for [Google Cloud
 Platform](https://github.com/pulumi/pulumi-gcp), `kubernetes` for
 [Kubernetes](https://github.com/pulumi/pulumi-kubernetes), or `cloud` for
 [Pulumi's cross-cloud programming framework](https://github.com/pulumi/pulumi-cloud).
 
 See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on getting started with Pulumi.
+
+## Outline
+
+- [AWS](#aws)
+    - [Typescript](#typescript)
+	- [Javascript](#javascript)
+	- [Python](#python)
+	- [Go](#go)
+	- [C#](#c)
+	- [F#](#f)
+- [Azure](#azure) 
+    - [Typescript](#typescript-1)
+	- [Javascript](#javascript-1)
+	- [Python](#python-1)
+	- [Go](#go-1)
+	- [C#](#c-1)
+	- [F#](#f-1)
+- [GCP](#gcp) 
+    - [Typescript](#typescript-2)
+	- [Javascript](#javascript-2)
+	- [Python](#python-2)
+	- [Go](#go-2)
+	- [C#](#c-2)
+- [Kubernetes](#kubernetes)
+- [Cloud](#cloud)
+- [DigitalOcean](#digitalocean)
+- [Multicloud](#multicloud)
+- [F5](#f5)
+- [Twilio](#twilio)
+- [Linode](#linode)
+- [Packet](#packet)
 
 ## AWS
 
