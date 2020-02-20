@@ -11,41 +11,44 @@ Platform](https://github.com/pulumi/pulumi-gcp), `kubernetes` for
 
 See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on getting started with Pulumi.
 
-### Cloud Infrastructure
+## AWS
 
-Example                 | Language          | Cloud |
------                   | -------           | ------| 
-[AWS EC2 instance (JavaScript)](aws-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | AWS |
-[AWS EC2 instance (Python)](aws-py-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | Python | AWS |
-[Azure Virtual Machine (JavaScript)](azure-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | Azure |
-[GCP Virtual Machine (JavaScript)](gcp-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | Google Cloud Platform |
-[Component for creating EC2 instances (JavaScript)](aws-js-webserver-component/) <br/>A minimal component that encapsulates creating EC2 instances | JavaScript | AWS |
-[Simple static website on AWS S3 (JavaScript)](aws-js-s3-folder) <br/> A simple program that uses S3's website support | JavaScript | AWS |
-[Component for simple static website (JavaScript)](aws-js-s3-folder-component) <br/> A reusable component for hosting static websites on AWS S3 | JavaScript | AWS |
-[Simple static website on AWS S3 (Go)](aws-go-s3-folder) <br/> A static website that uses S3's website support | Go | AWS |
-[Production-ready static website on AWS (TypeScript)](aws-ts-static-website) <br/> An end-to-end example for hosting a static website on AWS, using S3, CloudFront, Route53, and Amazon Certificate Manager | TypeScript | AWS |
-[Jenkins on Kubernetes (JavaScript)](kubernetes-ts-jenkins) <br/> A Jenkins container running on Kubernetes | JavaScript | Kubernetes |
-[AWS RDS and Airflow (TypeScript)](aws-ts-airflow)<br/> Deploys an RDS Postgres instance and containerized Airflow | TypeScript | AWS |
-[CloudWatch Log Groups, Event Targets, Metric Alarms, IAM roles, and more! (TypeScript)](aws-ts-resources) <br/> An example that shows how to create a number of AWS resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, `sqs.Queue`, and more. | TypeScript | AWS | 
-[Azure App Service with SQL Database and Application Insights](azure-ts-appservice) <br/> Deploy Azure App Service along with SQL Database and Application Insights | TypeScript | Azure |
-[Azure Functions](azure-ts-functions) <br/> A simple component for deploying inline code to Azure Functions | TypeScript | Azure |
-[Linode instance (JavaScript)](linode-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | Linode |
+### Typescript
 
-### Cloud Applications
+Example		| Description |
+----- 		| ----------- |
+[RDS and Airflow](aws-ts-airflow) | Deploy a RDS Postgres instance and containerized Airflow.
+[Apigateway - Auth0](aws-ts-apigateway-auth0) | Deploy a simple REST API protected by Auth0.
+[Apigateway](aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
+[AppSync](aws-ts-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
+[Assume Role](aws-ts-assume-role) | Use AssumeRole to create resources.
+[Containers](aws-ts-containers) | Provision containers on Fargate
+[WebServer with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
+[EKS - Hello World](aws-ts-eks-hello-world) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then a Kubernetes namespace and NGINX deployment into the cluster.
+[EKS - Migrate Node Groups](aws-ts-migrate-nodegroups) | Create an EKS cluster and node group to use for workload migration with zero downtime.
+[EKS - Dashboard](aws-ts-eks) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then the Kubernetes Dashboard into the cluster.
+[Hello Fargate](aws-ts-hello-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
+[Miniflux](aws-ts-pulumi-miniflux) | Stand up an RSS Service using Fargate and RDS.
+[Pulumi Webhooks](aws-ts-pulumi-webhooks) | Create a Pulumi `cloud.HttpEndpoint` that receives webhook events delivered by the Pulumi Service, then echos the event to Slack.
+[Resources](aws-ts-resources) | Create various resources.
+[Ruby on Rails](aws-ts-ruby-on-rails) | Create a single EC2 virtual machine instance and uses a local MySQL database for storage.
+[S3 Lambda](aws-s3-lambda-copyzip) | Set up two AWS S3 Buckets and a single Lambda that listens to one and, upon each new object arriving in it, zips it up and copies it to the second bucket.
+[Serverless Datawarehouse](aws-ts-serverless-datawarehouse) | Deploy a serverless data warehouse.
+[Serverless Application](aws-ts-serverless-raw) | Deploy a complete serverless C# application using raw resources from `@pulumi/aws`.
+[Slackbot](aws-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
+[Stack Reference](aws-ts-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
+[Static Website](aws-ts-static-website) | Serve a static website using S3, CloudFront, Route53, and Certificate Manager. 
+[Step Functions](aws-ts-stepfunctions) | Use Step Functions with a Lambda function.
+[Thumbnailer](aws-ts-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
+[Twitter](aws-ts-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
+[URL Shortener](aws-ts-url-shortener-cache-http) | Create a serverless URL shortener that uses the high-level components.
+[Voting App](aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
 
-Example                 | Language          | Cloud |
------                   | -------           | ------| 
-[Serverless REST API (JavaScript)](cloud-js-api) <br/> A simple REST API to count the number of times a route has been hit | JavaScript | AWS |
-[NGINX container on AWS ECS (JavaScript)](cloud-js-containers) <br/> In 15 lines of code, deploy an NGINX container to production | JavaScript | AWS |
-[Serverless URL shortener (TypeScript)](cloud-ts-url-shortener) <br/> A complete URL shortener web application using high-level `cloud.Table` and `cloud.HttpEndpoint` components | TypeScript | AWS |
-[Serverless URL shortener with cache (TypeScript)](cloud-ts-url-shortener-cache) <br/> An extension of the URL shortener that adds a Redis cache | TypeScript | AWS |
-[Serverless video thumbnailer with Lambda and Fargate (JavaScript)](cloud-js-thumbnailer) <br/> An end-to-end pipeline for generating keyframe thumbnails from videos uploaded to a bucket using containerized FFmpeg | JavaScript | AWS |
-[Serverless video thumbnailer with machine learning (JavaScript)](cloud-js-thumbnailer-machine-learning) <br/> An extension of the video thumbnail example that uses AWS Rekognition video labels | JavaScript | AWS |
-[Raw AWS Serverless (TypeScript and C#)](aws-ts-serverless-raw) <br/> A complete serverless C# application using that uses the raw resources `aws.apigateway.RestAPI`, `aws.lambda.Function` and `aws.dynamodb.Table` | TypeScript | AWS |
-[Voting App with containers (TypeScript)](cloud-ts-voting-app) <br/> A simple voting app that uses Redis for a data store and a Python Flask app for the frontend, demonstrating the high-level framework `@pulumi/cloud`. | TypeScript | AWS |
-[Kubernetes Guestbook (TypeScript)](kubernetes-ts-guestbook/) <br/>A version of the [Kubernetes Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/) app using Pulumi and `@pulumi/kubernetes` | TypeScript | Kubernetes | 
-[Kubernetes Sock Shop (TypeScript)](kubernetes-ts-sock-shop) <br/> A version of the standard [Sock Shop microservices reference app](https://github.com/microservices-demo/microservices-demo) app using Pulumi and `@pulumi/kubernetes` | TypeScript | Kubernetes |
-[AWS Athena Twitter Analyzer (JavaScript)](cloud-js-twitter-athena) <br/> An application that periodically queries Twitter for a search term, stores the results in S3, and configures an Athena query for data analysis | JavaScript | AWS |
-[Serverless SQS to Slack (JavaScript)](aws-js-sqs-slack) <br/> Uses a Lambda function to post SQS messages to a Slack channel | JavaScript | AWS |
-[AWS Step Functions](aws-ts-stepfunctions) <br/> A basic example that demonstrates using AWS Step Functions with a Lambda function | TypeScript | AWS | 
-[Twilio SMS handler for API Gateway](twilio-ts-component) <br/>A sample component that makes it easy to connect AWS API Gateway and Twilio SMS | TypeScript | AWS |
+
+### Javascript
+
+### Python
+
+### Go
+
+### C#
