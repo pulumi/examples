@@ -210,3 +210,112 @@ Example		| Description |
 ----- 		| --------- |
 [Functions](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
 [GKE](gcp-py-gke) | Deploy a Google Cloud Platform (GCP) Google Kubernetes Engine (GKE) cluster.
+
+## Kubernetes
+
+### Typescript
+
+Example		| Description |
+----- 		| --------- |
+[App Rollout via ConfigMap](kubernetes-ts-configmap-rollout) | Enable a change in a ConfigMap to trigger a rollout of an nginx Deployment.
+[Expose Deployment](kubernetes-ts-exposed-deployment) | Deploy nginx to a Kubernetes cluster, and publicly explose it using a Kubernetes Service.
+[Guestbook](kubernetes-ts-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+[Wordpress Helm Chart](kubernetes-ts-helm-wordpress) | Use the Helm API to deploy v2.1.3 of the Wordpress Helm Chart to a Kubernetes cluster.
+[Jenkins](kubernetes-ts-jenkins) | Deploy a container running the Jenkins continuous integration system onto a running Kubernetes cluster.
+[Multicloud](kubernetes-ts-multicloud) | Create managed Kubernetes clusters using AKS, EKS, and GKE, and deploy the application on each cluster.
+[NGINX server](kubernetes-ts-nginx) | Deploy a replicated Nginx server to a Kubernetes cluster, using TypeScript and no YAML.
+[App Rollout via S3 Data Change](kubernetes-ts-s3-rollout) | Enable a change in data in S3 to trigger a rollout of an nginx deployment.
+[Sock Shop](kubernetes-ts-sock-shop) | Deploy a version of the standard Sock Shop microservices reference app.
+[Staged App Rollout](kubernetes-ts-staged-rollout-with-prometheus) | Create a staged rollout gated by checking that the P90 response time reported by Prometheus is less than some amount. 
+
+### C#
+
+Example		| Description |
+----- 		| --------- |
+[Guestbook](kubernetes-cs-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+
+## Cloud
+
+### Typescript
+
+Example		| Description |
+----- 		| --------- |
+[URL Shortener - Cache and HttpServer](cloud-ts-url-shortener-cache-http) | Create a simple URL shortener SPA that uses the high-level `cloud.Table` and `cloud.HttpServer` components.
+[URL Shortener - Cache](cloud-ts-url-shortener-cache) | Create a simple URL shortener SPA that uses the high-level `cloud.Table` and `cloud.API` components.
+[URL Shortener](cloud-ts-url-shortener) | Create a complete URL shortener web application using the high-level `cloud.Table` and `cloud.HttpServer` components.
+[Voting App](cloud-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
+
+### Javascript
+
+Example		| Description |
+----- 		| --------- |
+[API on AWS](cloud-js-api) | Create a simple REST API that counts the number of times a route has been hit.
+[Containers](cloud-js-containers) | Provision containers on Fargate.
+[HttpServer](cloud-js-httpserver) | Create a simple REST API that counts the number of times a route has been hit.
+[Thumbnailer - Machine Learning](cloud-js-thumbnailer-machine-learning) | Create a video thumbnail extractor using serverless functions, containers, and AWS Rekognition.
+[Thumbnailer](cloud-js-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
+[Twitter](cloud-js-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
+
+## DigitalOcean
+
+### Typescript
+
+Example		| Description |
+----- 		| --------- |
+[Kubernetes](digitalocean-ts-k8s) | Provision a DigitalOcean Kubernetes cluster.
+[Droplets](digitalocean-ts-loadbalanced-droplets) | Build sample architecture.
+
+### Python
+
+Example		| Description |
+----- 		| --------- |
+[Kubernetes](digitalocean-py-k8s) | Provision a DigitalOcean Kubernetes cluster.
+[Droplets](digitalocean-py-loadbalanced-droplets) | Build sample architecture.
+
+### C#
+
+Example		| Description |
+----- 		| --------- |
+[Kubernetes](digitalocean-cs-k8s) | Provision a DigitalOcean Kubernetes cluster.
+[Droplets](digitalocean-cs-loadbalanced-droplets) | Build sample architecture.
+
+## Multicloud
+
+### Typescript
+Example		| Description |
+----- 		| --------- |
+[Buckets](multicloud-ts-buckets) | Use a single Pulumi program to provision resources in both AWS and GCP. 
+
+## F5
+
+### Typescript
+Example		| Description |
+----- 		| --------- |
+[BigIP Local Traffic Manager](f5bigip-ts-ltm-pool) | Provide load balancing via an F5 BigIP appliance to backend HTTP instances.
+
+## Twilio
+
+### Typescript
+Example		| Description |
+----- 		| --------- |
+[Component](twilio-ts-component) | Create a custom Component Resource to parse incoming messages from Twilio.
+
+## Linode
+
+### Javascript
+Example		| Description |
+----- 		| --------- |
+[Web Server](linode-js-webserver) | Build a web server on Linode.
+
+## Packet
+
+### Typescript
+Example		| Description |
+----- 		| --------- |
+[Web Server](packet-ts-webserver) | Build a web server on Packet.net.
+
+### Python
+Example		| Description |
+----- 		| --------- |
+[Web Server](packet-py-webserver) | Build a web server on Packet.net.
+
