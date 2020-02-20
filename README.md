@@ -50,20 +50,20 @@ Example		| Description |
 ----- 		| --------- |
 [RDS and Airflow](aws-ts-airflow) | Deploy a RDS Postgres instance and containerized Airflow.
 [Apigateway - Auth0](aws-ts-apigateway-auth0) | Deploy a simple REST API protected by Auth0.
-[Apigateway](aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
+[API Gateway](aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
 [AppSync](aws-ts-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
-[Assume Role](aws-ts-assume-role) | Use AssumeRole to create resources.
+[AssumeRole](aws-ts-assume-role) | Use AssumeRole to create resources.
 [Containers](aws-ts-containers) | Provision containers on Fargate.
 [Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
-[EKS - Hello World](aws-ts-eks-hello-world) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then a Kubernetes namespace and NGINX deployment into the cluster.
+[EKS - Hello World](aws-ts-eks-hello-world) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then a Kubernetes namespace and nginx deployment into the cluster.
 [EKS - Migrate Node Groups](aws-ts-migrate-nodegroups) | Create an EKS cluster and node group to use for workload migration with zero downtime.
 [EKS - Dashboard](aws-ts-eks) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then the Kubernetes Dashboard into the cluster.
 [Fargate](aws-ts-hello-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
 [Miniflux](aws-ts-pulumi-miniflux) | Stand up an RSS Service using Fargate and RDS.
 [Pulumi Webhooks](aws-ts-pulumi-webhooks) | Create a Pulumi `cloud.HttpEndpoint` that receives webhook events delivered by the Pulumi Service, then echos the event to Slack.
 [Resources](aws-ts-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
-[Ruby on Rails](aws-ts-ruby-on-rails) | Create a single EC2 virtual machine instance and uses a local MySQL database for storage.
-[S3 Lambda](aws-s3-lambda-copyzip) | Set up two AWS S3 Buckets and a single Lambda that listens to one and, upon each new object arriving in it, zips it up and copies it to the second bucket.
+[Ruby on Rails](aws-ts-ruby-on-rails) | Create a single EC2 virtual machine instance with a local MySQL database.
+[S3 Lambda](aws-ts-s3-lambda-copyzip) | Set up two AWS S3 Buckets and a single Lambda that listens to one and, upon each new object arriving in it, zips it up and copies it to the second bucket.
 [Serverless Datawarehouse](aws-ts-serverless-datawarehouse) | Deploy a serverless data warehouse.
 [Serverless Application](aws-ts-serverless-raw) | Deploy a complete serverless C# application using raw resources from `@pulumi/aws`.
 [Slackbot](aws-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
@@ -72,7 +72,7 @@ Example		| Description |
 [Step Functions](aws-ts-stepfunctions) | Use Step Functions with a Lambda function.
 [Thumbnailer](aws-ts-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
 [Twitter](aws-ts-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
-[URL Shortener](aws-ts-url-shortener-cache-http) | Create a serverless URL shortener that uses the high-level components.
+[URL Shortener](aws-ts-url-shortener-cache-http) | Create a serverless URL shortener that uses high-level components.
 [Voting App](aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
 
 ### Javascript
@@ -91,7 +91,7 @@ Example		| Description |
 Example		| Description |
 ----- 		| --------- |
 [AppSync](aws-py-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
-[Fargate](aws-py-fargate) | Provision a full ECS Fargate cluster running a load-balanced NGINX web server.
+[Fargate](aws-py-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
 [Resources](aws-py-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
 [S3 Folder](aws-py-s3-folder) | Serve a static website on S3.
 [Stack Reference](aws-py-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
@@ -102,7 +102,7 @@ Example		| Description |
 
 Example		| Description |
 ----- 		| --------- |
-[Fargate](aws-go-fargate) | Provision a full ECS Fargate cluster running a load-balanced NGINX web server.
+[Fargate](aws-go-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
 [Lambda](aws-go-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
 [S3 Folder](aws-go-s3-folder) | Serve a static website on S3.
 [Web Server](aws-go-webserver) | Deploy an EC2 Virtual machine running a Python web server.
@@ -127,10 +127,10 @@ Example		| Description |
 
 Example		| Description |
 ----- 		| --------- |
-[AKS - Helm](azure-ts-aks-helm) | Create an AKS Cluster and deploy a Helm Chart into it.
-[AKS - KEDA](azure-ts-aks-keda) | Create an AKS Cluster and deploy an Azure Function App with Kubernetes-based Event Driven Autoscaling (KEDA) into it.
-[AKS - Mean](azure-ts-aks-mean) | Stand up an AKS cluster and a MongoDB-flavored instance of CosmosDB.
-[AKS - Multicluster](azure-ts-aks-multicluster) | Create multiple AKS clusters in different regions and with different node counts.
+[AKS - Helm](azure-ts-aks-helm) | Create an Azure Kubernetes Service (AKS) Cluster and deploy a Helm Chart into it.
+[AKS - KEDA](azure-ts-aks-keda) | Create an Azure Kubernetes Service (AKS) Cluster and deploy an Azure Function App with Kubernetes-based Event Driven Autoscaling (KEDA) into it.
+[AKS - Mean](azure-ts-aks-mean) | Stand up an Azure Kubernetes Service (AKS) Cluster and a MongoDB-flavored instance of CosmosDB.
+[AKS - Multicluster](azure-ts-aks-multicluster) | Create multiple Azure Kubernetes Service (AKS) Clusters in different regions and with different node counts.
 [API Management](azure-ts-api-management) | Deploy an instance of Azure API Management.
 [App Service - DevOps](azure-ts-appservice-devops) | Deploy a Todo App using App Service with SQL Database and integrated with DevOps.
 [App Service - Docker](azure-ts-appservice-docker) | Build a web application hosted in App Service from Docker images.
@@ -138,9 +138,9 @@ Example		| Description |
 [App Service](azure-ts-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
 [ARM Template](azure-ts-arm-template) | Deploy an existing Azure Resource Manager (ARM) template.
 [CosmosApp Component](azure-ts-cosmosapp-component) | Use a reusable component to create globally-distributed applications with Azure Cosmos DB.
-[CosmosDB LogicApp](azure-ts-cosmosdb-logicapp) | Use ARM templates to create an API Connection and a Logic App.
+[CosmosDB LogicApp](azure-ts-cosmosdb-logicapp) | Use Azure Resource Manager (ARM) templates to create an API Connection and a Logic App.
 [Dynamic Resource](azure-ts-dynamicresource) | Add a custom domain to a CDN endpoint.
-[Functions - Raw](azure-ts-functions-raw) | Deploy functions in multiple languages to Azure Functions.
+[Functions - Raw](azure-ts-functions-raw) | Deploy functions in all supported languages to Azure Functions.
 [Functions](azure-ts-functions) | Deploy a typescript function to Azure Functions.
 [HDInsight Spark](azure-ts-hdinsight-spark) | Deploy a Spark cluster on Azure HDInsight.
 [MSI KeyVault RBAC](azure-ts-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
@@ -206,7 +206,7 @@ Example		| Description |
 ----- 		| --------- |
 [Cloud Run](gcp-ts-cloudrun) | Deploy a custom Docker image into Google Cloud Run service.
 [Functions](gcp-ts-functions) | Deploy an HTTP Google Cloud Function endpoint.
-[GKE - Hello World](gcp-ts-gke-hello-world) | Deploy a GKE cluster, then a Kubernetes namespace and NGINX deployment into the cluster.
+[GKE - Hello World](gcp-ts-gke-hello-world) | Deploy a GKE cluster, then a Kubernetes namespace and nginx deployment into the cluster.
 [GKE](gcp-ts-gke) | Provision a Google Kubernetes Engine (GKE) cluster, then a Kubernetes Deployment.
 [Ruby on Rails](gcp-ts-k8s-ruby-on-rails-postgresql) | Deliver a containerized Ruby on Rails application.
 [Functions - Raw](gcp-ts-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
@@ -224,7 +224,7 @@ Example		| Description |
 ----- 		| --------- |
 [Functions](gcp-py-functions) | Deploy a Python-based Google Cloud Function.
 [GKE](gcp-py-gke) | Provision a Google Kubernetes Engine (GKE) cluster, then a Kubernetes Deployment.
-[NGINX Server](gcp-py-instance-nginx) | Build a NGINX server in Google Cloud.
+[nginx Server](gcp-py-instance-nginx) | Build a nginx server in Google Cloud.
 [Network Component](gcp-py-network-component) | Use a reusable component to create a Google Cloud Network and instance.
 [Functions - Raw](gcp-py-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
 
@@ -254,7 +254,7 @@ Example		| Description |
 [Wordpress Helm Chart](kubernetes-ts-helm-wordpress) | Use the Helm API to deploy v2.1.3 of the Wordpress Helm Chart to a Kubernetes cluster.
 [Jenkins](kubernetes-ts-jenkins) | Deploy a container running the Jenkins continuous integration system onto a running Kubernetes cluster.
 [Multicloud](kubernetes-ts-multicloud) | Create managed Kubernetes clusters using AKS, EKS, and GKE, and deploy the application on each cluster.
-[NGINX server](kubernetes-ts-nginx) | Deploy a replicated Nginx server to a Kubernetes cluster, using TypeScript and no YAML.
+[nginx server](kubernetes-ts-nginx) | Deploy a replicated nginx server to a Kubernetes cluster, using TypeScript and no YAML.
 [App Rollout via S3 Data Change](kubernetes-ts-s3-rollout) | Enable a change in data in S3 to trigger a rollout of an nginx deployment.
 [Sock Shop](kubernetes-ts-sock-shop) | Deploy a version of the standard Sock Shop microservices reference app.
 [Staged App Rollout](kubernetes-ts-staged-rollout-with-prometheus) | Create a staged rollout gated by checking that the P90 response time reported by Prometheus is less than some amount. 
@@ -273,7 +273,7 @@ Example		| Description |
 ----- 		| --------- |
 [URL Shortener - Cache and HttpServer](cloud-ts-url-shortener-cache-http) | Create a simple URL shortener SPA that uses the high-level `cloud.Table` and `cloud.HttpServer` components.
 [URL Shortener - Cache](cloud-ts-url-shortener-cache) | Create a simple URL shortener SPA that uses the high-level `cloud.Table` and `cloud.API` components.
-[URL Shortener](cloud-ts-url-shortener) | Create a complete URL shortener web application using the high-level `cloud.Table` and `cloud.HttpServer` components.
+[URL Shortener](cloud-ts-url-shortener) | Create a complete URL shortener web application that uses the high-level `cloud.Table` and `cloud.HttpServer` components.
 [Voting App](cloud-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
 
 ### Javascript
