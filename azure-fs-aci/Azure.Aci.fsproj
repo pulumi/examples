@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Pulumi.FSharp" Version="1.5.2-preview" />
+    <PackageReference Include="Pulumi.Azure" Version="1.4.0-preview" />
+    <PackageReference Include="Pulumi.Docker" Version="1.2.0-preview" />
+  </ItemGroup>
+
+</Project>
