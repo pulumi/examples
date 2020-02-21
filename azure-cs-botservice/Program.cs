@@ -57,7 +57,7 @@ class Program
                 Content = new FileArchive("bot/publish")
             });
 
-            var codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount);
+            var codeBlobUrl = Storage.SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount);
 
             var appInsights = new Insights("ai", new InsightsArgs
             {

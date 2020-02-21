@@ -14,7 +14,7 @@ public static class Containers
     {
         // Read a list of target locations from the config file:
         // Expecting a comma-separated list, e.g., "westus,eastus,westeurope"
-        var locations = new Config().Require("locations").Split(",");
+        var locations = new Pulumi.Config().Require("locations").Split(",");
 
         var resourceGroup = new ResourceGroup("cosmosaci-rg", new ResourceGroupArgs { Location = locations[0] });
 

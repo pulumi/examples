@@ -137,24 +137,18 @@ public class CosmosApp : ComponentResource
             {
                 ResourceGroupName = resourceGroup.Name,
                 TrafficRoutingMethod = "Performance",
-                DnsConfigs =
+                DnsConfig = new TrafficManagerProfileDnsConfigArgs
                 {
-                    new TrafficManagerProfileDnsConfigsArgs
-                    {
-                        // Subdomain must be globally unique, so we default it with the full resource group name
-                        RelativeName = Output.Format($"{name}{resourceGroup.Name}"),
-                        Ttl = 60,
-                    }
+                    // Subdomain must be globally unique, so we default it with the full resource group name
+                    RelativeName = Output.Format($"{name}{resourceGroup.Name}"),
+                    Ttl = 60,
                 },
-                MonitorConfigs =
+                MonitorConfig = new TrafficManagerProfileMonitorConfigArgs
                 {
-                    new TrafficManagerProfileMonitorConfigsArgs
-                    {
-                        Protocol = "HTTP",
-                        Port = 80,
-                        Path = "/api/ping",
-                    }
-                },
+                    Protocol = "HTTP",
+                    Port = 80,
+                    Path = "/api/ping",
+                }
             },
             parentOptions);
 
