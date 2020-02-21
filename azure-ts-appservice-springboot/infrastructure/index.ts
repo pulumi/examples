@@ -40,12 +40,12 @@ const appService = new azure.appservice.AppService(customImage, {
     resourceGroupName: resourceGroup.name,
     appServicePlanId: appServicePlan.id,
     appSettings: {
-      WEBSITES_ENABLE_APP_SERVICE_STORAGE: "false",
-      DOCKER_REGISTRY_SERVER_URL: pulumi.interpolate`https://${registry.loginServer}`,
-      DOCKER_REGISTRY_SERVER_USERNAME: registry.adminUsername,
-      DOCKER_REGISTRY_SERVER_PASSWORD: registry.adminPassword,
-      // Our custom image exposes port 9000.
-      WEBSITES_PORT: "9000",
+        WEBSITES_ENABLE_APP_SERVICE_STORAGE: "false",
+        DOCKER_REGISTRY_SERVER_URL: pulumi.interpolate`https://${registry.loginServer}`,
+        DOCKER_REGISTRY_SERVER_USERNAME: registry.adminUsername,
+        DOCKER_REGISTRY_SERVER_PASSWORD: registry.adminPassword,
+        // Our custom image exposes port 9000.
+        WEBSITES_PORT: "9000",
     },
     siteConfig: {
         alwaysOn: true,
