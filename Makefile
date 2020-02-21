@@ -19,6 +19,11 @@ only_test:
 # The travis_* targets are entrypoints for CI.
 .PHONY: travis_cron travis_push travis_pull_request travis_api
 travis_cron: all
-travis_push: all
+travis_push: all theia
 travis_pull_request: all
 travis_api: all
+
+.PHONY: theia
+theia: 
+	docker build . -t pulumi/theia:latest
+	docker push pulumi/theia:latest
