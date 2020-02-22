@@ -1,0 +1,14 @@
+name: static-website
+description: Static website example
+runtime: python
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    static-website:targetDomain:
+      description: The domain to serve the website at (e.g. www.example.com)
+    static-website:pathToWebsiteContents:
+      description: Relative path to the website's contents (e.g. the `./www` folder)
+    static-website:certificateArn:
+      description: (Optional) ACM certificate ARN for the target domain; must be in the us-east-1 region. If omitted, a certificate will be created.

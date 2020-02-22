@@ -13,68 +13,82 @@ This sample uses the following AWS products:
 
 ## Getting Started
 
-Install prerequisites with:
-
-```bash
-npm install
-```
-
 Configure the Pulumi program. There are several configuration settings that need to be
 set:
 
-- `certificateArn` - ACM certificate to serve content from. ACM certificate creation needs to be
-  done manually. Also, any certificate used to secure a CloudFront distribution must be created
-  in the `us-east-1` region.
 - `targetDomain` - The domain to serve the website at (e.g. www.example.com). It is assumed that
   the parent domain (example.com) is a Route53 Hosted Zone in the AWS account you are running the
   Pulumi program in.
 - `pathToWebsiteContents` - Directory of the website's contents. e.g. the `./www` folder.
 
-## How it works
+## Deploying and running the program
 
-The Pulumi program constructs the S3 bucket, and constructs an `aws.s3.BucketObject` object
-for every file in `config.pathToWebsiteContents`. This is essentially tracks every file on
-your static website as a Pulumi-managed resource. So a subsequent `pulumi up` where the
-file's contents have changed will result in an update to the `aws.s3.BucketObject` resource.
+Note: some values in this example will be different from run to run.  These values are indicated
+with `***`.
 
-Note how the `contentType` property is set by calling the NPM package [mime](https://www.npmjs.com/package/mime).
+1.  Create a new stack:
 
-```typescript
-const contentFile = new aws.s3.BucketObject(
-    relativeFilePath,
-    {
-        key: relativeFilePath,
+    ```bash
+    $ pulumi stack init website-testing
+    ```
 
-        acl: "public-read",
-        bucket: contentBucket,
-        contentType: mime.getType(filePath) || undefined,
-        source: new pulumi.asset.FileAsset(filePath),
-    });
-```
+1.  Set the AWS region:
 
-The Pulumi program then creates an `aws.cloudfront.Distribution` resource, which will serve
-the contents of the S3 bucket. The CloudFront distribution can be configured to handle
-things like custom error pages, cache TTLs, and so on.
+    ```bash
+    $ pulumi config set aws:region us-west-2
+    ```
 
-Finally, an `aws.route53.Record` is created to associate the domain name (www.example.com)
-with the CloudFront distribution (which would be something like d3naiyyld9222b.cloudfront.net).
+1.  Create a Python virtualenv, activate it, and install dependencies:
 
-```typescript
-return new aws.route53.Record(
-        targetDomain,
-        {
-            name: domainParts.subdomain,
-            zoneId: hostedZone.zoneId,
-            type: "A",
-            aliases: [
-                {
-                    name: distribution.domainName,
-                    zoneId: distribution.hostedZoneId,
-                    evaluateTargetHealth: true,
-                },
-            ],
-        });
-```
+    ```bash
+    $ virtualenv -p python3 venv
+    $ source venv/bin/activate
+    $ pip3 install -r requirements.txt
+    ```
+
+1.  Run `pulumi up` to preview and deploy changes.  After the preview is shown you will be
+    prompted if you want to continue or not.
+
+    ```bash
+    $ pulumi up
+    Previewing update (example):
+        Type                              Name                                      Plan
+    +   pulumi:pulumi:Stack               static-website-example                    create
+    +   ├─ pulumi:providers:aws           east                                      create
+    +   ├─ aws:s3:Bucket                  requestLogs                               create
+    +   ├─ aws:s3:Bucket                  contentBucket                             create
+    +   │  ├─ aws:s3:BucketObject         404.html                                  create
+    +   │  └─ aws:s3:BucketObject         index.html                                create
+    +   ├─ aws:acm:Certificate            certificate                               create
+    +   ├─ aws:route53:Record             ***-validation                            create
+    +   ├─ aws:acm:CertificateValidation  certificateValidation                     create
+    +   ├─ aws:cloudfront:Distribution    cdn                                       create
+    +   └─ aws:route53:Record             ***                                       create
+    ```
+
+1.  To see the resources that were created, run `pulumi stack output`:
+
+    ```bash
+    $ pulumi stack output
+    Current stack outputs (4):
+        OUTPUT                           VALUE
+        cloudfront_domain                ***.cloudfront.net
+        content_bucket_url               s3://***
+        content_bucket_website_endpoint  ***.s3-website-us-west-2.amazonaws.com
+        target_domain_endpoint           https://***/
+    ```
+
+1.  To see that the S3 objects exist, you can either use the AWS Console or the AWS CLI:
+
+    ```bash
+    $ aws s3 ls $(pulumi stack output content_bucket_url)
+    2020-02-21 16:58:48        262 404.html
+    2020-02-21 16:58:48        394 index.html
+    ```
+
+1.  Open a browser to the target domain endpoint from above to see your beautiful static website. (Since we don't wait for the CloudFront distribution to completely sync, you may have to wait a few minutes)
+
+1.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
 
 ## Troubleshooting
 
@@ -95,6 +109,7 @@ Sometimes updating the CloudFront distribution will fail with:
 "PreconditionFailed: The request failed because it didn't meet the preconditions in one or more
 request-header fields."
 ```
+
 This is caused by CloudFront confirming the ETag of the resource before applying any updates.
 ETag is essentially a "version", and AWS is rejecting any requests that are trying to update
 any version but the "latest".
