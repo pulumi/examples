@@ -95,7 +95,6 @@ Sometimes updating the CloudFront distribution will fail with:
 "PreconditionFailed: The request failed because it didn't meet the preconditions in one or more
 request-header fields."
 ```
-
 This is caused by CloudFront confirming the ETag of the resource before applying any updates.
 ETag is essentially a "version", and AWS is rejecting any requests that are trying to update
 any version but the "latest".
@@ -103,8 +102,7 @@ any version but the "latest".
 This error will occurr when the state of the ETag get out of sync between the Pulumi Service
 and AWS. (Which can happen when inspecting the CloudFront distribution in the AWS console.)
 
-This will get fixed in Pulumi soon, but for the time being you can find workaround steps in
-the [issue on GitHub](https://github.com/pulumi/pulumi/issues/1449).
+You can fix this by running `pulumi refresh` to pickup the newer ETag values.
 
 ## Deployment Speed
 

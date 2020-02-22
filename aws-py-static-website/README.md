@@ -34,13 +34,13 @@ with `***`.
 
 1.  Set the AWS region:
 
-    ```
+    ```bash
     $ pulumi config set aws:region us-west-2
     ```
 
 1.  Create a Python virtualenv, activate it, and install dependencies:
 
-    ```
+    ```bash
     $ virtualenv -p python3 venv
     $ source venv/bin/activate
     $ pip3 install -r requirements.txt
@@ -117,8 +117,7 @@ any version but the "latest".
 This error will occurr when the state of the ETag get out of sync between the Pulumi Service
 and AWS. (Which can happen when inspecting the CloudFront distribution in the AWS console.)
 
-This will get fixed in Pulumi soon, but for the time being you can find workaround steps in
-the [issue on GitHub](https://github.com/pulumi/pulumi/issues/1449).
+You can fix this by running `pulumi refresh` to pickup the newer ETag values.
 
 ## Deployment Speed
 
