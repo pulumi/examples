@@ -3,7 +3,7 @@
     "theia": {
         "frontend": {
             "config": {
-                "applicationName": "Theia JavaScript/TypeScript Example",
+                "applicationName": "Try Pulumi",
                 "preferences": {
                     "files.enableTrash": false
                 }
