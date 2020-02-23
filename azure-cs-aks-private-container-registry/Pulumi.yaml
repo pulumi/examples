@@ -1,0 +1,3 @@
+name: azure-cs-aks-private-container-registry
+description: Creates an Azure Kubernetes Service (AKS) cluster and deploys a sample .NET application after bulding & pushing it to a private Azure Container Registry.
+runtime: dotnet
