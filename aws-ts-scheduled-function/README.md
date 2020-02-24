@@ -2,10 +2,10 @@
 
 # Scheduled Function on AWS
 
-A simple function in AWS that executes based on a schedule using Cloud Watch.
+A simple function in AWS that executes based on a schedule using CloudWatch.
 
 In this example, an S3 Bucket will be created. A function will run every Friday at 11:00pm UTC
-that will delete all the objects it contains.
+that will delete all of the objects it contains.
 
 ## Deploying and running the program
 
