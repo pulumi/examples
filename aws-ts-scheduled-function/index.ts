@@ -1,6 +1,7 @@
 import * as aws from "@pulumi/aws";
 import { ObjectIdentifier } from "aws-sdk/clients/s3";
 
+
 // Create an AWS resource (S3 Bucket)
 const trashBucket = new aws.s3.Bucket("trash");
 
@@ -23,7 +24,8 @@ const emptyTrash: aws.cloudwatch.EventRuleEventHandler = async (
       Bucket: bucket,
       Delete: { Objects: objects, Quiet: false }
     })
-    .promise();
+    .promise()
+    .catch(error => console.log(error));
   console.log(
     `Deleted ${Contents.length} item${
       Contents.length === 1 ? "" : "s"
