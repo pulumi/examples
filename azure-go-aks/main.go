@@ -25,68 +25,68 @@ func main() {
 			return err
 		}
 
-		adSpArgs := &azuread.ServicePrincipalArgs{
+		adSpArgs := azuread.ServicePrincipalArgs{
 			ApplicationId: adApp.ApplicationId,
 		}
-		adSp, err := azuread.NewServicePrincipal(ctx, "aksSp", adSpArgs)
+		adSp, err := azuread.NewServicePrincipal(ctx, "aksSp", &adSpArgs)
 		if err != nil {
 			return err
 		}
 
 		// Generate a random password.
-		passwordArgs := &random.RandomPasswordArgs{
+		passwordArgs := random.RandomPasswordArgs{
 			Length:  pulumi.Int(20),
 			Special: pulumi.Bool(true),
 		}
-		password, err := random.NewRandomPassword(ctx, "password", passwordArgs)
+		password, err := random.NewRandomPassword(ctx, "password", &passwordArgs)
 		if err != nil {
 			return err
 		}
 
 		// Create the Service Principal Password.
-		adSpPasswordArgs := &azuread.ServicePrincipalPasswordArgs{
+		adSpPasswordArgs := azuread.ServicePrincipalPasswordArgs{
 			ServicePrincipalId: adSp.ID(),
 			Value:              password.Result,
 			EndDate:            pulumi.String("2099-01-01T00:00:00Z"),
 		}
-		adSpPassword, err := azuread.NewServicePrincipalPassword(ctx, "aksSpPassword", adSpPasswordArgs)
+		adSpPassword, err := azuread.NewServicePrincipalPassword(ctx, "aksSpPassword", &adSpPasswordArgs)
 		if err != nil {
 			return err
 		}
 
 		// Create a Virtual Network.
-		vnetArgs := &network.VirtualNetworkArgs{
+		vnetArgs := network.VirtualNetworkArgs{
 			ResourceGroupName: resourceGroup.Name,
 			AddressSpaces:     pulumi.StringArray{pulumi.String("10.2.0.0/16")},
 		}
-		vnet, err := network.NewVirtualNetwork(ctx, "vnet", vnetArgs)
+		vnet, err := network.NewVirtualNetwork(ctx, "vnet", &vnetArgs)
 		if err != nil {
 			return err
 		}
 
 		// Create a subnet.
-		subnetArgs := &network.SubnetArgs{
+		subnetArgs := network.SubnetArgs{
 			ResourceGroupName:  resourceGroup.Name,
 			VirtualNetworkName: vnet.Name,
 			AddressPrefix:      pulumi.String("10.2.1.0/24"),
 		}
-		subnet, err := network.NewSubnet(ctx, "subnet", subnetArgs)
+		subnet, err := network.NewSubnet(ctx, "subnet", &subnetArgs)
 		if err != nil {
 			return err
 		}
 
 		// Generate an SSH key.
-		sshArgs := &tls.PrivateKeyArgs{
+		sshArgs := tls.PrivateKeyArgs{
 			Algorithm: pulumi.String("RSA"),
 			RsaBits:   pulumi.Int(4096),
 		}
-		sshKey, err := tls.NewPrivateKey(ctx, "ssh-key", sshArgs)
+		sshKey, err := tls.NewPrivateKey(ctx, "ssh-key", &sshArgs)
 		if err != nil {
 			return err
 		}
 
 		// Create our cluster specifications.
-		defaultNodePoolArgs := &containerservice.KubernetesClusterDefaultNodePoolArgs{
+		defaultNodePoolArgs := containerservice.KubernetesClusterDefaultNodePoolArgs{
 			Name:         pulumi.String("aksagentpool"),
 			NodeCount:    pulumi.Int(3),
 			VmSize:       pulumi.String("Standard_B2s"),
@@ -94,23 +94,23 @@ func main() {
 			VnetSubnetId: subnet.ID(),
 		}
 
-		linuxProfileArgs := &containerservice.KubernetesClusterLinuxProfileArgs{
+		linuxProfileArgs := containerservice.KubernetesClusterLinuxProfileArgs{
 			AdminUsername: pulumi.String("aksuser"),
-			SshKey: &containerservice.KubernetesClusterLinuxProfileSshKeyArgs{
+			SshKey: containerservice.KubernetesClusterLinuxProfileSshKeyArgs{
 				KeyData: sshKey.PublicKeyOpenssh,
 			},
 		}
 
-		spArgs := &containerservice.KubernetesClusterServicePrincipalArgs{
+		spArgs := containerservice.KubernetesClusterServicePrincipalArgs{
 			ClientId:     adApp.ApplicationId,
 			ClientSecret: adSpPassword.Value,
 		}
 
-		roleArgs := &containerservice.KubernetesClusterRoleBasedAccessControlArgs{
+		roleArgs := containerservice.KubernetesClusterRoleBasedAccessControlArgs{
 			Enabled: pulumi.Bool(true),
 		}
 
-		networkArgs := &containerservice.KubernetesClusterNetworkProfileArgs{
+		networkArgs := containerservice.KubernetesClusterNetworkProfileArgs{
 			NetworkPlugin:    pulumi.String("azure"),
 			DnsServiceIp:     pulumi.String("10.2.2.254"),
 			ServiceCidr:      pulumi.String("10.2.2.0/24"),
@@ -118,17 +118,17 @@ func main() {
 		}
 
 		// Allocate an AKS cluster.
-		clusterArgs := &containerservice.KubernetesClusterArgs{
+		clusterArgs := containerservice.KubernetesClusterArgs{
 			ResourceGroupName:      resourceGroup.Name,
 			DefaultNodePool:        defaultNodePoolArgs,
 			DnsPrefix:              pulumi.String("sampleaks"),
 			LinuxProfile:           linuxProfileArgs,
 			ServicePrincipal:       spArgs,
-			KubernetesVersion:      pulumi.String("1.15.4"),
+			KubernetesVersion:      pulumi.String("1.15.5"),
 			RoleBasedAccessControl: roleArgs,
 			NetworkProfile:         networkArgs,
 		}
-		cluster, err := containerservice.NewKubernetesCluster(ctx, "aksCluster", clusterArgs)
+		cluster, err := containerservice.NewKubernetesCluster(ctx, "aksCluster", &clusterArgs)
 		if err != nil {
 			return err
 		}
