@@ -21,6 +21,32 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestAccAwsGoS3Folder(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-s3-folder"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello, world!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsGoWebserver(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-webserver"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPHelloWorld(t, stack.Outputs["publicIp"], nil)
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsJsContainers(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
@@ -433,6 +459,23 @@ func TestAccAzureFsAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-fs-appservice"),
+			Config: map[string]string{
+				"sqlPassword": "2@Password@2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Azure App Service!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAzureGoAppService(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-go-appservice"),
 			Config: map[string]string{
 				"sqlPassword": "2@Password@2",
 			},
