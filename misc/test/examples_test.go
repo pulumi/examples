@@ -964,6 +964,21 @@ func TestAccLinodeJsWebserver(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccGcpGoFunctions(t *testing.T) {
+	test := getGoogleBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-functions"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["function"].(string)
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello World!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccGcpJsWebserver(t *testing.T) {
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
@@ -1065,7 +1080,7 @@ func TestAccGcpTsServerlessRaw(t *testing.T) {
 func TestAccGcpTsCloudRun(t *testing.T) {
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "gcp-ts-cloudrun"),
+			Dir:           path.Join(getCwd(t), "..", "..", "gcp-ts-cloudrun"),
 			RunUpdateTest: false,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["rubyUrl"].(string)
@@ -1077,7 +1092,6 @@ func TestAccGcpTsCloudRun(t *testing.T) {
 
 	integration.ProgramTest(t, &test)
 }
-
 
 func TestAccPacketPyWebserver(t *testing.T) {
 	test := getBaseOptions(t).
