@@ -25,5 +25,6 @@ travis_api: all
 
 .PHONY: theia
 theia: 
+	docker pull pulumi/pulumi:latest
 	docker build . -t pulumi/theia:latest
 	docker push pulumi/theia:latest
