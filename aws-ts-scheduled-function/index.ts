@@ -1,3 +1,6 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
 import { ObjectIdentifier } from "aws-sdk/clients/s3";
 
@@ -7,7 +10,7 @@ const trashBucket = new aws.s3.Bucket("trash");
 
 // A handler function that will list objects in the bucket and bulk delete them
 const emptyTrash: aws.cloudwatch.EventRuleEventHandler = async (
-  event: aws.cloudwatch.EventRuleEvent
+  event: aws.cloudwatch.EventRuleEvent,
 ) => {
   const s3Client = new aws.sdk.S3();
   const bucket = trashBucket.id.get();
@@ -22,15 +25,14 @@ const emptyTrash: aws.cloudwatch.EventRuleEventHandler = async (
   await s3Client
     .deleteObjects({
       Bucket: bucket,
-      Delete: { Objects: objects, Quiet: false }
+      Delete: { Objects: objects, Quiet: false },
     })
     .promise()
     .catch(error => console.log(error));
   console.log(
     `Deleted ${Contents.length} item${
-      Contents.length === 1 ? "" : "s"
-    } from ${bucket}.`
-  );
+    Contents.length === 1 ? "" : "s"
+    } from ${bucket}.`);
 };
 
 // Schedule the function to run every Friday at 11:00pm UTC (6:00pm EST)
@@ -39,7 +41,7 @@ const emptyTrash: aws.cloudwatch.EventRuleEventHandler = async (
 const emptyTrashSchedule: aws.cloudwatch.EventRuleEventSubscription = aws.cloudwatch.onSchedule(
   "emptyTrash",
   "cron(0 23 ? * FRI *)",
-  emptyTrash
+  emptyTrash,
 );
 
 // Export the name of the bucket
