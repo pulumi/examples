@@ -33,6 +33,12 @@ To deploy your infrastructure, follow the below steps.
     $ pulumi config set azure:location westus
     ```
 
+1. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
+
+    ```bash
+    $ dep ensure
+    ```
+
 1. Stand up the AKS cluster:
 
     > **Note**: Due to an [issue](https://github.com/terraform-providers/terraform-provider-azuread/issues/156) in Azure Terraform Provider, the
