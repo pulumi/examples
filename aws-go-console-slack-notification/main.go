@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 
+	AWS "github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/pulumi/pulumi-aws/sdk/go/aws"
 	"github.com/pulumi/pulumi-aws/sdk/go/aws/cloudtrail"
 	"github.com/pulumi/pulumi-aws/sdk/go/aws/cloudwatch"
@@ -15,12 +18,21 @@ import (
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		config := config.New(ctx, "")
-		var regions []string
-		config.RequireObject("regions", &regions)
+		svc := ec2.New(session.New())
+		result, err := svc.DescribeRegions(&ec2.DescribeRegionsInput{
+			Filters: []*ec2.Filter{
+				{
+					Name:   AWS.String("opt-in-status"),
+					Values: []*string{AWS.String("opt-in-not-required"), AWS.String("opted-in")},
+				},
+			},
+		})
+		if err != nil {
+			return err
+		}
 
-		for _, regionID := range regions {
-			err := region(ctx, regionID)
+		for _, region := range result.Regions {
+			err := deployRegion(ctx, *region.RegionName)
 			if err != nil {
 				return err
 			}
@@ -30,7 +42,7 @@ func main() {
 	})
 }
 
-func region(ctx *pulumi.Context, regionID string) error {
+func deployRegion(ctx *pulumi.Context, RegionName string) error {
 
 	config := config.New(ctx, "")
 	slackWebhookURL := config.Require("slackWebhookURL")
@@ -38,10 +50,10 @@ func region(ctx *pulumi.Context, regionID string) error {
 	slackMessageText := config.Get("slackMessageText")
 
 	// use the same logical name for all resources - e.g. '<stack-name>-<region-id>'
-	resourceName := fmt.Sprintf("%s-%s", ctx.Stack(), regionID)
+	resourceName := fmt.Sprintf("%s-%s", ctx.Stack(), RegionName)
 
-	awsProvider, err := aws.NewProvider(ctx, regionID, &aws.ProviderArgs{
-		Region: pulumi.String(regionID),
+	awsProvider, err := aws.NewProvider(ctx, RegionName, &aws.ProviderArgs{
+		Region: pulumi.String(RegionName),
 	})
 	if err != nil {
 		return err
