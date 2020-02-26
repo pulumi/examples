@@ -52,7 +52,7 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 	// use the same logical name for all resources - e.g. '<stack-name>-<region-name>'
 	resourceName := fmt.Sprintf("%s-%s", ctx.Stack(), regionName)
 
-	awsProvider, err := aws.NewProvider(ctx, regionName, &aws.ProviderArgs{
+	awsProvider, err := aws.NewProvider(ctx, resourceName, &aws.ProviderArgs{
 		Region: pulumi.String(regionName),
 	})
 	if err != nil {
@@ -190,8 +190,6 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 	if err != nil {
 		return err
 	}
-
-	// ctx.Export("lambda", function.Arn)
 
 	return nil
 }
