@@ -39,26 +39,11 @@ func handler(ctx context.Context, event events.CloudWatchEvent) {
 		Attachments: []slackMessageAttachment{
 			slackMessageAttachment{
 				Fields: []slackMessageAttachmentField{
-					slackMessageAttachmentField{
-						Title: "AWS Account",
-						Value: eventDetail.UserIdentity.AWSAccountID,
-						Short: true,
-					},
-					slackMessageAttachmentField{
-						Title: "Region",
-						Value: eventDetail.AWSRegion,
-						Short: true,
-					},
-					slackMessageAttachmentField{
-						Title: "User",
-						Value: eventDetail.UserIdentity.UserName,
-						Short: true,
-					},
-					slackMessageAttachmentField{
-						Title: "Event Name",
-						Value: eventDetail.EventName,
-						Short: true,
-					},
+					getSlackMessageAttachmentField("AWS Account", eventDetail.UserIdentity.AWSAccountID),
+					getSlackMessageAttachmentField("Region", eventDetail.AWSRegion),
+					getSlackMessageAttachmentField("Event Source", eventDetail.EventSource),
+					getSlackMessageAttachmentField("Event Name", eventDetail.EventName),
+					getSlackMessageAttachmentField("User", eventDetail.UserIdentity.UserName),
 				},
 			},
 		},
@@ -75,9 +60,18 @@ func handler(ctx context.Context, event events.CloudWatchEvent) {
 	}
 }
 
+func getSlackMessageAttachmentField(title string, value string) slackMessageAttachmentField {
+	return slackMessageAttachmentField{
+		Title: title,
+		Value: fmt.Sprintf("`%s`", value),
+		Short: true,
+	}
+}
+
 type eventDetail struct {
 	UserIdentity userIdentity `json:"userIdentity"`
 	UserAgent    string       `json:"userAgent"`
+	EventSource  string       `json:"eventSource"`
 	EventName    string       `json:"eventName"`
 	AWSRegion    string       `json:"awsRegion"`
 }
