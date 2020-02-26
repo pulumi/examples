@@ -32,7 +32,7 @@ func main() {
 		}
 
 		for _, region := range result.Regions {
-			err := deployRegion(ctx, *region.RegionName)
+			err := upRegion(ctx, *region.RegionName)
 			if err != nil {
 				return err
 			}
@@ -42,18 +42,18 @@ func main() {
 	})
 }
 
-func deployRegion(ctx *pulumi.Context, RegionName string) error {
+func upRegion(ctx *pulumi.Context, regionName string) error {
 
 	config := config.New(ctx, "")
 	slackWebhookURL := config.Require("slackWebhookURL")
 	slackMessageUsername := config.Get("slackMessageUsername")
 	slackMessageText := config.Get("slackMessageText")
 
-	// use the same logical name for all resources - e.g. '<stack-name>-<region-id>'
-	resourceName := fmt.Sprintf("%s-%s", ctx.Stack(), RegionName)
+	// use the same logical name for all resources - e.g. '<stack-name>-<region-name>'
+	resourceName := fmt.Sprintf("%s-%s", ctx.Stack(), regionName)
 
-	awsProvider, err := aws.NewProvider(ctx, RegionName, &aws.ProviderArgs{
-		Region: pulumi.String(RegionName),
+	awsProvider, err := aws.NewProvider(ctx, regionName, &aws.ProviderArgs{
+		Region: pulumi.String(regionName),
 	})
 	if err != nil {
 		return err
