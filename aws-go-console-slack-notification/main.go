@@ -104,11 +104,13 @@ func deployRegion(ctx *pulumi.Context, RegionName string) error {
 		S3BucketName: bucket.Bucket,
 		EventSelectors: cloudtrail.TrailEventSelectorArray{
 			cloudtrail.TrailEventSelectorArgs{
-				IncludeManagementEvents: pulumi.Bool(true),
-				ReadWriteType:           pulumi.String("WriteOnly"),
+				ReadWriteType: pulumi.String("WriteOnly"),
 			},
 		},
-	}, pulumi.DependsOn([]pulumi.Resource{bucket, bucketPolicy}), pulumi.Parent(bucket), pulumi.Provider(awsProvider))
+	},
+		// Have to ignore changes to eventSelectors until https://github.com/terraform-providers/terraform-provider-aws/issues/11712 is resolved.
+		pulumi.IgnoreChanges([]string{"eventSelectors"}),
+		pulumi.DependsOn([]pulumi.Resource{bucket, bucketPolicy}), pulumi.Parent(bucket), pulumi.Provider(awsProvider))
 	if err != nil {
 		return err
 	}
