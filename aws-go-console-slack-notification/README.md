@@ -3,9 +3,10 @@
 This example deploys a Lambda function and relevant CloudTrail and CloudWatch resources to send a 
 Slack notification for any resource operation that is performed via the AWS Console.
 
-Note: This application sets up the necessary infrastructure for a _single_ AWS region. Create a 
-stack for each region you want to monitor and repeat the steps below to get notifications for 
-multiple regions.
+Note: This application sets up the necessary infrastructure across _each_ AWS region in your 
+account that is `opt-in-not-required` or `opted-in`. The Pulumi application uses the 
+[DescribeRegions](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeRegions.html) API
+via [aws-sdk-go](https://github.com/aws/aws-sdk-go) to query for available regions.
 
 ## Deploying the App
 
@@ -57,7 +58,6 @@ After cloning this repo, run these commands from the working directory:
 1. Set the required configuration variables for this program:
 
 	```bash
-	pulumi config set aws:region us-east-1
 	pulumi config set slackWebhookURL 'YOUR_SLACK_WEBHOOK_URL'
 	```
 
