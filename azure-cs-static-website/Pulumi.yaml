@@ -1,0 +1,3 @@
+name: azure-cs-static-website
+runtime: dotnet
+description: Demo to show how to configure static site hosting in Azure storage using Azure storage Sdk
