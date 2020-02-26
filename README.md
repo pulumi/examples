@@ -189,6 +189,7 @@ Example		| Description |
 [Cosmos App Component](azure-cs-cosmosapp-component) | Use a reusable component to create globally-distributed applications with Azure Cosmos DB.
 [Functions - Raw](azure-cs-functions-raw) | Deploy a function to Azure Functions created from raw deployment packages in C#.
 [MSI Key Vault RBAC](azure-cs-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
+[Static Website](azure-cs-static-website) | Deploy a Static Website to Azure Storage.
 [Web Server](azure-cs-webserver) | Deploy a Virtual Machine and start an HTTP server on it.
 
 ### F#
