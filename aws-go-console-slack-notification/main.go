@@ -19,9 +19,17 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 
-		regions, err := getRegions()
-		if err != nil {
-			return err
+		config := config.New(ctx, "")
+
+		var regions []string
+		config.GetObject("regions", &regions)
+
+		if len(regions) == 0 {
+			var err error
+			regions, err = getRegions()
+			if err != nil {
+				return err
+			}
 		}
 
 		for _, region := range regions {
