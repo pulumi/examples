@@ -18,21 +18,14 @@ import (
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		svc := ec2.New(session.New())
-		result, err := svc.DescribeRegions(&ec2.DescribeRegionsInput{
-			Filters: []*ec2.Filter{
-				{
-					Name:   AWS.String("opt-in-status"),
-					Values: []*string{AWS.String("opt-in-not-required"), AWS.String("opted-in")},
-				},
-			},
-		})
+
+		regions, err := getRegions()
 		if err != nil {
 			return err
 		}
 
-		for _, region := range result.Regions {
-			err := upRegion(ctx, *region.RegionName)
+		for _, region := range regions {
+			err := upRegion(ctx, region)
 			if err != nil {
 				return err
 			}
@@ -42,12 +35,35 @@ func main() {
 	})
 }
 
+func getRegions() ([]string, error) {
+	svc := ec2.New(session.New())
+	result, err := svc.DescribeRegions(&ec2.DescribeRegionsInput{
+		Filters: []*ec2.Filter{
+			{
+				Name:   AWS.String("opt-in-status"),
+				Values: []*string{AWS.String("opt-in-not-required"), AWS.String("opted-in")},
+			},
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	regions := make([]string, len(result.Regions))
+	for i, region := range result.Regions {
+		regions[i] = *region.RegionName
+	}
+
+	return regions, nil
+}
+
 func upRegion(ctx *pulumi.Context, regionName string) error {
 
 	config := config.New(ctx, "")
 	slackWebhookURL := config.Require("slackWebhookURL")
 	slackMessageUsername := config.Get("slackMessageUsername")
 	slackMessageText := config.Get("slackMessageText")
+	trailObjectExpirationInDays := config.GetInt("trailObjectExpirationInDays")
 
 	// use the same logical name for all resources - e.g. '<stack-name>-<region-name>'
 	resourceName := fmt.Sprintf("%s-%s", ctx.Stack(), regionName)
@@ -64,8 +80,21 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 		return err
 	}
 
+	var lifecycleRules s3.BucketLifecycleRuleArray
+	if trailObjectExpirationInDays != 0 {
+		lifecycleRules = s3.BucketLifecycleRuleArray{
+			s3.BucketLifecycleRuleArgs{
+				Enabled: pulumi.Bool(true),
+				Expiration: s3.BucketLifecycleRuleExpirationArgs{
+					Days: pulumi.Int(trailObjectExpirationInDays),
+				},
+			},
+		}
+	}
+
 	bucket, err := s3.NewBucket(ctx, resourceName, &s3.BucketArgs{
-		ForceDestroy: pulumi.Bool(true),
+		ForceDestroy:   pulumi.Bool(true),
+		LifecycleRules: lifecycleRules,
 	}, pulumi.Provider(awsProvider))
 	if err != nil {
 		return err
@@ -108,7 +137,7 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 			},
 		},
 	},
-		// Have to ignore changes to eventSelectors until https://github.com/terraform-providers/terraform-provider-aws/issues/11712 is resolved.
+		// Ignore changes to eventSelectors until https://github.com/terraform-providers/terraform-provider-aws/issues/11712 is resolved.
 		pulumi.IgnoreChanges([]string{"eventSelectors"}),
 		pulumi.DependsOn([]pulumi.Resource{bucket, bucketPolicy}), pulumi.Parent(bucket), pulumi.Provider(awsProvider))
 	if err != nil {
