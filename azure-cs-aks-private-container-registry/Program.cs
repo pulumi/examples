@@ -130,7 +130,7 @@ class Program
                 AdminEnabled = true
             });
 
-            // Build & push the ample application to the registry.
+            // Build & push the sample application to the registry.
             var applicationName = "sample-application";
             var imageName = registry.LoginServer.Apply(value => $"{value}/{applicationName}");
 
