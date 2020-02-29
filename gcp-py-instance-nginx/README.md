@@ -6,29 +6,33 @@ Starting point for building the Pulumi nginx server sample in Google Cloud Platf
 
 ## Running the App
 
-1.  Create a new stack:
+1. Create a new stack:
 
-    ```
+    ```bash
     $ pulumi stack init gcp-instance-nginx
     ```
 
-2. Configure Python environment:
-    ```
-    virtualenv -p python3 venv
-    source venv/bin/activate
-    pip install pulumi_gcp
+2. Create a Python virtualenv, activate it, and install dependencies:
+
+    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip3 install -r requirements.txt
     ```
 
-3.  Configure the project:
+3. Configure the project:
 
-    ```
+    ```bash
     $ export GOOGLE_PROJECT=cncf-230209; export GOOGLE_REGION=asia-east1; export GOOGLE_ZONE=asia-east1-a;
     $ export GOOGLE_CREDENTIALS=YOURGCPCREDENTIALS
     ```
 
-4.  Run `pulumi up` to preview and deploy changes:
+4. Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```bash
     Previewing update (gcp-instance-nginx):
 
          Type                     Name                                   Plan
@@ -80,9 +84,9 @@ Starting point for building the Pulumi nginx server sample in Google Cloud Platf
     Duration: 51s
     ```
 
-5.  Curl the HTTP server:
+5. Curl the HTTP server:
 
-    ```
+    ```bash
     $ curl $(pulumi stack output external_ip)
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
@@ -204,7 +208,7 @@ Starting point for building the Pulumi nginx server sample in Google Cloud Platf
 
 6. Destroy the created resources:
 
-    ```
+    ```bash
     $ pulumi destroy
     Previewing destroy (gcp-instance-nginx):
 
@@ -236,7 +240,7 @@ Starting point for building the Pulumi nginx server sample in Google Cloud Platf
 
 7. Destroy the stack:
 
-    ```
+    ```bash
     $ pulumi stack rm
     This will permanently remove the 'gcp-instance-nginx' stack!
     Please confirm that this is what you'd like to do by typing ("gcp-instance-nginx"): gcp-instance-nginx

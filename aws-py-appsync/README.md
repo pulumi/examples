@@ -6,31 +6,32 @@ This example shows how to setup a basic GraphQL endpoint in AWS AppSync. The end
 
 ## Deploying and running the Pulumi App
 
-1.  Create a new stack:
+1. Create a new stack:
 
     ```bash
     $ pulumi stack init dev
     ```
 
-1.  Set the AWS region:
+1. Set the AWS region:
 
-    ```
+    ```bash
     $ pulumi config set aws:region us-east-2
     ```
 
-1.  Create a Python virtualenv, activate it, and install dependencies:
+1. Create a Python virtualenv, activate it, and install dependencies:
 
     This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
 
-    ```
-    $ virtualenv -p python3 venv
+
+    ```bash
+    $ python3 -m venv venv
     $ source venv/bin/activate
     $ pip3 install -r requirements.txt
     ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```bash
     $ pulumi up
     Previewing update (dev):
     ...
@@ -42,9 +43,9 @@ This example shows how to setup a basic GraphQL endpoint in AWS AppSync. The end
     Duration: 20s
     ```
 
-1.  Check the deployed GraphQL endpoint:
+1. Check the deployed GraphQL endpoint:
 
-    ```
+    ```bash
     $ pulumi stack output endpoint
     https://***.appsync-api.us-east-2.amazonaws.com/graphql
     $ pulumi stack output key
@@ -62,6 +63,6 @@ This example shows how to setup a basic GraphQL endpoint in AWS AppSync. The end
 
 ## Clean up
 
-1.  Run `pulumi destroy` to tear down all resources.
+1. Run `pulumi destroy` to tear down all resources.
 
-1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi Console.
+1. To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi Console.

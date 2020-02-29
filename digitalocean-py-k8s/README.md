@@ -28,13 +28,13 @@ After cloning this repo, from this working directory, run these commands:```
     ```bash
     $ pulumi stack init dev
     ```
-   
-1.  Create a Python virtualenv, activate it, and install dependencies:
+
+1. Create a Python virtualenv, activate it, and install dependencies:
 
     This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
 
-    ```
-    $ virtualenv -p python3 venv
+    ```bash
+    $ python3 -m venv venv
     $ source venv/bin/activate
     $ pip3 install -r requirements.txt
     ```
@@ -53,8 +53,7 @@ After cloning this repo, from this working directory, run these commands:```
 
 1. Deploy your cluster, application, and optional DNS records by running `pulumi up`.
 
-   This command shows a preview of the resources that will be created and asks you
-   whether to proceed with the deployment. Select "yes" to perform the deployment.
+   This command shows a preview of the resources that will be created, and asks you whether to proceed with the deployment. Select "yes" to perform the deployment.
 
     ```bash
     $ pulumi up

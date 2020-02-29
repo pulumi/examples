@@ -16,30 +16,33 @@ can be composed into a higher-level, reusable abstraction.
 
 ## Deploying and running the program
 
-1. Set up a virtual Python environment and install dependencies
+1. Create a Python virtualenv, activate it, and install dependencies:
 
-    ```
-    $ virtualenv -p python3 venv
+    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+
+
+    ```bash
+    $ python3 -m venv venv
     $ source venv/bin/activate
-    $ pip install -r requirements.txt
+    $ pip3 install -r requirements.txt
     ```
 
 1. Create a new stack:
 
-    ```
+    ```bash
     $ pulumi stack init
     ```
 
 1. Set the Google Cloud project and region
 
-    ```
+    ```bash
     $ pulumi config set gcp:project proj-123456
     $ pulumi config set gcp:region us-central1
     ```
 
 1. Run `pulumi up` to preview and deploy the changes:
 
-    ```
+    ```bash
     $ pulumi up -y
     Previewing update (dev):
 
@@ -88,21 +91,21 @@ can be composed into a higher-level, reusable abstraction.
 
 1. Get the IP address of the newly-created instance from the stack's outputs: 
 
-    ```
+    ```bash
     $ pulumi stack output public_ip
     13.64.196.146
     ```
 
 1. Check to see that your server is now running:
 
-    ```
+    ```bash
     $ curl http://$(pulumi stack output public_ip)
     Powered by Pulumi!
     ```
 
 1. Destroy the stack:
 
-    ```
+    ```bash
     $ pulumi destroy -y
     Previewing destroy (dev):
 
