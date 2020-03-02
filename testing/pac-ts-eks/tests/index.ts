@@ -42,7 +42,7 @@ const stackPolicy: policy.StackValidationPolicy = {
     },
 }
 
-const tests = new policy.PolicyPack("aws-eks-unit-tests", {
+const tests = new policy.PolicyPack("tests-pack", {
     policies: [stackPolicy],
 });
 
