@@ -1,0 +1,3 @@
+name: pac-ts-eks
+runtime: nodejs
+description: An example that applies PaC-based integration testing to provisioning an AWS EKS cluster.
