@@ -33,6 +33,12 @@ with App Service.
     pulumi config set --secret sqlPassword <value>
     ```
 
+1. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
+
+    ```bash
+    $ dep ensure
+    ```
+
 1.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
