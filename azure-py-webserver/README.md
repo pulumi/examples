@@ -128,8 +128,8 @@ the virtual machine that we are going to create.
     -   ├─ azure:network:VirtualNetwork    server-network               deleted     
     -   ├─ azure:network:PublicIp          server-ip                    deleted     
     -   └─ azure:core:ResourceGroup        server                       deleted     
-    
-    s:
+
+    Resources:
         - 7 deleted
 
     Duration: 3m49s
