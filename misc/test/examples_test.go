@@ -406,7 +406,7 @@ func TestAccAzureCsAppService(t *testing.T) {
 				"sqlPassword": "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
 				})
 			},
@@ -437,7 +437,7 @@ func TestAccAzureFsAppService(t *testing.T) {
 				"sqlPassword": "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
 				})
 			},
@@ -484,7 +484,7 @@ func TestAccAzurePyAppService(t *testing.T) {
 				"sqlPassword": "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
 				})
 			},
@@ -498,7 +498,7 @@ func TestAccAzurePyAppServiceDocker(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-appservice-docker"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["hello_endpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["hello_endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Hello, world!")
 				})
 			},
@@ -558,7 +558,7 @@ func TestAccAzureTsAppService(t *testing.T) {
 				"sqlPassword": "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
 				})
 			},
@@ -572,7 +572,7 @@ func TestAccAzureTsAppServiceDocker(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-appservice-docker"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["getStartedEndpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["getStartedEndpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Azure App Service")
 				})
 			},
@@ -1065,7 +1065,7 @@ func TestAccGcpTsServerlessRaw(t *testing.T) {
 func TestAccGcpTsCloudRun(t *testing.T) {
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "gcp-ts-cloudrun"),
+			Dir:           path.Join(getCwd(t), "..", "..", "gcp-ts-cloudrun"),
 			RunUpdateTest: false,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["rubyUrl"].(string)
@@ -1077,7 +1077,6 @@ func TestAccGcpTsCloudRun(t *testing.T) {
 
 	integration.ProgramTest(t, &test)
 }
-
 
 func TestAccPacketPyWebserver(t *testing.T) {
 	test := getBaseOptions(t).
@@ -1243,6 +1242,21 @@ func assertHTTPResult(t *testing.T, output interface{}, headers map[string]strin
 }
 
 func assertHTTPResultWithRetry(t *testing.T, output interface{}, headers map[string]string, maxWait time.Duration, check func(string) bool) bool {
+	return assertHTTPResultShapeWithRetry(t, output, headers, maxWait, func(string) bool { return true }, check)
+}
+
+func assertAppServiceResult(t *testing.T, output interface{}, check func(string) bool) bool {
+	ready := func(body string) bool {
+		// We got a welcome page from Azure App Service. This means the resource is deployed but our custom code is not
+		// there yet. Wait a bit more and retry later.
+		welcomePage := strings.Contains(body, "Your app service is up and running.")
+		return !welcomePage
+	}
+	return assertHTTPResultShapeWithRetry(t, output, nil, 5*time.Minute, ready, check)
+}
+
+func assertHTTPResultShapeWithRetry(t *testing.T, output interface{}, headers map[string]string, maxWait time.Duration,
+	ready func(string) bool, check func(string) bool) bool {
 	hostname, ok := output.(string)
 	if !assert.True(t, ok, fmt.Sprintf("expected `%s` output", output)) {
 		return false
@@ -1252,8 +1266,6 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, headers map[str
 		hostname = fmt.Sprintf("http://%s", hostname)
 	}
 
-	var err error
-	var resp *http.Response
 	startTime := time.Now()
 	count, sleep := 0, 0
 	for true {
@@ -1274,13 +1286,30 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, headers map[str
 		}
 
 		client := &http.Client{Timeout: time.Second * 10}
-		resp, err = client.Do(req)
+		resp, err := client.Do(req)
 		if err == nil && resp.StatusCode == 200 {
-			break
+			if !assert.NotNil(t, resp.Body, "resp.body was nil") {
+				return false
+			}
+
+			// Read the body
+			defer resp.Body.Close()
+			body, err := ioutil.ReadAll(resp.Body)
+			if !assert.NoError(t, err) {
+				return false
+			}
+
+			bodyText := string(body)
+
+			// Even if we got 200 and a response, it may not be ready for assertion yet - that's specific per test.
+			if ready(bodyText) {
+				// Verify it matches expectations
+				return check(bodyText)
+			}
 		}
 		if now.Sub(startTime) >= maxWait {
 			fmt.Printf("Timeout after %v. Unable to http.get %v successfully.", maxWait, hostname)
-			break
+			return false
 		}
 		count++
 		// delay 10s, 20s, then 30s and stay at 30s
@@ -1293,22 +1322,8 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, headers map[str
 		fmt.Printf("Http Error: %v\n", err)
 		fmt.Printf("  Retry: %v, elapsed wait: %v, max wait %v\n", count, now.Sub(startTime), maxWait)
 	}
-	if !assert.NoError(t, err) {
-		return false
-	}
 
-	if !assert.NotNil(t, resp, "resp was nil") && !assert.NotNil(t, resp.Body, "resp.body was nil") {
-		return false
-	}
-
-	// Read the body
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if !assert.NoError(t, err) {
-		return false
-	}
-	// Verify it matches expectations
-	return check(string(body))
+	return false
 }
 
 func assertHTTPHelloWorld(t *testing.T, output interface{}, headers map[string]string) bool {
