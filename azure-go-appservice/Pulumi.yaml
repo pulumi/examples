@@ -1,4 +1,4 @@
-name: azure-appservice
+name: azure-go-appservice
 runtime: go
 description: Creates Azure App Service with SQL Database and Application Insights
 template:
