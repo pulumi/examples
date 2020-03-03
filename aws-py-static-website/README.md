@@ -26,27 +26,29 @@ set:
 Note: some values in this example will be different from run to run.  These values are indicated
 with `***`.
 
-1.  Create a new stack:
+1. Create a new stack:
 
     ```bash
     $ pulumi stack init website-testing
     ```
 
-1.  Set the AWS region:
+1. Set the AWS region:
 
     ```bash
     $ pulumi config set aws:region us-west-2
     ```
 
-1.  Create a Python virtualenv, activate it, and install dependencies:
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
 
     ```bash
-    $ virtualenv -p python3 venv
+    $ python3 -m venv venv
     $ source venv/bin/activate
     $ pip3 install -r requirements.txt
     ```
 
-1.  Run `pulumi up` to preview and deploy changes.  After the preview is shown you will be
+1. Run `pulumi up` to preview and deploy changes.  After the preview is shown you will be
     prompted if you want to continue or not.
 
     ```bash
@@ -66,7 +68,7 @@ with `***`.
     +   └─ aws:route53:Record             ***                                       create
     ```
 
-1.  To see the resources that were created, run `pulumi stack output`:
+1. To see the resources that were created, run `pulumi stack output`:
 
     ```bash
     $ pulumi stack output
@@ -78,7 +80,7 @@ with `***`.
         target_domain_endpoint           https://***/
     ```
 
-1.  To see that the S3 objects exist, you can either use the AWS Console or the AWS CLI:
+1. To see that the S3 objects exist, you can either use the AWS Console or the AWS CLI:
 
     ```bash
     $ aws s3 ls $(pulumi stack output content_bucket_url)
@@ -86,9 +88,9 @@ with `***`.
     2020-02-21 16:58:48        394 index.html
     ```
 
-1.  Open a browser to the target domain endpoint from above to see your beautiful static website. (Since we don't wait for the CloudFront distribution to completely sync, you may have to wait a few minutes)
+1. Open a browser to the target domain endpoint from above to see your beautiful static website. (Since we don't wait for the CloudFront distribution to completely sync, you may have to wait a few minutes)
 
-1.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+1. To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
 
 ## Troubleshooting
 
@@ -114,18 +116,18 @@ This is caused by CloudFront confirming the ETag of the resource before applying
 ETag is essentially a "version", and AWS is rejecting any requests that are trying to update
 any version but the "latest".
 
-This error will occurr when the state of the ETag get out of sync between the Pulumi Service
+This error will occur when the state of the ETag gets out of sync between the Pulumi Service
 and AWS. (Which can happen when inspecting the CloudFront distribution in the AWS console.)
 
 You can fix this by running `pulumi refresh` to pickup the newer ETag values.
 
 ## Deployment Speed
 
-This example creates a `aws.S3.BucketObject` for every file served from the website. When deploying
+This example creates an `aws.S3.BucketObject` for every file served from the website. When deploying
 large websites, that can lead to very long updates as every individual file is checked for any
 changes.
 
-It may be more efficient to not manage individual files using Pulumi and and instead just use the
+It may be more efficient to not manage individual files using Pulumi and instead just use the
 AWS CLI to sync local files with the S3 bucket directly.
 
 Remove the call to `crawlDirectory` and run `pulumi up`. Pulumi will then delete the contents

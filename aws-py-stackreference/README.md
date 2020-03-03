@@ -3,7 +3,7 @@
 This example creates a "team" EC2 Instance with tags set from _upstream_ "company" and "department" 
 stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies).
 
-```
+```sh
 /**
  *   company
  *   └─ department
@@ -18,14 +18,16 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     ```bash
     $ cd company
     ````
-   
+
 1. Create a Python virtualenv, activate it, and install dependencies:
 
-   ```
-   $ virtualenv -p python3 venv
-   $ source venv/bin/activate
-   $ pip3 install -r requirements.txt
-   ```
+    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip3 install -r requirements.txt
+    ```
 
 1. Create a new stack:
 
@@ -76,7 +78,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
    
 1. Create a Python virtualenv, activate it, and install dependencies:
 
-   ```
+   ```bash
    $ virtualenv -p python3 venv
    $ source venv/bin/activate
    $ pip3 install -r requirements.txt
