@@ -30,6 +30,7 @@ Example                 | Language          | Cloud |
 [Azure App Service with SQL Database and Application Insights](azure-ts-appservice) <br/> Deploy Azure App Service along with SQL Database and Application Insights | TypeScript | Azure |
 [Azure Functions](azure-ts-functions) <br/> A simple component for deploying inline code to Azure Functions | TypeScript | Azure |
 [Linode instance (JavaScript)](linode-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | Linode |
+[Azure Kubernetes and Private Container Registry](azure-cs-aks-private-container-registry) | C# | Azure
 
 ### Cloud Applications
 

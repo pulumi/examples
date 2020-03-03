@@ -8,6 +8,7 @@ This sample setup demonstrates the following:
 * Creates an Azure Container Registry.
 * Builds & pushes a sample application as a Docker image to the registry.
 * Deploys the sample application from the registry onto the cluster.
+* Exports a container registry secret for use by other stacks. For example, "service" projects that create kubernetes deployments that need to be able to pull images from the registry.
 
 ## Deploying the App
 
