@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 pulumi = {editable = true,path = "./../../pulumi/sdk/python/env/src"}
 pulumi-aws = ">=1.0.0"
+pulumi-kubernetes = ">=1.0.0"
 
 [requires]
 python_version = "3.7"
