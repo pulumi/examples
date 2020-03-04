@@ -5,12 +5,12 @@
 This example creates a Pulumi `cloud.HttpEndpoint` that will receive webhook events delivered
 by the Pulumi Service. It then echos the event to Slack.
 
-### Prerequisites
+## Prerequisites
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
     - [Create an Organization](https://www.pulumi.com/docs/intro/console/accounts-and-organizations/organizations/)
 2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 
-### Steps
+## Steps
 
 After cloning this repo, run these commands from the working directory:
 
@@ -50,7 +50,7 @@ After cloning this repo, run these commands from the working directory:
     pulumi config set slackChannel <your-channel>
     ```
 
-1. (Optional) Set the shared secret for your app. Webhook deliveries can optionally be signed with a shared secret token. The shared secret is given to Pulumi, and will used to verify the contents of the message. You can find yours by going to `Settings -> Basic Information -> Signing Secret` from your app's API page.
+1. (Optional) Set the shared secret for your app. Webhook deliveries can optionally be signed with a shared secret token. The shared secret is given to Pulumi, and will be used to verify the contents of the message. You can find yours by going to `Settings -> Basic Information -> Signing Secret` from your app's API page.
 
     ```bash
     pulumi config set sharedSecret --secret <your-secret>
@@ -68,13 +68,9 @@ After cloning this repo, run these commands from the working directory:
     pulumi stack output url
     ```
 
-1. Create a [Pulumi webhook](https://www.pulumi.com/docs/intro/console/extensions/webhooks/).
+1. Create a [Pulumi webhook](https://www.pulumi.com/docs/intro/console/extensions/webhooks/). Use the output from the previous step as the `Payload URL`.
 
-    - Use the URL from the previous step as the `Payload URL` when creating your webhook.
-
-1. Ping our webhook by clicking `Ping` under `Deliveries` from your webhook's page.
-
-    - You should see a message like `Just a friendly ping from Pulumi` in your Slack channel.
+1. Ping our webhook by clicking `Ping` under `Deliveries` from your webhook's page. You should see the message `:tropical_drink: Just a friendly ping from Pulumi :tropical_drink:` in your Slack channel.
 
 1. From there, feel free to experiment. Simply making edits and running `pulumi up` will update your program.
 
