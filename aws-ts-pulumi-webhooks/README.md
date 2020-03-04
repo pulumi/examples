@@ -28,9 +28,9 @@ After cloning this repo, run these commands from the working directory:
 
 1. Create a [Slack App](https://api.slack.com/apps):
 
-    - Give your app the [`chat:write`](https://api.slack.com/scopes/chat:write) scope by going to `Features -> OAuth & Permissions -> Scopes` from your app's API page.
+    - Give your app the [`chat:write`](https://api.slack.com/scopes/chat:write) scope by going to `Features -> OAuth & Permissions -> Scopes` from your Slack app's API page.
 
-    - Add your app to the Slack channel in which you want to post webhook events.
+    - Add your Slack app to the Slack channel in which you want to post webhook events.
 
 1. Set the region for this program:
 
@@ -38,19 +38,19 @@ After cloning this repo, run these commands from the working directory:
     pulumi config set aws:region <your-region>
     ```
 
-1. Set the Slack token for your app. You can find yours by going to `Features -> OAuth & Permissions -> OAuth Tokens & Redirect URLs -> Tokens for Your Workspace` from your app's API page.
+1. Set the Slack token for your app. You can find yours by going to `Features -> OAuth & Permissions -> OAuth Tokens & Redirect URLs -> Tokens for Your Workspace` from your Slack app's API page.
 
     ```bash
     pulumi config set slackToken --secret <your-token>
     ```
 
-1. Set the Slack channel for your app. This should be the same channel in which you added your app. For example, `#pulumi-events`.
+1. Set the Slack channel for your app. This should be the same channel in which you added your Slack app. For example, `#pulumi-events`.
 
     ```bash
     pulumi config set slackChannel <your-channel>
     ```
 
-1. (Optional) Set the shared secret for your app. Webhook deliveries can optionally be signed with a shared secret token. The shared secret is given to Pulumi, and will be used to verify the contents of the message. You can find yours by going to `Settings -> Basic Information -> Signing Secret` from your app's API page.
+1. (Optional) Set the shared secret for your app. Webhook deliveries can optionally be signed with a shared secret token. The shared secret is given to Pulumi, and will be used to verify the contents of the message. You can find yours by going to `Settings -> Basic Information -> Signing Secret` from your Slack app's API page.
 
     ```bash
     pulumi config set sharedSecret --secret <your-secret>
@@ -70,7 +70,7 @@ After cloning this repo, run these commands from the working directory:
 
 1. Create a [Pulumi webhook](https://www.pulumi.com/docs/intro/console/extensions/webhooks/). Use the output from the previous step as the `Payload URL`.
 
-1. Ping our webhook by clicking `Ping` under `Deliveries` from your webhook's page. You should see the message `:tropical_drink: Just a friendly ping from Pulumi :tropical_drink:` in your Slack channel.
+1. Ping our webhook by clicking `Ping` under `Deliveries` from your webhook's page. You should see the message `Just a friendly ping from Pulumi` in your Slack channel.
 
 1. From there, feel free to experiment. Simply making edits and running `pulumi up` will update your program.
 
