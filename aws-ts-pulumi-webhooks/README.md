@@ -26,41 +26,64 @@ After cloning this repo, run these commands from the working directory:
     pulumi stack init
     ```
 
-1. Create a [Slack App](https://api.slack.com/apps).
+1. Create a [Slack App](https://api.slack.com/apps):
 
-    - Give your app the [`chat:write`](https://api.slack.com/scopes/chat:write) scope by going to Features -> OAuth & Permissions -> Scopes from your app's API page (e.g. https://api.slack.com/apps/<your-app>/oauth?)
+    - Give your app the [`chat:write`](https://api.slack.com/scopes/chat:write) scope by going to `Features -> OAuth & Permissions -> Scopes` from your app's API page.
 
-    - Add your app to the Slack channel you want to post webhook events to by going
+    - Add your app to the Slack channel in which you want to post webhook events.
 
+1. Set the region for this program:
 
-### Creating new Webhooks
+    ```bash
+    pulumi config set aws:region <your-region>
+    ```
 
-Webhooks can be created on the Pulumi Service at the Organization or Stack-level. Webhooks
-registered to an organization will fire for every stack housed within that organization, as well as
-for Organization-specific like team membership changes.
+1. Set the Slack token for your app. You can find yours by going to `Features -> OAuth & Permissions -> OAuth Tokens & Redirect URLs -> Tokens for Your Workspace` from your app's API page.
 
-To create a webhook go to the Organization or Stack's settings page, and then navigate to "webhooks".
+    ```bash
+    pulumi config set slackToken --secret <your-token>
+    ```
 
-> Webhooks are only available for Pulumi Team Tier organizations and stacks.
+1. Set the Slack channel for your app. This should be the same channel in which you added your app. For example, `#pulumi-events`.
 
-### Creating up the Webhook Handler
+    ```bash
+    pulumi config set slackChannel <your-channel>
+    ```
 
-Install prerequisites with:
+1. (Optional) Set the shared secret for your app. Webhook deliveries can optionally be signed with a shared secret token. The shared secret is given to Pulumi, and will used to verify the contents of the message. You can find yours by going to `Settings -> Basic Information -> Signing Secret` from your app's API page.
 
-```bash
-npm install
-```
+    ```bash
+    pulumi config set sharedSecret --secret <your-secret>
+    ```
 
-Configure the Pulumi program. There are several configuration settings that need to be
-set:
+1. Execute the Pulumi program:
 
-- `aws:region` - The AWS region to create the `cloud.HttpEndpoint` resource in, e.g. `us-west-2`.
-- `sharedSecret` - (Optional) Webhook deliveries can optionally be signed with a shared secret
-    token. The shared secret is given to Pulumi, and will be used to verify the contents of
-    the message.
-- `slackToken` - Slack API access token to use when posting messages. You can create a Slack
-    access token by [going here](https://api.slack.com/custom-integrations/legacy-tokens).
-- `slackChannel` - The Slack channel to post webhook events to. For example `#pulumi-events`.
+    ```bash
+    pulumi up
+    ```
+
+1. Retrieve our new URL:
+
+    ```bash
+    pulumi stack output url
+    ```
+
+1. Create a [Pulumi webhook](https://www.pulumi.com/docs/intro/console/extensions/webhooks/).
+
+    - Use the URL from the previous step as the `Payload URL` when creating your webhook.
+
+1. Ping our webhook by clicking `Ping` under `Deliveries` from your webhook's page.
+
+    - You should see a message like `Just a friendly ping from Pulumi` in your Slack channel.
+
+1. From there, feel free to experiment. Simply making edits and running `pulumi up` will update your program.
+
+1. Afterwards, destroy your stack and remove it:
+
+	```bash
+	pulumi destroy --yes
+	pulumi stack rm --yes
+	```
 
 ## Troubleshooting
 
