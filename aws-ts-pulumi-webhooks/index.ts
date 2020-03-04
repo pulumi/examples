@@ -2,9 +2,9 @@
 
 import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
+import { ChatPostMessageArguments, WebClient } from "@slack/web-api";
 
 import * as crypto from "crypto";
-import { ChatPostMessageArguments, WebClient } from "@slack/web-api";
 
 import { formatSlackMessage } from "./util";
 
@@ -70,7 +70,7 @@ const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
 
             const webhookKind = req.headers !== undefined ? req.headers["pulumi-webhook-kind"] : "";
             const bytes = req.body!.toString();
-            const payload = Buffer.from(bytes, 'base64').toString();
+            const payload = Buffer.from(bytes, "base64").toString();
             const parsedPayload = JSON.parse(payload);
             const prettyPrintedPayload = JSON.stringify(parsedPayload, null, 2);
 
