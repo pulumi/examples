@@ -260,6 +260,12 @@ Example		| Description |
 [Staged App Rollout](kubernetes-ts-staged-rollout-with-prometheus) | Create a staged rollout gated by checking that the P90 response time reported by Prometheus is less than some amount. 
 [Wordpress Helm Chart](kubernetes-ts-helm-wordpress) | Use the Helm API to deploy v2.1.3 of the Wordpress Helm Chart to a Kubernetes cluster.
 
+### Python
+
+Example		| Description |
+----- 		| --------- |
+[Guestbook](kubernetes-py-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+
 ### C#
 
 Example		| Description |
