@@ -5,7 +5,33 @@
 This example creates a Pulumi `cloud.HttpEndpoint` that will receive webhook events delivered
 by the Pulumi Service. It then echos the event to Slack.
 
-## Getting Started
+### Prerequisites
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+    - [Create an Organization](https://www.pulumi.com/docs/intro/console/accounts-and-organizations/organizations/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+
+### Steps
+
+After cloning this repo, run these commands from the working directory:
+
+1. Install prerequisites:
+
+    ```bash
+    npm install
+    ```
+
+1. Create a new Pulumi stack, which is an isolated deployment target for this example:
+
+    ```bash
+    pulumi stack init
+    ```
+
+1. Create a [Slack App](https://api.slack.com/apps).
+
+    - Give your app the [`chat:write`](https://api.slack.com/scopes/chat:write) scope by going to Features -> OAuth & Permissions -> Scopes from your app's API page (e.g. https://api.slack.com/apps/<your-app>/oauth?)
+
+    - Add your app to the Slack channel you want to post webhook events to by going
+
 
 ### Creating new Webhooks
 
