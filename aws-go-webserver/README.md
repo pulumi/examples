@@ -19,6 +19,12 @@ To deploy your infrastructure, follow the below steps.
 
 After cloning this repo, from this working directory, run these commands:
 
+1. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
+
+    ```bash
+    $ dep ensure
+    ```
+
 1. Go is a compiled language, so you must first compile it:
 
     ```bash
