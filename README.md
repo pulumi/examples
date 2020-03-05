@@ -184,6 +184,7 @@ Example		| Description |
 Example		| Description |
 ----- 		| --------- |
 [AKS](azure-cs-aks) | Stand up an Azure Kubernetes Service (AKS) cluster.
+[AKS and Private Container Registry](azure-cs-aks-private-container-registry) | Stand up an Azure Kubernetes Service (AKS) cluster, a private Azure Container Registry, and deploys an image to the cluster.
 [App Service](azure-cs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
 [Bot Service](azure-cs-botservice) | Build an Azure Bot Service hosted in Azure App Service.
 [Cosmos App Component](azure-cs-cosmosapp-component) | Use a reusable component to create globally-distributed applications with Azure Cosmos DB.
@@ -198,7 +199,6 @@ Example		| Description |
 ----- 		| --------- |
 [AKS](azure-fs-aks) | Stand up an Azure Kubernetes Service (AKS) cluster.
 [App Service](azure-fs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
-[Azure Kubernetes and Private Container Registry](azure-cs-aks-private-container-registry) | C# | Azure
 
 ## GCP
 
