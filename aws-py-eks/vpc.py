@@ -9,8 +9,7 @@ vpc = ec2.Vpc(
     enable_dns_hostnames=True,
     enable_dns_support=True,
     tags={
-        'Name' : 'pulumi-eks-vpc',
-        'kubernetes.io/cluster/pulumi-eks-cluster' : 'shared'
+        'Name' : 'pulumi-eks-vpc'
     }
 )
 
@@ -49,8 +48,7 @@ for zone in zones.names:
         cidr_block=f'10.100.{len(subnet_ids)}.0/24',
         availability_zone= zone,
         tags={
-            'Name' : f'pulumi-sn-{zone}',
-            'kubernetes.io/cluster/pulumi-eks-cluster' : 'shared'
+            'Name' : f'pulumi-sn-{zone}'
         }
     )
     ec2.RouteTableAssociation(
