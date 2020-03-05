@@ -42,7 +42,7 @@ func main() {
 			ResourceGroupName: resourceGroup.Name,
 			Location:          resourceGroup.Location,
 			Kind:              pulumi.String("App"),
-			Sku: appservice.PlanSkuInputs{
+			Sku: appservice.PlanSkuArgs{
 				Tier: pulumi.String("Basic"),
 				Size: pulumi.String("B1"),
 			},
@@ -115,8 +115,8 @@ func main() {
 				"ApplicationInsights:InstrumentationKey": appInsights.InstrumentationKey,
 				"APPINSIGHTS_INSTRUMENTATIONKEY":         appInsights.InstrumentationKey,
 			},
-			ConnectionStrings: appservice.AppServiceConnectionStringsArray{
-				appservice.AppServiceConnectionStringsInputs{
+			ConnectionStrings: appservice.AppServiceConnectionStringArray{
+				appservice.AppServiceConnectionStringArgs{
 					Name: pulumi.String("db"),
 					Value: pulumi.Sprintf("Server=tcp:%s.database.windows.net;initial catalog=%s;user ID=%s;password=%s;Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;",
 						sqlServer.Name, database.Name, username, passwd),
@@ -147,12 +147,12 @@ func signedBlobReadURL(ctx *pulumi.Context, blob *storage.ZipBlob, account *stor
 			containerName := args[2].(string)
 			blobName := args[3].(string)
 
-			sas, err := storage.LookupAccountBlobContainerSAS(ctx, &storage.GetAccountBlobContainerSASArgs{
+			sas, err := storage.GetAccountBlobContainerSAS(ctx, &storage.GetAccountBlobContainerSASArgs{
 				ConnectionString: connectionString,
 				ContainerName:    containerName,
 				Start:            "2019-01-01",
 				Expiry:           signatureExpiration,
-				Permissions:      storage.GetAccountBlobContainerSASPermissionsArgs{Read: true},
+				Permissions:      storage.GetAccountBlobContainerSASPermissions{Read: true},
 			})
 			if err != nil {
 				return "", err

@@ -24,14 +24,15 @@ use Pulumi to provision the Google Cloud Platform resources.
     pulumi config set gcp:region <region>
     ```
 
-1. Download dependencies:
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+
 
     ```bash
-    # (Optional) Create a virtualenv environment.
-    virtualenv -p python3 venv
-    source venv/bin/activate
-
-    pip3 install -r requirements.txt
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip3 install -r requirements.txt
     ```
 
 1. Run `pulumi up` to preview and deploy changes:
@@ -48,8 +49,7 @@ use Pulumi to provision the Google Cloud Platform resources.
     Duration: 1m2s
     ```
 
-Once the application is deployed, you can start accessing the Google Cloud Function by making an
-HTTP request to the function's endpoint. It is exported from the stack's as `fxn_url`.
+Once the application is deployed, you can start accessing the Google Cloud Function by making an HTTP request to the function's endpoint. It is exported from the stack's as `fxn_url`.
 
 ```bash
 $ pulumi stack output fxn_url

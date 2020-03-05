@@ -31,12 +31,12 @@ Next, to deploy the application and its infrastructure, follow these steps:
     $ pulumi config set aws:region us-east-1 # any valid AWS region will work
     ```
 
-3.  Create a Python virtualenv, activate it, and install dependencies:
+3. Create a Python virtualenv, activate it, and install dependencies:
 
     This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
 
-    ```
-    $ virtualenv -p python3 venv
+    ```bash
+    $ python3 -m venv venv
     $ source venv/bin/activate
     $ pip3 install -r requirements.txt
     ```
@@ -51,7 +51,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
 
     After being prompted and selecting "yes", your deployment will begin. It'll complete in a few minutes:
 
-    ```
+    ```bash
     Updating (dev):
          Type                             Name                Status
      +   pulumi:pulumi:Stack              aws-py-fargate-dev  created
@@ -64,13 +64,13 @@ Next, to deploy the application and its infrastructure, follow these steps:
      +   ├─ aws:lb:LoadBalancer           app-lb              created
      +   ├─ aws:lb:Listener               web                 created
      +   └─ aws:ecs:Service               app-svc             created
-    
+
     Outputs:
         url: "app-lb-ad43707-1433933240.us-west-2.elb.amazonaws.com"
-    
+
     Resources:
         + 10 created
-    
+
     Duration: 2m56s
 
     Permalink: https://app.pulumi.com/acmecorp/aws-python-fargate/dev/updates/1
@@ -78,7 +78,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
 
    Notice that the automatically assigned load-balancer URL is printed as a stack output.
 
-6. At this point, your app is running -- let's curl it. The CLI makes it easy to grab the URL:
+5. At this point, your app is running -- let's curl it. The CLI makes it easy to grab the URL:
 
     ```bash
     $ curl http://$(pulumi stack output url)
@@ -111,7 +111,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
    
 **Please Note**: It may take a few minutes for the app to start up. Until that point, you may receive a 503 error response code.
 
-7. Try making some changes, and rerunning `pulumi up`. For example, let's scale up to 3 instances:
+6. Try making some changes, and rerunning `pulumi up`. For example, let's scale up to 3 instances:
 
     Running `pulumi up` will show you the delta and then, after confirming, will deploy just those changes:
 
@@ -121,26 +121,26 @@ Next, to deploy the application and its infrastructure, follow these steps:
 
     Notice that `pulumi up` redeploys just the parts of the application/infrastructure that you've edited.
 
-    ```
+    ```bash
         Updating (dev):
-    
+
          Type                 Name                Status      Info
          pulumi:pulumi:Stack  aws-py-fargate-dev
      ~   └─ aws:ecs:Service   app-svc             updated     [diff: ~desiredCount]
-    
+
     Outputs:
         url: "app-lb-ad43707-1433933240.us-west-2.elb.amazonaws.com"
-    
+
     Resources:
         ~ 1 updated
         9 unchanged
-    
+  
     Duration: 14s
 
     Permalink: https://app.pulumi.com/acmecorp/aws-python-fargate/dev/updates/2
     ```
 
-8. Once you are done, you can destroy all of the resources, and the stack:
+7. Once you are done, you can destroy all of the resources, and the stack:
 
     ```bash
     $ pulumi destroy
