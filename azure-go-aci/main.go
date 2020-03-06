@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/pulumi/pulumi-azure/sdk/go/azure/containerservice"
 	"github.com/pulumi/pulumi-azure/sdk/go/azure/core"
+	"github.com/pulumi/pulumi-docker/sdk/go/docker"
 	"github.com/pulumi/pulumi/sdk/go/pulumi"
 )
 
@@ -26,6 +27,21 @@ func main() {
 		}
 
 		// Create the docker image.
+		imageArgs := docker.ImageArgs{
+			ImageName: pulumi.Sprintf("%s/mynodeapp:v1.0.0", registry.LoginServer),
+			Build: docker.DockerBuild{
+				Context: pulumi.String("./app"),
+			},
+			Registry: &docker.ImageRegistry{
+				Server:   registry.LoginServer,
+				Username: registry.AdminUsername,
+				Password: registry.AdminPassword,
+			},
+		}
+		image, err := docker.NewImage(ctx, "node-app", &imageArgs)
+		if err != nil {
+			return err
+		}
 
 		// Create a group.
 		credentialArgs := containerservice.GroupImageRegistryCredentialArgs{
@@ -39,6 +55,7 @@ func main() {
 		}
 		containerArgs := containerservice.GroupContainerArgs{
 			Cpu:    pulumi.Float64(0.5),
+			Image:  image.ImageName,
 			Memory: pulumi.Float64(1.5),
 			Name:   pulumi.String("hello-world"),
 			Ports:  containerservice.GroupContainerPortArray([]containerservice.GroupContainerPortInput{portArgs}),
