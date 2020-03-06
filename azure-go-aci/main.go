@@ -58,13 +58,13 @@ func main() {
 			Image:  image.ImageName,
 			Memory: pulumi.Float64(1.5),
 			Name:   pulumi.String("hello-world"),
-			Ports:  containerservice.GroupContainerPortArray([]containerservice.GroupContainerPortInput{portArgs}),
+			Ports:  containerservice.GroupContainerPortArray{portArgs},
 		}
 		groupArgs := containerservice.GroupArgs{
 			ResourceGroupName:        resourceGroup.Name,
-			ImageRegistryCredentials: containerservice.GroupImageRegistryCredentialArray([]containerservice.GroupImageRegistryCredentialInput{credentialArgs}),
+			ImageRegistryCredentials: containerservice.GroupImageRegistryCredentialArray{credentialArgs},
 			OsType:                   pulumi.String("Linux"),
-			Containers:               containerservice.GroupContainerArray([]containerservice.GroupContainerInput{containerArgs}),
+			Containers:               containerservice.GroupContainerArray{containerArgs},
 			IpAddressType:            pulumi.String("public"),
 			DnsNameLabel:             pulumi.String("acigo"),
 		}
