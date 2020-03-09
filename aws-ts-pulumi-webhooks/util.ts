@@ -1,6 +1,6 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import { ChatPostMessageArguments } from "@slack/client";
+import { ChatPostMessageArguments } from "@slack/web-api";
 
 // Return a formatted copy of the Slack message object, based on the kind of Pulumi webhook received.
 // See the Pulumi and Slack webhook documentation for details.
@@ -17,6 +17,8 @@ export function formatSlackMessage(kind: string, payload: object, messageArgs: C
         case "stack_preview":
         case "stack_update":
             return formatUpdate(kind, payload, cloned);
+        case "ping":
+            return formatPing(payload, cloned);
         default:
             return cloned;
     }
@@ -126,6 +128,11 @@ function formatUpdate(kind: "stack_preview" | "stack_update", payload: any, args
             ],
         },
     ];
+    return args;
+}
+
+function formatPing(payload: any, args: ChatPostMessageArguments) {
+    args.text = payload.message;
     return args;
 }
 
