@@ -17,12 +17,12 @@ httpdotnet_container=storage.Container(
     container_access_type="private"
 )
 
-httpdotnet_zib_blob=storage.ZipBlob(
+httpdotnet_zib_blob=storage.Blob(
     "http-dotnet",
     storage_account_name=httpdotnet_storage_account.name,
     storage_container_name=httpdotnet_container.name,
-    type="block",
-    content=asset.AssetArchive({
+    type="Block",
+    source=asset.AssetArchive({
         ".": asset.FileArchive("./dotnet/bin/Debug/netcoreapp3.1/publish")
     }))
 

@@ -47,11 +47,11 @@ const k8sClusters = aksClusterConfig.map((perClusterConfig, index) => {
         },
         // Per-cluster config arguments
         location: perClusterConfig.location,
-        agentPoolProfiles: [{
+        defaultNodePool: {
             name: "aksagentpool",
-            count: perClusterConfig.nodeCount,
+            nodeCount: perClusterConfig.nodeCount,
             vmSize: perClusterConfig.nodeSize,
-        }],
+        },
         dnsPrefix: `${pulumi.getStack()}-kube`,
     });
     return cluster;
