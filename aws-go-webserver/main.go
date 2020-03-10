@@ -41,10 +41,10 @@ func main() {
 
 		// Create a simple web server using the startup script for the instance.
 		srv, err := ec2.NewInstance(ctx, "web-server-www", &ec2.InstanceArgs{
-			Tags:           pulumi.Map{"Name": pulumi.String("web-server-www")},
-			InstanceType:   pulumi.String("t2.micro"), // t2.micro is available in the AWS free tier.
-			SecurityGroups: pulumi.StringArray{group.Name},
-			Ami:            pulumi.String(ami.Id),
+			Tags:                pulumi.Map{"Name": pulumi.String("web-server-www")},
+			InstanceType:        pulumi.String("t2.micro"), // t2.micro is available in the AWS free tier.
+			VpcSecurityGroupIds: pulumi.StringArray{group.ID()},
+			Ami:                 pulumi.String(ami.Id),
 			UserData: pulumi.String(`#!/bin/bash
 echo "Hello, World!" > index.html
 nohup python -m SimpleHTTPServer 80 &`),
