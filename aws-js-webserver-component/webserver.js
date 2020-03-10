@@ -30,7 +30,7 @@ exports.createInstance = function (name, size) {
     return new aws.ec2.Instance(name, {
         tags: { "Name": name },
         instanceType: size,
-        securityGroups: [ group.name ], // reference the group object above
+        vpcSecurityGroupIds: [ group.id ], // reference the group object above
         ami: ami,
         userData: userData              // start a simple web server
     });

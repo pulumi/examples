@@ -23,7 +23,7 @@ nohup python -m SimpleHTTPServer 80 &
 
 server = aws.ec2.Instance('web-server-www',
     instance_type=size,
-    security_groups=[group.name],
+    vpc_security_group_ids=[group.id],
     user_data=user_data,
     ami=ami.id)
 

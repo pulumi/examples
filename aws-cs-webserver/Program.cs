@@ -49,7 +49,7 @@ nohup python -m SimpleHTTPServer 80 &
             var server = new Instance("web-server-www", new InstanceArgs
             {
                 InstanceType = Size,
-                SecurityGroups = { group.Name },
+                VpcSecurityGroupIds = { group.Id },
                 UserData = userData,
                 Ami = ami.Id,
             });
