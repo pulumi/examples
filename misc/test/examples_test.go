@@ -508,6 +508,7 @@ func TestAccAzurePyAppServiceDocker(t *testing.T) {
 }
 
 func TestAccAzurePyHdInsightSpark(t *testing.T) {
+	t.Skip("Skipping HDInsights tests due to a stuck cluster in the account")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-hdinsight-spark"),
@@ -605,6 +606,7 @@ func TestAccAzureTsFunctions(t *testing.T) {
 }
 
 func TestAccAzureTsHdInsightSpark(t *testing.T) {
+	t.Skip("Skipping HDInsights tests due to a stuck cluster in the account")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-hdinsight-spark"),
