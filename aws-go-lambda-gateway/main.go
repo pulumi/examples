@@ -4,14 +4,21 @@ import (
 	"github.com/pulumi/pulumi-aws/sdk/go/aws/apigateway"
 	"github.com/pulumi/pulumi-aws/sdk/go/aws/iam"
 	"github.com/pulumi/pulumi-aws/sdk/go/aws/lambda"
+	"github.com/pulumi/pulumi-aws/sdk/go/aws"
 	"github.com/pulumi/pulumi/sdk/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		// Read the configuration data from Pulumi.<stack>.yaml
-		gatewayRegion, _ := ctx.GetConfig("go-lambda:gateway-region")
-		accountID, _ := ctx.GetConfig("go-lambda:accountid")
+		account, err := aws.GetCallerIdentity(ctx)
+		if err != nil {
+			return err
+		}
+
+		region, err := aws.GetRegion(ctx, &aws.GetRegionArgs{})
+		if err != nil {
+			return err
+		}
 
 		// Create an IAM role.
 		role, err := iam.NewRole(ctx, "task-exec-role", &iam.RoleArgs{
@@ -71,8 +78,26 @@ func main() {
 		gateway, err := apigateway.NewRestApi(ctx, "UpperCaseGateway", &apigateway.RestApiArgs{
 			Name:        pulumi.String("UpperCaseGateway"),
 			Description: pulumi.String("An API Gateway for the UpperCase function"),
-			Policy:      pulumi.String(`{ "Version": "2012-10-17", "Statement": [ { "Action": "sts:AssumeRole", "Principal": { "Service": "lambda.amazonaws.com" }, "Effect": "Allow", "Sid": "" },{ "Action": "execute-api:Invoke", "Resource":"execute-api:/*", "Principal": "*", "Effect": "Allow", "Sid": "" } ] }`),
-		})
+			Policy: pulumi.String(`{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    },
+    {
+      "Action": "execute-api:Invoke",
+      "Resource": "*",
+      "Principal": "*",
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}`)})
 		if err != nil {
 			return err
 		}
@@ -119,7 +144,7 @@ func main() {
 			Action:    pulumi.String("lambda:InvokeFunction"),
 			Function:  function.Name,
 			Principal: pulumi.String("apigateway.amazonaws.com"),
-			SourceArn: pulumi.Sprintf("arn:aws:execute-api:%s:%s:%s/*/*/*", gatewayRegion, accountID, gateway.ID()),
+			SourceArn: pulumi.Sprintf("arn:aws:execute-api:%s:%s:%s/*/*/*", region.Name, account.AccountId, gateway.ID()),
 		}, pulumi.DependsOn([]pulumi.Resource{gateway, apiresource, function}))
 		if err != nil {
 			return err
@@ -136,9 +161,7 @@ func main() {
 			return err
 		}
 
-		// Export the lambda ARN and API Gateway URL
-		ctx.Export("lambda", function.Arn)
-		ctx.Export("invocation URL", pulumi.Sprintf("https://%s.execute-api.%s.amazonaws.com/prod/{message}", gateway.ID(), gatewayRegion))
+		ctx.Export("invocation URL", pulumi.Sprintf("https://%s.execute-api.%s.amazonaws.com/prod/{message}", gateway.ID(), region.Name))
 
 		return nil
 	})
