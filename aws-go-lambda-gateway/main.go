@@ -89,7 +89,7 @@ func main() {
 		}
 
 		// Add a method to the API Gateway.
-		_, err = apigateway.NewMethod(ctx, "GetMethod", &apigateway.MethodArgs{
+		_, err = apigateway.NewMethod(ctx, "AnyMethod", &apigateway.MethodArgs{
 			HttpMethod:    pulumi.String("ANY"),
 			Authorization: pulumi.String("NONE"),
 			RestApi:       gateway.ID(),
