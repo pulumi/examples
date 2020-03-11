@@ -1,0 +1,13 @@
+name: go-lambda
+runtime: go
+description: Basic example of an AWS lambda With API Gateway
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
+    go-lambda:accountid:
+      description: The AWS account ID to use
+    go-lambda:gateway-region:
+      description: The AWS region to deploy the AWS API Gateway to
+      default: us-east-1
