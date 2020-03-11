@@ -44,7 +44,7 @@ const connectionString = pulumi.interpolate`Server=tcp:${sqlServer.name}.databas
 const textBlob = new azure.storage.Blob("text", {
     storageAccountName: storageAccount.name,
     storageContainerName: storageContainer.name,
-    type: "block",
+    type: "Block",
     source: "./README.md",
 });
 
@@ -59,12 +59,12 @@ const appServicePlan = new azure.appservice.Plan("asp", {
 });
 
 // ASP.NET deployment package
-const blob = new azure.storage.ZipBlob("zip", {
+const blob = new azure.storage.Blob("zip", {
     storageAccountName: storageAccount.name,
     storageContainerName: storageContainer.name,
-    type: "block",
+    type: "Block",
 
-    content: new pulumi.asset.FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish"),
+    source: new pulumi.asset.FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish"),
 });
 
 const clientConfig = azure.core.getClientConfig({ async: true });
@@ -90,7 +90,7 @@ const secret = new azure.keyvault.Secret("deployment-zip", {
     keyVaultId: vault.id,
     value: azure.storage.signedBlobReadUrl(blob, storageAccount),
 });
-const secretUri = pulumi.interpolate`${secret.vaultUri}secrets/${secret.name}/${secret.version}`;
+const secretUri = pulumi.interpolate`${vault.vaultUri}secrets/${secret.name}/${secret.version}`;
 
 // The application hosted in App Service
 const app = new azure.appservice.AppService("app", {

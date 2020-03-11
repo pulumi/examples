@@ -53,8 +53,8 @@ text_blob = storage.Blob(
     "text",
     storage_account_name=storage_account.name,
     storage_container_name=container.name,
-    type="block",
-    source="./README.md"
+    type="Block",
+    source=asset.FileAsset("./README.md")
 )
 
 app_service_plan = appservice.Plan(
@@ -67,12 +67,12 @@ app_service_plan = appservice.Plan(
     }
 )
 
-blob = storage.ZipBlob(
+blob = storage.Blob(
     "zip",
     storage_account_name=storage_account.name,
     storage_container_name=container.name,
-    type="block",
-    content=asset.FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish")
+    type="Block",
+    source=asset.FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish")
 )
 
 client_config = core.get_client_config()
@@ -91,42 +91,36 @@ vault = keyvault.KeyVault(
     }]
 )
 
-account_sas=storage.get_account_sas(
-    connection_string=storage_account.primary_connection_string,
-    start="2019-01-01",
-    expiry="2029-01-01",
-    services={
-        "blob": "true",
-        "queue": "false",
-        "table": "false",
-        "file": "false"
-    },
-    resource_types={
-        "service": "false",
-        "container": "false",
-        "object": "true"
-    },
-    permissions={
-        "read": "true",
-        "write": "false",
-        "delete": "false",
-        "add": "false",
-        "list": "false",
-        "create": "false",
-        "update": "false",
-        "process": "false"
-    },
-)
+def get_sas(args):
+    blob_sas = storage.get_account_blob_container_sas(
+        connection_string=args[1],
+        start="2020-01-01",
+        expiry="2030-01-01",
+        container_name=args[2],
+        permissions={
+            "read": "true",
+            "write": "false",
+            "delete": "false",
+            "list": "false",
+            "add": "false",
+            "create": "false"
+        }
+    )
+    return f"https://{args[0]}.blob.core.windows.net/{args[2]}/{args[3]}{blob_sas.sas}"
 
-signed_blob_url = Output.all(storage_account.name, container.name, blob.name, account_sas.sas) \
-    .apply(lambda args: f"https://{args[0]}.blob.core.windows.net/{args[1]}/{args[2]}{args[3]}")
+signed_blob_url = Output.all(
+    storage_account.name,
+    storage_account.primary_connection_string,
+    storage_account.name,
+    blob.name
+).apply(get_sas)
 
 secret = keyvault.Secret(
     "deployment-zip",
     key_vault_id=vault.id,
     value=signed_blob_url)
 
-secret_uri = Output.all(secret.vault_uri, secret.name, secret.version) \
+secret_uri = Output.all(vault.vault_uri, secret.name, secret.version) \
     .apply(lambda args: f"{args[0]}secrets/{args[1]}/{args[2]}")
 
 app = appservice.AppService(

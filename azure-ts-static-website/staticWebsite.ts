@@ -8,8 +8,10 @@ export interface StorageStaticWebsiteArgs {
 
 const accountNameProp = "accountName";
 
-// There's currently no way to enable the Static Web Site feature of a storage account via ARM
-// Therefore, we created a custom provider which wraps corresponding Azure CLI commands
+// There's currently a native way to enable the Static Web Site feature of a storage account with Pulumi.
+// This provider was created when that wasn't available.
+// It's kept for illustrative purpose only.
+// A custom provider which wraps corresponding Azure CLI commands.
 class StorageStaticWebsiteProvider implements pulumi.dynamic.ResourceProvider {
 
     public async check(olds: any, news: any): Promise<pulumi.dynamic.CheckResult> {
