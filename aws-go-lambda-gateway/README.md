@@ -59,8 +59,6 @@ After cloning this repo, run these commands from the working directory:
 3. Set the required configuration variables for this program:
 	```bash
 	$ pulumi config set aws:region us-west-2
-	$ pulumi config set accountid <your AWS account ID>
-	$ pulumi config set gateway-region <the region where you want to deploy your API gateway>
 	```
 
 4. Execute the Pulumi program to create our lambda:
