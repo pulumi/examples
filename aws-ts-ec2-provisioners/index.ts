@@ -18,7 +18,7 @@ const privateKey = config.requireSecret("privateKey").apply(key => {
     if (key.startsWith("-----BEGIN RSA PRIVATE KEY-----")) {
         return key;
     } else {
-        return new Buffer(key, "base64").toString("ascii");
+        return Buffer.from(key, "base64").toString("ascii");
     }
 });
 const privateKeyPassphrase = config.getSecret("privateKeyPassphrase");
@@ -52,7 +52,7 @@ const server = new aws.ec2.Instance("server", {
     instanceType: size,
     ami: amiId,
     keyName: keyName,
-    securityGroups: [ secgrp.name ],
+    vpcSecurityGroupIds: [ secgrp.id ],
 });
 const conn = {
     host: server.publicIp,

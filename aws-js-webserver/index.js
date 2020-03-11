@@ -31,7 +31,7 @@ nohup python -m SimpleHTTPServer 80 &`;
 let server = new aws.ec2.Instance("web-server-www", {
     tags: { "Name": "web-server-www" },
     instanceType: size,
-    securityGroups: [ group.name ], // reference the group object above
+    vpcSecurityGroupIds: [ group.id ], // reference the group object above
     ami: ami,
     userData: userData              // start a simple web server
 });
