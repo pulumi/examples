@@ -60,9 +60,9 @@ To deploy your infrastructure, follow the below steps.
     </body></html>
     ```
 
-6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
+1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
-7. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
     ```bash
     $ pulumi destroy --yes
