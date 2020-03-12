@@ -29,7 +29,7 @@ func main() {
 		// Create the docker image.
 		imageArgs := docker.ImageArgs{
 			ImageName: pulumi.Sprintf("%s/mynodeapp:v1.0.0", registry.LoginServer),
-			Build: docker.DockerBuildArgs{
+			Build: &docker.DockerBuildArgs{
 				Context: pulumi.String("./app"),
 			},
 			Registry: &docker.ImageRegistryArgs{
