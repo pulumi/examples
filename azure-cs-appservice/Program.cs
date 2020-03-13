@@ -41,12 +41,12 @@ class Program
                 ContainerAccessType = "private",
             });
 
-            var blob = new ZipBlob("zip", new ZipBlobArgs
+            var blob = new Blob("zip", new BlobArgs
             {
                 StorageAccountName = storageAccount.Name,
                 StorageContainerName = container.Name,
-                Type = "block",
-                Content = new FileArchive("wwwroot"),
+                Type = "Block",
+                Source = new FileArchive("wwwroot"),
             });
 
             var codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount);

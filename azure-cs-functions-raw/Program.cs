@@ -40,12 +40,12 @@ class Program
                 ContainerAccessType = "private",
             });
 
-            var blob = new ZipBlob("zip", new ZipBlobArgs
+            var blob = new Blob("zip", new BlobArgs
             {
                 StorageAccountName = storageAccount.Name,
                 StorageContainerName = container.Name,
-                Type = "block",
-                Content = new FileArchive("./functions/bin/Debug/netcoreapp3.0/publish"),
+                Type = "Block",
+                Source = new FileArchive("./functions/bin/Debug/netcoreapp3.1/publish"),
             });
 
             var codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount);
