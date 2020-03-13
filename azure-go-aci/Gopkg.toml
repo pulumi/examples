@@ -26,11 +26,11 @@
 
 [[constraint]]
   name = "github.com/pulumi/pulumi"
-  version = "1.9.1"
+  revision = "b6e5d2737d4fb454d748f0022ea29f9c4a0686fc"
 
 [[constraint]]
   name = "github.com/pulumi/pulumi-docker"
-  version = "1.4.0"
+  revision = "88e4d81f3ddf417d3468251affff2f55c56c1a5e"
 
 [prune]
   go-tests = true
