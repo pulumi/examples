@@ -65,8 +65,8 @@ class Program
             {
                 StorageAccountName = storageAccount.Name,
                 StorageContainerName = storageContainer.Name,
-                Type = "block",
-                Source = "./README.md",
+                Type = "Block",
+                Source = new FileAsset("./README.md"),
             });
 
             // A plan to host the App Service
@@ -82,12 +82,12 @@ class Program
             });
 
             // ASP.NET deployment package
-            var blob = new ZipBlob("zip", new ZipBlobArgs
+            var blob = new Blob("zip", new BlobArgs
             {
                 StorageAccountName = storageAccount.Name,
                 StorageContainerName = storageContainer.Name,
-                Type = "block",
-                Content = new FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish"),
+                Type = "Block",
+                Source = new FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish"),
             });
 
             var clientConfig = await Pulumi.Azure.Core.Invokes.GetClientConfig();
@@ -119,7 +119,7 @@ class Program
                 KeyVaultId = vault.Id,
                 Value = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount),
             });
-            var secretUri = Output.Format($"{secret.VaultUri}secrets/{secret.Name}/{secret.Version}");
+            var secretUri = Output.Format($"{vault.VaultUri}secrets/{secret.Name}/{secret.Version}");
 
 
             // The application hosted in App Service

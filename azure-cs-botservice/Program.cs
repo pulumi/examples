@@ -5,7 +5,6 @@ using Pulumi.Azure.AppInsights;
 using Pulumi.Azure.AppService;
 using Pulumi.Azure.AppService.Inputs;
 using Pulumi.Azure.Bot;
-using Pulumi.Azure.Cognitive.Inputs;
 using Pulumi.Azure.Core;
 using Pulumi.AzureAD;
 using Pulumi.Random;
@@ -49,12 +48,12 @@ class Program
                 ContainerAccessType = "private",
             });
 
-            var blob = new Storage.ZipBlob("zip", new Storage.ZipBlobArgs
+            var blob = new Storage.Blob("zip", new Storage.BlobArgs
             {
                 StorageAccountName = storageAccount.Name,
                 StorageContainerName = container.Name,
-                Type = "block",
-                Content = new FileArchive("bot/publish")
+                Type = "Block",
+                Source = new FileArchive("bot/publish")
             });
 
             var codeBlobUrl = Storage.SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount);
@@ -75,7 +74,7 @@ class Program
             {
                 Kind = "CognitiveServices", // includes LUIS
                 ResourceGroupName = resourceGroup.Name,
-                Sku = new AccountSkuArgs { Name = "S0", Tier = "Standard" }
+                SkuName = "S0"
             });
 
             var msa = new Application("msapp", new ApplicationArgs

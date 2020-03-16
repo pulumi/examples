@@ -29,6 +29,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digitalocean.K8s", "digital
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Azure.Aci", "azure-fs-aci\Azure.Aci.fsproj", "{9F646ECF-9CD3-4686-8C4C-FE6AAAD29FEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.AKS.PrivateContainerRegistry", "azure-cs-aks-private-container-registry\Azure.AKS.PrivateContainerRegistry.csproj", "{23099098-BEE1-4199-B1AB-8864DE7276DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "azure-cs-static-website", "azure-cs-static-website\azure-cs-static-website.csproj", "{4DEEF787-D589-44C5-AAB1-570D2D920043}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Azure.Aks", "azure-fs-aks\Azure.Aks.fsproj", "{555DED90-15AE-4620-ACEE-B53EC237C62B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +93,18 @@ Global
 		{9F646ECF-9CD3-4686-8C4C-FE6AAAD29FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F646ECF-9CD3-4686-8C4C-FE6AAAD29FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F646ECF-9CD3-4686-8C4C-FE6AAAD29FEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23099098-BEE1-4199-B1AB-8864DE7276DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23099098-BEE1-4199-B1AB-8864DE7276DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23099098-BEE1-4199-B1AB-8864DE7276DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23099098-BEE1-4199-B1AB-8864DE7276DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DEEF787-D589-44C5-AAB1-570D2D920043}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DEEF787-D589-44C5-AAB1-570D2D920043}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DEEF787-D589-44C5-AAB1-570D2D920043}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DEEF787-D589-44C5-AAB1-570D2D920043}.Release|Any CPU.Build.0 = Release|Any CPU
+		{555DED90-15AE-4620-ACEE-B53EC237C62B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{555DED90-15AE-4620-ACEE-B53EC237C62B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{555DED90-15AE-4620-ACEE-B53EC237C62B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{555DED90-15AE-4620-ACEE-B53EC237C62B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
