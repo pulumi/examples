@@ -11,10 +11,10 @@ public class ArchiveFunctionApp : ComponentResource
 {
     public Output<string> AppId { get; private set; } = null!;
 
-    public ArchiveFunctionApp(string name, ArchiveFunctionAppArgs args, ResourceOptions? options = null)
+    public ArchiveFunctionApp(string name, ArchiveFunctionAppArgs args, ComponentResourceOptions? options = null)
         : base("examples:azure:ArchiveFunctionApp", name, options)
     {
-        var opts = CustomResourceOptions.Merge(options, new CustomResourceOptions { Parent = this });
+        var opts = new CustomResourceOptions { Parent = this };
 
         var storageAccount = new Account($"sa{args.Location}", new AccountArgs
         {
@@ -42,12 +42,12 @@ public class ArchiveFunctionApp : ComponentResource
             ContainerAccessType = "private",
         }, opts);
 
-        var blob = new ZipBlob($"zip-{args.Location}", new ZipBlobArgs
+        var blob = new Blob($"zip-{args.Location}", new BlobArgs
         {
             StorageAccountName = storageAccount.Name,
             StorageContainerName = container.Name,
-            Type = "block",
-            Content = args.Archive,
+            Type = "Block",
+            Source = args.Archive,
         }, opts);
 
         var codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount);
@@ -73,7 +73,7 @@ public class ArchiveFunctionAppArgs
 {
     public Input<string> ResourceGroupName { get; set; } = null!;
     public string Location { get; set; } = null!;
-    public Input<Archive> Archive { get; set; } = null!;
+    public Input<AssetOrArchive> Archive { get; set; } = null!;
     
     private InputMap<string>? _appSettings;
     public InputMap<string> AppSettings

@@ -97,7 +97,7 @@ public class CosmosApp : ComponentResource
         var resourceGroup = args.ResourceGroup;
         var locations = args.Locations;
         var primaryLocation = locations[0];
-        var parentOptions = (CustomResourceOptions)ResourceOptions.Merge(new CustomResourceOptions { Parent = this }, options);
+        var parentOptions = new CustomResourceOptions { Parent = this };
 
         // Cosmos DB Account with multiple replicas
         var cosmosAccount = new Account($"cosmos-{name}",
@@ -154,7 +154,7 @@ public class CosmosApp : ComponentResource
 
         var globalContext = new GlobalContext(resourceGroup, cosmosAccount, database, container, parentOptions);
         var buildLocation = args.Factory(globalContext);
-        var endpointOptions = (CustomResourceOptions)ResourceOptions.Merge(options, new CustomResourceOptions { Parent = profile, DeleteBeforeReplace = true });
+        var endpointOptions = new CustomResourceOptions { Parent = profile, DeleteBeforeReplace = true };
 
         var endpoints = locations.Select(location =>
         {

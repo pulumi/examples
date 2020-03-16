@@ -51,7 +51,7 @@ public static class VmScaleSets
 
         public Func<RegionalContext, IRegionalEndpoint> BuildVMScaleSetApp(GlobalContext context)
         {
-            var options = (CustomResourceOptions)ResourceOptions.Merge(context.Options, new CustomResourceOptions { DeleteBeforeReplace = true });
+            var options = CustomResourceOptions.Merge(context.Options, new CustomResourceOptions { DeleteBeforeReplace = true });
             var file = File.ReadAllText("./vm/vmCustomData.yaml");
             return (RegionalContext region) =>
             {
@@ -198,7 +198,7 @@ public static class VmScaleSets
                     },
                     UpgradePolicyMode = "Automatic",
                 },
-                (CustomResourceOptions)ResourceOptions.Merge(options, new ResourceOptions { DependsOn = { bpepool, rule } }));
+                CustomResourceOptions.Merge(options, new CustomResourceOptions { DependsOn = { bpepool, rule } }));
 
                 var autoscale = new AutoscaleSetting($"as-{location}", new AutoscaleSettingArgs
                 {
