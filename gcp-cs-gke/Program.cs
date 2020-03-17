@@ -41,7 +41,7 @@ class Program
                 t => GetKubeconfig(t.Item1, t.Item2, t.Item3)
             );
 
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 {"clusterName", cluster.Name},
                 {"kubeconfig", kubeconfig},
@@ -51,7 +51,7 @@ class Program
 
     private static string GetKubeconfig(string clusterName, string clusterEndpoint, ClusterMasterAuth clusterMasterAuth)
     {
-        var context = $"{Pulumi.Gcp.Config.Config.Project}_{Pulumi.Gcp.Config.Config.Zone}_{clusterName}";
+        var context = $"{Pulumi.Gcp.Config.Project}_{Pulumi.Gcp.Config.Zone}_{clusterName}";
         return $@"apiVersion: v1
 clusters:
 - cluster:
