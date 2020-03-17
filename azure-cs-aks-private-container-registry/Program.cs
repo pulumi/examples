@@ -78,10 +78,10 @@ class Program
             var cluster = new KubernetesCluster("aksCluster", new KubernetesClusterArgs
             {
                 ResourceGroupName = resourceGroup.Name,
-                AgentPoolProfiles = new KubernetesClusterAgentPoolProfilesArgs
+                DefaultNodePool = new KubernetesClusterDefaultNodePoolArgs 
                 {
                     Name = "aksagentpool",
-                    Count = 3,
+                    NodeCount = 3,
                     VmSize = "Standard_B2s",
                     OsDiskSizeGb = 30,
                     VnetSubnetId = subnet.Id
