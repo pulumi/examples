@@ -31,13 +31,13 @@ public static class Functions
                 {
                     ResourceGroupName = resourceGroup.Name,
                     Location = region.Location,
-                    Archive = new FileArchive("./app/bin/Debug/netcoreapp2.2/publish"),
+                    Archive = new FileArchive("./app/bin/Debug/netcoreapp3.1/publish"),
                     AppSettings =
                     {
                         { "CosmosDBConnection", connectionString },
                     },
                 },
-                global.Options);
+                new ComponentResourceOptions { Parent = global.Options.Parent } );
 
                 return new AzureEndpoint(func.AppId);
             },
