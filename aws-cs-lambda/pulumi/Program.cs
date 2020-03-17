@@ -19,7 +19,7 @@ class Program
                 Role = CreateLambdaRole().Arn
             });
 
-            return new Dictionary<string, object> { { "lambda", lambda.Arn } };
+            return new Dictionary<string, object?> { { "lambda", lambda.Arn } };
         });
     }
 
