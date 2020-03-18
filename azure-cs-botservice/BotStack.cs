@@ -13,9 +13,9 @@ using Storage = Pulumi.Azure.Storage;
 
 class BotStack : Stack
 {
-	public BotStack()
-	{
-		var config = new Pulumi.Config();
+    public BotStack()
+    {
+        var config = new Pulumi.Config();
         var botName = config.Require("botName");
 
         var resourceGroup = new ResourceGroup("botservice-rg");
@@ -35,7 +35,7 @@ class BotStack : Stack
             {
                 Tier = "Basic",
                 Size = "B1"
-            },
+            }
         });
 
         var container = new Storage.Container("zips", new Storage.ContainerArgs
@@ -102,10 +102,10 @@ class BotStack : Stack
             AppServicePlanId = appServicePlan.Id,
             AppSettings =
             {
-                { "WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl },
-                { "MicrosoftAppId", msa.ApplicationId },
-                { "MicrosoftAppPassword", msaSecret.Value },
-                { "LuisApiKey", luis.PrimaryAccessKey },
+                {"WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl},
+                {"MicrosoftAppId", msa.ApplicationId},
+                {"MicrosoftAppPassword", msaSecret.Value},
+                {"LuisApiKey", luis.PrimaryAccessKey},
             },
             HttpsOnly = true
         });
@@ -126,14 +126,11 @@ class BotStack : Stack
         this.BotEndpoint = bot.Endpoint;
         this.MicrosoftAppId = msa.ApplicationId;
         this.MicrosoftAppPassword = msaSecret.Value;
-	}
-	
-	[Output]
-	public Output<string?> BotEndpoint { get; set; }
-	
-	[Output]
-	public Output<string> MicrosoftAppId { get; set; }
-	
-	[Output]
-	public Output<string> MicrosoftAppPassword { get; set; }
+    }
+
+    [Output] public Output<string?> BotEndpoint { get; set; }
+
+    [Output] public Output<string> MicrosoftAppId { get; set; }
+
+    [Output] public Output<string> MicrosoftAppPassword { get; set; }
 }

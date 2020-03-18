@@ -5,5 +5,5 @@ using Pulumi;
 
 class Program
 {
-	static Task<int> Main() => Deployment.RunAsync<AksStack>();
+    static Task<int> Main() => Deployment.RunAsync<AksStack>();
 }

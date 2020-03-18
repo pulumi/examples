@@ -9,9 +9,9 @@ using Pulumi.Azure.Storage;
 
 class AppServiceStack : Stack
 {
-	public AppServiceStack()
-	{
-		var resourceGroup = new ResourceGroup("appservice-rg");
+    public AppServiceStack()
+    {
+        var resourceGroup = new ResourceGroup("appservice-rg");
 
         var storageAccount = new Account("sa", new AccountArgs
         {
@@ -71,7 +71,7 @@ class AppServiceStack : Stack
             AppServicePlanId = appServicePlan.Id,
             AppSettings =
             {
-                { "WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl },
+                {"WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl},
             },
             ConnectionStrings =
             {
@@ -82,15 +82,15 @@ class AppServiceStack : Stack
                     Value = Output.Tuple<string, string, string>(sqlServer.Name, database.Name, password).Apply(t =>
                     {
                         (string server, string database, string pwd) = t;
-                        return $"Server= tcp:{server}.database.windows.net;initial catalog={database};userID={username};password={pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;";
+                        return
+                            $"Server= tcp:{server}.database.windows.net;initial catalog={database};userID={username};password={pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;";
                     }),
                 },
             },
         });
 
         this.Endpoint = app.DefaultSiteHostname;
-	}
-	
-	[Output]
-	public Output<string> Endpoint { get; set; }
+    }
+
+    [Output] public Output<string> Endpoint { get; set; }
 }

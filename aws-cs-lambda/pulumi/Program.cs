@@ -5,5 +5,5 @@ using Pulumi;
 
 class Program
 {
-	static Task<int> Main() => Deployment.RunAsync<LambdaStack>();
+    static Task<int> Main() => Deployment.RunAsync<LambdaStack>();
 }

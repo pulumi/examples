@@ -12,9 +12,9 @@ using Pulumi.Tls;
 
 class AksStack : Stack
 {
-	public AksStack()
-	{
-		var resourceGroup = new ResourceGroup("aks-rg");
+    public AksStack()
+    {
+        var resourceGroup = new ResourceGroup("aks-rg");
 
         var password = new RandomPassword("password", new RandomPasswordArgs
         {
@@ -30,7 +30,7 @@ class AksStack : Stack
 
         // Create the AD service principal for the K8s cluster.
         var adApp = new Application("aks");
-        var adSp = new ServicePrincipal("aksSp", new ServicePrincipalArgs { ApplicationId = adApp.ApplicationId });
+        var adSp = new ServicePrincipal("aksSp", new ServicePrincipalArgs {ApplicationId = adApp.ApplicationId});
         var adSpPassword = new ServicePrincipalPassword("aksSpPassword", new ServicePrincipalPasswordArgs
         {
             ServicePrincipalId = adSp.Id,
@@ -50,7 +50,7 @@ class AksStack : Stack
         var vnet = new VirtualNetwork("vnet", new VirtualNetworkArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            AddressSpaces = { "10.2.0.0/16" },
+            AddressSpaces = {"10.2.0.0/16"},
         });
 
         // Create a Subnet for the cluster
@@ -74,7 +74,7 @@ class AksStack : Stack
                 VnetSubnetId = subnet.Id,
             },
             DnsPrefix = "sampleaks",
-            LinuxProfile = new KubernetesClusterLinuxProfileArgs 
+            LinuxProfile = new KubernetesClusterLinuxProfileArgs
             {
                 AdminUsername = "aksuser",
                 SshKey = new KubernetesClusterLinuxProfileSshKeyArgs
@@ -82,14 +82,14 @@ class AksStack : Stack
                     KeyData = sshPublicKey,
                 },
             },
-            ServicePrincipal = new KubernetesClusterServicePrincipalArgs 
+            ServicePrincipal = new KubernetesClusterServicePrincipalArgs
             {
                 ClientId = adApp.ApplicationId,
                 ClientSecret = adSpPassword.Value,
             },
             KubernetesVersion = "1.15.7",
-            RoleBasedAccessControl = new KubernetesClusterRoleBasedAccessControlArgs { Enabled = true },
-            NetworkProfile = new KubernetesClusterNetworkProfileArgs 
+            RoleBasedAccessControl = new KubernetesClusterRoleBasedAccessControlArgs {Enabled = true},
+            NetworkProfile = new KubernetesClusterNetworkProfileArgs
             {
                 NetworkPlugin = "azure",
                 DnsServiceIp = "10.2.2.254",
@@ -99,8 +99,7 @@ class AksStack : Stack
         });
 
         this.KubeConfig = cluster.KubeConfigRaw;
-	}
-	
-	[Output]
-	public Output<string> KubeConfig { get; set; }
+    }
+
+    [Output] public Output<string> KubeConfig { get; set; }
 }

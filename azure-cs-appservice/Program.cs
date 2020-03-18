@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Pulumi;
 using Pulumi.Azure.AppService;
 using Pulumi.Azure.AppService.Inputs;
@@ -14,7 +13,8 @@ class Program
 {
     static Task<int> Main()
     {
-        return Deployment.RunAsync(() => {
+        return Deployment.RunAsync(() =>
+        {
             var resourceGroup = new ResourceGroup("appservice-rg");
 
             var storageAccount = new Account("sa", new AccountArgs
@@ -75,7 +75,7 @@ class Program
                 AppServicePlanId = appServicePlan.Id,
                 AppSettings =
                 {
-                    { "WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl },
+                    {"WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl},
                 },
                 ConnectionStrings =
                 {
@@ -86,7 +86,8 @@ class Program
                         Value = Output.Tuple<string, string, string>(sqlServer.Name, database.Name, password).Apply(t =>
                         {
                             (string server, string database, string pwd) = t;
-                            return $"Server= tcp:{server}.database.windows.net;initial catalog={database};userID={username};password={pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;";
+                            return
+                                $"Server= tcp:{server}.database.windows.net;initial catalog={database};userID={username};password={pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;";
                         }),
                     },
                 },
@@ -94,9 +95,8 @@ class Program
 
             return new Dictionary<string, object?>
             {
-                { "endpoint", app.DefaultSiteHostname },
+                {"endpoint", app.DefaultSiteHostname},
             };
-
         });
     }
 }

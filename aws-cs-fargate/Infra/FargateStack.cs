@@ -13,12 +13,12 @@ using Iam = Pulumi.Aws.Iam;
 
 class FargateStack : Stack
 {
-	public FargateStack()
-	{
-		// Read back the default VPC and public subnets, which we will use.
-        var vpc = Output.Create(Ec2.Invokes.GetVpc(new Ec2.GetVpcArgs { Default = true }));
+    public FargateStack()
+    {
+        // Read back the default VPC and public subnets, which we will use.
+        var vpc = Output.Create(Ec2.Invokes.GetVpc(new Ec2.GetVpcArgs {Default = true}));
         var vpcId = vpc.Apply(vpc => vpc.Id);
-        var subnet = vpcId.Apply(id => Ec2.Invokes.GetSubnetIds(new Ec2.GetSubnetIdsArgs { VpcId = id }));
+        var subnet = vpcId.Apply(id => Ec2.Invokes.GetSubnetIds(new Ec2.GetSubnetIdsArgs {VpcId = id}));
         var subnetIds = subnet.Apply(s => s.Ids);
 
         // Create a SecurityGroup that permits HTTP ingress and unrestricted egress.
@@ -32,7 +32,7 @@ class FargateStack : Stack
                     Protocol = "-1",
                     FromPort = 0,
                     ToPort = 0,
-                    CidrBlocks = { "0.0.0.0/0" }
+                    CidrBlocks = {"0.0.0.0/0"}
                 }
             },
             Ingress =
@@ -42,7 +42,7 @@ class FargateStack : Stack
                     Protocol = "tcp",
                     FromPort = 80,
                     ToPort = 80,
-                    CidrBlocks = { "0.0.0.0/0" }
+                    CidrBlocks = {"0.0.0.0/0"}
                 }
             }
         });
@@ -75,7 +75,7 @@ class FargateStack : Stack
         var webLb = new Elb.LoadBalancer("web-lb", new Elb.LoadBalancerArgs
         {
             Subnets = subnetIds,
-            SecurityGroups = { webSg.Id }
+            SecurityGroups = {webSg.Id}
         });
         var webTg = new Elb.TargetGroup("web-tg", new Elb.TargetGroupArgs
         {
@@ -102,7 +102,7 @@ class FargateStack : Stack
         var appRepo = new Ecr.Repository("app-repo");
         var appRepoCredentials = appRepo.RegistryId.Apply(async rid =>
         {
-            var credentials = await Ecr.Invokes.GetCredentials(new Ecr.GetCredentialsArgs { RegistryId = rid });
+            var credentials = await Ecr.Invokes.GetCredentials(new Ecr.GetCredentialsArgs {RegistryId = rid});
             var data = Convert.FromBase64String(credentials.AuthorizationToken);
             return Encoding.UTF8.GetString(data).Split(":").ToImmutableArray();
         });
@@ -125,7 +125,7 @@ class FargateStack : Stack
             Cpu = "256",
             Memory = "512",
             NetworkMode = "awsvpc",
-            RequiresCompatibilities = { "FARGATE" },
+            RequiresCompatibilities = {"FARGATE"},
             ExecutionRoleArn = taskExecRole.Arn,
             ContainerDefinitions = image.ImageName.Apply(imageName => @"[{
 ""name"": ""my-app"",
@@ -147,7 +147,7 @@ class FargateStack : Stack
             {
                 AssignPublicIp = true,
                 Subnets = subnetIds,
-                SecurityGroups = { webSg.Id }
+                SecurityGroups = {webSg.Id}
             },
             LoadBalancers =
             {
@@ -158,12 +158,11 @@ class FargateStack : Stack
                     ContainerPort = 80
                 }
             }
-        }, new CustomResourceOptions { DependsOn = { webListener } });
+        }, new CustomResourceOptions {DependsOn = {webListener}});
 
         // Export the resulting web address.
         this.Url = Output.Format($"http://{webLb.DnsName}");
-	}
-	
-	[Output]
-	public Output<string> Url { get; set; }
+    }
+
+    [Output] public Output<string> Url { get; set; }
 }

@@ -6,28 +6,27 @@ using Pulumi.Aws.Lambda;
 
 class LambdaStack : Stack
 {
-	public LambdaStack()
-	{
-		var lambda = new Function("basicLambda", new FunctionArgs
-		{
-			Runtime = "dotnetcore2.1",
-			Code = new FileArchive("../DotnetLambda/src/DotnetLambda/bin/Debug/netcoreapp2.1/publish"),
-			Handler = "DotnetLambda::DotnetLambda.Function::FunctionHandler",
-			Role = CreateLambdaRole().Arn
-		});
+    public LambdaStack()
+    {
+        var lambda = new Function("basicLambda", new FunctionArgs
+        {
+            Runtime = "dotnetcore2.1",
+            Code = new FileArchive("../DotnetLambda/src/DotnetLambda/bin/Debug/netcoreapp2.1/publish"),
+            Handler = "DotnetLambda::DotnetLambda.Function::FunctionHandler",
+            Role = CreateLambdaRole().Arn
+        });
 
-		this.Lambda = lambda.Arn;
-	}
-	
-	[Output]
-	public Output<string> Lambda { get; set; }
-	
-	private static Role CreateLambdaRole()
-	{
-		var lambdaRole = new Role("lambdaRole", new RoleArgs
-		{
-			AssumeRolePolicy =
-				@"{
+        this.Lambda = lambda.Arn;
+    }
+
+    [Output] public Output<string> Lambda { get; set; }
+
+    private static Role CreateLambdaRole()
+    {
+        var lambdaRole = new Role("lambdaRole", new RoleArgs
+        {
+            AssumeRolePolicy =
+                @"{
                 ""Version"": ""2012-10-17"",
                 ""Statement"": [
                     {
@@ -40,13 +39,13 @@ class LambdaStack : Stack
                     }
                 ]
             }"
-		});
+        });
 
-		var logPolicy = new RolePolicy("lambdaLogPolicy", new RolePolicyArgs
-		{
-			Role = lambdaRole.Id,
-			Policy =
-				@"{
+        var logPolicy = new RolePolicy("lambdaLogPolicy", new RolePolicyArgs
+        {
+            Role = lambdaRole.Id,
+            Policy =
+                @"{
                 ""Version"": ""2012-10-17"",
                 ""Statement"": [{
                     ""Effect"": ""Allow"",
@@ -58,8 +57,8 @@ class LambdaStack : Stack
                     ""Resource"": ""arn:aws:logs:*:*:*""
                 }]
             }"
-		});
+        });
 
-		return lambdaRole;
-	}
+        return lambdaRole;
+    }
 }

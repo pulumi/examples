@@ -14,9 +14,9 @@ using Pulumi.Random;
 
 class AppStack : Stack
 {
-	public AppStack()
-	{
-		var resourceGroup = new ResourceGroup("keyvault-rg");
+    public AppStack()
+    {
+        var resourceGroup = new ResourceGroup("keyvault-rg");
 
         // Create a storage account for Blobs
         var storageAccount = new Account("storage", new AccountArgs
@@ -35,7 +35,7 @@ class AppStack : Stack
 
         // Azure SQL Server that we want to access from the application
         var administratorLoginPassword = new RandomPassword("password",
-            new RandomPasswordArgs { Length = 16, Special = true }).Result;
+            new RandomPasswordArgs {Length = 16, Special = true}).Result;
         var sqlServer = new SqlServer("sqlserver", new SqlServerArgs
         {
             ResourceGroupName = resourceGroup.Name,
@@ -54,7 +54,8 @@ class AppStack : Stack
         });
 
         // The connection string that has no credentials in it: authertication will come through MSI
-        var connectionString = Output.Format($"Server=tcp:{sqlServer.Name}.database.windows.net;Database={database.Name};");
+        var connectionString =
+            Output.Format($"Server=tcp:{sqlServer.Name}.database.windows.net;Database={database.Name};");
 
         // A file in Blob Storage that we want to access from the application
         var textBlob = new Blob("text", new BlobArgs
@@ -104,7 +105,7 @@ class AppStack : Stack
                     // The current principal has to be granted permissions to Key Vault so that it can actually add and then remove
                     // secrets to/from the Key Vault. Otherwise, 'pulumi up' and 'pulumi destroy' operations will fail.
                     ObjectId = currentPrincipal,
-                    SecretPermissions = { "delete", "get", "list", "set" },
+                    SecretPermissions = {"delete", "get", "list", "set"},
                 }
             },
         });
@@ -124,15 +125,15 @@ class AppStack : Stack
             ResourceGroupName = resourceGroup.Name,
             AppServicePlanId = appServicePlan.Id,
             // A system-assigned managed service identity to be used for authentication and authorization to the SQL Database and the Blob Storage
-            Identity = new AppServiceIdentityArgs { Type = "SystemAssigned" },
+            Identity = new AppServiceIdentityArgs {Type = "SystemAssigned"},
 
             AppSettings =
             {
                 // Website is deployed from a URL read from the Key Vault
-                { "WEBSITE_RUN_FROM_ZIP", Output.Format($"@Microsoft.KeyVault(SecretUri={secretUri})") },
+                {"WEBSITE_RUN_FROM_ZIP", Output.Format($"@Microsoft.KeyVault(SecretUri={secretUri})")},
 
                 // Note that we simply provide the URL without SAS or keys
-                { "StorageBlobUrl", textBlob.Url },
+                {"StorageBlobUrl", textBlob.Url},
             },
             ConnectionStrings =
             {
@@ -154,7 +155,7 @@ class AppStack : Stack
             KeyVaultId = vault.Id,
             TenantId = tenantId,
             ObjectId = principalId,
-            SecretPermissions = { "get" },
+            SecretPermissions = {"get"},
         });
 
         // Make the App Service the admin of the SQL Server (double check if you want a more fine-grained security model in your real app)
@@ -188,8 +189,7 @@ class AppStack : Stack
             ).ToList());
 
         this.Endpoint = Output.Format($"https://{app.DefaultSiteHostname}");
-	}
-	
-	[Output]
-	public Output<string> Endpoint { get; set; }
+    }
+
+    [Output] public Output<string> Endpoint { get; set; }
 }

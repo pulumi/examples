@@ -7,9 +7,9 @@ using Pulumi.Kubernetes.Types.Inputs.Meta.V1;
 
 class Guestbook : Stack
 {
-	public Guestbook()
-	{
-		// Minikube does not implement services of type `LoadBalancer`; require the user to
+    public Guestbook()
+    {
+        // Minikube does not implement services of type `LoadBalancer`; require the user to
         // specify if we're running on minikube, and if so, create only services of type
         // ClusterIP.
         var config = new Config();
@@ -21,7 +21,7 @@ class Guestbook : Stack
 
         var redisMasterLabels = new InputMap<string>
         {
-            { "app", "redis-master" }
+            {"app", "redis-master"}
         };
 
         var redisMasterDeployment = new Pulumi.Kubernetes.Apps.V1.Deployment("redis-master", new DeploymentArgs
@@ -50,13 +50,13 @@ class Guestbook : Stack
                                 {
                                     Requests =
                                     {
-                                        { "cpu", "100m" },
-                                        { "memory", "100Mi" }
+                                        {"cpu", "100m"},
+                                        {"memory", "100Mi"}
                                     }
                                 },
                                 Ports =
                                 {
-                                    new ContainerPortArgs { ContainerPortValue = 6379 }
+                                    new ContainerPortArgs {ContainerPortValue = 6379}
                                 }
                             }
                         }
@@ -92,7 +92,7 @@ class Guestbook : Stack
 
         var redisReplicaLabels = new InputMap<string>
         {
-            { "app", "redis-replica" }
+            {"app", "redis-replica"}
         };
 
         var redisReplicaDeployment = new Pulumi.Kubernetes.Apps.V1.Deployment("redis-replica", new DeploymentArgs
@@ -121,8 +121,8 @@ class Guestbook : Stack
                                 {
                                     Requests =
                                     {
-                                        { "cpu", "100m" },
-                                        { "memory", "100Mi" }
+                                        {"cpu", "100m"},
+                                        {"memory", "100Mi"}
                                     }
                                 },
                                 // If your cluster config does not include a dns service, then to instead access an environment
@@ -137,7 +137,7 @@ class Guestbook : Stack
                                 },
                                 Ports =
                                 {
-                                    new ContainerPortArgs { ContainerPortValue = 6379 }
+                                    new ContainerPortArgs {ContainerPortValue = 6379}
                                 }
                             }
                         }
@@ -173,7 +173,7 @@ class Guestbook : Stack
 
         var frontendLabels = new InputMap<string>
         {
-            { "app", "frontend" },
+            {"app", "frontend"},
         };
 
         var frontendDeployment = new Pulumi.Kubernetes.Apps.V1.Deployment("frontend", new DeploymentArgs
@@ -201,9 +201,10 @@ class Guestbook : Stack
                                 Image = "gcr.io/google-samples/gb-frontend:v4",
                                 Resources = new ResourceRequirementsArgs
                                 {
-                                    Requests = {
-                                        { "cpu", "100m" },
-                                        { "memory", "100Mi" },
+                                    Requests =
+                                    {
+                                        {"cpu", "100m"},
+                                        {"memory", "100Mi"},
                                     },
                                 },
                                 // If your cluster config does not include a dns service, then to instead access an environment
@@ -218,7 +219,7 @@ class Guestbook : Stack
                                 },
                                 Ports =
                                 {
-                                    new ContainerPortArgs { ContainerPortValue = 80 }
+                                    new ContainerPortArgs {ContainerPortValue = 80}
                                 }
                             }
                         }
@@ -257,8 +258,7 @@ class Guestbook : Stack
         {
             this.FrontendIp = frontendService.Status.Apply(status => status.LoadBalancer.Ingress[0].Hostname);
         }
-	}
-	
-	[Output]
-	public Output<string> FrontendIp { get; set; }
+    }
+
+    [Output] public Output<string> FrontendIp { get; set; }
 }

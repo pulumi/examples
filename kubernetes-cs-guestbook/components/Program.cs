@@ -5,5 +5,5 @@ using Pulumi;
 
 class Program
 {
-	static Task<int> Main() => Deployment.RunAsync<Guestbook>();
+    static Task<int> Main() => Deployment.RunAsync<Guestbook>();
 }

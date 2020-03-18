@@ -22,9 +22,9 @@ using ServiceArgs = Pulumi.Kubernetes.Types.Inputs.Core.V1.ServiceArgs;
 
 class AksStack : Stack
 {
-	public AksStack()
-	{
-		var resourceGroup = new ResourceGroup("aks-rg");
+    public AksStack()
+    {
+        var resourceGroup = new ResourceGroup("aks-rg");
 
         var randomPassword = new RandomPassword("password", new RandomPasswordArgs
         {
@@ -40,7 +40,7 @@ class AksStack : Stack
 
         // Create the AD service principal for the K8s cluster.
         var adApp = new Application("aks");
-        var adSp = new ServicePrincipal("aksSp", new ServicePrincipalArgs { ApplicationId = adApp.ApplicationId });
+        var adSp = new ServicePrincipal("aksSp", new ServicePrincipalArgs {ApplicationId = adApp.ApplicationId});
         var adSpPassword = new ServicePrincipalPassword("aksSpPassword", new ServicePrincipalPasswordArgs
         {
             ServicePrincipalId = adSp.Id,
@@ -60,7 +60,7 @@ class AksStack : Stack
         var vnet = new VirtualNetwork("vnet", new VirtualNetworkArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            AddressSpaces = { "10.2.0.0/16" },
+            AddressSpaces = {"10.2.0.0/16"},
         });
 
         // Create a Subnet for the cluster.
@@ -98,7 +98,7 @@ class AksStack : Stack
                 ClientSecret = adSpPassword.Value,
             },
             KubernetesVersion = "1.15.7",
-            RoleBasedAccessControl = new KubernetesClusterRoleBasedAccessControlArgs { Enabled = true },
+            RoleBasedAccessControl = new KubernetesClusterRoleBasedAccessControlArgs {Enabled = true},
             NetworkProfile = new KubernetesClusterNetworkProfileArgs
             {
                 NetworkPlugin = "azure",
@@ -147,22 +147,23 @@ class AksStack : Stack
         });
 
         // Create a k8s secret for use when pulling images from the container registry when deploying the sample application.
-        var dockerCfg = Output.All<string>(registry.LoginServer, registry.AdminUsername, registry.AdminPassword).Apply(values =>
-        {
-            var r = new Dictionary<string, object>();
-            var server = values[0];
-            var username = values[1];
-            var password = values[2];
-
-            r[server] = new
+        var dockerCfg = Output.All<string>(registry.LoginServer, registry.AdminUsername, registry.AdminPassword).Apply(
+            values =>
             {
-                email = "notneeded@notneeded.com",
-                username,
-                password
-            };
+                var r = new Dictionary<string, object>();
+                var server = values[0];
+                var username = values[1];
+                var password = values[2];
 
-            return r;
-        });
+                r[server] = new
+                {
+                    email = "notneeded@notneeded.com",
+                    username,
+                    password
+                };
+
+                return r;
+            });
 
         var dockerCfgString = dockerCfg.Apply(x =>
             Convert.ToBase64String(Encoding.UTF8.GetBytes(System.Text.Json.JsonSerializer.Serialize(x))));
@@ -173,7 +174,7 @@ class AksStack : Stack
         {
             Data =
             {
-                { ".dockercfg", dockerCfgString }
+                {".dockercfg", dockerCfgString}
             },
             Type = "kubernetes.io/dockercfg",
             Metadata = new ObjectMetaArgs
@@ -185,7 +186,7 @@ class AksStack : Stack
         // Deploy the sample application to the cluster.
         var labels = new InputMap<string>
         {
-            { "app", $"app-{applicationName}" },
+            {"app", $"app-{applicationName}"},
         };
 
         var deployment = new Pulumi.Kubernetes.Apps.V1.Deployment(applicationName, new DeploymentArgs
@@ -244,11 +245,9 @@ class AksStack : Stack
 
         this.KubeConfig = cluster.KubeConfigRaw;
         this.DockercfgSecretName = dockerCfgSecret.Metadata.Apply(x => x.Name);
-	}
-	
-	[Output]
-	public Output<string> KubeConfig { get; set; }
-	
-	[Output]
-	public Output<string> DockercfgSecretName { get; set; }
+    }
+
+    [Output] public Output<string> KubeConfig { get; set; }
+
+    [Output] public Output<string> DockercfgSecretName { get; set; }
 }

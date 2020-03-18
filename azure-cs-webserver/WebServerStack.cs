@@ -9,18 +9,18 @@ using Pulumi.Azure.Network.Inputs;
 
 class WebServerStack : Stack
 {
-	public WebServerStack()
-	{
-		var resourceGroup = new ResourceGroup("server-rg");
+    public WebServerStack()
+    {
+        var resourceGroup = new ResourceGroup("server-rg");
 
         var network = new VirtualNetwork("server-network",
             new VirtualNetworkArgs
             {
                 ResourceGroupName = resourceGroup.Name,
-                AddressSpaces = { "10.0.0.0/16" },
+                AddressSpaces = {"10.0.0.0/16"},
                 Subnets =
                 {
-                    new VirtualNetworkSubnetsArgs { Name = "default",  AddressPrefix = "10.0.1.0/24" }
+                    new VirtualNetworkSubnetsArgs {Name = "default", AddressPrefix = "10.0.1.0/24"}
                 }
             }
         );
@@ -52,7 +52,7 @@ class WebServerStack : Stack
             new VirtualMachineArgs
             {
                 ResourceGroupName = resourceGroup.Name,
-                NetworkInterfaceIds = { networkInterface.Id },
+                NetworkInterfaceIds = {networkInterface.Id},
                 VmSize = "Standard_A0",
                 DeleteDataDisksOnTermination = true,
                 DeleteOsDiskOnTermination = true,
@@ -61,8 +61,8 @@ class WebServerStack : Stack
                     ComputerName = "hostname",
                     AdminUsername = "testadmin",
                     AdminPassword = "Password1234!",
-                    CustomData = 
-@"#!/bin/bash
+                    CustomData =
+                        @"#!/bin/bash
 echo ""Hello, World!"" > index.html
 nohup python -m SimpleHTTPServer 80 &"
                 },
@@ -82,20 +82,21 @@ nohup python -m SimpleHTTPServer 80 &"
                     Sku = "16.04-LTS",
                     Version = "latest"
                 }
-            }, new CustomResourceOptions { DeleteBeforeReplace = true });
+            }, new CustomResourceOptions {DeleteBeforeReplace = true});
 
 
         // The public IP address is not allocated until the VM is running, so wait for that
         // resource to create, and then lookup the IP address again to report its public IP.
         this.IpAddress = Output
             .Tuple<string, string, string>(vm.Id, publicIp.Name, resourceGroup.Name)
-            .Apply<string>(async t => {
+            .Apply<string>(async t =>
+            {
                 (_, string name, string resourceGroupName) = t;
-                var ip = await Pulumi.Azure.Network.Invokes.GetPublicIP(new GetPublicIPArgs{ Name = name, ResourceGroupName = resourceGroupName });
+                var ip = await Pulumi.Azure.Network.Invokes.GetPublicIP(new GetPublicIPArgs
+                    {Name = name, ResourceGroupName = resourceGroupName});
                 return ip.IpAddress;
             });
-	}
-	
-	[Output]
-	public Output<string> IpAddress { get; set; }
+    }
+
+    [Output] public Output<string> IpAddress { get; set; }
 }
