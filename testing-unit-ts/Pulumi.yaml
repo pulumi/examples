@@ -1,0 +1,3 @@
+name: test-unit-ts
+runtime: nodejs
+description: An example that applies unit testing to TypeScript and AWS resources.
