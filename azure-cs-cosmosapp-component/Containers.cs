@@ -1,6 +1,4 @@
-﻿// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
-
-using System.Collections.Generic;
+﻿// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 using Pulumi;
 using Pulumi.Azure.ContainerService;
@@ -10,7 +8,7 @@ using Pulumi.Docker;
 
 public static class Containers
 {
-    public static IDictionary<string, object> Run()
+    public static Output<string> Run()
     {
         // Read a list of target locations from the config file:
         // Expecting a comma-separated list, e.g., "westus,eastus,westeurope"
@@ -97,9 +95,6 @@ public static class Containers
             }
         });
 
-        return new Dictionary<string, object>
-        {
-            { "containersEndpoint", Output.Format($"{app.Endpoint}/cosmos") }
-        };
+        return Output.Format($"{app.Endpoint}/cosmos");
     }
 }

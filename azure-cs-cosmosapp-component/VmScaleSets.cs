@@ -1,8 +1,6 @@
-﻿// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+﻿// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 
 using Pulumi;
@@ -17,7 +15,7 @@ using Pulumi.Azure.Network;
 
 public static class VmScaleSets
 {
-    public static IDictionary<string, object> Run()
+    public static Output<string> Run()
     {
         // Read a list of target locations from the config file:
         // Expecting a comma-separated list, e.g., "westus,eastus,westeurope"
@@ -34,10 +32,7 @@ public static class VmScaleSets
             Factory = new Builder(resourceGroup).BuildVMScaleSetApp,
         });
 
-        return new Dictionary<string, object>
-        {
-            { "vmssEndpoint", Output.Format($"{vmss.Endpoint}/cosmos") }
-        };
+        return Output.Format($"{vmss.Endpoint}/cosmos");
     }
 
     private class Builder

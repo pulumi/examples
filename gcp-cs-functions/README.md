@@ -46,9 +46,9 @@ To deploy your infrastructure, follow the below steps.
 1.  Check the deployed function endpoints:
 
     ```
-    $ pulumi stack output pythonEndpoint
+    $ pulumi stack output PythonEndpoint
     https://us-central1-test-1234.cloudfunctions.net/python-func-742a512
-    $ curl "$(pulumi stack output pythonEndpoint)"
+    $ curl "$(pulumi stack output PythonEndpoint)"
     Hello World!
     ```
 1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.

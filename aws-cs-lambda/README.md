@@ -28,7 +28,7 @@ pulumi up -C ./pulumi
 3. Call our lambda function from the aws cli.
 ```bash
 aws lambda invoke \
---function-name $(pulumi stack output lambda -C ./pulumi) \
+--function-name $(pulumi stack output Lambda -C ./pulumi) \
 --region $(pulumi config get aws:region -C ./pulumi) \
 --payload '"foo"' \
 output.json

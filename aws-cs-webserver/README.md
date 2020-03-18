@@ -48,9 +48,9 @@ To deploy your infrastructure, follow the below steps.
     ```
     $ pulumi stack output
     Current stack outputs (2):
-        OUTPUT                                           VALUE
-        public_dns                                       ec2-34-217-176-141.us-west-2.compute.amazonaws.com
-        public_ip                                        34.217.176.141
+        OUTPUT          VALUE
+        PublicDns       ec2-34-217-176-141.us-west-2.compute.amazonaws.com
+        PublicIp        34.217.176.141
     ```
 
 1.  Verify that the EC2 instance exists, by either using the AWS Console or running `aws ec2 describe-instances`.

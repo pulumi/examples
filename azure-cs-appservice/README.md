@@ -59,9 +59,9 @@ To deploy your infrastructure, follow the below steps.
 1.  Check the deployed website endpoint:
 
     ```
-    $ pulumi stack output endpoint
+    $ pulumi stack output Endpoint
     https://azpulumi-as0ef47193.azurewebsites.net
-    $ curl "$(pulumi stack output endpoint)"
+    $ curl "$(pulumi stack output Endpoint)"
     <html>
         <body>
             <h1>Greetings from Azure App Service!</h1>

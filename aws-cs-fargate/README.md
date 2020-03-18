@@ -113,7 +113,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
    Now the endpoint will run the newly updated application code:
 
     ```bash
-    $ curl $(pulumi stack output url)
+    $ curl $(pulumi stack output Url)
     Hello Pulumi!
     ```
 

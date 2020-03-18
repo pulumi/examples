@@ -45,7 +45,7 @@ To deploy your infrastructure, follow the below steps.
 5. After 10-15 minutes, your cluster will be ready, and the kubeconfig YAML you'll use to connect to the cluster will be available as an output. You can save this kubeconfig to a file like so:
 
     ```bash
-    $ pulumi stack output kubeconfig > kubeconfig.yaml
+    $ pulumi stack output KubeConfig > kubeconfig.yaml
     ```
 
     Once you have this file in hand, you can interact with your new cluster as usual via `kubectl`:
