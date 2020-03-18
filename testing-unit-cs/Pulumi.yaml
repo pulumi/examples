@@ -1,0 +1,3 @@
+name: test-unit-cs
+runtime: dotnet
+description: An example that applies unit testing to C# and Azure resources.
