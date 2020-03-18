@@ -56,9 +56,9 @@ To deploy your infrastructure, follow the below steps.
 1.  Check the deployed function endpoints:
 
     ```
-    $ pulumi stack output endpoint
+    $ pulumi stack output Endpoint
     https://app1a2d3e4d.azurewebsites.net/api/Hello?name=Pulumi
-    $ curl "$(pulumi stack output endpoint)"
+    $ curl "$(pulumi stack output Endpoint)"
     Hello, Pulumi
     ```
 

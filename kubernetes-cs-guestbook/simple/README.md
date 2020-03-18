@@ -42,7 +42,7 @@ Performing changes:
  +   └─ kubernetes:core:Service     frontend                   created     
 
 Outputs:
-  + frontendIp: "35.232.147.18"
+  + FrontendIp: "35.232.147.18"
 
 Resources:
     + 7 created
@@ -56,7 +56,7 @@ And finally - open the application in your browser to see the running applicatio
 macOS you can simply run:
 
 ```sh
-open $(pulumi stack output frontendIp)
+open $(pulumi stack output FrontendIp)
 ```
 
 > _Note_: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure

@@ -45,14 +45,14 @@ To deploy your infrastructure, follow the below steps.
 1. Get the IP address of the newly-created instance from the stack's outputs:
 
     ```
-    $ pulumi stack output ipAddress
+    $ pulumi stack output IpAddress
     137.117.15.111
     ```
 
 1. Check to see that your server is now running:
 
     ```
-    $ curl http://$(pulumi stack output ipAddress)
+    $ curl http://$(pulumi stack output IpAddress)
     Hello, World!
     ```
 

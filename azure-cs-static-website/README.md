@@ -37,7 +37,7 @@ As a workaround we use the Azure storage SDK to enable the feature directly in t
     Performing changes:
     ...
     Outputs:
-        staticEndpoint: "https://mysitebc97f8a0.z6.web.core.windows.net/"
+        StaticEndpoint: "https://mysitebc97f8a0.z6.web.core.windows.net/"
 
     Resources:
         + 5 created
@@ -48,9 +48,9 @@ As a workaround we use the Azure storage SDK to enable the feature directly in t
 5.  Check the deployed website endpoint:
 
     ```
-    $ pulumi stack output staticEndpoint
+    $ pulumi stack output StaticEndpoint
     https://mysitebc97f8a0.z6.web.core.windows.net/
-    $ curl "$(pulumi stack output staticEndpoint)"
+    $ curl "$(pulumi stack output StaticEndpoint)"
     <html>
         <body>
             <h1>This file is served from Blob Storage</h1>

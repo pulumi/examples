@@ -26,7 +26,7 @@ class ServiceDeployment : Pulumi.ComponentResource
 {
     public Pulumi.Kubernetes.Apps.V1.Deployment Deployment;
     public Pulumi.Kubernetes.Core.V1.Service Service;
-    public Output<string>? IpAddress;
+    public Output<string> IpAddress;
 
     public ServiceDeployment(string name, ServiceDeploymentArgs args, ComponentResourceOptions? opts = null)
         : base("k8sx:service:ServiceDeployment", name, opts)
@@ -100,9 +100,8 @@ class ServiceDeployment : Pulumi.ComponentResource
         }, 
         new CustomResourceOptions { Parent = this });
 
-        this.IpAddress = args.AllocateIPAddress.Apply(hasIp =>
-        {
-            if (hasIp)
+        this.IpAddress = args.AllocateIPAddress.Apply(hasIp => {
+	        if (hasIp)
             {
                 return args.ServiceType.Apply(serviceType =>
                     serviceType == "ClusterIP"
@@ -115,10 +114,8 @@ class ServiceDeployment : Pulumi.ComponentResource
                     })
                 );
             }
-            else
-            {
-                return null;
-            }
+
+	        return null;
         });
     }
 }

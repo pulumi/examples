@@ -406,7 +406,7 @@ func TestAccAzureCsAppService(t *testing.T) {
 				"sqlPassword": "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["Endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
 				})
 			},
@@ -420,7 +420,7 @@ func TestAccAzureCsWebserver(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-cs-webserver"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["ipAddress"].(string), nil, func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["IpAddress"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World")
 				})
 			},
@@ -928,7 +928,7 @@ func TestAccDigitalOceanCsK8s(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "digitalocean-cs-k8s"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["ingressIp"].(string), nil, func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["IngressIp"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Welcome to nginx!")
 				})
 			},
@@ -942,7 +942,7 @@ func TestAccDigitalOceanCsLoadbalancedDroplets(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "digitalocean-cs-loadbalanced-droplets"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string), nil, func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["Endpoint"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Welcome to nginx!")
 				})
 			},

@@ -72,7 +72,7 @@ To deploy your infrastructure, follow the below steps.
    * [Bot Framework Emulator](https://github.com/Microsoft/BotFramework-Emulator) pointing to the output bot endpoint and Microsoft Application Id and the secret you supplied:
 
       ```bash
-      $ Bot Endpoint: "https://app8asdf.azurewebsites.net/api/messages"
+      $ BotEndpoint: "https://app8asdf.azurewebsites.net/api/messages"
       $ MicrosoftAppId: "b5e65403-923c-4568-z2f6-a6f41b258azz"
       $ MicrosoftAppPassword: "<secret>"    
       ```

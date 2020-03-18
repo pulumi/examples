@@ -1,6 +1,4 @@
-﻿// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
-
-using System.Collections.Generic;
+﻿// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 using Pulumi;
 using Pulumi.Azure.ContainerService;
@@ -10,13 +8,13 @@ using Pulumi.Docker;
 
 public static class Containers
 {
-    public static IDictionary<string, object> Run()
+    public static Output<string> Run()
     {
         // Read a list of target locations from the config file:
         // Expecting a comma-separated list, e.g., "westus,eastus,westeurope"
         var locations = new Pulumi.Config().Require("locations").Split(",");
 
-        var resourceGroup = new ResourceGroup("cosmosaci-rg", new ResourceGroupArgs { Location = locations[0] });
+        var resourceGroup = new ResourceGroup("cosmosaci-rg", new ResourceGroupArgs {Location = locations[0]});
 
         var app = new CosmosApp("aci", new CosmosAppArgs
         {
@@ -43,7 +41,7 @@ public static class Containers
                         Username = registry.AdminUsername,
                         Password = registry.AdminPassword,
                     },
-                }, new ComponentResourceOptions { Parent = registry });
+                }, new ComponentResourceOptions {Parent = registry});
 
                 return region =>
                 {
@@ -80,11 +78,11 @@ public static class Containers
                                 },
                                 EnvironmentVariables =
                                 {
-                                    { "ENDPOINT", global.CosmosAccount.Endpoint },
-                                    { "MASTER_KEY", global.CosmosAccount.PrimaryMasterKey },
-                                    { "DATABASE", global.Database.Name },
-                                    { "COLLECTION", global.Container.Name },
-                                    { "LOCATION", region.Location },
+                                    {"ENDPOINT", global.CosmosAccount.Endpoint},
+                                    {"MASTER_KEY", global.CosmosAccount.PrimaryMasterKey},
+                                    {"DATABASE", global.Database.Name},
+                                    {"COLLECTION", global.Container.Name},
+                                    {"LOCATION", region.Location},
                                 },
                             },
                         },
@@ -97,9 +95,6 @@ public static class Containers
             }
         });
 
-        return new Dictionary<string, object>
-        {
-            { "containersEndpoint", Output.Format($"{app.Endpoint}/cosmos") }
-        };
+        return Output.Format($"{app.Endpoint}/cosmos");
     }
 }
