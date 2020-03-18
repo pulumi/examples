@@ -11,7 +11,7 @@ public static class Functions
         // Expecting a comma-separated list, e.g., "westus,eastus,westeurope"
         var locations = new Config().Require("locations").Split(",");
 
-        var resourceGroup = new ResourceGroup("cosmosfunctions-rg", new ResourceGroupArgs { Location = locations[0] });
+        var resourceGroup = new ResourceGroup("cosmosfunctions-rg", new ResourceGroupArgs {Location = locations[0]});
 
         var app = new CosmosApp("functions", new CosmosAppArgs
         {
@@ -23,20 +23,19 @@ public static class Functions
             {
                 var connectionString = global.CosmosAccount.ConnectionStrings.Apply(cs => cs[0]);
                 var func = new ArchiveFunctionApp($"afa-{region.Location}", new ArchiveFunctionAppArgs
-                {
-                    ResourceGroupName = resourceGroup.Name,
-                    Location = region.Location,
-                    Archive = new FileArchive("./app/bin/Debug/netcoreapp3.1/publish"),
-                    AppSettings =
                     {
-                        { "CosmosDBConnection", connectionString },
+                        ResourceGroupName = resourceGroup.Name,
+                        Location = region.Location,
+                        Archive = new FileArchive("./app/bin/Debug/netcoreapp3.1/publish"),
+                        AppSettings =
+                        {
+                            {"CosmosDBConnection", connectionString},
+                        },
                     },
-                },
-                new ComponentResourceOptions { Parent = global.Options.Parent } );
+                    new ComponentResourceOptions {Parent = global.Options.Parent});
 
                 return new AzureEndpoint(func.AppId);
             },
-
         });
 
         return Output.Format($"{app.Endpoint}/cosmos");

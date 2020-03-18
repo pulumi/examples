@@ -14,7 +14,7 @@ public static class Containers
         // Expecting a comma-separated list, e.g., "westus,eastus,westeurope"
         var locations = new Pulumi.Config().Require("locations").Split(",");
 
-        var resourceGroup = new ResourceGroup("cosmosaci-rg", new ResourceGroupArgs { Location = locations[0] });
+        var resourceGroup = new ResourceGroup("cosmosaci-rg", new ResourceGroupArgs {Location = locations[0]});
 
         var app = new CosmosApp("aci", new CosmosAppArgs
         {
@@ -41,7 +41,7 @@ public static class Containers
                         Username = registry.AdminUsername,
                         Password = registry.AdminPassword,
                     },
-                }, new ComponentResourceOptions { Parent = registry });
+                }, new ComponentResourceOptions {Parent = registry});
 
                 return region =>
                 {
@@ -78,11 +78,11 @@ public static class Containers
                                 },
                                 EnvironmentVariables =
                                 {
-                                    { "ENDPOINT", global.CosmosAccount.Endpoint },
-                                    { "MASTER_KEY", global.CosmosAccount.PrimaryMasterKey },
-                                    { "DATABASE", global.Database.Name },
-                                    { "COLLECTION", global.Container.Name },
-                                    { "LOCATION", region.Location },
+                                    {"ENDPOINT", global.CosmosAccount.Endpoint},
+                                    {"MASTER_KEY", global.CosmosAccount.PrimaryMasterKey},
+                                    {"DATABASE", global.Database.Name},
+                                    {"COLLECTION", global.Container.Name},
+                                    {"LOCATION", region.Location},
                                 },
                             },
                         },
