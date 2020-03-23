@@ -45,4 +45,3 @@ const stackPolicy: policy.StackValidationPolicy = {
 const tests = new policy.PolicyPack("tests-pack", {
     policies: [stackPolicy],
 });
-

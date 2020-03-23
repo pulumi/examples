@@ -16,7 +16,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSimple(t *testing.T) {
+func TestS3Website(t *testing.T) {
 	cwd, err := os.Getwd()
 	if err != nil {
 		t.FailNow()

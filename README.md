@@ -361,8 +361,8 @@ Example		| Description |
 
 ## Testing
 
-Example		                                     | Description |
------ 		                                     | --------- |
+Example		| Description |
+----- 		| --------- |
 [Unit Tests in TypeScript](testing-unit-ts)      | Mock-based unit tests in TypeScript.
 [Unit Tests in Python](testing-unit-python)      | Mock-based unit tests in Python.
 [Unit Tests in Go](testing-unit-go)              | Mock-based unit tests in Go.
