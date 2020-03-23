@@ -1,0 +1,10 @@
+name: azure-py-vdc
+runtime: python
+description: A minimal Azure Virtual Data Center using Python
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    azure:location:
+      description: The Azure region to use (e.g. `australiaeast` or `australiasoutheast`)
