@@ -1,0 +1,49 @@
+name: azure-py-vdc
+runtime: python
+description: A minimal Azure Virtual Data Center described in Python
+template:
+  config:
+    azure:environment:
+      description: Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    azure:location:
+      description: Azure region to use (e.g. `australiaeast` or `australiasoutheast`)
+      default: australiasoutheast
+    azure-py-vdc:dmz_ar:
+      description: Address range for hub DMZ subnet (must be within fwz_as)
+      default: 192.168.100.128/25
+    azure-py-vdc:fwm_ar:
+      description: Address range for hub AzureFirewallManagementSubnet (optional - /26 within fwz_as)
+    azure-py-vdc:fws_ar:
+      description: Address range for hub AzureFirewallSubnet (/26 within fwz_as)
+      default: 192.168.100.0/26
+    azure-py-vdc:fwz_as:
+      description: Address space for hub containing dmz_ar, fwm_ar (optional) and fws_ar
+      default: 192.168.100.0/24
+    azure-py-vdc:gws_ar:
+      description: Address range for hub GatewaySubnet (/27 or larger within hub_as)
+      default: 10.100.0.0/26
+    azure-py-vdc:hbs_ar:
+      description: Address range for hub AzureBastionSubnet (optional - /27 within hub_as)
+    azure-py-vdc:hub_ar:
+      description: Address range for starting subnet in the hub (optional - within hub_as)
+    azure-py-vdc:hub_as:
+      description: Address space for hub containing hbs_ar, hub_ar and remaining subnets
+      default: 10.100.0.0/16
+    azure-py-vdc:hub_stem:
+      description: Short name for the hub that will appear in resource names (<4 chars)
+      default: hub
+    azure-py-vdc:org:
+      description: Pulumi organization in which this project resides (from app.pulumi.com)
+    azure-py-vdc:peer:
+      description: Another stack in same organization and project to peer hubs with (optional)
+    azure-py-vdc:sbs_ar:
+      description: Address range for spoke AzureBastionSubnet (optional - /27 within spoke_as)
+    azure-py-vdc:spoke_ar:
+      description: Address range for starting subnet in the spoke (optional - within spoke_as)
+    azure-py-vdc:spoke_as:
+      description: Address space for spoke containing sbs_ar, spoke_ar and remaining subnets
+      default: 10.101.0.0/16
+    azure-py-vdc:spoke_stem:
+      description: Short name for spoke that will appear in resource names (<6 chars)
+      default: spoke
