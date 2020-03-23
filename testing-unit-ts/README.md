@@ -1,6 +1,6 @@
 # Unit Testing Pulumi programs in TypeScript
 
-An example of writing mock-based unit tests with both infrastructure definition and tests written in TypeScript. The example uses [Mocha](https://mochajs.org/) test framework to define and run the tests.
+An example of writing mock-based unit tests with both infrastructure definition and tests written in TypeScript. The example uses the [Mocha](https://mochajs.org/) test framework to define and run the tests.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ An example of writing mock-based unit tests with both infrastructure definition 
     $ npm install
     ```
 
-4.  Run the tests:
+2.  Run the tests:
 
     ``` 
     $ PULUMI_TEST_MODE=true  \

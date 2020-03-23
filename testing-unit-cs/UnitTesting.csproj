@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--ProjectReference Include="..\..\..\go\src\github.com\pulumi\pulumi-azure\sdk\dotnet\Pulumi.Azure.csproj" />
-    <ProjectReference Include="..\..\..\go\src\github.com\pulumi\pulumi\sdk\dotnet\Pulumi\Pulumi.csproj" /-->
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Moq" Version="4.13.1" />

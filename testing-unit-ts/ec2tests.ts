@@ -44,6 +44,7 @@ pulumi.runtime.setMocks({
     },
 });
 
+// It's important to import the program _after_ the mocks are defined.
 import * as infra from "./index";
 
 describe("Infrastructure", function() {
