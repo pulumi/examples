@@ -41,6 +41,7 @@ See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on
 - [Twilio](#twilio)
 - [Linode](#linode)
 - [Packet](#packet)
+- [Testing](#testing) 
 
 ## AWS
 
@@ -358,3 +359,13 @@ Example		| Description |
 ----- 		| --------- |
 [Web Server](packet-py-webserver) | Build a web server on Packet.net.
 
+## Testing
+
+Example		                                     | Description |
+----- 		                                     | --------- |
+[Unit Tests in TypeScript](testing-unit-ts)      | Mock-based unit tests in TypeScript.
+[Unit Tests in Python](testing-unit-python)      | Mock-based unit tests in Python.
+[Unit Tests in Go](testing-unit-go)              | Mock-based unit tests in Go.
+[Unit Tests in C#](testing-unit-cs)              | Mock-based unit tests in C#.
+[Testing with Policies](testing-pac-ts)          | Tests based on Policy-as-Code in TypeScript.
+[Integration Testing in Go](testing-integration) | Deploy-check-destroy tests in Go.
