@@ -70,22 +70,11 @@ describe("Infrastructure", function() {
                 }
             });
         });
-
-        // check 3: Instances must name at least one security group.
-        it("must name a security group", function(done) {
-            pulumi.all([server.urn, server.securityGroups]).apply(([urn, securityGroups]) => {
-                if (!securityGroups || securityGroups.length === 0 || typeof securityGroups[0] !== "string") {
-                    done(new Error(`${securityGroups[0]}illegal security group spec on server ${urn}`));
-                } else {
-                    done();
-                }
-            });
-        });
     });
 
     const group = infra.group;
     describe("#group", function() {
-        // check 4: Instances must not have SSH open to the Internet.
+        // check 3: Instances must not have SSH open to the Internet.
         it("must not open port 22 (SSH) to the Internet", function(done) {
             pulumi.all([ group.urn, group.ingress ]).apply(([ urn, ingress ]) => {
                 if (ingress.find(rule =>
