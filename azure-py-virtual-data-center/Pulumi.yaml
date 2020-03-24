@@ -8,3 +8,33 @@ template:
       default: public
     azure:location:
       description: The Azure region to use (e.g. `australiaeast` or `australiasoutheast`)
+    azure-py-vdc:dmz_ap:
+      description: An address prefix for the DMZ within the firewall address space
+      default: 192.168.100.128/25
+    azure-py-vdc:fw_ap:
+      description: An address prefix for the firewall within the firewall address space
+      default: 192.168.100.0/26
+    azure-py-vdc:fw_as:
+      description: An address space that contains the firewall, management and DMZ address prefixes
+      default: 192.168.100.0/24
+    azure-py-vdc:fw_ip:
+      description: First available IP address in the address prefix for the firewall
+      default: 192.168.100.4
+    azure-py-vdc:fwm_ap:
+      description: An address prefix for firewall management used if forced tunnelling is enabled
+      default: 192.168.100.64/26
+    azure-py-vdc:gw_ap:
+      description: An address prefix for the gateways within the hub address space
+      default: 10.100.0.0/24
+    azure-py-vdc:hub_ap:
+      description: An address prefix for the first shared services subnet in the hub address space 
+      default: 10.100.1.0/24
+    azure-py-vdc:hub_as:
+      description: An address space that contains the gateways and shared services address prefixes
+      default: 10.100.0.0/16
+    azure-py-vdc:spoke1_ap:
+      description: An address prefix for the first subnet in the spoke1 address space
+      default: 10.101.0.0/24
+    azure-py-vdc:spoke1_as:
+      description: An address space that contains the spoke1 subnet address prefixes
+      default: 10.101.0.0/16

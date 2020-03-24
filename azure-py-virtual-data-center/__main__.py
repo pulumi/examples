@@ -6,6 +6,7 @@ config = pulumi.Config()
 dmz_ap = config.require('dmz_ap')
 fw_ap = config.require('fw_ap')
 fw_as = config.require('fw_as')
+fw_ip = config.require('fw_ip')
 fwm_ap = config.require('fwm_ap')
 gw_ap = config.require('gw_ap')
 hub_as = config.require('hub_as')
@@ -103,7 +104,7 @@ hub_fw_pip = network.PublicIp(
     allocation_method="Static"
 )
 
-hub_fw = network.Firewall( #ToDo output the firewall private IP for use in routing tables
+hub_fw = network.Firewall( #ToDo update fw_ip for use in routing tables
     "hub-fw-",
     resource_group_name=resource_group.name,
     location=resource_group.location,
@@ -123,7 +124,7 @@ hub_dmz_sn = network.Subnet( #ToDo add NSG preventing access except via firewall
     opts=pulumi.ResourceOptions(delete_before_replace=True)
 )
 
-hub_example_sn = network.Subnet( #ToDo add NSG
+hub_example_sn = network.Subnet( #ToDo add NSG for inter-subnet traffic in hub
     "hub-example-sn-",
     resource_group_name=resource_group.name,
     address_prefix=hub_ap,
@@ -140,7 +141,7 @@ spoke1 = network.VirtualNetwork(
     # there should be no GatewaySubnet in the spokes
 )
 
-spoke1_example_sn = network.Subnet( #ToDo add NSG
+spoke1_example_sn = network.Subnet( #ToDo add NSG for inter-subnet traffic in spoke1
     "spoke1-example-sn-",
     resource_group_name=resource_group.name,
     address_prefix=spoke1_ap,
@@ -157,7 +158,7 @@ hub_spoke1 = network.VirtualNetworkPeering(
     allow_virtual_network_access=True
 )
 
-# Create a VNet Peering from spoke to the hub (future spokes require similar)
+# Create a VNet Peering from spoke to the hub (additional spokes require similar)
 spoke1_hub = network.VirtualNetworkPeering(
     "spoke1-hub-vnp-",
     resource_group_name=resource_group.name,
@@ -180,21 +181,21 @@ hub_gw_rt = network.RouteTable(
         "name": "hub-gw-fw-dmz-r",
         "address_prefix": dmz_ap,
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     },
     {
         # override VNetLocal to redirect other hub subnet traffic via the firewall
         "name": "hub-gw-fw-sn-r",
         "address_prefix": hub_as,
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     },
     {
         # override VNet Peering to redirect spoke1 traffic via the firewall (future spokes require similar)
         "name": "hub-gw-fw-spoke1-r",
         "address_prefix": spoke1_as,
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     }]
 )
 
@@ -215,28 +216,28 @@ hub_dmz_rt = network.RouteTable(
         "name": "hub-dmz-fw-dmz-r",
         "address_prefix": dmz_ap,
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     },
     {
         # partially override VnetLocal to redirect hub traffic via the firewall
         "name": "hub-dmz-fw-sn-r",
         "address_prefix": hub_as,
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     },
     {
         # override VNet Peering to redirect spoke1 traffic via the firewall (future spokes require similar)
         "name": "hub-dmz-fw-spoke1-r",
         "address_prefix": spoke1_as,
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     },
     {
         # override the system route to redirect Internet traffic via the firewall
         "name": "hub-dmz-fw-dg-r",
         "address_prefix": "0.0.0.0/0",
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     }]
 )
 
@@ -258,21 +259,21 @@ hub_sn_rt = network.RouteTable(
         "name": "hub-sn-fw-dmz-r",
         "address_prefix": dmz_ap,
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     },
     {
         # override VNet Peering to redirect spoke1 traffic via the firewall (future spokes require similar)
         "name": "hub-sn-fw-spoke1-r",
         "address_prefix": spoke1_as,
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     },
     {
         # override the system route to redirect Internet traffic via the firewall
         "name": "hub-sn-fw-dg-r",
         "address_prefix": "0.0.0.0/0",
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     }]
 )
 
@@ -297,21 +298,21 @@ spokes_sn_rt = network.RouteTable(
         "name": "spokes-hub-fw-dmz-r",
         "address_prefix": dmz_ap,
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     },
     {
         # override a VNet Peering to redirect hub traffic via the firewall 
         "name": "spokes-hub-fw-sn-r",
         "address_prefix": hub_as,
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     },
     {
         # override the system route to redirect Internet traffic via the firewall
         "name": "spokes-hub-fw-dg-r",
         "address_prefix": "0.0.0.0/0",
         "next_hop_type": "VirtualAppliance",
-        "next_hop_in_ip_address": "192.168.100.4"
+        "next_hop_in_ip_address": fw_ip
     }]
 )
 

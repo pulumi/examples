@@ -2,7 +2,7 @@
 
 # Azure Virtual Data Center (VDC)
 
-This example deploys an Azure Virtual Datacenter (VDC) hub-and-spoke network stack in Azure,ready for gateway and firewall deployment (with provision for forced tunnelling). In this implementation, custom routing is used to redirect all traffic to and from Azure and between VNets in Azure through Azure Firewall in the hub, as well as all traffic to and from the DMZ.
+This example deploys an Azure Virtual Datacenter (VDC) hub-and-spoke network stack in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall (with provision for forced tunnelling) and a shared DMZ in the hub. In this implementation, custom routing is used to redirect all traffic to and from Azure and between VNets in Azure through the firewall, as well as all traffic to and from the DMZ. Shared services may have their own subnets in the hub, and multiple spokes may be provisioned with subnets for applications and environments.
 
 The intention is that matching stacks would be defined in paired Azure regions, either in Prod/Disaster Recovery or High Availability configurations. It is possible to define Global VNet Peering between hubs in different stacks.
 
@@ -45,6 +45,7 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi config set dmz_ap    192.168.100.128/25
     $ pulumi config set fw_ap     192.168.100.0/26
     $ pulumi config set fw_as     192.168.100.0/24
+    $ pulumi config set fw_ip     192.168.100.4
     $ pulumi config set fwm_ap    192.168.100.64/26
     $ pulumi config set gw_ap     10.100.0.0/24
     $ pulumi config set hub_ap    10.100.1.0/24
@@ -53,14 +54,13 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi config set spoke1_as 10.101.0.0/16
     ```
 
-1. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including
-   an Active Directory service principal and AKS clusters:
+1. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including gateways and firewall which will take up to an hour:
 
     ```bash
     $ pulumi up
     ```
 
-1. After a while, your VNets, Gateway and Firewall will be ready. The VNet address spaces will be printed as output
+1. After a while, your VDC will be ready. The VNet address spaces will be printed as output
    variables once `pulumi up` completes.
 
     ```bash
