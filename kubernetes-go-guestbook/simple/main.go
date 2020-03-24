@@ -36,34 +36,12 @@ func main() {
 			"tier": pulumi.String("backend"),
 			"role": pulumi.String("master"),
 		}
-		redisFollowerLabels := pulumi.StringMap{
-			"app":  pulumi.String("redis"),
-			"tier": pulumi.String("backend"),
-			"role": pulumi.String("slave"),
-		}
-		frontendLabels := pulumi.StringMap{
-			"app":  pulumi.String("guestbook"),
-			"tier": pulumi.String("frontend"),
-		}
-
-		redisLeaderContainer := corev1.ContainerArgs{
-			Name:  pulumi.String("master"),
-			Image: pulumi.String("k8s.gcr.io/redis:e2e"),
-			Resources: &corev1.ResourceRequirementsArgs{
-				Requests: pulumi.StringMap{
-					"cpu":    pulumi.String("100m"),
-					"memory": pulumi.String("100Mi"),
-				},
-			},
-			Ports: corev1.ContainerPortArray{
-				&corev1.ContainerPortArgs{
-					ContainerPort: pulumi.IntPtr(6379),
-				},
-			},
-		}
 
 		// Redis leader Deployment
 		_, err := appsv1.NewDeployment(ctx, "redis-leader", &appsv1.DeploymentArgs{
+			Metadata: &metav1.ObjectMetaArgs{
+				Labels: redisLeaderLabels,
+			},
 			Spec: appsv1.DeploymentSpecArgs{
 				Selector: &metav1.LabelSelectorArgs{
 					MatchLabels: redisLeaderLabels,
@@ -74,7 +52,22 @@ func main() {
 						Labels: redisLeaderLabels,
 					},
 					Spec: &corev1.PodSpecArgs{
-						Containers: corev1.ContainerArray{redisLeaderContainer},
+						Containers: corev1.ContainerArray{
+							corev1.ContainerArgs{
+								Name:  pulumi.String("master"),
+								Image: pulumi.String("k8s.gcr.io/redis:e2e"),
+								Resources: &corev1.ResourceRequirementsArgs{
+									Requests: pulumi.StringMap{
+										"cpu":    pulumi.String("100m"),
+										"memory": pulumi.String("100Mi"),
+									},
+								},
+								Ports: corev1.ContainerPortArray{
+									&corev1.ContainerPortArgs{
+										ContainerPort: pulumi.IntPtr(6379),
+									},
+								},
+							}},
 					},
 				},
 			},
@@ -83,18 +76,17 @@ func main() {
 			return err
 		}
 
-		port := 6379
-
 		// Redis leader Service
 		_, err = corev1.NewService(ctx, "redis-leader", &corev1.ServiceArgs{
 			Metadata: &metav1.ObjectMetaArgs{
+				Name:   pulumi.String("redis-master"),
 				Labels: redisLeaderLabels,
 			},
 			Spec: &corev1.ServiceSpecArgs{
 				Ports: corev1.ServicePortArray{
 					corev1.ServicePortArgs{
-						Port:       pulumi.IntPtr(port),
-						TargetPort: pulumi.Any(port),
+						Port:       pulumi.IntPtr(6379),
+						TargetPort: pulumi.Any(6379), // TODO: Change to `IntPtr` once union types are supported.
 					},
 				},
 				Selector: redisLeaderLabels,
@@ -104,41 +96,49 @@ func main() {
 			return err
 		}
 
-		redisFollowerContainer := corev1.ContainerArgs{
-			Name:  pulumi.String("slave"),
-			Image: pulumi.String("gcr.io/google_samples/gb-redisslave:v1"),
-			Resources: &corev1.ResourceRequirementsArgs{
-				Requests: pulumi.StringMap{
-					"cpu":    pulumi.String("100m"),
-					"memory": pulumi.String("100Mi"),
-				},
-			},
-			Env: corev1.EnvVarArray{
-				corev1.EnvVarArgs{
-					Name:  pulumi.StringPtr("GET_HOSTS_FROM"),
-					Value: pulumi.StringPtr("dns"),
-				},
-			},
-			Ports: corev1.ContainerPortArray{
-				&corev1.ContainerPortArgs{
-					ContainerPort: pulumi.IntPtr(6379),
-				},
-			},
+		redisFollowerLabels := pulumi.StringMap{
+			"app":  pulumi.String("redis"),
+			"tier": pulumi.String("backend"),
+			"role": pulumi.String("slave"),
 		}
 
 		// Redis follower Deployment
 		_, err = appsv1.NewDeployment(ctx, "redis-follower", &appsv1.DeploymentArgs{
+			Metadata: &metav1.ObjectMetaArgs{
+				Labels: redisFollowerLabels,
+			},
 			Spec: appsv1.DeploymentSpecArgs{
 				Selector: &metav1.LabelSelectorArgs{
 					MatchLabels: redisFollowerLabels,
 				},
-				Replicas: pulumi.IntPtr(1),
+				Replicas: pulumi.IntPtr(2),
 				Template: &corev1.PodTemplateSpecArgs{
 					Metadata: &metav1.ObjectMetaArgs{
 						Labels: redisFollowerLabels,
 					},
 					Spec: &corev1.PodSpecArgs{
-						Containers: corev1.ContainerArray{redisFollowerContainer},
+						Containers: corev1.ContainerArray{
+							corev1.ContainerArgs{
+								Name:  pulumi.String("slave"),
+								Image: pulumi.String("gcr.io/google_samples/gb-redisslave:v3"),
+								Resources: &corev1.ResourceRequirementsArgs{
+									Requests: pulumi.StringMap{
+										"cpu":    pulumi.String("100m"),
+										"memory": pulumi.String("100Mi"),
+									},
+								},
+								Env: corev1.EnvVarArray{
+									corev1.EnvVarArgs{
+										Name:  pulumi.StringPtr("GET_HOSTS_FROM"),
+										Value: pulumi.StringPtr("dns"),
+									},
+								},
+								Ports: corev1.ContainerPortArray{
+									&corev1.ContainerPortArgs{
+										ContainerPort: pulumi.IntPtr(6379),
+									},
+								},
+							}},
 					},
 				},
 			},
@@ -150,13 +150,12 @@ func main() {
 		// Redis follower Service
 		_, err = corev1.NewService(ctx, "redis-follower", &corev1.ServiceArgs{
 			Metadata: &metav1.ObjectMetaArgs{
-				Annotations: pulumi.StringMap{"foo": pulumi.String("baa")},
+				Labels: redisFollowerLabels,
 			},
 			Spec: &corev1.ServiceSpecArgs{
 				Ports: corev1.ServicePortArray{
 					corev1.ServicePortArgs{
-						Port:       pulumi.IntPtr(6379),
-						TargetPort: pulumi.Any(6379),
+						Port: pulumi.IntPtr(6379),
 					},
 				},
 				Selector: redisFollowerLabels,
@@ -166,30 +165,16 @@ func main() {
 			return err
 		}
 
-		frontendContainer := corev1.ContainerArgs{
-			Name:  pulumi.String("php-redis"),
-			Image: pulumi.String("gcr.io/google-samples/gb-frontend:v4"),
-			Resources: &corev1.ResourceRequirementsArgs{
-				Requests: pulumi.StringMap{
-					"cpu":    pulumi.String("100m"),
-					"memory": pulumi.String("100Mi"),
-				},
-			},
-			Env: corev1.EnvVarArray{
-				corev1.EnvVarArgs{
-					Name:  pulumi.StringPtr("GET_HOSTS_FROM"),
-					Value: pulumi.StringPtr("dns"),
-				},
-			},
-			Ports: corev1.ContainerPortArray{
-				&corev1.ContainerPortArgs{
-					ContainerPort: pulumi.IntPtr(80),
-				},
-			},
+		frontendLabels := pulumi.StringMap{
+			"app":  pulumi.String("guestbook"),
+			"tier": pulumi.String("frontend"),
 		}
 
 		// Frontend Deployment
 		_, err = appsv1.NewDeployment(ctx, "frontend", &appsv1.DeploymentArgs{
+			Metadata: &metav1.ObjectMetaArgs{
+				Labels: frontendLabels,
+			},
 			Spec: appsv1.DeploymentSpecArgs{
 				Selector: &metav1.LabelSelectorArgs{
 					MatchLabels: frontendLabels,
@@ -200,7 +185,28 @@ func main() {
 						Labels: frontendLabels,
 					},
 					Spec: &corev1.PodSpecArgs{
-						Containers: corev1.ContainerArray{frontendContainer},
+						Containers: corev1.ContainerArray{
+							corev1.ContainerArgs{
+								Name:  pulumi.String("php-redis"),
+								Image: pulumi.String("gcr.io/google-samples/gb-frontend:v4"),
+								Resources: &corev1.ResourceRequirementsArgs{
+									Requests: pulumi.StringMap{
+										"cpu":    pulumi.String("100m"),
+										"memory": pulumi.String("100Mi"),
+									},
+								},
+								Env: corev1.EnvVarArray{
+									corev1.EnvVarArgs{
+										Name:  pulumi.StringPtr("GET_HOSTS_FROM"),
+										Value: pulumi.StringPtr("dns"),
+									},
+								},
+								Ports: corev1.ContainerPortArray{
+									&corev1.ContainerPortArgs{
+										ContainerPort: pulumi.IntPtr(80),
+									},
+								},
+							}},
 					},
 				},
 			},
@@ -217,6 +223,10 @@ func main() {
 			frontendServiceType = "LoadBalancer"
 		}
 		frontendService, err := corev1.NewService(ctx, "frontend", &corev1.ServiceArgs{
+			Metadata: &metav1.ObjectMetaArgs{
+				Labels: frontendLabels,
+				Name:   pulumi.String("frontend"),
+			},
 			Spec: &corev1.ServiceSpecArgs{
 				Type: pulumi.StringPtr(frontendServiceType),
 				Ports: corev1.ServicePortArray{
@@ -231,31 +241,17 @@ func main() {
 			return err
 		}
 
-		// Export frontend Service IP
 		if isMinikube {
 			ctx.Export("frontendIP", frontendService.Spec.ApplyT(
-				func(spec *corev1.ServiceSpec) string {
-					if spec.ClusterIP == nil {
-						return ""
-					}
-					return *spec.ClusterIP
-				}))
+				func(spec *corev1.ServiceSpec) *string { return spec.ClusterIP }))
 		} else {
 			ctx.Export("frontendIP", frontendService.Status.ApplyT(
-				func(status *corev1.ServiceStatus) string {
+				func(status *corev1.ServiceStatus) *string {
 					ingress := status.LoadBalancer.Ingress[0]
 					if ingress.Hostname != nil {
-						ip := *ingress.Hostname
-						if len(ip) > 0 {
-							return ip
-						}
+						return ingress.Hostname
 					}
-
-					if ingress.Ip != nil {
-						return *ingress.Ip
-					}
-
-					return ""
+					return ingress.Ip
 				}))
 		}
 
