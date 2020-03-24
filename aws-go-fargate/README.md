@@ -10,8 +10,7 @@ This example is inspired by [Docker's Getting Started Tutorial](https://docs.doc
 ## Prerequisites
 
 * [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-* [Configure Pulumi to Use AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI
-      is configured, this will just work)
+* [Configure Pulumi to Use AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
 * [Install Go](https://golang.org/doc/install)
 
 ## Running the Example

@@ -59,7 +59,7 @@ func assertHTTPResultShapeWithRetry(t *testing.T, output interface{}, headers ma
 
 	startTime := time.Now()
 	count, sleep := 0, 0
-	for true {
+	for {
 		now := time.Now()
 		req, err := http.NewRequest("GET", hostname, nil)
 		if !assert.NoError(t, err) {
