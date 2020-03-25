@@ -1,0 +1,3 @@
+name: kubernetes-go-guestbook
+runtime: go
+description: Kubernetes Guestbook example based on https://kubernetes.io/docs/tutorials/stateless-application/guestbook/
