@@ -46,7 +46,7 @@ func main() {
 				Selector: &metav1.LabelSelectorArgs{
 					MatchLabels: redisLeaderLabels,
 				},
-				Replicas: pulumi.IntPtr(1),
+				Replicas: pulumi.Int(1),
 				Template: &corev1.PodTemplateSpecArgs{
 					Metadata: &metav1.ObjectMetaArgs{
 						Labels: redisLeaderLabels,
@@ -64,7 +64,7 @@ func main() {
 								},
 								Ports: corev1.ContainerPortArray{
 									&corev1.ContainerPortArgs{
-										ContainerPort: pulumi.IntPtr(6379),
+										ContainerPort: pulumi.Int(6379),
 									},
 								},
 							}},
@@ -85,8 +85,8 @@ func main() {
 			Spec: &corev1.ServiceSpecArgs{
 				Ports: corev1.ServicePortArray{
 					corev1.ServicePortArgs{
-						Port:       pulumi.IntPtr(6379),
-						TargetPort: pulumi.Any(6379), // TODO: Change to `IntPtr` once union types are supported.
+						Port:       pulumi.Int(6379),
+						TargetPort: pulumi.Int(6379),
 					},
 				},
 				Selector: redisLeaderLabels,
@@ -111,7 +111,7 @@ func main() {
 				Selector: &metav1.LabelSelectorArgs{
 					MatchLabels: redisFollowerLabels,
 				},
-				Replicas: pulumi.IntPtr(2),
+				Replicas: pulumi.Int(2),
 				Template: &corev1.PodTemplateSpecArgs{
 					Metadata: &metav1.ObjectMetaArgs{
 						Labels: redisFollowerLabels,
@@ -129,13 +129,13 @@ func main() {
 								},
 								Env: corev1.EnvVarArray{
 									corev1.EnvVarArgs{
-										Name:  pulumi.StringPtr("GET_HOSTS_FROM"),
-										Value: pulumi.StringPtr("dns"),
+										Name:  pulumi.String("GET_HOSTS_FROM"),
+										Value: pulumi.String("dns"),
 									},
 								},
 								Ports: corev1.ContainerPortArray{
 									&corev1.ContainerPortArgs{
-										ContainerPort: pulumi.IntPtr(6379),
+										ContainerPort: pulumi.Int(6379),
 									},
 								},
 							}},
@@ -150,12 +150,13 @@ func main() {
 		// Redis follower Service
 		_, err = corev1.NewService(ctx, "redis-follower", &corev1.ServiceArgs{
 			Metadata: &metav1.ObjectMetaArgs{
+				Name:   pulumi.String("redis-slave"),
 				Labels: redisFollowerLabels,
 			},
 			Spec: &corev1.ServiceSpecArgs{
 				Ports: corev1.ServicePortArray{
 					corev1.ServicePortArgs{
-						Port: pulumi.IntPtr(6379),
+						Port: pulumi.Int(6379),
 					},
 				},
 				Selector: redisFollowerLabels,
@@ -179,7 +180,7 @@ func main() {
 				Selector: &metav1.LabelSelectorArgs{
 					MatchLabels: frontendLabels,
 				},
-				Replicas: pulumi.IntPtr(1),
+				Replicas: pulumi.Int(1),
 				Template: &corev1.PodTemplateSpecArgs{
 					Metadata: &metav1.ObjectMetaArgs{
 						Labels: frontendLabels,
@@ -197,13 +198,13 @@ func main() {
 								},
 								Env: corev1.EnvVarArray{
 									corev1.EnvVarArgs{
-										Name:  pulumi.StringPtr("GET_HOSTS_FROM"),
-										Value: pulumi.StringPtr("dns"),
+										Name:  pulumi.String("GET_HOSTS_FROM"),
+										Value: pulumi.String("dns"),
 									},
 								},
 								Ports: corev1.ContainerPortArray{
 									&corev1.ContainerPortArgs{
-										ContainerPort: pulumi.IntPtr(80),
+										ContainerPort: pulumi.Int(80),
 									},
 								},
 							}},
@@ -228,10 +229,10 @@ func main() {
 				Name:   pulumi.String("frontend"),
 			},
 			Spec: &corev1.ServiceSpecArgs{
-				Type: pulumi.StringPtr(frontendServiceType),
+				Type: pulumi.String(frontendServiceType),
 				Ports: corev1.ServicePortArray{
 					corev1.ServicePortArgs{
-						Port: pulumi.IntPtr(80),
+						Port: pulumi.Int(80),
 					},
 				},
 				Selector: frontendLabels,
@@ -242,17 +243,17 @@ func main() {
 		}
 
 		if isMinikube {
-			ctx.Export("frontendIP", frontendService.Spec.ApplyT(
-				func(spec *corev1.ServiceSpec) *string { return spec.ClusterIP }))
+			ctx.Export("frontendIP", frontendService.Spec.ApplyT(func(spec *corev1.ServiceSpec) *string {
+				return spec.ClusterIP
+			}))
 		} else {
-			ctx.Export("frontendIP", frontendService.Status.ApplyT(
-				func(status *corev1.ServiceStatus) *string {
-					ingress := status.LoadBalancer.Ingress[0]
-					if ingress.Hostname != nil {
-						return ingress.Hostname
-					}
-					return ingress.Ip
-				}))
+			ctx.Export("frontendIP", frontendService.Status.ApplyT(func(status *corev1.ServiceStatus) *string {
+				ingress := status.LoadBalancer.Ingress[0]
+				if ingress.Hostname != nil {
+					return ingress.Hostname
+				}
+				return ingress.Ip
+			}))
 		}
 
 		return nil
