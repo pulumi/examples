@@ -42,15 +42,14 @@ After cloning this repo, `cd` into it and run these commands.
     ```bash
     $ pulumi config set azure:environment public
     $ pulumi config set azure:location australiasoutheast
-    $ pulumi config set dmz_ap    192.168.100.128/25
-    $ pulumi config set fw_ap     192.168.100.0/26
+    $ pulumi config set dmz_ar    192.168.100.128/25
+    $ pulumi config set fw_ar     192.168.100.0/26
     $ pulumi config set fw_as     192.168.100.0/24
-    $ pulumi config set fw_ip     192.168.100.4
-    $ pulumi config set fwm_ap    192.168.100.64/26
-    $ pulumi config set gw_ap     10.100.0.0/24
-    $ pulumi config set hub_ap    10.100.1.0/24
+    $ pulumi config set fwm_ar    192.168.100.64/26
+    $ pulumi config set gw_ar     10.100.0.0/24
+    $ pulumi config set hub_ar    10.100.1.0/24
     $ pulumi config set hub_as    10.100.0.0/16
-    $ pulumi config set spoke1_ap 10.101.0.0/24
+    $ pulumi config set spoke1_ar 10.101.0.0/24
     $ pulumi config set spoke1_as 10.101.0.0/16
     ```
 
@@ -68,10 +67,11 @@ After cloning this repo, `cd` into it and run these commands.
     ...
 
     Outputs:
-      + vdcVnetNames: [
-      +     [0]: "vdcvnet-east513be264"
-      +     [1]: "vdcvnet-westece285c7"
-        ]
+      + hub_er_gw     : "hub-er-gw-dc0babb8"
+      + hub_fw        : "hub-fw-3cc712b0"
+      + hub_fw_ip     : "192.168.100.4"
+      + hub_fw_pip    : "20.40.175.151"
+      + hub_vpn_gw    : "hub-vpn-gw-b79ae9dc"
     ...
     ```
 
