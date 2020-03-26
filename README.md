@@ -364,7 +364,7 @@ Example		| Description |
 Example		| Description |
 ----- 		| --------- |
 [Unit Tests in TypeScript](testing-unit-ts)      | Mock-based unit tests in TypeScript.
-[Unit Tests in Python](testing-unit-python)      | Mock-based unit tests in Python.
+[Unit Tests in Python](testing-unit-py)          | Mock-based unit tests in Python.
 [Unit Tests in Go](testing-unit-go)              | Mock-based unit tests in Go.
 [Unit Tests in C#](testing-unit-cs)              | Mock-based unit tests in C#.
 [Testing with Policies](testing-pac-ts)          | Tests based on Policy-as-Code in TypeScript.

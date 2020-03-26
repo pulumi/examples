@@ -1,6 +1,8 @@
 import pulumi
 
-import resources
+import infra
 
-pulumi.export("outprop", resources.mycomponent.outprop)
-pulumi.export("public_ip", resources.myinstance.public_ip)
+pulumi.export('group', infra.group)
+pulumi.export('server', infra.server)
+pulumi.export('publicIp', infra.server.public_ip)
+pulumi.export('publicHostName', infra.server.public_dns)

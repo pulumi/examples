@@ -1,5 +1,6 @@
 // Copyright 2016-2020, Pulumi Corporation
 
+using System;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Moq;
@@ -21,10 +22,10 @@ namespace UnitTesting
             var mocks = new Mock<IMocks>();
             mocks.Setup(m => m.NewResourceAsync(It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<ImmutableDictionary<string, object>>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync((string type, string name, ImmutableDictionary<string, object> inputs, string? provider, string? id) => (id ?? "", inputs));
+                .ReturnsAsync((string type, string name, ImmutableDictionary<string, object> inputs, string? provider, string? id) => (name + "_id", inputs));
             mocks.Setup(m => m.CallAsync(It.IsAny<string>(), It.IsAny<ImmutableDictionary<string, object>>(), It.IsAny<string>()))
                 .ReturnsAsync((string token, ImmutableDictionary<string, object> args, string? provider) => args);
-            return Deployment.TestAsync<T>(mocks.Object);
+            return Deployment.TestAsync<T>(mocks.Object, new TestOptions { IsPreview = false });
         }
 
         /// <summary>
