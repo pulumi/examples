@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -19,7 +20,10 @@ func handler(ctx context.Context, event events.CloudWatchEvent) {
 		panic(err)
 	}
 
-	if eventDetail.UserAgent != "signin.amazonaws.com" {
+	// see https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-record-contents.html
+	if eventDetail.UserAgent != "signin.amazonaws.com" &&
+		eventDetail.UserAgent != "console.ec2.amazonaws.com" &&
+		!strings.HasPrefix(eventDetail.UserAgent, "[S3Console/0.4, aws-internal/3 ") {
 		fmt.Printf("Skipping event [%s] from user agent [%s]", eventDetail.EventName, eventDetail.UserAgent)
 		return
 	}
@@ -44,6 +48,7 @@ func handler(ctx context.Context, event events.CloudWatchEvent) {
 					getSlackMessageAttachmentField("Event Source", eventDetail.EventSource),
 					getSlackMessageAttachmentField("Event Name", eventDetail.EventName),
 					getSlackMessageAttachmentField("User", eventDetail.UserIdentity.UserName),
+					getSlackMessageAttachmentField("Result", getResultText(eventDetail.ErrorCode)),
 				},
 			},
 		},
@@ -68,12 +73,20 @@ func getSlackMessageAttachmentField(title string, value string) slackMessageAtta
 	}
 }
 
+func getResultText(errorCode string) string {
+	if errorCode != "" {
+		return errorCode
+	}
+	return "Success"
+}
+
 type eventDetail struct {
 	UserIdentity userIdentity `json:"userIdentity"`
 	UserAgent    string       `json:"userAgent"`
 	EventSource  string       `json:"eventSource"`
 	EventName    string       `json:"eventName"`
 	AWSRegion    string       `json:"awsRegion"`
+	ErrorCode    string       `json:"errorCode"`
 }
 
 type userIdentity struct {
