@@ -31,18 +31,6 @@ Next, to deploy the application and its infrastructure, follow these steps:
     $ pulumi config set aws:region us-east-1 # any valid AWS region will work
     ```
 
-3. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
-
-    ```bash
-    $ dep ensure
-    ```
-
-4. Compile your Go application:
-
-    ```bash
-    $ go build .
-    ```
-
 5. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
    includes all of the required AWS resources (clusters, services, and the like). Don't worry if it's more than
    you expected -- this is one of the benefits of Pulumi, it configures everything so that so you don't need to!
@@ -117,12 +105,6 @@ Next, to deploy the application and its infrastructure, follow these steps:
     ```diff
     -                       DesiredCount:   pulumi.Int(3),
     +                       DesiredCount:   pulumi.Int(5),
-    ```
-
-    Remember to rebuild the application:
-
-    ```bash
-    $ go build .
     ```
 
     Running `pulumi up` will show you the delta and then, after confirming, will deploy just those changes:

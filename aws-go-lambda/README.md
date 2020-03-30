@@ -15,12 +15,6 @@ This example creates a lambda that does a simple `ToUpper` on the string input a
 
 After cloning this repo, run these commands from the working directory:
 
-1. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
-
-    ```bash
-    $ dep ensure
-    ```
-
 1. Build the handler:
 
 	- For developers on Linux and macOS:
