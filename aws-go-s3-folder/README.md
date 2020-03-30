@@ -7,12 +7,6 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
 
 ## Deploying and running the program
 
-1. Restore your Go dependencies. This example currently uses [go modules](https://github.com/golang/go/wiki/Modules) to do so:
-
-    ```bash
-    $ go mod download
-    ```
-
 1.  Create a new stack:
 
     ```bash

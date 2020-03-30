@@ -19,12 +19,6 @@ To deploy your infrastructure, follow the below steps.
 
 After cloning this repo, from this working directory, run these commands:
 
-1. Restore your Go dependencies. This example currently uses [go modules](https://github.com/golang/go/wiki/Modules) to do so:
-
-    ```bash
-    $ go mod download
-    ```
-
 2. Next, create a new Pulumi stack, which is an isolated deployment target for this example:
 
     ```bash
