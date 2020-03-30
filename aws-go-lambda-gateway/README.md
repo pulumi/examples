@@ -16,10 +16,10 @@ To deploy your infrastructure, follow the below steps.
 
 After cloning this repo, run these commands from the working directory:
 
-1. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
+1. Restore your Go dependencies. This example currently uses [go modules](https://github.com/golang/go/wiki/Modules) to do so:
 
     ```bash
-    $ dep ensure
+    $ go mod download
     ```
 
 1. Build the handler:
