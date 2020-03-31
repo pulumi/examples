@@ -3,8 +3,8 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/compute"
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/network"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/compute"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/network"
 	"github.com/pulumi/pulumi/sdk/go/pulumi"
 )
 
