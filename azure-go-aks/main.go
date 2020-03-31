@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/containerservice"
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/core"
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/network"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/containerservice"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/core"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/network"
 	"github.com/pulumi/pulumi-azuread/sdk/go/azuread"
 	"github.com/pulumi/pulumi-random/sdk/go/random"
 	"github.com/pulumi/pulumi-tls/sdk/go/tls"
