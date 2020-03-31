@@ -15,6 +15,14 @@ To deploy your infrastructure, follow the below steps.
 
 ### Steps
 
+1. Install plugins:
+
+    ```bash
+    pulumi plugin install resource tls 1.5.0
+    pulumi plugin install resource azuread 1.8.0
+    pulumi plugin install resource azure 2.3.1
+    ```
+
 1. Create a new stack:
 
     ```bash
@@ -31,12 +39,6 @@ To deploy your infrastructure, follow the below steps.
     
     ```bash
     $ pulumi config set azure:location westus
-    ```
-
-1. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
-
-    ```bash
-    $ dep ensure
     ```
 
 1. Stand up the AKS cluster:

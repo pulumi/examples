@@ -16,12 +16,6 @@ To deploy your infrastructure, follow the below steps.
 
 ### Steps
 
-1. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
-
-    ```bash
-    $ dep ensure
-    ```
-
 1.  Create a new stack:
 
     ```
