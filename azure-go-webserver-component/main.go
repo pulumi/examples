@@ -41,12 +41,11 @@ func main() {
 			},
 		})
 
-		subnetID := network.Subnets.Index(pulumi.Int(0)).Id().ApplyT(func(val interface{}) (string, error) {
-			v := val.(*string)
-			if v == nil {
+		subnetID := network.Subnets.Index(pulumi.Int(0)).Id().ApplyT(func(val *string) (string, error) {
+			if val == nil {
 				return "", nil
 			}
-			return *v, nil
+			return *val, nil
 		}).(pulumi.StringOutput)
 
 		// Now, allocate a few websever VMs -- by default, just 2, but this is configurable.
