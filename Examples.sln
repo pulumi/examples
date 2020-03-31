@@ -23,29 +23,31 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gcp.Functions", "gcp-cs-fun
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.BotService", "azure-cs-botservice\Azure.BotService.csproj", "{BF0F5532-EDDE-4AD4-8FA2-2D11CDED65D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digitalocean.LoadbalancedDroplets", "digitalocean-cs-loadbalanced-droplets\Digitalocean.LoadbalancedDroplets.csproj", "{C21DF417-3E59-45D0-911F-772E3793E0A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitalocean.LoadbalancedDroplets", "digitalocean-cs-loadbalanced-droplets\Digitalocean.LoadbalancedDroplets.csproj", "{C21DF417-3E59-45D0-911F-772E3793E0A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digitalocean.K8s", "digitalocean-cs-k8s\Digitalocean.K8s.csproj", "{CA1DB6A6-4B5D-41D7-AED6-43C096F5C7F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitalocean.K8s", "digitalocean-cs-k8s\Digitalocean.K8s.csproj", "{CA1DB6A6-4B5D-41D7-AED6-43C096F5C7F4}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Azure.Aci", "azure-fs-aci\Azure.Aci.fsproj", "{9F646ECF-9CD3-4686-8C4C-FE6AAAD29FEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Aks.PrivateContainerRegistry", "azure-cs-aks-private-container-registry\Azure.Aks.PrivateContainerRegistry.csproj", "{23099098-BEE1-4199-B1AB-8864DE7276DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Aks.PrivateContainerRegistry", "azure-cs-aks-private-container-registry\Azure.Aks.PrivateContainerRegistry.csproj", "{23099098-BEE1-4199-B1AB-8864DE7276DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.StaticWebsite", "azure-cs-static-website\Azure.StaticWebsite.csproj", "{4DEEF787-D589-44C5-AAB1-570D2D920043}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.StaticWebsite", "azure-cs-static-website\Azure.StaticWebsite.csproj", "{4DEEF787-D589-44C5-AAB1-570D2D920043}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Azure.Aks", "azure-fs-aks\Azure.Aks.fsproj", "{555DED90-15AE-4620-ACEE-B53EC237C62B}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Azure.Aks", "azure-fs-aks\Azure.Aks.fsproj", "{555DED90-15AE-4620-ACEE-B53EC237C62B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aws.Fargate", "aws-cs-fargate\Infra\Aws.Fargate.csproj", "{DCE03BA3-B0AA-4897-85D3-4EFEA7D1054C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aws.Fargate", "aws-cs-fargate\Infra\Aws.Fargate.csproj", "{DCE03BA3-B0AA-4897-85D3-4EFEA7D1054C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aws.Lambda", "aws-cs-lambda\pulumi\Aws.Lambda.csproj", "{82239443-6891-4644-B924-CB37D4FB74A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aws.Lambda", "aws-cs-lambda\pulumi\Aws.Lambda.csproj", "{82239443-6891-4644-B924-CB37D4FB74A6}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aws.LambdaWebServer", "aws-fs-lambda-webserver\pulumi\Aws.LambdaWebServer.fsproj", "{0FBE36F0-3E75-40C9-A619-889EE104335D}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Aws.LambdaWebServer", "aws-fs-lambda-webserver\pulumi\Aws.LambdaWebServer.fsproj", "{0FBE36F0-3E75-40C9-A619-889EE104335D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gcp.Gke", "gcp-cs-gke\Gcp.Gke.csproj", "{06BFC462-090E-4BC9-B518-CC7BA3B767E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gcp.Gke", "gcp-cs-gke\Gcp.Gke.csproj", "{06BFC462-090E-4BC9-B518-CC7BA3B767E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kubernetes.Guestbook", "kubernetes-cs-guestbook\simple\Kubernetes.Guestbook.csproj", "{D62CD873-8DCA-459C-A10D-4B022D82174E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kubernetes.Guestbook", "kubernetes-cs-guestbook\simple\Kubernetes.Guestbook.csproj", "{D62CD873-8DCA-459C-A10D-4B022D82174E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kubernetes.Guestbook.Components", "kubernetes-cs-guestbook\components\Kubernetes.Guestbook.Components.csproj", "{8836BAE0-2093-44F0-89E2-3F233CB72CCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kubernetes.Guestbook.Components", "kubernetes-cs-guestbook\components\Kubernetes.Guestbook.Components.csproj", "{8836BAE0-2093-44F0-89E2-3F233CB72CCC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Functions.On.Linux.AppService", "azure-cs-functions-on-linux-appservice\Azure.Functions.On.Linux.AppService.csproj", "{249EC5DF-D8E1-4CD5-B7B6-DFA73C80EBBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -141,6 +143,10 @@ Global
 		{8836BAE0-2093-44F0-89E2-3F233CB72CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8836BAE0-2093-44F0-89E2-3F233CB72CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8836BAE0-2093-44F0-89E2-3F233CB72CCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{249EC5DF-D8E1-4CD5-B7B6-DFA73C80EBBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{249EC5DF-D8E1-4CD5-B7B6-DFA73C80EBBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{249EC5DF-D8E1-4CD5-B7B6-DFA73C80EBBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{249EC5DF-D8E1-4CD5-B7B6-DFA73C80EBBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
