@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/appinsights"
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/appservice"
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/core"
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/sql"
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/storage"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/appinsights"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/appservice"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/core"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/sql"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/storage"
 	"github.com/pulumi/pulumi/sdk/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/go/pulumi/config"
 )
@@ -62,7 +62,7 @@ func main() {
 		blob, err := storage.NewZipBlob(ctx, prefix+"-b", &storage.ZipBlobArgs{
 			StorageAccountName:   storageAccount.Name,
 			StorageContainerName: storageContainer.Name,
-			Type:                 pulumi.String("block"),
+			Type:                 pulumi.String("Block"),
 			Content:              pulumi.NewFileArchive("wwwroot"),
 		})
 		if err != nil {
@@ -74,7 +74,7 @@ func main() {
 		appInsights, err := appinsights.NewInsights(ctx, prefix+"-i", &appinsights.InsightsArgs{
 			ResourceGroupName: resourceGroup.Name,
 			Location:          resourceGroup.Location,
-			ApplicationType:   pulumi.String("Web"),
+			ApplicationType:   pulumi.String("web"),
 		})
 		if err != nil {
 			return err
