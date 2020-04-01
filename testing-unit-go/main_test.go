@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi/pkg/resource"
+	"testing"
+
+	"github.com/pulumi/pulumi/sdk/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/go/pulumi"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 type testMonitor struct {

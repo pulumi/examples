@@ -8,12 +8,6 @@ An example of writing mock-based unit tests with both infrastructure definition 
 
 ## Running the tests
 
-1. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
-
-    ```bash
-    $ dep ensure
-    ```
-
 2.  Run the tests:
 
     ``` 
