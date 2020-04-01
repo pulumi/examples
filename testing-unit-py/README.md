@@ -7,7 +7,7 @@ An example of writing mock-based unit tests with both infrastructure definition 
 1. Create a Python virtualenv, activate it, and install dependencies:
 
    ```bash
-   $ virtualenv -p python3 venv
+   $ python3 -m venv venv
    $ source venv/bin/activate
    $ pip3 install -r requirements.txt
    ```

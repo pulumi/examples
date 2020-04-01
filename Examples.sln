@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kubernetes.Guestbook", "kub
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kubernetes.Guestbook.Components", "kubernetes-cs-guestbook\components\Kubernetes.Guestbook.Components.csproj", "{8836BAE0-2093-44F0-89E2-3F233CB72CCC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTesting", "testing-unit-cs\UnitTesting.csproj", "{7A9FC7DC-DC35-4033-B4FF-E9EFB3E6EBB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{8836BAE0-2093-44F0-89E2-3F233CB72CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8836BAE0-2093-44F0-89E2-3F233CB72CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8836BAE0-2093-44F0-89E2-3F233CB72CCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A9FC7DC-DC35-4033-B4FF-E9EFB3E6EBB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A9FC7DC-DC35-4033-B4FF-E9EFB3E6EBB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A9FC7DC-DC35-4033-B4FF-E9EFB3E6EBB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A9FC7DC-DC35-4033-B4FF-E9EFB3E6EBB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
