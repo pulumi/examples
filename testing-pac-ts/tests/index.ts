@@ -9,19 +9,22 @@ const stackPolicy: policy.StackValidationPolicy = {
     description: "EKS integration tests.",
     enforcementLevel: "mandatory",
     validateStack: async (args, reportViolation) => {
-        const clusterResource = args.resources.find(r => r.isType(aws.eks.Cluster));
-        const cluster = clusterResource && clusterResource.asType(aws.eks.Cluster);
-        if (!cluster) {
-            reportViolation("EKS Cluster not found");
+        const clusterResources = args.resources.filter(r => r.isType(aws.eks.Cluster));
+        if (clusterResources.length !== 1) {
+            reportViolation(`Expected one EKS Cluster but found ${clusterResources.length}`);
             return;
         }
 
+        const cluster = clusterResources[0].asType(aws.eks.Cluster)!;
         if (cluster.version !== "1.13") {
             reportViolation(`Expected EKS Cluster '${cluster.name}' version to be '1.13' but found '${cluster.version}'`);
         }
 
         const vpcId = cluster.vpcConfig.vpcId;
         if (!vpcId) {
+            // 'isDryRun==true' means the test are running in preview.
+            // If so, the VPC might not exist yet even though it's defined in the program.
+            // We shouldn't fail the test then to avoid false negatives.
             if (!pulumi.runtime.isDryRun()) {
                 reportViolation(`EKS Cluster '${cluster.name}' has unknown VPC`);
             }
