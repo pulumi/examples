@@ -32,13 +32,7 @@ func main() {
 		// Redis leader Deployment + Service
 		_, err := NewServiceDeployment(ctx, "redis-master", &ServiceDeploymentArgs{
 			Image: pulumi.String("k8s.gcr.io/redis:e2e"),
-			Labels: pulumi.StringMap{
-				"app":  pulumi.String("redis"),
-				"tier": pulumi.String("backend"),
-				"role": pulumi.String("master"),
-			},
-			Ports:    pulumi.IntArray{pulumi.Int(6379)},
-			Replicas: pulumi.Int(1),
+			Ports: pulumi.IntArray{pulumi.Int(6379)},
 		})
 		if err != nil {
 			return err
@@ -46,59 +40,20 @@ func main() {
 
 		// Redis follower Deployment + Service
 		_, err = NewServiceDeployment(ctx, "redis-slave", &ServiceDeploymentArgs{
-			Env: corev1.EnvVarArray{
-				corev1.EnvVarArgs{
-					Name:  pulumi.String("GET_HOSTS_FROM"),
-					Value: pulumi.String("dns"),
-				},
-			},
 			Image: pulumi.String("gcr.io/google_samples/gb-redisslave:v3"),
-			Labels: pulumi.StringMap{
-				"app":  pulumi.String("redis"),
-				"tier": pulumi.String("backend"),
-				"role": pulumi.String("slave"),
-			},
-			Ports:    pulumi.IntArray{pulumi.Int(6379)},
-			Replicas: pulumi.Int(2),
-			Resources: corev1.ResourceRequirementsArgs{
-				Requests: pulumi.StringMap{
-					"cpu":    pulumi.String("100m"),
-					"memory": pulumi.String("100Mi"),
-				},
-			},
+			Ports: pulumi.IntArray{pulumi.Int(6379)},
 		})
 		if err != nil {
 			return err
 		}
 
-		var frontendServiceType string
-		if isMinikube {
-			frontendServiceType = "ClusterIP"
-		} else {
-			frontendServiceType = "LoadBalancer"
-		}
 		// Frontend Deployment + Service
 		frontend, err := NewServiceDeployment(ctx, "frontend", &ServiceDeploymentArgs{
-			Env: corev1.EnvVarArray{
-				corev1.EnvVarArgs{
-					Name:  pulumi.String("GET_HOSTS_FROM"),
-					Value: pulumi.String("dns"),
-				},
-			},
-			Image: pulumi.String("gcr.io/google-samples/gb-frontend:v4"),
-			Labels: pulumi.StringMap{
-				"app":  pulumi.String("guestbook"),
-				"tier": pulumi.String("frontend"),
-			},
-			Ports:    pulumi.IntArray{pulumi.Int(80)},
-			Replicas: pulumi.Int(1),
-			Resources: corev1.ResourceRequirementsArgs{
-				Requests: pulumi.StringMap{
-					"cpu":    pulumi.String("100m"),
-					"memory": pulumi.String("100Mi"),
-				},
-			},
-			ServiceType: pulumi.StringPtr(frontendServiceType),
+			AllocateIPAddress: true,
+			Image:             pulumi.String("gcr.io/google-samples/gb-frontend:v4"),
+			IsMinikube:        pulumi.Bool(isMinikube),
+			Ports:             pulumi.IntArray{pulumi.Int(80)},
+			Replicas:          pulumi.Int(3),
 		})
 		if err != nil {
 			return err
