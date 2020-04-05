@@ -131,14 +131,14 @@ between the system:
    that was created in the networking stack. The stack needs to be in the form `<organization_or_user>/<projectName>/<stackName>`:
    
    ```bash
-   pulumi config set networkingStack stack72/networking-stack/dev
+   pulumi config set networkingStack stack72/networking-layer/dev
    ```
  
    You need to set a stack reference to the database stack so that the Application Instance can get the correct credentials
    and database information for application startup. The stack needs to be in the form `<organization_or_user>/<projectName>/<stackName>`:
    
    ```bash
-   pulumi config set networkingStack stack72/database-stack/dev
+   pulumi config set networkingStack stack72/database-layer/dev
    ```
  
 1. Deploy the application stack
