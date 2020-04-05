@@ -138,7 +138,7 @@ between the system:
    and database information for application startup. The stack needs to be in the form `<organization_or_user>/<projectName>/<stackName>`:
    
    ```bash
-   pulumi config set networkingStack stack72/database-layer/dev
+   pulumi config set application-layer:databaseStack stack72/database-layer/dev
    ```
  
 1. Deploy the application stack
