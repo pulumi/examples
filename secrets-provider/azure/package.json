@@ -1,5 +1,5 @@
 {
-    "name": "pulumi-azure-kms",
+    "name": "pulumi-azure-keyvault",
     "devDependencies": {
         "@types/node": "^8.0.0"
     },
