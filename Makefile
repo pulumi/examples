@@ -6,7 +6,8 @@ install:
 	yarn global add tslint typescript
 
 ensure:
-	cd misc/test && GO111MODULE=on go mod vendor
+	cd misc/test && GO111MODULE=on go mod tidy
+	cd misc/test && GO111MODULE=on go mod download
 
 only_build:
 
@@ -14,7 +15,7 @@ lint:
 	tslint -c tslint.json **/*.ts
 
 only_test:
-	go test ./misc/test/... --timeout 4h -v -count=1 -short -parallel 40
+	cd misc/test && go test ./... --timeout 4h -v -count=1 -short -parallel 40
 
 # The travis_* targets are entrypoints for CI.
 .PHONY: travis_cron travis_push travis_pull_request travis_api
