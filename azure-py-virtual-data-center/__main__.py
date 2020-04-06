@@ -4,10 +4,10 @@ from pulumi_azure import core, network
 # Retrieve the configuration data
 config = pulumi.Config()
 dmz_ar = config.require('dmz_ar')
-fw_ar = config.require('fw_ar')
-fw_as = config.require('fw_as')
 fwm_ar = config.require('fwm_ar')
-gw_ar = config.require('gw_ar')
+fws_ar = config.require('fws_ar')
+fwz_as = config.require('fwz_as')
+gws_ar = config.require('gws_ar')
 hub_ar = config.require('hub_ar')
 hub_as = config.require('hub_as')
 spoke1_ar = config.require('spoke1_ar')
@@ -22,7 +22,7 @@ hub = network.VirtualNetwork(
     resource_group_name=resource_group.name,
     location=resource_group.location,
     # separate firewall/DMZ address space to simplify custom routing as subnets are added
-    address_spaces=[fw_as,hub_as]
+    address_spaces=[fwz_as, hub_as]
     # avoid use of subnets= (use standalone Subnet resource instead)
 )
 
@@ -78,7 +78,7 @@ hub_gw_sn = network.Subnet(
     "hub-gw-sn",
     name="GatewaySubnet", # specific physical name required
     resource_group_name=resource_group.name,
-    address_prefix=gw_ar,
+    address_prefix=gws_ar,
     virtual_network_name=hub.name,
     opts=pulumi.ResourceOptions(delete_before_replace=True)
 )
@@ -87,7 +87,7 @@ hub_fw_sn = network.Subnet(
     "hub-fw-sn",
     name="AzureFirewallSubnet", # specific physical name required
     resource_group_name=resource_group.name,
-    address_prefix=fw_ar,
+    address_prefix=fws_ar,
     virtual_network_name=hub.name,
     opts=pulumi.ResourceOptions(delete_before_replace=True)
 )
@@ -99,6 +99,8 @@ hub_vpn_gw_pip = network.PublicIp(
     location=resource_group.location,
     allocation_method="Dynamic"
 )
+
+vpn_gw_pip = hub_vpn_gw_pip.ip_address
 
 # VPN Gateway
 hub_vpn_gw = network.VirtualNetworkGateway(
@@ -112,8 +114,7 @@ hub_vpn_gw = network.VirtualNetworkGateway(
         "name": "hub-vpn-gw-ipconf",
         "subnet_id": hub_gw_sn.id,
         "publicIpAddressId": hub_vpn_gw_pip.id
-    }],
-    opts=pulumi.ResourceOptions(depends_on=[hub_gw_sn]) # try to reduce contention
+    }]
 )
 
 # Public IP for the ExpressRoute Gateway (standard sku to enable zone-redundancy where available)
@@ -123,6 +124,8 @@ hub_er_gw_pip = network.PublicIp(
     location=resource_group.location,
     allocation_method="Dynamic"
 )
+
+er_gw_pip = hub_er_gw_pip.ip_address
 
 # ExpressRoute Gateway
 hub_er_gw = network.VirtualNetworkGateway(
@@ -136,8 +139,7 @@ hub_er_gw = network.VirtualNetworkGateway(
         "name": "hub-er-gw-ipconf",
         "subnet_id": hub_gw_sn.id,
         "publicIpAddressId": hub_er_gw_pip.id
-    }],
-    opts=pulumi.ResourceOptions(depends_on=[hub_gw_sn]) # try to reduce contention
+    }]
 )
 
 # Public IP for the Azure Firewall
@@ -158,8 +160,7 @@ hub_fw = network.Firewall( #ToDo update fw_ip for use in routing tables
         "name": "hub-fw-ipconf",
         "subnet_id": hub_fw_sn.id,
         "publicIpAddressId": hub_fw_pip.id
-    }],
-    opts=pulumi.ResourceOptions(depends_on=[hub_fw_sn]) # try to reduce contention
+    }]
 )
 
 # Work around https://github.com/pulumi/pulumi/issues/4040
@@ -172,8 +173,7 @@ hub_spoke1 = network.VirtualNetworkPeering(
     virtual_network_name=hub.name,
     remote_virtual_network_id=spoke1.id,
     allow_gateway_transit=True,
-    allow_virtual_network_access=True,
-    opts=pulumi.ResourceOptions(depends_on=[hub_er_gw, hub_vpn_gw]) # may as well
+    allow_virtual_network_access=True
 )
 
 # VNet Peering from spoke to the hub (additional spokes require similar)
@@ -352,6 +352,10 @@ pulumi.export("hub_fw", hub_fw.name)
 pulumi.export("hub_fw_ip", fw_ip)
 pulumi.export("hub_fw_pip", hub_fw_pip.ip_address)
 pulumi.export("hub_er_gw", hub_er_gw.name)
-pulumi.export("hub_er_gw_pip", hub_er_gw_pip.ip_address) # may need to apply a lambda
+pulumi.export("hub_er_gw_pip", er_gw_pip)
 pulumi.export("hub_vpn_gw", hub_vpn_gw.name)
-pulumi.export("hub_vpn_gw_pip", hub_vpn_gw_pip.ip_address) # may need to apply a lambda
+pulumi.export("hub_vpn_gw_pip", vpn_gw_pip)
+
+#combined_output = Output.all(public_ip.name, public_ip.resource_group_name)
+#public_ip_addr = combined_output.apply(lambda lst: network.get_public_ip(name=lst[0], resource_group_name=lst[1]))
+#pulumi.export("public_ip", public_ip_addr.ip_address)

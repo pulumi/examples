@@ -43,13 +43,13 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi config set azure:environment public
     $ pulumi config set azure:location australiasoutheast
     $ pulumi config set dmz_ar    192.168.100.128/25
-    $ pulumi config set fw_ar     192.168.100.0/26
-    $ pulumi config set fw_as     192.168.100.0/24
     $ pulumi config set fwm_ar    192.168.100.64/26
-    $ pulumi config set gw_ar     10.100.0.0/24
+    $ pulumi config set fws_ar    192.168.100.0/26
+    $ pulumi config set fwz_as    192.168.100.0/24
+    $ pulumi config set gws_ar    10.100.0.0/26
     $ pulumi config set hub_ar    10.100.1.0/24
     $ pulumi config set hub_as    10.100.0.0/16
-    $ pulumi config set spoke1_ar 10.101.0.0/24
+    $ pulumi config set spoke1_ar 10.101.1.0/24
     $ pulumi config set spoke1_as 10.101.0.0/16
     ```
 
@@ -67,11 +67,13 @@ After cloning this repo, `cd` into it and run these commands.
     ...
 
     Outputs:
-      + hub_er_gw     : "hub-er-gw-dc0babb8"
-      + hub_fw        : "hub-fw-3cc712b0"
+      + hub_er_gw     : "hub-er-gw-261ec575"
+      + hub_er_gw_pip : "23.101.233.172"
+      + hub_fw        : "hub-fw-9d706931"
       + hub_fw_ip     : "192.168.100.4"
-      + hub_fw_pip    : "20.40.175.151"
-      + hub_vpn_gw    : "hub-vpn-gw-b79ae9dc"
+      + hub_fw_pip    : "20.40.167.228"
+      + hub_vpn_gw    : "hub-vpn-gw-11b5fdfa"
+      + hub_vpn_gw_pip: "23.101.235.252"
     ...
     ```
 

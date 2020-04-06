@@ -10,29 +10,29 @@ template:
       description: The Azure region to use (e.g. `australiaeast` or `australiasoutheast`)
       default: australiasoutheast
     azure-py-vdc:dmz_ar:
-      description: An address range for the DMZ within the firewall address space
+      description: An address range within the firewall zone for the DMZ subnet
       default: 192.168.100.128/25
-    azure-py-vdc:fw_ar:
-      description: An address range for the firewall within the firewall address space
-      default: 192.168.100.0/26
-    azure-py-vdc:fw_as:
-      description: An address space that contains the firewall, management and DMZ address ranges
-      default: 192.168.100.0/24
     azure-py-vdc:fwm_ar:
-      description: An address range for firewall management used if forced tunnelling is enabled
+      description: An address range within the firewall zone for AzureFirewallManagementSubnet (/26)
       default: 192.168.100.64/26
-    azure-py-vdc:gw_ar:
-      description: An address range for the gateways within the hub address space
-      default: 10.100.0.0/24
+    azure-py-vdc:fws_ar:
+      description: An address range within the firewall zone for AzureFirewallSubnet (/26)
+      default: 192.168.100.0/26
+    azure-py-vdc:fwz_as:
+      description: An address space that contains the firewall zone address ranges
+      default: 192.168.100.0/24
+    azure-py-vdc:gws_ar:
+      description: An address range within the hub address space for the GatewaySubnet (/27 or larger)
+      default: 10.100.0.0/26
     azure-py-vdc:hub_ar:
-      description: An address range for the first shared services subnet in the hub address space 
+      description: An address range within the hub address space for the first shared services subnet 
       default: 10.100.1.0/24
     azure-py-vdc:hub_as:
-      description: An address space that contains the gateways and shared services address ranges
+      description: An address space that contains the gateway and shared services address ranges
       default: 10.100.0.0/16
     azure-py-vdc:spoke1_ar:
-      description: An address range for the first subnet in the spoke1 address space
-      default: 10.101.0.0/24
+      description: An address range within the spoke1 address space for the first subnet
+      default: 10.101.1.0/24
     azure-py-vdc:spoke1_as:
       description: An address space that contains the spoke1 subnet address ranges
       default: 10.101.0.0/16
