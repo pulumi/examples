@@ -16,7 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"github.com/pulumi/pulumi/pkg/resource"
+	"github.com/pulumi/pulumi/sdk/go/common/resource"
 	"github.com/pulumi/pulumi/pkg/testing/integration"
 	"github.com/stretchr/testify/assert"
 )
