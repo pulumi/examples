@@ -117,7 +117,7 @@ hub_vpn_gw = network.VirtualNetworkGateway(
     }]
 )
 
-# Public IP for the ExpressRoute Gateway (standard sku to enable zone-redundancy where available)
+# Public IP for the ExpressRoute Gateway
 hub_er_gw_pip = network.PublicIp(
     "hub-er-gw-pip-",
     resource_group_name=resource_group.name,
@@ -152,7 +152,7 @@ hub_fw_pip = network.PublicIp(
 )
 
 # Azure Firewall
-hub_fw = network.Firewall( #ToDo update fw_ip for use in routing tables
+hub_fw = network.Firewall(
     "hub-fw-",
     resource_group_name=resource_group.name,
     location=resource_group.location,
@@ -185,7 +185,7 @@ spoke1_hub = network.VirtualNetworkPeering(
     allow_forwarded_traffic=True,
     use_remote_gateways=True, # a gateway must be provisioned already or this will fail
     allow_virtual_network_access=True,
-    opts=pulumi.ResourceOptions(depends_on=[hub_er_gw, hub_vpn_gw])
+    opts=pulumi.ResourceOptions(depends_on=[hub_er_gw]) # doesn't require both gateways
 )
 
 # Custom routes to direct all traffic between virtual networks through the firewall
@@ -355,7 +355,3 @@ pulumi.export("hub_er_gw", hub_er_gw.name)
 pulumi.export("hub_er_gw_pip", er_gw_pip)
 pulumi.export("hub_vpn_gw", hub_vpn_gw.name)
 pulumi.export("hub_vpn_gw_pip", vpn_gw_pip)
-
-#combined_output = Output.all(public_ip.name, public_ip.resource_group_name)
-#public_ip_addr = combined_output.apply(lambda lst: network.get_public_ip(name=lst[0], resource_group_name=lst[1]))
-#pulumi.export("public_ip", public_ip_addr.ip_address)
