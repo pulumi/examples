@@ -1,0 +1,10 @@
+{
+    "name": "pulumi-azure-kms",
+    "devDependencies": {
+        "@types/node": "^8.0.0"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^1.0.0",
+        "@pulumi/azure": "^2.0.0"
+    }
+}
