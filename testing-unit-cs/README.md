@@ -25,3 +25,10 @@ Total tests: 1
      Passed: 1
  Total time: 1.2167 Seconds
 ```
+
+## Further steps
+
+Learn more about testing Pulumi programs:
+
+- [Testing Guide](https://www.pulumi.com/docs/guides/testing/)
+- [Unit Testing Guide](https://www.pulumi.com/docs/guides/testing/unit/)

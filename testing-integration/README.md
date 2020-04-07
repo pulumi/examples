@@ -22,3 +22,10 @@ $ go test
 PASS
 ok  	github.com/pulumi/examples/testing-integration	65.749s
 ```
+
+## Further steps
+
+Learn more about testing Pulumi programs:
+
+- [Testing Guide](https://www.pulumi.com/docs/guides/testing/)
+- [Integration Testing Guide](https://www.pulumi.com/docs/guides/testing/integration/)

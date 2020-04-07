@@ -29,3 +29,10 @@ An example of writing mock-based unit tests with both infrastructure definition 
 
     3 passing (420ms)
     ```
+
+## Further steps
+
+Learn more about testing Pulumi programs:
+
+- [Testing Guide](https://www.pulumi.com/docs/guides/testing/)
+- [Unit Testing Guide](https://www.pulumi.com/docs/guides/testing/unit/)
