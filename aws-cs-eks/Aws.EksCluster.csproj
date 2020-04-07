@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Pulumi.Aws" Version="1.30.0-preview" />
+    <PackageReference Include="Pulumi.Kubernetes" Version="1.6.0-preview" />
+  </ItemGroup>
+
+</Project>

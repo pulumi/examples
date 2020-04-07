@@ -1,0 +1,3 @@
+name: aws-cs-eks
+runtime: dotnet
+description: An ASP.NET application running a simple container in a EKS Cluster
