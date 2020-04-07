@@ -16,7 +16,11 @@ vm = packet.Device(
     operating_system="coreos_stable",
     plan="baremetal_0",
     project_id=project.id,
-    ip_address_types=["public_ipv4", "private_ipv4"],
+    ip_addresses=[{
+        "type": "public_ipv4",
+    }, {
+        "type": "private_ipv4",
+    }]
 )
 
 export('ip', vm.access_public_ipv4)
