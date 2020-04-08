@@ -16,7 +16,7 @@
         "strictNullChecks": true,
     },
     "files": [
-        "index.ts",
+        "compute.ts",
+        "index.ts"
     ]
 }
-

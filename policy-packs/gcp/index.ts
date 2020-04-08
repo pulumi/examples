@@ -1,5 +1,7 @@
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as gcp from "@pulumi/gcp";
-import { PolicyPack, validateTypedResource } from "@pulumi/policy";
+import { PolicyPack, validateResourceOfType } from "@pulumi/policy";
 
 const policies = new PolicyPack("gcp", {
     policies: [
@@ -7,9 +9,8 @@ const policies = new PolicyPack("gcp", {
             name: "discouraged-gcp-public-ip-address",
             description: "Associating public IP addresses is discouraged.",
             enforcementLevel: "advisory",
-            validateResource: validateTypedResource(gcp.compute.Instance, (instance, args, reportViolation) => {
-                const publicIps = instance.networkInterfaces.find(net => net.accessConfigs !== undefined);
-                if (publicIps !== undefined) {
+            validateResource: validateResourceOfType(gcp.compute.Instance, (instance, args, reportViolation) => {
+                if (instance.networkInterfaces.some(net => net.accessConfigs)) {
                     reportViolation("Associating public IP addresses is discouraged.");
                 }
             }),
@@ -18,9 +19,8 @@ const policies = new PolicyPack("gcp", {
             name: "prohibited-public-internet",
             description: "Ingress rules with public internet access are prohibited.",
             enforcementLevel: "mandatory",
-            validateResource: validateTypedResource(gcp.compute.Firewall, (firewall, args, reportViolation) => {
-                const publicInternetRules = (firewall.sourceRanges || []).find(ranges => ranges === "0.0.0.0/0");
-                if (publicInternetRules !== undefined) {
+            validateResource: validateResourceOfType(gcp.compute.Firewall, (firewall, args, reportViolation) => {
+                if (firewall.sourceRanges?.some(ranges => ranges === "0.0.0.0/0")) {
                     reportViolation("Ingress rules with public internet access are prohibited.");
                 }
             }),
