@@ -9,13 +9,13 @@ The intention is that matching stacks would be defined in paired Azure regions, 
 Although this pattern is in widespread use it has been superseded by the new Virtual Hub and SD-WAN architecture, with the migration plan detailed at:
 https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology
 
-# Prerequisites
+This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components). The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction.
 
-Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
+## Prerequisites
 
-We will be deploying to Azure, so you will need an Azure account. If you don't have an account,
-[sign up for free here](https://azure.microsoft.com/en-us/free/).
-[Follow the instructions here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect Pulumi to your Azure account.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure Pulumi for Azure](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+1. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
 
 # Running the Example
 
@@ -47,10 +47,12 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi config set fws_ar    192.168.100.0/26
     $ pulumi config set fwz_as    192.168.100.0/24
     $ pulumi config set gws_ar    10.100.0.0/26
+    $ pulumi config set hbs_ar    10.100.0.64/27
     $ pulumi config set hub_ar    10.100.1.0/24
     $ pulumi config set hub_as    10.100.0.0/16
-    $ pulumi config set spoke1_ar 10.101.1.0/24
-    $ pulumi config set spoke1_as 10.101.0.0/16
+    $ pulumi config set sbs_ar    10.101.0.0/27
+    $ pulumi config set spoke_ar  10.101.1.0/24
+    $ pulumi config set spoke_as  10.101.0.0/16
     ```
 
 1. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including gateways and firewall which will take up to an hour:
