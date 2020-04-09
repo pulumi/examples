@@ -20,7 +20,7 @@ spoke_as = config.require('spoke_as')
 # Azure Resource Group using the location in the stack configuration
 resource_group = core.ResourceGroup("vdc-rg-")
 
-# Hub virtual network with gateway, firewall, DMZ and shared services subnetsgit st
+# Hub virtual network with gateway, firewall, DMZ and shared services subnets
 hub = Hub(
     "hub",
     HubArgs(
