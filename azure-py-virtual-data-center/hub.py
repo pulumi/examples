@@ -30,7 +30,7 @@ class Hub(ComponentResource):
     def __init__(self, name: str, args: HubArgs, opts: ResourceOptions = None):
         super().__init__('vdc:network:Hub', name, {}, opts)
 
-        # 
+        # Azure Virtual Network to which spokes are peered (not to each other)
         hub = network.VirtualNetwork(
             f"{name}-vn-", # no trailing dash as not auto-named
             resource_group_name=args.resource_group.name,
@@ -94,7 +94,7 @@ class Hub(ComponentResource):
             )
 
         # as many subnets as are required for shared services may be created in the hub
-        if args.hub_ar:
+        if args.hub_ar: # replace with loop
             hub_example_sn = network.Subnet( #ToDo add NSG for inter-subnet traffic in hub
                 f"{name}-example-sn-",
                 resource_group_name=args.resource_group.name,
@@ -311,7 +311,7 @@ class Hub(ComponentResource):
             opts=ResourceOptions(parent=self),
         )
 
-        combined_output = Output.all.Apply(
+        combined_output = Output.all.apply(
             name=hub.name,
             id=hub.id,
             fw_name=hub_fw.name,
