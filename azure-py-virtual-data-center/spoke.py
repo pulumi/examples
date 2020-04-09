@@ -32,6 +32,7 @@ class Spoke(ComponentResource):
     def __init__(self, name:str, args: SpokeArgs, opts: ResourceOptions = None):
         super().__init__('vdc:network:Spoke', name, {}, opts)
 
+        # Azure Virtual Network intended for application environments
         spoke = network.VirtualNetwork(
             f"{name}-vn-",
             resource_group_name=args.resource_group.name,
@@ -50,7 +51,7 @@ class Spoke(ComponentResource):
                 resource_group_name=args.resource_group.name,
                 address_prefix=args.sbs_ar,
                 virtual_network_name=spoke.name,
-                opts=ResourceOptions(parent=self),
+                opts=ResourceOptions(parent=self, delete_before_replace=True),
             )
 
         # As many subnets as are required for application environments may be created in the spoke
