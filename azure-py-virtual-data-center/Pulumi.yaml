@@ -30,6 +30,9 @@ template:
     azure-py-vdc:hub_as:
       description: An address space that contains the gateway and shared services address ranges
       default: 10.100.0.0/16
+    azure-py-vdc:hub_stem:
+      description: A short name for the hub that will appear in resource names (<4 chars)
+      default: hub
     azure-py-vdc:sbs_ar:
       description: An address range within the spoke address space for an AzureBastionSubnet (/27)
     azure-py-vdc:spoke_ar:
@@ -37,3 +40,6 @@ template:
     azure-py-vdc:spoke_as:
       description: An address space that contains the spoke subnet address ranges
       default: 10.101.0.0/16
+    azure-py-vdc:spoke_stem:
+      description: A short name for the spoke that will appear in resource names (<6 chars)
+      default: spoke
