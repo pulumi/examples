@@ -45,7 +45,7 @@ class Spoke(ComponentResource):
             resource_group_name = props.resource_group.name,
             location = props.resource_group.location,
             address_spaces = [props.spoke_as],
-            # avoid use of inline subnets =  (use standalone Subnet resource instead)
+            # avoid use of inline subnets (use standalone Subnet resource instead)
             # there should be no GatewaySubnet in the spokes but AzureBastionSubnet is OK
             tags = props.tags,
             opts = ResourceOptions(parent=self),
@@ -80,32 +80,35 @@ class Spoke(ComponentResource):
             virtual_network_name = spoke.name,
             remote_virtual_network_id = props.hub_id,
             allow_forwarded_traffic = True,
-            use_remote_gateways = True, # a gateway must be provisioned already or this will fail
+            use_remote_gateways = True, # a gateway must already be provisioned or this will fail
             allow_virtual_network_access = True,
             opts = ResourceOptions(parent=self, custom_timeouts=CustomTimeouts(create='1h')),
         )
 
-        # Route table to be associated with all spoke subnets except AzureBastionSubnet
+        # Route table to be associated with all spoke subnets (except AzureBastionSubnet)
         spoke_sn_rt = network.RouteTable(
             f"{name}-sn-rt-",
             resource_group_name = props.resource_group.name,
             location = props.resource_group.location,
             disable_bgp_route_propagation = True, #use custom routes for subnets in spokes
-            # avoid use of inline routes =  (use standalone Route resource instead)
+            # avoid use of inline routes (use standalone Route resource instead)
             tags = props.tags,
-            opts = ResourceOptions(parent=self, depends_on=[hub_spoke, spoke_hub]),
+            opts = ResourceOptions(
+                parent=self,
+                depends_on=[hub_spoke, spoke_hub], # reduce contention
+            ),
         )
 
         # As many subnets as are required for application environments may be created in the spoke
         if props.spoke_ar: # replace with a loop
-            spoke_example_sn = network.Subnet( #ToDo add NSG for inter-subnet traffic in spoke
+            spoke_example_sn = network.Subnet( #ToDo add NSGs for inter-subnet traffic in spoke
                 f"{name}-example-sn-",
                 resource_group_name = props.resource_group.name,
                 address_prefix = props.spoke_ar,
                 virtual_network_name = spoke.name,
                 opts = ResourceOptions(parent=self),
             )
-            # associate all spoke subnets except AzureBastionSubnet to the route table
+            # associate all spoke subnets (except AzureBastionSubnet) to the route table
             spoke_example_sn_rta = network.SubnetRouteTableAssociation(
                 f"{name}-example-sn-rta", # no trailing dash as not auto-named
                 route_table_id = spoke_sn_rt.id,
@@ -114,8 +117,10 @@ class Spoke(ComponentResource):
             )
 
         # https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview
-        # because it is not possible to specify the VNet Peering as next_hop_type, ensure that
-        # there is no route with an address_prefix which covers the AzureFirewallSubnet
+        # Because it is not possible to specify the VNet Peering as next_hop_type, separate 
+        # address space for the firewall means that routes in the spokes don't need to be added
+        # for every new subnet created in the hub. It is very important to ensure that there is
+        # never a route with an address_prefix which covers the AzureFirewallSubnet.
         #ToDo check whether traffic to AzureFirewallManagementSubnet needs special treatment
   
         # override system route to redirect traffic from gateways to spoke via the firewall
@@ -133,7 +138,7 @@ class Spoke(ComponentResource):
         spoke_hub_dmz_r = network.Route(
             f"{name}-{props.hub_stem}-dmz-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.dmz_ar,
+            address_prefix = props.dmz_ar, # avoid overlapping AzureFirewallSubnet address space!
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = props.hub_fw_ip,
             route_table_name = spoke_sn_rt.name,

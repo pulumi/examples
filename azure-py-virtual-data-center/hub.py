@@ -33,14 +33,14 @@ class Hub(ComponentResource):
     def __init__(self, name: str, props: HubProps, opts: ResourceOptions=None):
         super().__init__('vdc:network:Hub', name, {}, opts)
 
-        # Azure Virtual Network to which spokes are peered (not to each other)
+        # Azure Virtual Network to which spokes are peered (only)
         hub = network.VirtualNetwork(
-            f"{name}-vn-", # no trailing dash as not auto-named
+            f"{name}-vn-",
             resource_group_name = props.resource_group.name,
             location = props.resource_group.location,
-            # separate firewall/DMZ address space to simplify custom routing
+            # separate address spaces to simplify custom routing
             address_spaces = [props.fwz_as, props.hub_as],
-            # avoid use of inline subnets =  (use standalone Subnet resource instead)
+            # avoid use of inline subnets (use standalone Subnet resource instead)
             tags = props.tags,
             opts = ResourceOptions(parent=self),
         )
@@ -48,7 +48,7 @@ class Hub(ComponentResource):
         # DMZ subnet
         hub_dmz_sn = network.Subnet( #ToDo add NSG preventing access except via firewall
             f"{name}-dmz-sn", # no trailing dash as not auto-named
-            name = "DMZ", # specific physical name not required but preferred as treated specially
+            name = "DMZ", # specific physical name not required but preferred for clarity
             resource_group_name = props.resource_group.name,
             address_prefix = props.dmz_ar,
             virtual_network_name = hub.name,
@@ -123,7 +123,7 @@ class Hub(ComponentResource):
             tags = props.tags,
             opts = ResourceOptions(
                 parent=self,
-                depends_on=[hub_dmz_sn, hub_fw_sn, hub_gw_sn],
+                depends_on=[hub_dmz_sn, hub_fw_sn, hub_gw_sn], # reduce contention
                 custom_timeouts=CustomTimeouts(create='1h'),
             ),
         )
@@ -152,7 +152,10 @@ class Hub(ComponentResource):
                 "publicIpAddressId": hub_er_gw_pip.id
             }],
             tags = props.tags,
-            opts = ResourceOptions(parent=self, depends_on=[hub_dmz_sn, hub_fw_sn, hub_gw_sn]),
+            opts = ResourceOptions(
+                parent=self,
+                depends_on=[hub_dmz_sn, hub_fw_sn, hub_gw_sn], # reduce contention
+            ),
         )
 
         # Public IP for the Azure Firewall
@@ -177,7 +180,10 @@ class Hub(ComponentResource):
                 "publicIpAddressId": hub_fw_pip.id,
             }],
             tags = props.tags,
-            opts = ResourceOptions(parent=self, depends_on=[hub_dmz_sn, hub_fw_sn, hub_gw_sn]),
+            opts = ResourceOptions(
+                parent=self,
+                depends_on=[hub_dmz_sn, hub_fw_sn, hub_gw_sn], # reduce contention
+            ),
         )
 
         # work around https://github.com/pulumi/pulumi/issues/4040
@@ -189,9 +195,12 @@ class Hub(ComponentResource):
             resource_group_name = props.resource_group.name,
             location = props.resource_group.location,
             disable_bgp_route_propagation = False, #use BGP for the gateway
-            # avoid use of inline routes =  (use standalone Route resource instead)
+            # avoid use of inline routes (use standalone Route resource instead)
             tags = props.tags,
-            opts = ResourceOptions(parent=self, depends_on=[hub_vpn_gw, hub_er_gw, hub_fw]),
+            opts = ResourceOptions(
+                parent=self,
+                depends_on=[hub_vpn_gw, hub_er_gw, hub_fw], # reduce contention
+            ),
         )
 
         # associate GatewaySubnet with route table
@@ -206,7 +215,7 @@ class Hub(ComponentResource):
         hub_gw_dmz_r = network.Route(
             f"{name}-gw-dmz-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.dmz_ar, # avoid including the AzureFirewallSubnet address space!
+            address_prefix = props.dmz_ar, # avoid overlapping AzureFirewallSubnet address space!
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = hub_fw_ip,
             route_table_name = hub_gw_rt.name,
@@ -217,8 +226,8 @@ class Hub(ComponentResource):
         hub_gw_gw_r = network.Route(
             f"{name}-gw-gw-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.gws_ar,
-            next_hop_type = "VnetLocal", # because gateways are in hub address space
+            address_prefix = props.gws_ar, # partially override the following route to hub_as
+            next_hop_type = "VnetLocal", # intra GatewaySubnet traffic not to be redirected
             route_table_name = hub_gw_rt.name,
             opts = ResourceOptions(parent=self, delete_before_replace=True),
         )
@@ -227,7 +236,7 @@ class Hub(ComponentResource):
         hub_gw_sn_r = network.Route(
             f"{name}-gw-sn-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.hub_as, # lower priority than shorter gateway prefix above
+            address_prefix = props.hub_as, # overlaps the shorter gateway prefix gws_ar above
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = hub_fw_ip,
             route_table_name = hub_gw_rt.name,
@@ -240,9 +249,12 @@ class Hub(ComponentResource):
             resource_group_name = props.resource_group.name,
             location = props.resource_group.location,
             disable_bgp_route_propagation = True, #use custom routes for the DMZ
-            # avoid use of inline routes =  (use standalone Route resource instead)
+            # avoid use of inline routes (use standalone Route resource instead)
             tags = props.tags,
-            opts = ResourceOptions(parent=self, depends_on=[hub_vpn_gw, hub_er_gw, hub_fw]),
+            opts = ResourceOptions(
+                parent=self,
+                depends_on=[hub_vpn_gw, hub_er_gw, hub_fw], # reduce contention
+            ),
         )
 
         # associate DMZ subnet with route table
@@ -257,7 +269,7 @@ class Hub(ComponentResource):
         hub_dmz_dmz_r = network.Route(
             f"{name}-dmz-dmz-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.dmz_ar,
+            address_prefix = props.dmz_ar, # avoid overlapping AzureFirewallSubnet address space!
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = hub_fw_ip,
             route_table_name = hub_dmz_rt.name,
@@ -294,14 +306,17 @@ class Hub(ComponentResource):
             disable_bgp_route_propagation = True, #use custom routes for ordinary subnets in hub
             # avoid use of inline routes =  (use standalone Route resource instead)
             tags = props.tags,
-            opts = ResourceOptions(parent=self, depends_on=[hub_vpn_gw, hub_er_gw, hub_fw]),
+            opts = ResourceOptions(
+                parent=self,
+                depends_on=[hub_vpn_gw, hub_er_gw, hub_fw], # reduce contention
+            ),
         )
 
         # partially override system route to redirect traffic from hub subnets to DMZ via the firewall
         hub_sn_dmz_r = network.Route(
             f"{name}-sn-dmz-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.dmz_ar, # avoid including the AzureFirewallSubnet address space!
+            address_prefix = props.dmz_ar, # avoid overlapping AzureFirewallSubnet address space!
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = hub_fw_ip,
             route_table_name = hub_sn_rt.name,
@@ -326,7 +341,7 @@ class Hub(ComponentResource):
                 resource_group_name = props.resource_group.name,
                 address_prefix = props.hub_ar,
                 virtual_network_name = hub.name,
-                opts = ResourceOptions(parent=self, depends_on=[hub_sn_rt]),
+                opts = ResourceOptions(parent=self, depends_on=[hub_sn_rt]), # reduce contention
             )
             # associate all hub shared services subnets to route table        
             hub_example_sn_rta = network.SubnetRouteTableAssociation(
@@ -342,7 +357,7 @@ class Hub(ComponentResource):
         self.hub_er_gw = hub_er_gw # depended on for VNet Peering from spokes
         self.hub_vpn_gw = hub_vpn_gw # depended on for VNet Peering from spokes
         self.hub_fw_ip = hub_fw_ip # used to construct routes from spokes
-        self.hub_gw_rt_name = hub_gw_rt.name # used to construct routes to spokes
-        self.hub_dmz_rt_name = hub_dmz_rt.name # used to construct routes to spokes
-        self.hub_sn_rt_name = hub_sn_rt.name # used to construct routes to spokes
+        self.hub_gw_rt_name = hub_gw_rt.name # used to add routes to spokes
+        self.hub_dmz_rt_name = hub_dmz_rt.name # used to add routes to spokes
+        self.hub_sn_rt_name = hub_sn_rt.name # used to add routes to spokes
         self.register_outputs({})

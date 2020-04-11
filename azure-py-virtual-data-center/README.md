@@ -6,8 +6,7 @@ This example deploys an Azure Virtual Datacenter (VDC) hub-and-spoke network sta
 
 The intention is that matching stacks would be defined in Azure [paired regions](https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions), either in Production/Disaster Recovery or High Availability configurations. It is then possible to define Global VNet Peering between the hubs.
 
-Although this pattern is in widespread use, Azure nows offers a managed service intended to replace it, comprising Virtual Hub and SD-WAN architecture, with the migration plan detailed at:
-https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology
+Although this pattern is in widespread use, Azure nows offers a managed service intended to replace it, comprising Virtual Hub and SD-WAN architecture. The [migration plan](https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology) shows the differences to VDC.
 
 This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components). The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction.
 
@@ -35,24 +34,28 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pip3 install -r requirements.txt
     ```
 
-1. Set the required configuration variables for this stack:
+1. Set the configuration variables for this stack:
 
+    Required:                               Example values:
     ```bash
     $ pulumi config set azure:environment   public
     $ pulumi config set azure:location      australiasoutheast
     $ pulumi config set dmz_ar              192.168.100.128/25
-    $ pulumi config set fwm_ar              192.168.100.64/26
     $ pulumi config set fws_ar              192.168.100.0/26
     $ pulumi config set fwz_as              192.168.100.0/24
     $ pulumi config set gws_ar              10.100.0.0/26
-    $ pulumi config set hbs_ar              10.100.0.64/27
-    $ pulumi config set hub_ar              10.100.1.0/24
     $ pulumi config set hub_as              10.100.0.0/16
     $ pulumi config set hub_stem            hub
-    $ pulumi config set sbs_ar              10.101.0.0/27
-    $ pulumi config set spoke_ar            10.101.1.0/24
     $ pulumi config set spoke_as            10.101.0.0/16
     $ pulumi config set spoke_stem          spoke
+    ```
+    Optional:
+    ```bash
+    $ pulumi config set fwm_ar              192.168.100.64/26
+    $ pulumi config set hbs_ar              10.100.0.64/27
+    $ pulumi config set hub_ar              10.100.1.0/24
+    $ pulumi config set sbs_ar              10.101.0.0/27
+    $ pulumi config set spoke_ar            10.101.1.0/24
     ```
 
 1. Deploy the stack with the `pulumi up` command. This provisions all the Azure resources necessary, including gateways and firewall which may take up to an hour:
@@ -170,10 +173,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
    
    Feel free to modify your program, and then run `pulumi up` again. The Pulumi CLI automatically detects differences and makes the minimal changes necessary to achieved the desired state.
    
-   Note that most resources are auto-named and have a trailing dash on the logical name to separate the random suffix that will be applied, while manually-named resources are set to be deleted before replacement:
-   https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming
-
-   Routes are also set to be deleted before replacement to avoid conflicts.
+   Note that most resources are [auto-named](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming) and have a trailing dash on the logical name to separate the random suffix that will be applied, while manually-named resources are set to be deleted before replacement. Routes are also set to be deleted before replacement to avoid conflicts.
 
 1. Create another stack in a paired region, for example to be used for Disaster Recovery:
 
@@ -181,7 +181,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi stack init dr
     ```
 
-1. Set the required configuration variables for this stack:
+1. Set the required or optional configuration variables to deploy this stack:
 
     ```bash
     $ pulumi config set azure:environment   public
@@ -219,7 +219,17 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set peer prod
     $ pulumi up
     ```
-    Note: it isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program, which is why you need to set a configuration variable.
+    Note: it isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program, which is why you need to set the `org` configuration variable for each stack that needs to peer with another stack.
+
+    If you later destroy a stack, you need to remove the corresponding `peer` variable in the other stack. If you want to tear down the peerings, you should remove the variables in both stacks:
+
+    ```bash
+    $ pulumi stack select prod
+    $ pulumi config rm peer
+    $ pulumi stack select dr
+    $ pulumi config rm peer
+    ```
+    The next time you use the `pulumi up` command for each stack, the peerings will be removed.
 
 1. When you are finished experimenting, you can destroy all of the resources, and the stacks:
 
