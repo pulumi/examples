@@ -63,8 +63,7 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi up
     ```
 
-1. After a while, your VDC will be ready. The VNet address spaces will be printed as output
-   variables once `pulumi up` completes.
+1. After a while, your VDC will be ready. If some outputs don't initially show then it may be necessary to do a `pulumi refresh` and then `pulumi up` again.
 
     ```bash
     Updating (prod):
@@ -114,11 +113,54 @@ After cloning this repo, `cd` into it and run these commands.
      +      └─ azure:network:Route                        spoke-hub-sn-r-       created
 
     Outputs:
-        hub_id       : "/subscriptions/subscription/resourceGroups/vdc-rg-b3024683/providers/Microsoft. Network/virtualNetworks/hub-vn-ee79c6e5"
-        hub_name     : "hub-vn-ee79c6e5"
-        spoke_id     : "/subscriptions/subscription/resourceGroups/vdc-rg-b3024683/providers/Microsoft. Network/virtualNetworks/spoke-vn-89304446"
-        spoke_name   : "spoke-vn-89304446"
-
+        hub_id       : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25"
+        hub_name     : "hub-vn-a98ceb25"
+        hub_subnets  : [
+          + [0]: {
+                  + address_prefix: "10.100.1.0/24"
+                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/hub-example-sn-d8cb4a9b"
+                  + name          : "hub-example-sn-d8cb4a9b"
+                }
+          + [1]: {
+                  + address_prefix: "192.168.100.64/26"
+                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/AzureFirewallManagementSubnet"
+                  + name          : "AzureFirewallManagementSubnet"
+                }
+          + [2]: {
+                  + address_prefix: "192.168.100.128/25"
+                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/DMZ"
+                  + name          : "DMZ"
+                }
+          + [3]: {
+                  + address_prefix: "10.100.0.0/26"
+                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/GatewaySubnet"
+                  + name          : "GatewaySubnet"
+                }
+          + [4]: {
+                  + address_prefix: "192.168.100.0/26"
+                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/AzureFirewallSubnet"
+                  + name          : "AzureFirewallSubnet"
+                }
+          + [5]: {
+                  + address_prefix: "10.100.0.64/27"
+                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/AzureBastionSubnet"
+                  + name          : "AzureBastionSubnet"
+                }
+        ]
+        spoke_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/spoke-vn-98ab581a"
+        spoke_name   : "spoke-vn-98ab581a"
+        spoke_subnets: [
+          + [0]: {
+                  + address_prefix: "10.101.0.0/27"
+                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/spoke-vn-98ab581a/subnets/AzureBastionSubnet"
+                  + name          : "AzureBastionSubnet"
+                }
+          + [1]: {
+                  + address_prefix: "10.101.1.0/24"
+                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/spoke-vn-98ab581a/subnets/spoke-example-sn-a1594836"
+                  + name          : "spoke-example-sn-a1594836"
+                }
+        ]
     Resources:
         + 44 created
 
@@ -132,6 +174,7 @@ After cloning this repo, `cd` into it and run these commands.
    Auto-named resources have a trailing dash on the logical name to separate the random suffix,
    however some resources are manually named and must therefore be deleted before replacement:
    https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming
+
    Routes must also be deleted before replacement to avoid conflicts.
 
 1. Create a new stack in a paired region, for example as Disaster Recovery:
