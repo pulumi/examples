@@ -4,42 +4,42 @@ description: A minimal Azure Virtual Data Center described in Python
 template:
   config:
     azure:environment:
-      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      description: Azure environment to use (`public`, `usgovernment`, `german`, `china`)
       default: public
     azure:location:
-      description: The Azure region to use (e.g. `australiaeast` or `australiasoutheast`)
+      description: Azure region to use (e.g. `australiaeast` or `australiasoutheast`)
       default: australiasoutheast
     azure-py-vdc:dmz_ar:
-      description: An address range within the firewall zone for the DMZ subnet
+      description: Address range for hub DMZ subnet (must be in fwz_as)
       default: 192.168.100.128/25
     azure-py-vdc:fwm_ar:
-      description: An address range within the firewall zone for AzureFirewallManagementSubnet (/26)
+      description: Address range for hub AzureFirewallManagementSubnet (optional - /26 within fwz_as)
     azure-py-vdc:fws_ar:
-      description: An address range within the firewall zone for AzureFirewallSubnet (/26)
+      description: Address range for hub AzureFirewallSubnet (/26 within fwz_as)
       default: 192.168.100.0/26
     azure-py-vdc:fwz_as:
-      description: An address space that contains the firewall zone address ranges
+      description: Address space for hub containing dmz_ar, fwm_ar (optional) and fws_ar
       default: 192.168.100.0/24
     azure-py-vdc:gws_ar:
-      description: An address range within the hub address space for the GatewaySubnet (/27 or larger)
+      description: Address range for hub GatewaySubnet (/27 or larger within hub_as)
       default: 10.100.0.0/26
     azure-py-vdc:hbs_ar:
-      description: An address range within the hub address space for an AzureBastionSubnet (/27)
+      description: Address range for hub AzureBastionSubnet (optional - /27 within hub_as)
     azure-py-vdc:hub_ar:
-      description: An address range within the hub address space for the first shared services subnet
+      description: Address range for first shared services subnet in the hub (within hub_as)
     azure-py-vdc:hub_as:
-      description: An address space that contains the gateway and shared services address ranges
+      description: Address space for hub containing hbs_ar and hub_ar address ranges
       default: 10.100.0.0/16
     azure-py-vdc:hub_stem:
-      description: A short name for the hub that will appear in resource names (<4 chars)
+      description: Short name for the hub that will appear in resource names (<4 chars)
       default: hub
     azure-py-vdc:sbs_ar:
-      description: An address range within the spoke address space for an AzureBastionSubnet (/27)
+      description: Address range for spoke AzureBastionSubnet (optional - /27 within spoke_as)
     azure-py-vdc:spoke_ar:
-      description: An address range within the spoke address space for the first subnet
+      description: Address range for first subnet in the spoke (with spoke_as)
     azure-py-vdc:spoke_as:
-      description: An address space that contains the spoke subnet address ranges
+      description: Address space for spoke containing sbs_ar and spoke_ar
       default: 10.101.0.0/16
     azure-py-vdc:spoke_stem:
-      description: A short name for the spoke that will appear in resource names (<6 chars)
+      description: Short name for spoke that will appear in resource names (<6 chars)
       default: spoke

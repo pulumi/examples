@@ -2,11 +2,11 @@
 
 # Azure Virtual Data Center (VDC)
 
-This example deploys an Azure Virtual Datacenter (VDC) hub-and-spoke network stack in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall (with provision for forced tunnelling) and a shared DMZ in the hub. In this implementation, custom routing is used to redirect all traffic to and from Azure and between VNets in Azure through the firewall, as well as all traffic to and from the DMZ. Shared services may have their own subnets in the hub, and multiple spokes may be provisioned with subnets for applications and environments.
+This example deploys an Azure Virtual Datacenter (VDC) hub-and-spoke network stack in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall (with provision for forced tunnelling) and a DMZ in the hub. In this implementation, custom routing is used to redirect all traffic to and from Azure VNets through the firewall, as well as all traffic to and from the DMZ. Shared services may have their own subnets in the hub, and multiple spokes may be provisioned with subnets for applications and environments.
 
-The intention is that matching stacks would be defined in Azure [paired regions](https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions), either in Production/Disaster Recovery or High Availability configurations. It is possible to define Global VNet Peering between hubs in different stacks.
+The intention is that matching stacks would be defined in Azure [paired regions](https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions), either in Production/Disaster Recovery or High Availability configurations. It is then possible to define Global VNet Peering between the hubs.
 
-Although this pattern is in widespread use, Azure nows offers a managed service intended to replace VDC, comprising Virtual Hub and SD-WAN architecture, with the migration plan detailed at:
+Although this pattern is in widespread use, Azure nows offers a managed service intended to replace it, comprising Virtual Hub and SD-WAN architecture, with the migration plan detailed at:
 https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology
 
 This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components). The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction.
@@ -19,7 +19,7 @@ This example uses `pulumi.ComponentResource` as described [here](https://www.pul
 
 # Running the Example
 
-After cloning this repo, `cd` into it and run these commands.
+After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory and run the following commands.
 
 1. Create a new stack, which is an isolated deployment target for this example:
 
@@ -27,9 +27,7 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi stack init prod
     ```
    
-1.  Create a Python virtualenv, activate it, and install dependencies:
-
-    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+1.  Create a Python virtualenv, activate it, and install the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program:
 
     ```
     $ python3 -m venv venv
@@ -37,7 +35,7 @@ After cloning this repo, `cd` into it and run these commands.
     $ pip3 install -r requirements.txt
     ```
 
-1. Set the required configuration variables for this program:
+1. Set the required configuration variables for this stack:
 
     ```bash
     $ pulumi config set azure:environment   public
@@ -57,13 +55,13 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi config set spoke_stem          spoke
     ```
 
-1. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including gateways and firewall which will take up to an hour:
+1. Deploy the stack with the `pulumi up` command. This provisions all the Azure resources necessary, including gateways and firewall which may take up to an hour:
 
     ```bash
     $ pulumi up
     ```
 
-1. After a while, your VDC will be ready. If some outputs don't initially show then it may be necessary to do a `pulumi refresh` and then `pulumi up` again.
+1. After a while, your VDC stack will be ready. If some outputs don't initially show then it may be necessary to do a `pulumi refresh` and then `pulumi up` again.
 
     ```bash
     Updating (prod):
@@ -161,6 +159,7 @@ After cloning this repo, `cd` into it and run these commands.
                   + name          : "spoke-example-sn-a1594836"
                 }
         ]
+
     Resources:
         + 44 created
 
@@ -169,21 +168,20 @@ After cloning this repo, `cd` into it and run these commands.
     Permalink: https://app.pulumi.com/organisation/azure-py-vdc/prod/updates/1    ...
     ```
    
-   Feel free to modify your program, and run `pulumi up` to redeploy changes. The Pulumi CLI automatically detects what has changed and makes the minimal edits necessary to accomplish these changes.
+   Feel free to modify your program, and then run `pulumi up` again. The Pulumi CLI automatically detects differences and makes the minimal changes necessary to achieved the desired state.
    
-   Auto-named resources have a trailing dash on the logical name to separate the random suffix,
-   however some resources are manually named and must therefore be deleted before replacement:
+   Note that most resources are auto-named and have a trailing dash on the logical name to separate the random suffix that will be applied, while manually-named resources are set to be deleted before replacement:
    https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming
 
-   Routes must also be deleted before replacement to avoid conflicts.
+   Routes are also set to be deleted before replacement to avoid conflicts.
 
-1. Create a new stack in a paired region, for example as Disaster Recovery:
+1. Create another stack in a paired region, for example to be used for Disaster Recovery:
 
     ```bash
     $ pulumi stack init dr
     ```
 
-1. Set the required configuration variables for this program (e.g. change 100 to 200):
+1. Set the required configuration variables for this stack:
 
     ```bash
     $ pulumi config set azure:environment   public
@@ -203,7 +201,7 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi config set spoke_stem          spoke
     ```
 
-1. Deploy the new stack with the `pulumi up` command. This provisions all the Azure resources necessary in the paired region, including gateways and firewall which will take up to an hour:
+1. Deploy the second stack with the `pulumi up` command. This provisions all the Azure resources necessary in the paired region, including gateways and firewall which may take up to an hour:
 
     ```bash
     $ pulumi up
