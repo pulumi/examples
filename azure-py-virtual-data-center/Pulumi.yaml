@@ -26,19 +26,23 @@ template:
     azure-py-vdc:hbs_ar:
       description: Address range for hub AzureBastionSubnet (optional - /27 within hub_as)
     azure-py-vdc:hub_ar:
-      description: Address range for first shared services subnet in the hub (within hub_as)
+      description: Address range for starting subnet in the hub (optional - within hub_as)
     azure-py-vdc:hub_as:
-      description: Address space for hub containing hbs_ar and hub_ar address ranges
+      description: Address space for hub containing hbs_ar, hub_ar and remaining subnets
       default: 10.100.0.0/16
     azure-py-vdc:hub_stem:
       description: Short name for the hub that will appear in resource names (<4 chars)
       default: hub
+    azure-py-vdc:org:
+      description: Pulumi organization (see https://github.com/pulumi/pulumi/issues/2800)
+    azure-py-vdc:peer:
+      description: Stack name in same project to peer with by connecting hubs (optional)
     azure-py-vdc:sbs_ar:
       description: Address range for spoke AzureBastionSubnet (optional - /27 within spoke_as)
     azure-py-vdc:spoke_ar:
-      description: Address range for first subnet in the spoke (with spoke_as)
+      description: Address range for starting subnet in the spoke (optional - within spoke_as)
     azure-py-vdc:spoke_as:
-      description: Address space for spoke containing sbs_ar and spoke_ar
+      description: Address space for spoke containing sbs_ar, spoke_ar and remaining subnets
       default: 10.101.0.0/16
     azure-py-vdc:spoke_stem:
       description: Short name for spoke that will appear in resource names (<6 chars)

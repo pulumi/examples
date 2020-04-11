@@ -207,10 +207,15 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi up
     ```
 
-1. Once you have stacks in paired regions, you can connect the hubs by cross-referencing the stacks when establishing Global VNet Peering. 
+1. Once you have stacks in paired regions, you can connect the hubs using Global VNet Peering:
 
     ```bash
-    (ToDo)
+    $ pulumi stack select prod
+    $ pulumi config set peer dr
+    $ pulumi up
+    $ pulumi stack select dr
+    $ pulumi config set peer prod
+    $ pulumi up
     ```
 
 1. When you are finished experimenting, you can destroy all of the resources, and the stacks:

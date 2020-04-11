@@ -1,6 +1,6 @@
-from pulumi import Config, export, ResourceOptions, get_stack
+from pulumi import Config, get_project, get_stack, ResourceOptions, StackReference, export
 from pulumi.resource import CustomTimeouts
-from pulumi_azure import core
+from pulumi_azure import core, network
 from hub import HubProps, Hub
 from spoke import SpokeProps, Spoke
 
@@ -72,6 +72,24 @@ spoke1 = Spoke(
         custom_timeouts=CustomTimeouts(create='1h')
     ),
 )
+
+# Global VNet Peering between hubs in separate stacks
+peer = config.get("peer")
+if peer:
+    org = config.require("org")
+    project = get_project()
+    peer_stack = StackReference(f"{org}/{project}/{peer}")
+    peer_hub = peer_stack.get_output("hub_id")
+    hub_hub = network.VirtualNetworkPeering(
+        f"{stack_name}-{peer}-vnp-",
+        resource_group_name = resource_group.name,
+        virtual_network_name = hub1.hub_name,
+        remote_virtual_network_id = peer_hub,
+        allow_forwarded_traffic = True,
+        allow_gateway_transit = False, # both hubs have gateways so not possible
+        allow_virtual_network_access = True,
+        opts = ResourceOptions(parent=hub1),
+    )
 
 # Exports
 export("hub_name", hub1.hub_name)
