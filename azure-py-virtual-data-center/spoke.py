@@ -6,6 +6,7 @@ class SpokeProps:
     def __init__(
         self,
         resource_group: core.ResourceGroup,
+        tags: [str, str],
         hub_stem: str,
         hub_name: str,
         hub_id: str,
@@ -20,6 +21,7 @@ class SpokeProps:
         spoke_ar: str,
     ):
         self.resource_group = resource_group
+        self.tags = tags
         self.hub_stem = hub_stem
         self.hub_name = hub_name
         self.hub_id = hub_id
@@ -45,6 +47,7 @@ class Spoke(ComponentResource):
             address_spaces = [props.spoke_as],
             # avoid use of inline subnets =  (use standalone Subnet resource instead)
             # there should be no GatewaySubnet in the spokes but AzureBastionSubnet is OK
+            tags = props.tags,
             opts = ResourceOptions(parent=self),
         )
 
@@ -89,6 +92,7 @@ class Spoke(ComponentResource):
             location = props.resource_group.location,
             disable_bgp_route_propagation = True, #use custom routes for subnets in spokes
             # avoid use of inline routes =  (use standalone Route resource instead)
+            tags = props.tags,
             opts = ResourceOptions(parent=self, depends_on=[hub_spoke, spoke_hub]),
         )
 

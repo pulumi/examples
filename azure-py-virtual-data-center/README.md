@@ -4,9 +4,9 @@
 
 This example deploys an Azure Virtual Datacenter (VDC) hub-and-spoke network stack in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall (with provision for forced tunnelling) and a shared DMZ in the hub. In this implementation, custom routing is used to redirect all traffic to and from Azure and between VNets in Azure through the firewall, as well as all traffic to and from the DMZ. Shared services may have their own subnets in the hub, and multiple spokes may be provisioned with subnets for applications and environments.
 
-The intention is that matching stacks would be defined in paired Azure regions, either in Prod/Disaster Recovery or High Availability configurations. It is possible to define Global VNet Peering between hubs in different stacks.
+The intention is that matching stacks would be defined in Azure [paired regions](https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions), either in Production/Disaster Recovery or High Availability configurations. It is possible to define Global VNet Peering between hubs in different stacks.
 
-Although this pattern is in widespread use it has been superseded by the new Virtual Hub and SD-WAN architecture, with the migration plan detailed at:
+Although this pattern is in widespread use, Azure nows offers a managed service intended to replace VDC, comprising Virtual Hub and SD-WAN architecture, with the migration plan detailed at:
 https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology
 
 This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components). The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction.
@@ -97,7 +97,7 @@ After cloning this repo, `cd` into it and run these commands.
      +   │  ├─ azure:network:Route                        hub-gw-dmz-r-         created
      +   │  ├─ azure:network:Route                        hub-gw-sn-r-          created
      +   │  └─ azure:network:SubnetRouteTableAssociation  hub-example-sn-rta    created
-     +   ├─ azure:core:ResourceGroup                      vdc-rg-               created
+     +   ├─ azure:core:ResourceGroup                      prod-vdc-rg-          created
      +   └─ vdc:network:Spoke                             spoke                 created
      +      ├─ azure:network:VirtualNetwork               spoke-vn-             created
      +      ├─ azure:network:Route                        hub-dmz-spoke-r-      created
@@ -126,13 +126,7 @@ After cloning this repo, `cd` into it and run these commands.
 
     Permalink: https://app.pulumi.com/organisation/azure-py-vdc/prod/updates/1    ...
     ```
-
-1. Once you have stacks in paired regions, you can connect the hubs by cross-referencing the stacks. 
-
-    ```bash
-    (ToDo)
-    ```
-
+   
    Feel free to modify your program, and run `pulumi up` to redeploy changes. The Pulumi CLI automatically detects what has changed and makes the minimal edits necessary to accomplish these changes.
    
    Auto-named resources have a trailing dash on the logical name to separate the random suffix,
@@ -140,9 +134,51 @@ After cloning this repo, `cd` into it and run these commands.
    https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming
    Routes must also be deleted before replacement to avoid conflicts.
 
-1. Once you are done, you can destroy all of the resources, and the stack:
+1. Create a new stack in a paired region, for example as Disaster Recovery:
 
     ```bash
+    $ pulumi stack init dr
+    ```
+
+1. Set the required configuration variables for this program (e.g. change 100 to 200):
+
+    ```bash
+    $ pulumi config set azure:environment   public
+    $ pulumi config set azure:location      australiaeast
+    $ pulumi config set dmz_ar              192.168.200.128/25
+    $ pulumi config set fwm_ar              192.168.200.64/26
+    $ pulumi config set fws_ar              192.168.200.0/26
+    $ pulumi config set fwz_as              192.168.200.0/24
+    $ pulumi config set gws_ar              10.200.0.0/26
+    $ pulumi config set hbs_ar              10.200.0.64/27
+    $ pulumi config set hub_ar              10.200.1.0/24
+    $ pulumi config set hub_as              10.200.0.0/16
+    $ pulumi config set hub_stem            hub
+    $ pulumi config set sbs_ar              10.201.0.0/27
+    $ pulumi config set spoke_ar            10.201.1.0/24
+    $ pulumi config set spoke_as            10.201.0.0/16
+    $ pulumi config set spoke_stem          spoke
+    ```
+
+1. Deploy the new stack with the `pulumi up` command. This provisions all the Azure resources necessary in the paired region, including gateways and firewall which will take up to an hour:
+
+    ```bash
+    $ pulumi up
+    ```
+
+1. Once you have stacks in paired regions, you can connect the hubs by cross-referencing the stacks when establishing Global VNet Peering. 
+
+    ```bash
+    (ToDo)
+    ```
+
+1. When you are finished experimenting, you can destroy all of the resources, and the stacks:
+
+    ```bash
+    $ pulumi stack select prod
+    $ pulumi destroy
+    $ pulumi stack rm
+    $ pulumi stack select dr
     $ pulumi destroy
     $ pulumi stack rm
     ```

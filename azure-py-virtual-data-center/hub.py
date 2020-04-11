@@ -6,6 +6,7 @@ class HubProps:
     def __init__(
         self,
         resource_group: core.ResourceGroup,
+        tags: [str, str],
         dmz_ar: str,
         fws_ar: str,
         fwz_as: str,
@@ -17,6 +18,7 @@ class HubProps:
 
     ):
         self.resource_group = resource_group
+        self.tags = tags
         self.dmz_ar = dmz_ar
         self.fws_ar = fws_ar
         self.fwz_as = fwz_as
@@ -39,6 +41,7 @@ class Hub(ComponentResource):
             # separate firewall/DMZ address space to simplify custom routing
             address_spaces = [props.fwz_as, props.hub_as],
             # avoid use of inline subnets =  (use standalone Subnet resource instead)
+            tags = props.tags,
             opts = ResourceOptions(parent=self),
         )
 
@@ -100,6 +103,7 @@ class Hub(ComponentResource):
             resource_group_name = props.resource_group.name,
             location = props.resource_group.location,
             allocation_method = "Dynamic",
+            tags = props.tags,
             opts = ResourceOptions(parent=self),
         )
 
@@ -116,6 +120,7 @@ class Hub(ComponentResource):
                 "subnet_id": hub_gw_sn.id,
                 "publicIpAddressId": hub_vpn_gw_pip.id
             }],
+            tags = props.tags,
             opts = ResourceOptions(
                 parent=self,
                 depends_on=[hub_dmz_sn, hub_fw_sn, hub_gw_sn],
@@ -129,6 +134,7 @@ class Hub(ComponentResource):
             resource_group_name = props.resource_group.name,
             location = props.resource_group.location,
             allocation_method = "Dynamic",
+            tags = props.tags,
             opts = ResourceOptions(parent=self),
         )
 
@@ -145,6 +151,7 @@ class Hub(ComponentResource):
                 "subnet_id": hub_gw_sn.id,
                 "publicIpAddressId": hub_er_gw_pip.id
             }],
+            tags = props.tags,
             opts = ResourceOptions(parent=self, depends_on=[hub_dmz_sn, hub_fw_sn, hub_gw_sn]),
         )
 
@@ -155,6 +162,7 @@ class Hub(ComponentResource):
             location = props.resource_group.location,
             sku = "Standard",
             allocation_method = "Static",
+            tags = props.tags,
             opts = ResourceOptions(parent=self),
         )
 
@@ -168,6 +176,7 @@ class Hub(ComponentResource):
                 "subnet_id": hub_fw_sn.id,
                 "publicIpAddressId": hub_fw_pip.id,
             }],
+            tags = props.tags,
             opts = ResourceOptions(parent=self, depends_on=[hub_dmz_sn, hub_fw_sn, hub_gw_sn]),
         )
 
@@ -181,6 +190,7 @@ class Hub(ComponentResource):
             location = props.resource_group.location,
             disable_bgp_route_propagation = False, #use BGP for the gateway
             # avoid use of inline routes =  (use standalone Route resource instead)
+            tags = props.tags,
             opts = ResourceOptions(parent=self, depends_on=[hub_vpn_gw, hub_er_gw, hub_fw]),
         )
 
@@ -231,6 +241,7 @@ class Hub(ComponentResource):
             location = props.resource_group.location,
             disable_bgp_route_propagation = True, #use custom routes for the DMZ
             # avoid use of inline routes =  (use standalone Route resource instead)
+            tags = props.tags,
             opts = ResourceOptions(parent=self, depends_on=[hub_vpn_gw, hub_er_gw, hub_fw]),
         )
 
@@ -282,6 +293,7 @@ class Hub(ComponentResource):
             location = props.resource_group.location,
             disable_bgp_route_propagation = True, #use custom routes for ordinary subnets in hub
             # avoid use of inline routes =  (use standalone Route resource instead)
+            tags = props.tags,
             opts = ResourceOptions(parent=self, depends_on=[hub_vpn_gw, hub_er_gw, hub_fw]),
         )
 

@@ -1,4 +1,4 @@
-from pulumi import Config, export, ResourceOptions
+from pulumi import Config, export, ResourceOptions, get_stack
 from pulumi.resource import CustomTimeouts
 from pulumi_azure import core
 from hub import HubProps, Hub
@@ -21,13 +21,21 @@ spoke_ar = config.get('spoke_ar')
 spoke_as = config.require('spoke_as')
 
 # Azure Resource Group using the location in the stack configuration
-resource_group = core.ResourceGroup("vdc-rg-")
+stack_name = get_stack()
+default_tags = {
+    "environment": stack_name
+}
+resource_group = core.ResourceGroup(
+    stack_name + "-vdc-rg-",
+    tags = default_tags,
+)
 
 # Hub virtual network with gateway, firewall, DMZ and shared services subnets
 hub1 = Hub(
     hub_stem,
     HubProps(
     resource_group = resource_group,
+    tags = default_tags,
     dmz_ar = dmz_ar,
     fws_ar = fws_ar,
     fwz_as = fwz_as,
@@ -45,6 +53,7 @@ spoke1 = Spoke(
     spoke_stem,
     SpokeProps(
     resource_group = resource_group,
+    tags = default_tags,
     hub_stem = hub_stem,
     hub_name = hub1.hub_name,
     hub_id = hub1.hub_id,
