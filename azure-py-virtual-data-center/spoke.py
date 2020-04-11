@@ -34,7 +34,7 @@ class SpokeProps:
         self.spoke_ar = spoke_ar
 
 class Spoke(ComponentResource):
-    def __init__(self, name, props: SpokeProps, opts: ResourceOptions=None):
+    def __init__(self, name: str, props: SpokeProps, opts: ResourceOptions=None):
         super().__init__('vdc:network:Spoke', name, {}, opts)
 
         # Azure Virtual Network intended for application environments
@@ -61,7 +61,7 @@ class Spoke(ComponentResource):
 
         # VNet Peering from the hub to spoke
         hub_spoke = network.VirtualNetworkPeering(
-            f"{props.hub_stem}-{name}-vnp-", # an individual resource in another component
+            f"{props.hub_stem}-{name}-vnp-", # named after hub but child of the spoke
             resource_group_name = props.resource_group.name,
             virtual_network_name = props.hub_name,
             remote_virtual_network_id = spoke.id,
@@ -116,7 +116,7 @@ class Spoke(ComponentResource):
   
         # override system route to redirect traffic from gateways to spoke via the firewall
         hub_gw_spoke_r = network.Route(
-            f"{props.hub_stem}-gw-{name}-r-", # an individual resource in another component
+            f"{props.hub_stem}-gw-{name}-r-", # named after hub but child of the spoke
             resource_group_name = props.resource_group.name,
             address_prefix = props.spoke_as,
             next_hop_type = "VirtualAppliance",
@@ -138,7 +138,7 @@ class Spoke(ComponentResource):
 
         # override system route to redirect traffic from DMZ to spoke via the firewall
         hub_dmz_spoke_r = network.Route(
-            f"{props.hub_stem}-dmz-{name}-r-", # an individual resource in another component
+            f"{props.hub_stem}-dmz-{name}-r-", # named after hub but child of the spoke
             resource_group_name = props.resource_group.name,
             address_prefix = props.spoke_as,
             next_hop_type = "VirtualAppliance",
@@ -160,7 +160,7 @@ class Spoke(ComponentResource):
 
         # override system route to redirect traffic from hub to spoke via the firewall
         hub_sn_spoke_r = network.Route(
-            f"{props.hub_stem}-sn-{name}-r-", # an individual resource in another component
+            f"{props.hub_stem}-sn-{name}-r-", # named after hub but child of the spoke
             resource_group_name = props.resource_group.name,
             address_prefix = props.spoke_as,
             next_hop_type = "VirtualAppliance",

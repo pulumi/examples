@@ -28,7 +28,7 @@ class HubProps:
 
 
 class Hub(ComponentResource):
-    def __init__(self, name, props: HubProps, opts: ResourceOptions=None):
+    def __init__(self, name: str, props: HubProps, opts: ResourceOptions=None):
         super().__init__('vdc:network:Hub', name, {}, opts)
 
         # Azure Virtual Network to which spokes are peered (not to each other)
@@ -204,10 +204,20 @@ class Hub(ComponentResource):
         )
 
         # override system route to redirect traffic from gateways to hub via the firewall
+        hub_gw_gw_r = network.Route(
+            f"{name}-gw-gw-r-",
+            resource_group_name = props.resource_group.name,
+            address_prefix = props.gws_ar,
+            next_hop_type = "VnetLocal", # because gateways are in hub address space
+            route_table_name = hub_gw_rt.name,
+            opts = ResourceOptions(parent=self, delete_before_replace=True),
+        )
+
+        # override system route to redirect traffic from gateways to hub via the firewall
         hub_gw_sn_r = network.Route(
             f"{name}-gw-sn-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.hub_as, #ToDo this includes gateways, is this a problem?
+            address_prefix = props.hub_as, # more specific gateway prefix excluded above
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = hub_fw_ip,
             route_table_name = hub_gw_rt.name,
