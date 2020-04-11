@@ -219,7 +219,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set peer prod
     $ pulumi up
     ```
-Note: it isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program, which is why you need to set a configuration variable.
+    Note: it isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program, which is why you need to set a configuration variable.
 
 1. When you are finished experimenting, you can destroy all of the resources, and the stacks:
 
