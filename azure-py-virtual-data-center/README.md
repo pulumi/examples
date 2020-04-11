@@ -165,7 +165,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
     Duration: 24m24s
 
-    Permalink: https://app.pulumi.com/organisation/azure-py-vdc/prod/updates/1    ...
+    Permalink: https://app.pulumi.com/organization/azure-py-vdc/prod/updates/1    ...
     ```
    
    Feel free to modify your program, and then run `pulumi up` again. The Pulumi CLI automatically detects differences and makes the minimal changes necessary to achieved the desired state.
@@ -211,12 +211,15 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
     ```bash
     $ pulumi stack select prod
+    $ pulumi config set org <your Pulumi organization>
     $ pulumi config set peer dr
     $ pulumi up
     $ pulumi stack select dr
+    $ pulumi config set org <your Pulumi organization>
     $ pulumi config set peer prod
     $ pulumi up
     ```
+Note: it isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program, which is why you need to set a configuration variable.
 
 1. When you are finished experimenting, you can destroy all of the resources, and the stacks:
 

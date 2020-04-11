@@ -34,9 +34,9 @@ template:
       description: Short name for the hub that will appear in resource names (<4 chars)
       default: hub
     azure-py-vdc:org:
-      description: Pulumi organization (see https://github.com/pulumi/pulumi/issues/2800)
+      description: Pulumi organization in which this project resides (from app.pulumi.com)
     azure-py-vdc:peer:
-      description: Stack name in same project to peer with by connecting hubs (optional)
+      description: Another stack in same organization and project to peer hubs with (optional)
     azure-py-vdc:sbs_ar:
       description: Address range for spoke AzureBastionSubnet (optional - /27 within spoke_as)
     azure-py-vdc:spoke_ar:
