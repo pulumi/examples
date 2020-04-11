@@ -68,10 +68,9 @@ After cloning this repo, `cd` into it and run these commands.
 
     ```bash
     Updating (prod):
-         Type                                             Name               Status
-     +   pulumi:pulumi:Stack                              azure-py-vdc-prod  creating..
-     +   ├─ vdc:network:Hub                               hub                 creating...
-     +   ├─ vdc:network:Hub                               hub                 creating...
+         Type                                             Name                  Status
+     +   pulumi:pulumi:Stack                              azure-py-vdc-prod     created
+     +   ├─ vdc:network:Hub                               hub                   created
      +   │  ├─ azure:network:PublicIp                     hub-er-gw-pip-        created
      +   │  ├─ azure:network:PublicIp                     hub-vpn-gw-pip-       created
      +   │  ├─ azure:network:PublicIp                     hub-fw-pip-           created
@@ -113,18 +112,18 @@ After cloning this repo, `cd` into it and run these commands.
      +      ├─ azure:network:Route                        spoke-hub-dmz-r-      created
      +      ├─ azure:network:Route                        spoke-hub-dg-r-       created
      +      └─ azure:network:Route                        spoke-hub-sn-r-       created
-    
+
     Outputs:
         hub_id       : "/subscriptions/subscription/resourceGroups/vdc-rg-b3024683/providers/Microsoft. Network/virtualNetworks/hub-vn-ee79c6e5"
         hub_name     : "hub-vn-ee79c6e5"
         spoke_id     : "/subscriptions/subscription/resourceGroups/vdc-rg-b3024683/providers/Microsoft. Network/virtualNetworks/spoke-vn-89304446"
         spoke_name   : "spoke-vn-89304446"
-    
+
     Resources:
         + 44 created
-    
+
     Duration: 24m24s
-    
+
     Permalink: https://app.pulumi.com/organisation/azure-py-vdc/prod/updates/1    ...
     ```
 

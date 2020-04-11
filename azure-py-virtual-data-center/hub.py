@@ -203,7 +203,7 @@ class Hub(ComponentResource):
             opts = ResourceOptions(parent=self, delete_before_replace=True),
         )
 
-        # override system route to redirect traffic from gateways to hub via the firewall
+        # ensure that traffic within the gateway subnet is not redirected to the firewall
         hub_gw_gw_r = network.Route(
             f"{name}-gw-gw-r-",
             resource_group_name = props.resource_group.name,
@@ -217,7 +217,7 @@ class Hub(ComponentResource):
         hub_gw_sn_r = network.Route(
             f"{name}-gw-sn-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.hub_as, # more specific gateway prefix excluded above
+            address_prefix = props.hub_as, # lower priority than shorter gateway prefix above
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = hub_fw_ip,
             route_table_name = hub_gw_rt.name,
