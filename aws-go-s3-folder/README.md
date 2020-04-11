@@ -7,12 +7,6 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
 
 ## Deploying and running the program
 
-1. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
-
-    ```bash
-    $ dep ensure
-    ```
-
 1.  Create a new stack:
 
     ```bash
@@ -22,20 +16,13 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
 1. Install the Pulumi AWS plugin:
 
     ```
-    $ pulumi plugin install resource aws 0.18.3
+    $ pulumi plugin install resource aws 1.28.0
     ```
 
 1.  Set the AWS region:
 
     ```
     $ pulumi config set aws:region us-west-2
-    ```
-
-1.  Compile the Go program and ensure it's on your path (such as with `$GOPATH`):
-
-    ```
-    $ go get .
-    $ go install .
     ```
 
 1.  Run `pulumi up` to preview and deploy changes.

@@ -10,8 +10,7 @@ This example is inspired by [Docker's Getting Started Tutorial](https://docs.doc
 ## Prerequisites
 
 * [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-* [Configure Pulumi to Use AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI
-      is configured, this will just work)
+* [Configure Pulumi to Use AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
 * [Install Go](https://golang.org/doc/install)
 
 ## Running the Example
@@ -30,18 +29,6 @@ Next, to deploy the application and its infrastructure, follow these steps:
 
     ```bash
     $ pulumi config set aws:region us-east-1 # any valid AWS region will work
-    ```
-
-3. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
-
-    ```bash
-    $ dep ensure
-    ```
-
-4. Compile your Go application:
-
-    ```bash
-    $ go build .
     ```
 
 5. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
@@ -118,12 +105,6 @@ Next, to deploy the application and its infrastructure, follow these steps:
     ```diff
     -                       DesiredCount:   pulumi.Int(3),
     +                       DesiredCount:   pulumi.Int(5),
-    ```
-
-    Remember to rebuild the application:
-
-    ```bash
-    $ go build .
     ```
 
     Running `pulumi up` will show you the delta and then, after confirming, will deploy just those changes:

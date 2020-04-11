@@ -3,11 +3,10 @@
     "version": "0.1.0",
     "dependencies": {
         "@pulumi/azure": "^1.0.0",
-        "@pulumi/policy": "^0.2.0",
-        "@pulumi/pulumi": "^1.0.0"
+        "@pulumi/policy": "^1.0.0"
     },
     "devDependencies": {
-        "@types/node": "latest",
-        "tslint": "latest"
+        "@types/node": "^10.0.0",
+        "typescript": "^3.8.3"
     }
 }

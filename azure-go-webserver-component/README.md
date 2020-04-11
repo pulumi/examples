@@ -11,16 +11,9 @@ defining a `WebServer` class, we can hide many details (see [here](./webserver.t
 
 - [Node.js](https://nodejs.org/en/download/)
 - [Download and install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
-- [Connect Pulumi with your Azure account](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) (if your `az` CLI is
-      configured, this will just work)
+- [Connect Pulumi with your Azure account](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) (if your `az` CLI is configured, no further changes are required)
 
 ## Running the App
-
-1. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
-
-    ```bash
-    $ dep ensure
-    ```
 
 1.  Create a new stack:
 

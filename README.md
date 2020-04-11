@@ -14,26 +14,31 @@ See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on
 ## Outline
 
 - [AWS](#aws)
-    - [Typescript](#typescript)
-	- [Javascript](#javascript)
-	- [Python](#python)
-	- [Go](#go)
-	- [C#](#c)
-	- [F#](#f)
+    - [TypeScript](#typescript)
+    - [JavaScript](#javascript)
+    - [Python](#python)
+    - [Go](#go)
+    - [C#](#c)
+    - [F#](#f)
 - [Azure](#azure) 
-    - [Typescript](#typescript-1)
-	- [Javascript](#javascript-1)
-	- [Python](#python-1)
-	- [Go](#go-1)
-	- [C#](#c-1)
-	- [F#](#f-1)
+    - [TypeScript](#typescript-1)
+    - [JavaScript](#javascript-1)
+    - [Python](#python-1)
+    - [Go](#go-1)
+    - [C#](#c-1)
+    - [F#](#f-1)
 - [GCP](#gcp) 
-    - [Typescript](#typescript-2)
-	- [Javascript](#javascript-2)
-	- [Python](#python-2)
-	- [Go](#go-2)
-	- [C#](#c-2)
+    - [TypeScript](#typescript-2)
+    - [JavaScript](#javascript-2)
+    - [Python](#python-2)
+    - [Go](#go-2)
+    - [C#](#c-2)
 - [Kubernetes](#kubernetes)
+    - [TypeScript](#typescript-3)
+    - [JavaScript](#javascript-3)
+    - [Python](#python-3)
+    - [Go](#go-3)
+    - [C#](#c-3)
 - [Cloud](#cloud)
 - [DigitalOcean](#digitalocean)
 - [Multicloud](#multicloud)
@@ -41,13 +46,14 @@ See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on
 - [Twilio](#twilio)
 - [Linode](#linode)
 - [Packet](#packet)
+- [Testing](#testing) 
 
 ## AWS
 
-### Typescript
+### TypeScript
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [API Gateway](aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
 [Apigateway - Auth0](aws-ts-apigateway-auth0) | Deploy a simple REST API protected by Auth0.
 [AppSync](aws-ts-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
@@ -75,10 +81,10 @@ Example		| Description |
 [Voting App](aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
 [Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
 
-### Javascript
+### JavaScript
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Containers](aws-js-containers) | Provision containers on Fargate.
 [S3 Folder Component](aws-js-s3-folder-component) | Serve a static website on S3 from a component.
 [S3 Folder](aws-js-s3-folder) | Serve a static website on S3.
@@ -88,8 +94,8 @@ Example		| Description |
 
 ### Python
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [AppSync](aws-py-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
 [Fargate](aws-py-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
 [Resources](aws-py-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
@@ -100,8 +106,8 @@ Example		| Description |
 
 ### Go
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Fargate](aws-go-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
 [Lambda](aws-go-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
 [S3 Folder](aws-go-s3-folder) | Serve a static website on S3.
@@ -109,24 +115,24 @@ Example		| Description |
 
 ### C#
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Fargate](aws-cs-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
 [Lambda](aws-cs-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
 [Web Server](aws-cs-webserver) | Deploy an EC2 instance and open port 80.
 
 ### F#
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Lambda Web Server](aws-fs-lambda-webserver) | Create a web server in AWS lambda using the Giraffe web server.
 
 ## Azure
 
-### Typescript
+### TypeScript
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [AKS - Helm](azure-ts-aks-helm) | Create an Azure Kubernetes Service (AKS) Cluster and deploy a Helm Chart into it.
 [AKS - KEDA](azure-ts-aks-keda) | Create an Azure Kubernetes Service (AKS) Cluster and deploy an Azure Function App with Kubernetes-based Event Driven Autoscaling (KEDA) into it.
 [AKS - Mean](azure-ts-aks-mean) | Stand up an Azure Kubernetes Service (AKS) Cluster and a MongoDB-flavored instance of CosmosDB.
@@ -151,16 +157,16 @@ Example		| Description |
 [Web Server Component](azure-ts-webserver-component) | Provision a configurable number of Linux web servers in an Azure Virtual Machine using a reusable component.
 [Web Server](azure-ts-webserver) | Provision a Linux web server in an Azure Virtual Machine.
 
-### Javascript
+### JavaScript
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Web Server](azure-js-webserver) | Build the Pulumi web server sample in Azure.
 
 ### Python
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [AKS - Multicluster](azure-py-aks-multicluster) | Create multiple AKS clusters in different regions and with different node counts.
 [AKS](azure-py-aks) | Deploy an AKS cluster, virtual network and Azure Container Registry and grant AKS permissions to access and manage those.
 [App Service - Docker](azure-py-appservice-docker) | Build a web application hosted in App Service from Docker images.
@@ -174,15 +180,15 @@ Example		| Description |
 
 ### Go
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [App Service](azure-go-appservice) | Build a web application hosted in Azure App Service.
 [Web Server Component](azure-go-webserver-component) | Provision a configurable number of Linux web servers in an Azure Virtual Machine using a reusable component.
 
 ### C#
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [AKS](azure-cs-aks) | Stand up an Azure Kubernetes Service (AKS) cluster.
 [AKS and Private Container Registry](azure-cs-aks-private-container-registry) | Stand up an Azure Kubernetes Service (AKS) cluster, a private Azure Container Registry, and deploys an image to the cluster.
 [App Service](azure-cs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
@@ -195,17 +201,17 @@ Example		| Description |
 
 ### F#
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [AKS](azure-fs-aks) | Stand up an Azure Kubernetes Service (AKS) cluster.
 [App Service](azure-fs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
 
 ## GCP
 
-### Typescript
+### TypeScript
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Cloud Run](gcp-ts-cloudrun) | Deploy a custom Docker image into Google Cloud Run service.
 [Functions - Raw](gcp-ts-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
 [Functions](gcp-ts-functions) | Deploy an HTTP Google Cloud Function endpoint.
@@ -214,16 +220,16 @@ Example		| Description |
 [Ruby on Rails](gcp-ts-k8s-ruby-on-rails-postgresql) | Deliver a containerized Ruby on Rails application.
 [Slackbot](gcp-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
 
-### Javascript
+### JavaScript
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Web Server](gcp-js-webserver) | Build a web server in Google Cloud.
 
 ### Python
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Functions - Raw](gcp-py-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
 [Functions](gcp-py-functions) | Deploy a Python-based Google Cloud Function.
 [GKE](gcp-py-gke) | Provision a Google Kubernetes Engine (GKE) cluster, then a Kubernetes Deployment.
@@ -232,24 +238,24 @@ Example		| Description |
 
 ### Go
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Functions](gcp-go-functions) | Deploy a Go-based Google Cloud Function.
 [Functions - Raw](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
 
 ### C#
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Functions - Raw](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
 [Functions](gcp-go-functions) | Deploy a Go-based Google Cloud Function.
 
 ## Kubernetes
 
-### Typescript
+### TypeScript
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [App Rollout via ConfigMap](kubernetes-ts-configmap-rollout) | Enable a change in a ConfigMap to trigger a rollout of an nginx Deployment.
 [App Rollout via S3 Data Change](kubernetes-ts-s3-rollout) | Enable a change in data in S3 to trigger a rollout of an nginx deployment.
 [Expose Deployment](kubernetes-ts-exposed-deployment) | Deploy nginx to a Kubernetes cluster, and publicly explose it using a Kubernetes Service.
@@ -263,31 +269,37 @@ Example		| Description |
 
 ### Python
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Guestbook](kubernetes-py-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
 
 ### C#
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Guestbook](kubernetes-cs-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+
+### Go
+
+Example   | Description |
+--------- | --------- |
+[Guestbook](kubernetes-go-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
 
 ## Cloud
 
-### Typescript
+### TypeScript
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [URL Shortener - Cache and HttpServer](cloud-ts-url-shortener-cache-http) | Create a simple URL shortener SPA that uses the high-level `cloud.Table` and `cloud.HttpServer` components.
 [URL Shortener - Cache](cloud-ts-url-shortener-cache) | Create a simple URL shortener SPA that uses the high-level `cloud.Table` and `cloud.API` components.
 [URL Shortener](cloud-ts-url-shortener) | Create a complete URL shortener web application that uses the high-level `cloud.Table` and `cloud.HttpServer` components.
 [Voting App](cloud-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
 
-### Javascript
+### JavaScript
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [API on AWS](cloud-js-api) | Create a simple REST API that counts the number of times a route has been hit.
 [Containers](cloud-js-containers) | Provision containers on Fargate.
 [HttpServer](cloud-js-httpserver) | Create a simple REST API that counts the number of times a route has been hit.
@@ -297,64 +309,74 @@ Example		| Description |
 
 ## DigitalOcean
 
-### Typescript
+### TypeScript
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Droplets](digitalocean-ts-loadbalanced-droplets) | Build sample architecture.
 [Kubernetes](digitalocean-ts-k8s) | Provision a DigitalOcean Kubernetes cluster.
 
 ### Python
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Droplets](digitalocean-py-loadbalanced-droplets) | Build sample architecture.
 [Kubernetes](digitalocean-py-k8s) | Provision a DigitalOcean Kubernetes cluster.
 
 ### C#
 
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Droplets](digitalocean-cs-loadbalanced-droplets) | Build sample architecture.
 [Kubernetes](digitalocean-cs-k8s) | Provision a DigitalOcean Kubernetes cluster.
 
 ## Multicloud
 
-### Typescript
-Example		| Description |
------ 		| --------- |
+### TypeScript
+Example   | Description |
+--------- | --------- |
 [Buckets](multicloud-ts-buckets) | Use a single Pulumi program to provision resources in both AWS and GCP. 
 
 ## F5
 
-### Typescript
-Example		| Description |
------ 		| --------- |
+### TypeScript
+Example   | Description |
+--------- | --------- |
 [BigIP Local Traffic Manager](f5bigip-ts-ltm-pool) | Provide load balancing via an F5 BigIP appliance to backend HTTP instances.
 
 ## Twilio
 
-### Typescript
-Example		| Description |
------ 		| --------- |
+### TypeScript
+Example   | Description |
+--------- | --------- |
 [Component](twilio-ts-component) | Create a custom Component Resource to parse incoming messages from Twilio.
 
 ## Linode
 
-### Javascript
-Example		| Description |
------ 		| --------- |
+### JavaScript
+Example   | Description |
+--------- | --------- |
 [Web Server](linode-js-webserver) | Build a web server on Linode.
 
 ## Packet
 
-### Typescript
-Example		| Description |
------ 		| --------- |
+### TypeScript
+Example   | Description |
+--------- | --------- |
 [Web Server](packet-ts-webserver) | Build a web server on Packet.net.
 
 ### Python
-Example		| Description |
------ 		| --------- |
+Example   | Description |
+--------- | --------- |
 [Web Server](packet-py-webserver) | Build a web server on Packet.net.
 
+## Testing
+
+Example   | Description |
+-----          | --------- |
+[Unit Tests in TypeScript](testing-unit-ts)      | Mock-based unit tests in TypeScript.
+[Unit Tests in Python](testing-unit-py)          | Mock-based unit tests in Python.
+[Unit Tests in Go](testing-unit-go)              | Mock-based unit tests in Go.
+[Unit Tests in C#](testing-unit-cs)              | Mock-based unit tests in C#.
+[Testing with Policies](testing-pac-ts)          | Tests based on Policy-as-Code in TypeScript.
+[Integration Testing in Go](testing-integration) | Deploy-check-destroy tests in Go.

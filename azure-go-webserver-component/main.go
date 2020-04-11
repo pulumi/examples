@@ -5,8 +5,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/core"
-	"github.com/pulumi/pulumi-azure/sdk/go/azure/network"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/core"
+	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/network"
 	"github.com/pulumi/pulumi/sdk/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/go/pulumi/config"
 )
@@ -41,6 +41,13 @@ func main() {
 			},
 		})
 
+		subnetID := network.Subnets.Index(pulumi.Int(0)).Id().ApplyT(func(val *string) (string, error) {
+			if val == nil {
+				return "", nil
+			}
+			return *val, nil
+		}).(pulumi.StringOutput)
+
 		// Now, allocate a few websever VMs -- by default, just 2, but this is configurable.
 		var ipAddresses pulumi.StringArray
 		for i := 0; i < count; i++ {
@@ -51,7 +58,7 @@ func main() {
 echo "Hello, from Server %v!" > index.html
 nohup python -m SimpleHTTPServer 80 &`, i)),
 				ResourceGroupName: rg.Name,
-				SubnetID:          network.Subnets.Index(pulumi.Int(0)).Id().ToStringPtrOutput().Elem(),
+				SubnetID:          subnetID,
 			})
 			if err != nil {
 				return err
