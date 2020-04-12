@@ -1,95 +1,48 @@
-from pulumi import Config, get_project, get_stack, ResourceOptions, StackReference, export
+from pulumi import Config, get_stack, ResourceOptions, export
 from pulumi.resource import CustomTimeouts
-from pulumi_azure import core, network
+from pulumi_azure import core
 from hub import HubProps, Hub
 from spoke import SpokeProps, Spoke
 
 # Retrieve the configuration data
 config = Config()
-hub_stem = config.require('hub_stem')
-dmz_ar = config.require('dmz_ar')
-fwm_ar = config.get('fwm_ar')
-fws_ar = config.require('fws_ar')
-fwz_as = config.require('fwz_as')
-gws_ar = config.require('gws_ar')
-hbs_ar = config.get('hbs_ar')
-hub_ar = config.get('hub_ar')
-hub_as = config.require('hub_as')
-spoke_stem = config.require('spoke_stem')
-sbs_ar = config.get('sbs_ar')
-spoke_ar = config.get('spoke_ar')
-spoke_as = config.require('spoke_as')
 
-# Azure Resource Group using the location in the stack configuration
-stack_name = get_stack()
+# Azure Resource Group location will be used for all resources
+stack = get_stack()
 default_tags = {
-    "environment": stack_name
+    "environment": stack
 }
 resource_group = core.ResourceGroup(
-    stack_name + "-vdc-rg-",
+    stack + "-vdc-rg-",
     tags = default_tags,
 )
 
 # Hub virtual network with gateway, firewall, DMZ and shared services subnets
 hub1 = Hub(
-    hub_stem,
+    config.require('hub_stem'),
     HubProps(
-    resource_group = resource_group,
-    tags = default_tags,
-    dmz_ar = dmz_ar,
-    fws_ar = fws_ar,
-    fwz_as = fwz_as,
-    gws_ar = gws_ar,
-    hub_ar = hub_ar,
-    hub_as = hub_as,
-    fwm_ar = fwm_ar,
-    hbs_ar = hbs_ar,
+        config = config,
+        resource_group = resource_group,
+        tags = default_tags,
+        stack = stack,
     ),
     opts=ResourceOptions(custom_timeouts=CustomTimeouts(create='1h')),
 )
 
 # Spoke virtual network for application environments
 spoke1 = Spoke(
-    spoke_stem,
+    config.require('spoke_stem'),
     SpokeProps(
-    resource_group = resource_group,
-    tags = default_tags,
-    hub_stem = hub_stem,
-    hub_name = hub1.hub_name,
-    hub_id = hub1.hub_id,
-    hub_fw_ip = hub1.hub_fw_ip,
-    hub_gw_rt_name = hub1.hub_gw_rt_name,
-    hub_dmz_rt_name = hub1.hub_dmz_rt_name,
-    hub_sn_rt_name = hub1.hub_sn_rt_name,
-    hub_as = hub_as,
-    dmz_ar = dmz_ar,
-    spoke_as = spoke_as,
-    sbs_ar = sbs_ar,
-    spoke_ar = spoke_ar,
+        config = config,
+        resource_group = resource_group,
+        tags = default_tags,
+        hub = hub1,
     ),
     opts=ResourceOptions(
         depends_on=[hub1.hub_er_gw, hub1.hub_vpn_gw],
         custom_timeouts=CustomTimeouts(create='1h')
     ),
 )
-
-# Global VNet Peering between hubs in separate stacks
-peer = config.get("peer")
-if peer:
-    org = config.require("org")
-    project = get_project()
-    peer_stack = StackReference(f"{org}/{project}/{peer}")
-    peer_hub = peer_stack.get_output("hub_id")
-    hub_hub = network.VirtualNetworkPeering(
-        f"{stack_name}-{peer}-vnp-",
-        resource_group_name = resource_group.name,
-        virtual_network_name = hub1.hub_name,
-        remote_virtual_network_id = peer_hub,
-        allow_forwarded_traffic = True,
-        allow_gateway_transit = False, # both hubs have gateways so not possible
-        allow_virtual_network_access = True,
-        opts = ResourceOptions(parent=hub1),
-    )
 
 # Exports
 export("hub_name", hub1.hub_name)

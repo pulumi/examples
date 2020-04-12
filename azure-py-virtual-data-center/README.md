@@ -2,13 +2,15 @@
 
 # Azure Virtual Data Center (VDC)
 
-This example deploys an Azure Virtual Datacenter (VDC) hub-and-spoke network stack in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall (with provision for forced tunnelling) and a DMZ in the hub. In this implementation, custom routing is used to redirect all traffic to and from Azure VNets through the firewall, as well as all traffic to and from the DMZ. Shared services may have their own subnets in the hub, and multiple spokes may be provisioned with subnets for applications and environments.
+This example deploys an Azure Virtual Data Center (VDC) hub-and-spoke network stack in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall (with provision for forced tunnelling) and a DMZ in the hub. Shared services may have their own subnets in the hub, and multiple spokes may be provisioned with subnets for applications and environments.
 
-The intention is that matching stacks would be defined in Azure [paired regions](https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions), either in Production/Disaster Recovery or High Availability configurations. It is then possible to define Global VNet Peering between the hubs.
+In this implementation, custom routing is used to redirect all traffic to and from Azure VNets, as well as all traffic to, within and from the DMZ, through the firewall (which scales out as a service). Traffic between ordinary hub and spoke subnets is not redirected through the firewall, and should be controlled using Network Security Groups (not yet implemented). Firewall rules are required to allow traffic through (not yet implemented).
 
-Although this pattern is in widespread use, Azure nows offers a managed service intended to replace it, comprising Virtual Hub and SD-WAN architecture. The [migration plan](https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology) shows the differences to VDC.
+The intention is that matching stacks would be deployed in Azure [paired regions](https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions), either in Production/Disaster Recovery or High Availability configurations. Global VNet Peering between the hubs connects the separate stacks into one network.
 
-This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components). The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction.
+Although the VDC pattern is in widespread use, Azure nows offers a managed service intended to replace it, comprising Virtual Hub and SD-WAN components. The [migration plan](https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology) shows the differences. But if you want or need to manage your own network infrastructure, VDC is still relevant.
+
+This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components) which demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction. It also demonstrates use of `pulumi.StackReference` as described [here](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) to manage multiple related stacks.
 
 ## Prerequisites
 
@@ -19,14 +21,8 @@ This example uses `pulumi.ComponentResource` as described [here](https://www.pul
 # Running the Example
 
 After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory and run the following commands.
-
-1. Create a new stack, which is an isolated deployment target for this example:
-
-    ```bash
-    $ pulumi stack init prod
-    ```
    
-1.  Create a Python virtualenv, activate it, and install the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program:
+1. (recommended) Create a Python virtualenv, activate it, and install the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program:
 
     ```
     $ python3 -m venv venv
@@ -34,9 +30,17 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pip3 install -r requirements.txt
     ```
 
-1. Set the configuration variables for this stack:
+1. Create a new stack intended for Production, for example:
 
-    Required:                               Example values:
+    ```bash
+    $ pulumi stack init prod
+    ```
+    
+    This will appear within your Pulumi organization under the `azure-py-vdc` project (as specified in `Pulumi.yaml`).
+
+1. Set the configuration variables for this stack which will be stored in a new `Pulumi.prod.yaml` file (change the values below to suit yourself):
+
+    Required:
     ```bash
     $ pulumi config set azure:environment   public
     $ pulumi config set azure:location      australiasoutheast
@@ -58,13 +62,13 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set spoke_ar            10.101.1.0/24
     ```
 
-1. Deploy the stack with the `pulumi up` command. This provisions all the Azure resources necessary, including gateways and firewall which may take up to an hour:
+1. Deploy the `prod` stack with the `pulumi up` command. This provisions all the Azure resources necessary, including gateways and firewall which may take up to an hour:
 
     ```bash
     $ pulumi up
     ```
 
-1. After a while, your VDC stack will be ready. If some outputs don't initially show then it may be necessary to do a `pulumi refresh` and then `pulumi up` again.
+1. After a while, your Production stack will be ready. If some outputs don't initially show then it may be necessary to do a `pulumi refresh` and then `pulumi up` again.
 
     ```bash
     Updating (prod):
@@ -175,39 +179,45 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
    
    Note that most resources are [auto-named](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming) and have a trailing dash on the logical name to separate the random suffix that will be applied, while manually-named resources are set to be deleted before replacement. Routes are also set to be deleted before replacement to avoid conflicts.
 
-1. Create another stack in a paired region, for example to be used for Disaster Recovery:
+1. Create another new stack intended for Disaster Recovery, for example:
 
     ```bash
     $ pulumi stack init dr
     ```
+    
+    This will also appear within your Pulumi organization under the `azure-py-vdc` project (as specified in `Pulumi.yaml`).
 
-1. Set the required or optional configuration variables to deploy this stack:
+1. Set the configuration variables for this stack which will be stored in a new `Pulumi.dr.yaml` file (change the values below to suit yourself):
 
+    Required:
     ```bash
     $ pulumi config set azure:environment   public
     $ pulumi config set azure:location      australiaeast
     $ pulumi config set dmz_ar              192.168.200.128/25
-    $ pulumi config set fwm_ar              192.168.200.64/26
     $ pulumi config set fws_ar              192.168.200.0/26
     $ pulumi config set fwz_as              192.168.200.0/24
     $ pulumi config set gws_ar              10.200.0.0/26
-    $ pulumi config set hbs_ar              10.200.0.64/27
-    $ pulumi config set hub_ar              10.200.1.0/24
     $ pulumi config set hub_as              10.200.0.0/16
     $ pulumi config set hub_stem            hub
-    $ pulumi config set sbs_ar              10.201.0.0/27
-    $ pulumi config set spoke_ar            10.201.1.0/24
     $ pulumi config set spoke_as            10.201.0.0/16
     $ pulumi config set spoke_stem          spoke
     ```
+    Optional:
+    ```bash
+    $ pulumi config set fwm_ar              192.168.200.64/26
+    $ pulumi config set hbs_ar              10.200.0.64/27
+    $ pulumi config set hub_ar              10.200.1.0/24
+    $ pulumi config set sbs_ar              10.201.0.0/27
+    $ pulumi config set spoke_ar            10.201.1.0/24
+    ```
 
-1. Deploy the second stack with the `pulumi up` command. This provisions all the Azure resources necessary in the paired region, including gateways and firewall which may take up to an hour:
+1. Deploy the `dr` stack with the `pulumi up` command. This provisions all the Azure resources necessary in the paired region, including gateways and firewall which may take up to an hour:
 
     ```bash
     $ pulumi up
     ```
 
-1. Once you have stacks in paired regions, you can connect the hubs using Global VNet Peering:
+1. Once you have Production and Disaster Recovery stacks in paired regions, you can connect their hubs using Global VNet Peering:
 
     ```bash
     $ pulumi stack select prod
@@ -221,15 +231,18 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```
     Note: it isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program, which is why you need to set the `org` configuration variable for each stack that needs to peer with another stack.
 
-    If you later destroy a stack, you need to remove the corresponding `peer` variable in the other stack. If you want to tear down the peerings, you should remove the variables in both stacks:
+    If you later destroy a stack, you need to remove the corresponding `peer` variable in the other stack and run `pulumi up`. If you want to tear down the peerings, you should remove the `peer` variables in both stacks and run `pulumi up`:
 
     ```bash
     $ pulumi stack select prod
     $ pulumi config rm peer
+    $ pulumi up
     $ pulumi stack select dr
     $ pulumi config rm peer
+    $ pulumi up
     ```
-    The next time you use the `pulumi up` command for each stack, the peerings will be removed.
+
+    You need to remove both peerings before you can connect the hubs again.
 
 1. When you are finished experimenting, you can destroy all of the resources, and the stacks:
 

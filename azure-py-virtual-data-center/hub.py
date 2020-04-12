@@ -1,45 +1,41 @@
-from pulumi import Output, ComponentResource, ResourceOptions
+from pulumi import Config, Output, ComponentResource, ResourceOptions, get_project, StackReference
 from pulumi.resource import CustomTimeouts
 from pulumi_azure import core, network
 
 class HubProps:
     def __init__(
         self,
+        config: Config,
         resource_group: core.ResourceGroup,
         tags: [str, str],
-        dmz_ar: str,
-        fws_ar: str,
-        fwz_as: str,
-        gws_ar: str,
-        hub_as: str,
-        fwm_ar: str,
-        hbs_ar: str,
-        hub_ar: str,
-
+        stack: str,
     ):
+        self.config = config
         self.resource_group = resource_group
         self.tags = tags
-        self.dmz_ar = dmz_ar
-        self.fws_ar = fws_ar
-        self.fwz_as = fwz_as
-        self.gws_ar = gws_ar
-        self.hub_as = hub_as
-        self.fwm_ar = fwm_ar
-        self.hbs_ar = hbs_ar
-        self.hub_ar = hub_ar
-
+        self.stack = stack
 
 class Hub(ComponentResource):
     def __init__(self, name: str, props: HubProps, opts: ResourceOptions=None):
         super().__init__('vdc:network:Hub', name, {}, opts)
 
-        # Azure Virtual Network to which spokes are peered (only)
+        # Retrieve configuration
+        dmz_ar = props.config.require('dmz_ar')
+        fwm_ar = props.config.get('fwm_ar')
+        fws_ar = props.config.require('fws_ar')
+        fwz_as = props.config.require('fwz_as')
+        gws_ar = props.config.require('gws_ar')
+        hbs_ar = props.config.get('hbs_ar')
+        hub_ar = props.config.get('hub_ar')
+        hub_as = props.config.require('hub_as')
+
+        # Azure Virtual Network to which spokes will be peered
         hub = network.VirtualNetwork(
             f"{name}-vn-",
             resource_group_name = props.resource_group.name,
             location = props.resource_group.location,
             # separate address spaces to simplify custom routing
-            address_spaces = [props.fwz_as, props.hub_as],
+            address_spaces = [fwz_as, hub_as],
             # avoid use of inline subnets (use standalone Subnet resource instead)
             tags = props.tags,
             opts = ResourceOptions(parent=self),
@@ -50,7 +46,7 @@ class Hub(ComponentResource):
             f"{name}-dmz-sn", # no trailing dash as not auto-named
             name = "DMZ", # specific physical name not required but preferred for clarity
             resource_group_name = props.resource_group.name,
-            address_prefix = props.dmz_ar,
+            address_prefix = dmz_ar,
             virtual_network_name = hub.name,
             opts = ResourceOptions(parent=self, delete_before_replace=True),
         )
@@ -60,18 +56,18 @@ class Hub(ComponentResource):
             f"{name}-fw-sn", # no trailing dash as not auto-named
             name = "AzureFirewallSubnet", # specific physical name required
             resource_group_name = props.resource_group.name,
-            address_prefix = props.fws_ar,
+            address_prefix = fws_ar,
             virtual_network_name = hub.name,
             opts = ResourceOptions(parent=self, delete_before_replace=True),
         )
 
         #AzureFirewallManagementSubnet (optional)
-        if props.fwm_ar:
+        if fwm_ar:
             hub_fwm_sn = network.Subnet(
                 f"{name}-fwm-sn", # no trailing dash as not auto-named
                 name = "AzureFirewallManagementSubnet", # specific physical name required
                 resource_group_name = props.resource_group.name,
-                address_prefix = props.fwm_ar,
+                address_prefix = fwm_ar,
                 virtual_network_name = hub.name,
                 opts = ResourceOptions(parent=self, delete_before_replace=True),
             )
@@ -81,18 +77,18 @@ class Hub(ComponentResource):
             f"{name}-gw-sn", # no trailing dash as not auto-named
             name = "GatewaySubnet", # specific physical name required
             resource_group_name = props.resource_group.name,
-            address_prefix = props.gws_ar,
+            address_prefix = gws_ar,
             virtual_network_name = hub.name,
             opts = ResourceOptions(parent=self, delete_before_replace=True),
         )
 
         # AzureBastionSubnet (optional)
-        if props.hbs_ar:
+        if hbs_ar:
             hub_ab_sn = network.Subnet( #ToDo add NSG if required
                 f"{name}-ab-sn", # no trailing dash as not auto-named
                 name = "AzureBastionSubnet", # specific physical name required
                 resource_group_name = props.resource_group.name,
-                address_prefix = props.hbs_ar,
+                address_prefix = hbs_ar,
                 virtual_network_name = hub.name,
                 opts = ResourceOptions(parent=self, delete_before_replace=True),
             )
@@ -215,7 +211,7 @@ class Hub(ComponentResource):
         hub_gw_dmz_r = network.Route(
             f"{name}-gw-dmz-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.dmz_ar, # avoid overlapping AzureFirewallSubnet address space!
+            address_prefix = dmz_ar, # avoid overlapping AzureFirewallSubnet address space!
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = hub_fw_ip,
             route_table_name = hub_gw_rt.name,
@@ -226,7 +222,7 @@ class Hub(ComponentResource):
         hub_gw_gw_r = network.Route(
             f"{name}-gw-gw-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.gws_ar, # partially override the following route to hub_as
+            address_prefix = gws_ar, # partially override the following route to hub_as
             next_hop_type = "VnetLocal", # intra GatewaySubnet traffic not to be redirected
             route_table_name = hub_gw_rt.name,
             opts = ResourceOptions(parent=self, delete_before_replace=True),
@@ -236,7 +232,7 @@ class Hub(ComponentResource):
         hub_gw_sn_r = network.Route(
             f"{name}-gw-sn-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.hub_as, # overlaps the shorter gateway prefix gws_ar above
+            address_prefix = hub_as, # overlaps the shorter gateway prefix gws_ar above
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = hub_fw_ip,
             route_table_name = hub_gw_rt.name,
@@ -269,7 +265,7 @@ class Hub(ComponentResource):
         hub_dmz_dmz_r = network.Route(
             f"{name}-dmz-dmz-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.dmz_ar, # avoid overlapping AzureFirewallSubnet address space!
+            address_prefix = dmz_ar, # avoid overlapping AzureFirewallSubnet address space!
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = hub_fw_ip,
             route_table_name = hub_dmz_rt.name,
@@ -280,7 +276,7 @@ class Hub(ComponentResource):
         hub_dmz_sn_r = network.Route(
             f"{name}-dmz-sn-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.hub_as,
+            address_prefix = hub_as,
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = hub_fw_ip,
             route_table_name = hub_dmz_rt.name,
@@ -316,7 +312,7 @@ class Hub(ComponentResource):
         hub_sn_dmz_r = network.Route(
             f"{name}-sn-dmz-r-",
             resource_group_name = props.resource_group.name,
-            address_prefix = props.dmz_ar, # avoid overlapping AzureFirewallSubnet address space!
+            address_prefix = dmz_ar, # avoid overlapping AzureFirewallSubnet address space!
             next_hop_type = "VirtualAppliance",
             next_hop_in_ip_address = hub_fw_ip,
             route_table_name = hub_sn_rt.name,
@@ -334,12 +330,35 @@ class Hub(ComponentResource):
             opts = ResourceOptions(parent=self, delete_before_replace=True),
         )
 
+        # VNet Peering between hubs in different stacks (Global if different regions)
+        peer = props.config.get('peer')
+        if peer:
+            org = props.config.require('org')
+            project = get_project()
+            peer_stack = StackReference(f"{org}/{project}/{peer}")
+            peer_hub_id = peer_stack.get_output("hub_id")
+            hub_hub = network.VirtualNetworkPeering( # need corresponding peering as well
+                f"{props.stack}-{peer}-vnp-",
+                resource_group_name = props.resource_group.name,
+                virtual_network_name = hub.name,
+                remote_virtual_network_id = peer_hub_id,
+                allow_forwarded_traffic = True,
+                allow_gateway_transit = False, # both hubs have gateways so not possible
+                allow_virtual_network_access = True,
+                opts = ResourceOptions(parent=self),
+            ) #ToDo add routes to override system routes created for the new peerings
+            # Still need to control access to the other DMZ and hub, need the following:
+            # peer_fw_ip = 
+            # peer_dmz_ar = 
+            # peer_hub_as = 
+            # Don't need to worry about spokes as peering isn't transitive
+
         # as many subnets as are required for shared services may be created in the hub
-        if props.hub_ar: # replace with loop
+        if hub_ar: # replace with loop
             hub_example_sn = network.Subnet( #ToDo add NSG for inter-subnet traffic in hub
                 f"{name}-example-sn-",
                 resource_group_name = props.resource_group.name,
-                address_prefix = props.hub_ar,
+                address_prefix = hub_ar,
                 virtual_network_name = hub.name,
                 opts = ResourceOptions(parent=self, depends_on=[hub_sn_rt]), # reduce contention
             )
