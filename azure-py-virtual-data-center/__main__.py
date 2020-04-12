@@ -10,10 +10,10 @@ config = Config()
 # Azure Resource Group location will be used for all resources
 stack = get_stack()
 default_tags = {
-    "environment": stack
+    'environment': stack
 }
 resource_group = core.ResourceGroup(
-    stack + "-vdc-rg-",
+    stack + '-vdc-rg-',
     tags = default_tags,
 )
 
@@ -45,10 +45,10 @@ spoke1 = Spoke(
 )
 
 # Exports
-export("hub_name", hub1.hub_name)
-export("hub_id", hub1.hub_id)
-export("hub_subnets", hub1.hub_subnets)
+export('hub_name', hub1.hub_name)
+export('hub_id', hub1.hub_id)
+export('hub_subnets', hub1.hub_subnets)
 
-export("spoke_name", spoke1.spoke_name)
-export("spoke_id", spoke1.spoke_id)
-export("spoke_subnets", spoke1.spoke_subnets)
+export('spoke_name', spoke1.spoke_name)
+export('spoke_id', spoke1.spoke_id)
+export('spoke_subnets', spoke1.spoke_subnets)

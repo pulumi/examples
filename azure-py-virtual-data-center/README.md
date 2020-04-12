@@ -177,7 +177,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
    
    Feel free to modify your program, and then run `pulumi up` again. The Pulumi CLI automatically detects differences and makes the minimal changes necessary to achieved the desired state.
    
-   Note that most resources are [auto-named](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming) and have a trailing dash on the logical name to separate the random suffix that will be applied, while manually-named resources are set to be deleted before replacement. Routes are also set to be deleted before replacement to avoid conflicts.
+   Note that because most resources are [auto-named](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming), a trailing dash on the logical name is used to separate the random suffix that will be applied, while manually-named resources are set to be deleted before replacement.
 
 1. Create another new stack intended for Disaster Recovery, for example:
 
