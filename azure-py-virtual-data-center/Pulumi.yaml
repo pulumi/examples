@@ -10,7 +10,7 @@ template:
       description: Azure region to use (e.g. `australiaeast` or `australiasoutheast`)
       default: australiasoutheast
     azure-py-vdc:dmz_ar:
-      description: Address range for hub DMZ subnet (must be in fwz_as)
+      description: Address range for hub DMZ subnet (must be within fwz_as)
       default: 192.168.100.128/25
     azure-py-vdc:fwm_ar:
       description: Address range for hub AzureFirewallManagementSubnet (optional - /26 within fwz_as)

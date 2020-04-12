@@ -232,7 +232,7 @@ class Hub(ComponentResource):
             opts = ResourceOptions(parent=self),
         )
 
-        # protect intra-GatewaySubnet traffic from redirection
+        # protect intra-GatewaySubnet traffic from being redirected (see below)
         hub_gw_gw_r = network.Route(
             f'{name}-gw-gw-r-',
             resource_group_name = props.resource_group.name,
@@ -242,7 +242,7 @@ class Hub(ComponentResource):
             opts = ResourceOptions(parent=self),
         )
 
-        # partially invalidate system route (excluding GatewaySubnet)
+        # invalidate system route to hub address space (overlaps GatewaySubnet)
         hub_gw_hub_r = network.Route(
             f'{name}-gw-hub-r-',
             resource_group_name = props.resource_group.name,
@@ -355,7 +355,7 @@ class Hub(ComponentResource):
             opts = ResourceOptions(parent=self),
         )
 
-        # VNet Peering between stacks requires more routes
+        # VNet Peering between stacks requires additional routes
         peer = props.config.get('peer')
         if peer:
             org = props.config.require('org')
@@ -363,7 +363,8 @@ class Hub(ComponentResource):
             peer_stack = StackReference(f'{org}/{project}/{peer}')
             peer_hub_id = peer_stack.get_output('hub_id')
             peer_hub_name = peer_stack.get_output('hub_name')
-            #peer_hub = network.VirtualNetwork.get(peer_hub_name,peer_hub_id)
+            # need a reference to the peer hub VNet but this doesn't work
+            #peer_hub = network.VirtualNetwork.get(peer_hub_name, peer_hub_id)
             #peer_fw_ip = peer_hub.hub_fw_ip
             #peer_dmz_ar = peer_hub.peer_dmz_ar 
             #peer_hub_as = peer_hub.peer_hub_as
@@ -378,7 +379,74 @@ class Hub(ComponentResource):
                 allow_virtual_network_access = True,
                 opts = ResourceOptions(parent=self),
             )
-
+# routes ready to go when we have peer_fw_ip, peer_dmz_ar and peer_hub_as       
+#            # partially invalidate system route (excluding AzureFirewallSubnet)
+#            stack_dmz_peer_dmz_r = network.Route(
+#                f'{props.stack}-dmz-{peer}-dmz-r-',
+#                resource_group_name = props.resource_group.name,
+#                address_prefix = peer_dmz_ar,
+#                next_hop_type = 'VirtualAppliance',
+#                next_hop_in_ip_address = peer_fw_ip,
+#                route_table_name = hub_dmz_rt.name,
+#                opts = ResourceOptions(parent=self),
+#            )
+#        
+#            # invalidate system route to peer hub address space
+#            stack_dmz_peer_hub_r = network.Route(
+#                f'{props.stack}-dmz-{peer}-hub-r-',
+#                resource_group_name = props.resource_group.name,
+#                address_prefix = peer_hub_as,
+#                next_hop_type = 'VirtualAppliance',
+#                next_hop_in_ip_address = peer_fw_ip,
+#                route_table_name = hub_dmz_rt.name,
+#                opts = ResourceOptions(parent=self),
+#            )
+#        
+#            # partially invalidate system route (excluding AzureFirewallSubnet)
+#            stack_sn_peer_dmz_r = network.Route(
+#                f'{props.stack}-sn-{peer}-dmz-r-',
+#                resource_group_name = props.resource_group.name,
+#                address_prefix = peer_dmz_ar,
+#                next_hop_type = 'VirtualAppliance',
+#                next_hop_in_ip_address = peer_fw_ip,
+#                route_table_name = hub_sn_rt.name,
+#                opts = ResourceOptions(parent=self),
+#            )
+#        
+#            # invalidate system route to peer hub address space
+#            stack_sn_peer_hub_r = network.Route(
+#                f'{props.stack}-sn-{peer}-hub-r-',
+#                resource_group_name = props.resource_group.name,
+#                address_prefix = peer_hub_as,
+#                next_hop_type = 'VirtualAppliance',
+#                next_hop_in_ip_address = peer_fw_ip,
+#                route_table_name = hub_sn_rt.name,
+#                opts = ResourceOptions(parent=self),
+#            )
+#        
+#            # invalidate system route to peer hub address space
+#            stack_gw_peer_hub_r = network.Route(
+#                f'{props.stack}-gw-{peer}-hub-r-',
+#                resource_group_name = props.resource_group.name,
+#                address_prefix = peer_hub_as,
+#                next_hop_type = 'VirtualAppliance',
+#                next_hop_in_ip_address = peer_fw_ip,
+#                route_table_name = hub_gw_rt.name,
+#                opts = ResourceOptions(parent=self),
+#            )
+#                        
+#            # partially invalidate system route (excluding AzureFirewallSubnet)
+#            stack_gw_peer_dmz_r = network.Route(
+#                f'{props.stack}-gw-{peer}-dmz-r-',
+#                resource_group_name = props.resource_group.name,
+#                address_prefix = peer_dmz_ar,
+#                next_hop_type = 'VirtualAppliance',
+#                next_hop_in_ip_address = peer_fw_ip,
+#                route_table_name = hub_gw_rt.name,
+#                opts = ResourceOptions(parent=self),
+#            )
+#        
+#        
         # Provisioning of subnets depends_on gateways and firewall because of
         # contention in the Azure control plane that otherwise results
 
