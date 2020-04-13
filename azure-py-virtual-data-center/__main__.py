@@ -39,7 +39,7 @@ spoke1 = Spoke(
         hub = hub1,
     ),
     opts=ResourceOptions(
-        depends_on=[hub1.hub_er_gw, hub1.hub_vpn_gw],
+        depends_on=[hub1.hub_vpn_gw, hub1.hub_er_gw, hub1.hub_fw],
         custom_timeouts=CustomTimeouts(create='1h')
     ),
 )
