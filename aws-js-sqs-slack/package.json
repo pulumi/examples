@@ -3,6 +3,6 @@
     "dependencies": {
         "@pulumi/aws": "^1.0.0",
         "@pulumi/pulumi": "^1.0.0",
-        "@slack/client": "^4.3.1"
+        "@slack/client": "^5.0.2"
     }
 }

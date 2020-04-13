@@ -2,7 +2,7 @@
     "name": "azure-ts-stream-analytics",
     "version": "0.1.0",
     "devDependencies": {
-        "@types/node": "^8.0.0",
+        "@types/node": "^13.11.1",
         "@types/utf8": "^2.1.6"
     },
     "dependencies": {

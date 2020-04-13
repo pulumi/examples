@@ -2,7 +2,7 @@
     "name": "gcp-ts-cloudrun",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "^8.0.0",
+        "@types/node": "^13.11.1",
         "@types/express": "^4.16.0"
     },
     "dependencies": {

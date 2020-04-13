@@ -2,10 +2,10 @@
     "name": "url-shortener",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@types/node": "^13.11.1"
     },
     "dependencies": {
-        "redis": "^2.8.0",
+        "redis": "^3.0.2",
         "@pulumi/cloud": "latest",
         "@pulumi/cloud-aws": "latest"
     }

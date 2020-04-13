@@ -2,7 +2,7 @@
   "name": "sock-shop",
   "version": "0.1.0",
   "devDependencies": {
-    "@types/node": "^8.0.0"
+    "@types/node": "^13.11.1"
   },
   "dependencies": {
     "@pulumi/kubernetes": "^1.0.0",

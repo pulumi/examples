@@ -1,21 +1,21 @@
 {
     "name": "serverless-datawarehouse",
     "devDependencies": {
-        "@types/jest": "^24.9.0",
+        "@types/jest": "^25.2.1",
         "@types/moment-timezone": "^0.5.12",
-        "@types/node": "^8.0.0",
-        "jest": "^24.9.0",
-        "jest-circus": "^24.9.0",
-        "ts-jest": "^24.3.0"
+        "@types/node": "^13.11.1",
+        "jest": "^25.3.0",
+        "jest-circus": "^25.3.0",
+        "ts-jest": "^25.3.1"
     },
     "dependencies": {
         "@pulumi/aws": "^1.0.0",
-        "@pulumi/awsx": "^0.18.10",
+        "@pulumi/awsx": "^0.19.3",
         "@pulumi/pulumi": "^1.0.0",
         "athena-client": "^2.5.1",
         "aws-sdk": "^2.606.0",
         "moment-timezone": "^0.5.27",
-        "uuid": "^3.4.0"
+        "uuid": "^7.0.3"
     },
     "scripts": {
         "test": "jest",

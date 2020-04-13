@@ -1,7 +1,7 @@
 {
     "name": "exposed-deployment",
     "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@types/node": "^13.11.1"
     },
     "dependencies": {
         "@pulumi/azure": "^2.0.0",

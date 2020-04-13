@@ -2,7 +2,7 @@
     "name": "packet-ts-webserver",
     "version": "0.1.0",
     "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@types/node": "^13.11.1"
     },
     "dependencies": {
         "@pulumi/packet": "^1.4.0",
