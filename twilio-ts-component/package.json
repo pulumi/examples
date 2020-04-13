@@ -5,7 +5,7 @@
     },
     "dependencies": {
         "@pulumi/pulumi": "^1.0.0",
-        "@pulumi/aws-serverless": "latest",
+        "@pulumi/aws-serverless": "^0.15.1",
         "twilio": "latest"
     }
 }

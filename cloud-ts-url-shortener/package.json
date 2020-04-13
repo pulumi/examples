@@ -5,7 +5,7 @@
         "@types/node": "^13.11.1"
     },
     "dependencies": {
-        "@pulumi/cloud-aws": "latest",
-        "@pulumi/cloud": "latest"
+        "@pulumi/cloud-aws": "^1.0.0",
+        "@pulumi/cloud": "^1.0.0"
     }
 }

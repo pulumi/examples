@@ -1,10 +1,10 @@
 {
     "name": "typescript",
     "devDependencies": {
-        "@types/node": "latest"
+        "@types/node": "^13.0.0"
     },
     "dependencies": {
-        "@pulumi/digitalocean": "latest",
+        "@pulumi/digitalocean": "^1.0.0",
         "@pulumi/kubernetes": "^1.0.0",
         "@pulumi/pulumi": "^1.0.0"
     }

@@ -6,7 +6,7 @@
     },
     "dependencies": {
         "@pulumi/packet": "^1.4.0",
-        "@pulumi/random": "latest"
+        "@pulumi/random": "^1.0.0"
     },
     "license": "Apache-2.0"
 }
