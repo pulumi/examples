@@ -56,7 +56,7 @@ jobs:
     if: type = cron
   - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --version=feature-2.0"
     name: feature-2.0
-    if: type = cron
+    #if: type = cron
 after_failure:
   - "${PULUMI_SCRIPTS}/ci/upload-failed-tests"
 notifications:
