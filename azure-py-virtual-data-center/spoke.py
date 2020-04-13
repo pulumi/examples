@@ -1,7 +1,7 @@
 from pulumi import Config, Output, ComponentResource, ResourceOptions
-from pulumi.resource import CustomTimeouts
-from pulumi_azure import core, network
+from pulumi_azure import core
 from hub import Hub
+import vdc
 
 class SpokeProps:
     def __init__(
@@ -29,94 +29,69 @@ class Spoke(ComponentResource):
         spoke_ar = props.config.get('spoke_ar')
         spoke_as = props.config.require('spoke_as')
 
+        # set vdc defaults
+        vdc.resource_group_name = props.resource_group.name
+        vdc.location = props.resource_group.location
+        vdc.tags = props.tags
+        vdc.self = self
+
         # Azure Virtual Network to be peered to the hub
-        spoke = network.VirtualNetwork(
-            f'{name}-vn-',
-            resource_group_name = props.resource_group.name,
-            location = props.resource_group.location,
-            address_spaces = [spoke_as],
-            # avoid inline subnets (use standalone Subnet resource instead)
-            # no GatewaySubnet in the spokes but AzureBastionSubnet is OK
-            tags = props.tags,
-            opts = ResourceOptions(parent=self),
-        )
+        spoke = vdc.virtual_network(name, [spoke_as])
 
         # AzureBastionSubnet (optional)
         if sbs_ar:
-            spoke_sbs_sn = network.Subnet( #ToDo add NSG if required
-                f'{name}-ab-sn',
-                name = 'AzureBastionSubnet', # name required            
-                resource_group_name = props.resource_group.name,
-                address_prefix = sbs_ar,
-                virtual_network_name = spoke.name,
-                opts = ResourceOptions(
-                    parent=self,
-                    delete_before_replace=True,
-                ),
+            spoke_sbs_sn = vdc.subnet_special(
+                f'{name}-ab',
+                'AzureBastionSubnet',
+                spoke.name,
+                sbs_ar,
             )
 
         # VNet Peering from the hub to spoke
-        hub_spoke = network.VirtualNetworkPeering(
-            f'{hub_stem}-{name}-vnp-', # named after hub but child of the spoke
-            resource_group_name = props.resource_group.name,
-            virtual_network_name = props.hub.hub_name,
-            remote_virtual_network_id = spoke.id,
-            allow_gateway_transit = True,
-            allow_virtual_network_access = True,
-            opts = ResourceOptions(
-                parent=self,
-                custom_timeouts=CustomTimeouts(create='1h'),
-            ),
+        hub_spoke = vdc.vnet_peering(
+            hub_stem,
+            props.hub.hub_name,
+            name,
+            spoke.id,
+            allow_gateway_transit=True,
         )
 
         # VNet Peering from spoke to the hub
-        spoke_hub = network.VirtualNetworkPeering(
-            f'{name}-{hub_stem}-vnp-',
-            resource_group_name = props.resource_group.name,
-            virtual_network_name = spoke.name,
-            remote_virtual_network_id = props.hub.hub_id,
-            allow_forwarded_traffic = True,
-            use_remote_gateways = True, # gateway must already be provisioned
-            allow_virtual_network_access = True,
-            opts = ResourceOptions(
-                parent=self,
-                custom_timeouts=CustomTimeouts(create='1h'),
-            ),
+        spoke_hub = vdc.vnet_peering(
+            name,
+            spoke.name,
+            hub_stem,
+            props.hub.hub_id,
+            allow_forwarded_traffic=True,
+            use_remote_gateways=True,
         )
 
         # Provisioning of routes depends_on VNet Peerings because of
         # contention in the Azure control plane that otherwise results
 
         # Route table only to be associated with ordinary spoke subnets
-        spoke_sn_rt = network.RouteTable(
-            f'{name}-sn-rt-',
-            resource_group_name = props.resource_group.name,
-            location = props.resource_group.location,
-            disable_bgp_route_propagation = True,
-            # avoid inline routes (use standalone Route resource instead)
-            tags = props.tags,
-            opts = ResourceOptions(
-                parent=self,
-                depends_on=[hub_spoke, spoke_hub],
-            ),
+        spoke_sn_rt = vdc.route_table(
+            f'{name}-sn',
+            disable_bgp_route_propagation=True,
+            depends_on=[hub_spoke, spoke_hub],
         )
+                
+        # Provisioning of subnets depends_on VNet Peerings and Route Table to
+        # avoid contention in the Azure control plane
 
         # Only one spoke subnet is provisioned as an example, but many can be
         if spoke_ar: # replace with a loop
-            spoke_example_sn = network.Subnet( #ToDo add NSGs
-                f'{name}-example-sn-',
-                resource_group_name = props.resource_group.name,
-                address_prefix = spoke_ar,
-                virtual_network_name = spoke.name,
-                opts = ResourceOptions(parent=self),
+            spoke_example_sn = vdc.subnet(
+                f'{name}-example',
+                spoke.name,
+                spoke_ar,
+                depends_on=[spoke_sn_rt],
             )
-
             # associate all ordinary spoke subnets to the route table
-            spoke_example_sn_rta = network.SubnetRouteTableAssociation(
-                f'{name}-example-sn-rta',
-                route_table_id = spoke_sn_rt.id,
-                subnet_id = spoke_example_sn.id,
-                opts = ResourceOptions(parent=self),
+            spoke_example_sn_rta = vdc.subnet_route_table(
+                f'{name}-example',
+                spoke_sn_rt.id,
+                spoke_example_sn.id,
             )
 
         # As VNet Peering may not be specified as next_hop_type, a separate
@@ -128,69 +103,51 @@ class Spoke(ComponentResource):
         #ToDo check AzureFirewallManagementSubnet requirements
   
         # invalidate system route to spoke address space
-        hub_gw_spoke_r = network.Route(
-            f'{hub_stem}-gw-{name}-r-', # named after hub but child of spoke
-            resource_group_name = props.resource_group.name,
-            address_prefix = spoke_as,
-            next_hop_type = 'VirtualAppliance',
-            next_hop_in_ip_address = props.hub.hub_fw_ip,
-            route_table_name = props.hub.hub_gw_rt_name,
-            opts = ResourceOptions(parent=self),
+        hub_gw_spoke_r = vdc.route_to_virtual_appliance(
+            f'{hub_stem}-gw-{name}', # named after hub but child of spoke
+            props.hub.hub_gw_rt_name,
+            spoke_as,
+            props.hub.hub_fw_ip,
         )
 
         # partially invalidate system route (excluding AzureFirewallSubnet)
-        spoke_hub_dmz_r = network.Route(
-            f'{name}-{hub_stem}-dmz-r-',
-            resource_group_name = props.resource_group.name,
-            address_prefix = dmz_ar,
-            next_hop_type = 'VirtualAppliance',
-            next_hop_in_ip_address = props.hub.hub_fw_ip,
-            route_table_name = spoke_sn_rt.name,
-            opts = ResourceOptions(parent=self),
+        spoke_hub_dmz_r = vdc.route_to_virtual_appliance(
+            f'{name}-{hub_stem}-dmz',
+            spoke_sn_rt.name,
+            dmz_ar,
+            props.hub.hub_fw_ip,
         )
-
+        
         # invalidate system route to spoke address space
-        hub_dmz_spoke_r = network.Route(
-            f'{hub_stem}-dmz-{name}-r-', # named after hub but child of spoke
-            resource_group_name = props.resource_group.name,
-            address_prefix = spoke_as,
-            next_hop_type = 'VirtualAppliance',
-            next_hop_in_ip_address = props.hub.hub_fw_ip,
-            route_table_name = props.hub.hub_dmz_rt_name,
-            opts = ResourceOptions(parent=self),
+        hub_dmz_spoke_r = vdc.route_to_virtual_appliance(
+            f'{hub_stem}-dmz-{name}', # named after hub but child of spoke
+            props.hub.hub_dmz_rt_name,
+            spoke_as,
+            props.hub.hub_fw_ip,
         )
 
         # invalidate system route to hub address space
-        spoke_hub_r = network.Route(
-            f'{name}-{hub_stem}-hub-r-',
-            resource_group_name = props.resource_group.name,
-            address_prefix = hub_as,
-            next_hop_type = 'VirtualAppliance',
-            next_hop_in_ip_address = props.hub.hub_fw_ip,
-            route_table_name = spoke_sn_rt.name,
-            opts = ResourceOptions(parent=self),
+        spoke_hub_r = vdc.route_to_virtual_appliance(
+            f'{name}-{hub_stem}-hub',
+            spoke_sn_rt.name,
+            hub_as,
+            props.hub.hub_fw_ip,
         )
 
         # invalidate system route to spoke address space
-        hub_sn_spoke_r = network.Route(
-            f'{hub_stem}-sn-{name}-r-', # named after hub but child of spoke
-            resource_group_name = props.resource_group.name,
-            address_prefix = spoke_as,
-            next_hop_type = 'VirtualAppliance',
-            next_hop_in_ip_address = props.hub.hub_fw_ip,
-            route_table_name = props.hub.hub_sn_rt_name,
-            opts = ResourceOptions(parent=self),
+        hub_sn_spoke_r = vdc.route_to_virtual_appliance(
+            f'{hub_stem}-sn-{name}', # named after hub but child of spoke
+            props.hub.hub_sn_rt_name,
+            spoke_as,
+            props.hub.hub_fw_ip,
         )
 
         # invalidate system route to Internet
-        spoke_hub_dg_r = network.Route(
-            f'{name}-{hub_stem}-dg-r-',
-            resource_group_name = props.resource_group.name,
-            address_prefix = '0.0.0.0/0',
-            next_hop_type = 'VirtualAppliance',
-            next_hop_in_ip_address = props.hub.hub_fw_ip,
-            route_table_name = spoke_sn_rt.name,
-            opts = ResourceOptions(parent=self),
+        spoke_hub_dg_r = vdc.route_to_virtual_appliance(
+            f'{name}-{hub_stem}-dg',
+            spoke_sn_rt.name,
+            '0.0.0.0/0',
+            props.hub.hub_fw_ip,
         )
 
         self.spoke_name=spoke.name # exported perhaps not needed
