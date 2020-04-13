@@ -1,0 +1,2 @@
+pulumi-policy>=1.0.0
+pulumi-azure>=2.0.0
