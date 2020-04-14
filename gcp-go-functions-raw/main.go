@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/pulumi/pulumi-gcp/sdk/v2/go/gcp/cloudfunctions"
 	"github.com/pulumi/pulumi-gcp/sdk/v2/go/gcp/storage"
-	"github.com/pulumi/pulumi/sdk/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
 
 func main() {
