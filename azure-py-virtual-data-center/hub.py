@@ -196,12 +196,12 @@ class Hub(ComponentResource):
                 allow_gateway_transit = False, # as both hubs have gateways
             )
 
-            # needed to invalidate system routes created by Global VNet Peering
+            # need to invalidate system routes created by Global VNet Peering
             routes_to_peer_firewall = [
                 (f'dmz-{peer}-dmz', hub_dmz_rt.name, peer_dmz_ar),
                 (f'dmz-{peer}-hub', hub_dmz_rt.name, peer_hub_as),
-                (f'gw-{peer}-hub', hub_gw_rt.name, peer_hub_as),
                 (f'gw-{peer}-dmz', hub_gw_rt.name, peer_dmz_ar),
+                (f'gw-{peer}-hub', hub_gw_rt.name, peer_hub_as),
                 (f'sn-{peer}-dmz', hub_sn_rt.name, peer_dmz_ar),
                 (f'sn-{peer}-hub', hub_sn_rt.name, peer_hub_as),
             ]
