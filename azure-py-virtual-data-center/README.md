@@ -2,15 +2,15 @@
 
 # Azure Virtual Data Center (VDC)
 
-This example deploys an Azure Virtual Data Center (VDC) hub-and-spoke network stack in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall (with provision for forced tunnelling) and a DMZ in the hub. Shared services may have their own subnets in the hub, and multiple spokes may be provisioned with subnets for applications and environments.
+This example deploys an Azure Virtual Data Center (VDC) hub-and-spoke network stack in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall (with provision for forced tunnelling) guarding a DMZ, and provision for Azure Bastion. Shared services may have their own subnets in the hub, and multiple spokes may be managed with subnets for applications and environments.
 
-In this implementation, custom routing is used to redirect all traffic to and from Azure VNets, as well as all traffic to, within and from the DMZ, through the firewall (which scales out as a service). Traffic between ordinary hub and spoke subnets is not redirected through the firewall, and should be controlled using Network Security Groups (not yet implemented). Firewall rules are required to allow traffic through (not yet implemented).
+This all works using custom routing to redirect all traffic to and from Azure VNets, as well as all traffic to, within and from the DMZ, through the firewall (which scales out as a service). Traffic between ordinary subnets in the hub and spokes is not redirected through the firewall, and should instead be controlled using Network Security Groups (not yet implemented). Firewall rules are required to allow traffic through (not yet implemented).
 
-The intention is that matching stacks would be deployed in Azure [paired regions](https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions), either in Production/Disaster Recovery or High Availability configurations. Global VNet Peering between the hubs connects the separate stacks into one network.
+The intention is for matching stacks to be deployed in Azure [paired regions](https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions), configured as either Production/Disaster Recovery or High Availability (or both for different applications). Global VNet Peering between the hubs connects the separate stacks into one symmetric network.
 
-Although the VDC pattern is in widespread use, Azure nows offers a managed service intended to replace it, comprising Virtual Hub and SD-WAN components. The [migration plan](https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology) shows the differences. But if you want or need to manage your own network infrastructure, VDC is still relevant.
+Although the VDC pattern is in widespread use, Azure now offers a managed service intended to replace it, comprising Virtual Hub and SD-WAN components, with a [migration plan](https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology) that illustrates the differences between the two patterns. But if you want or need to manage your own network infrastructure, VDC is still relevant.
 
-This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components) which demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction. It also demonstrates use of `pulumi.StackReference` as described [here](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) to manage multiple related stacks.
+This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components) which demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction. It also demonstrates use of `pulumi.StackReference` as described [here](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) to relate multiple stacks.
 
 ## Prerequisites
 
@@ -30,7 +30,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pip3 install -r requirements.txt
     ```
 
-1. Create a new stack intended for Production, for example:
+1. Create a new stack intended for Production (for example's sake):
 
     ```bash
     $ pulumi stack init prod
@@ -38,7 +38,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     
     This will appear within your Pulumi organization under the `azure-py-vdc` project (as specified in `Pulumi.yaml`).
 
-1. Set the configuration variables for this stack which will be stored in a new `Pulumi.prod.yaml` file (change the values below to suit yourself):
+1. Set the configuration variables for this stack to suit yourself, following guidance in `Pulumi.yaml`. This will create a new `Pulumi.prod.yaml` file (named after the stack) in which to store them:
 
     Required:
     ```bash
@@ -62,124 +62,85 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set spoke_ar            10.101.1.0/24
     ```
 
-1. Deploy the `prod` stack with the `pulumi up` command. This provisions all the Azure resources necessary, including gateways and firewall which may take up to an hour:
+1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways and firewall:
 
     ```bash
     $ pulumi up
     ```
 
-1. After a while, your Production stack will be ready. If some outputs don't initially show then it may be necessary to do a `pulumi refresh` and then `pulumi up` again.
+1. After a while, your Production stack will be ready.
 
     ```bash
+
     Updating (prod):
-         Type                                             Name                  Status
-     +   pulumi:pulumi:Stack                              azure-py-vdc-prod     created
-     +   ├─ vdc:network:Hub                               hub                   created
-     +   │  ├─ azure:network:PublicIp                     hub-er-gw-pip-        created
+         Type                                             Name                Status
+     +   pulumi:pulumi:Stack                              azure-py-vdc-prod   creating..
+     +   ├─ vdc:network:Hub                               hub                   creating..
+     +   │  ├─ azure:network:VirtualNetwork               hub-vn-               created
      +   │  ├─ azure:network:PublicIp                     hub-vpn-gw-pip-       created
+     +   │  ├─ azure:network:PublicIp                     hub-er-gw-pip-        created
      +   │  ├─ azure:network:PublicIp                     hub-fw-pip-           created
      +   │  ├─ azure:network:Subnet                       hub-dmz-sn            created
      +   │  ├─ azure:network:Subnet                       hub-fw-sn             created
      +   │  ├─ azure:network:Subnet                       hub-fwm-sn            created
-     +   │  ├─ azure:network:Subnet                       hub-gw-sn             created
      +   │  ├─ azure:network:Subnet                       hub-ab-sn             created
+     +   │  ├─ azure:network:Subnet                       hub-gw-sn             created
      +   │  ├─ azure:network:VirtualNetworkGateway        hub-vpn-gw-           created
      +   │  ├─ azure:network:Firewall                     hub-fw-               created
      +   │  ├─ azure:network:VirtualNetworkGateway        hub-er-gw-            created
-     +   │  ├─ azure:network:RouteTable                   hub-dmz-rt-           created
-     +   │  ├─ azure:network:RouteTable                   hub-sn-rt-            created
      +   │  ├─ azure:network:RouteTable                   hub-gw-rt-            created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-dmz-sn-rta        created
-     +   │  ├─ azure:network:Route                        hub-dmz-dmz-r-        created
-     +   │  ├─ azure:network:Route                        hub-dmz-sn-r-         created
-     +   │  ├─ azure:network:Route                        hub-dmz-dg-r-         created
-     +   │  ├─ azure:network:Route                        hub-sn-dmz-r-         created
-     +   │  ├─ azure:network:Route                        hub-sn-dg-r-          created
-     +   │  ├─ azure:network:Subnet                       hub-example-sn-       created
-     +   │  ├─ azure:network:Route                        hub-gw-gw-r-          created
+     +   │  ├─ azure:network:RouteTable                   hub-sn-rt-            created
+     +   │  ├─ azure:network:RouteTable                   hub-dmz-rt-           created
+     +   │  ├─ azure:network:Route                        gw-gw-r-              created
      +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-gw-sn-rta         created
-     +   │  ├─ azure:network:Route                        hub-gw-dmz-r-         created
-     +   │  ├─ azure:network:Route                        hub-gw-sn-r-          created
+     +   │  ├─ azure:network:Route                        gw-dmz-r-             created
+     +   │  ├─ azure:network:Route                        gw-hub-r-             created
+     +   │  ├─ azure:network:Route                        sn-dg-r-              created
+     +   │  ├─ azure:network:Route                        sn-dmz-r-             created
+     +   │  ├─ azure:network:Route                        sn-gw-r-              created
+     +   │  ├─ azure:network:Subnet                       hub-example-sn-       created
+     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-dmz-sn-rta        created
+     +   │  ├─ azure:network:Route                        dmz-dg-r-             created
+     +   │  ├─ azure:network:Route                        dmz-dmz-r-            created
+     +   │  ├─ azure:network:Route                        dmz-hub-r-            created
      +   │  └─ azure:network:SubnetRouteTableAssociation  hub-example-sn-rta    created
      +   ├─ azure:core:ResourceGroup                      prod-vdc-rg-          created
      +   └─ vdc:network:Spoke                             spoke                 created
      +      ├─ azure:network:VirtualNetwork               spoke-vn-             created
-     +      ├─ azure:network:Route                        hub-dmz-spoke-r-      created
-     +      ├─ azure:network:Route                        hub-sn-spoke-r-       created
-     +      ├─ azure:network:Route                        hub-gw-spoke-r-       created
+     +      ├─ azure:network:Route                        gw-spoke-r-           created
+     +      ├─ azure:network:Route                        sn-spoke-r-           created
+     +      ├─ azure:network:Route                        dmz-spoke-r-          created
      +      ├─ azure:network:Subnet                       spoke-ab-sn           created
-     +      ├─ azure:network:Subnet                       spoke-example-sn-     created
      +      ├─ azure:network:VirtualNetworkPeering        spoke-hub-vnp-        created
      +      ├─ azure:network:VirtualNetworkPeering        hub-spoke-vnp-        created
      +      ├─ azure:network:RouteTable                   spoke-sn-rt-          created
-     +      ├─ azure:network:SubnetRouteTableAssociation  spoke-example-sn-rta  created
-     +      ├─ azure:network:Route                        spoke-hub-dmz-r-      created
-     +      ├─ azure:network:Route                        spoke-hub-dg-r-       created
-     +      └─ azure:network:Route                        spoke-hub-sn-r-       created
+     +      ├─ azure:network:Route                        spoke-dg-r-           created
+     +      ├─ azure:network:Route                        spoke-dmz-r-          created
+     +      ├─ azure:network:Subnet                       spoke-example-sn-     created
+     +      ├─ azure:network:Route                        spoke-hub-r-          created
+     +      └─ azure:network:SubnetRouteTableAssociation  spoke-example-sn-rta  created
 
     Outputs:
-        hub_id       : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25"
-        hub_name     : "hub-vn-a98ceb25"
-        hub_subnets  : [
-          + [0]: {
-                  + address_prefix: "10.100.1.0/24"
-                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/hub-example-sn-d8cb4a9b"
-                  + name          : "hub-example-sn-d8cb4a9b"
-                }
-          + [1]: {
-                  + address_prefix: "192.168.100.64/26"
-                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/AzureFirewallManagementSubnet"
-                  + name          : "AzureFirewallManagementSubnet"
-                }
-          + [2]: {
-                  + address_prefix: "192.168.100.128/25"
-                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/DMZ"
-                  + name          : "DMZ"
-                }
-          + [3]: {
-                  + address_prefix: "10.100.0.0/26"
-                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/GatewaySubnet"
-                  + name          : "GatewaySubnet"
-                }
-          + [4]: {
-                  + address_prefix: "192.168.100.0/26"
-                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/AzureFirewallSubnet"
-                  + name          : "AzureFirewallSubnet"
-                }
-          + [5]: {
-                  + address_prefix: "10.100.0.64/27"
-                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/hub-vn-a98ceb25/subnets/AzureBastionSubnet"
-                  + name          : "AzureBastionSubnet"
-                }
-        ]
-        spoke_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/spoke-vn-98ab581a"
-        spoke_name   : "spoke-vn-98ab581a"
-        spoke_subnets: [
-          + [0]: {
-                  + address_prefix: "10.101.0.0/27"
-                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/spoke-vn-98ab581a/subnets/AzureBastionSubnet"
-                  + name          : "AzureBastionSubnet"
-                }
-          + [1]: {
-                  + address_prefix: "10.101.1.0/24"
-                  + id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-615948f0/providers/Microsoft.Network/virtualNetworks/spoke-vn-98ab581a/subnets/spoke-example-sn-a1594836"
-                  + name          : "spoke-example-sn-a1594836"
-                }
-        ]
+        dmz_ar       : "192.168.100.128/25"
+        hub_as       : "10.100.0.0/16"
+        hub_fw_ip    : "192.168.100.4"
+        hub_id       : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-6ecb23ab/providers/Microsoft.Network/virtualNetworks/hub-vn-b007c91b"
+        hub_name     : "hub-vn-b007c91b"
+        spoke_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-6ecb23ab/providers/Microsoft.Network/virtualNetworks/spoke-vn-d69aa6c4"
+        spoke_name   : "spoke-vn-d69aa6c4"
 
     Resources:
-        + 44 created
+        + 45 created
 
-    Duration: 24m24s
+    Duration: 48m7s
 
-    Permalink: https://app.pulumi.com/organization/azure-py-vdc/prod/updates/1    ...
-    ```
+    Permalink: https://app.pulumi.com/organization/azure-py-vdc/prod/updates/1
+
+   Feel free to modify your program, and then run `pulumi up` again. Pulumi automatically detects differences and makes the minimal changes necessary to achieved the desired state. If any changes to resources are made outside of Pulumi, you should first do a `pulumi refresh` so that Pulumi can discover the actual situation, and then `pulumi up` to return to desired state.
    
-   Feel free to modify your program, and then run `pulumi up` again. The Pulumi CLI automatically detects differences and makes the minimal changes necessary to achieved the desired state.
-   
-   Note that because most resources are [auto-named](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming), a trailing dash on the logical name is used to separate the random suffix that will be applied, while manually-named resources are set to be deleted before replacement.
+   Note that because most resources are [auto-named](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming), you see trailing dashes above which will actually be followed by random suffixes that you can see in the Outputs and in Azure.
 
-1. Create another new stack intended for Disaster Recovery, for example:
+1. Create another new stack intended for Disaster Recovery (following the example):
 
     ```bash
     $ pulumi stack init dr
@@ -211,13 +172,13 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set spoke_ar            10.201.1.0/24
     ```
 
-1. Deploy the `dr` stack with the `pulumi up` command. This provisions all the Azure resources necessary in the paired region, including gateways and firewall which may take up to an hour:
+1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways and firewall:
 
     ```bash
     $ pulumi up
     ```
 
-1. Once you have Production and Disaster Recovery stacks in paired regions, you can connect their hubs using Global VNet Peering:
+1. Once you have both Production and Disaster Recovery stacks (ideally in paired regions), you can connect their hubs using Global (if in different regions) VNet Peering:
 
     ```bash
     $ pulumi stack select prod

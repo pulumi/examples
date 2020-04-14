@@ -2,6 +2,12 @@ from pulumi import ResourceOptions
 from pulumi.resource import CustomTimeouts
 from pulumi_azure import network
 
+# Need something like the following in calling class
+# vdc.resource_group_name = props.resource_group.name
+# vdc.location = props.resource_group.location
+# vdc.tags = props.tags
+# vdc.self = self
+
 def expressroute_gateway(stem, subnet_id, depends_on=[]):
     er_gw_pip = network.PublicIp(
         f'{stem}-er-gw-pip-',
@@ -21,7 +27,7 @@ def expressroute_gateway(stem, subnet_id, depends_on=[]):
         ip_configurations = [{
             'name': f'{stem}-er-gw-ipconf',
             'subnet_id': subnet_id,
-            'publicIpAddressId': er_gw_pip.id
+            'publicIpAddressId': er_gw_pip.id,
         }],
         tags = tags,
         opts = ResourceOptions(
@@ -101,7 +107,11 @@ def subnet(stem, virtual_network_name, address_prefix, depends_on=[]):
         resource_group_name = resource_group_name,
         address_prefix = address_prefix,
         virtual_network_name = virtual_network_name,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(
+            parent=self,
+            delete_before_replace=True,
+            depends_on=depends_on,
+        ),
     )
     return sn
 
@@ -114,14 +124,18 @@ def subnet_route_table(stem, route_table_id, subnet_id):
     )
     return rta
 
-def subnet_special(stem, name, virtual_network_name, address_prefix):
+def subnet_special(stem, name, virtual_network_name, address_prefix, depends_on=[]):
     sn = network.Subnet(
         f'{stem}-sn',
         name = name,
         resource_group_name = resource_group_name,
         address_prefix = address_prefix,
         virtual_network_name = virtual_network_name,
-        opts = ResourceOptions(parent=self, delete_before_replace=True),
+        opts = ResourceOptions(
+            parent=self,
+            delete_before_replace=True,
+            depends_on=depends_on,
+        ),
     )
     return sn
 

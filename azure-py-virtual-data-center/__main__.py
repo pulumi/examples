@@ -45,10 +45,12 @@ spoke1 = Spoke(
 )
 
 # Exports
-export('hub_name', hub1.hub_name)
+export('dmz_ar', config.require('dmz_ar'))
+export('hub_as', config.require('hub_as'))
+export('hub_fw_ip', hub1.hub_fw_ip)
 export('hub_id', hub1.hub_id)
+export('hub_name', hub1.hub_name)
 export('hub_subnets', hub1.hub_subnets)
-
-export('spoke_name', spoke1.spoke_name)
 export('spoke_id', spoke1.spoke_id)
+export('spoke_name', spoke1.spoke_name)
 export('spoke_subnets', spoke1.spoke_subnets)
