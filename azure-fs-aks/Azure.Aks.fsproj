@@ -9,10 +9,10 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Pulumi.Azure" Version="2.1.0-preview" />
-    <PackageReference Include="Pulumi.AzureAD" Version="1.6.0-preview" />
-    <PackageReference Include="Pulumi.FSharp" Version="1.12.1-preview" />
-    <PackageReference Include="Pulumi.Random" Version="1.6.0-preview" />
-    <PackageReference Include="Pulumi.Tls" Version="1.5.0-preview" />
+    <PackageReference Include="Pulumi.Azure" Version="3.0.0" />
+    <PackageReference Include="Pulumi.AzureAD" Version="2.0.0" />
+    <PackageReference Include="Pulumi.FSharp" Version="2.0.0" />
+    <PackageReference Include="Pulumi.Random" Version="2.0.0" />
+    <PackageReference Include="Pulumi.Tls" Version="2.0.0" />
   </ItemGroup>
 </Project>
