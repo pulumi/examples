@@ -4,14 +4,16 @@ from pulumi_azure import core
 from hub import HubProps, Hub
 from spoke import SpokeProps, Spoke
 
-# Retrieve the configuration data
+# retrieve the configuration data
 config = Config()
 
-# Azure Resource Group location will be used for all resources
+# set default tags to be applied to all tagable resources
 stack = get_stack()
 default_tags = {
     'environment': stack
 }
+
+# all resources will be created in the Resource Group location
 resource_group = core.ResourceGroup(
     stack + '-vdc-rg-',
     tags = default_tags,
