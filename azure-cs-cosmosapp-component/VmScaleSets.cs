@@ -68,7 +68,7 @@ public static class VmScaleSets
                         Location = location,
                         FrontendIpConfigurations =
                         {
-                            new LoadBalancerFrontendIpConfigurationsArgs
+                            new LoadBalancerFrontendIpConfigurationArgs
                             {
                                 Name = "PublicIPAddress",
                                 PublicIpAddressId = publicIp.Id,
@@ -138,11 +138,11 @@ public static class VmScaleSets
                         Location = location,
                         NetworkProfiles =
                         {
-                            new ScaleSetNetworkProfilesArgs
+                            new ScaleSetNetworkProfileArgs
                             {
                                 IpConfigurations =
                                 {
-                                    new ScaleSetNetworkProfilesIpConfigurationsArgs
+                                    new ScaleSetNetworkProfileIpConfigurationArgs
                                     {
                                         LoadBalancerBackendAddressPoolIds = {bpepool.Id},
                                         Name = "IPConfiguration",
@@ -171,7 +171,7 @@ public static class VmScaleSets
                         },
                         StorageProfileDataDisks =
                         {
-                            new ScaleSetStorageProfileDataDisksArgs
+                            new ScaleSetStorageProfileDataDiskArgs
                             {
                                 Caching = "ReadWrite",
                                 CreateOption = "Empty",
@@ -212,9 +212,9 @@ public static class VmScaleSets
                         },
                         Profiles =
                         {
-                            new AutoscaleSettingProfilesArgs
+                            new AutoscaleSettingProfileArgs
                             {
-                                Capacity = new AutoscaleSettingProfilesCapacityArgs
+                                Capacity = new AutoscaleSettingProfileCapacityArgs
                                 {
                                     Default = 1,
                                     Maximum = 10,
@@ -223,9 +223,9 @@ public static class VmScaleSets
                                 Name = "defaultProfile",
                                 Rules =
                                 {
-                                    new AutoscaleSettingProfilesRulesArgs
+                                    new AutoscaleSettingProfileRuleArgs
                                     {
-                                        MetricTrigger = new AutoscaleSettingProfilesRulesMetricTriggerArgs
+                                        MetricTrigger = new AutoscaleSettingProfileRuleMetricTriggerArgs
                                         {
                                             MetricName = "Percentage CPU",
                                             MetricResourceId = scaleSet.Id,
@@ -236,7 +236,7 @@ public static class VmScaleSets
                                             TimeGrain = "PT1M",
                                             TimeWindow = "PT5M",
                                         },
-                                        ScaleAction = new AutoscaleSettingProfilesRulesScaleActionArgs
+                                        ScaleAction = new AutoscaleSettingProfileRuleScaleActionArgs
                                         {
                                             Cooldown = "PT1M",
                                             Direction = "Increase",
@@ -244,9 +244,9 @@ public static class VmScaleSets
                                             Value = 1,
                                         },
                                     },
-                                    new AutoscaleSettingProfilesRulesArgs
+                                    new AutoscaleSettingProfileRuleArgs
                                     {
-                                        MetricTrigger = new AutoscaleSettingProfilesRulesMetricTriggerArgs
+                                        MetricTrigger = new AutoscaleSettingProfileRuleMetricTriggerArgs
                                         {
                                             MetricName = "Percentage CPU",
                                             MetricResourceId = scaleSet.Id,
@@ -257,7 +257,7 @@ public static class VmScaleSets
                                             TimeGrain = "PT1M",
                                             TimeWindow = "PT5M",
                                         },
-                                        ScaleAction = new AutoscaleSettingProfilesRulesScaleActionArgs
+                                        ScaleAction = new AutoscaleSettingProfileRuleScaleActionArgs
                                         {
                                             Cooldown = "PT1M",
                                             Direction = "Decrease",

@@ -38,18 +38,18 @@ let infra () =
             GroupArgs
                (ResourceGroupName = io resourceGroup.Name,
                 ImageRegistryCredentials = inputList [input
-                   (GroupImageRegistryCredentialsArgs
+                   (GroupImageRegistryCredentialArgs
                        (Server = io registry.LoginServer,
                         Username = io registry.AdminUsername,
                         Password = io registry.AdminPassword))],
                 OsType = input "Linux",
                 Containers = inputList [input
-                   (GroupContainersArgs
+                   (GroupContainerArgs
                        (Cpu = input 0.5,
                         Image = io dockerImage.ImageName,
                         Memory = input 1.5,
                         Name = input "hello-world",
-                        Ports = inputList [input (GroupContainersPortsArgs(Port = input 80, Protocol = input "TCP"))]
+                        Ports = inputList [input (GroupContainerPortArgs(Port = input 80, Protocol = input "TCP"))]
                        ))],
                 IpAddressType = input "public",
                 DnsNameLabel = input "acifsharp"))

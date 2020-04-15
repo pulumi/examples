@@ -10,11 +10,11 @@ class WebServerStack : Stack
 {
     public WebServerStack()
     {
-        var ami = Output.Create(Pulumi.Aws.Invokes.GetAmi(new GetAmiArgs
+        var ami = Output.Create(GetAmi.InvokeAsync(new GetAmiArgs
         {
             MostRecent = true,
             Owners = {"137112412989"},
-            Filters = {new GetAmiFiltersArgs {Name = "name", Values = {"amzn-ami-hvm-*"}}}
+            Filters = {new GetAmiFilterArgs {Name = "name", Values = {"amzn-ami-hvm-*"}}}
         }));
 
         var group = new SecurityGroup("web-secgrp", new SecurityGroupArgs

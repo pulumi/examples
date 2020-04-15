@@ -16,9 +16,9 @@ class FargateStack : Stack
     public FargateStack()
     {
         // Read back the default VPC and public subnets, which we will use.
-        var vpc = Output.Create(Ec2.Invokes.GetVpc(new Ec2.GetVpcArgs {Default = true}));
+        var vpc = Output.Create(Ec2.GetVpc.InvokeAsync(new Ec2.GetVpcArgs {Default = true}));
         var vpcId = vpc.Apply(vpc => vpc.Id);
-        var subnet = vpcId.Apply(id => Ec2.Invokes.GetSubnetIds(new Ec2.GetSubnetIdsArgs {VpcId = id}));
+        var subnet = vpcId.Apply(id => Ec2.GetSubnetIds.InvokeAsync(new Ec2.GetSubnetIdsArgs {VpcId = id}));
         var subnetIds = subnet.Apply(s => s.Ids);
 
         // Create a SecurityGroup that permits HTTP ingress and unrestricted egress.
@@ -90,7 +90,7 @@ class FargateStack : Stack
             Port = 80,
             DefaultActions =
             {
-                new Elb.Inputs.ListenerDefaultActionsArgs
+                new Elb.Inputs.ListenerDefaultActionArgs
                 {
                     Type = "forward",
                     TargetGroupArn = webTg.Arn,
@@ -102,7 +102,7 @@ class FargateStack : Stack
         var appRepo = new Ecr.Repository("app-repo");
         var appRepoCredentials = appRepo.RegistryId.Apply(async rid =>
         {
-            var credentials = await Ecr.Invokes.GetCredentials(new Ecr.GetCredentialsArgs {RegistryId = rid});
+            var credentials = await Ecr.GetCredentials.InvokeAsync(new Ecr.GetCredentialsArgs {RegistryId = rid});
             var data = Convert.FromBase64String(credentials.AuthorizationToken);
             return Encoding.UTF8.GetString(data).Split(":").ToImmutableArray();
         });
@@ -151,7 +151,7 @@ class FargateStack : Stack
             },
             LoadBalancers =
             {
-                new Ecs.Inputs.ServiceLoadBalancersArgs
+                new Ecs.Inputs.ServiceLoadBalancerArgs
                 {
                     TargetGroupArn = webTg.Arn,
                     ContainerName = "my-app",
