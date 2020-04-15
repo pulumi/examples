@@ -52,7 +52,7 @@ public static class Containers
                         Location = region.Location,
                         ImageRegistryCredentials =
                         {
-                            new GroupImageRegistryCredentialsArgs
+                            new GroupImageRegistryCredentialArgs
                             {
                                 Server = registry.LoginServer,
                                 Username = registry.AdminUsername,
@@ -62,7 +62,7 @@ public static class Containers
                         OsType = "Linux",
                         Containers =
                         {
-                            new GroupContainersArgs
+                            new GroupContainerArgs
                             {
                                 Cpu = 0.5,
                                 Image = dockerImage.ImageName,
@@ -70,7 +70,7 @@ public static class Containers
                                 Name = "hello-world",
                                 Ports =
                                 {
-                                    new GroupContainersPortsArgs
+                                    new GroupContainerPortArgs
                                     {
                                         Port = 80,
                                         Protocol = "TCP",

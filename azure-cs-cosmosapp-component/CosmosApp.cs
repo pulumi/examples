@@ -105,7 +105,7 @@ public class CosmosApp : ComponentResource
             {
                 ResourceGroupName = resourceGroup.Name,
                 Location = primaryLocation,
-                GeoLocations = locations.Select((l, i) => new AccountGeoLocationsArgs { Location = l, FailoverPriority = i }).ToArray(),
+                GeoLocations = locations.Select((l, i) => new AccountGeoLocationArgs { Location = l, FailoverPriority = i }).ToArray(),
                 OfferType = "Standard",
                 ConsistencyPolicy = new AccountConsistencyPolicyArgs { ConsistencyLevel = "Session" },
                 EnableMultipleWriteLocations = args.EnableMultiMaster,

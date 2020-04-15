@@ -10,7 +10,7 @@ class KubernetesStack : Stack
     public KubernetesStack()
     {
         var masterVersion = new Config().Get("masterVersion")
-                            ?? (Input<string>) Output.Create(Invokes.GetEngineVersions())
+                            ?? (Input<string>) Output.Create(GetEngineVersions.InvokeAsync())
                                 .Apply(v => v.LatestMasterVersion);
 
         var cluster = new Cluster("helloworld", new ClusterArgs

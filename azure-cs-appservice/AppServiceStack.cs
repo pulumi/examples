@@ -75,7 +75,7 @@ class AppServiceStack : Stack
             },
             ConnectionStrings =
             {
-                new AppServiceConnectionStringsArgs
+                new AppServiceConnectionStringArgs
                 {
                     Name = "db",
                     Type = "SQLAzure",

@@ -13,9 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pulumi.Azure" Version="3.0.0" />
-    <PackageReference Include="Pulumi.AzureAD" Version="2.0.0" />
-    <PackageReference Include="Pulumi.Random" Version="2.0.0" />
+    <PackageReference Include="Pulumi.Azure" Version="3.*" />
+    <PackageReference Include="Pulumi.AzureAD" Version="2.*" />
+    <PackageReference Include="Pulumi.Random" Version="2.*" />
   </ItemGroup>
 
 </Project>
