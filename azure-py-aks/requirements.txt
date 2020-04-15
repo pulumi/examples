@@ -1,4 +1,4 @@
-pulumi>=1.0.0
-pulumi-azure>=2.0.0
-pulumi-azuread>=1.0.0
-pulumi-kubernetes>=1.0.0
+pulumi>=2.0.0
+pulumi-azure>=3.0.0
+pulumi-azuread>=2.0.0
+pulumi-kubernetes>=2.0.0
