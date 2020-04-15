@@ -23,6 +23,14 @@ const functionPython = new gcp.cloudfunctions.Function("python-func", {
     availableMemoryMb: 128,
 });
 
+const pyInvoker = new gcp.cloudfunctions.FunctionIamMember("py-invoker", {
+    project: functionPython.function.project,
+    region: functionPython.function.region,
+    cloudFunction: functionPython.function.name,
+    role: "roles/cloudfunctions.invoker",
+    member: "allUsers",
+});
+
 export const pythonEndpoint = functionPython.httpsTriggerUrl;
 
 // Google Cloud Function in Go
@@ -41,6 +49,14 @@ const functionGo = new gcp.cloudfunctions.Function("go-func", {
     entryPoint: "Handler",
     triggerHttp: true,
     availableMemoryMb: 128,
+});
+
+const goInvoker = new gcp.cloudfunctions.FunctionIamMember("go-invoker", {
+    project: functionGo.function.project,
+    region: functionGo.function.region,
+    cloudFunction: functionGo.function.name,
+    role: "roles/cloudfunctions.invoker",
+    member: "allUsers",
 });
 
 export const goEndpoint = functionGo.httpsTriggerUrl;
