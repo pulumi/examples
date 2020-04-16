@@ -6,4 +6,12 @@ const greeting = new gcp.cloudfunctions.HttpCallbackFunction("greeting", (req, r
     res.send(`Greetings from ${req.body.name || "Google Cloud Functions"}!`);
 });
 
+const invoker = new gcp.cloudfunctions.FunctionIamMember("invoker", {
+    project: greeting.function.project,
+    region: greeting.function.region,
+    cloudFunction: greeting.function.name,
+    role: "roles/cloudfunctions.invoker",
+    member: "allUsers",
+});
+
 export const url = greeting.httpsTriggerUrl;
