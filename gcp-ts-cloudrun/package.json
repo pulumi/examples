@@ -6,8 +6,8 @@
         "@types/express": "^4.16.0"
     },
     "dependencies": {
-        "@pulumi/gcp": "^2.0.0",
-        "@pulumi/docker": "^1.0.0",
-        "@pulumi/pulumi": "^1.0.0"
+        "@pulumi/gcp": "^3.0.0",
+        "@pulumi/docker": "^2.0.0",
+        "@pulumi/pulumi": "^2.0.0"
     }
 }
