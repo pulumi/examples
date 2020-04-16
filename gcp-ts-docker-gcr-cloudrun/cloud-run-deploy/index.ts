@@ -4,19 +4,19 @@ import * as docker from "@pulumi/docker";
 
 const location = gcp.config.region || "us-central1";
 
-const config = new pulumi.Config()
+const config = new pulumi.Config();
 
-const configFile = config.require("docker-config-file")
+const configFile = config.require("docker-config-file");
 
 // Default to using ruby-app since that is the name of the image for the example.    
-const imageName = config.get("image-name") ?? "ruby-app"
+const imageName = config.get("image-name") ?? "ruby-app";
 
 const gcrDockerProvider = new docker.Provider('gcr', {
     registryAuth: [{
         address: "gcr.io",
         configFile: configFile
     }],
-})
+});
 
 // Used to get the image from the google cloud registry.  Output is required to make sure that the provider is in sync with this call. 
 const registryImage = pulumi.output(
@@ -33,7 +33,7 @@ var dockerImage = registryImage.apply(r => new docker.RemoteImage(`${imageName}-
 }, {provider: gcrDockerProvider}));
 
 // String used to force the update using the new image. 
-var truncatedSha = registryImage.sha256Digest.apply(d => imageName + "-" + d.substr(8,20))
+var truncatedSha = registryImage.sha256Digest.apply(d => imageName + "-" + d.substr(8,20));
 
 // Deploy to Cloud Run if there is a difference in the sha, denoted above.  
 const rubyService = new gcp.cloudrun.Service("ruby", {
