@@ -16,4 +16,4 @@ const myImage = new docker.Image(imageName, {
 });
 
 // Digest exported so it's easy to match updates happening in cloud run project
-export const digest = myImage.digest
+export const digest = myImage.digest;
