@@ -2,7 +2,7 @@
 
 # Docker Build and Push to GCR and Deploy to Google Cloud Run using separate projects
 
-An example of building a custom Docker image and pushing it into a Google Cloud Container Registry and then in a seperate project deploying that image with the Google Cloud Run service using TypeScript.
+An example of building a custom Docker image and pushing it into a Google Cloud Container Registry and then in a separate project deploying that image with the Google Cloud Run service using TypeScript.
 
 > Note this is an adaptation of the [gcp-ts-cloudrun example](../gcp-ts-cloudrun)
 
@@ -133,4 +133,3 @@ An example of building a custom Docker image and pushing it into a Google Cloud 
     $ pulumi stack rm dev
     ...
     ```
-
