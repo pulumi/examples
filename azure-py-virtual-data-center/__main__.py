@@ -7,7 +7,7 @@ from spoke import SpokeProps, Spoke
 # retrieve the configuration data
 config = Config()
 
-# set default tags to be applied to all tagable resources
+# set default tags to be applied to all taggable resources
 stack = get_stack()
 default_tags = {
     'environment': stack

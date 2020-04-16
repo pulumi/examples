@@ -38,15 +38,6 @@ class Spoke(ComponentResource):
         # Azure Virtual Network to be peered to the hub
         spoke = vdc.virtual_network(name, [spoke_as])
 
-        # AzureBastionSubnet (optional)
-        if sbs_ar:
-            spoke_sbs_sn = vdc.subnet_special(
-                stem = f'{name}-ab',
-                name = 'AzureBastionSubnet',
-                virtual_network_name = spoke.name,
-                address_prefix = sbs_ar,
-            )
-
         # VNet Peering from the hub to spoke
         hub_spoke = vdc.vnet_peering(
             stem = hub_stem,
@@ -66,8 +57,18 @@ class Spoke(ComponentResource):
             use_remote_gateways = True,
         )
 
-        # provisioning of routes depends_on VNet Peerings
+        # provisioning of optional subnet and routes depends_on VNet Peerings
         # to avoid contention in the Azure control plane
+
+        # AzureBastionSubnet (optional)
+        if sbs_ar:
+            spoke_sbs_sn = vdc.subnet_special(
+                stem = f'{name}-ab',
+                name = 'AzureBastionSubnet',
+                virtual_network_name = spoke.name,
+                address_prefix = sbs_ar,
+                depends_on = [hub_spoke, spoke_hub],
+            )
 
         # Route Table only to be associated with ordinary spoke subnets
         spoke_sn_rt = vdc.route_table(
@@ -103,16 +104,14 @@ class Spoke(ComponentResource):
         #ToDo check AzureFirewallManagementSubnet requirements
 
         # partially or fully invalidate system routes to redirect traffic
-        routes_to_hub_firewall = [
+        for route in [
             (f'dmz-{name}', props.hub.hub_dmz_rt_name, spoke_as),
             (f'gw-{name}', props.hub.hub_gw_rt_name, spoke_as),
             (f'sn-{name}', props.hub.hub_sn_rt_name, spoke_as),
             (f'{name}-dg', spoke_sn_rt.name, '0.0.0.0/0'),
             (f'{name}-dmz', spoke_sn_rt.name, dmz_ar),
             (f'{name}-hub', spoke_sn_rt.name, hub_as),
-        ]
-        
-        for route in routes_to_hub_firewall:
+        ]:
             vdc.route_to_virtual_appliance(
                 stem = route[0],
                 route_table_name = route[1],
@@ -120,9 +119,9 @@ class Spoke(ComponentResource):
                 next_hop_in_ip_address = props.hub.hub_fw_ip,
             )
 
-        combined_output = Output.all(spoke.name, spoke.id, spoke.subnets)
-        
-        self.spoke_name = spoke.name # exported perhaps not needed
-        self.spoke_id = spoke.id # exported as possibly needed
+        combined_output = Output.all(spoke.name, spoke.id, spoke.subnets).apply
+
+        self.spoke_id = spoke.id # exported as informational
+        self.spoke_name = spoke.name # exported as informational
         self.spoke_subnets = spoke.subnets # exported as informational
         self.register_outputs({})

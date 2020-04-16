@@ -55,15 +55,6 @@ class Hub(ComponentResource):
             address_prefix = fws_ar,
         )
 
-        # AzureFirewallManagementSubnet (optional)
-        if fwm_ar:
-            hub_fwm_sn = vdc.subnet_special(
-                stem = f'{name}-fwm',
-                name = 'AzureFirewallManagementSubnet', # name required
-                virtual_network_name = hub.name,
-                address_prefix = fwm_ar,
-            )
-
         # GatewaySubnet
         hub_gw_sn = vdc.subnet_special(
             stem = f'{name}-gw',
@@ -71,15 +62,6 @@ class Hub(ComponentResource):
             virtual_network_name = hub.name,
             address_prefix = gws_ar,
         )
-
-        # AzureBastionSubnet (optional)
-        if hbs_ar:
-            hub_ab_sn = vdc.subnet_special( #ToDo add NSG if required
-                stem = f'{name}-ab',
-                name = 'AzureBastionSubnet', # name required
-                virtual_network_name = hub.name,
-                address_prefix = hbs_ar,
-            )
 
         # provisioning of Gateways and Firewall depends_on subnets
         # to avoid contention in the Azure control plane
@@ -105,6 +87,29 @@ class Hub(ComponentResource):
             depends_on=[hub_dmz_sn, hub_fw_sn, hub_gw_sn],
         )
 
+        # provisioning of optional subnets depends_on Gateways and Firewall
+        # to avoid contention in the Azure control plane
+
+        # AzureBastionSubnet (optional)
+        if hbs_ar:
+            hub_ab_sn = vdc.subnet_special( #ToDo add NSG if required
+                stem = f'{name}-ab',
+                name = 'AzureBastionSubnet', # name required
+                virtual_network_name = hub.name,
+                address_prefix = hbs_ar,
+                depends_on=[hub_er_gw, hub_fw, hub_vpn_gw],
+            )
+
+        # AzureFirewallManagementSubnet (optional)
+        if fwm_ar:
+            hub_fwm_sn = vdc.subnet_special(
+                stem = f'{name}-fwm',
+                name = 'AzureFirewallManagementSubnet', # name required
+                virtual_network_name = hub.name,
+                address_prefix = fwm_ar,
+                depends_on=[hub_er_gw, hub_fw, hub_vpn_gw],
+            )
+
         # work around https://github.com/pulumi/pulumi/issues/4040
         hub_fw_ip = hub_fw.ip_configurations.apply(
             lambda ipc: ipc[0].get('private_ip_address')
@@ -117,7 +122,7 @@ class Hub(ComponentResource):
         hub_gw_rt = vdc.route_table(
             stem = f'{name}-gw',
             disable_bgp_route_propagation = False,
-            depends_on=[hub_vpn_gw, hub_er_gw, hub_fw],
+            depends_on=[hub_er_gw, hub_fw, hub_vpn_gw],
         )
 
         # associate GatewaySubnet with Route Table
@@ -131,7 +136,7 @@ class Hub(ComponentResource):
         hub_dmz_rt = vdc.route_table(
             stem = f'{name}-dmz',
             disable_bgp_route_propagation = True,
-            depends_on=[hub_vpn_gw, hub_er_gw, hub_fw],
+            depends_on=[hub_er_gw, hub_fw, hub_vpn_gw],
         )
 
         # associate DMZ subnet with Route Table
@@ -145,7 +150,7 @@ class Hub(ComponentResource):
         hub_sn_rt = vdc.route_table(
             stem = f'{name}-sn',
             disable_bgp_route_propagation = True,
-            depends_on=[hub_vpn_gw, hub_er_gw, hub_fw],
+            depends_on=[hub_er_gw, hub_fw, hub_vpn_gw],
         )
 
         # protect intra-GatewaySubnet traffic from being redirected
@@ -156,7 +161,7 @@ class Hub(ComponentResource):
         )
 
         # partially or fully invalidate system routes to redirect traffic
-        routes_to_hub_firewall = [
+        for route in [
             (f'gw-dmz', hub_gw_rt.name, dmz_ar),
             (f'gw-hub', hub_gw_rt.name, hub_as),
             (f'dmz-dg', hub_dmz_rt.name, '0.0.0.0/0'),
@@ -165,9 +170,7 @@ class Hub(ComponentResource):
             (f'sn-dg', hub_sn_rt.name, '0.0.0.0/0'),
             (f'sn-dmz', hub_sn_rt.name, dmz_ar),
             (f'sn-gw', hub_sn_rt.name, gws_ar),
-        ]
-        
-        for route in routes_to_hub_firewall:
+        ]:
             vdc.route_to_virtual_appliance(
                 stem = route[0],
                 route_table_name = route[1],
@@ -197,16 +200,14 @@ class Hub(ComponentResource):
             )
 
             # need to invalidate system routes created by Global VNet Peering
-            routes_to_peer_firewall = [
+            for route in [
                 (f'dmz-{peer}-dmz', hub_dmz_rt.name, peer_dmz_ar),
                 (f'dmz-{peer}-hub', hub_dmz_rt.name, peer_hub_as),
                 (f'gw-{peer}-dmz', hub_gw_rt.name, peer_dmz_ar),
                 (f'gw-{peer}-hub', hub_gw_rt.name, peer_hub_as),
                 (f'sn-{peer}-dmz', hub_sn_rt.name, peer_dmz_ar),
                 (f'sn-{peer}-hub', hub_sn_rt.name, peer_hub_as),
-            ]
-
-            for route in routes_to_peer_firewall:
+            ]:
                 vdc.route_to_virtual_appliance(
                     stem = route[0],
                     route_table_name = route[1],
@@ -244,7 +245,7 @@ class Hub(ComponentResource):
             hub_sn_rt.name,
             hub.subnets,
             hub_vpn_gw,
-        )
+        ).apply
 
         self.hub_dmz_rt_name = hub_dmz_rt.name # used to add routes to spokes
         self.hub_er_gw = hub_er_gw # needed prior to VNet Peering from spokes
