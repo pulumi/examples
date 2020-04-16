@@ -28,7 +28,7 @@ hub1 = Hub(
         tags = default_tags,
         stack = stack,
     ),
-    opts=ResourceOptions(custom_timeouts=CustomTimeouts(create='1h')),
+    opts=ResourceOptions(custom_timeouts=CustomTimeouts(create='1h', update='1h', delete='1h')),
 )
 
 # Spoke virtual network for application environments
