@@ -59,3 +59,4 @@ const iamRuby = new gcp.cloudrun.IamMember("ruby-everyone", {
 });
 
 export const rubyUrl = rubyService.status.url;
+
