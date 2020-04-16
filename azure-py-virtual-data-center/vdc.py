@@ -195,7 +195,7 @@ def vpn_gateway(stem, subnet_id, depends_on=[]):
         opts = ResourceOptions(
             parent=self,
             depends_on=depends_on,
-            custom_timeouts=CustomTimeouts(create='1h'),
+            custom_timeouts=CustomTimeouts(create='1h', update='1h', delete='1h'),
         ),
     )
     return vpn_gw
