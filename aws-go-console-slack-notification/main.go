@@ -74,7 +74,11 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 	trailObjectExpirationInDays := config.GetInt("trailObjectExpirationInDays")
 
 	// use the same logical name for all resources - e.g. '<stack-name>-<region-name>'
-	resourceName := fmt.Sprintf("%s-%s", ctx.Stack(), regionName)
+	resourceNamePrefix := config.Get("resourceNamePrefix")
+	if resourceNamePrefix == "" {
+		resourceNamePrefix = ctx.Stack()
+	}
+	resourceName := fmt.Sprintf("%s-%s", resourceNamePrefix, regionName)
 
 	awsProvider, err := aws.NewProvider(ctx, resourceName, &aws.ProviderArgs{
 		Region: pulumi.String(regionName),
@@ -101,6 +105,7 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 	}
 
 	bucket, err := s3.NewBucket(ctx, resourceName, &s3.BucketArgs{
+		Acl:            pulumi.String("private"),
 		ForceDestroy:   pulumi.Bool(true),
 		LifecycleRules: lifecycleRules,
 	}, pulumi.Provider(awsProvider))
@@ -133,6 +138,17 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 			}`, args[0], args[0], args[1]))
 		}),
 	}, pulumi.Parent(bucket), pulumi.Provider(awsProvider))
+	if err != nil {
+		return err
+	}
+
+	_, err = s3.NewBucketPublicAccessBlock(ctx, resourceName, &s3.BucketPublicAccessBlockArgs{
+		Bucket:                bucket.Bucket,
+		BlockPublicAcls:       pulumi.Bool(true),
+		BlockPublicPolicy:     pulumi.Bool(true),
+		IgnorePublicAcls:      pulumi.Bool(true),
+		RestrictPublicBuckets: pulumi.Bool(true),
+	}, pulumi.Provider(awsProvider), pulumi.DependsOn([]pulumi.Resource{bucketPolicy})) // Do bucket changes sequentially to avoid 'A conflicting conditional operation...'
 	if err != nil {
 		return err
 	}
