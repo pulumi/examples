@@ -174,6 +174,7 @@ Example   | Description |
 [Functions - Raw](azure-py-functions-raw) | Deploy a function to Azure Functions created from raw deployment packages in C#.
 [HDInsight Spark](azure-py-hdinsight-spark) | Deploy a Spark cluster on Azure HDInsight.
 [MSI Key Vault RBAC](azure-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
+[Virtual Data Center](azure-py-virtual-data-center) | Deploy peered hub-and-spoke networks in paired regions complete with gateways, firewalls and custom routing to redirect traffic through the firewalls.
 [VM Scale Set](azure-vm-scaleset) | Provision a Scale Set of Linux web servers with nginx deployed, auto-scaling based on CPU load, a Load Balancer in front of them, and a public IP address.
 [Web Server Component](azure-py-webserver-component) | Deploy a Virtual Machine and start an HTTP server on it using a reusable component.
 [Web Server](azure-py-webserver) | Deploy a Virtual Machine and start an HTTP server on it.
