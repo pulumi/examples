@@ -1,27 +1,26 @@
 from pulumi import Config, Output, ComponentResource, ResourceOptions
-from pulumi_azure import core
 from hub import Hub
 import vdc
 
 class SpokeProps:
     def __init__(
         self,
-        config: Config,
-        resource_group: core.ResourceGroup,
+        resource_group_name: str,
         tags: [str, str],
         hub: Hub,
+        config: Config,
     ):
-        self.config = config
-        self.resource_group = resource_group
+        self.resource_group_name = resource_group_name
         self.tags = tags
         self.hub = hub
+        self.config = config
 
 class Spoke(ComponentResource):
     def __init__(self, name: str, props: SpokeProps,
             opts: ResourceOptions=None):
         super().__init__('vdc:network:Spoke', name, {}, opts)
 
-        # retrieve configuration
+        # retrieve configuration for spoke
         dmz_ar = props.config.require('dmz_ar')
         hub_as = props.config.require('hub_as')
         hub_stem = props.config.require('hub_stem')
@@ -30,8 +29,7 @@ class Spoke(ComponentResource):
         spoke_as = props.config.require('spoke_as')
 
         # set vdc defaults
-        vdc.resource_group_name = props.resource_group.name
-        vdc.location = props.resource_group.location
+        vdc.resource_group_name = props.resource_group_name
         vdc.tags = props.tags
         vdc.self = self
 

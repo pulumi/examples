@@ -1,25 +1,25 @@
 from pulumi import Config, Output, ComponentResource, ResourceOptions, get_project, StackReference
-from pulumi_azure import core, network
 import vdc
 
 class HubProps:
     def __init__(
         self,
-        config: Config,
-        resource_group: core.ResourceGroup,
+        resource_group_name: str,
         tags: [str, str],
         stack: str,
+        config: Config,
     ):
-        self.config = config
-        self.resource_group = resource_group
+
+        self.resource_group_name = resource_group_name
         self.tags = tags
         self.stack = stack
+        self.config = config
 
 class Hub(ComponentResource):
     def __init__(self, name: str, props: HubProps, opts: ResourceOptions=None):
         super().__init__('vdc:network:Hub', name, {}, opts)
 
-        # retrieve configuration
+        # retrieve configuration for hub
         dmz_ar = props.config.require('dmz_ar')
         fwm_ar = props.config.get('fwm_ar')
         fws_ar = props.config.require('fws_ar')
@@ -30,8 +30,7 @@ class Hub(ComponentResource):
         hub_as = props.config.require('hub_as')
 
         # set vdc defaults
-        vdc.resource_group_name = props.resource_group.name
-        vdc.location = props.resource_group.location
+        vdc.resource_group_name = props.resource_group_name
         vdc.tags = props.tags
         vdc.self = self
 

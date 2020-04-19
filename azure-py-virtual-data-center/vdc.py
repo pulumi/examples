@@ -1,18 +1,16 @@
 from pulumi import ResourceOptions
 from pulumi.resource import CustomTimeouts
-from pulumi_azure import network
+from pulumi_azure import core, network
 
-# Variables to be injected from the calling class:
-# vdc.resource_group_name = props.resource_group.name
-# vdc.location = props.resource_group.location
-# vdc.tags = props.tags
+# Variables to be injected e.g:
+# vdc.resource_group_name = props.resource_group_name
+# vdc.tags = props.default_tags
 # vdc.self = self
 
 def expressroute_gateway(stem, subnet_id, depends_on=[]):
     er_gw_pip = network.PublicIp(
         f'{stem}-er-gw-pip-',
         resource_group_name = resource_group_name,
-        location = location,
         allocation_method = 'Dynamic',
         tags = tags,
         opts = ResourceOptions(parent=self),
@@ -20,7 +18,6 @@ def expressroute_gateway(stem, subnet_id, depends_on=[]):
     er_gw = network.VirtualNetworkGateway(
         f'{stem}-er-gw-',
         resource_group_name = resource_group_name,
-        location = location,
         sku = 'Standard',
         type = 'ExpressRoute',
         vpn_type = 'RouteBased',
@@ -38,7 +35,6 @@ def firewall(stem, subnet_id, depends_on=[]):
     fw_pip = network.PublicIp(
         f'{stem}-fw-pip-',
         resource_group_name = resource_group_name,
-        location = location,
         sku = 'Standard',
         allocation_method = 'Static',
         tags = tags,
@@ -47,7 +43,6 @@ def firewall(stem, subnet_id, depends_on=[]):
     fw = network.Firewall(
         f'{stem}-fw-',
         resource_group_name = resource_group_name,
-        location = location,
         ip_configurations = [{
             'name': f'{stem}-fw-ipconf',
             'subnet_id': subnet_id,
@@ -58,11 +53,17 @@ def firewall(stem, subnet_id, depends_on=[]):
     )
     return fw
 
+def resource_group(stem):
+    rg = resource_group = core.ResourceGroup(
+        f'{stem}-vdc-rg-',
+        tags = tags,
+    )
+    return rg.name
+
 def route_table(stem, disable_bgp_route_propagation=None, depends_on=[]):
     rt = network.RouteTable(
         f'{stem}-rt-',
         resource_group_name = resource_group_name,
-        location = location,
         disable_bgp_route_propagation = disable_bgp_route_propagation,
         tags = tags,
         opts = ResourceOptions(parent=self, depends_on=depends_on),
@@ -141,7 +142,6 @@ def virtual_network(stem, address_spaces):
     vn = network.VirtualNetwork(
         f'{stem}-vn-',
         resource_group_name = resource_group_name,
-        location = location,
         address_spaces = address_spaces,
         tags = tags,
         opts = ResourceOptions(parent=self),
@@ -174,7 +174,6 @@ def vpn_gateway(stem, subnet_id, depends_on=[]):
     vpn_gw_pip = network.PublicIp(
         f'{stem}-vpn-gw-pip-',
         resource_group_name = resource_group_name,
-        location = location,
         allocation_method = 'Dynamic',
         tags = tags,
         opts = ResourceOptions(parent=self),
@@ -182,7 +181,6 @@ def vpn_gateway(stem, subnet_id, depends_on=[]):
     vpn_gw = network.VirtualNetworkGateway(
         f'{stem}-vpn-gw-',
         resource_group_name = resource_group_name,
-        location = location,
         sku = 'VpnGw1',
         type = 'Vpn',
         vpn_type = 'RouteBased',

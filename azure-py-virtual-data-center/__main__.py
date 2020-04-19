@@ -1,32 +1,29 @@
 from pulumi import Config, get_stack, ResourceOptions, export
 from pulumi.resource import CustomTimeouts
-from pulumi_azure import core
 from hub import HubProps, Hub
 from spoke import SpokeProps, Spoke
+import vdc
 
 # retrieve the configuration data
 config = Config()
-
 # set default tags to be applied to all taggable resources
 stack = get_stack()
 default_tags = {
     'environment': stack
 }
-
-# all resources will be created in the Resource Group location
-resource_group = core.ResourceGroup(
-    stack + '-vdc-rg-',
-    tags = default_tags,
-)
+# set vdc default
+vdc.tags = default_tags
+# all resources will be created in configuration location
+resource_group_name = vdc.resource_group(stack)
 
 # Hub virtual network with gateway, firewall, DMZ and shared services subnets
 hub1 = Hub(
     config.require('hub_stem'),
     HubProps(
-        config = config,
-        resource_group = resource_group,
+        resource_group_name = resource_group_name,
         tags = default_tags,
         stack = stack,
+        config = config,
     ),
     opts=ResourceOptions(custom_timeouts=CustomTimeouts(create='1h', update='1h', delete='1h')),
 )
@@ -35,10 +32,10 @@ hub1 = Hub(
 spoke1 = Spoke(
     config.require('spoke_stem'),
     SpokeProps(
-        config = config,
-        resource_group = resource_group,
+        resource_group_name = resource_group_name,
         tags = default_tags,
         hub = hub1,
+        config = config,
     ),
     opts=ResourceOptions(
         depends_on=[hub1.hub_vpn_gw, hub1.hub_er_gw, hub1.hub_fw],
