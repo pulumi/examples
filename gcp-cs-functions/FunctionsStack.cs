@@ -26,6 +26,15 @@ class FunctionsStack : Stack
             AvailableMemoryMb = 128
         });
 
+        var invoker = new FunctionIamMember("invoker", new FunctionIamMemberArgs
+        {
+            Project = function.Project,
+            Region = function.Region,
+            CloudFunction = function.Name,
+            Role = "roles/cloudfunctions.invoker",
+            Member = "allUsers"
+        });
+
         // Export the URL of the function
         this.PythonEndpoint = function.HttpsTriggerUrl;
     }
