@@ -4,6 +4,6 @@ go 1.13
 
 require (
 	github.com/aws/aws-lambda-go v1.15.0
-	github.com/pulumi/pulumi-aws/sdk v1.28.0
-	github.com/pulumi/pulumi/sdk v1.13.1
+	github.com/pulumi/pulumi-aws/sdk/v2 v2.0.0
+	github.com/pulumi/pulumi/sdk/v2 v2.0.0
 )
