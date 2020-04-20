@@ -5,10 +5,10 @@
     },
     "dependencies": {
         "@pulumi/awsx": "^2.0.0",
-        "@pulumi/azure": "^2.0.0",
+        "@pulumi/azure": "^3.0.0",
         "@pulumi/azuread": "^2.0.0",
         "@pulumi/eks": "^1.0.0",
-        "@pulumi/gcp": "^2.0.0",
+        "@pulumi/gcp": "^3.0.0",
         "@pulumi/kubernetes": "^2.0.0",
         "@pulumi/pulumi": "^2.0.0",
         "@pulumi/random": "^2.0.0",
