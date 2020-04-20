@@ -10,6 +10,12 @@ https://github.com/pulumi/pulumi/issues/1691 tracks designing and developing a c
 
 First, create a stack, using `pulumi stack init`.
 
+Now, we need to ensure that our dependencies are installed:
+
+```
+$ npm install
+``` 
+
 Next, generate an OpenSSH keypair for use with your server - as per the AWS [Requirements][1]
 
 ```

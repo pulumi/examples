@@ -69,7 +69,7 @@ let infra () =
                 server database username pwd)
 
     let connectionStringSetting =
-        AppServiceConnectionStringsArgs
+        AppServiceConnectionStringArgs
            (Name = input "db",
             Type = input "SQLAzure",
             Value = io connectionString)

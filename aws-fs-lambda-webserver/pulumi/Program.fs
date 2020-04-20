@@ -65,8 +65,7 @@ let addInvokePermission name accountId functionArn executionArn =
     |> ignore
 
 let infra () =
-    let configSection = Pulumi.Config()
-    let accountId = configSection.Get "awsAccount"
+    let accountId = Output.Create<GetCallerIdentityResult>(Pulumi.Aws.GetCallerIdentity.InvokeAsync()).Apply(fun r -> r.AccountId)
 
     let lambdaRole =
         Role (
@@ -96,8 +95,8 @@ let infra () =
         Function(
             "basicLambda",
             FunctionArgs(
-                Runtime = input "dotnetcore2.1",
-                Code    = input (FileArchive "../LambdaWebServer/bin/Debug/netcoreapp2.1/publish" :> Archive),
+                Runtime = input "dotnetcore3.1",
+                Code    = input (FileArchive "../LambdaWebServer/bin/Debug/netcoreapp3.1/publish" :> Archive),
                 Handler = input "LambdaWebServer::Setup+LambdaEntryPoint::FunctionHandlerAsync",
                 Role    = io lambdaRole.Arn,
                 Timeout = input 30
@@ -129,8 +128,8 @@ let infra () =
             )
         )
 
-    addInvokePermission "lambdaPermission1" (input accountId) (io lambda.Arn) (deployment.ExecutionArn |> Outputs.apply (fun arn -> arn + "*/*/")  |> io)
-    addInvokePermission "lambdaPermission2" (input accountId) (io lambda.Arn) (deployment.ExecutionArn |> Outputs.apply (fun arn -> arn + "*/*/*") |> io)
+    addInvokePermission "lambdaPermission1" (io accountId) (io lambda.Arn) (deployment.ExecutionArn |> Outputs.apply (fun arn -> arn + "*/*/")  |> io)
+    addInvokePermission "lambdaPermission2" (io accountId) (io lambda.Arn) (deployment.ExecutionArn |> Outputs.apply (fun arn -> arn + "*/*/*") |> io)
 
     let urlWithTrailingSlash =
         prodStage.InvokeUrl

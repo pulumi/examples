@@ -40,6 +40,17 @@ func main() {
 			return err
 		}
 
+		invoker, err := cloudfunctions.NewFunctionsIamMember(ctx, "invoker", &cloudfunctions.FunctionsIamMemberArgs{
+			Project:       function.Project,
+			Region:        function.Region,
+			CloudFunction: function.Region,
+			Role:          pulumi.String("roles/cloudfunctions.invoker"),
+			Member:        pulumi.String("allUsers"),
+		})
+		if err != nil {
+			return err
+		}
+
 		// Export the tigger URL.
 		ctx.Export("function", function.HttpsTriggerUrl)
 		return nil

@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pulumi.Aws" Version="1.27.0-preview" />
-    <PackageReference Include="Pulumi.FSharp" Version="1.12.1-preview" />
+    <PackageReference Include="Pulumi.Aws" Version="2.0.0-beta.3" />
+    <PackageReference Include="Pulumi.FSharp" Version="2.0.0-beta.2" />
   </ItemGroup>
 </Project>

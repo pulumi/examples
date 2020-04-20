@@ -10,8 +10,8 @@ class LambdaStack : Stack
     {
         var lambda = new Function("basicLambda", new FunctionArgs
         {
-            Runtime = "dotnetcore2.1",
-            Code = new FileArchive("../DotnetLambda/src/DotnetLambda/bin/Debug/netcoreapp2.1/publish"),
+            Runtime = "dotnetcore3.1",
+            Code = new FileArchive("../DotnetLambda/src/DotnetLambda/bin/Debug/netcoreapp3.1/publish"),
             Handler = "DotnetLambda::DotnetLambda.Function::FunctionHandler",
             Role = CreateLambdaRole().Arn
         });

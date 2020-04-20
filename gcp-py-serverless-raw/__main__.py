@@ -20,6 +20,15 @@ py_function = cloudfunctions.Function(
     available_memory_mb=128,
 )
 
+py_invoker = cloudfunctions.FunctionIamMember(
+    "py-invoker",
+    project=py_function.project,
+    region=py_function.region,
+    cloud_function=py_function.name,
+    role="roles/cloudfunctions.invoker",
+    member="allUsers",
+)
+
 export("python_endpoint", py_function.https_trigger_url)
 
 go_bucket_object = storage.BucketObject(
@@ -37,6 +46,15 @@ go_function = cloudfunctions.Function(
     entry_point="Handler",
     trigger_http="true",
     available_memory_mb=128,
+)
+
+go_invoker = cloudfunctions.FunctionIamMember(
+    "go-invoker",
+    project=go_function.project,
+    region=go_function.region,
+    cloud_function=go_function.name,
+    role="roles/cloudfunctions.invoker",
+    member="allUsers",
 )
 
 export("go_endpoint", go_function.https_trigger_url)
