@@ -54,7 +54,7 @@ def firewall(stem, subnet_id, depends_on=[]):
     return fw
 
 def resource_group(stem):
-    rg = resource_group = core.ResourceGroup(
+    rg = core.ResourceGroup(
         f'{stem}-vdc-rg-',
         tags = tags,
     )
