@@ -40,7 +40,7 @@ sudo apt-get install -y nginx
         var loadbalancer = new LoadBalancer("public", new LoadBalancerArgs
         {
             DropletTag = dropletTypeTag.Name,
-            ForwardingRules = new LoadBalancerForwardingRulesArgs
+            ForwardingRules = new LoadBalancerForwardingRuleArgs
             {
                 EntryPort = 80,
                 EntryProtocol = "http",
