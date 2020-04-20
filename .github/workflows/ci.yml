@@ -34,6 +34,7 @@ env:
 jobs:
   released:
     strategy:
+      fail-fast: false
       matrix:
         tests-set: ["DigitalOcean", "Aws", "Azure", "Gcp", "Packet", "Linode", "Cloud"]
         platform: [ubuntu-latest]
