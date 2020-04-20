@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pulumi.DigitalOcean" Version="2.0.0-beta.1" />
+    <PackageReference Include="Pulumi.DigitalOcean" Version="2.*" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-aws/sdk/go/aws/ec2"
-	"github.com/pulumi/pulumi-aws/sdk/go/aws/ecs"
-	elb "github.com/pulumi/pulumi-aws/sdk/go/aws/elasticloadbalancingv2"
-	"github.com/pulumi/pulumi-aws/sdk/go/aws/iam"
-	"github.com/pulumi/pulumi/sdk/go/pulumi"
+	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/ec2"
+	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/ecs"
+	elb "github.com/pulumi/pulumi-aws/sdk/v2/go/aws/elasticloadbalancingv2"
+	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/iam"
+	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
 
 func main() {

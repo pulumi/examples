@@ -2,8 +2,8 @@
     "name": "azure-policies",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/azure": "^1.0.0",
-        "@pulumi/policy": "^1.0.0"
+        "@pulumi/azure": "^3.0.0",
+        "@pulumi/policy": "^1.1.0"
     },
     "devDependencies": {
         "@types/node": "^10.0.0",
