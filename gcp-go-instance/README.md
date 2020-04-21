@@ -19,12 +19,6 @@ Create a GCP instance using Pulumi + Go.
     $ pulumi config set gcp:zone us-central1-a
     ```
 
-1.  Restore NPM dependencies:
-
-    ```
-    $ npm install
-    ```
-
 1.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
