@@ -145,9 +145,9 @@ class Hub(ComponentResource):
             subnet_id = hub_dmz_sn.id,
         )
 
-        # Route Table only to be associated with ordinary subnets in hub
-        hub_sn_rt = vdc.route_table(
-            stem = f'{name}-sn',
+        # Route Table only to be associated with shared services subnets in hub
+        hub_ss_rt = vdc.route_table(
+            stem = f'{name}-ss',
             disable_bgp_route_propagation = True,
             depends_on=[hub_er_gw, hub_fw, hub_vpn_gw],
         )
@@ -166,9 +166,9 @@ class Hub(ComponentResource):
             (f'dmz-dg', hub_dmz_rt.name, '0.0.0.0/0'),
             (f'dmz-dmz', hub_dmz_rt.name, dmz_ar),
             (f'dmz-hub', hub_dmz_rt.name, hub_as),
-            (f'sn-dg', hub_sn_rt.name, '0.0.0.0/0'),
-            (f'sn-dmz', hub_sn_rt.name, dmz_ar),
-            (f'sn-gw', hub_sn_rt.name, gws_ar),
+            (f'ss-dg', hub_ss_rt.name, '0.0.0.0/0'),
+            (f'ss-dmz', hub_ss_rt.name, dmz_ar),
+            (f'ss-gw', hub_ss_rt.name, gws_ar),
         ]:
             vdc.route_to_virtual_appliance(
                 stem = route[0],
@@ -204,8 +204,8 @@ class Hub(ComponentResource):
                 (f'dmz-{peer}-hub', hub_dmz_rt.name, peer_hub_as),
                 (f'gw-{peer}-dmz', hub_gw_rt.name, peer_dmz_ar),
                 (f'gw-{peer}-hub', hub_gw_rt.name, peer_hub_as),
-                (f'sn-{peer}-dmz', hub_sn_rt.name, peer_dmz_ar),
-                (f'sn-{peer}-hub', hub_sn_rt.name, peer_hub_as),
+                (f'ss-{peer}-dmz', hub_ss_rt.name, peer_dmz_ar),
+                (f'ss-{peer}-hub', hub_ss_rt.name, peer_hub_as),
             ]:
                 vdc.route_to_virtual_appliance(
                     stem = route[0],
@@ -223,13 +223,13 @@ class Hub(ComponentResource):
                 stem = f'{name}-example',
                 virtual_network_name = hub.name,
                 address_prefix = hub_ar,
-                depends_on=[hub_sn_rt],
+                depends_on=[hub_ss_rt],
             )
 
             # associate all hub shared services subnets to Route Table        
             hub_example_sn_rta = vdc.subnet_route_table(
                 stem = f'{name}-example',
-                route_table_id = hub_sn_rt.id,
+                route_table_id = hub_ss_rt.id,
                 subnet_id = hub_example_sn.id,
             )
 
@@ -241,7 +241,7 @@ class Hub(ComponentResource):
             hub_gw_rt.name,
             hub.id,
             hub.name,
-            hub_sn_rt.name,
+            hub_ss_rt.name,
             hub.subnets,
             hub_vpn_gw,
         ).apply
@@ -253,7 +253,7 @@ class Hub(ComponentResource):
         self.hub_gw_rt_name = hub_gw_rt.name # used to add routes to spokes
         self.hub_id = hub.id # exported and used for peering
         self.hub_name = hub.name # exported and used for peering
-        self.hub_sn_rt_name = hub_sn_rt.name # used to add routes to spokes
+        self.hub_ss_rt_name = hub_ss_rt.name # used to add routes to spokes
         self.hub_subnets = hub.subnets # exported as informational
         self.hub_vpn_gw = hub_vpn_gw # needed prior to VNet Peering from spokes
         self.register_outputs({})

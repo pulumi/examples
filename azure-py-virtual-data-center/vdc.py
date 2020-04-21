@@ -27,7 +27,11 @@ def expressroute_gateway(stem, subnet_id, depends_on=[]):
             'publicIpAddressId': er_gw_pip.id,
         }],
         tags = tags,
-        opts = ResourceOptions(parent=self, depends_on=depends_on),
+        opts = ResourceOptions(
+            parent=self,
+            depends_on=depends_on,
+            custom_timeouts=CustomTimeouts(create='1h', update='1h', delete='1h'),
+        ),
     )
     return er_gw
 
@@ -49,7 +53,11 @@ def firewall(stem, subnet_id, depends_on=[]):
             'publicIpAddressId': fw_pip.id,
         }],
         tags = tags,
-        opts = ResourceOptions(parent=self, depends_on=depends_on),
+        opts = ResourceOptions(
+            parent=self,
+            depends_on=depends_on,
+            custom_timeouts=CustomTimeouts(create='1h', update='1h', delete='1h'),
+        ),
     )
     return fw
 

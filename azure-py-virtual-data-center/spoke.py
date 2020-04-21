@@ -69,8 +69,8 @@ class Spoke(ComponentResource):
             )
 
         # Route Table only to be associated with ordinary spoke subnets
-        spoke_sn_rt = vdc.route_table(
-            stem = f'{name}-sn',
+        spoke_rt = vdc.route_table(
+            stem = f'{name}',
             disable_bgp_route_propagation = True,
             depends_on = [hub_spoke, spoke_hub],
         )
@@ -84,12 +84,12 @@ class Spoke(ComponentResource):
                 stem = f'{name}-example',
                 virtual_network_name = spoke.name,
                 address_prefix = spoke_ar,
-                depends_on = [spoke_sn_rt],
+                depends_on = [spoke_rt],
             )
             # associate all ordinary spoke subnets to Route Table
             spoke_example_sn_rta = vdc.subnet_route_table(
                 stem = f'{name}-example',
-                route_table_id = spoke_sn_rt.id,
+                route_table_id = spoke_rt.id,
                 subnet_id = spoke_example_sn.id,
             )
 
@@ -105,10 +105,10 @@ class Spoke(ComponentResource):
         for route in [
             (f'dmz-{name}', props.hub.hub_dmz_rt_name, spoke_as),
             (f'gw-{name}', props.hub.hub_gw_rt_name, spoke_as),
-            (f'sn-{name}', props.hub.hub_sn_rt_name, spoke_as),
-            (f'{name}-dg', spoke_sn_rt.name, '0.0.0.0/0'),
-            (f'{name}-dmz', spoke_sn_rt.name, dmz_ar),
-            (f'{name}-hub', spoke_sn_rt.name, hub_as),
+            (f'ss-{name}', props.hub.hub_ss_rt_name, spoke_as),
+            (f'{name}-dg', spoke_rt.name, '0.0.0.0/0'),
+            (f'{name}-dmz', spoke_rt.name, dmz_ar),
+            (f'{name}-hub', spoke_rt.name, hub_as),
         ]:
             vdc.route_to_virtual_appliance(
                 stem = route[0],
