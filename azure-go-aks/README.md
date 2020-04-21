@@ -16,15 +16,6 @@ To deploy your infrastructure, follow the below steps.
 
 ### Steps
 
-1. Install plugins:
-
-    ```bash
-    pulumi plugin install resource tls 1.5.0
-    pulumi plugin install resource azuread 1.8.0
-    pulumi plugin install resource azure 2.3.1
-    pulumi plugin install resource kubernest 1.6.0
-    ```
-
 1. Create a new stack:
 
     ```bash
