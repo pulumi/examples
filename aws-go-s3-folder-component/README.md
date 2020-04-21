@@ -15,12 +15,6 @@ with `***`.
     $ pulumi stack init website-component-testing
     ```
 
-1. Install the Pulumi AWS plugin:
-
-    ```
-    $ pulumi plugin install resource aws 1.28.0
-    ```
-
 1.  Set the AWS region:
 
     ```

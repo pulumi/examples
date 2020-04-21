@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/containerservice"
-	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/core"
-	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/network"
-	"github.com/pulumi/pulumi-azuread/sdk/go/azuread"
+	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/containerservice"
+	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/core"
+	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/network"
+	"github.com/pulumi/pulumi-azuread/sdk/v2/go/azuread"
 	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/apps/v1"
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/core/v1"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/meta/v1"
