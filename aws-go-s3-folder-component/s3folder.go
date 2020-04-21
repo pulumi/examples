@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-aws/sdk/go/aws/s3"
-	"github.com/pulumi/pulumi/sdk/go/pulumi"
 	"io/ioutil"
 	"mime"
 	"path"
 	"path/filepath"
 	"reflect"
+
+	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/s3"
+	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
 
 type Folder struct {
@@ -66,7 +67,7 @@ func NewS3Folder(ctx *pulumi.Context, bucketName string, siteDir string, args *F
 				},
 			},
 		}),
-	},  pulumi.Parent(&resource)); err != nil {
+	}, pulumi.Parent(&resource)); err != nil {
 		return nil, err
 	}
 	resource.bucketName = siteBucket.ID()
