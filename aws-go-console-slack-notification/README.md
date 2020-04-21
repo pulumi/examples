@@ -26,8 +26,7 @@ After cloning this repo, run these commands from the working directory:
 	- For developers on Linux and macOS:
 
 		```bash
-		make dep
-		make build
+		make
 		```
 		
 	- For developers on Windows:

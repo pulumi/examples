@@ -138,7 +138,7 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 				]
 			}`, args[0], args[0], args[1]))
 		}),
-	}, pulumi.Parent(bucket), pulumi.Provider(awsProvider))
+	}, pulumi.Provider(awsProvider), pulumi.Parent(bucket))
 	if err != nil {
 		return err
 	}
@@ -162,9 +162,10 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 			},
 		},
 	},
+		pulumi.Provider(awsProvider), pulumi.Parent(bucket), pulumi.DependsOn([]pulumi.Resource{bucket, bucketPolicy}),
 		// Ignore changes to eventSelectors until https://github.com/terraform-providers/terraform-provider-aws/issues/11712 is resolved.
 		pulumi.IgnoreChanges([]string{"eventSelectors"}),
-		pulumi.DependsOn([]pulumi.Resource{bucket, bucketPolicy}), pulumi.Parent(bucket), pulumi.Provider(awsProvider))
+	)
 	if err != nil {
 		return err
 	}
@@ -181,7 +182,7 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 				"Action": "sts:AssumeRole"
 			}]
 		}`),
-	}, pulumi.Parent(bucket), pulumi.Provider(awsProvider))
+	}, pulumi.Provider(awsProvider), pulumi.Parent(bucket))
 	if err != nil {
 		return err
 	}
@@ -200,7 +201,7 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 				"Resource": "arn:aws:logs:*:*:*"
 			}]
 		}`),
-	}, pulumi.Parent(lambdaRole), pulumi.Provider(awsProvider))
+	}, pulumi.Provider(awsProvider), pulumi.Parent(lambdaRole))
 
 	function, err := lambda.NewFunction(ctx, resourceName, &lambda.FunctionArgs{
 		Handler: pulumi.String("handler"),
@@ -214,7 +215,7 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 				"SLACK_MESSAGE_TEXT":     pulumi.String(slackMessageText),
 			},
 		},
-	}, pulumi.DependsOn([]pulumi.Resource{logPolicy}), pulumi.Parent(lambdaRole), pulumi.Provider(awsProvider))
+	}, pulumi.Provider(awsProvider), pulumi.Parent(lambdaRole), pulumi.DependsOn([]pulumi.Resource{logPolicy}))
 	if err != nil {
 		return err
 	}
@@ -225,7 +226,7 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 			  "AWS API Call via CloudTrail"
 			]
 		  }`),
-	}, pulumi.Parent(trail), pulumi.Provider(awsProvider))
+	}, pulumi.Provider(awsProvider), pulumi.Parent(trail))
 	if err != nil {
 		return err
 	}
@@ -235,12 +236,12 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 		Principal: pulumi.String("events.amazonaws.com"),
 		SourceArn: eventRule.Arn,
 		Function:  function.Name,
-	}, pulumi.Parent(eventRule), pulumi.Provider(awsProvider))
+	}, pulumi.Provider(awsProvider), pulumi.Parent(eventRule))
 
 	_, err = cloudwatch.NewEventTarget(ctx, resourceName, &cloudwatch.EventTargetArgs{
 		Rule: eventRule.Name,
 		Arn:  function.Arn,
-	}, pulumi.Parent(eventRule), pulumi.Provider(awsProvider))
+	}, pulumi.Provider(awsProvider), pulumi.Parent(eventRule))
 	if err != nil {
 		return err
 	}
