@@ -11,10 +11,7 @@ class FunctionsStack : Stack
 {
     public FunctionsStack()
     {
-        var resourceGroup = new ResourceGroup("functions-rg", new ResourceGroupArgs
-        {
-            Tags = { { "Owner", "mikhailshilkov" }}
-        });
+        var resourceGroup = new ResourceGroup("functions-rg");
 
         var storageAccount = new Account("sa", new AccountArgs
         {
