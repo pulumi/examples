@@ -5,7 +5,7 @@
     },
     "dependencies": {
         "@pulumi/pulumi": "^2.0.0",
-        "@pulumi/awsx": "^1.0.0",
-        "@pulumi/eks": "^1.0.0"
+        "@pulumi/awsx": "^0.20.0",
+        "@pulumi/eks": "^0.19.0"
     }
 }
