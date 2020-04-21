@@ -3,9 +3,9 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/compute"
-	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/network"
-	"github.com/pulumi/pulumi/sdk/go/pulumi"
+	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/compute"
+	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/network"
+	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
 
 // Webserver is a reusable web server component that creates and exports a NIC, public IP, and VM.
