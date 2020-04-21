@@ -10,8 +10,4 @@
     <PackageReference Include="Pulumi.Azure" Version="3.*" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <DefaultItemExcludes>$(DefaultItemExcludes);functions\**\*</DefaultItemExcludes>
-  </PropertyGroup>
-
 </Project>

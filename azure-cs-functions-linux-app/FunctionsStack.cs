@@ -70,7 +70,7 @@ class FunctionsStack : Stack
                 {"runtime", "python"},
                 {"FUNCTIONS_WORKER_RUNTIME", "python"},
                 {"WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl},
-                { "APPLICATIONINSIGHTS_CONNECTION_STRING", Output.Format($"InstrumentationKey={insights.InstrumentationKey}") }
+                {"APPLICATIONINSIGHTS_CONNECTION_STRING", Output.Format($"InstrumentationKey={insights.InstrumentationKey}")}
             },
             StorageConnectionString = storageAccount.PrimaryConnectionString,
             Version = "~3",
