@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Aks", "azure-cs-aks\A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.KeyVault", "azure-cs-msi-keyvault-rbac\Azure.KeyVault.csproj", "{79319396-C17A-4DBB-92B2-7291D39E0B70}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.FunctionsRaw", "azure-cs-functions-raw\Azure.FunctionsRaw.csproj", "{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Functions", "azure-cs-functions-consumption\Azure.Functions.csproj", "{8C01B8EF-B770-4817-98F2-F7FC6F2B2A74}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aws.WebServer", "aws-cs-webserver\Aws.WebServer.csproj", "{C0F20B39-07D0-4118-A48F-6D3911673424}"
 EndProject
@@ -48,6 +48,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kubernetes.Guestbook.Components", "kubernetes-cs-guestbook\components\Kubernetes.Guestbook.Components.csproj", "{8836BAE0-2093-44F0-89E2-3F233CB72CCC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTesting", "testing-unit-cs\UnitTesting.csproj", "{7A9FC7DC-DC35-4033-B4FF-E9EFB3E6EBB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Functions.LinuxApp", "azure-cs-functions-linux-app\Azure.Functions.LinuxApp.csproj", "{B3739A06-5343-4990-A48B-E5BEFAC5678A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +149,10 @@ Global
 		{7A9FC7DC-DC35-4033-B4FF-E9EFB3E6EBB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A9FC7DC-DC35-4033-B4FF-E9EFB3E6EBB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A9FC7DC-DC35-4033-B4FF-E9EFB3E6EBB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3739A06-5343-4990-A48B-E5BEFAC5678A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3739A06-5343-4990-A48B-E5BEFAC5678A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3739A06-5343-4990-A48B-E5BEFAC5678A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3739A06-5343-4990-A48B-E5BEFAC5678A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
