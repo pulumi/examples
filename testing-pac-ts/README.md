@@ -53,3 +53,10 @@ The tests will run while Pulumi deploys the code, right before the deployment of
     $ pulumi destroy --yes
     $ pulumi stack rm --yes
     ```
+
+## Further steps
+
+Learn more about testing Pulumi programs:
+
+- [Testing Guide](https://www.pulumi.com/docs/guides/testing/)
+- [Property Testing Guide](https://www.pulumi.com/docs/guides/testing/property-testing/)

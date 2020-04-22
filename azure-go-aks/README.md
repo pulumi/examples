@@ -2,7 +2,8 @@
 
 # Azure Kubernetes Service (AKS) Cluster
 
-Stands up an [Azure Kubernetes Service](https://azure.microsoft.com/en-us/services/kubernetes-service/) (AKS) cluster.
+Stands up an [Azure Kubernetes Service](https://azure.microsoft.com/en-us/services/kubernetes-service/) (AKS) cluster and
+deploys an application to it.
 
 ## Deploying the App
 
@@ -14,14 +15,6 @@ To deploy your infrastructure, follow the below steps.
 1. [Configure Azure](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
 
 ### Steps
-
-1. Install plugins:
-
-    ```bash
-    pulumi plugin install resource tls 1.5.0
-    pulumi plugin install resource azuread 1.8.0
-    pulumi plugin install resource azure 2.3.1
-    ```
 
 1. Create a new stack:
 
@@ -65,6 +58,13 @@ To deploy your infrastructure, follow the below steps.
     ```bash
     $ KUBECONFIG=./kubeconfig.yaml kubectl get nodes
     ```
+
+1. You can check that the application is loadbalanced across all of the pods:
+
+    ```bash
+    $ for i in {0..10}; do curl $(pulumi stack output url); done
+    ```
+
 1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
 1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:

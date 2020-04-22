@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/pulumi/pulumi-gcp/sdk/v2/go/gcp/cloudfunctions"
 	"github.com/pulumi/pulumi-gcp/sdk/v2/go/gcp/storage"
-	"github.com/pulumi/pulumi/sdk/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
 
 func main() {
@@ -36,6 +36,17 @@ func main() {
 
 		// Create the function using the args.
 		function, err := cloudfunctions.NewFunction(ctx, "basicFunction", args)
+		if err != nil {
+			return err
+		}
+
+		invoker, err := cloudfunctions.NewFunctionsIamMember(ctx, "invoker", &cloudfunctions.FunctionsIamMemberArgs{
+			Project:       function.Project,
+			Region:        function.Region,
+			CloudFunction: function.Region,
+			Role:          pulumi.String("roles/cloudfunctions.invoker"),
+			Member:        pulumi.String("allUsers"),
+		})
 		if err != nil {
 			return err
 		}

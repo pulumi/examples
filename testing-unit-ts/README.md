@@ -18,11 +18,7 @@ An example of writing mock-based unit tests with both infrastructure definition 
 2.  Run the tests:
 
     ``` 
-    $ PULUMI_TEST_MODE=true  \
-        PULUMI_NODEJS_STACK="my-ws" \
-        PULUMI_NODEJS_PROJECT="dev" \
-        PULUMI_CONFIG='{ "aws:region": "us-west-2" }'  \
-        mocha -r ts-node/register ec2tests.ts
+    $ mocha -r ts-node/register ec2tests.ts
 
     Infrastructure
       #server
@@ -33,3 +29,10 @@ An example of writing mock-based unit tests with both infrastructure definition 
 
     3 passing (420ms)
     ```
+
+## Further steps
+
+Learn more about testing Pulumi programs:
+
+- [Testing Guide](https://www.pulumi.com/docs/guides/testing/)
+- [Unit Testing Guide](https://www.pulumi.com/docs/guides/testing/unit/)

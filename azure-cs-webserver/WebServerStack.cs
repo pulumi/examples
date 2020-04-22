@@ -20,7 +20,7 @@ class WebServerStack : Stack
                 AddressSpaces = {"10.0.0.0/16"},
                 Subnets =
                 {
-                    new VirtualNetworkSubnetsArgs {Name = "default", AddressPrefix = "10.0.1.0/24"}
+                    new VirtualNetworkSubnetArgs {Name = "default", AddressPrefix = "10.0.1.0/24"}
                 }
             }
         );
@@ -38,7 +38,7 @@ class WebServerStack : Stack
                 ResourceGroupName = resourceGroup.Name,
                 IpConfigurations =
                 {
-                    new NetworkInterfaceIpConfigurationsArgs
+                    new NetworkInterfaceIpConfigurationArgs
                     {
                         Name = "webserveripcfg",
                         SubnetId = network.Subnets.Apply(subnets => subnets[0].Id),
@@ -92,7 +92,7 @@ nohup python -m SimpleHTTPServer 80 &"
             .Apply<string>(async t =>
             {
                 (_, string name, string resourceGroupName) = t;
-                var ip = await Pulumi.Azure.Network.Invokes.GetPublicIP(new GetPublicIPArgs
+                var ip = await GetPublicIP.InvokeAsync(new GetPublicIPArgs
                     {Name = name, ResourceGroupName = resourceGroupName});
                 return ip.IpAddress;
             });

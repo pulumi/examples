@@ -1,0 +1,3 @@
+name: pulumi-gcloud-kms
+runtime: nodejs
+description: Minimal config to check gcloud encryption support

@@ -25,8 +25,8 @@ const ffmpegThumbnailTask = new awsx.ecs.FargateTaskDefinition("ffmpegThumbTask"
 bucket.onObjectCreated("onNewVideo", new aws.lambda.CallbackFunction<aws.s3.BucketEvent, void>("onNewVideo", {
     // Specify appropriate policies so that this AWS lambda can run EC2 tasks.
     policies: [
-        aws.iam.AWSLambdaFullAccess,                 // Provides wide access to "serverless" services (Dynamo, S3, etc.)
-        aws.iam.AmazonEC2ContainerServiceFullAccess, // Required for lambda compute to be able to run Tasks
+        aws.iam.ManagedPolicies.AWSLambdaFullAccess,                 // Provides wide access to "serverless" services (Dynamo, S3, etc.)
+        aws.iam.ManagedPolicies.AmazonEC2ContainerServiceFullAccess, // Required for lambda compute to be able to run Tasks
     ],
     callback: async bucketArgs => {
         console.log("onNewVideo called");

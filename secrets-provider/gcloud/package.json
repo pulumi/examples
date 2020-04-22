@@ -1,0 +1,10 @@
+{
+    "name": "pulumi-gcloud-kmstest",
+    "devDependencies": {
+        "@types/node": "^8.0.0"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^2.0.0",
+        "@pulumi/gcp": "^3.0.0"
+    }
+}

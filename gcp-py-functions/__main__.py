@@ -67,6 +67,15 @@ fxn = cloudfunctions.Function(
     source_archive_object=source_archive_object.name,
     trigger_http=True)
 
+invoker = cloudfunctions.FunctionIamMember(
+    "invoker",
+    project=fxn.project,
+    region=fxn.region,
+    cloud_function=fxn.name,
+    role="roles/cloudfunctions.invoker",
+    member="allUsers",
+)
+
 # Export the DNS name of the bucket and the cloud function URL.
 pulumi.export("bucket_name", bucket.url)
 pulumi.export("fxn_url", fxn.https_trigger_url)

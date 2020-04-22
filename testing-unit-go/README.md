@@ -8,12 +8,6 @@ An example of writing mock-based unit tests with both infrastructure definition 
 
 ## Running the tests
 
-1. Restore your Go dependencies. This example currently uses [Dep](https://github.com/golang/dep) to do so:
-
-    ```bash
-    $ dep ensure
-    ```
-
 2.  Run the tests:
 
     ``` 
@@ -22,3 +16,10 @@ An example of writing mock-based unit tests with both infrastructure definition 
     PASS
     ok  	testing-unit-go	0.400s
     ```
+
+## Further steps
+
+Learn more about testing Pulumi programs:
+
+- [Testing Guide](https://www.pulumi.com/docs/guides/testing/)
+- [Unit Testing Guide](https://www.pulumi.com/docs/guides/testing/unit/)

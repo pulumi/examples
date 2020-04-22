@@ -87,7 +87,7 @@ class AppStack : Stack
             Source = new FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish"),
         });
 
-        var clientConfig = Output.Create(Pulumi.Azure.Core.Invokes.GetClientConfig());
+        var clientConfig = Output.Create(GetClientConfig.InvokeAsync());
         var tenantId = clientConfig.Apply(c => c.TenantId);
         var currentPrincipal = clientConfig.Apply(c => c.ObjectId);
 
@@ -99,7 +99,7 @@ class AppStack : Stack
             TenantId = tenantId,
             AccessPolicies =
             {
-                new KeyVaultAccessPoliciesArgs
+                new KeyVaultAccessPolicyArgs
                 {
                     TenantId = tenantId,
                     // The current principal has to be granted permissions to Key Vault so that it can actually add and then remove
@@ -137,7 +137,7 @@ class AppStack : Stack
             },
             ConnectionStrings =
             {
-                new AppServiceConnectionStringsArgs
+                new AppServiceConnectionStringArgs
                 {
                     Name = "db",
                     Type = "SQLAzure",
