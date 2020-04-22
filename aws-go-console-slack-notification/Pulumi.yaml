@@ -1,0 +1,3 @@
+name: aws-go-console-slack-notification
+runtime: go
+description: Deploy necessary resources to notify Slack when an operation is performed via the AWS Console.
