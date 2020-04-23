@@ -39,7 +39,7 @@ class StorageStaticWebsiteProvider implements pulumi.dynamic.ResourceProvider {
         const url = require("url");
         const accountName = inputs[accountNameProp];
 
-        // Helper function to execute a command, supress the warnings from polluting the output, and parse the result as JSON
+        // Helper function to execute a command, suppress the warnings from polluting the output, and parse the result as JSON
         const executeToJson = (command: string) => JSON.parse(execSync(command, { stdio: ["pipe", "pipe", "ignore"] }).toString());
 
         // Install Azure CLI extension for storage (currently, only the preview version has the one we need)

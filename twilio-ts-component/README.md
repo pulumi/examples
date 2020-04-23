@@ -58,7 +58,7 @@ A sample for interacting with Twilio SMS. This sample includes a custom Componen
     Update duration: 27.155440706s
     ```
 
-1. Send an SMS message to the phone number you have registered with Twilio, or make a request by hand with cURL (you may wish to pass aditional data with your request, see https://www.twilio.com/docs/sms/twiml#request-parameters for the complete set of data that Twilio sends).
+1. Send an SMS message to the phone number you have registered with Twilio, or make a request by hand with cURL (you may wish to pass additional data with your request, see https://www.twilio.com/docs/sms/twiml#request-parameters for the complete set of data that Twilio sends).
 
     ```
     $ curl -X POST -d "From=+12065555555" -d "Body=Hello!" $(pulumi stack output smsUrl)

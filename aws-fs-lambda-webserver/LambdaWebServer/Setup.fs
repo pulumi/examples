@@ -45,7 +45,7 @@ let configureAppConfiguration (ctx:WebHostBuilderContext) (builder : IConfigurat
         .AddEnvironmentVariables() |> ignore
 
 // ---------------------------------
-// This type is the entry point when running in Lambda. It has similar responsiblities
+// This type is the entry point when running in Lambda. It has similar responsibilities
 // to the main entry point function that can be used for local development.
 // ---------------------------------
 type LambdaEntryPoint() =

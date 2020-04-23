@@ -51,7 +51,7 @@ func main() {
 			return err
 		}
 
-		// Export the tigger URL.
+		// Export the trigger URL.
 		ctx.Export("function", function.HttpsTriggerUrl)
 		return nil
 	})
