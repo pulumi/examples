@@ -38,18 +38,18 @@ spoke1 = Spoke(
         config = config,
     ),
     opts=ResourceOptions(
-        depends_on=[hub1.hub_er_gw, hub1.hub_fw, hub1.hub_vpn_gw],
-        custom_timeouts=CustomTimeouts(create='1h'),
+        depends_on=[hub1.er_gw, hub1.fw, hub1.vpn_gw],
+        custom_timeouts=CustomTimeouts(create='1h'), # wait on hub, spoke is quick
     ),
 )
 
 # Exports
 export('dmz_ar', config.require('dmz_ar'))
+export('fw_ip', hub1.fw_ip)
 export('hub_as', config.require('hub_as'))
-export('hub_fw_ip', hub1.hub_fw_ip)
-export('hub_id', hub1.hub_id)
-export('hub_name', hub1.hub_name)
-export('hub_subnets', hub1.hub_subnets)
-export('spoke_id', spoke1.spoke_id)
-export('spoke_name', spoke1.spoke_name)
-export('spoke_subnets', spoke1.spoke_subnets)
+export('hub_id', hub1.id)
+export('hub_name', hub1.name)
+export('hub_subnets', hub1.subnets.apply(lambda s: s))
+export('spoke_id', spoke1.id)
+export('spoke_name', spoke1.name)
+export('spoke_subnets', spoke1.subnets.apply(lambda s: s))

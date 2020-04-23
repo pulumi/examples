@@ -184,9 +184,6 @@ class Hub(ComponentResource):
             project = get_project()
             peer_stack = StackReference(f'{org}/{project}/{peer}')
             peer_hub_id = peer_stack.get_output('hub_id')
-            peer_fw_ip = peer_stack.get_output('hub_fw_ip')
-            peer_dmz_ar = peer_stack.get_output('dmz_ar') 
-            peer_hub_as = peer_stack.get_output('hub_as')
 
             # VNet Peering (Global) in one direction from stack to peer
             hub_hub = vdc.vnet_peering(
@@ -199,6 +196,10 @@ class Hub(ComponentResource):
             )
 
             # need to invalidate system routes created by Global VNet Peering
+            peer_dmz_ar = peer_stack.get_output('dmz_ar') 
+            peer_fw_ip = peer_stack.get_output('fw_ip')
+            peer_hub_as = peer_stack.get_output('hub_as')
+            
             for route in [
                 (f'dmz-{peer}-dmz', hub_dmz_rt.name, peer_dmz_ar),
                 (f'dmz-{peer}-hub', hub_dmz_rt.name, peer_hub_as),
@@ -233,27 +234,17 @@ class Hub(ComponentResource):
                 subnet_id = hub_example_sn.id,
             )
 
-        combined_output = Output.all(
-            hub_dmz_rt.name,
-            hub_er_gw,
-            hub_fw,
-            hub_fw_ip,
-            hub_gw_rt.name,
-            hub.id,
-            hub.name,
-            hub_ss_rt.name,
-            hub.subnets,
-            hub_vpn_gw,
-        ).apply
-
-        self.hub_dmz_rt_name = hub_dmz_rt.name # used to add routes to spokes
-        self.hub_er_gw = hub_er_gw # needed prior to VNet Peering from spokes
-        self.hub_fw = hub_fw # needed prior to VNet Peering from spokes
-        self.hub_fw_ip = hub_fw_ip # used to construct routes
-        self.hub_gw_rt_name = hub_gw_rt.name # used to add routes to spokes
-        self.hub_id = hub.id # exported and used for peering
-        self.hub_name = hub.name # exported and used for peering
-        self.hub_ss_rt_name = hub_ss_rt.name # used to add routes to spokes
-        self.hub_subnets = hub.subnets # exported as informational
-        self.hub_vpn_gw = hub_vpn_gw # needed prior to VNet Peering from spokes
+        # assign properties to hub from child virtual network and resources
+        self.address_spaces = hub.address_spaces # informational
+        self.dmz_rt_name = hub_dmz_rt.name # used to add routes to spokes
+        self.er_gw = hub_er_gw # needed prior to VNet Peering from spokes
+        self.fw = hub_fw # needed prior to VNet Peering from spokes
+        self.fw_ip = hub_fw_ip # used to construct routes
+        self.gw_rt_name = hub_gw_rt.name # used to add routes to spokes
+        self.id = hub.id # exported and used for stack and spoke peering
+        self.location = hub.location # informational
+        self.name = hub.name # exported and used for spoke peering
+        self.subnets = hub.subnets # exported as informational
+        self.ss_rt_name = hub_ss_rt.name # used to add routes to spokes
+        self.vpn_gw = hub_vpn_gw # needed prior to VNet Peering from spokes
         self.register_outputs({})

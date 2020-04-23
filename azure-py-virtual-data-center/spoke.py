@@ -39,7 +39,7 @@ class Spoke(ComponentResource):
         # VNet Peering from the hub to spoke
         hub_spoke = vdc.vnet_peering(
             stem = hub_stem,
-            virtual_network_name = props.hub.hub_name,
+            virtual_network_name = props.hub.name,
             peer = name,
             remote_virtual_network_id = spoke.id,
             allow_gateway_transit = True,
@@ -50,7 +50,7 @@ class Spoke(ComponentResource):
             stem = name,
             virtual_network_name = spoke.name,
             peer = hub_stem,
-            remote_virtual_network_id = props.hub.hub_id,
+            remote_virtual_network_id = props.hub.id,
             allow_forwarded_traffic = True,
             use_remote_gateways = True,
         )
@@ -103,9 +103,9 @@ class Spoke(ComponentResource):
 
         # partially or fully invalidate system routes to redirect traffic
         for route in [
-            (f'dmz-{name}', props.hub.hub_dmz_rt_name, spoke_as),
-            (f'gw-{name}', props.hub.hub_gw_rt_name, spoke_as),
-            (f'ss-{name}', props.hub.hub_ss_rt_name, spoke_as),
+            (f'dmz-{name}', props.hub.dmz_rt_name, spoke_as),
+            (f'gw-{name}', props.hub.gw_rt_name, spoke_as),
+            (f'ss-{name}', props.hub.ss_rt_name, spoke_as),
             (f'{name}-dg', spoke_rt.name, '0.0.0.0/0'),
             (f'{name}-dmz', spoke_rt.name, dmz_ar),
             (f'{name}-hub', spoke_rt.name, hub_as),
@@ -114,12 +114,13 @@ class Spoke(ComponentResource):
                 stem = route[0],
                 route_table_name = route[1],
                 address_prefix = route[2],
-                next_hop_in_ip_address = props.hub.hub_fw_ip,
+                next_hop_in_ip_address = props.hub.fw_ip,
             )
 
-        combined_output = Output.all(spoke.name, spoke.id, spoke.subnets).apply
-
-        self.spoke_id = spoke.id # exported as informational
-        self.spoke_name = spoke.name # exported as informational
-        self.spoke_subnets = spoke.subnets # exported as informational
+        # assign properties to spoke from child virtual network
+        self.address_spaces = spoke.address_spaces # informational
+        self.id = spoke.id # informational
+        self.location = spoke.location # informational
+        self.name = spoke.name # informational
+        self.subnets = spoke.subnets # informational
         self.register_outputs({})
