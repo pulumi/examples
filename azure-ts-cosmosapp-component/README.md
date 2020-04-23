@@ -17,7 +17,7 @@ The [`CosmosApp`](cosmosApp.ts) defines a skeleton for the application. While no
 The application has three example of using this component with the following compute services:
 
 - Azure Functions
-- Azure Container Intances
+- Azure Container Instances
 - Azure VM Scale Sets + Azure Load Balancer
 
 ## Prerequisites

@@ -236,7 +236,7 @@ After cloning this repo, from this working directory, run these commands:
 
     To access your new Kubernetes cluster using `kubectl`, we need to set up the
     `kubeconfig` file and download `kubectl`. We can leverage the Pulumi
-    stack output in the CLI, as Pulumi faciliates exporting these objects for us.
+    stack output in the CLI, as Pulumi facilitates exporting these objects for us.
 
     ```bash
     $ pulumi stack output kubeconfig > kubeconfig

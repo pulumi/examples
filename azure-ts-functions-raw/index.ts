@@ -35,7 +35,7 @@ const javaApp = new azure.appservice.ArchiveFunctionApp("http-java", {
     },
 });
 
-// Create a dedicated resoure group for Linux App Service Plan - require for Python
+// Create a dedicated resource group for Linux App Service Plan - require for Python
 const linuxResourceGroup = new azure.core.ResourceGroup("linuxrg");
 
 // Python Function App won't run on Windows Consumption Plan, so we create a Linux Consumption Plan instead
