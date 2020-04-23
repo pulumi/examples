@@ -120,12 +120,12 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
      +      └─ azure:network:SubnetRouteTableAssociation  spoke-example-sn-rta  created
 
     Outputs:
-        dmz_ar       : "192.168.200.128/25"
-        fw_ip        : "192.168.200.4"
-        hub_as       : "10.200.0.0/16"
-        hub_id       : "/subscriptions/subscription/resourceGroups/ prod-vdc-rg-3a11e96f/providers/Microsoft.Network/virtualNetworks/hub-vn-aefbe39f"
+        dmz_ar       : "192.168.100.128/25"
+        fw_ip        : "192.168.100.4"
+        hub_as       : "10.100.0.0/16"
+        hub_id       : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-3a11e96f/providers/Microsoft.Network/virtualNetworks/hub-vn-aefbe39f"
         hub_name     : "hub-vn-aefbe39f"
-        spoke_id     : "/subscriptions/subscription/resourceGroups/ prod-vdc-rg-3a11e96f/providers/Microsoft.Network/virtualNetworks/spoke-vn-2344447a"
+        spoke_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-3a11e96f/providers/Microsoft.Network/virtualNetworks/spoke-vn-2344447a"
         spoke_name   : "spoke-vn-2344447a"
 
     Resources:
