@@ -18,28 +18,23 @@ resource_group_name = vdc.resource_group(stack)
 
 # Hub virtual network with gateway, firewall, DMZ and shared services subnets
 hub1 = Hub(
-    config.require('hub_stem'),
+    'hub', # stem of child resource names (<4 chars)
     HubProps(
         resource_group_name = resource_group_name,
         tags = default_tags,
         stack = stack,
         config = config,
     ),
-    opts=ResourceOptions(custom_timeouts=CustomTimeouts(create='1h', update='1h', delete='1h')),
 )
 
 # Spoke virtual network for application environments
 spoke1 = Spoke(
-    config.require('spoke_stem'),
+    'spoke', # stem of child resource names (<6 chars)
     SpokeProps(
         resource_group_name = resource_group_name,
         tags = default_tags,
         hub = hub1,
         config = config,
-    ),
-    opts=ResourceOptions(
-        depends_on=[hub1.er_gw, hub1.fw, hub1.vpn_gw],
-        custom_timeouts=CustomTimeouts(create='1h'), # wait on hub, spoke is quick
     ),
 )
 

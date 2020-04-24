@@ -49,9 +49,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set fwz_as              192.168.100.0/24
     $ pulumi config set gws_ar              10.100.0.0/26
     $ pulumi config set hub_as              10.100.0.0/16
-    $ pulumi config set hub_stem            hub
     $ pulumi config set spoke_as            10.101.0.0/16
-    $ pulumi config set spoke_stem          spoke
     ```
     Optional:
     ```bash
@@ -77,62 +75,62 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
      +   ├─ vdc:network:Hub                               hub                   created
      +   │  ├─ azure:network:VirtualNetwork               hub-vn-               created
      +   │  ├─ azure:network:PublicIp                     hub-vpn-gw-pip-       created
-     +   │  ├─ azure:network:PublicIp                     hub-er-gw-pip-        created
      +   │  ├─ azure:network:PublicIp                     hub-fw-pip-           created
+     +   │  ├─ azure:network:PublicIp                     hub-er-gw-pip-        created
      +   │  ├─ azure:network:Subnet                       hub-dmz-sn            created
-     +   │  ├─ azure:network:Subnet                       hub-gw-sn             created
      +   │  ├─ azure:network:Subnet                       hub-fw-sn             created
+     +   │  ├─ azure:network:Subnet                       hub-gw-sn             created
      +   │  ├─ azure:network:VirtualNetworkGateway        hub-vpn-gw-           created
      +   │  ├─ azure:network:Firewall                     hub-fw-               created
      +   │  ├─ azure:network:VirtualNetworkGateway        hub-er-gw-            created
      +   │  ├─ azure:network:RouteTable                   hub-gw-rt-            created
      +   │  ├─ azure:network:RouteTable                   hub-dmz-rt-           created
-     +   │  ├─ azure:network:RouteTable                   hub-ss-rt-            created
      +   │  ├─ azure:network:Subnet                       hub-ab-sn             created
+     +   │  ├─ azure:network:RouteTable                   hub-ss-rt-            created
      +   │  ├─ azure:network:Subnet                       hub-fwm-sn            created
-     +   │  ├─ azure:network:Route                        gw-gw-r-              created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-gw-sn-rta         created
-     +   │  ├─ azure:network:Route                        gw-dmz-r-             created
-     +   │  ├─ azure:network:Route                        gw-hub-r-             created
      +   │  ├─ azure:network:Route                        ss-dg-r-              created
      +   │  ├─ azure:network:Route                        ss-dmz-r-             created
      +   │  ├─ azure:network:Route                        ss-gw-r-              created
      +   │  ├─ azure:network:Subnet                       hub-example-sn-       created
+     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-example-sn-rta    created
+     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-gw-sn-rta         created
+     +   │  ├─ azure:network:Route                        gw-gw-r-              created
+     +   │  ├─ azure:network:Route                        gw-dmz-r-             created
+     +   │  ├─ azure:network:Route                        gw-hub-r-             created
      +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-dmz-sn-rta        created
      +   │  ├─ azure:network:Route                        dmz-dg-r-             created
      +   │  ├─ azure:network:Route                        dmz-dmz-r-            created
-     +   │  ├─ azure:network:Route                        dmz-hub-r-            created
-     +   │  └─ azure:network:SubnetRouteTableAssociation  hub-example-sn-rta    created
-     +   ├─ azure:core:ResourceGroup                      prod-vdc-rg-          created
-     +   └─ vdc:network:Spoke                             spoke                 created
-     +      ├─ azure:network:VirtualNetwork               spoke-vn-             created
-     +      ├─ azure:network:Route                        gw-spoke-r-           created
-     +      ├─ azure:network:Route                        ss-spoke-r-           created
-     +      ├─ azure:network:VirtualNetworkPeering        spoke-hub-vnp-        created
-     +      ├─ azure:network:VirtualNetworkPeering        hub-spoke-vnp-        created
-     +      ├─ azure:network:Route                        dmz-spoke-r-          created
-     +      ├─ azure:network:RouteTable                   spoke-rt-             created
-     +      ├─ azure:network:Subnet                       spoke-ab-sn           created
-     +      ├─ azure:network:Route                        spoke-dg-r-           created
-     +      ├─ azure:network:Route                        spoke-dmz-r-          created
-     +      ├─ azure:network:Route                        spoke-hub-r-          created
-     +      ├─ azure:network:Subnet                       spoke-example-sn-     created
-     +      └─ azure:network:SubnetRouteTableAssociation  spoke-example-sn-rta  created
-
+     +   │  └─ azure:network:Route                        dmz-hub-r-            created
+     +   ├─ vdc:network:Spoke                             spoke                 created
+     +   │  ├─ azure:network:VirtualNetwork               spoke-vn-             created
+     +   │  ├─ azure:network:VirtualNetworkPeering        hub-spoke-vnp-        created
+     +   │  ├─ azure:network:VirtualNetworkPeering        spoke-hub-vnp-        created
+     +   │  ├─ azure:network:Route                        ss-spoke-r-           created
+     +   │  ├─ azure:network:Route                        gw-spoke-r-           created
+     +   │  ├─ azure:network:Route                        dmz-spoke-r-          created
+     +   │  ├─ azure:network:RouteTable                   spoke-rt-             created
+     +   │  ├─ azure:network:Subnet                       spoke-ab-sn           created
+     +   │  ├─ azure:network:Route                        spoke-dg-r-           created
+     +   │  ├─ azure:network:Route                        spoke-dmz-r-          created
+     +   │  ├─ azure:network:Route                        spoke-hub-r-          created
+     +   │  ├─ azure:network:Subnet                       spoke-example-sn-     created
+     +   │  └─ azure:network:SubnetRouteTableAssociation  spoke-example-sn-rta  created
+     +   └─ azure:core:ResourceGroup                      prod-vdc-rg-          created
+    
     Outputs:
         dmz_ar       : "192.168.100.128/25"
         fw_ip        : "192.168.100.4"
         hub_as       : "10.100.0.0/16"
-        hub_id       : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-3a11e96f/providers/Microsoft.Network/virtualNetworks/hub-vn-aefbe39f"
-        hub_name     : "hub-vn-aefbe39f"
-        spoke_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-3a11e96f/providers/Microsoft.Network/virtualNetworks/spoke-vn-2344447a"
-        spoke_name   : "spoke-vn-2344447a"
-
+        hub_id       : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-200e86af/providers/  Microsoft.Network/virtualNetworks/hub-vn-fb2ab3b9"
+        hub_name     : "hub-vn-fb2ab3b9"
+        spoke_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-200e86af/providers/  Microsoft.Network/virtualNetworks/spoke-vn-87fb8477"
+        spoke_name   : "spoke-vn-87fb8477"
+    
     Resources:
         + 45 created
-
-    Duration: 23m37s
-
+    
+    Duration: 22m48s
+    
     Permalink: https://app.pulumi.com/organization/azure-py-vdc/prod/updates/1
     ```
     
@@ -159,9 +157,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set fwz_as              192.168.200.0/24
     $ pulumi config set gws_ar              10.200.0.0/26
     $ pulumi config set hub_as              10.200.0.0/16
-    $ pulumi config set hub_stem            hub
     $ pulumi config set spoke_as            10.201.0.0/16
-    $ pulumi config set spoke_stem          spoke
     ```
     Optional:
     ```bash

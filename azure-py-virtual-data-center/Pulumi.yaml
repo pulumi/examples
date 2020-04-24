@@ -30,9 +30,6 @@ template:
     azure-py-vdc:hub_as:
       description: Address space for hub containing hbs_ar, hub_ar and remaining subnets
       default: 10.100.0.0/16
-    azure-py-vdc:hub_stem:
-      description: Short name for the hub that will appear in resource names (<4 chars)
-      default: hub
     azure-py-vdc:org:
       description: Pulumi organization in which this project resides (from app.pulumi.com)
     azure-py-vdc:peer:
@@ -44,6 +41,3 @@ template:
     azure-py-vdc:spoke_as:
       description: Address space for spoke containing sbs_ar, spoke_ar and remaining subnets
       default: 10.101.0.0/16
-    azure-py-vdc:spoke_stem:
-      description: Short name for spoke that will appear in resource names (<6 chars)
-      default: spoke

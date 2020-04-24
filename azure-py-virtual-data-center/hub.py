@@ -234,7 +234,7 @@ class Hub(ComponentResource):
                 subnet_id = hub_example_sn.id,
             )
 
-        # assign properties to hub from child virtual network and resources
+        # assign properties to hub including from child resources
         self.address_spaces = hub.address_spaces # informational
         self.dmz_rt_name = hub_dmz_rt.name # used to add routes to spokes
         self.er_gw = hub_er_gw # needed prior to VNet Peering from spokes
@@ -245,6 +245,7 @@ class Hub(ComponentResource):
         self.location = hub.location # informational
         self.name = hub.name # exported and used for spoke peering
         self.subnets = hub.subnets # exported as informational
+        self.stem = name # used for VNet Peering from spokes
         self.ss_rt_name = hub_ss_rt.name # used to add routes to spokes
         self.vpn_gw = hub_vpn_gw # needed prior to VNet Peering from spokes
         self.register_outputs({})

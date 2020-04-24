@@ -23,7 +23,6 @@ class Spoke(ComponentResource):
         # retrieve configuration for spoke
         dmz_ar = props.config.require('dmz_ar')
         hub_as = props.config.require('hub_as')
-        hub_stem = props.config.require('hub_stem')
         sbs_ar = props.config.get('sbs_ar')
         spoke_ar = props.config.get('spoke_ar')
         spoke_as = props.config.require('spoke_as')
@@ -38,7 +37,7 @@ class Spoke(ComponentResource):
 
         # VNet Peering from the hub to spoke
         hub_spoke = vdc.vnet_peering(
-            stem = hub_stem,
+            stem = props.hub.stem,
             virtual_network_name = props.hub.name,
             peer = name,
             remote_virtual_network_id = spoke.id,
@@ -49,10 +48,11 @@ class Spoke(ComponentResource):
         spoke_hub = vdc.vnet_peering(
             stem = name,
             virtual_network_name = spoke.name,
-            peer = hub_stem,
+            peer = props.hub.stem,
             remote_virtual_network_id = props.hub.id,
             allow_forwarded_traffic = True,
-            use_remote_gateways = True,
+            use_remote_gateways = True, # requires gateway(s)
+            depends_on=[props.hub.er_gw, props.hub.vpn_gw]
         )
 
         # provisioning of optional subnet and routes depends_on VNet Peerings
@@ -117,10 +117,11 @@ class Spoke(ComponentResource):
                 next_hop_in_ip_address = props.hub.fw_ip,
             )
 
-        # assign properties to spoke from child virtual network
+        # assign properties to spoke including from child resources
         self.address_spaces = spoke.address_spaces # informational
         self.id = spoke.id # informational
         self.location = spoke.location # informational
         self.name = spoke.name # informational
         self.subnets = spoke.subnets # informational
+        self.stem = name # informational
         self.register_outputs({})

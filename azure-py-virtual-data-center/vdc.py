@@ -2,9 +2,9 @@ from pulumi import ResourceOptions
 from pulumi.resource import CustomTimeouts
 from pulumi_azure import core, network
 
-# Variables to be injected e.g:
+# Variables that must be injected when calling:
 # vdc.resource_group_name = props.resource_group_name
-# vdc.tags = props.default_tags
+# vdc.tags = props.tags
 # vdc.self = self
 
 def expressroute_gateway(stem, subnet_id, depends_on=[]):
@@ -30,7 +30,11 @@ def expressroute_gateway(stem, subnet_id, depends_on=[]):
         opts = ResourceOptions(
             parent=self,
             depends_on=depends_on,
-            custom_timeouts=CustomTimeouts(create='1h', update='1h', delete='1h'),
+            custom_timeouts=CustomTimeouts(
+                create='1h',
+                update='1h',
+                delete='1h',
+            ),
         ),
     )
     return er_gw
@@ -56,7 +60,11 @@ def firewall(stem, subnet_id, depends_on=[]):
         opts = ResourceOptions(
             parent=self,
             depends_on=depends_on,
-            custom_timeouts=CustomTimeouts(create='1h', update='1h', delete='1h'),
+            custom_timeouts=CustomTimeouts(
+                create='1h',
+                update='1h',
+                delete='1h',
+            ),
         ),
     )
     return fw
@@ -164,6 +172,7 @@ def vnet_peering(
         allow_forwarded_traffic=None,
         allow_gateway_transit=None,
         use_remote_gateways=None,
+        depends_on=[],
     ):
         vnp = network.VirtualNetworkPeering(
             f'{stem}-{peer}-vnp-',
@@ -174,7 +183,7 @@ def vnet_peering(
             allow_gateway_transit = allow_gateway_transit,
             use_remote_gateways = use_remote_gateways,
             allow_virtual_network_access = True,
-            opts = ResourceOptions(parent=self),
+            opts = ResourceOptions(parent=self, depends_on=depends_on),
         )
         return vnp
 
@@ -201,7 +210,11 @@ def vpn_gateway(stem, subnet_id, depends_on=[]):
         opts = ResourceOptions(
             parent=self,
             depends_on=depends_on,
-            custom_timeouts=CustomTimeouts(create='1h', update='1h', delete='1h'),
+            custom_timeouts=CustomTimeouts(
+                create='1h',
+                update='1h',
+                delete='1h',
+            ),
         ),
     )
     return vpn_gw
