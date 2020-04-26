@@ -19,7 +19,7 @@ only_test:
 
 specific_test_set:
 	echo "running $(TestSet) Acceptance Tests"
-	cd misc/test && go test ./... --timeout 4h -v -count=1 -short -parallel 40 --run=TestAcc$(TestSet)
+	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel 40 --run=TestAcc$(TestSet)
 
 # The travis_* targets are entrypoints for CI.
 .PHONY: travis_cron travis_push travis_pull_request travis_api
