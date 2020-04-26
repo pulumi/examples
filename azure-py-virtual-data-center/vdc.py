@@ -1,10 +1,10 @@
 from pulumi import ResourceOptions
 from pulumi.resource import CustomTimeouts
-from pulumi_azure import network
+from pulumi_azure import core, network
+import ipaddress
 
-# Variables to be injected from the calling class:
-# vdc.resource_group_name = props.resource_group.name
-# vdc.location = props.resource_group.location
+# Variables that must be injected when calling:
+# vdc.resource_group_name = props.resource_group_name
 # vdc.tags = props.tags
 # vdc.self = self
 
@@ -12,7 +12,6 @@ def expressroute_gateway(stem, subnet_id, depends_on=[]):
     er_gw_pip = network.PublicIp(
         f'{stem}-er-gw-pip-',
         resource_group_name = resource_group_name,
-        location = location,
         allocation_method = 'Dynamic',
         tags = tags,
         opts = ResourceOptions(parent=self),
@@ -20,7 +19,6 @@ def expressroute_gateway(stem, subnet_id, depends_on=[]):
     er_gw = network.VirtualNetworkGateway(
         f'{stem}-er-gw-',
         resource_group_name = resource_group_name,
-        location = location,
         sku = 'Standard',
         type = 'ExpressRoute',
         vpn_type = 'RouteBased',
@@ -30,7 +28,15 @@ def expressroute_gateway(stem, subnet_id, depends_on=[]):
             'publicIpAddressId': er_gw_pip.id,
         }],
         tags = tags,
-        opts = ResourceOptions(parent=self, depends_on=depends_on),
+        opts = ResourceOptions(
+            parent=self,
+            depends_on=depends_on,
+            custom_timeouts=CustomTimeouts(
+                create='1h',
+                update='1h',
+                delete='1h',
+            ),
+        ),
     )
     return er_gw
 
@@ -38,7 +44,6 @@ def firewall(stem, subnet_id, depends_on=[]):
     fw_pip = network.PublicIp(
         f'{stem}-fw-pip-',
         resource_group_name = resource_group_name,
-        location = location,
         sku = 'Standard',
         allocation_method = 'Static',
         tags = tags,
@@ -47,22 +52,35 @@ def firewall(stem, subnet_id, depends_on=[]):
     fw = network.Firewall(
         f'{stem}-fw-',
         resource_group_name = resource_group_name,
-        location = location,
         ip_configurations = [{
             'name': f'{stem}-fw-ipconf',
             'subnet_id': subnet_id,
             'publicIpAddressId': fw_pip.id,
         }],
         tags = tags,
-        opts = ResourceOptions(parent=self, depends_on=depends_on),
+        opts = ResourceOptions(
+            parent=self,
+            depends_on=depends_on,
+            custom_timeouts=CustomTimeouts(
+                create='1h',
+                update='1h',
+                delete='1h',
+            ),
+        ),
     )
     return fw
+
+def resource_group(stem):
+    rg = core.ResourceGroup(
+        f'{stem}-vdc-rg-',
+        tags = tags,
+    )
+    return rg.name
 
 def route_table(stem, disable_bgp_route_propagation=None, depends_on=[]):
     rt = network.RouteTable(
         f'{stem}-rt-',
         resource_group_name = resource_group_name,
-        location = location,
         disable_bgp_route_propagation = disable_bgp_route_propagation,
         tags = tags,
         opts = ResourceOptions(parent=self, depends_on=depends_on),
@@ -107,6 +125,17 @@ def subnet(stem, virtual_network_name, address_prefix, depends_on=[]):
     )
     return sn
 
+def subnet_next(address_space, address_range):
+    space = ipaddress.ip_network(address_space)
+    current = ipaddress.ip_network(address_range)
+    subnets = space.subnets(new_prefix=current.prefixlen)
+    subnet = next(subnets)
+    while subnet.compare_networks(current) <= 0:
+        subnet = next(subnets)
+    else:
+        return str(subnet)
+    return None
+
 def subnet_route_table(stem, route_table_id, subnet_id):
     rta = network.SubnetRouteTableAssociation(
         f'{stem}-sn-rta',
@@ -141,7 +170,6 @@ def virtual_network(stem, address_spaces):
     vn = network.VirtualNetwork(
         f'{stem}-vn-',
         resource_group_name = resource_group_name,
-        location = location,
         address_spaces = address_spaces,
         tags = tags,
         opts = ResourceOptions(parent=self),
@@ -156,6 +184,7 @@ def vnet_peering(
         allow_forwarded_traffic=None,
         allow_gateway_transit=None,
         use_remote_gateways=None,
+        depends_on=[],
     ):
         vnp = network.VirtualNetworkPeering(
             f'{stem}-{peer}-vnp-',
@@ -166,7 +195,7 @@ def vnet_peering(
             allow_gateway_transit = allow_gateway_transit,
             use_remote_gateways = use_remote_gateways,
             allow_virtual_network_access = True,
-            opts = ResourceOptions(parent=self),
+            opts = ResourceOptions(parent=self, depends_on=depends_on),
         )
         return vnp
 
@@ -174,7 +203,6 @@ def vpn_gateway(stem, subnet_id, depends_on=[]):
     vpn_gw_pip = network.PublicIp(
         f'{stem}-vpn-gw-pip-',
         resource_group_name = resource_group_name,
-        location = location,
         allocation_method = 'Dynamic',
         tags = tags,
         opts = ResourceOptions(parent=self),
@@ -182,7 +210,6 @@ def vpn_gateway(stem, subnet_id, depends_on=[]):
     vpn_gw = network.VirtualNetworkGateway(
         f'{stem}-vpn-gw-',
         resource_group_name = resource_group_name,
-        location = location,
         sku = 'VpnGw1',
         type = 'Vpn',
         vpn_type = 'RouteBased',
@@ -195,7 +222,11 @@ def vpn_gateway(stem, subnet_id, depends_on=[]):
         opts = ResourceOptions(
             parent=self,
             depends_on=depends_on,
-            custom_timeouts=CustomTimeouts(create='1h', update='1h', delete='1h'),
+            custom_timeouts=CustomTimeouts(
+                create='1h',
+                update='1h',
+                delete='1h',
+            ),
         ),
     )
     return vpn_gw
