@@ -44,20 +44,23 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi config set azure:environment           public
     $ pulumi config set azure:location              australiasoutheast
-    $ pulumi config set dmz_subnet                  192.168.100.128/25
     $ pulumi config set firewall_address_space      192.168.100.0/24
+    $ pulumi config set firewall_dmz_subnet         192.168.100.128/25
     $ pulumi config set firewall_subnet             192.168.100.0/26
-    $ pulumi config set gateway_subnet              10.100.0.0/26
     $ pulumi config set hub_address_space           10.100.0.0/16
     $ pulumi config set hub_first_subnet            10.100.1.0/24
+    $ pulumi config set hub_gateway_subnet          10.100.0.0/26
     $ pulumi config set spoke1_address_space        10.101.0.0/16
     $ pulumi config set spoke1_first_subnet         10.101.1.0/24
+    $ pulumi config set spoke2_address_space        10.102.0.0/16
+    $ pulumi config set spoke2_first_subnet         10.102.1.0/24
     ```
     Optional:
     ```bash
     $ pulumi config set firewall_management_subnet  192.168.100.64/26
     $ pulumi config set hub_bastion_subnet          10.100.0.64/27
     $ pulumi config set spoke1_bastion_subnet       10.101.0.0/27
+    $ pulumi config set spoke2_bastion_subnet       10.102.0.0/27
     ```
 
 1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways and firewall:
@@ -157,20 +160,23 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi config set azure:environment           public
     $ pulumi config set azure:location              australiaeast
-    $ pulumi config set dmz_subnet                  192.168.200.128/25
     $ pulumi config set firewall_address_space      192.168.200.0/24
+    $ pulumi config set firewall_dmz_subnet         192.168.200.128/25
     $ pulumi config set firewall_subnet             192.168.200.0/26
-    $ pulumi config set gateway_subnet              10.200.0.0/26
     $ pulumi config set hub_address_space           10.200.0.0/16
     $ pulumi config set hub_first_subnet            10.200.1.0/24
+    $ pulumi config set hub_gateway_subnet          10.200.0.0/26
     $ pulumi config set spoke1_address_space        10.201.0.0/16
     $ pulumi config set spoke1_first_subnet         10.201.1.0/24
+    $ pulumi config set spoke2_address_space        10.202.0.0/16
+    $ pulumi config set spoke2_first_subnet         10.202.1.0/24
     ```
     Optional:
     ```bash
     $ pulumi config set firewall_management_subnet  192.168.200.64/26
     $ pulumi config set hub_bastion_subnet          10.200.0.64/27
     $ pulumi config set spoke1_bastion_subnet       10.201.0.0/27
+    $ pulumi config set spoke2_bastion_subnet       10.202.0.0/27
     ```
 
 1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways and firewall:

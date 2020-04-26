@@ -32,11 +32,11 @@ hub = Hub(
         resource_group_name = resource_group_name,
         tags = default_tags,
         stack = stack,
-        dmz_ar = config.require('dmz_subnet'),
+        dmz_ar = config.require('firewall_dmz_subnet'),
         fwm_ar = config.get('firewall_management_subnet'),
         fws_ar = config.require('firewall_subnet'),
         fwz_as = config.require('firewall_address_space'),
-        gws_ar = config.require('gateway_subnet'),
+        gws_ar = config.require('hub_gateway_subnet'),
         hbs_ar = config.get('hub_bastion_subnet'),
         hub_ar = config.require('hub_first_subnet'),
         hub_as = config.require('hub_address_space'),
@@ -67,6 +67,23 @@ spoke1 = Spoke(
     ),
 )
 
+spoke2 = Spoke(
+    's02', # stem of child resource names (<6 chars)
+    SpokeProps(
+        resource_group_name = resource_group_name,
+        tags = default_tags,
+        hub = hub,
+        sbs_ar = config.get('spoke2_bastion_subnet'),
+        spoke_ar = config.require('spoke2_first_subnet'),
+        spoke_as = config.require('spoke2_address_space'),
+        subnets = [ # extra columns for future NSGs
+            ('web', 'any', 'app'),
+            ('app', 'web', 'db'),
+            ('db', 'app', 'none'),
+        ],
+    ),
+)
+
 # export information about the stack
 export('dmz_ar', hub.dmz_ar) # required for stack peering
 export('fw_ip', hub.fw_ip) # required for stack peering
@@ -74,6 +91,9 @@ export('hub_as', hub.hub_as) # required for stack peering
 export('hub_id', hub.id) # required for stack peering
 export('hub_name', hub.name)
 export('hub_subnets', hub.subnets.apply(lambda s: s)) # attempt to refresh
-export('spoke_id', spoke1.id)
-export('spoke_name', spoke1.name)
-export('spoke_subnets', spoke1.subnets.apply(lambda s: s)) # attempt to refresh
+export('s01_id', spoke1.id)
+export('s01_name', spoke1.name)
+export('s01_subnets', spoke1.subnets.apply(lambda s: s)) # attempt to refresh
+export('s02_id', spoke2.id)
+export('s02_name', spoke2.name)
+export('s02_subnets', spoke2.subnets.apply(lambda s: s)) # attempt to refresh
