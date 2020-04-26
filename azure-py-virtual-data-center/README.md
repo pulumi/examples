@@ -48,16 +48,16 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set fws_ar              192.168.100.0/26
     $ pulumi config set fwz_as              192.168.100.0/24
     $ pulumi config set gws_ar              10.100.0.0/26
+    $ pulumi config set hub_ar              10.100.1.0/24
     $ pulumi config set hub_as              10.100.0.0/16
+    $ pulumi config set spoke_ar            10.101.1.0/24
     $ pulumi config set spoke_as            10.101.0.0/16
     ```
     Optional:
     ```bash
     $ pulumi config set fwm_ar              192.168.100.64/26
     $ pulumi config set hbs_ar              10.100.0.64/27
-    $ pulumi config set hub_ar              10.100.1.0/24
     $ pulumi config set sbs_ar              10.101.0.0/27
-    $ pulumi config set spoke_ar            10.101.1.0/24
     ```
 
 1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways and firewall:
@@ -156,16 +156,16 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set fws_ar              192.168.200.0/26
     $ pulumi config set fwz_as              192.168.200.0/24
     $ pulumi config set gws_ar              10.200.0.0/26
+    $ pulumi config set hub_ar              10.200.1.0/24
     $ pulumi config set hub_as              10.200.0.0/16
+    $ pulumi config set spoke_ar            10.201.1.0/24
     $ pulumi config set spoke_as            10.201.0.0/16
     ```
     Optional:
     ```bash
     $ pulumi config set fwm_ar              192.168.200.64/26
     $ pulumi config set hbs_ar              10.200.0.64/27
-    $ pulumi config set hub_ar              10.200.1.0/24
     $ pulumi config set sbs_ar              10.201.0.0/27
-    $ pulumi config set spoke_ar            10.201.1.0/24
     ```
 
 1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways and firewall:

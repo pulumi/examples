@@ -1,4 +1,4 @@
-from pulumi import Config, Output, ComponentResource, ResourceOptions, get_project, StackReference
+from pulumi import ComponentResource, ResourceOptions, StackReference
 import vdc
 
 class HubProps:
@@ -7,27 +7,36 @@ class HubProps:
         resource_group_name: str,
         tags: [str, str],
         stack: str,
-        config: Config,
+        dmz_ar: str,
+        fwm_ar: str,
+        fws_ar: str,
+        fwz_as: str,
+        gws_ar: str,
+        hbs_ar: str,
+        hub_ar: str,
+        hub_as: str,
+        peer: str,
+        ref: str,
+        subnets: [str, str, str],
     ):
-
         self.resource_group_name = resource_group_name
         self.tags = tags
         self.stack = stack
-        self.config = config
+        self.dmz_ar = dmz_ar
+        self.fwm_ar = fwm_ar
+        self.fws_ar = fws_ar
+        self.fwz_as = fwz_as
+        self.gws_ar = gws_ar
+        self.hbs_ar = hbs_ar
+        self.hub_ar = hub_ar
+        self.hub_as = hub_as
+        self.peer = peer
+        self.ref = ref
+        self.subnets = subnets
 
 class Hub(ComponentResource):
     def __init__(self, name: str, props: HubProps, opts: ResourceOptions=None):
         super().__init__('vdc:network:Hub', name, {}, opts)
-
-        # retrieve configuration for hub
-        dmz_ar = props.config.require('dmz_ar')
-        fwm_ar = props.config.get('fwm_ar')
-        fws_ar = props.config.require('fws_ar')
-        fwz_as = props.config.require('fwz_as')
-        gws_ar = props.config.require('gws_ar')
-        hbs_ar = props.config.get('hbs_ar')
-        hub_ar = props.config.get('hub_ar')
-        hub_as = props.config.require('hub_as')
 
         # set vdc defaults
         vdc.resource_group_name = props.resource_group_name
@@ -36,14 +45,14 @@ class Hub(ComponentResource):
 
         # Azure Virtual Network to which spokes will be peered
         # separate address spaces to simplify custom routing
-        hub = vdc.virtual_network(name, [fwz_as, hub_as])
+        hub = vdc.virtual_network(name, [props.fwz_as, props.hub_as])
 
         # DMZ subnet
         hub_dmz_sn = vdc.subnet_special( #ToDo add NSG
             stem = f'{name}-dmz',
             name = 'DMZ', # name not required but preferred
             virtual_network_name = hub.name,
-            address_prefix = dmz_ar,
+            address_prefix = props.dmz_ar,
         )
 
         # AzureFirewallSubnet
@@ -51,7 +60,7 @@ class Hub(ComponentResource):
             stem = f'{name}-fw',
             name = 'AzureFirewallSubnet', # name required
             virtual_network_name = hub.name,
-            address_prefix = fws_ar,
+            address_prefix = props.fws_ar,
         )
 
         # GatewaySubnet
@@ -59,7 +68,7 @@ class Hub(ComponentResource):
             stem = f'{name}-gw',
             name = 'GatewaySubnet', # name required
             virtual_network_name = hub.name,
-            address_prefix = gws_ar,
+            address_prefix = props.gws_ar,
         )
 
         # provisioning of Gateways and Firewall depends_on subnets
@@ -90,22 +99,22 @@ class Hub(ComponentResource):
         # to avoid contention in the Azure control plane
 
         # AzureBastionSubnet (optional)
-        if hbs_ar:
+        if props.hbs_ar:
             hub_ab_sn = vdc.subnet_special( #ToDo add NSG if required
                 stem = f'{name}-ab',
                 name = 'AzureBastionSubnet', # name required
                 virtual_network_name = hub.name,
-                address_prefix = hbs_ar,
+                address_prefix = props.hbs_ar,
                 depends_on=[hub_er_gw, hub_fw, hub_vpn_gw],
             )
 
         # AzureFirewallManagementSubnet (optional)
-        if fwm_ar:
+        if props.fwm_ar:
             hub_fwm_sn = vdc.subnet_special(
                 stem = f'{name}-fwm',
                 name = 'AzureFirewallManagementSubnet', # name required
                 virtual_network_name = hub.name,
-                address_prefix = fwm_ar,
+                address_prefix = props.fwm_ar,
                 depends_on=[hub_er_gw, hub_fw, hub_vpn_gw],
             )
 
@@ -156,19 +165,19 @@ class Hub(ComponentResource):
         vdc.route_to_virtual_network(
             stem = f'gw-gw',
             route_table_name = hub_gw_rt.name,
-            address_prefix = gws_ar,
+            address_prefix = props.gws_ar,
         )
 
         # partially or fully invalidate system routes to redirect traffic
         for route in [
-            (f'gw-dmz', hub_gw_rt.name, dmz_ar),
-            (f'gw-hub', hub_gw_rt.name, hub_as),
+            (f'gw-dmz', hub_gw_rt.name, props.dmz_ar),
+            (f'gw-hub', hub_gw_rt.name, props.hub_as),
             (f'dmz-dg', hub_dmz_rt.name, '0.0.0.0/0'),
-            (f'dmz-dmz', hub_dmz_rt.name, dmz_ar),
-            (f'dmz-hub', hub_dmz_rt.name, hub_as),
+            (f'dmz-dmz', hub_dmz_rt.name, props.dmz_ar),
+            (f'dmz-hub', hub_dmz_rt.name, props.hub_as),
             (f'ss-dg', hub_ss_rt.name, '0.0.0.0/0'),
-            (f'ss-dmz', hub_ss_rt.name, dmz_ar),
-            (f'ss-gw', hub_ss_rt.name, gws_ar),
+            (f'ss-dmz', hub_ss_rt.name, props.dmz_ar),
+            (f'ss-gw', hub_ss_rt.name, props.gws_ar),
         ]:
             vdc.route_to_virtual_appliance(
                 stem = route[0],
@@ -178,18 +187,15 @@ class Hub(ComponentResource):
             )
 
         # VNet Peering between stacks using StackReference
-        peer = props.config.get('peer')
-        if peer:
-            org = props.config.require('org')
-            project = get_project()
-            peer_stack = StackReference(f'{org}/{project}/{peer}')
+        if props.peer:
+            peer_stack = StackReference(props.ref)
             peer_hub_id = peer_stack.get_output('hub_id')
 
             # VNet Peering (Global) in one direction from stack to peer
             hub_hub = vdc.vnet_peering(
                 stem = props.stack,
                 virtual_network_name = hub.name,
-                peer = peer,
+                peer = props.peer,
                 remote_virtual_network_id = peer_hub_id,
                 allow_forwarded_traffic = True,
                 allow_gateway_transit = False, # as both hubs have gateways
@@ -201,12 +207,12 @@ class Hub(ComponentResource):
             peer_hub_as = peer_stack.get_output('hub_as')
             
             for route in [
-                (f'dmz-{peer}-dmz', hub_dmz_rt.name, peer_dmz_ar),
-                (f'dmz-{peer}-hub', hub_dmz_rt.name, peer_hub_as),
-                (f'gw-{peer}-dmz', hub_gw_rt.name, peer_dmz_ar),
-                (f'gw-{peer}-hub', hub_gw_rt.name, peer_hub_as),
-                (f'ss-{peer}-dmz', hub_ss_rt.name, peer_dmz_ar),
-                (f'ss-{peer}-hub', hub_ss_rt.name, peer_hub_as),
+                (f'dmz-{props.peer}-dmz', hub_dmz_rt.name, peer_dmz_ar),
+                (f'dmz-{props.peer}-hub', hub_dmz_rt.name, peer_hub_as),
+                (f'gw-{props.peer}-dmz', hub_gw_rt.name, peer_dmz_ar),
+                (f'gw-{props.peer}-hub', hub_gw_rt.name, peer_hub_as),
+                (f'ss-{props.peer}-dmz', hub_ss_rt.name, peer_dmz_ar),
+                (f'ss-{props.peer}-hub', hub_ss_rt.name, peer_hub_as),
             ]:
                 vdc.route_to_virtual_appliance(
                     stem = route[0],
@@ -218,34 +224,41 @@ class Hub(ComponentResource):
         # provisioning of subnets depends_on Route Table (Gateways & Firewall)
         # to avoid contention in the Azure control plane
 
-        # only one shared subnet is provisioned as an example, but many can be
-        if hub_ar: #ToDo replace with loop
-            hub_example_sn = vdc.subnet( #ToDo add NSG
-                stem = f'{name}-example',
+        # shared services subnets
+        subnet_range = props.hub_ar
+        for subnet in props.subnets:
+            hub_sn = vdc.subnet( #ToDo add NSG
+                stem = f'{name}-{subnet[0]}',
                 virtual_network_name = hub.name,
-                address_prefix = hub_ar,
+                address_prefix = subnet_range,
                 depends_on=[hub_ss_rt],
             )
-
             # associate all hub shared services subnets to Route Table        
-            hub_example_sn_rta = vdc.subnet_route_table(
-                stem = f'{name}-example',
+            hub_sn_rta = vdc.subnet_route_table(
+                stem = f'{name}-{subnet[0]}',
                 route_table_id = hub_ss_rt.id,
-                subnet_id = hub_example_sn.id,
+                subnet_id = hub_sn.id,
             )
+            subnet_range = vdc.subnet_next(props.hub_as, subnet_range)
 
         # assign properties to hub including from child resources
         self.address_spaces = hub.address_spaces # informational
+        self.dmz_ar = props.dmz_ar # used to construct routes to the hub
         self.dmz_rt_name = hub_dmz_rt.name # used to add routes to spokes
         self.er_gw = hub_er_gw # needed prior to VNet Peering from spokes
         self.fw = hub_fw # needed prior to VNet Peering from spokes
-        self.fw_ip = hub_fw_ip # used to construct routes
+        self.fw_ip = hub_fw_ip # used to construct routes to the hub
         self.gw_rt_name = hub_gw_rt.name # used to add routes to spokes
+        self.hub_as = props.hub_as # used to construct routes to the hub
         self.id = hub.id # exported and used for stack and spoke peering
         self.location = hub.location # informational
         self.name = hub.name # exported and used for spoke peering
+        self.peer = props.peer # informational
+        self.resource_group_name = props.resource_group_name # informational
         self.subnets = hub.subnets # exported as informational
+        self.stack = props.stack # informational
         self.stem = name # used for VNet Peering from spokes
         self.ss_rt_name = hub_ss_rt.name # used to add routes to spokes
+        self.tags = props.tags # informational
         self.vpn_gw = hub_vpn_gw # needed prior to VNet Peering from spokes
         self.register_outputs({})

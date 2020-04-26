@@ -1,6 +1,7 @@
 from pulumi import ResourceOptions
 from pulumi.resource import CustomTimeouts
 from pulumi_azure import core, network
+import ipaddress
 
 # Variables that must be injected when calling:
 # vdc.resource_group_name = props.resource_group_name
@@ -123,6 +124,17 @@ def subnet(stem, virtual_network_name, address_prefix, depends_on=[]):
         opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     return sn
+
+def subnet_next(address_space, address_range):
+    space = ipaddress.ip_network(address_space)
+    current = ipaddress.ip_network(address_range)
+    subnets = space.subnets(new_prefix=current.prefixlen)
+    subnet = next(subnets)
+    while subnet.compare_networks(current) <= 0:
+        subnet = next(subnets)
+    else:
+        return str(subnet)
+    return None
 
 def subnet_route_table(stem, route_table_id, subnet_id):
     rta = network.SubnetRouteTableAssociation(
