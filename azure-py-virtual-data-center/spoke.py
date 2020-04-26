@@ -74,26 +74,6 @@ class Spoke(ComponentResource):
             disable_bgp_route_propagation = True,
             depends_on = [hub_spoke, spoke_hub],
         )
-                
-        # provisioning of subnets depends_on VNet Peerings and Route Table
-        # to avoid contention in the Azure control plane
-
-        # ordinary spoke subnets
-        subnet_range = props.spoke_ar
-        for subnet in props.subnets:
-            spoke_sn = vdc.subnet(
-                stem = f'{name}-{subnet[0]}',
-                virtual_network_name = spoke.name,
-                address_prefix = subnet_range,
-                depends_on = [spoke_rt],
-            )
-            # associate all ordinary spoke subnets to Route Table
-            spoke_sn_rta = vdc.subnet_route_table(
-                stem = f'{name}-{subnet[0]}',
-                route_table_id = spoke_rt.id,
-                subnet_id = spoke_sn.id,
-            )
-            subnet_range = vdc.subnet_next(props.spoke_as, subnet_range)
 
         # as VNet Peering may not be specified as next_hop_type, a separate
         # address space in the hub from the firewall allows routes from the
@@ -118,6 +98,26 @@ class Spoke(ComponentResource):
                 address_prefix = route[2],
                 next_hop_in_ip_address = props.hub.fw_ip,
             )
+                
+        # provisioning of subnets depends_on Route Table (VNet Peerings)
+        # to avoid contention in the Azure control plane
+
+        # ordinary spoke subnets
+        subnet_range = props.spoke_ar
+        for subnet in props.subnets:
+            spoke_sn = vdc.subnet(
+                stem = f'{name}-{subnet[0]}',
+                virtual_network_name = spoke.name,
+                address_prefix = subnet_range,
+                depends_on = [spoke_rt],
+            )
+            # associate all ordinary spoke subnets to Route Table
+            spoke_sn_rta = vdc.subnet_route_table(
+                stem = f'{name}-{subnet[0]}',
+                route_table_id = spoke_rt.id,
+                subnet_id = spoke_sn.id,
+            )
+            subnet_range = vdc.subnet_next(props.spoke_as, subnet_range)
 
         # assign properties to spoke including from child resources
         self.address_spaces = spoke.address_spaces
