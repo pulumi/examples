@@ -47,11 +47,11 @@ template:
       description: Address range for first application subnet within spoke1_address_space
       default: 10.101.1.0/24
     azure-py-vdc:spoke2_address_space:
-      description: Address space for spoke1 containing ABS and application subnets
+      description: Address space for spoke2 containing ABS and application subnets
       default: 10.102.0.0/16
     azure-py-vdc:spoke2_bastion_subnet:
-      description: Address range for AzureBastionSubnet within spoke1_address_space (optional /27)
+      description: Address range for AzureBastionSubnet within spoke2_address_space (optional /27)
       default: 10.102.0.0/27
     azure-py-vdc:spoke2_first_subnet:
-      description: Address range for first application subnet within spoke1_address_space
+      description: Address range for first application subnet within spoke2_address_space
       default: 10.102.1.0/24

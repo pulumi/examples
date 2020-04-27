@@ -45,7 +45,7 @@ hub = Hub(
         subnets = [ # extra columns for future NSGs
             ('domain', 'any', 'any'),
             ('files', 'any', 'none'),
-        ]
+        ],
     ),
 )
 
