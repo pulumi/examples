@@ -41,7 +41,7 @@ class Spoke(ComponentResource):
             peer = name,
             remote_virtual_network_id = spoke.id,
             allow_gateway_transit = True,
-            depends_on=[props.hub.er_gw, props.hub.vpn_gw] # avoid contention
+            depends_on=[props.hub.er_gw, props.hub.vpn_gw], # avoid contention
         )
 
         # VNet Peering from spoke to the hub
@@ -52,7 +52,7 @@ class Spoke(ComponentResource):
             remote_virtual_network_id = props.hub.id,
             allow_forwarded_traffic = True,
             use_remote_gateways = True, # requires at least one gateway
-            depends_on=[props.hub.er_gw, props.hub.vpn_gw]
+            depends_on=[props.hub.er_gw, props.hub.vpn_gw],
         )
 
         # provisioning of optional subnet and routes depends_on VNet Peerings
