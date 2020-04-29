@@ -63,7 +63,7 @@ can see `canary-example-app` and `canary-staging-app` created.
 
 1. **IMPORTANT NOTE:** The code in `index.ts` is meant to be run out-of-cluster (_e.g._, on your
    local machine). It will thus call `kubectl port-forward` on your behalf so that the Prometheus
-   service is fowarded to your local machine, which allows this program to poll for metrics. **If
+   service is forwarded to your local machine, which allows this program to poll for metrics. **If
    you are running Pulumi in-cluster, you can comment out this part of the example.**
 
 1. Perform the deployment:

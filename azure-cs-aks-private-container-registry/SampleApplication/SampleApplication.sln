@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1F7D45BD-9A1F-4376-A138-B3A9FC474A98}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{0BA2646E-7BFB-4F7F-A813-77F91141BE2C}"
+ProjectSection(SolutionItems) = preProject
+	Dockerfile = Dockerfile
+	docker-compose.yaml = docker-compose.yaml
+EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApplication.Web", "src\SampleApplication.Web\SampleApplication.Web.csproj", "{85D64E00-0137-43D5-A8B9-D0B8F9FBA659}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{85D64E00-0137-43D5-A8B9-D0B8F9FBA659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85D64E00-0137-43D5-A8B9-D0B8F9FBA659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85D64E00-0137-43D5-A8B9-D0B8F9FBA659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85D64E00-0137-43D5-A8B9-D0B8F9FBA659}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{85D64E00-0137-43D5-A8B9-D0B8F9FBA659} = {1F7D45BD-9A1F-4376-A138-B3A9FC474A98}
+	EndGlobalSection
+EndGlobal

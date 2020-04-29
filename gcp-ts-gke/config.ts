@@ -23,4 +23,5 @@ export const password = config.get("password") || new random.RandomPassword(
 
 // GKE master version
 // Default to the latest available version.
-export const masterVersion = config.get("masterVersion") || gcp.container.getEngineVersions().latestMasterVersion;
+export const masterVersion = config.get("masterVersion") ||
+    gcp.container.getEngineVersions().then(it => it.latestMasterVersion);

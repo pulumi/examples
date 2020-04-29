@@ -33,7 +33,7 @@ const amiId = aws.getAmi({
 const webServer = new aws.ec2.Instance("webServer", {
     ami: amiId,
     instanceType: config.instanceType,
-    securityGroups: [ webSg.name ],
+    vpcSecurityGroupIds: [ webSg.id ],
     userData: createUserData(
         [ "install_ruby_2_3_1", "install_mysql", "configure_mysql", "install_application" ],
         {

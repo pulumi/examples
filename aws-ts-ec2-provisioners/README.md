@@ -10,10 +10,16 @@ https://github.com/pulumi/pulumi/issues/1691 tracks designing and developing a c
 
 First, create a stack, using `pulumi stack init`.
 
-Next, generate an OpenSSH keypair for use with your server:
+Now, we need to ensure that our dependencies are installed:
 
 ```
-$ ssh-keygen -t rsa -f rsa
+$ npm install
+``` 
+
+Next, generate an OpenSSH keypair for use with your server - as per the AWS [Requirements][1]
+
+```
+$ ssh-keygen -t rsa -f rsa -m PEM
 ```
 
 This will output two files, `rsa` and `rsa.pub`, in the current directory. Be sure not to commit these files!
@@ -42,3 +48,5 @@ $ pulumi config set aws:region us-west-2
 ```
 
 From there, you can run `pulumi up` and all resources will be provisioned and configured.
+
+[1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws

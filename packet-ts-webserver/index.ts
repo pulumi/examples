@@ -13,8 +13,13 @@ const vm = new packet.Device("vm", {
     hostname: randomHostName.id,
     operatingSystem: packet.OperatingSystems.CoreOSStable,
     plan: packet.Plans.T1SmallX86,
-    projectId:  project.id,
-    ipAddressTypes: [packet.IpAddressTypes.PublicIPv4, packet.IpAddressTypes.PrivateIPv4, packet.IpAddressTypes.PublicIPv6],
+    projectId:  project.then(p => p.id),
+    ipAddresses: [{
+        type: "public_ipv4",
+    },
+    {
+        type: "private_ipv4",
+    }],
 });
 
 export const ip = vm.accessPublicIpv4;

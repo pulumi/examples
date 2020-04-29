@@ -2,7 +2,6 @@ FROM gradle:5.6-jdk11 as build
 WORKDIR /app
 COPY ./src ./src
 COPY build.gradle .
-COPY .classpath .
 RUN gradle build
 
 FROM openjdk:8-jdk-alpine

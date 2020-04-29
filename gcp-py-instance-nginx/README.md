@@ -3,86 +3,81 @@
 # Nginx Server Using Compute Engine
 
 Starting point for building the Pulumi nginx server sample in Google Cloud Platform.
+This example deploys two GCP virtual machines:
+
+- a virtual machine running nginx via a [startup script](https://cloud.google.com/compute/docs/startupscript)
+- a virtual machine running nginx via a Docker container with Google's 
+[Container-Optimized OS](https://cloud.google.com/container-optimized-os/docs)
 
 ## Running the App
 
-1.  Create a new stack:
+1. Create a new stack:
 
-    ```
+    ```bash
     $ pulumi stack init gcp-instance-nginx
     ```
 
-2. Configure Python environment:
-    ```
-    virtualenv -p python3 venv
-    source venv/bin/activate
-    pip install pulumi_gcp
+2. Create a Python virtualenv, activate it, and install dependencies:
+
+    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip3 install -r requirements.txt
     ```
 
-3.  Configure the project:
+3. Configure the project:
 
-    ```
+    ```bash
     $ export GOOGLE_PROJECT=cncf-230209; export GOOGLE_REGION=asia-east1; export GOOGLE_ZONE=asia-east1-a;
     $ export GOOGLE_CREDENTIALS=YOURGCPCREDENTIALS
     ```
 
-4.  Run `pulumi up` to preview and deploy changes:
+4. Run `pulumi up` to preview and deploy changes:
 
-    ``` 
-    Previewing update (gcp-instance-nginx):
-
-         Type                     Name                                   Plan
-         pulumi:pulumi:Stack      gcp-instance-nginx-gcp-instance-nginx
-     +   ├─ gcp:compute:Network   network                                create
-     +   ├─ gcp:compute:Address   poc                                    create
-     +   ├─ gcp:compute:Firewall  firewall                               create
-     +   └─ gcp:compute:Instance  poc                                    create
-
+    ```bash
+    $ pulumi up
+    Previewing update (dev):
+        Type                     Name                    Plan       
+    +   pulumi:pulumi:Stack      gcp-instance-nginx-dev  create     
+    +   ├─ gcp:compute:Address   poc                     create     
+    +   ├─ gcp:compute:Network   poc                     create     
+    +   ├─ gcp:compute:Address   poc-container-instance  create     
+    +   ├─ gcp:compute:Firewall  poc                     create     
+    +   ├─ gcp:compute:Instance  poc                     create     
+    +   └─ gcp:compute:Instance  poc-container-instance  create     
+    
     Resources:
-        + 4 to create
-        1 unchanged
+        + 7 to create
 
     Do you want to perform this update? yes
-    Updating (gcp-instance-nginx):
-
-         Type                     Name                                   Status
-         pulumi:pulumi:Stack      gcp-instance-nginx-gcp-instance-nginx
-     +   ├─ gcp:compute:Network   network                                created
-     +   ├─ gcp:compute:Address   poc                                    created
-     +   ├─ gcp:compute:Instance  poc                                    created
-     +   └─ gcp:compute:Firewall  firewall                               created
-
+    Updating (dev):
+        Type                     Name                    Status      
+    +   pulumi:pulumi:Stack      gcp-instance-nginx-dev  created     
+    +   ├─ gcp:compute:Address   poc                     created     
+    +   ├─ gcp:compute:Network   poc                     created     
+    +   ├─ gcp:compute:Address   poc-container-instance  created     
+    +   ├─ gcp:compute:Firewall  poc                     created     
+    +   ├─ gcp:compute:Instance  poc                     created     
+    +   └─ gcp:compute:Instance  poc-container-instance  created     
+    
     Outputs:
-      + external_ip     : "34.80.8.146"
-      + instance_name   : "poc"
-      + instance_network: [
-      +     [0]: {
-              + accessConfigs    : [
-              +     [0]: {
-                      + assignedNatIp      : "34.80.8.146"
-                      + natIp              : "34.80.8.146"
-                      + network_tier       : "PREMIUM"
-                    }
-                ]
-              + address          : "10.140.0.2"
-              + name             : "nic0"
-              + network          : "https://www.googleapis.com/compute/v1/projects/cncf-230209/global/networks/network-6054c92"
-              + networkIp        : "10.140.0.2"
-              + subnetwork       : "https://www.googleapis.com/compute/v1/projects/cncf-230209/regions/asia-east1/subnetworks/network-6054c92"
-              + subnetworkProject: "cncf-230209"
-            }
-        ]
+        container_instance_external_ip: "34.66.98.237"
+        container_instance_name       : "poc-container-instance-11dddc1"
+        instance_external_ip          : "35.192.222.243"
+        instance_name                 : "poc-4897b20"
 
     Resources:
-        + 4 created
-        1 unchanged
+        + 7 created
 
-    Duration: 51s
+    Duration: 59s
     ```
 
-5.  Curl the HTTP server:
+5. Curl the HTTP server:
 
-    ```
+    ```bash
     $ curl $(pulumi stack output external_ip)
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
@@ -204,39 +199,53 @@ Starting point for building the Pulumi nginx server sample in Google Cloud Platf
 
 6. Destroy the created resources:
 
-    ```
+    ```bash
     $ pulumi destroy
-    Previewing destroy (gcp-instance-nginx):
-
-         Type                     Name                                   Plan
-     -   pulumi:pulumi:Stack      gcp-instance-nginx-gcp-instance-nginx  delete
-     -   ├─ gcp:compute:Instance  poc                                    delete
-     -   ├─ gcp:compute:Firewall  firewall                               delete
-     -   ├─ gcp:compute:Network   network                                delete
-     -   └─ gcp:compute:Address   poc                                    delete
+    Previewing destroy (dev):
+        Type                     Name                    Plan       
+    -   pulumi:pulumi:Stack      gcp-instance-nginx-dev  delete     
+    -   ├─ gcp:compute:Firewall  poc                     delete     
+    -   ├─ gcp:compute:Instance  poc                     delete     
+    -   ├─ gcp:compute:Instance  poc-container-instance  delete     
+    -   ├─ gcp:compute:Address   poc-container-instance  delete     
+    -   ├─ gcp:compute:Network   poc                     delete     
+    -   └─ gcp:compute:Address   poc                     delete     
+    
+    Outputs:
+    - container_instance_external_ip: "34.66.98.237"
+    - container_instance_name       : "poc-container-instance-11dddc1"
+    - instance_external_ip          : "35.192.222.243"
+    - instance_name                 : "poc-4897b20"
 
     Resources:
-        - 5 to delete
+        - 7 to delete
 
     Do you want to perform this destroy? yes
-    Destroying (gcp-instance-nginx):
-
-         Type                     Name                                   Status
-     -   pulumi:pulumi:Stack      gcp-instance-nginx-gcp-instance-nginx  deleted
-     -   ├─ gcp:compute:Instance  poc                                    deleted
-     -   ├─ gcp:compute:Firewall  firewall                               deleted
-     -   ├─ gcp:compute:Network   network                                deleted
-     -   └─ gcp:compute:Address   poc                                    deleted
+    Destroying (dev):
+        Type                     Name                    Status      
+    -   pulumi:pulumi:Stack      gcp-instance-nginx-dev  deleted     
+    -   ├─ gcp:compute:Firewall  poc                     deleted     
+    -   ├─ gcp:compute:Instance  poc                     deleted     
+    -   ├─ gcp:compute:Instance  poc-container-instance  deleted     
+    -   ├─ gcp:compute:Network   poc                     deleted     
+    -   ├─ gcp:compute:Address   poc-container-instance  deleted     
+    -   └─ gcp:compute:Address   poc                     deleted     
+    
+    Outputs:
+    - container_instance_external_ip: "34.66.98.237"
+    - container_instance_name       : "poc-container-instance-11dddc1"
+    - instance_external_ip          : "35.192.222.243"
+    - instance_name                 : "poc-4897b20"
 
     Resources:
-        - 5 deleted
+        - 7 deleted
 
-    Duration: 1m57s
+    Duration: 3m9s
     ```
 
 7. Destroy the stack:
 
-    ```
+    ```bash
     $ pulumi stack rm
     This will permanently remove the 'gcp-instance-nginx' stack!
     Please confirm that this is what you'd like to do by typing ("gcp-instance-nginx"): gcp-instance-nginx

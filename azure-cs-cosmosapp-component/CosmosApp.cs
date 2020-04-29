@@ -97,7 +97,7 @@ public class CosmosApp : ComponentResource
         var resourceGroup = args.ResourceGroup;
         var locations = args.Locations;
         var primaryLocation = locations[0];
-        var parentOptions = (CustomResourceOptions)ResourceOptions.Merge(new CustomResourceOptions { Parent = this }, options);
+        var parentOptions = new CustomResourceOptions { Parent = this };
 
         // Cosmos DB Account with multiple replicas
         var cosmosAccount = new Account($"cosmos-{name}",
@@ -105,7 +105,7 @@ public class CosmosApp : ComponentResource
             {
                 ResourceGroupName = resourceGroup.Name,
                 Location = primaryLocation,
-                GeoLocations = locations.Select((l, i) => new AccountGeoLocationsArgs { Location = l, FailoverPriority = i }).ToArray(),
+                GeoLocations = locations.Select((l, i) => new AccountGeoLocationArgs { Location = l, FailoverPriority = i }).ToArray(),
                 OfferType = "Standard",
                 ConsistencyPolicy = new AccountConsistencyPolicyArgs { ConsistencyLevel = "Session" },
                 EnableMultipleWriteLocations = args.EnableMultiMaster,
@@ -137,30 +137,24 @@ public class CosmosApp : ComponentResource
             {
                 ResourceGroupName = resourceGroup.Name,
                 TrafficRoutingMethod = "Performance",
-                DnsConfigs =
+                DnsConfig = new TrafficManagerProfileDnsConfigArgs
                 {
-                    new TrafficManagerProfileDnsConfigsArgs
-                    {
-                        // Subdomain must be globally unique, so we default it with the full resource group name
-                        RelativeName = Output.Format($"{name}{resourceGroup.Name}"),
-                        Ttl = 60,
-                    }
+                    // Subdomain must be globally unique, so we default it with the full resource group name
+                    RelativeName = Output.Format($"{name}{resourceGroup.Name}"),
+                    Ttl = 60,
                 },
-                MonitorConfigs =
+                MonitorConfig = new TrafficManagerProfileMonitorConfigArgs
                 {
-                    new TrafficManagerProfileMonitorConfigsArgs
-                    {
-                        Protocol = "HTTP",
-                        Port = 80,
-                        Path = "/api/ping",
-                    }
-                },
+                    Protocol = "HTTP",
+                    Port = 80,
+                    Path = "/api/ping",
+                }
             },
             parentOptions);
 
         var globalContext = new GlobalContext(resourceGroup, cosmosAccount, database, container, parentOptions);
         var buildLocation = args.Factory(globalContext);
-        var endpointOptions = (CustomResourceOptions)ResourceOptions.Merge(options, new CustomResourceOptions { Parent = profile, DeleteBeforeReplace = true });
+        var endpointOptions = new CustomResourceOptions { Parent = profile, DeleteBeforeReplace = true };
 
         var endpoints = locations.Select(location =>
         {

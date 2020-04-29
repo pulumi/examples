@@ -16,10 +16,90 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"github.com/pulumi/pulumi/pkg/resource"
-	"github.com/pulumi/pulumi/pkg/testing/integration"
+	"github.com/pulumi/pulumi/pkg/v2/testing/integration"
+	"github.com/pulumi/pulumi/sdk/v2/go/common/resource"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestAccAwsGoEks(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-eks"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["url"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello Kubernetes bootcamp!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsGoFargate(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-fargate"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["url"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Welcome to nginx!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsGoS3Folder(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-s3-folder"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["websiteUrl"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, world!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsGoS3FolderComponent(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-s3-folder-component"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["websiteUrl"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, world!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsGoWebserver(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-webserver"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["publicIp"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, World!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
 
 func TestAccAwsJsContainers(t *testing.T) {
 	test := getAWSBase(t).
@@ -406,7 +486,7 @@ func TestAccAzureCsAppService(t *testing.T) {
 				"sqlPassword": "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["Endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
 				})
 			},
@@ -420,7 +500,7 @@ func TestAccAzureCsWebserver(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-cs-webserver"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["ipAddress"].(string), nil, func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["IpAddress"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World")
 				})
 			},
@@ -437,9 +517,67 @@ func TestAccAzureFsAppService(t *testing.T) {
 				"sqlPassword": "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
 				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAzureGoAci(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aci"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
+					return assert.Contains(t, body, "Hello, containers!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAzureGoAks(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aks"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResult(t, stack.Outputs["url"], func(body string) bool {
+					return assert.Contains(t, body, "Hello Kubernetes bootcamp!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAzureGoAppservice(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-go-appservice"),
+			Config: map[string]string{
+				"sqlPassword": "2@Password@2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
+					return assert.Contains(t, body, "Greetings from Azure App Service!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAzureGoWebserverComponent(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-go-webserver-component"),
+			Config: map[string]string{
+				"username": "webmaster",
+				"password": "Password1234!",
 			},
 		})
 
@@ -484,7 +622,7 @@ func TestAccAzurePyAppService(t *testing.T) {
 				"sqlPassword": "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
 				})
 			},
@@ -498,7 +636,7 @@ func TestAccAzurePyAppServiceDocker(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-appservice-docker"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["hello_endpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["hello_endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Hello, world!")
 				})
 			},
@@ -508,6 +646,7 @@ func TestAccAzurePyAppServiceDocker(t *testing.T) {
 }
 
 func TestAccAzurePyHdInsightSpark(t *testing.T) {
+	t.Skip("Skipping HDInsights tests due to a stuck cluster in the account")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-hdinsight-spark"),
@@ -558,7 +697,7 @@ func TestAccAzureTsAppService(t *testing.T) {
 				"sqlPassword": "2@Password@2",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Azure App Service!")
 				})
 			},
@@ -572,7 +711,7 @@ func TestAccAzureTsAppServiceDocker(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-appservice-docker"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["getStartedEndpoint"], nil, func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["getStartedEndpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Azure App Service")
 				})
 			},
@@ -605,6 +744,7 @@ func TestAccAzureTsFunctions(t *testing.T) {
 }
 
 func TestAccAzureTsHdInsightSpark(t *testing.T) {
+	t.Skip("Skipping HDInsights tests due to a stuck cluster in the account")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-hdinsight-spark"),
@@ -926,7 +1066,7 @@ func TestAccDigitalOceanCsK8s(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "digitalocean-cs-k8s"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["ingressIp"].(string), nil, func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["IngressIp"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Welcome to nginx!")
 				})
 			},
@@ -940,7 +1080,7 @@ func TestAccDigitalOceanCsLoadbalancedDroplets(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "digitalocean-cs-loadbalanced-droplets"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string), nil, func(body string) bool {
+				assertHTTPResult(t, stack.Outputs["Endpoint"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Welcome to nginx!")
 				})
 			},
@@ -959,6 +1099,60 @@ func TestAccLinodeJsWebserver(t *testing.T) {
 					return assert.Contains(t, body, "Hello, World!")
 				})
 			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccGcpGoFunctions(t *testing.T) {
+	test := getGoogleBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-functions"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["function"].(string)
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello World!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccGcpGoFunctionsRaw(t *testing.T) {
+	test := getGoogleBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-functions-raw"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["function"].(string)
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello World!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccGcpGoGke(t *testing.T) {
+	test := getGoogleBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-gke"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["url"].(string)
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello Kubernetes bootcamp!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccGcpGoInstance(t *testing.T) {
+	test := getGoogleBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-instance"),
 		})
 
 	integration.ProgramTest(t, &test)
@@ -1055,6 +1249,22 @@ func TestAccGcpTsServerlessRaw(t *testing.T) {
 				})
 				assertHTTPResult(t, stack.Outputs["pythonEndpoint"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccGcpTsCloudRun(t *testing.T) {
+	test := getGoogleBase(t).
+		With(integration.ProgramTestOptions{
+			Dir:           path.Join(getCwd(t), "..", "..", "gcp-ts-cloudrun"),
+			RunUpdateTest: false,
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["rubyUrl"].(string)
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello Pulumi!")
 				})
 			},
 		})
@@ -1226,6 +1436,21 @@ func assertHTTPResult(t *testing.T, output interface{}, headers map[string]strin
 }
 
 func assertHTTPResultWithRetry(t *testing.T, output interface{}, headers map[string]string, maxWait time.Duration, check func(string) bool) bool {
+	return assertHTTPResultShapeWithRetry(t, output, headers, maxWait, func(string) bool { return true }, check)
+}
+
+func assertAppServiceResult(t *testing.T, output interface{}, check func(string) bool) bool {
+	ready := func(body string) bool {
+		// We got a welcome page from Azure App Service. This means the resource is deployed but our custom code is not
+		// there yet. Wait a bit more and retry later.
+		welcomePage := strings.Contains(body, "Your app service is up and running.")
+		return !welcomePage
+	}
+	return assertHTTPResultShapeWithRetry(t, output, nil, 5*time.Minute, ready, check)
+}
+
+func assertHTTPResultShapeWithRetry(t *testing.T, output interface{}, headers map[string]string, maxWait time.Duration,
+	ready func(string) bool, check func(string) bool) bool {
 	hostname, ok := output.(string)
 	if !assert.True(t, ok, fmt.Sprintf("expected `%s` output", output)) {
 		return false
@@ -1235,8 +1460,6 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, headers map[str
 		hostname = fmt.Sprintf("http://%s", hostname)
 	}
 
-	var err error
-	var resp *http.Response
 	startTime := time.Now()
 	count, sleep := 0, 0
 	for true {
@@ -1257,13 +1480,30 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, headers map[str
 		}
 
 		client := &http.Client{Timeout: time.Second * 10}
-		resp, err = client.Do(req)
+		resp, err := client.Do(req)
 		if err == nil && resp.StatusCode == 200 {
-			break
+			if !assert.NotNil(t, resp.Body, "resp.body was nil") {
+				return false
+			}
+
+			// Read the body
+			defer resp.Body.Close()
+			body, err := ioutil.ReadAll(resp.Body)
+			if !assert.NoError(t, err) {
+				return false
+			}
+
+			bodyText := string(body)
+
+			// Even if we got 200 and a response, it may not be ready for assertion yet - that's specific per test.
+			if ready(bodyText) {
+				// Verify it matches expectations
+				return check(bodyText)
+			}
 		}
 		if now.Sub(startTime) >= maxWait {
 			fmt.Printf("Timeout after %v. Unable to http.get %v successfully.", maxWait, hostname)
-			break
+			return false
 		}
 		count++
 		// delay 10s, 20s, then 30s and stay at 30s
@@ -1276,22 +1516,8 @@ func assertHTTPResultWithRetry(t *testing.T, output interface{}, headers map[str
 		fmt.Printf("Http Error: %v\n", err)
 		fmt.Printf("  Retry: %v, elapsed wait: %v, max wait %v\n", count, now.Sub(startTime), maxWait)
 	}
-	if !assert.NoError(t, err) {
-		return false
-	}
 
-	if !assert.NotNil(t, resp, "resp was nil") && !assert.NotNil(t, resp.Body, "resp.body was nil") {
-		return false
-	}
-
-	// Read the body
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if !assert.NoError(t, err) {
-		return false
-	}
-	// Verify it matches expectations
-	return check(string(body))
+	return false
 }
 
 func assertHTTPHelloWorld(t *testing.T, output interface{}, headers map[string]string) bool {

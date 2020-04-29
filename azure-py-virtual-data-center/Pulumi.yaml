@@ -1,0 +1,57 @@
+name: azure-py-vdc
+runtime: python
+description: A minimal Azure Virtual Data Center described in Python
+template:
+  config:
+    azure:environment:
+      description: Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    azure:location:
+      description: Azure region to use (e.g. `australiaeast` or `australiasoutheast`)
+      default: australiasoutheast
+    azure-py-vdc:firewall_address_space:
+      description: Address space containing DMZ, AFMS and AFS subnets
+      default: 192.168.100.0/24
+    azure-py-vdc:firewall_dmz_subnet:
+      description: Address range for DMZ subnet within firewall_address_space
+      default: 192.168.100.128/25
+    azure-py-vdc:firewall_management_subnet:
+      description: Address range for AzureFirewallManagementSubnet within firewall_address_space (optional /26)
+      default: 192.168.100.64/26
+    azure-py-vdc:firewall_subnet:
+      description: Address range for AzureFirewallSubnet within firewall_address_space (/26)
+      default: 192.168.100.0/26
+    azure-py-vdc:hub_address_space:
+      description: Address space containing ABS and shared services subnets
+      default: 10.100.0.0/16
+    azure-py-vdc:hub_bastion_subnet:
+      description: Address range for AzureBastionSubnet within hub_address_space (optional /27)
+      default: 10.100.0.64/27
+    azure-py-vdc:hub_first_subnet:
+      description: Address range for first shared services subnet within hub_address_space
+      default: 10.100.1.0/24
+    azure-py-vdc:hub_gateway_subnet:
+      description: Address range for GatewaySubnet within hub_address_space (/27 or larger)
+      default: 10.100.0.0/26
+    azure-py-vdc:org:
+      description: Pulumi organization in which this project resides (from app.pulumi.com)
+    azure-py-vdc:peer:
+      description: Another stack in same organization and project to peer hubs with (optional)
+    azure-py-vdc:spoke1_address_space:
+      description: Address space for spoke1 containing ABS and application subnets
+      default: 10.101.0.0/16
+    azure-py-vdc:spoke1_bastion_subnet:
+      description: Address range for AzureBastionSubnet within spoke1_address_space (optional /27)
+      default: 10.101.0.0/27
+    azure-py-vdc:spoke1_first_subnet:
+      description: Address range for first application subnet within spoke1_address_space
+      default: 10.101.1.0/24
+    azure-py-vdc:spoke2_address_space:
+      description: Address space for spoke2 containing ABS and application subnets
+      default: 10.102.0.0/16
+    azure-py-vdc:spoke2_bastion_subnet:
+      description: Address range for AzureBastionSubnet within spoke2_address_space (optional /27)
+      default: 10.102.0.0/27
+    azure-py-vdc:spoke2_first_subnet:
+      description: Address range for first application subnet within spoke2_address_space
+      default: 10.102.1.0/24

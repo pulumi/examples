@@ -10,7 +10,7 @@ $ pulumi stack init dev
 $ pulumi config set aws:region us-east-2
 
 # Install dependencies
-$ virtualenv -p python3 venv
+$ python3 -m venv venv
 $ source venv/bin/activate
 $ pip3 install -r requirements.txt
 

@@ -125,5 +125,5 @@ for (const location of locations) {
 }
 
 export const endpoint = profile.fqdn.apply(h => {
-    return `http://${h}/api/{key}`;
+    return `http://${h}/api/`;
 });

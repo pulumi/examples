@@ -82,8 +82,8 @@ After cloning this repo, from this working directory, run these commands:
     +   └─ gcp:container:Cluster  helloworld      created
 
     Outputs:
-        clusterName: "helloworld-9b9530f"
-        kubeconfig : "<KUBECONFIG_CONTENTS>"
+        ClusterName: "helloworld-9b9530f"
+        KubeConfig : "<KUBECONFIG_CONTENTS>"
 
 	Resources:
         + 2 created
@@ -98,10 +98,10 @@ After cloning this repo, from this working directory, run these commands:
 
     To access your new Kubernetes cluster using `kubectl`, we need to setup the
     `kubeconfig` file and download `kubectl`. We can leverage the Pulumi
-    stack output in the CLI, as Pulumi faciliates exporting these objects for us.
+    stack output in the CLI, as Pulumi facilitates exporting these objects for us.
 
     ```bash
-    $ pulumi stack output kubeconfig > kubeconfig
+    $ pulumi stack output KubeConfig > kubeconfig
     $ export KUBECONFIG=$PWD/kubeconfig
 
     $ kubectl version

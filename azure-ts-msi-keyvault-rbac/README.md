@@ -4,7 +4,7 @@
 
 [Managed identities](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/) for Azure resources provides Azure services with an automatically managed identity in Azure Active Directory (Azure AD).
 
-This example demostrates using a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
+This example demonstrates using a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
 
 The application consists of several parts:
 

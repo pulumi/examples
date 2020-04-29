@@ -17,44 +17,37 @@ httpdotnet_container=storage.Container(
     container_access_type="private"
 )
 
-httpdotnet_zib_blob=storage.ZipBlob(
+httpdotnet_zib_blob=storage.Blob(
     "http-dotnet",
-    resource_group_name=resource_group.name,
     storage_account_name=httpdotnet_storage_account.name,
     storage_container_name=httpdotnet_container.name,
-    type="block",
-    content=asset.AssetArchive({
-        ".": asset.FileArchive("./dotnet/bin/Debug/netcoreapp2.1/publish")
+    type="Block",
+    source=asset.AssetArchive({
+        ".": asset.FileArchive("./dotnet/bin/Debug/netcoreapp3.1/publish")
     }))
 
-account_sas=storage.get_account_sas(
-    connection_string=httpdotnet_storage_account.primary_connection_string,
-    start="2019-01-01",
-    expiry="2029-01-01",
-    services={
-        "blob": "true",
-        "queue": "false",
-        "table": "false",
-        "file": "false"
-    },
-    resource_types={
-        "service": "false",
-        "container": "false",
-        "object": "true"
-    },
-    permissions={
-        "read": "true",
-        "write": "false",
-        "delete": "false",
-        "add": "false",
-        "list": "false",
-        "create": "false",
-        "update": "false",
-        "process": "false"
-    },
-)
-httpdotnet_signed_blob_url = Output.all(httpdotnet_storage_account.name, httpdotnet_container.name, httpdotnet_zib_blob.name, account_sas.sas) \
-    .apply(lambda args: f"https://{args[0]}.blob.core.windows.net/{args[1]}/{args[2]}{args[3]}")
+def get_sas(args):
+    blob_sas = storage.get_account_blob_container_sas(
+        connection_string=args[1],
+        start="2020-01-01",
+        expiry="2030-01-01",
+        container_name=args[2],
+        permissions={
+            "read": "true",
+            "write": "false",
+            "delete": "false",
+            "list": "false",
+            "add": "false",
+            "create": "false"
+        }
+    )
+    return f"https://{args[0]}.blob.core.windows.net/{args[2]}/{args[3]}{blob_sas.sas}"
+
+httpdotnet_signed_blob_url = Output.all(
+    httpdotnet_storage_account.name,
+    httpdotnet_storage_account.primary_connection_string,
+    httpdotnet_container.name, httpdotnet_zib_blob.name
+).apply(get_sas)
 
 httpdotnet_plan=appservice.Plan(
     "http-dotnet",
@@ -71,10 +64,9 @@ httpdotnet_function_app=appservice.FunctionApp(
     resource_group_name=resource_group.name,
     app_service_plan_id=httpdotnet_plan.id,
     storage_connection_string=httpdotnet_storage_account.primary_connection_string,
-    version="~2",
+    version="~3",
     app_settings={
         "runtime": "dotnet",
-        "WEBSITE_NODE_DEFAULT_VERSION": "8.11.1",
         "WEBSITE_RUN_FROM_PACKAGE": httpdotnet_signed_blob_url,
     },
 )

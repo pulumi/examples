@@ -27,10 +27,7 @@ const httpFunction = new azure.appservice.HttpEventSubscription("greeting-func",
 // Create an API Management Service instance
 const service = new azure.apimanagement.Service("greeting-service", {
     resourceGroupName: resourceGroup.name,
-    sku: {
-        name: "Developer",
-        capacity: 1,
-    },
+    skuName: "Developer_1",
     publisherName: "YourCompany",
     publisherEmail: "api@yourcompany.com",
 });

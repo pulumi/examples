@@ -74,10 +74,10 @@ Previewing changes:
 Three endpoints are now available. For example,
 
 ```
-$ pulumi stack output vmssEndpoint
+$ pulumi stack output VmssEndpoint
 http://vmssrgcc15ea50.trafficmanager.net/cosmos
 
-$ curl "$(pulumi stack output vmssEndpoint)"
+$ curl "$(pulumi stack output VmssEndpoint)"
 Document 'cosmos' not found
 ```
 

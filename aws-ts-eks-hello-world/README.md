@@ -14,7 +14,7 @@ To deploy your infrastructure, follow the below steps.
 1. [Install Node.js version 6 or later](https://nodejs.org/en/download/)
 1. Install a package manager for Node.js, such as [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/en/docs/install).
 1. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
-1. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html#get-started-kubectl)
+1. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
 
 ### Steps
 
@@ -236,7 +236,7 @@ After cloning this repo, from this working directory, run these commands:
 
     To access your new Kubernetes cluster using `kubectl`, we need to set up the
     `kubeconfig` file and download `kubectl`. We can leverage the Pulumi
-    stack output in the CLI, as Pulumi faciliates exporting these objects for us.
+    stack output in the CLI, as Pulumi facilitates exporting these objects for us.
 
     ```bash
     $ pulumi stack output kubeconfig > kubeconfig

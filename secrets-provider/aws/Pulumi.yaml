@@ -1,0 +1,3 @@
+name: pulumi-aws-kms
+runtime: nodejs
+description: Minimal config which shows how AWS encryption support works

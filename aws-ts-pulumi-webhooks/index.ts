@@ -2,8 +2,8 @@
 
 import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
+import { ChatPostMessageArguments, WebClient } from "@slack/web-api";
 
-import * as slack from "@slack/client";
 import * as crypto from "crypto";
 
 import { formatSlackMessage } from "./util";
@@ -48,6 +48,9 @@ function authenticateRequest(req: awsx.apigateway.Request): awsx.apigateway.Resp
 }
 
 const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
+    restApiArgs: {
+        binaryMediaTypes: ["application/json"],
+    },
     routes: [{
         path: "/",
         method: "GET",
@@ -66,14 +69,15 @@ const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
             }
 
             const webhookKind = req.headers !== undefined ? req.headers["pulumi-webhook-kind"] : "";
-            const payload = req.body!.toString();
+            const bytes = req.body!.toString();
+            const payload = Buffer.from(bytes, "base64").toString();
             const parsedPayload = JSON.parse(payload);
             const prettyPrintedPayload = JSON.stringify(parsedPayload, null, 2);
 
-            const client = new slack.WebClient(stackConfig.slackToken);
+            const client = new WebClient(stackConfig.slackToken);
 
             const fallbackText = `Pulumi Service Webhook (\`${webhookKind}\`)\n` + "```\n" + prettyPrintedPayload + "```\n";
-            const messageArgs: slack.ChatPostMessageArguments = {
+            const messageArgs: ChatPostMessageArguments = {
                 channel: stackConfig.slackChannel,
                 text: fallbackText,
                 as_user: true,

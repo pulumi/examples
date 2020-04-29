@@ -32,14 +32,14 @@ let infra () =
                (StorageAccountName = io storageAccount.Name,
                 ContainerAccessType = input "private"))
 
-    let archive = FileArchive("wwwroot") :> Archive
+    let archive = FileArchive("wwwroot") :> AssetOrArchive
     let blob =
-        ZipBlob("zip", 
-            ZipBlobArgs
+        Blob("zip", 
+            BlobArgs
                (StorageAccountName = io storageAccount.Name,
                 StorageContainerName = io container.Name,
-                Type = input "block",
-                Content = input archive))
+                Type = input "Block",
+                Source = input archive))
 
     let codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount)
 
@@ -69,7 +69,7 @@ let infra () =
                 server database username pwd)
 
     let connectionStringSetting =
-        AppServiceConnectionStringsArgs
+        AppServiceConnectionStringArgs
            (Name = input "db",
             Type = input "SQLAzure",
             Value = io connectionString)

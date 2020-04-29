@@ -2,15 +2,14 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
     <AssemblyName>Digitalocean.LoadbalancedDroplets</AssemblyName>
     <RootNamespace>Digitalocean.LoadbalancedDroplets</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pulumi.Digitalocean" Version="1.2.0-preview" />
-    <PackageReference Include="Pulumi.Kubernetes" Version="1.3.3-preview" />
+    <PackageReference Include="Pulumi.DigitalOcean" Version="2.*" />
   </ItemGroup>
 
 </Project>

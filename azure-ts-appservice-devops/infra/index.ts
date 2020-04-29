@@ -44,13 +44,12 @@ const storageContainer = new azure.storage.Container(`${prefix}-c`, {
     containerAccessType: "private",
 });
 
-const blob = new azure.storage.ZipBlob(`${prefix}-b`, {
-    resourceGroupName: resourceGroup.name,
+const blob = new azure.storage.Blob(`${prefix}-b`, {
     storageAccountName: storageAccount.name,
     storageContainerName: storageContainer.name,
-    type: "block",
+    type: "Block",
 
-    content: new pulumi.asset.FileArchive("../src/bin/Debug/netcoreapp2.1/publish"),
+    source: new pulumi.asset.FileArchive("../src/bin/Debug/netcoreapp2.1/publish"),
 });
 
 const codeBlobUrl = azure.storage.signedBlobReadUrl(blob, storageAccount);
@@ -58,7 +57,7 @@ const codeBlobUrl = azure.storage.signedBlobReadUrl(blob, storageAccount);
 const appInsights = new azure.appinsights.Insights(`${prefix}-ai`, {
     ...resourceGroupArgs,
 
-    applicationType: "Web",
+    applicationType: "web",
 });
 
 

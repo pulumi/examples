@@ -2,7 +2,7 @@
 
 # Azure Kubernetes Service (AKS) Cluster
 
-This example deploys an AKS cluster, virtual network and Azure Container Registry and grants AKS permissions to access and manage those.
+This example deploys an AKS cluster, a virtual network, and an Azure Container Registry and grants AKS permissions to access and manage those.
 
 ## Deploying the App
 
@@ -11,7 +11,7 @@ To deploy your infrastructure, follow the below steps.
 ### Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Install Python 3.6](https://www.python.org/downloads/)
+2. [Install Python 3.6 or higher](https://www.python.org/downloads/)
 3. [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
 4. [Generate SSH Key](https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key)
 
@@ -19,28 +19,32 @@ To deploy your infrastructure, follow the below steps.
 
 After cloning this repo, from this working directory, run these commands:
 
-1. Install the required Python packages packages:
-
-    ```bash
-    $ pip install -r requirements.txt
-    ```
-
-2. Create a new stack, which is an isolated deployment target for this example:
+1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
     $ pulumi stack init
     ```
 
-3. Set the configuration variables for this program:
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip3 install -r requirements.txt
+    ```
+
+1. Set the configuration variables for this program:
 
     ```bash
     $ pulumi config set password service_principal_password
     $ pulumi config set sshkey < ~/.ssh/id_rsa.pub
-    $ # this has a default value, so you can skip it
-    $ pulumi config set location any_valid_azure_location_for_aks
+    $ # set the azure location in which to run the test
+    $ pulumi config set azure:location westus2
     ```
 
-4. Stand up the AKS cluster:
+1. Stand up the AKS cluster:
 
     > **Note**: Due to an [issue](https://github.com/terraform-providers/terraform-provider-azuread/issues/156) in Azure Terraform Provider, the
     > creation of an Azure Service Principal, which is needed to create the Kubernetes cluster, is delayed and may not
@@ -53,7 +57,7 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi up
     ```
 
-5. After 10-15 minutes, your cluster will be ready, and the kubeconfig YAML you'll use to connect to the cluster will be available as an output. You can save this kubeconfig to a file like so:
+1. After 10-15 minutes, your cluster will be ready, and the kubeconfig YAML you'll use to connect to the cluster will be available as an output. You can save this kubeconfig to a file like so:
 
     ```bash
     $ pulumi stack output kubeconfig > kubeconfig.yaml
@@ -64,9 +68,9 @@ After cloning this repo, from this working directory, run these commands:
     ```bash
     $ KUBECONFIG=./kubeconfig.yaml kubectl get nodes
     ```
-6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
+1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
-7. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
     ```bash
     $ pulumi destroy --yes

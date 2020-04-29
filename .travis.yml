@@ -1,12 +1,12 @@
 if: branch = master
 language: go
-go: 1.12.x
+go: 1.13.x
 sudo: true
 git:
   depth: false
 cache:
   directories:
-  - "$HOME/google-cloud-sdk/"
+    - "$HOME/google-cloud-sdk/"
 before_install:
   - openssl aes-256-cbc -K $encrypted_9f72dfef7328_key -iv $encrypted_9f72dfef7328_iv -in gcp-credentials.json.enc -out gcp-credentials.json -d
   - git clone https://github.com/pulumi/scripts ${GOPATH}/src/github.com/pulumi/scripts
@@ -25,15 +25,17 @@ install:
   - curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
   - helm init -c
   - helm repo add bitnami https://charts.bitnami.com/bitnami
-# Install aws-iam-authenticator
-# See: https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
+  # Install aws-iam-authenticator
+  # See: https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
   - curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
   - chmod +x ./aws-iam-authenticator
   - sudo mv aws-iam-authenticator /usr/local/bin
-# Install kubectl
+  # Install kubectl
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv kubectl /usr/local/bin
+  # Enable docker to access Google Cloud Registry
+  - cat gcp-credentials.json | docker login -u _json_key --password-stdin gcr.io
 before_script:
   - "${PULUMI_SCRIPTS}/ci/ensure-dependencies"
   # Attempt to work around issues with cross-region replication of resource group state in Azure.
@@ -41,17 +43,18 @@ before_script:
   - echo "$(getent hosts $ARM_LOCATION.management.azure.com | awk '{ print $1 }') management.azure.com" | sudo tee --append /etc/hosts
 jobs:
   include:
-  - script: make travis_${TRAVIS_EVENT_TYPE}
-    name: released
-  - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head"
-    name: latest-all
-    if: type = cron
-  - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --no-latest-packages"
-    name: latest-cli
-    if: type = cron
-  - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --no-latest-cli"
-    name: latest-packages
-    if: type = cron
+    - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head"
+      name: latest-all
+      if: type = cron
+    - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --no-latest-packages"
+      name: latest-cli
+      if: type = cron
+    - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --no-latest-cli"
+      name: latest-packages
+      if: type = cron
+    - script: "${GOPATH}/src/github.com/pulumi/scripts/ci/run-at-head --version=feature-2.0"
+      name: feature-2.0
+      if: type = cron
 after_failure:
   - "${PULUMI_SCRIPTS}/ci/upload-failed-tests"
 notifications:

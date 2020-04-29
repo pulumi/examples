@@ -77,16 +77,16 @@ export class CosmosApp extends pulumi.ComponentResource {
         const profile = new azure.trafficmanager.Profile(`tm${name}`, {
             resourceGroupName: resourceGroup.name,
             trafficRoutingMethod: "Performance",
-            dnsConfigs: [{
+            dnsConfig: {
                 // Subdomain must be globally unique, so we default it with the full resource group name
                 relativeName: pulumi.interpolate`${name}${resourceGroup.name}`,
                 ttl: 60,
-            }],
-            monitorConfigs: [{
+            },
+            monitorConfig: {
                 protocol: "HTTP",
                 port: 80,
                 path: "/api/ping",
-            }],
+            },
         }, parentOpts);
 
         const buildLocation = args.factory({ resourceGroup, cosmosAccount, database, container, opts: parentOpts });

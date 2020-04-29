@@ -3,7 +3,7 @@
 This repository contains examples of using Pulumi to build and deploy cloud applications and infrastructure.
 
 Each example has a two-part prefix, `<cloud>-<language>`, to indicate which `<cloud>` and `<language>` it pertains to.
-The cloud is one of `aws` for [Amazon Web Services](https://github.com/pulumi/pulumi-aws), `azure` for [Microsoft
+For example, `<cloud>` could be `aws` for [Amazon Web Services](https://github.com/pulumi/pulumi-aws), `azure` for [Microsoft
 Azure](https://github.com/pulumi/pulumi-azure), `gcp` for [Google Cloud
 Platform](https://github.com/pulumi/pulumi-gcp), `kubernetes` for
 [Kubernetes](https://github.com/pulumi/pulumi-kubernetes), or `cloud` for
@@ -11,41 +11,374 @@ Platform](https://github.com/pulumi/pulumi-gcp), `kubernetes` for
 
 See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on getting started with Pulumi.
 
-### Cloud Infrastructure
+## Outline
 
-Example                 | Language          | Cloud |
------                   | -------           | ------| 
-[AWS EC2 instance (JavaScript)](aws-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | AWS |
-[AWS EC2 instance (Python)](aws-py-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | Python | AWS |
-[Azure Virtual Machine (JavaScript)](azure-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | Azure |
-[GCP Virtual Machine (JavaScript)](gcp-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | Google Cloud Platform |
-[Component for creating EC2 instances (JavaScript)](aws-js-webserver-component/) <br/>A minimal component that encapsulates creating EC2 instances | JavaScript | AWS |
-[Simple static website on AWS S3 (JavaScript)](aws-js-s3-folder) <br/> A simple program that uses S3's website support | JavaScript | AWS |
-[Component for simple static website (JavaScript)](aws-js-s3-folder-component) <br/> A reusable component for hosting static websites on AWS S3 | JavaScript | AWS |
-[Simple static website on AWS S3 (Go)](aws-go-s3-folder) <br/> A static website that uses S3's website support | Go | AWS |
-[Production-ready static website on AWS (TypeScript)](aws-ts-static-website) <br/> An end-to-end example for hosting a static website on AWS, using S3, CloudFront, Route53, and Amazon Certificate Manager | TypeScript | AWS |
-[Jenkins on Kubernetes (JavaScript)](kubernetes-ts-jenkins) <br/> A Jenkins container running on Kubernetes | JavaScript | Kubernetes |
-[AWS RDS and Airflow (TypeScript)](aws-ts-airflow)<br/> Deploys an RDS Postgres instance and containerized Airflow | TypeScript | AWS |
-[CloudWatch Log Groups, Event Targets, Metric Alarms, IAM roles, and more! (TypeScript)](aws-ts-resources) <br/> An example that shows how to create a number of AWS resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, `sqs.Queue`, and more. | TypeScript | AWS | 
-[Azure App Service with SQL Database and Application Insights](azure-ts-appservice) <br/> Deploy Azure App Service along with SQL Database and Application Insights | TypeScript | Azure |
-[Azure Functions](azure-ts-functions) <br/> A simple component for deploying inline code to Azure Functions | TypeScript | Azure |
-[Linode instance (JavaScript)](linode-js-webserver) <br/> Provision a simple Linux web server that serves traffic on port 80 | JavaScript | Linode |
+- [AWS](#aws)
+    - [TypeScript](#typescript)
+    - [JavaScript](#javascript)
+    - [Python](#python)
+    - [Go](#go)
+    - [C#](#c)
+    - [F#](#f)
+- [Azure](#azure) 
+    - [TypeScript](#typescript-1)
+    - [JavaScript](#javascript-1)
+    - [Python](#python-1)
+    - [Go](#go-1)
+    - [C#](#c-1)
+    - [F#](#f-1)
+- [GCP](#gcp) 
+    - [TypeScript](#typescript-2)
+    - [JavaScript](#javascript-2)
+    - [Python](#python-2)
+    - [Go](#go-2)
+    - [C#](#c-2)
+- [Kubernetes](#kubernetes)
+    - [TypeScript](#typescript-3)
+    - [JavaScript](#javascript-3)
+    - [Python](#python-3)
+    - [Go](#go-3)
+    - [C#](#c-3)
+- [Cloud](#cloud)
+- [DigitalOcean](#digitalocean)
+- [Multicloud](#multicloud)
+- [F5](#f5)
+- [Twilio](#twilio)
+- [Linode](#linode)
+- [Packet](#packet)
+- [Testing](#testing) 
 
-### Cloud Applications
+## AWS
 
-Example                 | Language          | Cloud |
------                   | -------           | ------| 
-[Serverless REST API (JavaScript)](cloud-js-api) <br/> A simple REST API to count the number of times a route has been hit | JavaScript | AWS |
-[NGINX container on AWS ECS (JavaScript)](cloud-js-containers) <br/> In 15 lines of code, deploy an NGINX container to production | JavaScript | AWS |
-[Serverless URL shortener (TypeScript)](cloud-ts-url-shortener) <br/> A complete URL shortener web application using high-level `cloud.Table` and `cloud.HttpEndpoint` components | TypeScript | AWS |
-[Serverless URL shortener with cache (TypeScript)](cloud-ts-url-shortener-cache) <br/> An extension of the URL shortener that adds a Redis cache | TypeScript | AWS |
-[Serverless video thumbnailer with Lambda and Fargate (JavaScript)](cloud-js-thumbnailer) <br/> An end-to-end pipeline for generating keyframe thumbnails from videos uploaded to a bucket using containerized FFmpeg | JavaScript | AWS |
-[Serverless video thumbnailer with machine learning (JavaScript)](cloud-js-thumbnailer-machine-learning) <br/> An extension of the video thumbnail example that uses AWS Rekognition video labels | JavaScript | AWS |
-[Raw AWS Serverless (TypeScript and C#)](aws-ts-serverless-raw) <br/> A complete serverless C# application using that uses the raw resources `aws.apigateway.RestAPI`, `aws.lambda.Function` and `aws.dynamodb.Table` | TypeScript | AWS |
-[Voting App with containers (TypeScript)](cloud-ts-voting-app) <br/> A simple voting app that uses Redis for a data store and a Python Flask app for the frontend, demonstrating the high-level framework `@pulumi/cloud`. | TypeScript | AWS |
-[Kubernetes Guestbook (TypeScript)](kubernetes-ts-guestbook/) <br/>A version of the [Kubernetes Guestbook](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/) app using Pulumi and `@pulumi/kubernetes` | TypeScript | Kubernetes | 
-[Kubernetes Sock Shop (TypeScript)](kubernetes-ts-sock-shop) <br/> A version of the standard [Sock Shop microservices reference app](https://github.com/microservices-demo/microservices-demo) app using Pulumi and `@pulumi/kubernetes` | TypeScript | Kubernetes |
-[AWS Athena Twitter Analyzer (JavaScript)](cloud-js-twitter-athena) <br/> An application that periodically queries Twitter for a search term, stores the results in S3, and configures an Athena query for data analysis | JavaScript | AWS |
-[Serverless SQS to Slack (JavaScript)](aws-js-sqs-slack) <br/> Uses a Lambda function to post SQS messages to a Slack channel | JavaScript | AWS |
-[AWS Step Functions](aws-ts-stepfunctions) <br/> A basic example that demonstrates using AWS Step Functions with a Lambda function | TypeScript | AWS | 
-[Twilio SMS handler for API Gateway](twilio-ts-component) <br/>A sample component that makes it easy to connect AWS API Gateway and Twilio SMS | TypeScript | AWS |
+### TypeScript
+
+Example   | Description |
+--------- | --------- |
+[API Gateway](aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
+[Apigateway - Auth0](aws-ts-apigateway-auth0) | Deploy a simple REST API protected by Auth0.
+[AppSync](aws-ts-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
+[AssumeRole](aws-ts-assume-role) | Use AssumeRole to create resources.
+[Containers](aws-ts-containers) | Provision containers on Fargate.
+[EKS - Dashboard](aws-ts-eks) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then the Kubernetes Dashboard into the cluster.
+[EKS - Hello World](aws-ts-eks-hello-world) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then a Kubernetes namespace and nginx deployment into the cluster.
+[EKS - Migrate Node Groups](aws-ts-migrate-nodegroups) | Create an EKS cluster and node group to use for workload migration with zero downtime.
+[Fargate](aws-ts-hello-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
+[Miniflux](aws-ts-pulumi-miniflux) | Stand up an RSS Service using Fargate and RDS.
+[Pulumi Webhooks](aws-ts-pulumi-webhooks) | Create a Pulumi `cloud.HttpEndpoint` that receives webhook events delivered by the Pulumi Service, then echos the event to Slack.
+[RDS and Airflow](aws-ts-airflow) | Deploy a RDS Postgres instance and containerized Airflow.
+[Resources](aws-ts-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
+[Ruby on Rails](aws-ts-ruby-on-rails) | Create a single EC2 virtual machine instance with a local MySQL database.
+[S3 Lambda](aws-ts-s3-lambda-copyzip) | Set up two AWS S3 Buckets and a single Lambda that listens to one and, upon each new object arriving in it, zips it up and copies it to the second bucket.
+[Serverless Application](aws-ts-serverless-raw) | Deploy a complete serverless C# application using raw resources from `@pulumi/aws`.
+[Serverless Datawarehouse](aws-ts-serverless-datawarehouse) | Deploy a serverless data warehouse.
+[Slackbot](aws-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
+[Stack Reference](aws-ts-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
+[Static Website](aws-ts-static-website) | Serve a static website using S3, CloudFront, Route53, and Certificate Manager. 
+[Step Functions](aws-ts-stepfunctions) | Use Step Functions with a Lambda function.
+[Thumbnailer](aws-ts-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
+[Twitter](aws-ts-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
+[URL Shortener](aws-ts-url-shortener-cache-http) | Create a serverless URL shortener that uses high-level components.
+[Voting App](aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
+[Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
+
+### JavaScript
+
+Example   | Description |
+--------- | --------- |
+[Containers](aws-js-containers) | Provision containers on Fargate.
+[S3 Folder Component](aws-js-s3-folder-component) | Serve a static website on S3 from a component.
+[S3 Folder](aws-js-s3-folder) | Serve a static website on S3.
+[Servless SQS to Slack](aws-js-sqs-slack) | Wire up a serverless AWS Lambda to an AWS SQS queue and post a message to Slack.
+[Web Server - Component](aws-js-webserver-component) | Deploy an EC2 instance using a common module for creating an instance.
+[Web Server](aws-js-webserver) | Deploy an EC2 Virtual machine running a Python web server.
+
+### Python
+
+Example   | Description |
+--------- | --------- |
+[AppSync](aws-py-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
+[Fargate](aws-py-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
+[Resources](aws-py-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
+[S3 Folder](aws-py-s3-folder) | Serve a static website on S3.
+[Stack Reference](aws-py-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
+[Step Functions](aws-py-stepfunctions) | Use Step Functions with a Lambda function.
+[Web Server](aws-py-webserver) | Deploy an EC2 instance and open port 80.
+
+### Go
+
+Example   | Description |
+--------- | --------- |
+[Fargate](aws-go-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
+[Lambda](aws-go-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
+[S3 Folder](aws-go-s3-folder) | Serve a static website on S3.
+[Web Server](aws-go-webserver) | Deploy an EC2 Virtual machine running a Python web server.
+
+### C#
+
+Example   | Description |
+--------- | --------- |
+[Fargate](aws-cs-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
+[Lambda](aws-cs-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
+[Web Server](aws-cs-webserver) | Deploy an EC2 instance and open port 80.
+
+### F#
+
+Example   | Description |
+--------- | --------- |
+[Lambda Web Server](aws-fs-lambda-webserver) | Create a web server in AWS lambda using the Giraffe web server.
+
+## Azure
+
+### TypeScript
+
+Example   | Description |
+--------- | --------- |
+[AKS - Helm](azure-ts-aks-helm) | Create an Azure Kubernetes Service (AKS) Cluster and deploy a Helm Chart into it.
+[AKS - KEDA](azure-ts-aks-keda) | Create an Azure Kubernetes Service (AKS) Cluster and deploy an Azure Function App with Kubernetes-based Event Driven Autoscaling (KEDA) into it.
+[AKS - Mean](azure-ts-aks-mean) | Stand up an Azure Kubernetes Service (AKS) Cluster and a MongoDB-flavored instance of CosmosDB.
+[AKS - Multicluster](azure-ts-aks-multicluster) | Create multiple Azure Kubernetes Service (AKS) Clusters in different regions and with different node counts.
+[API Management](azure-ts-api-management) | Deploy an instance of Azure API Management.
+[App Service - DevOps](azure-ts-appservice-devops) | Deploy a Todo App using App Service with SQL Database and integrated with DevOps.
+[App Service - Docker](azure-ts-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[App Service - Spring Boot](azure-ts-appservice-Springboot) | Deploy a Spring Boot app to an App Service instance using Jenkins.
+[App Service](azure-ts-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+[ARM Template](azure-ts-arm-template) | Deploy an existing Azure Resource Manager (ARM) template.
+[CosmosApp Component](azure-ts-cosmosapp-component) | Use a reusable component to create globally-distributed applications with Azure Cosmos DB.
+[CosmosDB LogicApp](azure-ts-cosmosdb-logicapp) | Use Azure Resource Manager (ARM) templates to create an API Connection and a Logic App.
+[Dynamic Resource](azure-ts-dynamicresource) | Add a custom domain to a CDN endpoint.
+[Functions - Raw](azure-ts-functions-raw) | Deploy functions in all supported languages to Azure Functions.
+[Functions](azure-ts-functions) | Deploy a typescript function to Azure Functions.
+[HDInsight Spark](azure-ts-hdinsight-spark) | Deploy a Spark cluster on Azure HDInsight.
+[MSI KeyVault RBAC](azure-ts-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
+[Static Website](azure-ts-static-website) | Configure static website hosting in Azure Storage.
+[Stream Analytics](azure-ts-stream-analytics) | Deploy an Azure Stream Analytics job to transform data in an Event Hub.
+[URL Shortener](azure-ts-serverless-url-shortener-global) | Create a globally-distributed serverless URL shortener using Azure Functions and Cosmos DB.
+[VM Scaleset](azure-ts-vm-scaleset) | Provision a Scale Set of Linux web servers with nginx deployed, auto-scaling based on CPU load, a Load Balancer in front of them, and a public IP address.
+[Web Server Component](azure-ts-webserver-component) | Provision a configurable number of Linux web servers in an Azure Virtual Machine using a reusable component.
+[Web Server](azure-ts-webserver) | Provision a Linux web server in an Azure Virtual Machine.
+
+### JavaScript
+
+Example   | Description |
+--------- | --------- |
+[Web Server](azure-js-webserver) | Build the Pulumi web server sample in Azure.
+
+### Python
+
+Example   | Description |
+--------- | --------- |
+[AKS - Multicluster](azure-py-aks-multicluster) | Create multiple AKS clusters in different regions and with different node counts.
+[AKS](azure-py-aks) | Deploy an AKS cluster, virtual network and Azure Container Registry and grant AKS permissions to access and manage those.
+[App Service - Docker](azure-py-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[App Service](azure-py-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+[Functions - Raw](azure-py-functions-raw) | Deploy a function to Azure Functions created from raw deployment packages in C#.
+[HDInsight Spark](azure-py-hdinsight-spark) | Deploy a Spark cluster on Azure HDInsight.
+[MSI Key Vault RBAC](azure-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
+[Virtual Data Center](azure-py-virtual-data-center) | Deploy peered hub-and-spoke networks in paired regions complete with gateways, firewalls and custom routing to redirect traffic through the firewalls.
+[VM Scale Set](azure-vm-scaleset) | Provision a Scale Set of Linux web servers with nginx deployed, auto-scaling based on CPU load, a Load Balancer in front of them, and a public IP address.
+[Web Server Component](azure-py-webserver-component) | Deploy a Virtual Machine and start an HTTP server on it using a reusable component.
+[Web Server](azure-py-webserver) | Deploy a Virtual Machine and start an HTTP server on it.
+
+### Go
+
+Example   | Description |
+--------- | --------- |
+[App Service](azure-go-appservice) | Build a web application hosted in Azure App Service.
+[Web Server Component](azure-go-webserver-component) | Provision a configurable number of Linux web servers in an Azure Virtual Machine using a reusable component.
+
+### C#
+
+Example   | Description |
+--------- | --------- |
+[AKS](azure-cs-aks) | Stand up an Azure Kubernetes Service (AKS) cluster.
+[AKS and Private Container Registry](azure-cs-aks-private-container-registry) | Stand up an Azure Kubernetes Service (AKS) cluster, a private Azure Container Registry, and deploys an image to the cluster.
+[App Service](azure-cs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+[Bot Service](azure-cs-botservice) | Build an Azure Bot Service hosted in Azure App Service.
+[Cosmos App Component](azure-cs-cosmosapp-component) | Use a reusable component to create globally-distributed applications with Azure Cosmos DB.
+[Functions - .NET on Consumption](azure-cs-functions-consumption) | Deploy a .NET Azure Function running on a Windows Consumption Plan.
+[Functions - Python on Linux App Service](azure-cs-functions-linux-app) | Deploy a Python Azure Function running on a Linux App Service Premium Plan.
+[MSI Key Vault RBAC](azure-cs-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
+[Static Website](azure-cs-static-website) | Deploy a Static Website to Azure Storage.
+[Web Server](azure-cs-webserver) | Deploy a Virtual Machine and start an HTTP server on it.
+
+### F#
+
+Example   | Description |
+--------- | --------- |
+[AKS](azure-fs-aks) | Stand up an Azure Kubernetes Service (AKS) cluster.
+[App Service](azure-fs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+
+## GCP
+
+### TypeScript
+
+Example   | Description |
+--------- | --------- |
+[Cloud Run](gcp-ts-cloudrun) | Deploy a custom Docker image into Google Cloud Run service.
+[Functions - Raw](gcp-ts-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
+[Functions](gcp-ts-functions) | Deploy an HTTP Google Cloud Function endpoint.
+[GKE - Hello World](gcp-ts-gke-hello-world) | Deploy a GKE cluster, then a Kubernetes namespace and nginx deployment into the cluster.
+[GKE](gcp-ts-gke) | Provision a Google Kubernetes Engine (GKE) cluster, then a Kubernetes Deployment.
+[Ruby on Rails](gcp-ts-k8s-ruby-on-rails-postgresql) | Deliver a containerized Ruby on Rails application.
+[Slackbot](gcp-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
+
+### JavaScript
+
+Example   | Description |
+--------- | --------- |
+[Web Server](gcp-js-webserver) | Build a web server in Google Cloud.
+
+### Python
+
+Example   | Description |
+--------- | --------- |
+[Functions - Raw](gcp-py-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
+[Functions](gcp-py-functions) | Deploy a Python-based Google Cloud Function.
+[GKE](gcp-py-gke) | Provision a Google Kubernetes Engine (GKE) cluster, then a Kubernetes Deployment.
+[Network Component](gcp-py-network-component) | Use a reusable component to create a Google Cloud Network and instance.
+[nginx Server](gcp-py-instance-nginx) | Build a nginx server in Google Cloud.
+
+### Go
+
+Example   | Description |
+--------- | --------- |
+[Functions](gcp-go-functions) | Deploy a Go-based Google Cloud Function.
+[Functions - Raw](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
+
+### C#
+
+Example   | Description |
+--------- | --------- |
+[Functions - Raw](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
+[Functions](gcp-go-functions) | Deploy a Go-based Google Cloud Function.
+
+## Kubernetes
+
+### TypeScript
+
+Example   | Description |
+--------- | --------- |
+[App Rollout via ConfigMap](kubernetes-ts-configmap-rollout) | Enable a change in a ConfigMap to trigger a rollout of an nginx Deployment.
+[App Rollout via S3 Data Change](kubernetes-ts-s3-rollout) | Enable a change in data in S3 to trigger a rollout of an nginx deployment.
+[Expose Deployment](kubernetes-ts-exposed-deployment) | Deploy nginx to a Kubernetes cluster, and publicly explose it using a Kubernetes Service.
+[Guestbook](kubernetes-ts-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+[Jenkins](kubernetes-ts-jenkins) | Deploy a container running the Jenkins continuous integration system onto a running Kubernetes cluster.
+[Multicloud](kubernetes-ts-multicloud) | Create managed Kubernetes clusters using AKS, EKS, and GKE, and deploy the application on each cluster.
+[nginx server](kubernetes-ts-nginx) | Deploy a replicated nginx server to a Kubernetes cluster, using TypeScript and no YAML.
+[Sock Shop](kubernetes-ts-sock-shop) | Deploy a version of the standard Sock Shop microservices reference app.
+[Staged App Rollout](kubernetes-ts-staged-rollout-with-prometheus) | Create a staged rollout gated by checking that the P90 response time reported by Prometheus is less than some amount. 
+[Wordpress Helm Chart](kubernetes-ts-helm-wordpress) | Use the Helm API to deploy v2.1.3 of the Wordpress Helm Chart to a Kubernetes cluster.
+
+### Python
+
+Example   | Description |
+--------- | --------- |
+[Guestbook](kubernetes-py-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+
+### C#
+
+Example   | Description |
+--------- | --------- |
+[Guestbook](kubernetes-cs-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+
+### Go
+
+Example   | Description |
+--------- | --------- |
+[Guestbook](kubernetes-go-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+
+## Cloud
+
+### TypeScript
+
+Example   | Description |
+--------- | --------- |
+[URL Shortener - Cache and HttpServer](cloud-ts-url-shortener-cache-http) | Create a simple URL shortener SPA that uses the high-level `cloud.Table` and `cloud.HttpServer` components.
+[URL Shortener - Cache](cloud-ts-url-shortener-cache) | Create a simple URL shortener SPA that uses the high-level `cloud.Table` and `cloud.API` components.
+[URL Shortener](cloud-ts-url-shortener) | Create a complete URL shortener web application that uses the high-level `cloud.Table` and `cloud.HttpServer` components.
+[Voting App](cloud-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
+
+### JavaScript
+
+Example   | Description |
+--------- | --------- |
+[API on AWS](cloud-js-api) | Create a simple REST API that counts the number of times a route has been hit.
+[Containers](cloud-js-containers) | Provision containers on Fargate.
+[HttpServer](cloud-js-httpserver) | Create a simple REST API that counts the number of times a route has been hit.
+[Thumbnailer - Machine Learning](cloud-js-thumbnailer-machine-learning) | Create a video thumbnail extractor using serverless functions, containers, and AWS Rekognition.
+[Thumbnailer](cloud-js-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
+[Twitter](cloud-js-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
+
+## DigitalOcean
+
+### TypeScript
+
+Example   | Description |
+--------- | --------- |
+[Droplets](digitalocean-ts-loadbalanced-droplets) | Build sample architecture.
+[Kubernetes](digitalocean-ts-k8s) | Provision a DigitalOcean Kubernetes cluster.
+
+### Python
+
+Example   | Description |
+--------- | --------- |
+[Droplets](digitalocean-py-loadbalanced-droplets) | Build sample architecture.
+[Kubernetes](digitalocean-py-k8s) | Provision a DigitalOcean Kubernetes cluster.
+
+### C#
+
+Example   | Description |
+--------- | --------- |
+[Droplets](digitalocean-cs-loadbalanced-droplets) | Build sample architecture.
+[Kubernetes](digitalocean-cs-k8s) | Provision a DigitalOcean Kubernetes cluster.
+
+## Multicloud
+
+### TypeScript
+Example   | Description |
+--------- | --------- |
+[Buckets](multicloud-ts-buckets) | Use a single Pulumi program to provision resources in both AWS and GCP. 
+
+## F5
+
+### TypeScript
+Example   | Description |
+--------- | --------- |
+[BigIP Local Traffic Manager](f5bigip-ts-ltm-pool) | Provide load balancing via an F5 BigIP appliance to backend HTTP instances.
+
+## Twilio
+
+### TypeScript
+Example   | Description |
+--------- | --------- |
+[Component](twilio-ts-component) | Create a custom Component Resource to parse incoming messages from Twilio.
+
+## Linode
+
+### JavaScript
+Example   | Description |
+--------- | --------- |
+[Web Server](linode-js-webserver) | Build a web server on Linode.
+
+## Packet
+
+### TypeScript
+Example   | Description |
+--------- | --------- |
+[Web Server](packet-ts-webserver) | Build a web server on Packet.net.
+
+### Python
+Example   | Description |
+--------- | --------- |
+[Web Server](packet-py-webserver) | Build a web server on Packet.net.
+
+## Testing
+
+Example   | Description |
+-----          | --------- |
+[Unit Tests in TypeScript](testing-unit-ts)      | Mock-based unit tests in TypeScript.
+[Unit Tests in Python](testing-unit-py)          | Mock-based unit tests in Python.
+[Unit Tests in Go](testing-unit-go)              | Mock-based unit tests in Go.
+[Unit Tests in C#](testing-unit-cs)              | Mock-based unit tests in C#.
+[Testing with Policies](testing-pac-ts)          | Tests based on Policy-as-Code in TypeScript.
+[Integration Testing in Go](testing-integration) | Deploy-check-destroy tests in Go.
