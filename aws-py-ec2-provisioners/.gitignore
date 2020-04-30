@@ -1,0 +1,4 @@
+*.pyc
+venv/
+rsa
+rsa.pub
