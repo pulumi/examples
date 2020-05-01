@@ -1,3 +1,4 @@
+from ipaddress import ip_network
 from pulumi import ComponentResource, ResourceOptions
 from hub import Hub
 import vdc
@@ -5,21 +6,19 @@ import vdc
 class SpokeProps:
     def __init__(
         self,
-        resource_group_name: str,
-        tags: [str, str],
+        azure_bastion,
         hub: Hub,
-        sbs_ar: str,
-        spoke_ar: str,
-        spoke_as: str,
-        subnets: [str, str, str]
+        resource_group_name: str,
+        spoke_address_space: str,
+        subnets: [str, str, str],
+        tags: [str, str],
     ):
-        self.resource_group_name = resource_group_name
-        self.tags = tags
+        self.azure_bastion = azure_bastion
         self.hub = hub
-        self.sbs_ar = sbs_ar
-        self.spoke_ar = spoke_ar
-        self.spoke_as = spoke_as
+        self.resource_group_name = resource_group_name
+        self.spoke_address_space = spoke_address_space
         self.subnets = subnets
+        self.tags = tags
 
 class Spoke(ComponentResource):
     def __init__(self, name: str, props: SpokeProps,
@@ -32,7 +31,7 @@ class Spoke(ComponentResource):
         vdc.self = self
 
         # Azure Virtual Network to be peered to the hub
-        spoke = vdc.virtual_network(name, [props.spoke_as])
+        spoke = vdc.virtual_network(name, [props.spoke_address_space])
 
         # VNet Peering from the hub to spoke
         hub_spoke = vdc.vnet_peering(
@@ -55,17 +54,29 @@ class Spoke(ComponentResource):
             depends_on=[props.hub.er_gw, props.hub.vpn_gw],
         )
 
+        # calculate the subnets in spoke_address_space
+        spoke_nw = ip_network(props.spoke_address_space)
+        pfl_diff = int((spoke_nw.max_prefixlen - spoke_nw.prefixlen) / 2)
+        subnets = spoke_nw.subnets(prefixlen_diff=pfl_diff)
+        next_sn = next(subnets) # first subnet reserved for special uses
+        first_sn = next_sn.subnets(new_prefix=27) # for subdivision
+        ab_nw = next(first_sn) # Azure Bastion subnet /27 or greater
+
         # provisioning of optional subnet and routes depends_on VNet Peerings
         # to avoid contention in the Azure control plane
 
         # AzureBastionSubnet (optional)
-        if props.sbs_ar:
-            spoke_sbs_sn = vdc.subnet_special(
+        if props.azure_bastion:
+            spoke_ab_sn = vdc.subnet_special(
                 stem = f'{name}-ab',
                 name = 'AzureBastionSubnet',
                 virtual_network_name = spoke.name,
-                address_prefix = props.sbs_ar,
+                address_prefix = str(ab_nw),
                 depends_on = [hub_spoke, spoke_hub],
+            )
+            spoke_ab = vdc.bastion_host(
+                stem = name,
+                subnet_id = spoke_ab_sn.id,
             )
 
         # Route Table only to be associated with ordinary spoke subnets
@@ -85,9 +96,9 @@ class Spoke(ComponentResource):
 
         # partially or fully invalidate system routes to redirect traffic
         for route in [
-            (f'dmz-{name}', props.hub.dmz_rt_name, props.spoke_as),
-            (f'gw-{name}', props.hub.gw_rt_name, props.spoke_as),
-            (f'ss-{name}', props.hub.ss_rt_name, props.spoke_as),
+            (f'dmz-{name}', props.hub.dmz_rt_name, props.spoke_address_space),
+            (f'gw-{name}', props.hub.gw_rt_name, props.spoke_address_space),
+            (f'ss-{name}', props.hub.ss_rt_name, props.spoke_address_space),
             (f'{name}-dg', spoke_rt.name, '0.0.0.0/0'),
             (f'{name}-dmz', spoke_rt.name, props.hub.dmz_ar),
             (f'{name}-hub', spoke_rt.name, props.hub.hub_as),
@@ -102,13 +113,13 @@ class Spoke(ComponentResource):
         # provisioning of subnets depends_on Route Table (VNet Peerings)
         # to avoid contention in the Azure control plane
 
-        # ordinary spoke subnets
-        subnet_range = props.spoke_ar
+        # ordinary spoke subnets starting with the second subnet
+        next_sn = next(subnets)
         for subnet in props.subnets:
             spoke_sn = vdc.subnet(
                 stem = f'{name}-{subnet[0]}',
                 virtual_network_name = spoke.name,
-                address_prefix = subnet_range,
+                address_prefix = str(next_sn),
                 depends_on = [spoke_rt],
             )
             # associate all ordinary spoke subnets to Route Table
@@ -117,7 +128,7 @@ class Spoke(ComponentResource):
                 route_table_id = spoke_rt.id,
                 subnet_id = spoke_sn.id,
             )
-            subnet_range = vdc.subnet_next(props.spoke_as, subnet_range)
+            next_sn = next(subnets)
 
         # assign properties to spoke including from child resources
         self.address_spaces = spoke.address_spaces

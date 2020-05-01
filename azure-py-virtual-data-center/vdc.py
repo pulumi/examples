@@ -1,12 +1,34 @@
 from pulumi import ResourceOptions
 from pulumi.resource import CustomTimeouts
-from pulumi_azure import core, network
-import ipaddress
+from pulumi_azure import core, network, compute
 
 # Variables that must be injected when calling:
 # vdc.resource_group_name = props.resource_group_name
 # vdc.tags = props.tags
 # vdc.self = self
+
+def bastion_host(stem, subnet_id, depends_on=[]):
+    ab_pip = network.PublicIp(
+        f'{stem}-ab-pip-',
+        resource_group_name = resource_group_name,
+        sku = 'Standard',
+        allocation_method = 'Static',
+        tags = tags,
+        opts = ResourceOptions(parent=self),
+    )
+    ab = compute.BastionHost(
+        f'{stem}-ab-',
+        resource_group_name = resource_group_name,
+        ip_configuration = {
+            'name': f'{stem}-ab-ipconf',
+            'publicIpAddressId': ab_pip.id,
+            'subnet_id': subnet_id,
+        },
+        tags = tags,
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
+    )
+    return ab
+
 
 def expressroute_gateway(stem, subnet_id, depends_on=[]):
     er_gw_pip = network.PublicIp(
@@ -24,8 +46,8 @@ def expressroute_gateway(stem, subnet_id, depends_on=[]):
         vpn_type = 'RouteBased',
         ip_configurations = [{
             'name': f'{stem}-er-gw-ipconf',
-            'subnet_id': subnet_id,
             'publicIpAddressId': er_gw_pip.id,
+            'subnet_id': subnet_id,
         }],
         tags = tags,
         opts = ResourceOptions(
@@ -54,8 +76,8 @@ def firewall(stem, subnet_id, depends_on=[]):
         resource_group_name = resource_group_name,
         ip_configurations = [{
             'name': f'{stem}-fw-ipconf',
-            'subnet_id': subnet_id,
             'publicIpAddressId': fw_pip.id,
+            'subnet_id': subnet_id,
         }],
         tags = tags,
         opts = ResourceOptions(
@@ -124,17 +146,6 @@ def subnet(stem, virtual_network_name, address_prefix, depends_on=[]):
         opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     return sn
-
-def subnet_next(address_space, address_range):
-    space = ipaddress.ip_network(address_space)
-    current = ipaddress.ip_network(address_range)
-    subnets = space.subnets(new_prefix=current.prefixlen)
-    subnet = next(subnets)
-    while subnet.compare_networks(current) <= 0:
-        subnet = next(subnets)
-    else:
-        return str(subnet)
-    return None
 
 def subnet_route_table(stem, route_table_id, subnet_id):
     rta = network.SubnetRouteTableAssociation(
@@ -215,8 +226,8 @@ def vpn_gateway(stem, subnet_id, depends_on=[]):
         vpn_type = 'RouteBased',
         ip_configurations = [{
             'name': f'{stem}-vpn-gw-ipconf',
-            'subnet_id': subnet_id,
             'publicIpAddressId': vpn_gw_pip.id,
+            'subnet_id': subnet_id,
         }],
         tags = tags,
         opts = ResourceOptions(
