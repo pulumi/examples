@@ -29,7 +29,6 @@ def bastion_host(stem, subnet_id, depends_on=[]):
     )
     return ab
 
-
 def expressroute_gateway(stem, subnet_id, depends_on=[]):
     er_gw_pip = network.PublicIp(
         f'{stem}-er-gw-pip-',

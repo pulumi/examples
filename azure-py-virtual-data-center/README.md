@@ -2,15 +2,15 @@
 
 # Azure Virtual Data Center (VDC)
 
-This example deploys an Azure Virtual Data Center (VDC) hub-and-spoke network stack in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall (with provision for forced tunnelling) guarding a DMZ, and provision for Azure Bastion. Shared services may have their own subnets in the hub, and multiple spokes may be managed with subnets for applications and environments.
+This example deploys Azure Virtual Data Center (VDC) hub-and-spoke network stacks in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall (with provision for forced tunnelling) guarding a DMZ, and Azure Bastion. In addition, as many subnets as required for shared services in the hub and application environments in the spokes may be simply specified.
 
-This all works using custom routing to redirect all traffic to and from Azure VNets, as well as all traffic to, within and from the DMZ, through the firewall (which scales out as a service). Traffic between ordinary subnets in the hub and spokes is not redirected through the firewall, and should instead be controlled using Network Security Groups (not yet implemented). Firewall rules are required to allow traffic through (not yet implemented).
+In this implementation, the Azure Firewall is central. Custom routing redirects all traffic to and from hub and spokes, as well as all traffic to, within and from the DMZ, through the firewall (which scales out as a service to handle the throughput). Firewall rules are required to allow traffic through (not yet implemented). Traffic between shared services subnets in the hub and between subnets within the spokes is not redirected through the firewall, and should instead be controlled using Network Security Groups (not yet implemented).
 
 The intention is for matching stacks to be deployed in Azure [paired regions](https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions), configured as either Production/Disaster Recovery or High Availability (or both for different applications). Global VNet Peering between the hubs connects the separate stacks into one symmetric network.
 
-Although the VDC pattern is in widespread use, Azure now offers a managed service intended to replace it, comprising Virtual Hub and SD-WAN components, with a [migration plan](https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology) that illustrates the differences between the two patterns. But if you want or need to manage your own network infrastructure, VDC is still relevant.
+Although the VDC pattern is in widespread use, Azure now offers a managed service intended to replace it, comprising Virtual Hub along with partner SD-WAN components, with a [migration plan](https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology) that illustrates the differences between the two patterns. But if you want or need to manage your own network infrastructure, VDC is still relevant.
 
-This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components) which demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction. It also demonstrates use of `pulumi.StackReference` as described [here](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) to relate multiple stacks.
+This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components) which demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction. It also demonstrates use of `pulumi.StackReference` as described [here](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) to relate multiple stacks. Finally, it uses Python's ```ipaddress``` module to simplify configuration of network addresses.
 
 ## Prerequisites
 
@@ -53,7 +53,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set forced_tunnel               "true"
     ```
 
-1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways and firewall:
+1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
 
     ```bash
     $ pulumi up
@@ -66,21 +66,23 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
          Type                                             Name               Status
      +   pulumi:pulumi:Stack                              azure-py-vdc-prod  created
      +   ├─ vdc:network:Hub                               hub                created
-     +   │  ├─ azure:network:VirtualNetwork               hub-vn-            created
-     +   │  ├─ azure:network:PublicIp                     hub-vpn-gw-pip-    created
+     +   ├─ vdc:network:Hub                               hub                created
      +   │  ├─ azure:network:PublicIp                     hub-fw-pip-        created
-     +   │  ├─ azure:network:PublicIp                     hub-er-gw-pip-     created
+     +   ├─ vdc:network:Hub                               hub                created
+     +   ├─ vdc:network:Hub                               hub                created
+     +   │  ├─ azure:network:PublicIp                     hub-ab-pip-        created
      +   │  ├─ azure:network:Subnet                       hub-dmz-sn         created
      +   │  ├─ azure:network:Subnet                       hub-fw-sn          created
      +   │  ├─ azure:network:Subnet                       hub-gw-sn          created
-     +   │  ├─ azure:network:VirtualNetworkGateway        hub-vpn-gw-        created
-     +   │  ├─ azure:network:Firewall                     hub-fw-            created
-     +   │  ├─ azure:network:VirtualNetworkGateway        hub-er-gw-         created
-     +   │  ├─ azure:network:RouteTable                   hub-gw-rt-         created
-     +   │  ├─ azure:network:Subnet                       hub-fwm-sn         created
+     +   ├─ vdc:network:Hub                               hub                created
+     +   ├─ vdc:network:Hub                               hub                created
+     +   ├─ vdc:network:Hub                               hub                created
+     +   ├─ vdc:network:Hub                               hub                created
      +   │  ├─ azure:network:RouteTable                   hub-dmz-rt-        created
-     +   │  ├─ azure:network:Subnet                       hub-ab-sn          created
      +   │  ├─ azure:network:RouteTable                   hub-ss-rt-         created
+     +   │  ├─ azure:network:Subnet                       hub-ab-sn          created
+     +   │  ├─ azure:network:Subnet                       hub-fwm-sn         created
+     +   │  ├─ azure:compute:BastionHost                  hub-ab-            created
      +   │  ├─ azure:network:Route                        ss-dg-r-           created
      +   │  ├─ azure:network:Route                        ss-dmz-r-          created
      +   │  ├─ azure:network:Route                        ss-gw-r-           created
@@ -98,6 +100,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
      +   │  └─ azure:network:SubnetRouteTableAssociation  hub-files-sn-rta   created
      +   ├─ vdc:network:Spoke                             s01                created
      +   │  ├─ azure:network:VirtualNetwork               s01-vn-            created
+     +   │  ├─ azure:network:PublicIp                     s01-ab-pip-        created
      +   │  ├─ azure:network:VirtualNetworkPeering        hub-s01-vnp-       created
      +   │  ├─ azure:network:VirtualNetworkPeering        s01-hub-vnp-       created
      +   │  ├─ azure:network:Route                        ss-s01-r-          created
@@ -105,17 +108,19 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
      +   │  ├─ azure:network:Route                        dmz-s01-r-         created
      +   │  ├─ azure:network:RouteTable                   s01-rt-            created
      +   │  ├─ azure:network:Subnet                       s01-ab-sn          created
+     +   │  ├─ azure:compute:BastionHost                  s01-ab-            created
+     +   │  ├─ azure:network:Route                        s01-dg-r-          created
+     +   │  ├─ azure:network:Route                        s01-hub-r-         created
+     +   │  ├─ azure:network:Subnet                       s01-app-sn-        created
      +   │  ├─ azure:network:Route                        s01-dmz-r-         created
      +   │  ├─ azure:network:Subnet                       s01-web-sn-        created
      +   │  ├─ azure:network:Subnet                       s01-db-sn-         created
-     +   │  ├─ azure:network:Subnet                       s01-app-sn-        created
-     +   │  ├─ azure:network:Route                        s01-hub-r-         created
-     +   │  ├─ azure:network:Route                        s01-dg-r-          created
+     +   │  ├─ azure:network:SubnetRouteTableAssociation  s01-app-sn-rta     created
      +   │  ├─ azure:network:SubnetRouteTableAssociation  s01-web-sn-rta     created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  s01-db-sn-rta      created
-     +   │  └─ azure:network:SubnetRouteTableAssociation  s01-app-sn-rta     created
+     +   │  └─ azure:network:SubnetRouteTableAssociation  s01-db-sn-rta      created
      +   ├─ vdc:network:Spoke                             s02                created
      +   │  ├─ azure:network:VirtualNetwork               s02-vn-            created
+     +   │  ├─ azure:network:PublicIp                     s02-ab-pip-        created
      +   │  ├─ azure:network:VirtualNetworkPeering        hub-s02-vnp-       created
      +   │  ├─ azure:network:VirtualNetworkPeering        s02-hub-vnp-       created
      +   │  ├─ azure:network:Route                        ss-s02-r-          created
@@ -123,120 +128,41 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
      +   │  ├─ azure:network:Route                        dmz-s02-r-         created
      +   │  ├─ azure:network:RouteTable                   s02-rt-            created
      +   │  ├─ azure:network:Subnet                       s02-ab-sn          created
+     +   │  ├─ azure:compute:BastionHost                  s02-ab-            created
      +   │  ├─ azure:network:Route                        s02-dg-r-          created
      +   │  ├─ azure:network:Route                        s02-dmz-r-         created
-     +   │  ├─ azure:network:Subnet                       s02-db-sn-         created
-     +   │  ├─ azure:network:Subnet                       s02-web-sn-        created
      +   │  ├─ azure:network:Subnet                       s02-app-sn-        created
+     +   │  ├─ azure:network:Subnet                       s02-web-sn-        created
      +   │  ├─ azure:network:Route                        s02-hub-r-         created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  s02-db-sn-rta      created
+     +   │  ├─ azure:network:Subnet                       s02-db-sn-         created
+     +   │  ├─ azure:network:SubnetRouteTableAssociation  s02-app-sn-rta     created
      +   │  ├─ azure:network:SubnetRouteTableAssociation  s02-web-sn-rta     created
-     +   │  └─ azure:network:SubnetRouteTableAssociation  s02-app-sn-rta     created
+     +   │  └─ azure:network:SubnetRouteTableAssociation  s02-db-sn-rta      created
      +   └─ azure:core:ResourceGroup                      prod-vdc-rg-       created
 
     Outputs:
         dmz_ar     : "192.168.100.128/25"
         fw_ip      : "192.168.100.4"
         hub_as     : "10.100.0.0/16"
-        hub_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/hub-vn-b3b15d3c"
-        hub_name   : "hub-vn-b3b15d3c"
-        hub_subnets: [
-            [0]: {
-                address_prefix: "10.100.2.0/24"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/hub-vn-b3b15d3c/subnets/hub-files-sn-a140de11"
-                name          : "hub-files-sn-a140de11"
-            }
-            [1]: {
-                address_prefix: "192.168.100.64/26"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/hub-vn-b3b15d3c/subnets/AzureFirewallManagementSubnet"
-                name          : "AzureFirewallManagementSubnet"
-            }
-            [2]: {
-                address_prefix: "192.168.100.128/25"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/hub-vn-b3b15d3c/subnets/DMZ"
-                name          : "DMZ"
-            }
-            [3]: {
-                address_prefix: "10.100.1.0/24"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/hub-vn-b3b15d3c/subnets/hub-domain-sn-b4c2a106"
-                name          : "hub-domain-sn-b4c2a106"
-            }
-            [4]: {
-                address_prefix: "10.100.0.0/26"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/hub-vn-b3b15d3c/subnets/GatewaySubnet"
-                name          : "GatewaySubnet"
-            }
-            [5]: {
-                address_prefix: "192.168.100.0/26"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/hub-vn-b3b15d3c/subnets/AzureFirewallSubnet"
-                name          : "AzureFirewallSubnet"
-            }
-            [6]: {
-                address_prefix: "10.100.0.64/27"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/hub-vn-b3b15d3c/subnets/AzureBastionSubnet"
-                name          : "AzureBastionSubnet"
-            }
-        ]
-        s01_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/s01-vn-5701451e"
-        s01_name   : "s01-vn-5701451e"
-        s01_subnets: [
-            [0]: {
-                address_prefix: "10.101.2.0/24"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/s01-vn-5701451e/subnets/s01-app-sn-87259a1d"
-                name          : "s01-app-sn-87259a1d"
-            }
-            [1]: {
-                address_prefix: "10.101.3.0/24"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/s01-vn-5701451e/subnets/s01-db-sn-d15d2c4a"
-                name          : "s01-db-sn-d15d2c4a"
-            }
-            [2]: {
-                address_prefix: "10.101.0.0/27"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/s01-vn-5701451e/subnets/AzureBastionSubnet"
-                name          : "AzureBastionSubnet"
-            }
-            [3]: {
-                address_prefix: "10.101.1.0/24"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/s01-vn-5701451e/subnets/s01-web-sn-97a42e0e"
-                name          : "s01-web-sn-97a42e0e"
-            }
-        ]
-        s02_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/s02-vn-0d94f0c2"
-        s02_name   : "s02-vn-0d94f0c2"
-        s02_subnets: [
-            [0]: {
-                address_prefix: "10.102.0.0/27"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/s02-vn-0d94f0c2/subnets/AzureBastionSubnet"
-                name          : "AzureBastionSubnet"
-            }
-            [1]: {
-                address_prefix: "10.102.2.0/24"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/s02-vn-0d94f0c2/subnets/s02-app-sn-2d36f0e3"
-                name          : "s02-app-sn-2d36f0e3"
-            }
-            [2]: {
-                address_prefix: "10.102.1.0/24"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/s02-vn-0d94f0c2/subnets/s02-web-sn-640c721d"
-                name          : "s02-web-sn-640c721d"
-            }
-            [3]: {
-                address_prefix: "10.102.3.0/24"
-                id            : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-efb0bde7/providers/Microsoft.Network/virtualNetworks/s02-vn-0d94f0c2/subnets/s02-db-sn-f9ac8b27"
-                name          : "s02-db-sn-f9ac8b27"
-            }
-        ]
+        hub_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-29069d60/providers/Microsoft.Network/virtualNetworks/hub-vn-6e9885c3"
+        hub_name   : "hub-vn-6e9885c3"
+        s01_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-29069d60/providers/Microsoft.Network/virtualNetworks/s01-vn-4703f8f7"
+        s01_name   : "s01-vn-4703f8f7"
+        s02_id     : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-29069d60/providers/Microsoft.Network/virtualNetworks/s02-vn-796b48fc"
+        s02_name   : "s02-vn-796b48fc"
 
     Resources:
-        + 69 created
+        + 75 created
 
-    Duration: 48m5s
+    Duration: 52m46s
 
     Permalink: https://app.pulumi.com/organization/azure-py-vdc/prod/updates/1
+
     ```
     
     Feel free to modify your program, and then run `pulumi up` again. Pulumi automatically detects differences and makes the minimal changes necessary to achieved the desired state. If any changes to resources are made outside of Pulumi, you should first do a `pulumi refresh` so that Pulumi can discover the actual situation, and then `pulumi up` to return to desired state.
    
-    Note that because most resources are [auto-named](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming), you see trailing dashes above which will actually be followed by random suffixes that you can see in the Outputs and in Azure.
+    Note that because most resources are [auto-named](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming), the trailing dashes that you see above will actually be followed by random suffixes that appear in the Outputs and in Azure.
 
 1. Create another new stack intended for Disaster Recovery (following the example):
 
@@ -261,7 +187,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set forced_tunnel               "true"
     ```
 
-1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways and firewall:
+1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
 
     ```bash
     $ pulumi up
