@@ -66,18 +66,18 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
          Type                                             Name               Status
      +   pulumi:pulumi:Stack                              azure-py-vdc-prod  created
      +   ├─ vdc:network:Hub                               hub                created
-     +   ├─ vdc:network:Hub                               hub                created
+     +   │  ├─ azure:network:VirtualNetwork               hub-vn-            created
+     +   │  ├─ azure:network:PublicIp                     hub-vpn-gw-pip-    created
      +   │  ├─ azure:network:PublicIp                     hub-fw-pip-        created
-     +   ├─ vdc:network:Hub                               hub                created
-     +   ├─ vdc:network:Hub                               hub                created
+     +   │  ├─ azure:network:PublicIp                     hub-er-gw-pip-     created
      +   │  ├─ azure:network:PublicIp                     hub-ab-pip-        created
-     +   │  ├─ azure:network:Subnet                       hub-dmz-sn         created
      +   │  ├─ azure:network:Subnet                       hub-fw-sn          created
+     +   │  ├─ azure:network:Subnet                       hub-dmz-sn         created
      +   │  ├─ azure:network:Subnet                       hub-gw-sn          created
-     +   ├─ vdc:network:Hub                               hub                created
-     +   ├─ vdc:network:Hub                               hub                created
-     +   ├─ vdc:network:Hub                               hub                created
-     +   ├─ vdc:network:Hub                               hub                created
+     +   │  ├─ azure:network:Firewall                     hub-fw-            created
+     +   │  ├─ azure:network:VirtualNetworkGateway        hub-vpn-gw-        created
+     +   │  ├─ azure:network:VirtualNetworkGateway        hub-er-gw-         created
+     +   │  ├─ azure:network:RouteTable                   hub-gw-rt-         created
      +   │  ├─ azure:network:RouteTable                   hub-dmz-rt-        created
      +   │  ├─ azure:network:RouteTable                   hub-ss-rt-         created
      +   │  ├─ azure:network:Subnet                       hub-ab-sn          created
