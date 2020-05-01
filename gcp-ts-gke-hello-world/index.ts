@@ -8,7 +8,7 @@ const name = "helloworld";
 
 const config = new pulumi.Config();
 export const masterVersion = config.get("masterVersion") ||
-    gcp.container.getEngineVersions().latestMasterVersion;
+    gcp.container.getEngineVersions().then(it => it.latestMasterVersion);
 
 // Create a GKE cluster
 const cluster = new gcp.container.Cluster(name, {

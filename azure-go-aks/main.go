@@ -61,19 +61,14 @@ func main() {
 		vnetArgs := network.VirtualNetworkArgs{
 			ResourceGroupName: resourceGroup.Name,
 			AddressSpaces:     pulumi.StringArray{pulumi.String("10.2.0.0/16")},
+			Subnets: network.VirtualNetworkSubnetArray{
+				network.VirtualNetworkSubnetArgs{
+					Name:          pulumi.String("subnet-1"),
+					AddressPrefix: pulumi.String("10.2.1.0/24"),
+				},
+			},
 		}
 		vnet, err := network.NewVirtualNetwork(ctx, "vnet", &vnetArgs)
-		if err != nil {
-			return err
-		}
-
-		// Create a subnet.
-		subnetArgs := network.SubnetArgs{
-			ResourceGroupName:  resourceGroup.Name,
-			VirtualNetworkName: vnet.Name,
-			AddressPrefix:      pulumi.String("10.2.1.0/24"),
-		}
-		subnet, err := network.NewSubnet(ctx, "subnet", &subnetArgs)
 		if err != nil {
 			return err
 		}
@@ -94,7 +89,7 @@ func main() {
 			NodeCount:    pulumi.Int(3),
 			VmSize:       pulumi.String("Standard_B2s"),
 			OsDiskSizeGb: pulumi.Int(30),
-			VnetSubnetId: subnet.ID(),
+			VnetSubnetId: vnet.Subnets.Index(pulumi.Int(0)).Id(),
 		}
 
 		linuxProfileArgs := containerservice.KubernetesClusterLinuxProfileArgs{
@@ -141,7 +136,8 @@ func main() {
 			RoleBasedAccessControl: roleArgs,
 			NetworkProfile:         networkArgs,
 		}
-		cluster, err := containerservice.NewKubernetesCluster(ctx, "aksCluster", &clusterArgs)
+		cluster, err := containerservice.NewKubernetesCluster(ctx, "aksCluster", &clusterArgs,
+			pulumi.DependsOn([]pulumi.Resource{vnet}))
 		if err != nil {
 			return err
 		}

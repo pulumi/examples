@@ -155,7 +155,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
         + 75 created
 
     Duration: 52m46s
-
+    
     Permalink: https://app.pulumi.com/organization/azure-py-vdc/prod/updates/1
 
     ```

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-gcp/sdk/v2/go/gcp/cloudfunctions"
-	"github.com/pulumi/pulumi-gcp/sdk/v2/go/gcp/storage"
+	"github.com/pulumi/pulumi-gcp/sdk/v3/go/gcp/cloudfunctions"
+	"github.com/pulumi/pulumi-gcp/sdk/v3/go/gcp/storage"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
 
@@ -40,10 +40,10 @@ func main() {
 			return err
 		}
 
-		invoker, err := cloudfunctions.NewFunctionsIamMember(ctx, "invoker", &cloudfunctions.FunctionsIamMemberArgs{
+		_, err = cloudfunctions.NewFunctionIamMember(ctx, "invoker", &cloudfunctions.FunctionIamMemberArgs{
 			Project:       function.Project,
 			Region:        function.Region,
-			CloudFunction: function.Region,
+			CloudFunction: function.Name,
 			Role:          pulumi.String("roles/cloudfunctions.invoker"),
 			Member:        pulumi.String("allUsers"),
 		})
