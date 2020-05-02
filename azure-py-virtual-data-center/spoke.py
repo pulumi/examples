@@ -133,11 +133,11 @@ class Spoke(ComponentResource):
         # assign properties to spoke including from child resources
         self.address_spaces = spoke.address_spaces
         self.hub = props.hub.id
-        self.id = spoke.id
+        self.id = spoke.id # exported
         self.location = spoke.location
-        self.name = spoke.name
+        self.name = spoke.name # exported
         self.resource_group_name = props.resource_group_name
-        self.subnets = spoke.subnets
+        self.subnets = spoke.subnets # exported
         self.stem = name
         self.tags = props.tags
         self.register_outputs({})

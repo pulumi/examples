@@ -16,7 +16,7 @@ vdc.tags = default_tags
 # all resources will be created in configuration location
 resource_group_name = vdc.resource_group(stack)
 
-# Azure Bastion optional in both hub and spokes (until it works over peerings)
+# Azure Bastion hosts in hub and spokes (until it works over peerings)
 azure_bastion = config.get_bool('azure_bastion')
 
 # another stack in the same project and organization may be peered
@@ -28,7 +28,7 @@ if peer:
 else:
     reference = None
 
-# locate hub_address_space within supernet
+# locate hub_address_space within supernet for contiguous spoke_address_space
 hub_address_space = config.require('hub_address_space')
 hub_nw = ip_network(hub_address_space)
 pfl_diff = int(hub_nw.prefixlen / 2)
@@ -37,8 +37,9 @@ stack_sn = super_nw.subnets(prefixlen_diff=pfl_diff)
 hub_as = next(stack_sn)
 while hub_as.compare_networks(hub_nw) < 0:
       hub_as = next(stack_sn)
+# assert that hub_address_space == str(hub_as)
 
-# single hub virtual network with gateway, firewall, DMZ and shared services
+# single hub with gateways, firewall, DMZ, shared services, bastion (optional)
 hub = Hub('hub', # stem of child resource names (<4 chars)
     HubProps(
         azure_bastion = azure_bastion,
@@ -57,7 +58,7 @@ hub = Hub('hub', # stem of child resource names (<4 chars)
     ),
 )
 
-# multiple spoke virtual networks for application environments
+# multiple spokes for application environments with bastion access (optional)
 spoke_address_space = str(next(stack_sn))
 spoke1 = Spoke('s01', # stem of child resource names (<6 chars)
     SpokeProps(
