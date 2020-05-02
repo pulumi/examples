@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/appinsights"
-	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/appservice"
-	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/core"
-	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/sql"
-	"github.com/pulumi/pulumi-azure/sdk/v2/go/azure/storage"
+	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/appinsights"
+	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/appservice"
+	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/core"
+	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/sql"
+	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/storage"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
 )
@@ -51,7 +51,7 @@ func main() {
 			return err
 		}
 
-		storageContainer, err := storage.NewContainer(ctx, prefix+"-c", &storage.ContainerArgs{
+		storageContainer, err := storage.NewContainer(ctx, prefix+"c", &storage.ContainerArgs{
 			StorageAccountName:  storageAccount.Name,
 			ContainerAccessType: pulumi.String("private"),
 		})

@@ -2,7 +2,7 @@
 
 # Azure Functions
 
-Azure Functions created from raw deployment packages in C#.
+Azure Functions created from deployment packages in C# and deployed to a Consumption Plan on Windows.
 
 ## Deploying the App
 
