@@ -21,6 +21,94 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestAccAwsCsEks(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-cs-eks"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["Url"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello Kubernetes bootcamp!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsCsFargate(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-cs-fargate"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["Url"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello World!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsCsLambda(t *testing.T) {
+	t.Skip("Skipped as requires test pre-steps")
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-cs-lambda"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsCsWebserver(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-cs-webserver"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["PublicIp"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, World!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsFsLambdaWebserver(t *testing.T) {
+	t.Skip("Skipped as requires test pre-steps")
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-fs-lambda-webserver"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["websiteUrl"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Serverless Giraffe Web API")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsGoConsoleSlackNotification(t *testing.T) {
+	t.Skip("Skipped as requires test pre-steps")
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-console-slack-notification"),
+			Config: map[string]string{
+				"slackWebhookURL": "https://webhookUrl",
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsGoEks(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
@@ -46,6 +134,33 @@ func TestAccAwsGoFargate(t *testing.T) {
 				endpoint := stack.Outputs["url"].(string)
 				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Welcome to nginx!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsGoLambda(t *testing.T) {
+	t.Skip("Skipped as requires test pre-steps")
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-lambda"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsGoLambdaGateway(t *testing.T) {
+	t.Skip("Skipped as requires test pre-steps")
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-lambda-gateway"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := fmt.Sprintf("%s/helloworld", stack.Outputs["invocationUrl"].(string))
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "HELLOWORLD")
 				})
 			},
 		})
@@ -190,6 +305,68 @@ func TestAccAwsPyAppSync(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsPyEc2Provisioners(t *testing.T) {
+	t.Skip("Skipped due to async bug in python")
+	sess, err := session.NewSession(&aws.Config{
+		Region: aws.String(getAwsRegion())},
+	)
+	assert.NoError(t, err)
+	svc := ec2.New(sess)
+	keyName, err := resource.NewUniqueHex("test-keyname", 8, 20)
+	assert.NoError(t, err)
+	key, err := svc.CreateKeyPair(&ec2.CreateKeyPairInput{
+		KeyName: aws.String(keyName),
+	})
+	assert.NoError(t, err)
+	defer func() {
+		_, err := svc.DeleteKeyPair(&ec2.DeleteKeyPairInput{
+			KeyName: aws.String(keyName),
+		})
+		assert.NoError(t, err)
+	}()
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-py-ec2-provisioners"),
+			Config: map[string]string{
+				"keyName": aws.StringValue(key.KeyName),
+			},
+			Secrets: map[string]string{
+				"privateKey": base64.StdEncoding.EncodeToString([]byte(aws.StringValue(key.KeyMaterial))),
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				catConfigStdout := stack.Outputs["catConfigStdout"].(string)
+				assert.Equal(t, "[test]\nx = 42\n", catConfigStdout)
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsPyEks(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-py-eks"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsPyFargate(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-py-fargate"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["url"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Welcome to nginx!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsPyResources(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
@@ -208,6 +385,16 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsPyStaticWebsite(t *testing.T) {
+	t.Skip("Temp skip due to missing domain name")
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-py-static-website"),
 		})
 
 	integration.ProgramTest(t, &test)
@@ -250,6 +437,23 @@ func TestAccAwsTsAirflow(t *testing.T) {
 }
 
 func TestAccAwsTsApiGateway(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-apigateway"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["endpoint"].(string)
+				assertHTTPResultWithRetry(t, endpoint+"hello", nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "route")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsTsApiGatewayAuth0(t *testing.T) {
+	t.Skip("Skipped due to missing Auth0 credentials")
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-apigateway"),
@@ -310,13 +514,11 @@ func TestAccAwsTsEc2Provisioners(t *testing.T) {
 	svc := ec2.New(sess)
 	keyName, err := resource.NewUniqueHex("test-keyname", 8, 20)
 	assert.NoError(t, err)
-	t.Logf("Creating keypair %s.\n", keyName)
 	key, err := svc.CreateKeyPair(&ec2.CreateKeyPairInput{
 		KeyName: aws.String(keyName),
 	})
 	assert.NoError(t, err)
 	defer func() {
-		t.Logf("Deleting keypair %s.\n", keyName)
 		_, err := svc.DeleteKeyPair(&ec2.DeleteKeyPairInput{
 			KeyName: aws.String(keyName),
 		})
@@ -431,6 +633,25 @@ func TestAccAwsTsS3LambdaCopyZip(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsTsScheduledFunction(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-scheduled-function"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsTsServerlessRaw(t *testing.T) {
+	t.Skip("Skipped due to missing pre-step")
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsTsSlackbot(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
@@ -439,6 +660,16 @@ func TestAccAwsTsSlackbot(t *testing.T) {
 				"mentionbot:slackToken":        "XXX",
 				"mentionbot:verificationToken": "YYY",
 			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsTsStaticWebsite(t *testing.T) {
+	t.Skip("Temp skip due to missing domain name")
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-static-website"),
 		})
 
 	integration.ProgramTest(t, &test)
@@ -473,6 +704,26 @@ func TestAccAwsTsTwitterAthena(t *testing.T) {
 				"aws-ts-twitter-athena:twitterAccessTokenSecret": "xyz",
 				"aws-ts-twitter-athena:twitterQuery":             "smurfs",
 			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsTsUrlShortenerCacheHttp(t *testing.T) {
+	t.Skip("Temp skip due to service timeouts")
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-url-shortener-cache-http"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsTsVotingApp(t *testing.T) {
+	t.Skip("Temp skip due to service timeouts")
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-voting-app"),
 		})
 
 	integration.ProgramTest(t, &test)

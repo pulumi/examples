@@ -90,7 +90,7 @@ After cloning this repo, run these commands from the working directory:
 	+   └─ aws:apigateway:Deployment   APIDeployment      created     
 	
 	Outputs:
-		invocation URL: "https://<gateway-id>.execute-api.us-west-2.amazonaws.com/prod/{message}"
+		invocationUrl: "https://<gateway-id>.execute-api.us-west-2.amazonaws.com/prod"
 		lambda        : "arn:aws:lambda:us-west-2:ACCOUNTID:function:basicLambda-75711af"
 
 	Resources:
@@ -102,7 +102,7 @@ After cloning this repo, run these commands from the working directory:
 5. Call our lambda function from the cli:
 
 	```bash
-	curl https://<gateway-id>.execute-api.us-west-2.amazonaws.com/prod/helloworld   
+	curl "$(pulumi stack output invocationUrl)/helloworld"   
 	HELLOWORLD% 
 	```
 

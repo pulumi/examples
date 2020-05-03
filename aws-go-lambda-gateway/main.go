@@ -161,7 +161,7 @@ func main() {
 			return err
 		}
 
-		ctx.Export("invocation URL", pulumi.Sprintf("https://%s.execute-api.%s.amazonaws.com/prod/{message}", gateway.ID(), region.Name))
+		ctx.Export("invocationUrl", pulumi.Sprintf("https://%s.execute-api.%s.amazonaws.com/prod", gateway.ID(), region.Name))
 
 		return nil
 	})

@@ -99,8 +99,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Go dependencies
         run: make ensure
-      - name: Run ${{ matrix.clouds }}{{ matrix.languages }} Tests
-        run: make specific_test_set TestSet=${{ matrix.clouds }}{{ matrix.languages }}
+      - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
+        run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
   lint:
     strategy:
       matrix:

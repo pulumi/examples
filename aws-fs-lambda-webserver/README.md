@@ -22,7 +22,7 @@ dotnet publish ./LambdaWebService
 
 2. Execute our Pulumi program to archive our published function output, and create our lambda. 
 ```bash
-pulumi up -C ./pulumi
+pulumi up
 ```
 
 3. In a browser, navigate to the URL for `websiteUrl`. You should see the welcome message.

@@ -22,14 +22,14 @@ dotnet publish ./DotnetLambda/src/DotnetLambda/
 
 2. Execute our Pulumi program to archive our published function output, and create our lambda. 
 ```bash
-pulumi up -C ./pulumi
+pulumi up
 ```
 
 3. Call our lambda function from the aws cli.
 ```bash
 aws lambda invoke \
---function-name $(pulumi stack output Lambda -C ./pulumi) \
---region $(pulumi config get aws:region -C ./pulumi) \
+--function-name $(pulumi stack output Lambda) \
+--region $(pulumi config get aws:region) \
 --payload '"foo"' \
 output.json
 

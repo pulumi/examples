@@ -17,7 +17,7 @@
         "@pulumi/pulumi": "^2.0.0",
         "@pulumi/aws": "^2.0.0",
         "@pulumi/awsx": "^0.20.0",
-        "@pulumi/cloud-aws": "^0.19.0",
+        "@pulumi/cloud-aws": "^0.20.0",
         "redis": "^2.8.0",
         "express": "^4.16.3",
         "parseurl": "^1.3.2",
