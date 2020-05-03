@@ -541,6 +541,7 @@ func TestAccAzureGoAci(t *testing.T) {
 }
 
 func TestAccAzureGoAks(t *testing.T) {
+	t.Skip("The credentials in ServicePrincipalProfile were invalid")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aks"),
