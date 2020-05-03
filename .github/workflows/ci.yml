@@ -36,7 +36,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tests-set: ["DigitalOcean", "Aws", "Azure", "Gcp", "Packet", "Linode", "Cloud"]
+#        tests-set: ["DigitalOcean", "Aws", "Azure", "Gcp", "Packet", "Linode", "Cloud"]
+        tests-set: ["Aws"]
         platform: [ubuntu-latest]
         go-version: [1.13.x]
         node-version: [10.x]
