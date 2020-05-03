@@ -61,7 +61,7 @@ def expressroute_gateway(stem, subnet_id, depends_on=[]):
     )
     return er_gw
 
-def firewall(stem, subnet_id, depends_on=[]):
+def firewall(stem, fw_sn_id, fwm_sn_id, depends_on=[]):
     fw_pip = network.PublicIp(
         f'{stem}-fw-pip-',
         resource_group_name = resource_group_name,
@@ -70,14 +70,28 @@ def firewall(stem, subnet_id, depends_on=[]):
         tags = tags,
         opts = ResourceOptions(parent=self),
     )
+#    fwm_pip = network.PublicIp( # requires api 2019-11-01 or later
+#        f'{stem}-fwm-pip-',
+#        resource_group_name = resource_group_name,
+#        sku = 'Standard',
+#        allocation_method = 'Static',
+#        tags = tags,
+#        opts = ResourceOptions(parent=self),
+#    )
     fw = network.Firewall(
         f'{stem}-fw-',
         resource_group_name = resource_group_name,
+#        sku = 'AZFW_VNet', # not required but distinguishes from 'AZFW_Hub'
         ip_configurations = [{
             'name': f'{stem}-fw-ipconf',
             'publicIpAddressId': fw_pip.id,
-            'subnet_id': subnet_id,
+            'subnet_id': fw_sn_id,
         }],
+#        management_ip_configuration = { # requires api 2019-11-01 or later
+#            'name': f'{stem}-fwm-ipconf',
+#            'publicIpAddressId': fwm_pip.id,
+#            'subnet_id': fwm_sn_id,
+#        },
         tags = tags,
         opts = ResourceOptions(
             parent=self,

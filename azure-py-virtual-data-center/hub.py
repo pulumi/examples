@@ -44,7 +44,7 @@ class Hub(ComponentResource):
         dmz_nw = next(fwz_sn) # largest remaining subnet for DMZ
         fwx_sn = fwx_nw.subnets(new_prefix=26) # split the /25 into two /26
         fws_nw = next(fwx_sn) # AzureFirewallSubnet
-        fwm_nw = next(fwx_sn) # AzureFirewallManagementSubnet (optional)
+        fwm_nw = next(fwx_sn) # AzureFirewallManagementSubnet
 
         # calculate the subnets in the hub_address_space
         hub_nw = ip_network(props.hub_address_space)
@@ -67,6 +67,14 @@ class Hub(ComponentResource):
             ],
         )
 
+        # GatewaySubnet
+        hub_gw_sn = vdc.subnet_special(
+            stem = f'{name}-gw',
+            name = 'GatewaySubnet', # name required
+            virtual_network_name = hub.name,
+            address_prefix = gws_ar,
+        )
+
         # DMZ subnet
         hub_dmz_sn = vdc.subnet_special( #ToDo add NSG
             stem = f'{name}-dmz',
@@ -83,36 +91,37 @@ class Hub(ComponentResource):
             address_prefix = str(fws_nw),
         )
 
-        # GatewaySubnet
-        hub_gw_sn = vdc.subnet_special(
-            stem = f'{name}-gw',
-            name = 'GatewaySubnet', # name required
+        # AzureFirewallManagementSubnet
+        hub_fwm_sn = vdc.subnet_special(
+            stem = f'{name}-fwm',
+            name = 'AzureFirewallManagementSubnet', # name required
             virtual_network_name = hub.name,
-            address_prefix = gws_ar,
+            address_prefix = str(fwm_nw),
         )
 
         # provisioning of Gateways and Firewall depends_on subnets
         # to avoid contention in the Azure control plane
 
+        # Azure Firewall
+        hub_fw = vdc.firewall(
+            stem = name,
+            fw_sn_id = hub_fw_sn.id,
+            fwm_sn_id = hub_fwm_sn.id,
+            depends_on = [hub_dmz_sn, hub_fw_sn, hub_fwm_sn, hub_gw_sn],
+        )
+
         # VPN Gateway
         hub_vpn_gw = vdc.vpn_gateway(
             stem = name,
             subnet_id = hub_gw_sn.id,
-            depends_on = [hub_dmz_sn, hub_fw_sn, hub_gw_sn],
+            depends_on = [hub_dmz_sn, hub_fw_sn, hub_fwm_sn, hub_gw_sn],
         )
 
         # ExpressRoute Gateway
         hub_er_gw = vdc.expressroute_gateway(
             stem = name,
             subnet_id = hub_gw_sn.id,
-            depends_on = [hub_dmz_sn, hub_fw_sn, hub_gw_sn],
-        )
-
-        # Azure Firewall
-        hub_fw = vdc.firewall(
-            stem = name,
-            subnet_id = hub_fw_sn.id,
-            depends_on = [hub_dmz_sn, hub_fw_sn, hub_gw_sn],
+            depends_on = [hub_dmz_sn, hub_fw_sn, hub_fwm_sn, hub_gw_sn],
         )
 
         # provisioning of optional subnets depends_on Gateways and Firewall
@@ -132,16 +141,9 @@ class Hub(ComponentResource):
                 subnet_id = hub_ab_sn.id,
             )
 
-        # Forced Tunnel requires AzureFirewallManagementSubnet and ...
-        if props.forced_tunnel:
-            hub_fwm_sn = vdc.subnet_special(
-                stem = f'{name}-fwm',
-                name = 'AzureFirewallManagementSubnet', # name required
-                virtual_network_name = hub.name,
-                address_prefix = str(fwm_nw),
-                depends_on = [hub_er_gw, hub_fw, hub_vpn_gw],
-            )
-            #ToDo set up firewall forced tunnel configuration
+        #ToDo requires Azure API version 2019-11-01 or later
+        #if props.forced_tunnel:
+        # https://docs.microsoft.com/en-us/azure/firewall/forced-tunneling
 
         # work around https://github.com/pulumi/pulumi/issues/4040
         hub_fw_ip = hub_fw.ip_configurations.apply(

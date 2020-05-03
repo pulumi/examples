@@ -73,6 +73,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
      +   │  ├─ azure:network:Subnet                       hub-gw-sn          created
      +   │  ├─ azure:network:Subnet                       hub-dmz-sn         created
      +   │  ├─ azure:network:Subnet                       hub-fw-sn          created
+     +   │  ├─ azure:network:Subnet                       hub-fwm-sn         created
      +   │  ├─ azure:network:VirtualNetworkGateway        hub-vpn-gw-        created
      +   │  ├─ azure:network:Firewall                     hub-fw-            created
      +   │  ├─ azure:network:VirtualNetworkGateway        hub-er-gw-         created
@@ -142,7 +143,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
         s02_name: "s02-vn-61f44736"
 
     Resources:
-        + 65 created
+        + 66 created
 
     Duration: 31m27s
     
