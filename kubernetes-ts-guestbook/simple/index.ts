@@ -33,6 +33,7 @@ const redisMasterDeployment = new k8s.apps.v1.Deployment("redis-master", {
 });
 const redisMasterService = new k8s.core.v1.Service("redis-master", {
     metadata: {
+        name: "redis-master",
         labels: redisMasterDeployment.metadata.labels,
     },
     spec: {
@@ -45,8 +46,8 @@ const redisMasterService = new k8s.core.v1.Service("redis-master", {
 // REDIS REPLICA.
 //
 
-const redisReplicaLabels = { app: "redis-replica" };
-const redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-replica", {
+const redisReplicaLabels = { app: "redis-slave" };
+const redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-slave", {
     spec: {
         selector: { matchLabels: redisReplicaLabels },
         template: {
@@ -68,7 +69,10 @@ const redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-replica", {
     },
 });
 const redisReplicaService = new k8s.core.v1.Service("redis-replica", {
-    metadata: { labels: redisReplicaDeployment.metadata.labels },
+    metadata: {
+        name: "redis-slave",
+        labels: redisReplicaDeployment.metadata.labels
+    },
     spec: {
         ports: [{ port: 6379, targetPort: 6379 }],
         selector: redisReplicaDeployment.spec.template.metadata.labels,
@@ -103,7 +107,10 @@ const frontendDeployment = new k8s.apps.v1.Deployment("frontend", {
     },
 });
 const frontendService = new k8s.core.v1.Service("frontend", {
-    metadata: { labels: frontendDeployment.metadata.labels },
+    metadata: {
+        labels: frontendDeployment.metadata.labels,
+        name: "frontend",
+    },
     spec: {
         type: isMinikube ? "ClusterIP" : "LoadBalancer",
         ports: [{ port: 80 }],

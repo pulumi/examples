@@ -1,0 +1,12 @@
+{
+    "name": "kubernetes-ts-multicloud",
+    "devDependencies": {
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@pulumi/gcp": "latest",
+        "@pulumi/kubernetes": "latest",
+        "@pulumi/pulumi": "latest",
+        "@pulumi/random": "latest"
+    }
+}

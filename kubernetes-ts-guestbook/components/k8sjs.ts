@@ -37,6 +37,7 @@ export class ServiceDeployment extends pulumi.ComponentResource {
 
         this.service = new k8s.core.v1.Service(name, {
             metadata: {
+                name: name,
                 labels: this.deployment.metadata.labels,
             },
             spec: {

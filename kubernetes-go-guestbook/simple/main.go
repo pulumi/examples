@@ -32,13 +32,11 @@ func main() {
 		isMinikube := conf.GetBool("isMinikube")
 
 		redisLeaderLabels := pulumi.StringMap{
-			"app":  pulumi.String("redis"),
-			"tier": pulumi.String("backend"),
-			"role": pulumi.String("master"),
+			"app": pulumi.String("redis-master"),
 		}
 
 		// Redis leader Deployment
-		_, err := appsv1.NewDeployment(ctx, "redis-leader", &appsv1.DeploymentArgs{
+		_, err := appsv1.NewDeployment(ctx, "redis-master", &appsv1.DeploymentArgs{
 			Metadata: &metav1.ObjectMetaArgs{
 				Labels: redisLeaderLabels,
 			},
@@ -77,7 +75,7 @@ func main() {
 		}
 
 		// Redis leader Service
-		_, err = corev1.NewService(ctx, "redis-leader", &corev1.ServiceArgs{
+		_, err = corev1.NewService(ctx, "redis-master", &corev1.ServiceArgs{
 			Metadata: &metav1.ObjectMetaArgs{
 				Name:   pulumi.String("redis-master"),
 				Labels: redisLeaderLabels,
@@ -97,13 +95,11 @@ func main() {
 		}
 
 		redisFollowerLabels := pulumi.StringMap{
-			"app":  pulumi.String("redis"),
-			"tier": pulumi.String("backend"),
-			"role": pulumi.String("slave"),
+			"app": pulumi.String("redis-slave"),
 		}
 
 		// Redis follower Deployment
-		_, err = appsv1.NewDeployment(ctx, "redis-follower", &appsv1.DeploymentArgs{
+		_, err = appsv1.NewDeployment(ctx, "redis-slave", &appsv1.DeploymentArgs{
 			Metadata: &metav1.ObjectMetaArgs{
 				Labels: redisFollowerLabels,
 			},
@@ -119,7 +115,7 @@ func main() {
 					Spec: &corev1.PodSpecArgs{
 						Containers: corev1.ContainerArray{
 							corev1.ContainerArgs{
-								Name:  pulumi.String("slave"),
+								Name:  pulumi.String("redis-slave"),
 								Image: pulumi.String("gcr.io/google_samples/gb-redisslave:v3"),
 								Resources: &corev1.ResourceRequirementsArgs{
 									Requests: pulumi.StringMap{
@@ -148,7 +144,7 @@ func main() {
 		}
 
 		// Redis follower Service
-		_, err = corev1.NewService(ctx, "redis-follower", &corev1.ServiceArgs{
+		_, err = corev1.NewService(ctx, "redis-slave", &corev1.ServiceArgs{
 			Metadata: &metav1.ObjectMetaArgs{
 				Name:   pulumi.String("redis-slave"),
 				Labels: redisFollowerLabels,
@@ -167,8 +163,7 @@ func main() {
 		}
 
 		frontendLabels := pulumi.StringMap{
-			"app":  pulumi.String("guestbook"),
-			"tier": pulumi.String("frontend"),
+			"app": pulumi.String("frontend"),
 		}
 
 		// Frontend Deployment
