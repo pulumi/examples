@@ -256,7 +256,7 @@ class Guestbook : Stack
         }
         else
         {
-            this.FrontendIp = frontendService.Status.Apply(status => status.LoadBalancer.Ingress[0].Hostname);
+            this.FrontendIp = frontendService.Status.Apply(status => status.LoadBalancer.Ingress[0].Ip ?? status.LoadBalancer.Ingress[0].Hostname);
         }
     }
 

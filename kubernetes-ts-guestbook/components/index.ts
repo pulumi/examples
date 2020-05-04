@@ -10,7 +10,7 @@ const redisMaster = new k8sjs.ServiceDeployment("redis-master", {
     ports: [6379],
 });
 
-const redisReplica = new k8sjs.ServiceDeployment("redis-replica", {
+const redisReplica = new k8sjs.ServiceDeployment("redis-slave", {
     image: "gcr.io/google_samples/gb-redisslave:v1",
     ports: [6379],
 });

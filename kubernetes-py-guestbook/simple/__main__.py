@@ -22,13 +22,11 @@ config = pulumi.Config()
 isMinikube = config.get_bool("isMinikube")
 
 redis_leader_labels = {
-	"app": "redis",
-	"tier": "backend",
-	"role": "master"
+	"app": "redis-master",
 }
 
 redis_leader_deployment = Deployment(
-	"redis-leader",
+	"redis-master",
 	spec={
 		"selector": {
 			"match_labels": redis_leader_labels,
@@ -57,8 +55,9 @@ redis_leader_deployment = Deployment(
 	})
 
 redis_leader_service = Service(
-	"redis-leader",
+	"redis-master",
 	metadata={
+		"name": "redis-master",
 		"labels": redis_leader_labels
 	},
 	spec={
@@ -70,9 +69,7 @@ redis_leader_service = Service(
 	})
 
 redis_follower_labels = {
-	"app": "redis",
-	"tier": "backend",
-	"role": "slave"
+	"app": "redis-slave",
 }
 
 redis_follower_deployment = Deployment(
@@ -88,7 +85,7 @@ redis_follower_deployment = Deployment(
 			},
 			"spec": {
 				"containers": [{
-					"name": "slave",
+					"name": "redis-slave",
 					"image": "gcr.io/google_samples/gb-redisslave:v1",
 					"resources": {
 						"requests": {
@@ -113,8 +110,9 @@ redis_follower_deployment = Deployment(
 	})
 
 redis_follower_service = Service(
-	"redis-follower",
+	"redis-slave",
 	metadata={
+		"name": "redis-slave",
 		"labels": redis_follower_labels
 	},
 	spec={
@@ -127,8 +125,7 @@ redis_follower_service = Service(
 
 # Frontend
 frontend_labels = {
-	"app": "guestbook",
-	"tier": "frontend"
+	"app": "frontend",
 }
 
 frontend_deployment = Deployment(

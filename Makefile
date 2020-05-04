@@ -21,6 +21,14 @@ specific_test_set:
 	echo "running $(TestSet) Acceptance Tests"
 	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel 40 --run=TestAcc$(TestSet)
 
+setup_test_infra:
+	echo "Setting up test infra"
+	./misc/scripts/create-ci-cluster.sh $(StackName)
+
+destroy_test_infra:
+	echo "Tearing down test infra"
+	./misc/scripts/destroy-ci-cluster.sh $(StackName)
+
 # The travis_* targets are entrypoints for CI.
 .PHONY: travis_cron travis_push travis_pull_request travis_api
 travis_cron: all
