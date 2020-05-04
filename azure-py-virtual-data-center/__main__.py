@@ -1,5 +1,5 @@
+from ipaddress import ip_network
 from pulumi import Config, get_stack, get_project, export
-from pulumi.resource import CustomTimeouts
 from hub import HubProps, Hub
 from spoke import SpokeProps, Spoke
 import vdc
@@ -16,71 +16,78 @@ vdc.tags = default_tags
 # all resources will be created in configuration location
 resource_group_name = vdc.resource_group(stack)
 
+# Azure Bastion hosts in hub and spokes (until it works over peerings)
+azure_bastion = config.get_bool('azure_bastion')
+
 # another stack in the same project and organization may be peered
 peer = config.get('peer')
 if peer:
     org = config.require('org')
     project = get_project()
-    ref = f'{org}/{project}/{peer}'
+    reference = f'{org}/{project}/{peer}'
 else:
-    ref = None
+    reference = None
 
-# single hub virtual network with gateway, firewall, DMZ and shared services
-hub = Hub(
-    'hub', # stem of child resource names (<4 chars)
+# locate hub_address_space within supernet for contiguous spoke_address_space
+hub_address_space = config.require('hub_address_space')
+hub_nw = ip_network(hub_address_space)
+pfl_diff = int(hub_nw.prefixlen / 2)
+super_nw = hub_nw.supernet(prefixlen_diff=pfl_diff)
+stack_sn = super_nw.subnets(prefixlen_diff=pfl_diff)
+hub_as = next(stack_sn)
+while hub_as.compare_networks(hub_nw) < 0:
+      hub_as = next(stack_sn)
+# assert that hub_address_space == str(hub_as)
+
+# single hub with gateways, firewall, DMZ, shared services, bastion (optional)
+hub = Hub('hub', # stem of child resource names (<4 chars)
     HubProps(
-        resource_group_name = resource_group_name,
-        tags = default_tags,
-        stack = stack,
-        dmz_ar = config.require('firewall_dmz_subnet'),
-        fwm_ar = config.get('firewall_management_subnet'),
-        fws_ar = config.require('firewall_subnet'),
-        fwz_as = config.require('firewall_address_space'),
-        gws_ar = config.require('hub_gateway_subnet'),
-        hbs_ar = config.get('hub_bastion_subnet'),
-        hub_ar = config.require('hub_first_subnet'),
-        hub_as = config.require('hub_address_space'),
+        azure_bastion = azure_bastion,
+        forced_tunnel = config.get_bool('forced_tunnel'),
+        firewall_address_space = config.require('firewall_address_space'),
+        hub_address_space = hub_address_space,
         peer = peer,
-        ref = ref,
+        reference = reference,
+        resource_group_name = resource_group_name,
+        stack = stack,
         subnets = [ # extra columns for future NSGs
             ('domain', 'any', 'any'),
             ('files', 'any', 'none'),
         ],
+        tags = default_tags,
     ),
 )
 
-# multiple spoke virtual networks for application environments
-spoke1 = Spoke(
-    's01', # stem of child resource names (<6 chars)
+# multiple spokes for application environments with bastion access (optional)
+spoke_address_space = str(next(stack_sn))
+spoke1 = Spoke('s01', # stem of child resource names (<6 chars)
     SpokeProps(
-        resource_group_name = resource_group_name,
-        tags = default_tags,
+        azure_bastion = azure_bastion,
         hub = hub,
-        sbs_ar = config.get('spoke1_bastion_subnet'),
-        spoke_ar = config.require('spoke1_first_subnet'),
-        spoke_as = config.require('spoke1_address_space'),
+        resource_group_name = resource_group_name,
+        spoke_address_space = spoke_address_space,
         subnets = [ # extra columns for future NSGs
             ('web', 'any', 'app'),
             ('app', 'web', 'db'),
             ('db', 'app', 'none'),
         ],
+        tags = default_tags,
     ),
 )
 
-spoke2 = Spoke(
-    's02', # stem of child resource names (<6 chars)
+spoke_address_space = str(next(stack_sn))
+spoke2 = Spoke('s02', # stem of child resource names (<6 chars)
     SpokeProps(
-        resource_group_name = resource_group_name,
-        tags = default_tags,
+        azure_bastion = azure_bastion,
         hub = hub,
-        sbs_ar = config.get('spoke2_bastion_subnet'),
-        spoke_ar = config.require('spoke2_first_subnet'),
-        spoke_as = config.require('spoke2_address_space'),
+        resource_group_name = resource_group_name,
+        spoke_address_space = spoke_address_space,
         subnets = [ # extra columns for future NSGs
             ('web', 'any', 'app'),
             ('app', 'web', 'db'),
             ('db', 'app', 'none'),
         ],
+        tags = default_tags,
     ),
 )
 
@@ -90,10 +97,10 @@ export('fw_ip', hub.fw_ip) # required for stack peering
 export('hub_as', hub.hub_as) # required for stack peering
 export('hub_id', hub.id) # required for stack peering
 export('hub_name', hub.name)
-export('hub_subnets', hub.subnets.apply(lambda s: s)) # attempt to refresh
+export('hub_subnets', hub.subnets)
 export('s01_id', spoke1.id)
 export('s01_name', spoke1.name)
-export('s01_subnets', spoke1.subnets.apply(lambda s: s)) # attempt to refresh
+export('s01_subnets', spoke1.subnets)
 export('s02_id', spoke2.id)
 export('s02_name', spoke2.name)
-export('s02_subnets', spoke2.subnets.apply(lambda s: s)) # attempt to refresh
+export('s02_subnets', spoke2.subnets)
