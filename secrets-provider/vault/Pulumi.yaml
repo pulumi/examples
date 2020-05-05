@@ -1,0 +1,3 @@
+name: pulumi-vault-kms
+runtime: nodejs
+description: Minimal config which shows how Vault encryption support works
