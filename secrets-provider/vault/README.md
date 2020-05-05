@@ -1,6 +1,6 @@
 # Pulumi Vault Encryption
 
-Pulumi allows you to use KMS encryption from your cloud provider to encrypt any secrets stored in the backend.
+Pulumi allows you to encrypt any secrets stored in the backend.
 
 This example shows how this might be done for Hashicorp Vault. It creates an S3 bucket with a single file that has a "secret" value.
 
@@ -108,7 +108,6 @@ Code: 400. Errors:
 
 * missing client token
 ```
-
 
 
 
