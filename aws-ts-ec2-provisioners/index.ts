@@ -3,6 +3,7 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import * as provisioners from "./provisioners";
+import { getFileHash } from "./util";
 
 // Get the config ready to go.
 const config = new pulumi.Config();
@@ -54,15 +55,17 @@ const server = new aws.ec2.Instance("server", {
     keyName: keyName,
     vpcSecurityGroupIds: [ secgrp.id ],
 });
-const conn = {
+const conn: provisioners.ConnectionArgs = {
     host: server.publicIp,
     username: "ec2-user",
     privateKey,
     privateKeyPassphrase,
 };
 
+const changeToken = getFileHash("myapp.conf");
 // Copy a config file to our server.
 const cpConfig = new provisioners.CopyFile("config", {
+    changeToken,
     conn,
     src: "myapp.conf",
     dest: "myapp.conf",
@@ -70,6 +73,7 @@ const cpConfig = new provisioners.CopyFile("config", {
 
 // Execute a basic command on our server.
 const catConfig = new provisioners.RemoteExec("cat-config", {
+    changeToken,
     conn,
     command: "cat myapp.conf",
 }, { dependsOn: cpConfig });

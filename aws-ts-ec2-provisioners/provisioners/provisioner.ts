@@ -11,10 +11,23 @@ export class Provisioner<T, U> extends pulumi.dynamic.Resource {
     constructor(name: string, props: ProvisionerProperties<T, U>, opts?: pulumi.CustomResourceOptions) {
         const provider: pulumi.dynamic.ResourceProvider = {
             diff: async (id: pulumi.ID, olds: State<T, U>, news: State<T, U>) => {
-                const replace = JSON.stringify(olds.dep) !== JSON.stringify(news.dep);
+                let replace = false;
+                let replacementProperties = [];
+                if (JSON.stringify(olds.dep) !== JSON.stringify(news.dep)) {
+                    replace = true;
+                    replacementProperties.push("dep");
+                }
+                // Only trigger replacement due to the `changeToken` property, IFF
+                // the changeToken still has a value in the new inputs, and it doesn't
+                // match with the old value. If, say, the user decides to no longer specify
+                // the changeToken in the new inputs, then we don't trigger a replacement.
+                if (news.changeToken && olds.changeToken !== news.changeToken) {
+                    replace = true;
+                    replacementProperties.push("changeToken");
+                }
                 return {
                     changes: replace,
-                    replaces: replace ? ["dep"] : undefined,
+                    replaces: replace ? replacementProperties : undefined,
                     deleteBeforeReplace: true,
                 };
             },
@@ -32,10 +45,12 @@ export class Provisioner<T, U> extends pulumi.dynamic.Resource {
 
 export interface ProvisionerProperties<T, U> {
     dep: pulumi.Input<T>;
+    changeToken: pulumi.Input<string>;
     onCreate: (dep: pulumi.Unwrap<T>) => Promise<pulumi.Unwrap<U>>;
 }
 
 interface State<T, U> {
     dep: pulumi.Unwrap<T>;
+    changeToken: pulumi.Unwrap<string>;
     result: pulumi.Unwrap<U>;
 }
