@@ -24,4 +24,4 @@ template:
       default: public
     azure:location:
       description: Azure region to use (e.g. `australiaeast` or `australiasoutheast`)
-      default: australiasoutheast
+      default: australiaeast

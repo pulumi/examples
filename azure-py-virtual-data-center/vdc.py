@@ -154,7 +154,7 @@ def subnet(stem, virtual_network_name, address_prefix, depends_on=[]):
     sn = network.Subnet(
         f'{stem}-sn-',
         resource_group_name = resource_group_name,
-        address_prefix = address_prefix,
+        address_prefixes = [address_prefix],
         virtual_network_name = virtual_network_name,
         opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
@@ -180,7 +180,7 @@ def subnet_special(
         f'{stem}-sn',
         name = name,
         resource_group_name = resource_group_name,
-        address_prefix = address_prefix,
+        address_prefixes = [address_prefix],
         virtual_network_name = virtual_network_name,
         opts = ResourceOptions(
             parent=self,

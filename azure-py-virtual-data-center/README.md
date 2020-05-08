@@ -6,11 +6,11 @@ This example deploys Azure Virtual Data Center (VDC) hub-and-spoke network stack
 
 In this implementation, the Azure Firewall is central. Custom routing redirects all traffic to and from hub and spokes, as well as all traffic to, within and from the DMZ, through the firewall (which scales out as a service to handle the throughput). Firewall rules are required to allow traffic through (not yet implemented). Traffic between shared services subnets in the hub and between subnets within the spokes is not redirected through the firewall, and should instead be controlled using Network Security Groups (not yet implemented).
 
-The intention is for matching stacks to be deployed in Azure [paired regions](https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions), configured as either Production/Disaster Recovery or High Availability (or both for different applications). Global VNet Peering between the hubs connects the separate stacks into one symmetric network.
+With minimal configuration, matching stacks may be deployed in Azure [paired regions](https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions), configured for Production/Disaster Recovery or High Availability (or both for different applications). Global VNet Peering between the hubs connects the separate stacks into one symmetric network.
 
 Although the VDC pattern is in widespread use, Azure now offers a managed service intended to replace it, comprising Virtual Hub along with partner SD-WAN components, with a [migration plan](https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology) that illustrates the differences between the two patterns. But if you want or need to manage your own network infrastructure, VDC is still relevant.
 
-This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components) which demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction. It also demonstrates use of `pulumi.StackReference` as described [here](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) to relate multiple stacks. Finally, it uses Python's ```ipaddress``` module to simplify configuration of network addresses.
+This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components) which demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction. It also demonstrates use of `pulumi.StackReference` as described [here](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) to relate multiple stacks. Finally, it uses Python's ```ipaddress``` module to simplify and validate configuration of network addresses.
 
 ## Prerequisites
 
@@ -43,7 +43,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     Required:
     ```bash
     $ pulumi config set azure:environment           public
-    $ pulumi config set azure:location              australiasoutheast
+    $ pulumi config set azure:location              australiaeast
     $ pulumi config set firewall_address_space      192.168.100.0/24
     $ pulumi config set hub_address_space           10.100.0.0/16
     ```
@@ -168,7 +168,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     Required:
     ```bash
     $ pulumi config set azure:environment           public
-    $ pulumi config set azure:location              australiaeast
+    $ pulumi config set azure:location              australiasoutheast
     $ pulumi config set firewall_address_space      192.168.200.0/24
     $ pulumi config set hub_address_space           10.200.0.0/16
     ```
