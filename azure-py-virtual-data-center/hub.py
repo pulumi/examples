@@ -53,10 +53,10 @@ class Hub(ComponentResource):
         else:
             sub_diff = 25 - hub_nw.prefixlen # minimum /25 subnet
         subnets = hub_nw.subnets(prefixlen_diff=sub_diff)
-        next_sn = next(subnets) # first subnet reserved for GatewaySubnet etc
-        first_sn = next_sn.subnets(new_prefix=26) # at least two /26 subnets
+        next_sn = next(subnets) # first subnet reserved for special uses
+        first_sn = next_sn.subnets(new_prefix=26) # split into /26 subnets
         gws_nw = next(first_sn) # GatewaySubnet /26
-        rem_nw = next(first_sn) # another /26 subnet, perhaps more available
+        rem_nw = next(first_sn) # at least one more /26 subnet, perhaps more
         rem_sn = rem_nw.subnets(new_prefix=27) # only need /27 save the rest
         abs_nw = next(rem_sn) # AzureBastionSubnet /27 or greater
 

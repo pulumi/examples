@@ -90,7 +90,7 @@ while not super_nw.is_private: # accommodate longer private network prefixes
 if sup_diff <= 0:
     raise ConfigError(
         ['hub_address_space'],
-        'must belong to a private supernet'
+        'must be a subnet of a private supernet'
     )
 stack_sn = super_nw.subnets(prefixlen_diff=sup_diff)
 hub_as = next(stack_sn)
