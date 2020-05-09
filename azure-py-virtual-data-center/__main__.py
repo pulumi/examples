@@ -74,7 +74,8 @@ hub = Hub('hub', # stem of child resource names (<4 chars)
         resource_group_name = resource_group_name,
         stack = stack,
         subnets = [ # extra columns for future NSGs
-            ('shared', 'any', 'any'),
+            ('domain', 'any', 'any'),
+            ('files', 'any', 'none'),
         ],
         tags = default_tags,
     ),

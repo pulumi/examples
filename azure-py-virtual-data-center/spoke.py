@@ -32,14 +32,14 @@ class Spoke(ComponentResource):
 
         # calculate the subnets in spoke_address_space
         spoke_nw = ip_network(props.spoke_address_space)
-        if spoke_nw.prefixlen < 21: # split evenly between subnets and hosts
+        if spoke_nw.prefixlen < 24: # split evenly between subnets and hosts
             sub_diff = int((spoke_nw.max_prefixlen - spoke_nw.prefixlen) / 2)
         else:
-            sub_diff = 26 - spoke_nw.prefixlen # minimum /26 subnet
+            sub_diff = 27 - spoke_nw.prefixlen # minimum /27 subnet
         subnets = spoke_nw.subnets(prefixlen_diff=sub_diff)
         next_sn = next(subnets) # first subnet reserved for special uses
-        first_sn = next_sn.subnets(new_prefix=27) # for subdivision
-        abs_nw = next(first_sn) # Azure Bastion subnet /27 or greater
+        first_sn = next_sn.subnets(new_prefix=27) # subdivide if possible
+        abs_nw = next(first_sn) # AzureBastionSubnet /27 or greater
 
         # Azure Virtual Network to be peered to the hub
         spoke = vdc.virtual_network(name, [props.spoke_address_space])
@@ -110,8 +110,8 @@ class Spoke(ComponentResource):
             )
 
         # ordinary spoke subnets starting with the second subnet
-        next_sn = next(subnets)
         for subnet in props.subnets:
+            next_sn = next(subnets)
             spoke_sn = vdc.subnet(
                 stem = f'{name}-{subnet[0]}',
                 virtual_network_name = spoke.name,
@@ -123,7 +123,6 @@ class Spoke(ComponentResource):
                 route_table_id = spoke_rt.id,
                 subnet_id = spoke_sn.id,
             )
-            next_sn = next(subnets)
 
         # assign properties to spoke including from child resources
         self.address_spaces = spoke.address_spaces

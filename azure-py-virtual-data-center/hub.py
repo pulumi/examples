@@ -54,9 +54,11 @@ class Hub(ComponentResource):
             sub_diff = 25 - hub_nw.prefixlen # minimum /25 subnet
         subnets = hub_nw.subnets(prefixlen_diff=sub_diff)
         next_sn = next(subnets) # first subnet reserved for GatewaySubnet etc
-        first_sn = next_sn.subnets(new_prefix=26) # for subdivision
-        gws_nw = next(first_sn) # GatewaySubnet subnet /26
-        abs_nw = next(first_sn) # AzureBastionSubnet /27 or greater
+        first_sn = next_sn.subnets(new_prefix=26) # at least two /26 subnets
+        gws_nw = next(first_sn) # GatewaySubnet /26
+        rem_nw = next(first_sn) # another /26 subnet, perhaps more available
+        rem_sn = rem_nw.subnets(new_prefix=27) # only need /27 save the rest
+        abs_nw = next(rem_sn) # AzureBastionSubnet /27 or greater
 
         # cast repeatedly referenced networks to strings
         dmz_ar = str(dmz_nw)
@@ -245,8 +247,8 @@ class Hub(ComponentResource):
                 )
         
         # shared services subnets starting with the second subnet
-        next_sn = next(subnets)
         for subnet in props.subnets:
+            next_sn = next(subnets)
             hub_sn = vdc.subnet( #ToDo add NSG
                 stem = f'{name}-{subnet[0]}',
                 virtual_network_name = hub.name,
@@ -258,7 +260,6 @@ class Hub(ComponentResource):
                 route_table_id = hub_ss_rt.id,
                 subnet_id = hub_sn.id,
             )
-            next_sn = next(subnets)
 
         # assign properties to hub including from child resources
         self.address_spaces = hub.address_spaces # informational
