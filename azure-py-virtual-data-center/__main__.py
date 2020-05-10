@@ -100,13 +100,12 @@ if hub_address_space != str(hub_as):
     raise ConfigError(['hub_address_space'], 'check assumptions')
 
 # multiple spokes for application environments with bastion access (optional)
-spoke_address_space = str(next(stack_sn))
 spoke1 = Spoke('s01', # stem of child resource names (<6 chars)
     SpokeProps(
         azure_bastion = azure_bastion,
         hub = hub,
         resource_group_name = resource_group_name,
-        spoke_address_space = spoke_address_space,
+        spoke_address_space = str(next(stack_sn)),
         subnets = [ # extra columns for future NSGs
             ('web', 'any', 'app'),
             ('app', 'web', 'db'),
@@ -116,13 +115,12 @@ spoke1 = Spoke('s01', # stem of child resource names (<6 chars)
     ),
 )
 
-spoke_address_space = str(next(stack_sn))
 spoke2 = Spoke('s02', # stem of child resource names (<6 chars)
     SpokeProps(
         azure_bastion = azure_bastion,
         hub = hub,
         resource_group_name = resource_group_name,
-        spoke_address_space = spoke_address_space,
+        spoke_address_space = str(next(stack_sn)),
         subnets = [ # extra columns for future NSGs
             ('web', 'any', 'app'),
             ('app', 'web', 'db'),
