@@ -12,7 +12,7 @@ To deploy your infrastructure, follow the below steps.
 ### Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Install Node.js 8.11.3](https://nodejs.org/en/download/)
+2. [Install Node.js](https://nodejs.org/en/download/)
 3. (Optional) [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 4. (Optional) [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
 5. (Optional) [Configure GCP Credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
