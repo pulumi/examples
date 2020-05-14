@@ -18,7 +18,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     ```bash
     $ cd company
     $ npm install
-    ````
+    ```
 
 1. Create a new stack:
 
