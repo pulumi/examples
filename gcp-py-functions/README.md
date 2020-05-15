@@ -1,13 +1,13 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Google Cloud Functions
+# Google Cloud Functions in Python
 
 This example shows how to deploy a Python-based Google Cloud Function.
 
 The deployed Cloud Function allows you to notify a friend via SMS about how long it will take to
 arrive at a location. This uses the Google Maps API and Twilio, and also benefits from using a
 [Flic button](https://flic.io) and [IFTTT](https://ifttt.com). But none of that is necessary to
-use Pulumi to provision the Google Cloud Platform resources.
+use Pulumi to provision the Google Cloud Platform functions.
 
 ## Creating the Stack
 
@@ -68,7 +68,7 @@ Sent text message to...
 
 ### Google Maps for Travel Time
 
-The application uses the [Google Maps API](https://developers.google.com/maps/documentation/) to estimate travel time. To set this up:
+The application uses the [Google Maps API](https://developers.google.com/maps/documentation/) to estimate travel time data. To set this up:
 
 1. Get a [Google Maps](https://cloud.google.com/maps-platform/) API key by clicking 'Get started'.
 
@@ -134,3 +134,5 @@ To make sure to include the button presser's location, you can use [IFTTT](https
     * Select your Flic button and the appropriate gesture from the menu.
     * For "Then" select the "Make a web request" service
     * Under URL enter following (replace `<FUNCTION_URL>` with the value from `pulumi stack output fxn_url`): `<FUNCTION_URL>?long={{Longitude}}&lat={{Latitude}}`
+
+Get started on [Google Cloud](https://www.pulumi.com/docs/get-started/gcp/) with Pulumi today.
