@@ -2,7 +2,7 @@ from pulumi import ResourceOptions
 from pulumi.resource import CustomTimeouts
 from pulumi_azure import core, network, compute
 
-# Variables that must be injected when calling:
+# Variables that may need to be injected before calling functions:
 # vdc.resource_group_name = props.resource_group_name
 # vdc.tags = props.tags
 # vdc.self = self
@@ -256,5 +256,4 @@ def vpn_gateway(stem, subnet_id, depends_on=None):
     return vpn_gw
 
 if __name__ == "__main__":
-    import sys
-    vdc(int(sys.argv[1]))
+    print(dir())

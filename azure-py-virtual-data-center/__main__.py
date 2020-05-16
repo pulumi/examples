@@ -4,7 +4,7 @@ from hub import HubProps, Hub
 from spoke import SpokeProps, Spoke
 from pulumi import export
 
-# set vdc default
+# set required vdc variable before calling function
 vdc.tags = config.default_tags
 # all resources will be created in configuration location
 resource_group_name = vdc.resource_group(config.stack)

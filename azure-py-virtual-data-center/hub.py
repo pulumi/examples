@@ -31,7 +31,7 @@ class Hub(ComponentResource):
     def __init__(self, name: str, props: HubProps, opts: ResourceOptions=None):
         super().__init__('vdc:network:Hub', name, {}, opts)
 
-        # set vdc defaults
+        # set required vdc variables before calling functions
         vdc.resource_group_name = props.resource_group_name
         vdc.tags = props.tags
         vdc.self = self
@@ -54,7 +54,7 @@ class Hub(ComponentResource):
             sub_diff = 25 - hub_nw.prefixlen # minimum /25 subnet
         subnets = hub_nw.subnets(prefixlen_diff=sub_diff)
         next_sn = next(subnets) # first subnet reserved for special uses
-        first_sn = next_sn.subnets(new_prefix=26) # split into /26 subnets
+        first_sn = next_sn.subnets(new_prefix=26) # split it into /26 subnets
         gws_nw = next(first_sn) # GatewaySubnet /26
         rem_nw = next(first_sn) # at least one more /26 subnet, perhaps more
         rem_sn = rem_nw.subnets(new_prefix=27) # only need /27 save the rest
@@ -72,7 +72,7 @@ class Hub(ComponentResource):
             ],
         )
 
-        # GatewaySubnet
+        # Azure will deploy gateways into this subnet
         hub_gw_sn = vdc.subnet_special(
             stem = f'{name}-gw',
             name = 'GatewaySubnet', # name required
@@ -80,7 +80,7 @@ class Hub(ComponentResource):
             address_prefix = gws_ar,
         )
 
-        # DMZ subnet
+        # A perimeter network for Internet-facing services
         hub_dmz_sn = vdc.subnet_special( #ToDo add NSG
             stem = f'{name}-dmz',
             name = 'DMZ', # name not required but preferred
@@ -88,7 +88,7 @@ class Hub(ComponentResource):
             address_prefix = dmz_ar,
         )
 
-        # AzureFirewallSubnet
+        # Azure will deploy the firewall into this subnet 
         hub_fw_sn = vdc.subnet_special(
             stem = f'{name}-fw',
             name = 'AzureFirewallSubnet', # name required
@@ -96,7 +96,7 @@ class Hub(ComponentResource):
             address_prefix = str(fws_nw),
         )
 
-        # AzureFirewallManagementSubnet
+        # Azure requires this subnet in case of forced_tunnel
         hub_fwm_sn = vdc.subnet_special(
             stem = f'{name}-fwm',
             name = 'AzureFirewallManagementSubnet', # name required
@@ -129,7 +129,7 @@ class Hub(ComponentResource):
             depends_on = [hub_dmz_sn, hub_fw_sn, hub_fwm_sn, hub_gw_sn],
         )
 
-        # AzureBastionSubnet (optional)
+        # Azure Bastion subnet and host (optional)
         if props.azure_bastion:
             hub_ab_sn = vdc.subnet_special( #ToDo add NSG if required
                 stem = f'{name}-ab',
@@ -152,7 +152,7 @@ class Hub(ComponentResource):
             lambda ipc: ipc[0].get('private_ip_address')
         )
 
-        # Route Table only to be associated with the GatewaySubnet
+        # Route Table only to be associated with GatewaySubnet
         hub_gw_rt = vdc.route_table(
             stem = f'{name}-gw',
             disable_bgp_route_propagation = False,

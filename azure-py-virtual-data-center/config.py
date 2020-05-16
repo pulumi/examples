@@ -16,7 +16,7 @@ class ConfigError(Error):
         self.keys = keys
         self.message = message
 
-# retrieve the configuration data
+# retrieve the stack configuration data
 config = Config()
 
 # set default tags to be applied to all taggable resources

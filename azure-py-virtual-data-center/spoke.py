@@ -25,7 +25,7 @@ class Spoke(ComponentResource):
             opts: ResourceOptions=None):
         super().__init__('vdc:network:Spoke', name, {}, opts)
 
-        # set vdc defaults
+        # set required vdc variables before calling functions
         vdc.resource_group_name = props.resource_group_name
         vdc.tags = props.tags
         vdc.self = self
@@ -65,7 +65,7 @@ class Spoke(ComponentResource):
             depends_on=[props.hub.er_gw, props.hub.vpn_gw],
         )
 
-        # AzureBastionSubnet (optional)
+        # Azure Bastion subnet and host (optional)
         if props.azure_bastion:
             spoke_ab_sn = vdc.subnet_special(
                 stem = f'{name}-ab',
@@ -87,8 +87,8 @@ class Spoke(ComponentResource):
         )
 
         # VNet Peering may not be specified as next_hop_type, so a separate
-        # address space in the hub from the firewall is necessary to allow
-        # routes from spokes to remain unchanged when hub subnets are added
+        # hub address space from the firewall is necessary to allow routes
+        # from spokes to remain unchanged when hub subnets are added
 
         # it is very important to ensure that there is never a route with an
         # address_prefix which covers the AzureFirewallSubnet.
