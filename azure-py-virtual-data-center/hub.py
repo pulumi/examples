@@ -31,7 +31,7 @@ class Hub(ComponentResource):
     def __init__(self, name: str, props: HubProps, opts: ResourceOptions=None):
         super().__init__('vdc:network:Hub', name, {}, opts)
 
-        # set vdc defaults
+        # set required vdc variables before calling functions
         vdc.resource_group_name = props.resource_group_name
         vdc.tags = props.tags
         vdc.self = self
@@ -48,12 +48,17 @@ class Hub(ComponentResource):
 
         # calculate the subnets in the hub_address_space
         hub_nw = ip_network(props.hub_address_space)
-        pfl_diff = int((hub_nw.max_prefixlen - hub_nw.prefixlen) / 2)
-        subnets = hub_nw.subnets(prefixlen_diff=pfl_diff)
-        next_sn = next(subnets) # first subnet reserved for GatewaySubnet etc
-        first_sn = next_sn.subnets(new_prefix=26) # for subdivision
-        gws_nw = next(first_sn) # GatewaySubnet subnet /26
-        ab_nw = next(first_sn) # AzureBastionSubnet /27 or greater
+        if hub_nw.prefixlen < 20: # split evenly between subnets and hosts
+            sub_diff = int((hub_nw.max_prefixlen - hub_nw.prefixlen) / 2)
+        else:
+            sub_diff = 25 - hub_nw.prefixlen # minimum /25 subnet
+        subnets = hub_nw.subnets(prefixlen_diff=sub_diff)
+        next_sn = next(subnets) # first subnet reserved for special uses
+        first_sn = next_sn.subnets(new_prefix=26) # split it into /26 subnets
+        gws_nw = next(first_sn) # GatewaySubnet /26
+        rem_nw = next(first_sn) # at least one more /26 subnet, perhaps more
+        rem_sn = rem_nw.subnets(new_prefix=27) # only need /27 save the rest
+        abs_nw = next(rem_sn) # AzureBastionSubnet /27 or greater
 
         # cast repeatedly referenced networks to strings
         dmz_ar = str(dmz_nw)
@@ -67,7 +72,7 @@ class Hub(ComponentResource):
             ],
         )
 
-        # GatewaySubnet
+        # Azure will deploy gateways into this subnet
         hub_gw_sn = vdc.subnet_special(
             stem = f'{name}-gw',
             name = 'GatewaySubnet', # name required
@@ -75,7 +80,7 @@ class Hub(ComponentResource):
             address_prefix = gws_ar,
         )
 
-        # DMZ subnet
+        # A perimeter network for Internet-facing services
         hub_dmz_sn = vdc.subnet_special( #ToDo add NSG
             stem = f'{name}-dmz',
             name = 'DMZ', # name not required but preferred
@@ -83,7 +88,7 @@ class Hub(ComponentResource):
             address_prefix = dmz_ar,
         )
 
-        # AzureFirewallSubnet
+        # Azure will deploy the firewall into this subnet 
         hub_fw_sn = vdc.subnet_special(
             stem = f'{name}-fw',
             name = 'AzureFirewallSubnet', # name required
@@ -91,7 +96,7 @@ class Hub(ComponentResource):
             address_prefix = str(fws_nw),
         )
 
-        # AzureFirewallManagementSubnet
+        # Azure requires this subnet in case of forced_tunnel
         hub_fwm_sn = vdc.subnet_special(
             stem = f'{name}-fwm',
             name = 'AzureFirewallManagementSubnet', # name required
@@ -99,7 +104,7 @@ class Hub(ComponentResource):
             address_prefix = str(fwm_nw),
         )
 
-        # provisioning of Gateways and Firewall depends_on subnets
+        # Gateways and Firewall depends_on special subnets
         # to avoid contention in the Azure control plane
 
         # Azure Firewall
@@ -124,17 +129,14 @@ class Hub(ComponentResource):
             depends_on = [hub_dmz_sn, hub_fw_sn, hub_fwm_sn, hub_gw_sn],
         )
 
-        # provisioning of optional subnets depends_on Gateways and Firewall
-        # to avoid contention in the Azure control plane
-
-        # AzureBastionSubnet (optional)
+        # Azure Bastion subnet and host (optional)
         if props.azure_bastion:
             hub_ab_sn = vdc.subnet_special( #ToDo add NSG if required
                 stem = f'{name}-ab',
                 name = 'AzureBastionSubnet', # name required
                 virtual_network_name = hub.name,
-                address_prefix = str(ab_nw),
-                depends_on = [hub_er_gw, hub_fw, hub_vpn_gw],
+                address_prefix = str(abs_nw),
+                depends_on = [hub_er_gw, hub_fw, hub_vpn_gw],# avoid contention
             )
             hub_ab = vdc.bastion_host(
                 stem = name,
@@ -150,17 +152,12 @@ class Hub(ComponentResource):
             lambda ipc: ipc[0].get('private_ip_address')
         )
 
-        # provisioning of Route Tables depends_on Gateways and Firewall
-        # to avoid contention in the Azure control plane
-
-        # Route Table only to be associated with the GatewaySubnet
+        # Route Table only to be associated with GatewaySubnet
         hub_gw_rt = vdc.route_table(
             stem = f'{name}-gw',
             disable_bgp_route_propagation = False,
-            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw],
+            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw], # avoid contention
         )
-
-        # associate GatewaySubnet with Route Table
         hub_gw_sn_rta = vdc.subnet_route_table(
             stem = f'{name}-gw',
             route_table_id = hub_gw_rt.id,
@@ -171,21 +168,19 @@ class Hub(ComponentResource):
         hub_dmz_rt = vdc.route_table(
             stem = f'{name}-dmz',
             disable_bgp_route_propagation = True,
-            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw],
+            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw], # avoid contention
         )
-
-        # associate DMZ subnet with Route Table
         hub_dmz_sn_rta = vdc.subnet_route_table(
             stem = f'{name}-dmz',
             route_table_id = hub_dmz_rt.id,
             subnet_id = hub_dmz_sn.id,
         )
 
-        # Route Table only to be associated with shared services subnets in hub
+        # Route Table only to be associated with hub shared services subnets
         hub_ss_rt = vdc.route_table(
             stem = f'{name}-ss',
             disable_bgp_route_propagation = True,
-            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw],
+            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw], # avoid contention
         )
 
         # protect intra-GatewaySubnet traffic from being redirected
@@ -194,6 +189,9 @@ class Hub(ComponentResource):
             route_table_name = hub_gw_rt.name,
             address_prefix = gws_ar,
         )
+
+        # it is very important to ensure that there is never a route with an
+        # address_prefix which covers the AzureFirewallSubnet.
 
         # partially or fully invalidate system routes to redirect traffic
         for route in [
@@ -248,25 +246,20 @@ class Hub(ComponentResource):
                     next_hop_in_ip_address = peer_fw_ip,
                 )
         
-        # provisioning of subnets depends_on Route Table (Gateways & Firewall)
-        # to avoid contention in the Azure control plane
-
         # shared services subnets starting with the second subnet
-        next_sn = next(subnets)
         for subnet in props.subnets:
+            next_sn = next(subnets)
             hub_sn = vdc.subnet( #ToDo add NSG
                 stem = f'{name}-{subnet[0]}',
                 virtual_network_name = hub.name,
                 address_prefix = str(next_sn),
-                depends_on = [hub_ss_rt],
+                depends_on = [hub_ss_rt], # avoid contention
             )
-            # associate all hub shared services subnets to Route Table        
             hub_sn_rta = vdc.subnet_route_table(
                 stem = f'{name}-{subnet[0]}',
                 route_table_id = hub_ss_rt.id,
                 subnet_id = hub_sn.id,
             )
-            next_sn = next(subnets)
 
         # assign properties to hub including from child resources
         self.address_spaces = hub.address_spaces # informational

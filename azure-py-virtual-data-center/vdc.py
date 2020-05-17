@@ -2,12 +2,12 @@ from pulumi import ResourceOptions
 from pulumi.resource import CustomTimeouts
 from pulumi_azure import core, network, compute
 
-# Variables that must be injected when calling:
+# Variables that may need to be injected before calling functions:
 # vdc.resource_group_name = props.resource_group_name
 # vdc.tags = props.tags
 # vdc.self = self
 
-def bastion_host(stem, subnet_id, depends_on=[]):
+def bastion_host(stem, subnet_id, depends_on=None):
     ab_pip = network.PublicIp(
         f'{stem}-ab-pip-',
         resource_group_name = resource_group_name,
@@ -29,7 +29,7 @@ def bastion_host(stem, subnet_id, depends_on=[]):
     )
     return ab
 
-def expressroute_gateway(stem, subnet_id, depends_on=[]):
+def expressroute_gateway(stem, subnet_id, depends_on=None):
     er_gw_pip = network.PublicIp(
         f'{stem}-er-gw-pip-',
         resource_group_name = resource_group_name,
@@ -61,7 +61,7 @@ def expressroute_gateway(stem, subnet_id, depends_on=[]):
     )
     return er_gw
 
-def firewall(stem, fw_sn_id, fwm_sn_id, depends_on=[]):
+def firewall(stem, fw_sn_id, fwm_sn_id, depends_on=None):
     fw_pip = network.PublicIp(
         f'{stem}-fw-pip-',
         resource_group_name = resource_group_name,
@@ -112,7 +112,7 @@ def resource_group(stem):
     )
     return rg.name
 
-def route_table(stem, disable_bgp_route_propagation=None, depends_on=[]):
+def route_table(stem, disable_bgp_route_propagation=None, depends_on=None):
     rt = network.RouteTable(
         f'{stem}-rt-',
         resource_group_name = resource_group_name,
@@ -150,11 +150,11 @@ def route_to_virtual_network(stem, route_table_name, address_prefix):
     )
     return r_vn
 
-def subnet(stem, virtual_network_name, address_prefix, depends_on=[]):
+def subnet(stem, virtual_network_name, address_prefix, depends_on=None):
     sn = network.Subnet(
         f'{stem}-sn-',
         resource_group_name = resource_group_name,
-        address_prefix = address_prefix,
+        address_prefixes = [address_prefix],
         virtual_network_name = virtual_network_name,
         opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
@@ -180,7 +180,7 @@ def subnet_special(
         f'{stem}-sn',
         name = name,
         resource_group_name = resource_group_name,
-        address_prefix = address_prefix,
+        address_prefixes = [address_prefix],
         virtual_network_name = virtual_network_name,
         opts = ResourceOptions(
             parent=self,
@@ -208,7 +208,7 @@ def vnet_peering(
         allow_forwarded_traffic=None,
         allow_gateway_transit=None,
         use_remote_gateways=None,
-        depends_on=[],
+        depends_on=None,
     ):
         vnp = network.VirtualNetworkPeering(
             f'{stem}-{peer}-vnp-',
@@ -223,7 +223,7 @@ def vnet_peering(
         )
         return vnp
 
-def vpn_gateway(stem, subnet_id, depends_on=[]):
+def vpn_gateway(stem, subnet_id, depends_on=None):
     vpn_gw_pip = network.PublicIp(
         f'{stem}-vpn-gw-pip-',
         resource_group_name = resource_group_name,
@@ -256,5 +256,4 @@ def vpn_gateway(stem, subnet_id, depends_on=[]):
     return vpn_gw
 
 if __name__ == "__main__":
-    import sys
-    vdc(int(sys.argv[1]))
+    print(dir())
