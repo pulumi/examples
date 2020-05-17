@@ -1,12 +1,12 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Slackbot for Posting Slack Mention Notifications
+# Create a Slackbot for Posting Mention Notifications
 
-This is an example of a simple Slackbot (called '@mentionbot') that posts a notification to a specific channel any time you're @mentioned anywhere. This bot is useful for when you need a time-ordered list of @mentions to go through at a later point.
+This is an example of a simple Slackbot (called '@mentionbot') that posts a notification to a specific channel any time you're @mentioned anywhere, whether in various channels or via direct message. This bot is useful for when you need a time-ordered list of @mentions to go through at a later point.
 
 Slack users can subscribe/unsubscribe from notifications easily.  To receive notifications, add `@mentionbot` to a channel you want to be notified in.  Then send any message to `@mentionbot` to subscribe.  To stop getting messages, send a message to `@mentionbot` containing the word `unsubscribe`.
 
-The example contains a few useful patterns showing you how to build a good Slackbot while taking advantage of a lot of conveniences that Pulumi and the `aws` and `awsx` packages provide.
+This Slackbot example contains a few useful patterns, showing you how to create a Slackbot while taking advantage of a lot of conveniences that Pulumi and the `aws` and `awsx` packages provide.
 
 1. We set up an ApiGateway API to receive push notifications from Slack whenever important events happen.
 2. Slack has strict requirements on how quickly the push endpoint must respond with `200` notifications before they consider the message as "not received", triggering back-off and resending of those same messages.  For this reason, our example does not process Slack `event` messages as they come in.  Instead, they are immediately added to an [AWS SNS Topic](https://aws.amazon.com/sns/) to be processed at a later point in time. This allows the ApiGateway call to return quickly, satisfying Slack's requirements.
@@ -110,14 +110,14 @@ Next, create a bot user like so:
 <img src=https://user-images.githubusercontent.com/4564579/55648827-32c51b00-5796-11e9-9abc-086a3760f6af.png>
 </p>
 
-Next, we'll enable 'Event Subscriptions'.  This will tell Slack to push events to your ApiGateway endpoint when changes happen.  Note that we put the Stack-Output `url` shown above (along with the `events` suffix).  This corresponds to the specific ApiGateway Route that was defined in the Pulumi app. Note that Slack will test this endpoint to ensure it is accepting Slack notifications and responding to them in a valid manner.  We'll also setup notifications for the events we care about.  Importantly, our bot will have to hear about when people mention it (for subscribing/unsubscribing), as well as hearing about all messages (so it can look for @-mentions):
+Next, we'll enable 'Event Subscriptions'.  This will tell Slack to push events to your ApiGateway endpoint when changes happen.  Note that we put the Stack-Output `url` shown above (along with the `events` suffix).  This corresponds to the specific ApiGateway Route that was defined in the Pulumi app. Note that Slack will test this endpoint to ensure it is accepting Slack notifications and responding to them in a valid manner.  We'll also setup notifications for the events we care about.  Importantly, our Slackbot will have to hear about when people mention it (for subscribing/unsubscribing), as well as hearing about all messages (so it can look for @-mentions):
 
 <p align=center>
 <img src=https://user-images.githubusercontent.com/4564579/55648880-58522480-5796-11e9-95fd-edfc9d12c381.png>
 <img src=https://user-images.githubusercontent.com/4564579/55648902-63a55000-5796-11e9-8cf6-8e8f4909d600.png>
 </p>
 
-Next, we'll go to 'Permissions'.  Here, we can find the oauth tokens your Pulumi App will need.  Specifically, we'll need the 'Bot User Oauth Token' listed here:
+Next, we'll go to 'Permissions'.  Here, we can find the OAuth tokens your Pulumi App will need.  Specifically, we'll need the 'Bot User OAuth Token' listed here:
 
 <p align=center>
 <img src=https://user-images.githubusercontent.com/4564579/55648951-7fa8f180-5796-11e9-81ba-b45d7ebc4bb7.png>
@@ -129,7 +129,7 @@ Underneath this, we'll set the following Scopes defining the permissions of the 
    <img src=https://user-images.githubusercontent.com/4564579/55647362-55edcb80-5792-11e9-8f60-ae5261fa9c9a.png>
 </p>
 
-Now, we're almost done.  The only thing left to do is supply your Pulumi App with the appropriate secrets/tokens.  We'll need the Bot Oauth token (shown above), and the 'Verification Token' (found under 'Basic Information'): 
+Now, we're almost done.  The only thing left to do is supply your Pulumi App with the appropriate secrets/tokens.  We'll need the Bot OAuth token (shown above), and the 'Verification Token' (found under 'Basic Information'): 
 
 <p align=center>
    <img src=https://user-images.githubusercontent.com/4564579/55647507-af55fa80-5792-11e9-80bf-b07b894d996f.png>
@@ -170,7 +170,7 @@ Then send it a message.  Note that it may take several seconds for the bot to re
 <img src=https://user-images.githubusercontent.com/4564579/55648466-3e641200-5795-11e9-9917-e64cdf45b63e.png>
 </p>
 
-And you're set!  From now on when someone mentions you, you'll get a little message in your channel like so:
+And you're set!  From now on when someone from your team mentions you, you'll get a little message with a direct mention in your channel like so:
 
 <p align=center>
 <img src=https://user-images.githubusercontent.com/4564579/55648631-b0d4f200-5795-11e9-886a-8ce0f932e9f1.png>
