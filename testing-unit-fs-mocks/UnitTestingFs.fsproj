@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentAssertions" Version="5.10.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+        <PackageReference Include="NUnit" Version="3.12.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+        <PackageReference Include="Pulumi.Azure" Version="3.*" />
+        <PackageReference Include="Pulumi.FSharp" Version="2.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="README.md" />
+        <None Include="wwwroot\about.html">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="wwwroot\index.html">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="Testing.fs" />
+        <Compile Include="WebsiteStack.fs" />
+        <Compile Include="WebsiteStackTests.fs" />
+    </ItemGroup>
+
+</Project>
