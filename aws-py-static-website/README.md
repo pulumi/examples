@@ -2,7 +2,7 @@
 
 # Secure Static Website Using Amazon S3, CloudFront, Route53, and Certificate Manager
 
-This example serves a static website using TypeScript and AWS.
+This example serves a static website using Python and AWS.
 
 This sample uses the following AWS products:
 
