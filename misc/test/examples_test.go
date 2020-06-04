@@ -102,6 +102,38 @@ func TestAccAwsGoWebserver(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsCsS3Folder(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-cs-s3-folder"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["Endpoint"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, world!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsFsS3Folder(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-fs-s3-folder"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["endpoint"].(string)
+				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, world!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsJsContainers(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
