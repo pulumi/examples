@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MimeTypes" Version="2.0.1">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="Pulumi.Aws" Version="2.*" />
     <PackageReference Include="Pulumi.FSharp" Version="2.*" />
   </ItemGroup>
