@@ -35,7 +35,7 @@ const db = new aws.rds.Instance("db", {
 });
 
 // Assemble a connection string for the Miniflux service.
-const connectionString = pulumi.interpolate `postgres://${dbUsername}:${dbPassword}@${db.endpoint}/miniflux?sslmode=disable`;
+const connectionString = pulumi.interpolate `postgres://${dbUsername}:${dbPassword}@${db.endpoint}/${dbName}?sslmode=disable`;
 
 // Create an NetworkListener to forward HTTP traffic on port 8080.
 const listener = new awsx.lb.NetworkListener("lb", { port: 8080 });
