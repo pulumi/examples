@@ -42,6 +42,9 @@ const node = new k8s.helm.v2.Chart(
         repo: "bitnami",
         chart: "node",
         version: "4.0.1",
+        fetchOpts:{
+            repo: "https://charts.bitnami.com/bitnami",
+        },
         values: {
             serviceType: "LoadBalancer",
             mongodb: { install: false },

@@ -9,6 +9,9 @@ const apache = new helm.v2.Chart(
         repo: "bitnami",
         chart: "apache",
         version: "1.0.0",
+        fetchOpts: {
+            repo: "https://charts.bitnami.com/bitnami",
+        },
     },
     { providers: { kubernetes: k8sProvider } },
 );

@@ -12,8 +12,7 @@ We will be deploying to Azure, so you will need an Azure account. If you don't h
 [sign up for free here](https://azure.microsoft.com/en-us/free/).
 [Follow the instructions here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect Pulumi to your Azure account.
 
-This example deploys a Helm Chart from Kedacore Helm chart repository, so you
-will need to [install the Helm CLI](https://docs.helm.sh/using_helm/#installing-helm) and configure it:
+This example deploys a Helm Chart from Kedacore Helm chart repository.
 
 If you are using Helm v2:
 ```bash
