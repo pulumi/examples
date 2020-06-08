@@ -14,6 +14,7 @@ on:
 env:
   PULUMI_TEST_OWNER: ${{ secrets.PULUMI_TEST_OWNER }}
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: "us-west-2"
@@ -100,6 +101,13 @@ jobs:
         run: make ensure
       - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
         run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
+      - if: 'failure()'
+        name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          author_name: ${{ job.name }}
+          fields: repo,commit,author,action
+          status: ${{ job.status }}
   lint:
     strategy:
       matrix:
@@ -123,6 +131,13 @@ jobs:
         run: make install
       - name: Lint typescript files
         run: make lint
+      - if: 'failure()'
+        name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          author_name: ${{ job.name }}
+          fields: repo,commit,author,action
+          status: ${{ job.status }}
   test-infra-setup:
     strategy:
       fail-fast: false
@@ -325,3 +340,10 @@ jobs:
           pulumi stack -s "${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}" -C misc/scripts/testinfra/ output kubeconfig >~/.kube/config
       - name: Run ${{ matrix.tests-set }} Tests
         run: make specific_test_set TestSet=Kubernetes
+      - if: 'failure()'
+        name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          author_name: ${{ job.name }}
+          fields: repo,commit,author,action
+          status: ${{ job.status }}
