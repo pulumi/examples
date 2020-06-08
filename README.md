@@ -119,6 +119,7 @@ Example   | Description |
 --------- | --------- |
 [Fargate](aws-cs-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
 [Lambda](aws-cs-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
+[S3 Folder](aws-cs-s3-folder) | Serve a static website on S3.
 [Web Server](aws-cs-webserver) | Deploy an EC2 instance and open port 80.
 
 ### F#
@@ -126,6 +127,7 @@ Example   | Description |
 Example   | Description |
 --------- | --------- |
 [Lambda Web Server](aws-fs-lambda-webserver) | Create a web server in AWS lambda using the Giraffe web server.
+[S3 Folder](aws-fs-s3-folder) | Serve a static website on S3.
 
 ## Azure
 
