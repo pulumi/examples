@@ -54,6 +54,9 @@ export class KedaService extends pulumi.ComponentResource {
             repo: "kedacore",
             chart: "keda",
             version: "1.2.0",
+            fetchOpts:{
+                repo: "https://kedacore.github.io/charts",
+            },
             values: {
                 logLevel: "debug",
             },
