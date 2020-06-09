@@ -19,6 +19,8 @@ obj/
 vendor
 Gopkg.lock
 
+**/ci-scripts
+
 # Java app
 .gradle/
 .settings/
