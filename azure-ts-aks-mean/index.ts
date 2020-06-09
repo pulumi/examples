@@ -42,7 +42,7 @@ const node = new k8s.helm.v2.Chart(
         repo: "bitnami",
         chart: "node",
         version: "4.0.1",
-        fetchOpts:{
+        fetchOpts: {
             repo: "https://charts.bitnami.com/bitnami",
         },
         values: {

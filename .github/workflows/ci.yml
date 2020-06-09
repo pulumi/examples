@@ -105,7 +105,7 @@ jobs:
         name: Notify Slack
         uses: 8398a7/action-slack@v3
         with:
-          author_name: ${{ job.name }}
+          author_name: Failure in ${{ matrix.clouds }}${{ matrix.languages }} Tests
           fields: repo,commit,author,action
           status: ${{ job.status }}
   lint:
@@ -135,7 +135,7 @@ jobs:
         name: Notify Slack
         uses: 8398a7/action-slack@v3
         with:
-          author_name: ${{ job.name }}
+          author_name: Failure in lint step
           fields: repo,commit,author,action
           status: ${{ job.status }}
   test-infra-setup:
@@ -344,6 +344,6 @@ jobs:
         name: Notify Slack
         uses: 8398a7/action-slack@v3
         with:
-          author_name: ${{ job.name }}
+          author_name: 'Failure in Kubernetes Tests'
           fields: repo,commit,author,action
           status: ${{ job.status }}
