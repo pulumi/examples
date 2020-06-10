@@ -14,7 +14,6 @@ const cluster = new eks.Cluster("cluster", {
     desiredCapacity: 2,
     minSize: 1,
     maxSize: 2,
-    deployDashboard: true,
 });
 
 // Export the cluster's kubeconfig.
