@@ -56,7 +56,7 @@ def get_sas(args):
 signed_blob_url = Output.all(
     storage_account.name,
     storage_account.primary_connection_string,
-    storage_account.name,
+    storage_container.name,
     blob.name
 ).apply(get_sas)
 
@@ -87,7 +87,7 @@ app=appservice.AppService(
     resource_group_name=resource_group.name,
     app_service_plan_id=app_service_plan.id,
     app_settings={
-        "WEBSITE_RUN_FROM_ZIP": signed_blob_url,
+        "WEBSITE_RUN_FROM_PACKAGE": signed_blob_url,
         "ApplicationInsights:InstrumentationKey": app_insights.instrumentation_key,
         "APPINSIGHTS_INSTRUMENTATIONKEY": app_insights.instrumentation_key,
     },
