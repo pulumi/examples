@@ -17,7 +17,7 @@ $ npm install
 ``` 
 
 
-You'll need to login to the azure cli. You will be prompted to do this during deployment if you forget this step.
+You'll need to log in to the azure cli. You will be prompted to do this during deployment if you forget this step.
 
 ```
 $ az login
