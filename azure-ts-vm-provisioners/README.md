@@ -41,7 +41,7 @@ $ ssh-keygen -t rsa -f rsa -m PEM
 This will output two files, `rsa` and `rsa.pub`, in the current directory. Be sure not to commit these files!
 
 We then need to configure our stack so that the public key is used by our VM, and the private key used
-for subsequent SCP and SSH steps that will configure our server after it is stood up.
+for subsequent SCP and SSH steps to configure our server after it is stood up.
 
 ```
 $ cat rsa.pub | pulumi config set publicKey --
