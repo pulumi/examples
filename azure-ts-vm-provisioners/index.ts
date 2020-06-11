@@ -8,6 +8,7 @@ import { getFileHash } from "./util";
 // Get the config ready to go.
 const config = new pulumi.Config();
 
+// Set login credentials for the VM
 const username = config.require("username");
 const password = config.requireSecret("password");
 
