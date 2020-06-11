@@ -96,6 +96,13 @@ jobs:
           repository: pulumi/scripts
       - name: scripts/run-at-head ${{ matrix.examples-test-matrix }}
         run: ./ci-scripts/ci/run-at-head ${{ matrix.examples-test-matrix }}
+      - if: ${{ matrix.examples-test-matrix }} == '--no-latest-cli'
+        name: Install Pulumi CLI
+        uses: pulumi/action-install-pulumi-cli@releases/v1
+      - if: ${{ matrix.examples-test-matrix }} == '--no-latest-packages'
+        name: Set Pulumi to PATH
+        run: |
+          echo "::add-path::$HOME/.pulumi/bin"
       - name: Install Go dependencies
         run: make ensure
       - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
