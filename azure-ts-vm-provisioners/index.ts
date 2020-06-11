@@ -67,7 +67,7 @@ const sg = new azure.network.NetworkSecurityGroup("sg", {
             sourcePortRange: "*",
             direction: "Inbound",
             name: "in",
-            priority: 100
+            priority: 100,
         },
         {
             access: "Allow",
@@ -78,15 +78,15 @@ const sg = new azure.network.NetworkSecurityGroup("sg", {
             sourcePortRange: "*",
             direction: "Outbound",
             name: "out",
-            priority: 101
-        }
+            priority: 101,
+        },
     ],
 
-})
+});
 
 const sga = new azure.network.NetworkInterfaceSecurityGroupAssociation("assoc", {
     networkInterfaceId: networkInterface.id,
-    networkSecurityGroupId: sg.id
+    networkSecurityGroupId: sg.id,
 });
 
 // Now create the VM, using the resource group and NIC allocated above.
@@ -107,8 +107,8 @@ const vm = new azure.compute.VirtualMachine("server-vm", {
             {
                 keyData: publicKey,
                 path: `/home/${username}/.ssh/authorized_keys`,
-            }
-        ]
+            },
+        ],
     },
     storageOsDisk: {
         createOption: "FromImage",
