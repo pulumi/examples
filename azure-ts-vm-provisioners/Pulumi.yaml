@@ -1,0 +1,3 @@
+name: aws-ts-ec2-provisioners
+runtime: nodejs
+description: An example of an EC2 webserver instance with post-provision configuration.
