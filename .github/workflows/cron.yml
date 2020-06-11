@@ -95,6 +95,7 @@ jobs:
           path: ci-scripts
           repository: pulumi/scripts
       - name: scripts/run-at-head ${{ matrix.examples-test-matrix }}
+        run: ./ci-scripts/ci/run-at-head ${{ matrix.examples-test-matrix }}
       - name: Install Go dependencies
         run: make ensure
       - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
