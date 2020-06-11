@@ -1,4 +1,4 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
