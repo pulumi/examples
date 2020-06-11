@@ -1,0 +1,3 @@
+name: azure-ts-vm-provisioners
+runtime: nodejs
+description: An example of an Azure VM webserver instance with post-provision configuration.
