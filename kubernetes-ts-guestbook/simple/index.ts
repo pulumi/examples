@@ -9,20 +9,20 @@ const config = new pulumi.Config();
 const isMinikube = config.getBoolean("isMinikube");
 
 //
-// REDIS MASTER.
+// REDIS LEADER.
 //
 
-const redisMasterLabels = { app: "redis-master" };
-const redisMasterDeployment = new k8s.apps.v1.Deployment("redis-master", {
+const redisLeaderLabels = { app: "redis-leader" };
+const redisLeaderDeployment = new k8s.apps.v1.Deployment("redis-leader", {
     spec: {
-        selector: { matchLabels: redisMasterLabels },
+        selector: { matchLabels: redisLeaderLabels },
         template: {
-            metadata: { labels: redisMasterLabels },
+            metadata: { labels: redisLeaderLabels },
             spec: {
                 containers: [
                     {
-                        name: "master",
-                        image: "k8s.gcr.io/redis:e2e",
+                        name: "redis-leader",
+                        image: "redis",
                         resources: { requests: { cpu: "100m", memory: "100Mi" } },
                         ports: [{ containerPort: 6379 }],
                     },
@@ -31,14 +31,14 @@ const redisMasterDeployment = new k8s.apps.v1.Deployment("redis-master", {
         },
     },
 });
-const redisMasterService = new k8s.core.v1.Service("redis-master", {
+const redisLeaderService = new k8s.core.v1.Service("redis-leader", {
     metadata: {
-        name: "redis-master",
-        labels: redisMasterDeployment.metadata.labels,
+        name: "redis-leader",
+        labels: redisLeaderDeployment.metadata.labels,
     },
     spec: {
         ports: [{ port: 6379, targetPort: 6379 }],
-        selector: redisMasterDeployment.spec.template.metadata.labels,
+        selector: redisLeaderDeployment.spec.template.metadata.labels,
     },
 });
 
@@ -46,8 +46,8 @@ const redisMasterService = new k8s.core.v1.Service("redis-master", {
 // REDIS REPLICA.
 //
 
-const redisReplicaLabels = { app: "redis-slave" };
-const redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-slave", {
+const redisReplicaLabels = { app: "redis-replica" };
+const redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-replica", {
     spec: {
         selector: { matchLabels: redisReplicaLabels },
         template: {
@@ -56,10 +56,10 @@ const redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-slave", {
                 containers: [
                     {
                         name: "replica",
-                        image: "gcr.io/google_samples/gb-redisslave:v1",
+                        image: "pulumi/guestbook-redis-replica",
                         resources: { requests: { cpu: "100m", memory: "100Mi" } },
                         // If your cluster config does not include a dns service, then to instead access an environment
-                        // variable to find the master service's host, change `value: "dns"` to read `value: "env"`.
+                        // variable to find the leader's host, change `value: "dns"` to read `value: "env"`.
                         env: [{ name: "GET_HOSTS_FROM", value: "dns" }],
                         ports: [{ containerPort: 6379 }],
                     },
@@ -70,7 +70,7 @@ const redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-slave", {
 });
 const redisReplicaService = new k8s.core.v1.Service("redis-replica", {
     metadata: {
-        name: "redis-slave",
+        name: "redis-replica",
         labels: redisReplicaDeployment.metadata.labels
     },
     spec: {
@@ -93,8 +93,8 @@ const frontendDeployment = new k8s.apps.v1.Deployment("frontend", {
             spec: {
                 containers: [
                     {
-                        name: "php-redis",
-                        image: "gcr.io/google-samples/gb-frontend:v4",
+                        name: "frontend",
+                        image: "pulumi/guestbook-php-redis",
                         resources: { requests: { cpu: "100m", memory: "100Mi" } },
                         // If your cluster config does not include a dns service, then to instead access an environment
                         // variable to find the master service's host, change `value: "dns"` to read `value: "env"`.

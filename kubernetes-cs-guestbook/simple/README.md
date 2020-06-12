@@ -36,8 +36,8 @@ Performing changes:
  +   pulumi:pulumi:Stack            guestbook-csharp-testbook  created     
  +   ├─ kubernetes:apps:Deployment  redis-replica              created     
  +   ├─ kubernetes:apps:Deployment  frontend                   created     
- +   ├─ kubernetes:apps:Deployment  redis-master               created     
- +   ├─ kubernetes:core:Service     redis-master               created     
+ +   ├─ kubernetes:apps:Deployment  redis-leader               created     
+ +   ├─ kubernetes:core:Service     redis-leader               created     
  +   ├─ kubernetes:core:Service     redis-replica              created     
  +   └─ kubernetes:core:Service     frontend                   created     
 

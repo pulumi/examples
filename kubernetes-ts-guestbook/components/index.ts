@@ -5,19 +5,19 @@ import * as k8sjs from "./k8sjs";
 
 const config = new pulumi.Config();
 
-const redisMaster = new k8sjs.ServiceDeployment("redis-master", {
-    image: "k8s.gcr.io/redis:e2e",
+const redisLeader = new k8sjs.ServiceDeployment("redis-leader", {
+    image: "redis",
     ports: [6379],
 });
 
-const redisReplica = new k8sjs.ServiceDeployment("redis-slave", {
-    image: "gcr.io/google_samples/gb-redisslave:v1",
+const redisReplica = new k8sjs.ServiceDeployment("redis-replica", {
+    image: "pulumi/guestbook-redis-replica",
     ports: [6379],
 });
 
 const frontend = new k8sjs.ServiceDeployment("frontend", {
     replicas: 3,
-    image: "gcr.io/google-samples/gb-frontend:v4",
+    image: "pulumi/guestbook-php-redis",
     ports: [80],
     allocateIpAddress: true,
     isMinikube: config.getBoolean("isMinikube"),

@@ -9,22 +9,22 @@ class Guestbook : Stack
         var config = new Config();
         var isMiniKube = config.GetBoolean("isMiniKube") ?? false;
 
-        var redisMaster = new ServiceDeployment("redis-master", new ServiceDeploymentArgs
+        var redisLeader = new ServiceDeployment("redis-leader", new ServiceDeploymentArgs
         {
-            Image = "k8s.gcr.io/redis:e2e",
+            Image = "redis",
             Ports = {6379}
         });
 
-        var redisReplica = new ServiceDeployment("redis-slave", new ServiceDeploymentArgs
+        var redisReplica = new ServiceDeployment("redis-replica", new ServiceDeploymentArgs
         {
-            Image = "gcr.io/google_samples/gb-redisslave:v1",
+            Image = "pulumi/guestbook-redis-replica",
             Ports = {6379}
         });
 
         var frontend = new ServiceDeployment("frontend", new ServiceDeploymentArgs
         {
             Replicas = 3,
-            Image = "gcr.io/google-samples/gb-frontend:v4",
+            Image = "pulumi/guestbook-php-redis",
             Ports = {80},
             AllocateIPAddress = true,
             ServiceType = isMiniKube ? "ClusterIP" : "LoadBalancer"

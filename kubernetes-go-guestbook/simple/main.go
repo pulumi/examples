@@ -32,11 +32,11 @@ func main() {
 		isMinikube := conf.GetBool("isMinikube")
 
 		redisLeaderLabels := pulumi.StringMap{
-			"app": pulumi.String("redis-master"),
+			"app": pulumi.String("redis-leader"),
 		}
 
 		// Redis leader Deployment
-		_, err := appsv1.NewDeployment(ctx, "redis-master", &appsv1.DeploymentArgs{
+		_, err := appsv1.NewDeployment(ctx, "redis-leader", &appsv1.DeploymentArgs{
 			Metadata: &metav1.ObjectMetaArgs{
 				Labels: redisLeaderLabels,
 			},
@@ -52,8 +52,8 @@ func main() {
 					Spec: &corev1.PodSpecArgs{
 						Containers: corev1.ContainerArray{
 							corev1.ContainerArgs{
-								Name:  pulumi.String("master"),
-								Image: pulumi.String("k8s.gcr.io/redis:e2e"),
+								Name:  pulumi.String("redis-leader"),
+								Image: pulumi.String("redis"),
 								Resources: &corev1.ResourceRequirementsArgs{
 									Requests: pulumi.StringMap{
 										"cpu":    pulumi.String("100m"),
@@ -75,9 +75,9 @@ func main() {
 		}
 
 		// Redis leader Service
-		_, err = corev1.NewService(ctx, "redis-master", &corev1.ServiceArgs{
+		_, err = corev1.NewService(ctx, "redis-leader", &corev1.ServiceArgs{
 			Metadata: &metav1.ObjectMetaArgs{
-				Name:   pulumi.String("redis-master"),
+				Name:   pulumi.String("redis-leader"),
 				Labels: redisLeaderLabels,
 			},
 			Spec: &corev1.ServiceSpecArgs{
@@ -94,29 +94,29 @@ func main() {
 			return err
 		}
 
-		redisFollowerLabels := pulumi.StringMap{
-			"app": pulumi.String("redis-slave"),
+		redisReplicaLabels := pulumi.StringMap{
+			"app": pulumi.String("redis-replica"),
 		}
 
-		// Redis follower Deployment
-		_, err = appsv1.NewDeployment(ctx, "redis-slave", &appsv1.DeploymentArgs{
+		// Redis replica Deployment
+		_, err = appsv1.NewDeployment(ctx, "redis-replica", &appsv1.DeploymentArgs{
 			Metadata: &metav1.ObjectMetaArgs{
-				Labels: redisFollowerLabels,
+				Labels: redisReplicaLabels,
 			},
 			Spec: appsv1.DeploymentSpecArgs{
 				Selector: &metav1.LabelSelectorArgs{
-					MatchLabels: redisFollowerLabels,
+					MatchLabels: redisReplicaLabels,
 				},
 				Replicas: pulumi.Int(2),
 				Template: &corev1.PodTemplateSpecArgs{
 					Metadata: &metav1.ObjectMetaArgs{
-						Labels: redisFollowerLabels,
+						Labels: redisReplicaLabels,
 					},
 					Spec: &corev1.PodSpecArgs{
 						Containers: corev1.ContainerArray{
 							corev1.ContainerArgs{
-								Name:  pulumi.String("redis-slave"),
-								Image: pulumi.String("gcr.io/google_samples/gb-redisslave:v3"),
+								Name:  pulumi.String("redis-replica"),
+								Image: pulumi.String("pulumi/guestbook-redis-replica"),
 								Resources: &corev1.ResourceRequirementsArgs{
 									Requests: pulumi.StringMap{
 										"cpu":    pulumi.String("100m"),
@@ -143,11 +143,11 @@ func main() {
 			return err
 		}
 
-		// Redis follower Service
-		_, err = corev1.NewService(ctx, "redis-slave", &corev1.ServiceArgs{
+		// Redis replica Service
+		_, err = corev1.NewService(ctx, "redis-replica", &corev1.ServiceArgs{
 			Metadata: &metav1.ObjectMetaArgs{
-				Name:   pulumi.String("redis-slave"),
-				Labels: redisFollowerLabels,
+				Name:   pulumi.String("redis-replica"),
+				Labels: redisReplicaLabels,
 			},
 			Spec: &corev1.ServiceSpecArgs{
 				Ports: corev1.ServicePortArray{
@@ -155,7 +155,7 @@ func main() {
 						Port: pulumi.Int(6379),
 					},
 				},
-				Selector: redisFollowerLabels,
+				Selector: redisReplicaLabels,
 			},
 		})
 		if err != nil {
@@ -184,7 +184,7 @@ func main() {
 						Containers: corev1.ContainerArray{
 							corev1.ContainerArgs{
 								Name:  pulumi.String("php-redis"),
-								Image: pulumi.String("gcr.io/google-samples/gb-frontend:v4"),
+								Image: pulumi.String("pulumi/guestbook-php-redis"),
 								Resources: &corev1.ResourceRequirementsArgs{
 									Requests: pulumi.StringMap{
 										"cpu":    pulumi.String("100m"),

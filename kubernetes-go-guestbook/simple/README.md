@@ -33,10 +33,10 @@ Updating (kubernetes-go-guestbook):
      Type                           Name                                             Status
  +   pulumi:pulumi:Stack            kubernetes-go-guestbook-testbook                 created
  +   ├─ kubernetes:core:Service     redis-leader                                     created
- +   ├─ kubernetes:core:Service     redis-follower                                   created
+ +   ├─ kubernetes:core:Service     redis-replica                                    created
  +   ├─ kubernetes:core:Service     frontend                                         created
  +   ├─ kubernetes:apps:Deployment  redis-leader                                     created
- +   ├─ kubernetes:apps:Deployment  redis-follower                                   created
+ +   ├─ kubernetes:apps:Deployment  redis-replica                                    created
  +   └─ kubernetes:apps:Deployment  frontend                                         created
 
 Outputs:
