@@ -24,7 +24,7 @@ class Guestbook : Stack
         var frontend = new ServiceDeployment("frontend", new ServiceDeploymentArgs
         {
             Replicas = 3,
-            Image = "pulumi/guestbook/php-redis",
+            Image = "pulumi/guestbook-php-redis",
             Ports = {80},
             AllocateIPAddress = true,
             ServiceType = isMiniKube ? "ClusterIP" : "LoadBalancer"

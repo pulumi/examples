@@ -17,7 +17,7 @@ const redisReplica = new k8sjs.ServiceDeployment("redis-replica", {
 
 const frontend = new k8sjs.ServiceDeployment("frontend", {
     replicas: 3,
-    image: "pulumi/guestbook/php-redis",
+    image: "pulumi/guestbook-php-redis",
     ports: [80],
     allocateIpAddress: true,
     isMinikube: config.getBoolean("isMinikube"),
