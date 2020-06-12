@@ -21,16 +21,16 @@ config = pulumi.Config()
 isMinikube = config.get_bool("isMinikube")
 
 ServiceDeployment(
-    "redis-master",
-    image="k8s.gcr.io/redis:e2e",
+    "redis-leader",
+    image="redis",
     ports=[6379])
 ServiceDeployment(
-    "redis-slave",
-    image="gcr.io/google_samples/gb-redisslave:v1",
+    "redis-replica",
+    image="pulumi/guestbook-redis-replica",
     ports=[6379])
 frontend = ServiceDeployment(
     "frontend",
-    image="gcr.io/google-samples/gb-frontend:v4",
+    image="pulumi/guestbook-php-redis",
     replicas=3,
     ports=[80],
     allocate_ip_address=True,

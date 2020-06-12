@@ -22,11 +22,11 @@ config = pulumi.Config()
 isMinikube = config.get_bool("isMinikube")
 
 redis_leader_labels = {
-	"app": "redis-master",
+	"app": "redis-leader",
 }
 
 redis_leader_deployment = Deployment(
-	"redis-master",
+	"redis-leader",
 	spec={
 		"selector": {
 			"match_labels": redis_leader_labels,
@@ -38,8 +38,8 @@ redis_leader_deployment = Deployment(
 			},
 			"spec": {
 				"containers": [{
-					"name": "master",
-					"image": "k8s.gcr.io/redis:e2e",
+					"name": "redis-leader",
+					"image": "redis",
 					"resources": {
 						"requests": {
 							"cpu": "100m",
@@ -55,9 +55,9 @@ redis_leader_deployment = Deployment(
 	})
 
 redis_leader_service = Service(
-	"redis-master",
+	"redis-leader",
 	metadata={
-		"name": "redis-master",
+		"name": "redis-leader",
 		"labels": redis_leader_labels
 	},
 	spec={
@@ -68,25 +68,25 @@ redis_leader_service = Service(
 		"selector": redis_leader_labels
 	})
 
-redis_follower_labels = {
-	"app": "redis-slave",
+redis_replica_labels = {
+	"app": "redis-replica",
 }
 
-redis_follower_deployment = Deployment(
-	"redis-follower",
+redis_replica_deployment = Deployment(
+	"redis-replica",
 	spec={
 		"selector": {
-			"match_labels": redis_follower_labels
+			"match_labels": redis_replica_labels
 		},
 		"replicas": 1,
 		"template": {
 			"metadata": {
-				"labels": redis_follower_labels,
+				"labels": redis_replica_labels,
 			},
 			"spec": {
 				"containers": [{
-					"name": "redis-slave",
-					"image": "gcr.io/google_samples/gb-redisslave:v1",
+					"name": "redis-replica",
+					"image": "pulumi/guestbook-redis-replica",
 					"resources": {
 						"requests": {
 							"cpu": "100m",
@@ -97,7 +97,7 @@ redis_follower_deployment = Deployment(
 						"name": "GET_HOSTS_FROM",
 						"value": "dns",
 						# If your cluster config does not include a dns service, then to instead access an environment
-						# variable to find the master service's host, comment out the 'value: dns' line above, and
+						# variable to find the leader's host, comment out the 'value: dns' line above, and
 						# uncomment the line below:
 						# value: "env"
 					}],
@@ -109,18 +109,18 @@ redis_follower_deployment = Deployment(
 		},
 	})
 
-redis_follower_service = Service(
-	"redis-slave",
+redis_replica_service = Service(
+	"redis-replica",
 	metadata={
-		"name": "redis-slave",
-		"labels": redis_follower_labels
+		"name": "redis-replica",
+		"labels": redis_replica_labels
 	},
 	spec={
 		"ports": [{
 			"port": 6379,
 			"target_port": 6379,
 		}],
-		"selector": redis_follower_labels
+		"selector": redis_replica_labels
 	})
 
 # Frontend
@@ -142,7 +142,7 @@ frontend_deployment = Deployment(
 			"spec": {
 				"containers": [{
 					"name": "php-redis",
-					"image": "gcr.io/google-samples/gb-frontend:v4",
+					"image": "pulumi/guestbook-php-redis",
 					"resources": {
 						"requests": {
 							"cpu": "100m",
@@ -153,7 +153,7 @@ frontend_deployment = Deployment(
 						"name": "GET_HOSTS_FROM",
 						"value": "dns",
 						# If your cluster config does not include a dns service, then to instead access an environment
-						# variable to find the master service's host, comment out the 'value: dns' line above, and
+						# variable to find the leader's host, comment out the 'value: dns' line above, and
 						# uncomment the line below:
 						# "value": "env"
 					}],

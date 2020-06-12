@@ -30,17 +30,17 @@ func main() {
 		isMinikube := conf.GetBool("isMinikube")
 
 		// Redis leader Deployment + Service
-		_, err := NewServiceDeployment(ctx, "redis-master", &ServiceDeploymentArgs{
-			Image: pulumi.String("k8s.gcr.io/redis:e2e"),
+		_, err := NewServiceDeployment(ctx, "redis-leader", &ServiceDeploymentArgs{
+			Image: pulumi.String("redis"),
 			Ports: pulumi.IntArray{pulumi.Int(6379)},
 		})
 		if err != nil {
 			return err
 		}
 
-		// Redis follower Deployment + Service
-		_, err = NewServiceDeployment(ctx, "redis-slave", &ServiceDeploymentArgs{
-			Image: pulumi.String("gcr.io/google_samples/gb-redisslave:v3"),
+		// Redis replica Deployment + Service
+		_, err = NewServiceDeployment(ctx, "redis-replica", &ServiceDeploymentArgs{
+			Image: pulumi.String("pulumi/guestbook-redis-replica"),
 			Ports: pulumi.IntArray{pulumi.Int(6379)},
 		})
 		if err != nil {
@@ -50,7 +50,7 @@ func main() {
 		// Frontend Deployment + Service
 		frontend, err := NewServiceDeployment(ctx, "frontend", &ServiceDeploymentArgs{
 			AllocateIPAddress: true,
-			Image:             pulumi.String("gcr.io/google-samples/gb-frontend:v4"),
+			Image:             pulumi.String("pulumi/guestbook-php-redis"),
 			IsMinikube:        pulumi.Bool(isMinikube),
 			Ports:             pulumi.IntArray{pulumi.Int(80)},
 			Replicas:          pulumi.Int(3),

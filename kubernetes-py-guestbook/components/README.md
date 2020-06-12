@@ -41,9 +41,9 @@ Previewing update (guestbook):
  +   ├─ k8sx:component:ServiceDeployment  redis-replica             create     
  +   │  ├─ kubernetes:apps:Deployment     redis-replica             create     
  +   │  └─ kubernetes:core:Service        redis-replica             create     
- +   └─ k8sx:component:ServiceDeployment  redis-master              create     
- +      ├─ kubernetes:apps:Deployment     redis-master              create     
- +      └─ kubernetes:core:Service        redis-master              create     
+ +   └─ k8sx:component:ServiceDeployment  redis-leader              create     
+ +      ├─ kubernetes:apps:Deployment     redis-leader              create     
+ +      └─ kubernetes:core:Service        redis-leader              create     
  
 Resources:
     + 10 to create
@@ -53,9 +53,9 @@ Updating (guestbook):
 
      Type                                 Name                      Status      
  +   pulumi:pulumi:Stack                  guestbook-easy-guestbook  created     
- +   ├─ k8sx:component:ServiceDeployment  redis-master              created     
- +   │  ├─ kubernetes:apps:Deployment     redis-master              created     
- +   │  └─ kubernetes:core:Service        redis-master              created     
+ +   ├─ k8sx:component:ServiceDeployment  redis-leader              created     
+ +   │  ├─ kubernetes:apps:Deployment     redis-leader              created     
+ +   │  └─ kubernetes:core:Service        redis-leader              created     
  +   ├─ k8sx:component:ServiceDeployment  frontend                  created     
  +   │  ├─ kubernetes:apps:Deployment     frontend                  created     
  +   │  └─ kubernetes:core:Service        frontend                  created     

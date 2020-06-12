@@ -19,24 +19,24 @@ class Guestbook : Stack
         // REDIS MASTER.
         //
 
-        var redisMasterLabels = new InputMap<string>
+        var redisLeaderLabels = new InputMap<string>
         {
-            {"app", "redis-master"}
+            {"app", "redis-leader"}
         };
 
-        var redisMasterDeployment = new Pulumi.Kubernetes.Apps.V1.Deployment("redis-master", new DeploymentArgs
+        var redisLeaderDeployment = new Pulumi.Kubernetes.Apps.V1.Deployment("redis-leader", new DeploymentArgs
         {
             Spec = new DeploymentSpecArgs
             {
                 Selector = new LabelSelectorArgs
                 {
-                    MatchLabels = redisMasterLabels
+                    MatchLabels = redisLeaderLabels
                 },
                 Template = new PodTemplateSpecArgs
                 {
                     Metadata = new ObjectMetaArgs
                     {
-                        Labels = redisMasterLabels
+                        Labels = redisLeaderLabels
                     },
                     Spec = new PodSpecArgs
                     {
@@ -44,8 +44,8 @@ class Guestbook : Stack
                         {
                             new ContainerArgs
                             {
-                                Name = "master",
-                                Image = "k8s.gcr.io/redis:e2e",
+                                Name = "redis-leader",
+                                Image = "redis",
                                 Resources = new ResourceRequirementsArgs
                                 {
                                     Requests =
@@ -65,12 +65,12 @@ class Guestbook : Stack
             }
         });
 
-        var redisMasterService = new Pulumi.Kubernetes.Core.V1.Service("redis-master", new ServiceArgs
+        var redisLeaderService = new Pulumi.Kubernetes.Core.V1.Service("redis-leader", new ServiceArgs
         {
             Metadata = new ObjectMetaArgs
             {
-                Name = "redis-master",
-                Labels = redisMasterDeployment.Metadata.Apply(metadata => metadata.Labels),
+                Name = "redis-leader",
+                Labels = redisLeaderDeployment.Metadata.Apply(metadata => metadata.Labels),
             },
             Spec = new ServiceSpecArgs
             {
@@ -82,7 +82,7 @@ class Guestbook : Stack
                         TargetPort = 6379
                     },
                 },
-                Selector = redisMasterDeployment.Spec.Apply(spec => spec.Template.Metadata.Labels)
+                Selector = redisLeaderDeployment.Spec.Apply(spec => spec.Template.Metadata.Labels)
             }
         });
 
@@ -115,8 +115,8 @@ class Guestbook : Stack
                         {
                             new ContainerArgs
                             {
-                                Name = "replica",
-                                Image = "gcr.io/google_samples/gb-redisslave:v1",
+                                Name = "redis-replica",
+                                Image = "pulumi/guestbook-redis-replica",
                                 Resources = new ResourceRequirementsArgs
                                 {
                                     Requests =
@@ -126,7 +126,7 @@ class Guestbook : Stack
                                     }
                                 },
                                 // If your cluster config does not include a dns service, then to instead access an environment
-                                // variable to find the master service's host, change `value: "dns"` to read `value: "env"`.
+                                // variable to find the leader's host, change `value: "dns"` to read `value: "env"`.
                                 Env =
                                 {
                                     new EnvVarArgs
@@ -150,7 +150,7 @@ class Guestbook : Stack
         {
             Metadata = new ObjectMetaArgs
             {
-                Name = "redis-slave",
+                Name = "redis-replica",
                 Labels = redisReplicaDeployment.Metadata.Apply(metadata => metadata.Labels)
             },
             Spec = new ServiceSpecArgs
@@ -198,7 +198,7 @@ class Guestbook : Stack
                             new ContainerArgs
                             {
                                 Name = "php-redis",
-                                Image = "gcr.io/google-samples/gb-frontend:v4",
+                                Image = "pulumi/guestbook-php-redis",
                                 Resources = new ResourceRequirementsArgs
                                 {
                                     Requests =

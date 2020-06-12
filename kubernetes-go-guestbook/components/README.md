@@ -34,12 +34,12 @@ $ pulumi up
 Updating (kubernetes-go-guestbook):
      Type                                                    Name                                             Status
  +   pulumi:pulumi:Stack                                     kubernetes-go-guestbook-kubernetes-go-guestbook  created
- +   ├─ kubernetes-go-guestbook:component:ServiceDeployment  redis-master                                     created
- +   │  ├─ kubernetes:core:Service                           redis-master                                     created
- +   │  └─ kubernetes:apps:Deployment                        redis-master                                     created
- +   ├─ kubernetes-go-guestbook:component:ServiceDeployment  redis-slave                                      created
- +   │  ├─ kubernetes:core:Service                           redis-slave                                      created
- +   │  └─ kubernetes:apps:Deployment                        redis-slave                                      created
+ +   ├─ kubernetes-go-guestbook:component:ServiceDeployment  redis-leader                                     created
+ +   │  ├─ kubernetes:core:Service                           redis-leader                                     created
+ +   │  └─ kubernetes:apps:Deployment                        redis-leader                                     created
+ +   ├─ kubernetes-go-guestbook:component:ServiceDeployment  redis-replica                                    created
+ +   │  ├─ kubernetes:core:Service                           redis-replica                                    created
+ +   │  └─ kubernetes:apps:Deployment                        redis-replica                                    created
  +   └─ kubernetes-go-guestbook:component:ServiceDeployment  frontend                                         created
  +      ├─ kubernetes:core:Service                           frontend                                         created
  +      └─ kubernetes:apps:Deployment                        frontend                                         created
