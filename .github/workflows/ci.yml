@@ -110,7 +110,7 @@ jobs:
         run: make ensure
       - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
         run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
-      - if: 'failure()'
+      - if: failure() && github.event_name == 'push'
         name: Notify Slack
         uses: 8398a7/action-slack@v3
         with:
@@ -140,7 +140,7 @@ jobs:
         run: make install
       - name: Lint typescript files
         run: make lint
-      - if: 'failure()'
+      - if: failure() && github.event_name == 'push'
         name: Notify Slack
         uses: 8398a7/action-slack@v3
         with:
@@ -349,7 +349,7 @@ jobs:
           pulumi stack -s "${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}" -C misc/scripts/testinfra/ output kubeconfig >~/.kube/config
       - name: Run ${{ matrix.tests-set }} Tests
         run: make specific_test_set TestSet=Kubernetes
-      - if: 'failure()'
+      - if: failure() && github.event_name == 'push'
         name: Notify Slack
         uses: 8398a7/action-slack@v3
         with:
