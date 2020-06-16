@@ -2,10 +2,8 @@
 
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
-import * as pulumi from "@pulumi/pulumi";
 import * as fs from "fs";
 import * as cp from "child_process";
-import * as awssdk from "aws-sdk";
 
 export = async () => {
 
@@ -46,7 +44,36 @@ export = async () => {
     const api = new awsx.apigateway.API("api", {
         routes: [
             {
-                method: "POST", path: "/", eventHandler: efsvpcCallback("postHandler", async (ev, ctx) => {
+                method: "GET", path: "/files/{filename+}", eventHandler: efsvpcCallback("getHandler", async (ev, ctx) => {
+                    try {
+                        const f = "/mnt/storage/" + ev.pathParameters!.filename;
+                        const data = fs.readFileSync(f)
+                        return {
+                            statusCode: 200,
+                            body: data.toString(),
+                        };
+                    } catch {
+                        return { statusCode: 500, body: "" }
+                    }
+                }),
+            },
+            {
+                method: "POST", path: "/files/{filename+}", eventHandler: efsvpcCallback("uploadHandler", async (ev, ctx) => {
+                    try {
+                        const f = "/mnt/storage/" + ev.pathParameters!.filename;
+                        const data = new Buffer(ev.body!, 'base64');
+                        fs.writeFileSync(f, data)
+                        return {
+                            statusCode: 200,
+                            body: "",
+                        };
+                    } catch {
+                        return { statusCode: 500, body: "" }
+                    }
+                }),
+            },
+            {
+                method: "POST", path: "/", eventHandler: efsvpcCallback("execHandler", async (ev, ctx) => {
                     const cmd = new Buffer(ev.body!, 'base64').toString()
                     const buf = cp.execSync(cmd);
                     return {
@@ -55,7 +82,7 @@ export = async () => {
                     };
                 }),
             },
-        ]
+        ],
     });
 
     // ECS Cluster
