@@ -1,0 +1,8 @@
+name: aws-ts-lambda-efs
+runtime: nodejs
+description: Examples of using Lambda + EFS
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2
