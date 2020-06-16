@@ -31,7 +31,7 @@ This example deploys two GCP virtual machines:
 3. Configure the project:
 
     ```bash
-    $ export GOOGLE_PROJECT=cncf-230209; export GOOGLE_REGION=asia-east1; export GOOGLE_ZONE=asia-east1-a;
+    $ export GOOGLE_PROJECT=YOURPROJECTID; export GOOGLE_REGION=asia-east1; export GOOGLE_ZONE=asia-east1-a;
     $ export GOOGLE_CREDENTIALS=YOURGCPCREDENTIALS
     ```
 
