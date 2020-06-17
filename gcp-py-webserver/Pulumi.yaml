@@ -1,0 +1,13 @@
+name: gcp-py-webserver
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Basic example of a Google Cloud web server accessible over HTTP
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:zone:
+      description: The Google Cloud zone
+      default: us-central1-a
