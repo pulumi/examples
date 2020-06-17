@@ -2,8 +2,8 @@
 
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
-import * as fs from "fs";
 import * as cp from "child_process";
+import * as fs from "fs";
 
 export = async () => {
 
@@ -47,13 +47,13 @@ export = async () => {
                 method: "GET", path: "/files/{filename+}", eventHandler: efsvpcCallback("getHandler", async (ev, ctx) => {
                     try {
                         const f = "/mnt/storage/" + ev.pathParameters!.filename;
-                        const data = fs.readFileSync(f)
+                        const data = fs.readFileSync(f);
                         return {
                             statusCode: 200,
                             body: data.toString(),
                         };
                     } catch {
-                        return { statusCode: 500, body: "" }
+                        return { statusCode: 500, body: "" };
                     }
                 }),
             },
@@ -61,20 +61,20 @@ export = async () => {
                 method: "POST", path: "/files/{filename+}", eventHandler: efsvpcCallback("uploadHandler", async (ev, ctx) => {
                     try {
                         const f = "/mnt/storage/" + ev.pathParameters!.filename;
-                        const data = new Buffer(ev.body!, 'base64');
-                        fs.writeFileSync(f, data)
+                        const data = new Buffer(ev.body!, "base64");
+                        fs.writeFileSync(f, data);
                         return {
                             statusCode: 200,
                             body: "",
                         };
                     } catch {
-                        return { statusCode: 500, body: "" }
+                        return { statusCode: 500, body: "" };
                     }
                 }),
             },
             {
                 method: "POST", path: "/", eventHandler: efsvpcCallback("execHandler", async (ev, ctx) => {
-                    const cmd = new Buffer(ev.body!, 'base64').toString()
+                    const cmd = new Buffer(ev.body!, "base64").toString();
                     const buf = cp.execSync(cmd);
                     return {
                         statusCode: 200,
@@ -89,7 +89,7 @@ export = async () => {
     const cluster = new awsx.ecs.Cluster("cluster", { vpc: vpc });
     const efsVolumeConfiguration: aws.types.input.ecs.TaskDefinitionVolumeEfsVolumeConfiguration = {
         fileSystemId: filesystem.id,
-        authorizationConfig: { accessPointId: ap.id, },
+        authorizationConfig: { accessPointId: ap.id },
         rootDirectory: "/www",
     };
 
@@ -115,4 +115,4 @@ export = async () => {
         url: api.url,
     };
 
-}
+};
