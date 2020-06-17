@@ -25,6 +25,8 @@ env:
   GOOGLE_ZONE: "us-central1-a"
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
   LINODE_API_TOKEN: ${{ secrets.LINODE_API_TOKEN }}
+  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 jobs:
   released:
     strategy:
@@ -97,6 +99,11 @@ jobs:
           role-duration-seconds: 3600
           role-session-name: examples@githubActions
           role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          always-auth: true
+          registry-url: https://registry.npmjs.org
       - uses: actions/checkout@v2
       - name: Checkout Scripts Repo
         uses: actions/checkout@v2
