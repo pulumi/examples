@@ -1,0 +1,6 @@
+name: kubernetes-py-nginx
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Example of a Kubernetes Stateless Application Deployment, using Nginx
