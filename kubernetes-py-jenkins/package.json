@@ -1,0 +1,12 @@
+{
+  "name": "k8s-nginx",
+  "version": "0.1.0",
+  "devDependencies": {
+    "@types/node": "^8.0.0"
+  },
+  "dependencies": {
+    "@pulumi/kubernetes": "^2.0.0",
+    "@pulumi/pulumi": "^2.0.0"
+  },
+  "license": "MIT"
+}
