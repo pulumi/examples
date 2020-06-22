@@ -1,6 +1,9 @@
-name: kubernetes-ts-jenkins
+name: kubernetes-py-jenkins
 description: Jenkins deployment on Kubernetes
-runtime: nodejs
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 template:
   config:
     username:

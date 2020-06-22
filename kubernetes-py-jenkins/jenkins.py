@@ -1,10 +1,13 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+# Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
-import * as k8s from "@pulumi/kubernetes";
-import * as input from "@pulumi/kubernetes/types/input";
-import * as pulumi from "@pulumi/pulumi";
-
-function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
+import pulumi
+from pulumi_kubernetes.core.v1 import Service
+from pulumi_kubernetes.core.v1 import PersistentVolumeClaim
+from pulumi_kubernetes.core.v1 import Secret
+from pulumi_kubernetes.apps.v1 import Deployment
+from pulumi_kubernetes.apps.v1 import input
+"""
+def createDeploymentArgs(jenkinsArgs): input.apps.v1.Deployment {
     const image = args.image || {
         registry: "docker.io",
         repository: "bitnami/jenkins",
@@ -107,80 +110,85 @@ function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
         }, // spec
     }; // deployment
 }
+"""
 
-/**
- * ComponentResource for a Jenkins instance running in a Kubernetes cluster.
- */
-export class Instance extends pulumi.ComponentResource {
-    constructor(args: JenkinsArgs, opts?: pulumi.ResourceOptions) {
-        super("jenkins:jenkins:Instance", args.name, args, opts);
+# ComponentResource for a Jenkins instance running in a Kubernetes cluster.
 
-        // The Secret will contain the root password for this instance.
-        const secret = new k8s.core.v1.Secret(`${args.name}-secret`, {
-            metadata: {
-                name: args.name,
+class Instance (pulumi.ComponentResource):
+    def __init__(self, name, credentials, resources, image=None, storageClass=None, opts=None):
+        super(Instance, self).__init__(self, name, credentials, resources, image=None, storageClass=None, opts=None)
+
+        # The Secret will contain the root password for this instance.
+        secret = Secret(
+            "${name}-secret",
+            metadata={
+                "name": name,
             },
-            type: "Opaque",
-            data: {
+            type="Opaque",
+            data={
                 "jenkins-password": Buffer.from(args.credentials.password).toString("base64"),
             },
-        }, { parent: this });
+            opts=ResourceOptions(parent=self),     #?????
+        )
 
-        // The PVC provides persistent storage for Jenkins state.
-        const pvc = new k8s.core.v1.PersistentVolumeClaim(`${args.name}-pvc`, {
-            metadata: {
-                name: args.name,
-                annotations: {
-                    "volume.beta.kubernetes.io/storage-class": `${args.storageClass || "standard" }`,
+        # The PVC provides persistent storage for Jenkins states.
+        pvc = PersistentVolumeClaim(
+            "${name}-pvc", 
+            metadata={
+                "name": name,
+                "annotations": {
+                    "volume.beta.kubernetes.io/storage-class": "standard" if storageClass is None else storageClass,
                 },
             },
-            spec: {
-                accessModes: ["ReadWriteOnce"],
-                resources: {
-                    requests: {
-                        storage: "8Gi",
+            spec={
+                "accessModes": ["ReadWriteOnce"],
+                "resources": {
+                    "requests": {
+                        "storage": "8Gi",
                     },
                 },
             },
-        }, { parent: this });
+            opts=ResourceOptions(parent=self),      #?????
+        )
 
-        // The Deployment describes the desired state for our Jenkins setup.
-        const deploymentArgs = createDeploymentArgs(args);
-        const deployment = new k8s.apps.v1.Deployment(`${args.name}-deploy`, deploymentArgs, { parent: this });
+        # The Deployment describes the desired state for our Jenkins setup.
+        deploymentArgs = createDeploymentArgs(args)
+        deployment = Deployment("${name}-deploy", deploymentArgs, { parent: this })     #?????
 
-        // The Service exposes Jenkins to the external internet by providing load-balanced ingress for HTTP and HTTPS.
-        const service = new k8s.core.v1.Service(`${args.name}-service`, {
-            metadata: {
-                name: args.name,
+        # The Service exposes Jenkins to the external internet by providing load-balanced ingress for HTTP and HTTPS.
+        service = Service(
+            "${name}-service",
+            metadata={
+                "name": name,
             },
-            spec: {
-                type: "LoadBalancer",
-                ports: [
+            spec={
+                "type": "LoadBalancer",
+                "ports": [
                     {
-                        name: "http",
-                        port: 80,
-                        targetPort: "http",
+                        "name": "http",
+                        "port": 80,
+                        "targetPort": "http",
                     },
                     {
-                        name: "https",
-                        port: 443,
-                        targetPort: "https",
+                        "name": "https",
+                        "port": 443,
+                        "targetPort": "https",
                     },
                 ],
-                selector: {
-                    app: args.name,
+                "selector": {
+                    "app": name,
                 },
             },
-        }, { parent: this });
+            opts=ResourceOptions(parent=self )     #?????
+        )
 
-        // This component resource has no outputs.
-        this.registerOutputs({});
-    }
-}
+        # This component resource has no outputs.
+        self.registerOutputs({})
 
-/**
- * Arguments for Jenkins instances.
- */
+
+
+# Arguments for Jenkins instances.
+
 export interface JenkinsArgs {
     /**
      * The name of the instance. All Kubernetes objects will be tagged with this name
