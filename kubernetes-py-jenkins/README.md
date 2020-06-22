@@ -44,7 +44,7 @@ about to create:
 Configure Kubernetes to run without Minikube:
 
 ```bash
-    $ pulumi config set kubernetes-py-jenkins:isMinikube 0
+    $ pulumi config set isMinikube false
 ```
 
 Preview the deployment of the application:
