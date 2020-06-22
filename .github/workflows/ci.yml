@@ -67,7 +67,7 @@ jobs:
           pip3 list
       - name: Install Python Prereqs
         run: |
-          pip3 install --upgrade setuptools wheel
+          pip3 install --upgrade pip setuptools wheel
       - name: Install Python Deps
         run: |
           pip3 install pipenv
