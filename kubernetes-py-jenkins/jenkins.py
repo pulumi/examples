@@ -1,139 +1,138 @@
 # Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
+import base64
 import pulumi
-from pulumi_kubernetes.core.v1 import Service
+from pulumi import ResourceOptions
+from pulumi_kubernetes.apps.v1 import Deployment
 from pulumi_kubernetes.core.v1 import PersistentVolumeClaim
 from pulumi_kubernetes.core.v1 import Secret
-from pulumi_kubernetes.apps.v1 import Deployment
-from pulumi_kubernetes.apps.v1 import input
-"""
-def createDeploymentArgs(jenkinsArgs): input.apps.v1.Deployment {
-    const image = args.image || {
-        registry: "docker.io",
-        repository: "bitnami/jenkins",
-        tag: "2.121.2",
-        pullPolicy: "IfNotPresent",
-    };
+from pulumi_kubernetes.core.v1 import Service
 
-    // This object is a projection of the Kubernetes object model into the Pulumi object model.
-    // Its structure is derived from the Deployment object in the Kubernetes API.
+def createDeploymentArgs(name, credentials, resources, image=None):
+    image = image if image is not None else {   
+        "registry": "docker.io",
+        "repository": "bitnami/jenkins",
+        "tag": "2.121.2",
+        "pullPolicy": "IfNotPresent",
+    }
+
+    # This object is a projection of the Kubernetes object model into the Pulumi object model.
+    # Its structure is derived from the Deployment object in the Kubernetes API.
     return {
-        metadata: {
-            name: args.name,
+        "metadata": {
+            "name": name,
         },
-        spec: {
-            replicas: 1,
-            selector: {
-                matchLabels:  {
-                    app: args.name,
+        "spec": {
+            "replicas": 1,
+            "selector": {
+                "matchLabels":  {
+                    "app": name,
                 },
             },
-            template: {
-                metadata: {
-                    labels: {
-                        app: args.name,
+            "template": {
+                "metadata": {
+                    "labels": {
+                        "app": name,
                     },
                 },
-                spec: {
-                    volumes: [
+                "spec": {
+                    "volumes": [
                         {
-                            name: "jenkins-data",
-                            persistentVolumeClaim: {
-                                claimName: args.name,
+                            "name": "jenkins-data",
+                            "persistentVolumeClaim": {
+                                "claimName": name,
                             },
                         },
                     ],
-                    containers: [
+                    "containers": [
                         {
-                            name: args.name,
-                            image: `${image.registry}/${image.repository}:${image.tag}`,
-                            imagePullPolicy: image.pullPolicy,
-                            env: [
+                            "name": name,
+                            "image": image["registry"] + "/" + image["repository"] + ":" + image["tag"],
+                            "imagePullPolicy": image["pullPolicy"],
+                            "env": [
                                 {
-                                    name: "JENKINS_USERNAME",
-                                    value: args.credentials.username,
+                                    "name": "JENKINS_USERNAME",
+                                    "value": credentials["username"],
                                 },
                                 {
-                                    name: "JENKINS_PASSWORD",
-                                    valueFrom: {
-                                        secretKeyRef: {
-                                            name: args.name,
-                                            key: "jenkins-password",
+                                    "name": "JENKINS_PASSWORD",
+                                    "valueFrom": {
+                                        "secretKeyRef": {
+                                            "name": name,
+                                            "key": "jenkins-password",
                                         },
                                     },
                                 },
                             ],
-                            ports: [
+                            "ports": [
                                 {
-                                    name: "http",
-                                    containerPort: 8080,
+                                    "name": "http",
+                                    "containerPort": 8080,
                                 },
                                 {
-                                    name: "https",
-                                    containerPort: 8443,
+                                    "name": "https",
+                                    "containerPort": 8443,
                                 },
                             ],
-                            livenessProbe: {
-                                httpGet: {
-                                    path: "/",
-                                    port: "http",
+                            "livenessProbe": {
+                                "httpGet": {
+                                    "path": "/",
+                                    "port": "http",
                                 },
-                                initialDelaySeconds: 180,
-                                timeoutSeconds: 5,
-                                failureThreshold: 6,
+                                "initialDelaySeconds": 180,
+                                "timeoutSeconds": 5,
+                                "failureThreshold": 6,
                             },
-                            readinessProbe: {
-                                httpGet: {
-                                    path: "/",
-                                    port: "http",
+                            "readinessProbe": {
+                                "httpGet": {
+                                    "path": "/",
+                                    "port": "http",
                                 },
-                                initialDelaySeconds: 90,
-                                timeoutSeconds: 5,
-                                periodSeconds: 6,
+                                "initialDelaySeconds": 90,
+                                "timeoutSeconds": 5,
+                                "periodSeconds": 6,
                             },
-                            volumeMounts: [
+                            "volumeMounts": [
                                 {
-                                    name: "jenkins-data",
-                                    mountPath: "/bitnami/jenkins",
+                                    "name": "jenkins-data",
+                                    "mountPath": "/bitnami/jenkins",
                                 },
                             ],
-                            resources: {
-                                requests: {
-                                    memory: args.resources.memory,
-                                    cpu: args.resources.cpu,
+                            "resources": {
+                                "requests": {
+                                    "memory": resources["memory"],
+                                    "cpu": resources["cpu"],
                                 },
                             },
-                        }, // container
-                    ], // containers
-                }, // spec
-            }, // template
-        }, // spec
-    }; // deployment
-}
-"""
+                        }, # container
+                    ], # containers
+                }, # spec
+            }, # template
+        }, # spec
+    } # deployment
 
 # ComponentResource for a Jenkins instance running in a Kubernetes cluster.
 
 class Instance (pulumi.ComponentResource):
     def __init__(self, name, credentials, resources, image=None, storageClass=None, opts=None):
-        super(Instance, self).__init__(self, name, credentials, resources, image=None, storageClass=None, opts=None)
+        super(Instance, self).__init__("jenkins:jenkins:Instance", name, {"credentials": credentials, "resources": resources, "image": image, "storageClass": storageClass}, opts)
 
         # The Secret will contain the root password for this instance.
         secret = Secret(
-            "${name}-secret",
+            name+"-secret",
             metadata={
                 "name": name,
             },
             type="Opaque",
             data={
-                "jenkins-password": Buffer.from(args.credentials.password).toString("base64"),
+                "jenkins-password": str(base64.b64encode(bytes(credentials["password"],"utf-8"),None),"utf-8"),
             },
-            opts=ResourceOptions(parent=self),     #?????
+            opts=ResourceOptions(parent=self),
         )
 
         # The PVC provides persistent storage for Jenkins states.
         pvc = PersistentVolumeClaim(
-            "${name}-pvc", 
+            name+"-pvc", 
             metadata={
                 "name": name,
                 "annotations": {
@@ -148,16 +147,21 @@ class Instance (pulumi.ComponentResource):
                     },
                 },
             },
-            opts=ResourceOptions(parent=self),      #?????
+            opts=ResourceOptions(parent=self),
         )
 
         # The Deployment describes the desired state for our Jenkins setup.
-        deploymentArgs = createDeploymentArgs(args)
-        deployment = Deployment("${name}-deploy", deploymentArgs, { parent: this })     #?????
+        deploymentArgs = createDeploymentArgs(name, credentials, resources, image)
+        deployment = Deployment(
+            name+"-deploy",
+            metadata=deploymentArgs["metadata"],
+            spec=deploymentArgs["spec"],
+            opts=ResourceOptions(parent=self),
+        )
 
         # The Service exposes Jenkins to the external internet by providing load-balanced ingress for HTTP and HTTPS.
         service = Service(
-            "${name}-service",
+            name+"-service",
             metadata={
                 "name": name,
             },
@@ -179,95 +183,8 @@ class Instance (pulumi.ComponentResource):
                     "app": name,
                 },
             },
-            opts=ResourceOptions(parent=self )     #?????
+            opts=ResourceOptions(parent=self)
         )
 
         # This component resource has no outputs.
-        self.registerOutputs({})
-
-
-
-# Arguments for Jenkins instances.
-
-export interface JenkinsArgs {
-    /**
-     * The name of the instance. All Kubernetes objects will be tagged with this name
-     * in their metadata.
-     */
-    readonly name: string;
-
-    /**
-     * Credentials for accessing the created Jenkins instance.
-     */
-    readonly credentials: JenkinsCredentials;
-
-    /**
-     * The Docker image to use to launch this instance of Jenkins.
-     */
-    readonly image?: JenkinsImage;
-
-    /**
-     * Resource requests for this instance.
-     */
-    readonly resources: JenkinsResources;
-
-    /**
-     * Storage class to use for the persistent volume claim.
-     */
-    readonly storageClass?: string;
-}
-
-/**
- * Credentials to access the newly-created Jenkins instance.
- */
-export interface JenkinsCredentials {
-    /**
-     * Username for the root user.
-     */
-    readonly username: string;
-
-    /**
-     * Password for the root user.
-     */
-    readonly password: string;
-}
-
-/**
- * The image to use when launching Jenkins.
- */
-export interface JenkinsImage {
-    /**
-     * The registry from which to draw Docker images.
-     */
-    readonly registry: string;
-
-    /**
-     * The Docker repository name for the target image.
-     */
-    readonly repository: string;
-
-    /**
-     * The Docker image tag for the target image.
-     */
-    readonly tag: string;
-
-    /**
-     * Pull policy for this image.
-     */
-    readonly pullPolicy: string;
-}
-
-/**
- * Resource requests for this Jenkins instance.
- */
-export interface JenkinsResources {
-    /**
-     * Requested memory.
-     */
-    readonly memory: string;
-
-    /**
-     * Requested CPU.
-     */
-    readonly cpu: string;
-}
+        self.register_outputs({})

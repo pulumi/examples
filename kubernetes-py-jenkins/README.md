@@ -21,76 +21,83 @@ Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
 
 Install dependencies:
 
-```
-$ npm install
+```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip3 install -r requirements.txt
 ```
 
 Create a new stack:
 
-```
-$ pulumi stack init
-Enter a stack name: kubernetes-ts-jenkins-dev
+```bash
+    $ pulumi stack init dev
 ```
 
 Create configuration keys for the root username and password for the Jenkins instance we are
 about to create:
 
+```bash
+    $ pulumi config set username <your desired username>
+    $ pulumi config set password <your desired password> --secret
 ```
-$ pulumi config set username <your desired username>
-$ pulumi config set password <your desired password> --secret
+
+Configure Kubernetes to run without Minikube:
+
+```bash
+    $ pulumi config set kubernetes-py-jenkins:isMinikube 0
 ```
 
 Preview the deployment of the application:
 
-```
-$ pulumi preview
-Previewing update of stack 'kubernetes-ts-jenkins-dev'
-     Type    Name    Status        Info
- *   global  global  unchanged
-Previewing changes:
+```bash
+    $ pulumi preview
+    Previewing update of stack 'dev'
+        Type    Name    Status        Info
+    *   global  global  unchanged
+    Previewing changes:
 
-     Type                                            Name                                             Status        Info
- *   global                                          global                                           no change
- +   pulumi:pulumi:Stack                             kubernetes-ts-jenkins-kubernetes-ts-jenkins-dev  create
- +   └─ jenkins:jenkins:Instance                     jenkins                                          create
- +      ├─ kubernetes:core:v1:Secret                 jenkins-secret                                   create
- +      ├─ kubernetes:core:v1:PersistentVolumeClaim  jenkins-pvc                                      create
- +      ├─ kubernetes:core:v1:Service                jenkins-service                                  create
- +      └─ kubernetes:extensions:v1beta1:Deployment  jenkins-deploy                                   create
+        Type                                            Name                                             Status        Info
+    *   global                                          global                                           no change
+    +   pulumi:pulumi:Stack                             kubernetes-py-jenkins-dev                        create
+    +   └─ jenkins:jenkins:Instance                     dev                                              create
+    +      ├─ kubernetes:core:v1:Secret                 dev-secret                                       create
+    +      ├─ kubernetes:core:v1:PersistentVolumeClaim  dev-pvc                                          create
+    +      ├─ kubernetes:core:v1:Service                dev-service                                      create
+    +      └─ kubernetes:extensions:v1beta1:Deployment  dev-deploy                                       create
 
-info: 6 changes previewed:
-    + 6 resources to create
+    info: 6 changes previewed:
+        + 6 resources to create
 ```
 
 Perform the deployment:
 
-```
-$ pulumi up --skip-preview
-Updating stack 'kubernetes-ts-jenkins-dev'
-     Type    Name    Status        Info
- *   global  global  unchanged
-Performing changes:
+```bash
+    $ pulumi up --skip-preview
+    Updating stack 'dev'
+        Type    Name    Status        Info
+    *   global  global  unchanged
+    Performing changes:
 
-     Type                                            Name                                             Status        Info
- *   global                                          global                                           unchanged
- +   pulumi:pulumi:Stack                             kubernetes-ts-jenkins-kubernetes-ts-jenkins-dev  created
- +   └─ jenkins:jenkins:Instance                     jenkins                                          created
- +      ├─ kubernetes:core:v1:Secret                 jenkins-secret                                   created
- +      ├─ kubernetes:core:v1:PersistentVolumeClaim  jenkins-pvc                                      created
- +      ├─ kubernetes:core:v1:Service                jenkins-service                                  created
- +      └─ kubernetes:extensions:v1beta1:Deployment  jenkins-deploy                                   created
+        Type                                            Name                                             Status        Info
+    *   global                                          global                                           unchanged
+    +   pulumi:pulumi:Stack                             kubernetes-py-jenkins-dev                        created
+    +   └─ jenkins:jenkins:Instance                     dev                                              created
+    +      ├─ kubernetes:core:v1:Secret                 dev-secret                                       created
+    +      ├─ kubernetes:core:v1:PersistentVolumeClaim  dev-pvc                                          created
+    +      ├─ kubernetes:core:v1:Service                dev-service                                      created
+    +      └─ kubernetes:extensions:v1beta1:Deployment  dev-deploy                                       created
 
-info: 6 changes performed:
-    + 6 resources created
-Update duration: 2m30.397621136s
+    info: 6 changes performed:
+        + 6 resources created
+    Update duration: 2m30.397621136s
 ```
 
 The deployment is complete! Use `kubectl` to see the Service that we just deployed:
 
-```
-$ kubectl get services
-NAME         TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE
-jenkins      LoadBalancer   10.43.241.251   35.230.56.127   80:30638/TCP,443:30204/TCP   3m
+```bash
+    $ kubectl get services
+    NAME         TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE
+    dev          LoadBalancer   10.43.241.251   35.230.56.127   80:30638/TCP,443:30204/TCP   3m
 ```
 
 The Jenkins instance we just deployed is reachable through port 80 of the external IP address. You can now
@@ -103,21 +110,21 @@ You can use the username and password that you saved in your Pulumi config to lo
 
 When you're ready to be done with Jenkins, you can destroy the instance:
 
-```
-$ pulumi destroy
-Do you want to perform this destroy? yes
-Destroying stack 'kubernetes-ts-jenkins-dev'
-Performing changes:
+```bash
+    $ pulumi destroy
+    Do you want to perform this destroy? yes
+    Destroying stack 'dev'
+    Performing changes:
 
-     Type                                            Name                                             Status      Info
- -   pulumi:pulumi:Stack                             kubernetes-ts-jenkins-kubernetes-ts-jenkins-dev  deleted
- -   └─ jenkins:jenkins:Instance                     jenkins                                          deleted
- -      ├─ kubernetes:extensions:v1beta1:Deployment  jenkins-deploy                                   deleted
- -      ├─ kubernetes:core:v1:Service                jenkins-service                                  deleted
- -      ├─ kubernetes:core:v1:PersistentVolumeClaim  jenkins-pvc                                      deleted
- -      └─ kubernetes:core:v1:Secret                 jenkins-secret                                   deleted
+        Type                                            Name                                             Status      Info
+    -   pulumi:pulumi:Stack                             kubernetes-py-jenkins-dev                        deleted
+    -   └─ jenkins:jenkins:Instance                     dev                                              deleted
+    -      ├─ kubernetes:extensions:v1beta1:Deployment  dev-deploy                                       deleted
+    -      ├─ kubernetes:core:v1:Service                dev-service                                      deleted
+    -      ├─ kubernetes:core:v1:PersistentVolumeClaim  dev-pvc                                          deleted
+    -      └─ kubernetes:core:v1:Secret                 dev-secret                                       deleted
 
-info: 6 changes performed:
-    - 6 resources deleted
-Update duration: 18.202009282s
+    info: 6 changes performed:
+        - 6 resources deleted
+    Update duration: 18.202009282s
 ```
