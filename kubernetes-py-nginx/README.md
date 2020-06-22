@@ -4,7 +4,7 @@
 
 A version of the [Kubernetes Stateless Application Deployment](
 https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/) example that uses Pulumi.
-This example deploys a replicated Nginx server to a Kubernetes cluster, using TypeScript and no YAML.
+This example deploys a replicated Nginx server to a Kubernetes cluster, using Python and no YAML.
 
 There is an [interactive Tutorial available](https://www.pulumi.com/docs/tutorials/kubernetes/stateless-app/) for
 this example. If this is your first time using Pulumi for Kubernetes, we recommend starting there.
