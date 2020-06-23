@@ -76,7 +76,7 @@ def createDeploymentArgs(name, credentials, resources, image=None):
                             ],
                             "livenessProbe": {
                                 "httpGet": {
-                                    "path": "/",
+                                    "path": "/login",
                                     "port": "http",
                                 },
                                 "initialDelaySeconds": 180,
@@ -85,7 +85,7 @@ def createDeploymentArgs(name, credentials, resources, image=None):
                             },
                             "readinessProbe": {
                                 "httpGet": {
-                                    "path": "/",
+                                    "path": "/login",
                                     "port": "http",
                                 },
                                 "initialDelaySeconds": 90,
@@ -114,8 +114,8 @@ def createDeploymentArgs(name, credentials, resources, image=None):
 # ComponentResource for a Jenkins instance running in a Kubernetes cluster.
 
 class Instance (pulumi.ComponentResource):
-    def __init__(self, name, credentials, resources, image=None, storageClass=None, opts=None):
-        super(Instance, self).__init__("jenkins:jenkins:Instance", name, {"credentials": credentials, "resources": resources, "image": image, "storageClass": storageClass}, opts)
+    def __init__(self, name, credentials, resources, image=None, opts=None):
+        super(Instance, self).__init__("jenkins:jenkins:Instance", name, {"credentials": credentials, "resources": resources, "image": image}, opts)
 
         # The Secret will contain the root password for this instance.
         secret = Secret(
@@ -135,9 +135,6 @@ class Instance (pulumi.ComponentResource):
             name+"-pvc", 
             metadata={
                 "name": name,
-                "annotations": {
-                    "volume.beta.kubernetes.io/storage-class": "standard" if storageClass is None else storageClass,
-                },
             },
             spec={
                 "accessModes": ["ReadWriteOnce"],
