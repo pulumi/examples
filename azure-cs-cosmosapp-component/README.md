@@ -10,7 +10,7 @@ The application shows several notable features:
 
 ## `CosmosApp` component
 
-The [`CosmosApp`](cosmosApp.cs) defines a skeleton for the application. While not limiting the type of compute resources, it creates the multi-regional pieces of the infrastructure:
+The [`CosmosApp`](CosmosApp.cs) defines a skeleton for the application. While not limiting the type of compute resources, it creates the multi-regional pieces of the infrastructure:
 
 ![Cosmos App](https://github.com/mikhailshilkov/pulumi-cosmos/raw/master/pictures/globalapp.png)
 
