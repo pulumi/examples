@@ -62,15 +62,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: List Python Deps
-        run: |
-          pip3 list
-      - name: Install Python Prereqs
-        run: |
-          pip3 install --upgrade pip setuptools wheel
       - name: Install Python Deps
         run: |
-          pip3 install pipenv
+          python -m pip install --upgrade pip
+          pip install pipenv
       - name: Install aws-iam-authenticator
         run: |
           curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
