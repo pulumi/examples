@@ -65,7 +65,8 @@ jobs:
       - name: Install Python Deps
         run: |
           python -m pip install --upgrade pip setuptools wheel
-          python -m pip install pipenv==2018.11.26
+          python -m pip install virtualenv==20.0.23
+          python -m pip install pipenv
       - name: Install aws-iam-authenticator
         run: |
           curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
