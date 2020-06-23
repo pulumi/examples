@@ -417,6 +417,8 @@ github.com/pulumi/pulumi/pkg/v2 v2.4.1-0.20200622233016-f8200858337b h1:CMWYsrTc
 github.com/pulumi/pulumi/pkg/v2 v2.4.1-0.20200622233016-f8200858337b/go.mod h1:zfUm4/GH2dVRlHZ3Yeb9bRweCQM7icVBdplu6MUDRrQ=
 github.com/pulumi/pulumi/pkg/v2 v2.4.1-0.20200622233621-583b2c05d62f h1:FTzLLCD7JAFEaIcUnZaTJ24b/GFXMG+E+mHWZJ2wR4g=
 github.com/pulumi/pulumi/pkg/v2 v2.4.1-0.20200622233621-583b2c05d62f/go.mod h1:zfUm4/GH2dVRlHZ3Yeb9bRweCQM7icVBdplu6MUDRrQ=
+github.com/pulumi/pulumi/pkg/v2 v2.4.1-0.20200623000229-a7d6ea6dd819 h1:VJPnzFETfInLXyRJIa5evyiHk3AA9dSv0hNQoE9sdpo=
+github.com/pulumi/pulumi/pkg/v2 v2.4.1-0.20200623000229-a7d6ea6dd819/go.mod h1:zfUm4/GH2dVRlHZ3Yeb9bRweCQM7icVBdplu6MUDRrQ=
 github.com/pulumi/pulumi/sdk/v2 v2.0.0 h1:3VMXbEo3bqeaU+YDt8ufVBLD0WhLYE3tG3t/nIZ3Iac=
 github.com/pulumi/pulumi/sdk/v2 v2.0.0/go.mod h1:W7k1UDYerc5o97mHnlHHp5iQZKEby+oQrQefWt+2RF4=
 github.com/pulumi/pulumi/sdk/v2 v2.4.1-0.20200622230208-81b14f58332d h1:/KLDOqrOzy9ti2qHFUQnYIQf3bxGt4rdrCsq6dcZAB8=
@@ -425,6 +427,8 @@ github.com/pulumi/pulumi/sdk/v2 v2.4.1-0.20200622233016-f8200858337b h1:bWk4abNp
 github.com/pulumi/pulumi/sdk/v2 v2.4.1-0.20200622233016-f8200858337b/go.mod h1:llk6tmXss8kJrt3vEXAkwiwgZOuINEFmKIfMveVIwO8=
 github.com/pulumi/pulumi/sdk/v2 v2.4.1-0.20200622233621-583b2c05d62f h1:uOwFOKwKfVvTdlktlWPmPdNkwl5ZhNloonlh1aa/dQY=
 github.com/pulumi/pulumi/sdk/v2 v2.4.1-0.20200622233621-583b2c05d62f/go.mod h1:llk6tmXss8kJrt3vEXAkwiwgZOuINEFmKIfMveVIwO8=
+github.com/pulumi/pulumi/sdk/v2 v2.4.1-0.20200623000229-a7d6ea6dd819 h1:xPF7czMQWgVsfkTzLU39xx8IVRt4grOqrW+WV3ia/M8=
+github.com/pulumi/pulumi/sdk/v2 v2.4.1-0.20200623000229-a7d6ea6dd819/go.mod h1:llk6tmXss8kJrt3vEXAkwiwgZOuINEFmKIfMveVIwO8=
 github.com/rjeczalik/notify v0.9.2 h1:MiTWrPj55mNDHEiIX5YUSKefw/+lCQVoAFmD6oQm5w8=
 github.com/rjeczalik/notify v0.9.2/go.mod h1:aErll2f0sUX9PXZnVNyeiObbmTlk5jnMoCa4QEjJeqM=
 github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af/go.mod h1:XWv6SoW27p1b0cqNHllgS5HIMJraePCO15w5zCzIWYg=
