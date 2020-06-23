@@ -1,0 +1,13 @@
+name: kubernetes-py-jenkins
+description: Jenkins deployment on Kubernetes
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+template:
+  config:
+    username:
+      description: Your desired username for the Jenkins instance
+    password:
+      description: Your desired password for the Jenkins instance
+      secret: true
