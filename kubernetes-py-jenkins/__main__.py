@@ -20,3 +20,4 @@ instance = jenkins.Instance(
         "cpu": "100m",
     },
 )
+pulumi.export("external_ip", instance.external_ip)

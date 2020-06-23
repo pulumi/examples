@@ -28,8 +28,7 @@ $ npm install
 Create a new stack:
 
 ```
-$ pulumi stack init
-Enter a stack name: kubernetes-ts-jenkins-dev
+$ pulumi stack init dev
 ```
 
 Create configuration keys for the root username and password for the Jenkins instance we are
@@ -44,57 +43,50 @@ Preview the deployment of the application:
 
 ```
 $ pulumi preview
-Previewing update of stack 'kubernetes-ts-jenkins-dev'
-     Type    Name    Status        Info
- *   global  global  unchanged
-Previewing changes:
-
-     Type                                            Name                                             Status        Info
- *   global                                          global                                           no change
- +   pulumi:pulumi:Stack                             kubernetes-ts-jenkins-kubernetes-ts-jenkins-dev  create
- +   └─ jenkins:jenkins:Instance                     jenkins                                          create
- +      ├─ kubernetes:core:v1:Secret                 jenkins-secret                                   create
- +      ├─ kubernetes:core:v1:PersistentVolumeClaim  jenkins-pvc                                      create
- +      ├─ kubernetes:core:v1:Service                jenkins-service                                  create
- +      └─ kubernetes:extensions:v1beta1:Deployment  jenkins-deploy                                   create
-
-info: 6 changes previewed:
-    + 6 resources to create
+Previewing update (dev):
+     Type                                         Name                       Plan       
+ +   pulumi:pulumi:Stack                          kubernetes-ts-jenkins-dev  create     
+ +   └─ jenkins:jenkins:Instance                  dev                        create     
+ +      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    create     
+ +      ├─ kubernetes:core:Secret                 dev-secret                 create     
+ +      ├─ kubernetes:core:Service                dev-service                create     
+ +      └─ kubernetes:apps:Deployment             dev-deploy                 create     
+ 
+Resources:
+    + 6 to create
 ```
 
 Perform the deployment:
 
 ```
 $ pulumi up --skip-preview
-Updating stack 'kubernetes-ts-jenkins-dev'
-     Type    Name    Status        Info
- *   global  global  unchanged
-Performing changes:
+Updating (dev):
+     Type                                         Name                       Status      
+ +   pulumi:pulumi:Stack                          kubernetes-ts-jenkins-dev  created     
+ +   └─ jenkins:jenkins:Instance                  dev                        created     
+ +      ├─ kubernetes:core:Secret                 dev-secret                 created     
+ +      ├─ kubernetes:core:Service                dev-service                created     
+ +      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    created     
+ +      └─ kubernetes:apps:Deployment             dev-deploy                 created     
+ 
+Outputs:
+    externalIp: "35.184.131.21"
 
-     Type                                            Name                                             Status        Info
- *   global                                          global                                           unchanged
- +   pulumi:pulumi:Stack                             kubernetes-ts-jenkins-kubernetes-ts-jenkins-dev  created
- +   └─ jenkins:jenkins:Instance                     jenkins                                          created
- +      ├─ kubernetes:core:v1:Secret                 jenkins-secret                                   created
- +      ├─ kubernetes:core:v1:PersistentVolumeClaim  jenkins-pvc                                      created
- +      ├─ kubernetes:core:v1:Service                jenkins-service                                  created
- +      └─ kubernetes:extensions:v1beta1:Deployment  jenkins-deploy                                   created
+Resources:
+    + 6 created
 
-info: 6 changes performed:
-    + 6 resources created
-Update duration: 2m30.397621136s
+Duration: 1m58s
 ```
 
-The deployment is complete! Use `kubectl` to see the Service that we just deployed:
+The deployment is complete! Use `pulumi stack output externalIp` to see the IP of the Service that we just deployed:
 
 ```
-$ kubectl get services
-NAME         TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE
-jenkins      LoadBalancer   10.43.241.251   35.230.56.127   80:30638/TCP,443:30204/TCP   3m
+$ pulumi stack output externalIp
+35.184.131.21
 ```
 
 The Jenkins instance we just deployed is reachable through port 80 of the external IP address. You can now
-visit `http://35.230.56.127/jenkins/login` in a Web browser to begin the first-install flow for your new Jenkins instance.
+visit `http://35.184.131.21/login` in a Web browser to begin the first-install flow for your new Jenkins instance.
 You can use the username and password that you saved in your Pulumi config to log in to your new Jenkins instance.
 
 > _Note_: If you are deploying to a cluster that does not support `type: "LoadBalancer"`, and deployed the example using
@@ -106,18 +98,20 @@ When you're ready to be done with Jenkins, you can destroy the instance:
 ```
 $ pulumi destroy
 Do you want to perform this destroy? yes
-Destroying stack 'kubernetes-ts-jenkins-dev'
-Performing changes:
+Destroying (dev):
+     Type                                         Name                       Status      
+ -   pulumi:pulumi:Stack                          kubernetes-ts-jenkins-dev  deleted     
+ -   └─ jenkins:jenkins:Instance                  dev                        deleted     
+ -      ├─ kubernetes:core:Secret                 dev-secret                 deleted     
+ -      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    deleted     
+ -      ├─ kubernetes:core:Service                dev-service                deleted     
+ -      └─ kubernetes:apps:Deployment             dev-deploy                 deleted     
+ 
+Outputs:
+  - externalIp: "35.184.131.21"
 
-     Type                                            Name                                             Status      Info
- -   pulumi:pulumi:Stack                             kubernetes-ts-jenkins-kubernetes-ts-jenkins-dev  deleted
- -   └─ jenkins:jenkins:Instance                     jenkins                                          deleted
- -      ├─ kubernetes:extensions:v1beta1:Deployment  jenkins-deploy                                   deleted
- -      ├─ kubernetes:core:v1:Service                jenkins-service                                  deleted
- -      ├─ kubernetes:core:v1:PersistentVolumeClaim  jenkins-pvc                                      deleted
- -      └─ kubernetes:core:v1:Secret                 jenkins-secret                                   deleted
+Resources:
+    - 6 deleted
 
-info: 6 changes performed:
-    - 6 resources deleted
-Update duration: 18.202009282s
+Duration: 36s
 ```

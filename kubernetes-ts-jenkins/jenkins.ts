@@ -3,6 +3,7 @@
 import * as k8s from "@pulumi/kubernetes";
 import * as input from "@pulumi/kubernetes/types/input";
 import * as pulumi from "@pulumi/pulumi";
+import { externalIp } from ".";
 
 function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
     const image = args.image || {
@@ -72,7 +73,7 @@ function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
                             ],
                             livenessProbe: {
                                 httpGet: {
-                                    path: "/",
+                                    path: "/login",
                                     port: "http",
                                 },
                                 initialDelaySeconds: 180,
@@ -81,7 +82,7 @@ function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
                             },
                             readinessProbe: {
                                 httpGet: {
-                                    path: "/",
+                                    path: "/login",
                                     port: "http",
                                 },
                                 initialDelaySeconds: 90,
@@ -112,6 +113,9 @@ function createDeploymentArgs(args: JenkinsArgs): input.apps.v1.Deployment {
  * ComponentResource for a Jenkins instance running in a Kubernetes cluster.
  */
 export class Instance extends pulumi.ComponentResource {
+
+    externalIp: pulumi.Output<string>;
+
     constructor(args: JenkinsArgs, opts?: pulumi.ResourceOptions) {
         super("jenkins:jenkins:Instance", args.name, args, opts);
 
@@ -172,9 +176,8 @@ export class Instance extends pulumi.ComponentResource {
                 },
             },
         }, { parent: this });
-
-        // This component resource has no outputs.
-        this.registerOutputs({});
+        this.externalIp = service.status.loadBalancer.ingress[0].ip;
+        this.registerOutputs({externalIp: externalIp});
     }
 }
 
