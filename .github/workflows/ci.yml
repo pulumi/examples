@@ -70,7 +70,7 @@ jobs:
           pip3 install --upgrade pip setuptools wheel
       - name: Install Python Deps
         run: |
-          pip3 install --user pipenv
+          pip3 install pipenv
       - name: Install aws-iam-authenticator
         run: |
           curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
