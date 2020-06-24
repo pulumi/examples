@@ -319,6 +319,18 @@ func TestAccAwsTsAssumeRole(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsPyAssumeRole(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-py-assume-role", "create-role"),
+			Config: map[string]string{
+				"create-role:unprivilegedUsername": "unpriv-py",
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsTsContainers(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
