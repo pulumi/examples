@@ -2,11 +2,10 @@
 
 This example shows how to use the AssumeRole functionality of the AWS provider
 to create resources in the security context of an IAM Role assumed by the IAM
-User running the Pulumi programs. This was ported from TypeScript to Python,
-and you can find the original example in [aws-ts-assume-role](https://github.com/pulumi/examples/tree/master/aws-ts-assume-role/assume-role). Much of the
-original README.md is the same.
+User running the Pulumi programs.
 
 ## Deploying the Example
+
 
 ### Prerequisites
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
@@ -32,16 +31,6 @@ $ cd create-role
 $ python3 -m venv venv
 $ source venv/bin/activate
 $ pip install -r requirements.txt
-```
-
-As of June 23, 2020, the latest version of grpcio, 1.30.0, has some bugs which
-prevents AWS and Pulumi from working properly. If you have that version
-downloaded, which you can check by running `pip list`. In that case you will 
-need to downgrade to version 1.29.0:
-
-```bash
-$ pip uninstall grpcio
-$ pip install grpcio==1.29.0
 ```
 
 Now create a new stack:
@@ -79,8 +68,6 @@ $ pip install -r requirements.txt
 $ export AWS_ACCESS_KEY_ID="$(pulumi stack output --stack assume-role-create accessKeyId)"
 $ export AWS_SECRET_ACCESS_KEY="$(pulumi stack output --stack assume-role-create secretAccessKey)"
 ```
-
-Like before, you should downgrade to grpcio 1.29.0 if necessary.
 
 The configuration variable `roleToAssumeARN` must be set to the ARN of the role allowing S3 access, and the AWS region
 must be set to the region in which you wish to operate:

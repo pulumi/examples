@@ -9,8 +9,6 @@ def assume_role_policy_for_principal(principal):
     assume_role_policy_for_principal returns a well-formed policy document 
     which can be used to control which principals may assume an IAM Role, by 
     granting the `sts:AssumeRole` action to those principals.
-    See https://github.com/pulumi/pulumi-aws/blob/
-    e07f1c21047146459fa7794a69555b4dd80e2222/sdk/nodejs/iam/documents.ts
     """
     return {
         'Version': '2012-10-17',
