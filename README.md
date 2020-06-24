@@ -97,6 +97,7 @@ Example   | Description |
 Example   | Description |
 --------- | --------- |
 [AppSync](aws-py-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
+[AssumeRole](aws-py-assume-role) | Use AssumeRole to create resources.
 [Fargate](aws-py-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
 [Resources](aws-py-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
 [S3 Folder](aws-py-s3-folder) | Serve a static website on S3.

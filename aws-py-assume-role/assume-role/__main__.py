@@ -1,4 +1,4 @@
-# Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+# Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import pulumi_aws as aws
 from pulumi_aws.config.vars import region
@@ -8,9 +8,7 @@ from pulumi import Config, ResourceOptions, export
 def require_region():
     """
     require_region fetches the AWS region, requiring that it exists. if it does
-    not exist, an exception is raised. Mirrors the TypeScript equivalent in:
-    https://github.com/pulumi/pulumi-aws/blob/
-    2b541a94242d9cf6f795a60775a4f3e8708dd85d/sdk/nodejs/config/require.ts
+    not exist, an exception is raised.
     """
     if not region:
         raise Exception('No AWS region has been configured')
