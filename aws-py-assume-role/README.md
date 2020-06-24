@@ -6,8 +6,8 @@ User running the Pulumi programs.
 
 ## Deploying the Example
 
-
 ### Prerequisites
+
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 2. [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
