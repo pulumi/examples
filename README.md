@@ -174,7 +174,7 @@ Example   | Description |
 [AKS](azure-py-aks) | Deploy an AKS cluster, virtual network and Azure Container Registry and grant AKS permissions to access and manage those.
 [App Service - Docker](azure-py-appservice-docker) | Build a web application hosted in App Service from Docker images.
 [App Service](azure-py-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
-[ARM Template](azure-ts-arm-template) | Deploy an existing Azure Resource Manager (ARM) template.
+[ARM Template](azure-py-arm-template) | Deploy an existing Azure Resource Manager (ARM) template.
 [Functions - Raw](azure-py-functions-raw) | Deploy a function to Azure Functions created from raw deployment packages in C#.
 [HDInsight Spark](azure-py-hdinsight-spark) | Deploy a Spark cluster on Azure HDInsight.
 [MSI Key Vault RBAC](azure-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
