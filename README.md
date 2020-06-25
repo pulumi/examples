@@ -188,6 +188,7 @@ Example   | Description |
 Example   | Description |
 --------- | --------- |
 [App Service](azure-go-appservice) | Build a web application hosted in Azure App Service.
+[AKS - Multicluster](azure-go-aks-multicluster) | Create multiple Azure Kubernetes Service (AKS) Clusters in different regions and with different node counts.
 [Web Server Component](azure-go-webserver-component) | Provision a configurable number of Linux web servers in an Azure Virtual Machine using a reusable component.
 
 ### C#
