@@ -223,6 +223,18 @@ func TestAccAwsPyAppSync(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsPyAssumeRole(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-py-assume-role", "create-role"),
+			Config: map[string]string{
+				"create-role:unprivilegedUsername": "unpriv-py",
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsPyResources(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
@@ -313,18 +325,6 @@ func TestAccAwsTsAssumeRole(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-assume-role", "create-role"),
 			Config: map[string]string{
 				"create-role:unprivilegedUsername": "unpriv",
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAwsPyAssumeRole(t *testing.T) {
-	test := getAWSBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "aws-py-assume-role", "create-role"),
-			Config: map[string]string{
-				"create-role:unprivilegedUsername": "unpriv-py",
 			},
 		})
 
@@ -686,6 +686,15 @@ func TestAccAzurePyAppServiceDocker(t *testing.T) {
 					return assert.Contains(t, body, "Hello, world!")
 				})
 			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAzurePyArmTemplate(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-py-arm-template"),
 		})
 
 	integration.ProgramTest(t, &test)
