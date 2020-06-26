@@ -42,19 +42,19 @@ const collection = new azure.cosmosdb.SqlContainer("Urls", {
 });
 
 // Traffic Manager as a global HTTP endpoint
-const profile = new azure.trafficmanager.Profile("UrlShortEndpoint", {
+const profile = new azure.network.TrafficManagerProfile("UrlShortEndpoint", {
     resourceGroupName: resourceGroup.name,
     trafficRoutingMethod: "Performance",
-    dnsConfigs: [{
+    dnsConfig: {
         // Subdomain must be globally unique, so we default it with the full resource group name
         relativeName: resourceGroup.name,
         ttl: 60,
-    }],
-    monitorConfigs: [{
+    },
+    monitorConfig: {
         protocol: "HTTP",
         port: 80,
         path: "/api/ping",
-    }],
+    },
 });
 
 // Azure Function to accept new URL shortcodes and save to Cosmos DB
@@ -114,7 +114,7 @@ for (const location of locations) {
     const app = fn.functionApp;
 
     // An endpoint per region for Traffic Manager, link to the corresponding Function App
-    const endpoint = new azure.trafficmanager.Endpoint(`tme${location}`, {
+    const endpoint = new azure.network.TrafficManagerEndpoint(`tme${location}`, {
         resourceGroupName: resourceGroup.name,
         profileName: profile.name,
         type: "azureEndpoints",
