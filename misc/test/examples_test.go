@@ -602,7 +602,7 @@ func TestAccAzureGoAks(t *testing.T) {
 
 func TestAccAzureGoAksMulticluster(t *testing.T) {
 	skipIfShort(t)
-	// t.Skip("Skipping Azure tests temporarily")
+	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aks-multicluster"),
