@@ -602,7 +602,7 @@ func TestAccAzureGoAks(t *testing.T) {
 
 func TestAccAzureGoAksMulticluster(t *testing.T) {
 	skipIfShort(t)
-	t.Skip("Skipping Azure tests temporarily")
+	// t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aks-multicluster"),
@@ -1223,6 +1223,21 @@ func TestAccGcpGoInstance(t *testing.T) {
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-instance"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccGcpGoWebserver(t *testing.T) {
+	test := getGoogleBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-webserver"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["instanceIP"].(string)
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello, World!")
+				})
+			},
 		})
 
 	integration.ProgramTest(t, &test)

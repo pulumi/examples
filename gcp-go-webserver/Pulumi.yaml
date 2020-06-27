@@ -1,0 +1,10 @@
+name: webserver-gcp
+runtime: go
+description: Basic example of an Google Cloud web server accessible over HTTP
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:zone:
+      description: The Google Cloud zone
+      default: us-central1-a

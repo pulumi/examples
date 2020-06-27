@@ -249,6 +249,7 @@ Example   | Description |
 --------- | --------- |
 [Functions](gcp-go-functions) | Deploy a Go-based Google Cloud Function.
 [Functions - Raw](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
+[Web Server](gcp-go-webserver) | Build a web server in Google Cloud.
 
 ### C#
 
