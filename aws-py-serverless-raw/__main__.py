@@ -32,7 +32,7 @@ counter_table = aws.dynamodb.Table("counterTable",
 ## Lambda Function
 ##################
 
-# Give our Lambda access to the Dynamo DB table, CloudWatch Logs and Metrics.
+# Give our Lambda access to the Dynamo DB table, CloudWatch Logs and Metrics
 # Python package does not have assumeRolePolicyForPrinciple
 instance_assume_role_policy = aws.iam.get_policy_document(statements=[{
     "actions": ["sts:AssumeRole"],
