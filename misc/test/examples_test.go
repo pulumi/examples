@@ -223,6 +223,15 @@ func TestAccAwsPyAppSync(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsGoAppSync(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-appsync"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsPyAssumeRole(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
