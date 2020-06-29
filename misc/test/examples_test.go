@@ -1228,6 +1228,21 @@ func TestAccGcpGoInstance(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccGcpGoWebserver(t *testing.T) {
+	test := getGoogleBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-webserver"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["instanceIP"].(string)
+				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello, World!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccGcpJsWebserver(t *testing.T) {
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
