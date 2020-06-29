@@ -1,5 +1,5 @@
-from ipaddress import ip_network
-from pulumi import Config, get_stack, get_project
+from ipaddress import ip_address, ip_network
+from pulumi import Config, get_stack, get_project, StackReference
 
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -30,13 +30,21 @@ azure_bastion = config.get_bool('azure_bastion')
 
 # Azure Firewall to route all Internet-bound traffic to designated next hop
 forced_tunnel = config.get_bool('forced_tunnel')
+# turn off SNAT (private_ranges not yet available on Azure API?)
+# https://docs.microsoft.com/en-us/azure/firewall/snat-private-range
+if forced_tunnel:
+    ft_ip = ip_address(forced_tunnel)
+    if ft_ip.is_private:
+        private_ranges = 'IANAPrivateRanges'
+    else:
+        private_ranges = '0.0.0.0./0'
 
 # another stack in the same project and organization may be peered
 peer = config.get('peer')
 if peer:
     org = config.require('org')
     project = get_project()
-    reference = f'{org}/{project}/{peer}'
+    reference = StackReference(f'{org}/{project}/{peer}')
 else:
     reference = None
 

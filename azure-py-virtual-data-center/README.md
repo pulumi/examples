@@ -50,7 +50,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     Optional:
     ```bash
     $ pulumi config set azure_bastion               "true"
-    $ pulumi config set forced_tunnel               "true"
+    $ pulumi config set forced_tunnel               "10.0.100.1"
     ```
 
 1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
@@ -175,7 +175,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     Optional:
     ```bash
     $ pulumi config set azure_bastion               "true"
-    $ pulumi config set forced_tunnel               "true"
+    $ pulumi config set forced_tunnel               "10.0.200.1"
     ```
 
 1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
