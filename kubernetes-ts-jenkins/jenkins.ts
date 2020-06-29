@@ -134,9 +134,6 @@ export class Instance extends pulumi.ComponentResource {
         const pvc = new k8s.core.v1.PersistentVolumeClaim(`${args.name}-pvc`, {
             metadata: {
                 name: args.name,
-                annotations: {
-                    "volume.beta.kubernetes.io/storage-class": `${args.storageClass || "standard" }`,
-                },
             },
             spec: {
                 accessModes: ["ReadWriteOnce"],
