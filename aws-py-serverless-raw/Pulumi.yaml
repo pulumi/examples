@@ -1,6 +1,4 @@
 name: aws-py-serverless-raw
 runtime:
   name: python
-  options:
-    virtualenv: venv
 description: A minimal Python Pulumi program
