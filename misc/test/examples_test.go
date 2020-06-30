@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -253,7 +252,7 @@ func TestAccAwsPyServerlessRaw(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-py-serverless-raw"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
-					return assert.Regexp(t, regexp.MustCompile("{\"Path\":\"hello\",\"Count\":[0-9]+}"), body)
+					return assert.Contains(t, body, "{\"Path\":\"hello\",\"Count\":1}")
 				})
 			},
 		})
@@ -497,7 +496,7 @@ func TestAccAwsTsServerlessRaw(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
-					return assert.Regexp(t, regexp.MustCompile("{\"Path\":\"hello\",\"Count\":[0-9]+}"), body)
+					return assert.Contains(t, body, "{\"Path\":\"hello\",\"Count\":1}")
 				})
 			},
 		})
