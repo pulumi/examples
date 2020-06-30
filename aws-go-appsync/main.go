@@ -30,7 +30,7 @@ func main() {
 		}
 
 		// create IAM role and policy wiring
-		tempJSON, err := json.Marshal(map[string]interface{}{
+		assumeRolePolicyJSON, err := json.Marshal(map[string]interface{}{
 			"Version": "2012-10-17",
 			"Statement": map[string]interface{}{
 				"Action": "sts:AssumeRole",
@@ -44,14 +44,14 @@ func main() {
 			return err
 		}
 		role, err := iam.NewRole(ctx, "iam-role", &iam.RoleArgs{
-			AssumeRolePolicy: pulumi.String(tempJSON),
+			AssumeRolePolicy: pulumi.String(assumeRolePolicyJSON),
 		})
 		if err != nil {
 			return err
 		}
 
 		tempPolicy := table.Arn.ApplyT(func(arn string) (string, error) {
-			tempoJSON, err := json.Marshal(map[string]interface{}{
+			policyJSON, err := json.Marshal(map[string]interface{}{
 				"Version": "2012-10-17",
 				"Statement": []interface{}{
 					map[string]interface{}{
@@ -69,7 +69,7 @@ func main() {
 			if err != nil {
 				return "", err
 			}
-			return string(tempoJSON), nil
+			return string(policyJSON), nil
 		})
 
 		policy, err := iam.NewPolicy(ctx, "iam-policy", &iam.PolicyArgs{
@@ -136,9 +136,7 @@ func main() {
 			DynamodbConfig: &appsync.DataSourceDynamodbConfigArgs{
 				TableName: table.Name,
 			},
-			ServiceRoleArn: role.Arn.ApplyString(func(arn string) string {
-				return arn
-			}),
+			ServiceRoleArn: role.Arn,
 		})
 		if err != nil {
 			return err
