@@ -183,5 +183,6 @@ class Instance (pulumi.ComponentResource):
             opts=ResourceOptions(parent=self)
         )
 
-        # This component resource has no outputs.
-        self.register_outputs({})
+        ingress = service.status["load_balancer"]["ingress"][0]
+        self.external_ip = ingress.apply(lambda x: x.get("ip", x["hostname"]))
+        self.register_outputs({"external_ip": self.external_ip})

@@ -21,3 +21,4 @@ const instance = new jenkins.Instance({
         cpu: "100m",
     },
 });
+export const externalIp = instance.externalIp;

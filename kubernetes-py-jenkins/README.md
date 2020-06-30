@@ -51,57 +51,50 @@ Preview the deployment of the application:
 
 ```bash
     $ pulumi preview
-    Previewing update of stack 'dev'
-        Type    Name    Status        Info
-    *   global  global  unchanged
-    Previewing changes:
+    Previewing update (dev):
+         Type                                         Name                       Plan       
+     +   pulumi:pulumi:Stack                          kubernetes-py-jenkins-dev  create     
+     +   └─ jenkins:jenkins:Instance                  dev                        create     
+     +      ├─ kubernetes:core:Service                dev-service                create     
+     +      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    create     
+     +      ├─ kubernetes:core:Secret                 dev-secret                 create     
+     +      └─ kubernetes:apps:Deployment             dev-deploy                 create     
 
-        Type                                            Name                                             Status        Info
-    *   global                                          global                                           no change
-    +   pulumi:pulumi:Stack                             kubernetes-py-jenkins-dev                        create
-    +   └─ jenkins:jenkins:Instance                     dev                                              create
-    +      ├─ kubernetes:core:v1:Secret                 dev-secret                                       create
-    +      ├─ kubernetes:core:v1:PersistentVolumeClaim  dev-pvc                                          create
-    +      ├─ kubernetes:core:v1:Service                dev-service                                      create
-    +      └─ kubernetes:extensions:v1beta1:Deployment  dev-deploy                                       create
-
-    info: 6 changes previewed:
-        + 6 resources to create
+    Resources:
+        + 6 to create
 ```
 
 Perform the deployment:
 
 ```bash
     $ pulumi up --skip-preview
-    Updating stack 'dev'
-        Type    Name    Status        Info
-    *   global  global  unchanged
-    Performing changes:
+    Updating (dev):
+         Type                                         Name                       Status      
+     +   pulumi:pulumi:Stack                          kubernetes-py-jenkins-dev  created     
+     +   └─ jenkins:jenkins:Instance                  dev                        created     
+     +      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    created     
+     +      ├─ kubernetes:core:Service                dev-service                created     
+     +      ├─ kubernetes:core:Secret                 dev-secret                 created     
+     +      └─ kubernetes:apps:Deployment             dev-deploy                 created     
 
-        Type                                            Name                                             Status        Info
-    *   global                                          global                                           unchanged
-    +   pulumi:pulumi:Stack                             kubernetes-py-jenkins-dev                        created
-    +   └─ jenkins:jenkins:Instance                     dev                                              created
-    +      ├─ kubernetes:core:v1:Secret                 dev-secret                                       created
-    +      ├─ kubernetes:core:v1:PersistentVolumeClaim  dev-pvc                                          created
-    +      ├─ kubernetes:core:v1:Service                dev-service                                      created
-    +      └─ kubernetes:extensions:v1beta1:Deployment  dev-deploy                                       created
+    Outputs:
+        external_ip: "35.239.72.50"
 
-    info: 6 changes performed:
-        + 6 resources created
-    Update duration: 2m30.397621136s
+    Resources:
+        + 6 created
+
+    Duration: 1m57s
 ```
 
-The deployment is complete! Use `kubectl` to see the Service that we just deployed:
+The deployment is complete! Use `pulumi stack output external_ip` to see the IP of the Service that we just deployed:
 
 ```bash
-    $ kubectl get services
-    NAME         TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE
-    dev          LoadBalancer   10.43.241.251   35.230.56.127   80:30638/TCP,443:30204/TCP   3m
+    $ pulumi stack output external_ip
+    35.239.72.50
 ```
 
 The Jenkins instance we just deployed is reachable through port 80 of the external IP address. You can now
-visit `http://35.230.56.127/jenkins/login` in a Web browser to begin the first-install flow for your new Jenkins instance.
+visit `http://35.239.72.50/login` in a Web browser to begin the first-install flow for your new Jenkins instance.
 You can use the username and password that you saved in your Pulumi config to log in to your new Jenkins instance.
 
 > _Note_: If you are deploying to a cluster that does not support `type: "LoadBalancer"`, and deployed the example using
@@ -112,19 +105,20 @@ When you're ready to be done with Jenkins, you can destroy the instance:
 
 ```bash
     $ pulumi destroy
-    Do you want to perform this destroy? yes
-    Destroying stack 'dev'
-    Performing changes:
-
-        Type                                            Name                                             Status      Info
-    -   pulumi:pulumi:Stack                             kubernetes-py-jenkins-dev                        deleted
-    -   └─ jenkins:jenkins:Instance                     dev                                              deleted
-    -      ├─ kubernetes:extensions:v1beta1:Deployment  dev-deploy                                       deleted
-    -      ├─ kubernetes:core:v1:Service                dev-service                                      deleted
-    -      ├─ kubernetes:core:v1:PersistentVolumeClaim  dev-pvc                                          deleted
-    -      └─ kubernetes:core:v1:Secret                 dev-secret                                       deleted
-
-    info: 6 changes performed:
-        - 6 resources deleted
-    Update duration: 18.202009282s
+        Destroying (dev):
+         Type                                         Name                       Status      
+     -   pulumi:pulumi:Stack                          kubernetes-py-jenkins-dev  deleted     
+     -   └─ jenkins:jenkins:Instance                  dev                        deleted     
+     -      ├─ kubernetes:core:Secret                 dev-secret                 deleted     
+     -      ├─ kubernetes:core:Service                dev-service                deleted     
+     -      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    deleted     
+     -      └─ kubernetes:apps:Deployment             dev-deploy                 deleted     
+     
+    Outputs:
+      - external_ip: "35.239.72.50"
+    
+    Resources:
+        - 6 deleted
+    
+    Duration: 33s
 ```
