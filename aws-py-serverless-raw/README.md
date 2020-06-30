@@ -2,9 +2,9 @@
 
 # Serverless C# App
 
-This example deploys a complete serverless C# application using raw `aws.apigateway.RestAPI`, `aws.lambda.Function` and
-`aws.dynamodb.Table` resources from `@pulumi/aws`.  Although this doesn't feature any of the higher-level abstractions
-from the `@pulumi/cloud` package, it demonstrates that you can program the raw resources directly available in AWS
+This example deploys a complete serverless C# application using raw `aws.apigateway.RestApi`, `aws.lambda_.Function` and
+`aws.dynamodb.Table` resources from `pulumi_aws`.  Although this doesn't feature any of the higher-level abstractions
+from the `pulumi_cloud` package, it demonstrates that you can program the raw resources directly available in AWS
 to accomplish all of the same things this higher-level package offers.
 
 The deployed Lambda function is a simple C# application, highlighting the ability to manage existing application code
@@ -14,14 +14,18 @@ The Lambda function is a C# application using .NET Core 3.1 (a similar approach 
 AWS Lambda).
 
 ## Deploying and running the Pulumi App
-
+1. Install dependencies. In this example we will install them in a virtual environment named `venv`.
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+    
 1.  Create a new stack:
 
     ```bash
     $ pulumi stack init dev
     ```
-
-1.  Restore NPM modules via `npm install` or `yarn install`.
 
 1.  Build the C# application.
 

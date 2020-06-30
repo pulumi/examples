@@ -258,6 +258,20 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsPyServerlessRaw(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-py-serverless-raw"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
+					return assert.Contains(t, body, "{\"Path\":\"hello\",\"Count\":1}")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsPyStepFunctions(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
@@ -471,6 +485,20 @@ func TestAccAwsTsS3LambdaCopyZip(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-s3-lambda-copyzip"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsTsServerlessRaw(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
+					return assert.Contains(t, body, "{\"Path\":\"hello\",\"Count\":1}")
+				})
+			},
 		})
 
 	integration.ProgramTest(t, &test)
