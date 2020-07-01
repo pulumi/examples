@@ -37,8 +37,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        clouds: ["DigitalOcean", "Aws", "Azure", "Gcp", "Packet", "Linode", "Cloud"]
-        languages: ["Go", "Cs", "Js", "Ts", "Py", "Fs"]
+        clouds: ["Aws"]
+        languages: ["Go"]
         platform: [ubuntu-latest]
         go-version: [1.13.x]
         node-version: [10.x]
