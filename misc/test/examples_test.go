@@ -244,6 +244,15 @@ func TestAccAwsPyResources(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsGoResources(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-resources"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsPyS3Folder(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
