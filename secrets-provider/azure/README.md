@@ -17,6 +17,8 @@ You should also ensure:
 
 ## Create an Azure Keyvault Key
 
+> `$YOUR_OBJECT_ID` in this case corresponds to the object ID of the Azure ServicePrincipal or account currently logged into the `az` CLI. You will likely need to run a ` az ad sp show --id {app id} | jq -r .objectId` or `az ad user show --id {user id}` query to get this value.
+
 ```bash
 # First, create a keyvault
 az keyvault create -l westus -n pulumi --resource-group $RESOURCE_GROUP_NAME
@@ -25,7 +27,7 @@ az keyvault create -l westus -n pulumi --resource-group $RESOURCE_GROUP_NAME
 az keyvault key create --name pulumi-secret --vault-name pulumi
 
 # Finally, set the relevant permissions on the keyvault
-az keyvault set-policy --name pulumi --object-id $YOUR_OBJECT_ID --key-permissions decrypt get create delete list update import backup restore recover
+az keyvault set-policy --name pulumi --object-id $YOUR_OBJECT_ID --key-permissions decrypt get create delete list update import backup restore recover encrypt
 ```
 
 _When creating your key, be sure to specify a permissions that restricts access to only those that need to use the key_
