@@ -1,5 +1,6 @@
-.PHONY: ensure only_build only_test all
+TestParallelism ?= 40
 
+.PHONY: ensure only_build only_test all
 all: install ensure only_build lint only_test
 
 install:
@@ -18,8 +19,8 @@ only_test:
 	cd misc/test && go test ./... --timeout 4h -v -count=1 -short -parallel 40
 
 specific_test_set:
-	echo "running $(TestSet) Acceptance Tests"
-	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel 40 --run=TestAcc$(TestSet)
+	echo "running $(TestSet) Acceptance Tests with parallelism $(TestParallelism)"
+	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel $(TestParallelism) --run=TestAcc$(TestSet)
 
 setup_test_infra:
 	echo "Setting up test infra"

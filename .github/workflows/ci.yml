@@ -109,7 +109,11 @@ jobs:
           role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
       - name: Install Go dependencies
         run: make ensure
-      - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
+      - if: matrix.languages == 'go'
+        name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests with Limited Parallelism
+        run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }} TestParallelism=2
+      - if: matrix.languages != 'go'
+        name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
         run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
       - if: failure() && github.event_name == 'push'
         name: Notify Slack
@@ -118,245 +122,245 @@ jobs:
           author_name: Failure in ${{ matrix.clouds }}${{ matrix.languages }} Tests
           fields: repo,commit,author,action
           status: ${{ job.status }}
-  lint:
-    strategy:
-      matrix:
-        platform: [ubuntu-latest]
-        yarn-version: [1.13.0]
-        node-version: [12.x]
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install Yarn
-        run: curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version ${{ matrix.yarn-version }}
-      - name: Update PATH for Yarn
-        run: |
-          echo "::add-path::$HOME/.yarn/bin"
-          echo "::add-path::$HOME/.config/yarn/global/node_modules/.bin"
-      - name: setup linting tool
-        run: make install
-      - name: Lint typescript files
-        run: make lint
-      - if: failure() && github.event_name == 'push'
-        name: Notify Slack
-        uses: 8398a7/action-slack@v3
-        with:
-          author_name: Failure in lint step
-          fields: repo,commit,author,action
-          status: ${{ job.status }}
-  test-infra-setup:
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ubuntu-latest]
-        go-version: [1.13.x]
-        node-version: [10.x]
-        python-version: [3.7]
-        dotnet-version: ['3.1.100']
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - name: Install DotNet ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Set up Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v1
-        with:
-          go-version: ${{ matrix.go-version }}
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Python Deps
-        run: |
-          pip3 install virtualenv==20.0.23
-          pip3 install pipenv
-      - name: Install aws-iam-authenticator
-        run: |
-          curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
-          chmod +x ./aws-iam-authenticator
-          sudo mv aws-iam-authenticator /usr/local/bin
-      - name: Install Kubectl
-        run: |
-          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-          chmod +x ./kubectl
-          sudo mv kubectl /usr/local/bin
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          version: '285.0.0'
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-      - name: Install helm
-        run: |
-          curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-      - name: Configure helm
-        run: |
-          helm init -c
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-      - name: Set Azure DNS
-        run: |
-          echo "$(getent hosts $ARM_LOCATION.management.azure.com | awk '{ print $1 }') management.azure.com" | sudo tee --append /etc/hosts
-      - name: Login to Google Cloud Registry
-        run: |
-          gcloud --quiet auth configure-docker
-      - name: Install Pulumi CLI
-        uses: pulumi/action-install-pulumi-cli@releases/v1
-      - uses: actions/checkout@v2
-      - name: Create test infra
-        run: |
-          make setup_test_infra StackName="${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}"
-  test-infra-destroy:
-    needs: kubernetes
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ubuntu-latest]
-        go-version: [1.13.x]
-        node-version: [10.x]
-        python-version: [3.7]
-        dotnet-version: ['3.1.100']
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - name: Install DotNet ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Set up Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v1
-        with:
-          go-version: ${{ matrix.go-version }}
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Python Deps
-        run: |
-          pip3 install virtualenv==20.0.23
-          pip3 install pipenv
-      - name: Install aws-iam-authenticator
-        run: |
-          curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
-          chmod +x ./aws-iam-authenticator
-          sudo mv aws-iam-authenticator /usr/local/bin
-      - name: Install Kubectl
-        run: |
-          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-          chmod +x ./kubectl
-          sudo mv kubectl /usr/local/bin
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          version: '285.0.0'
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-      - name: Install helm
-        run: |
-          curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-      - name: Configure helm
-        run: |
-          helm init -c
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-      - name: Set Azure DNS
-        run: |
-          echo "$(getent hosts $ARM_LOCATION.management.azure.com | awk '{ print $1 }') management.azure.com" | sudo tee --append /etc/hosts
-      - name: Login to Google Cloud Registry
-        run: |
-          gcloud --quiet auth configure-docker
-      - name: Install Pulumi CLI
-        uses: pulumi/action-install-pulumi-cli@releases/v1
-      - uses: actions/checkout@v2
-      - name: Destroy test infra
-        run: |
-          make destroy_test_infra StackName="${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}"
-  kubernetes:
-    needs: test-infra-setup
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ubuntu-latest]
-        go-version: [1.13.x]
-        node-version: [10.x]
-        python-version: [3.7]
-        dotnet-version: ['3.1.100']
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - name: Install DotNet ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Set up Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v1
-        with:
-          go-version: ${{ matrix.go-version }}
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Python Deps
-        run: |
-          pip3 install virtualenv==20.0.23
-          pip3 install pipenv
-      - name: Install aws-iam-authenticator
-        run: |
-          curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
-          chmod +x ./aws-iam-authenticator
-          sudo mv aws-iam-authenticator /usr/local/bin
-      - name: Install Kubectl
-        run: |
-          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-          chmod +x ./kubectl
-          sudo mv kubectl /usr/local/bin
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          version: '285.0.0'
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-      - name: Install helm
-        run: |
-          curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-      - name: Configure helm
-        run: |
-          helm init -c
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-      - name: Set Azure DNS
-        run: |
-          echo "$(getent hosts $ARM_LOCATION.management.azure.com | awk '{ print $1 }') management.azure.com" | sudo tee --append /etc/hosts
-      - name: Login to Google Cloud Registry
-        run: |
-          gcloud --quiet auth configure-docker
-      - name: Install Pulumi CLI
-        uses: pulumi/action-install-pulumi-cli@releases/v1
-      - uses: actions/checkout@v2
-      - name: Install Go dependencies
-        run: make ensure
-      - name: Setup Config
-        run: |
-          mkdir -p "$HOME/.kube/"
-          pulumi stack -s "${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}" -C misc/scripts/testinfra/ output kubeconfig >~/.kube/config
-      - name: Run ${{ matrix.tests-set }} Tests
-        run: make specific_test_set TestSet=Kubernetes
-      - if: failure() && github.event_name == 'push'
-        name: Notify Slack
-        uses: 8398a7/action-slack@v3
-        with:
-          author_name: 'Failure in Kubernetes Tests'
-          fields: repo,commit,author,action
-          status: ${{ job.status }}
+#  lint:
+#    strategy:
+#      matrix:
+#        platform: [ubuntu-latest]
+#        yarn-version: [1.13.0]
+#        node-version: [12.x]
+#    runs-on: ${{ matrix.platform }}
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Setup node
+#        uses: actions/setup-node@v1
+#        with:
+#          node-version: ${{ matrix.node-version }}
+#      - name: Install Yarn
+#        run: curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version ${{ matrix.yarn-version }}
+#      - name: Update PATH for Yarn
+#        run: |
+#          echo "::add-path::$HOME/.yarn/bin"
+#          echo "::add-path::$HOME/.config/yarn/global/node_modules/.bin"
+#      - name: setup linting tool
+#        run: make install
+#      - name: Lint typescript files
+#        run: make lint
+#      - if: failure() && github.event_name == 'push'
+#        name: Notify Slack
+#        uses: 8398a7/action-slack@v3
+#        with:
+#          author_name: Failure in lint step
+#          fields: repo,commit,author,action
+#          status: ${{ job.status }}
+#  test-infra-setup:
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        platform: [ubuntu-latest]
+#        go-version: [1.13.x]
+#        node-version: [10.x]
+#        python-version: [3.7]
+#        dotnet-version: ['3.1.100']
+#    runs-on: ${{ matrix.platform }}
+#    steps:
+#      - name: Install DotNet ${{ matrix.dotnet-version }}
+#        uses: actions/setup-dotnet@v1
+#        with:
+#          dotnet-version: ${{ matrix.dotnet-version }}
+#      - name: Use Node.js ${{ matrix.node-version }}
+#        uses: actions/setup-node@v1
+#        with:
+#          node-version: ${{ matrix.node-version }}
+#      - name: Set up Go ${{ matrix.go-version }}
+#        uses: actions/setup-go@v1
+#        with:
+#          go-version: ${{ matrix.go-version }}
+#      - name: Set up Python ${{ matrix.python-version }}
+#        uses: actions/setup-python@v1
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#      - name: Install Python Deps
+#        run: |
+#          pip3 install virtualenv==20.0.23
+#          pip3 install pipenv
+#      - name: Install aws-iam-authenticator
+#        run: |
+#          curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+#          chmod +x ./aws-iam-authenticator
+#          sudo mv aws-iam-authenticator /usr/local/bin
+#      - name: Install Kubectl
+#        run: |
+#          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+#          chmod +x ./kubectl
+#          sudo mv kubectl /usr/local/bin
+#      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+#        with:
+#          version: '285.0.0'
+#          project_id: ${{ secrets.GCP_PROJECT_ID }}
+#          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+#          service_account_key: ${{ secrets.GCP_SA_KEY }}
+#      - name: Install helm
+#        run: |
+#          curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+#      - name: Configure helm
+#        run: |
+#          helm init -c
+#          helm repo add bitnami https://charts.bitnami.com/bitnami
+#      - name: Set Azure DNS
+#        run: |
+#          echo "$(getent hosts $ARM_LOCATION.management.azure.com | awk '{ print $1 }') management.azure.com" | sudo tee --append /etc/hosts
+#      - name: Login to Google Cloud Registry
+#        run: |
+#          gcloud --quiet auth configure-docker
+#      - name: Install Pulumi CLI
+#        uses: pulumi/action-install-pulumi-cli@releases/v1
+#      - uses: actions/checkout@v2
+#      - name: Create test infra
+#        run: |
+#          make setup_test_infra StackName="${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}"
+#  test-infra-destroy:
+#    needs: kubernetes
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        platform: [ubuntu-latest]
+#        go-version: [1.13.x]
+#        node-version: [10.x]
+#        python-version: [3.7]
+#        dotnet-version: ['3.1.100']
+#    runs-on: ${{ matrix.platform }}
+#    steps:
+#      - name: Install DotNet ${{ matrix.dotnet-version }}
+#        uses: actions/setup-dotnet@v1
+#        with:
+#          dotnet-version: ${{ matrix.dotnet-version }}
+#      - name: Use Node.js ${{ matrix.node-version }}
+#        uses: actions/setup-node@v1
+#        with:
+#          node-version: ${{ matrix.node-version }}
+#      - name: Set up Go ${{ matrix.go-version }}
+#        uses: actions/setup-go@v1
+#        with:
+#          go-version: ${{ matrix.go-version }}
+#      - name: Set up Python ${{ matrix.python-version }}
+#        uses: actions/setup-python@v1
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#      - name: Install Python Deps
+#        run: |
+#          pip3 install virtualenv==20.0.23
+#          pip3 install pipenv
+#      - name: Install aws-iam-authenticator
+#        run: |
+#          curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+#          chmod +x ./aws-iam-authenticator
+#          sudo mv aws-iam-authenticator /usr/local/bin
+#      - name: Install Kubectl
+#        run: |
+#          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+#          chmod +x ./kubectl
+#          sudo mv kubectl /usr/local/bin
+#      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+#        with:
+#          version: '285.0.0'
+#          project_id: ${{ secrets.GCP_PROJECT_ID }}
+#          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+#          service_account_key: ${{ secrets.GCP_SA_KEY }}
+#      - name: Install helm
+#        run: |
+#          curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+#      - name: Configure helm
+#        run: |
+#          helm init -c
+#          helm repo add bitnami https://charts.bitnami.com/bitnami
+#      - name: Set Azure DNS
+#        run: |
+#          echo "$(getent hosts $ARM_LOCATION.management.azure.com | awk '{ print $1 }') management.azure.com" | sudo tee --append /etc/hosts
+#      - name: Login to Google Cloud Registry
+#        run: |
+#          gcloud --quiet auth configure-docker
+#      - name: Install Pulumi CLI
+#        uses: pulumi/action-install-pulumi-cli@releases/v1
+#      - uses: actions/checkout@v2
+#      - name: Destroy test infra
+#        run: |
+#          make destroy_test_infra StackName="${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}"
+#  kubernetes:
+#    needs: test-infra-setup
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        platform: [ubuntu-latest]
+#        go-version: [1.13.x]
+#        node-version: [10.x]
+#        python-version: [3.7]
+#        dotnet-version: ['3.1.100']
+#    runs-on: ${{ matrix.platform }}
+#    steps:
+#      - name: Install DotNet ${{ matrix.dotnet-version }}
+#        uses: actions/setup-dotnet@v1
+#        with:
+#          dotnet-version: ${{ matrix.dotnet-version }}
+#      - name: Use Node.js ${{ matrix.node-version }}
+#        uses: actions/setup-node@v1
+#        with:
+#          node-version: ${{ matrix.node-version }}
+#      - name: Set up Go ${{ matrix.go-version }}
+#        uses: actions/setup-go@v1
+#        with:
+#          go-version: ${{ matrix.go-version }}
+#      - name: Set up Python ${{ matrix.python-version }}
+#        uses: actions/setup-python@v1
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#      - name: Install Python Deps
+#        run: |
+#          pip3 install virtualenv==20.0.23
+#          pip3 install pipenv
+#      - name: Install aws-iam-authenticator
+#        run: |
+#          curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+#          chmod +x ./aws-iam-authenticator
+#          sudo mv aws-iam-authenticator /usr/local/bin
+#      - name: Install Kubectl
+#        run: |
+#          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+#          chmod +x ./kubectl
+#          sudo mv kubectl /usr/local/bin
+#      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+#        with:
+#          version: '285.0.0'
+#          project_id: ${{ secrets.GCP_PROJECT_ID }}
+#          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+#          service_account_key: ${{ secrets.GCP_SA_KEY }}
+#      - name: Install helm
+#        run: |
+#          curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+#      - name: Configure helm
+#        run: |
+#          helm init -c
+#          helm repo add bitnami https://charts.bitnami.com/bitnami
+#      - name: Set Azure DNS
+#        run: |
+#          echo "$(getent hosts $ARM_LOCATION.management.azure.com | awk '{ print $1 }') management.azure.com" | sudo tee --append /etc/hosts
+#      - name: Login to Google Cloud Registry
+#        run: |
+#          gcloud --quiet auth configure-docker
+#      - name: Install Pulumi CLI
+#        uses: pulumi/action-install-pulumi-cli@releases/v1
+#      - uses: actions/checkout@v2
+#      - name: Install Go dependencies
+#        run: make ensure
+#      - name: Setup Config
+#        run: |
+#          mkdir -p "$HOME/.kube/"
+#          pulumi stack -s "${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}" -C misc/scripts/testinfra/ output kubeconfig >~/.kube/config
+#      - name: Run ${{ matrix.tests-set }} Tests
+#        run: make specific_test_set TestSet=Kubernetes
+#      - if: failure() && github.event_name == 'push'
+#        name: Notify Slack
+#        uses: 8398a7/action-slack@v3
+#        with:
+#          author_name: 'Failure in Kubernetes Tests'
+#          fields: repo,commit,author,action
+#          status: ${{ job.status }}
