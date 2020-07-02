@@ -22,6 +22,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestAccAwsGoAssumeRole(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-assume-role", "create-role"),
+			Config: map[string]string{
+				"create-role:unprivilegedUsername": "unpriv",
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsGoEks(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
