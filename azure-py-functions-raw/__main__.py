@@ -1,29 +1,29 @@
 from pulumi import asset, export, Output
 from pulumi_azure import core, storage, appservice
 
-resource_group = core.ResourceGroup("windowsrg")
+resource_group = core.ResourceGroup("linuxrg")
 
-httpdotnet_storage_account = storage.Account(
-    "httpdotnet",
+http_storage_account = storage.Account(
+    "http",
     account_kind="StorageV2",
     account_tier="Standard",
     account_replication_type="LRS",
     resource_group_name=resource_group.name,
 )
 
-httpdotnet_container=storage.Container(
-    "http-dotnet",
-    storage_account_name=httpdotnet_storage_account.name,
+http_container=storage.Container(
+    "http",
+    storage_account_name=http_storage_account.name,
     container_access_type="private"
 )
 
-httpdotnet_zib_blob=storage.Blob(
-    "http-dotnet",
-    storage_account_name=httpdotnet_storage_account.name,
-    storage_container_name=httpdotnet_container.name,
+http_zib_blob=storage.Blob(
+    "http",
+    storage_account_name=http_storage_account.name,
+    storage_container_name=http_container.name,
     type="Block",
     source=asset.AssetArchive({
-        ".": asset.FileArchive("./dotnet/bin/Debug/netcoreapp3.1/publish")
+        ".": asset.FileArchive("./python")
     }))
 
 def get_sas(args):
@@ -43,33 +43,35 @@ def get_sas(args):
     )
     return f"https://{args[0]}.blob.core.windows.net/{args[2]}/{args[3]}{blob_sas.sas}"
 
-httpdotnet_signed_blob_url = Output.all(
-    httpdotnet_storage_account.name,
-    httpdotnet_storage_account.primary_connection_string,
-    httpdotnet_container.name, httpdotnet_zib_blob.name
+http_signed_blob_url = Output.all(
+    http_storage_account.name,
+    http_storage_account.primary_connection_string,
+    http_container.name, http_zib_blob.name
 ).apply(get_sas)
 
-httpdotnet_plan=appservice.Plan(
-    "http-dotnet",
+http_plan=appservice.Plan(
+    "http",
     resource_group_name=resource_group.name,
-    kind="FunctionApp",
+    kind="Linux",
     sku={
         "tier": "Dynamic",
         "size": "Y1"
-    }
+    },
+    reserved="true"
 )
 
-httpdotnet_function_app=appservice.FunctionApp(
-    "http-dotnet",
+http_function_app=appservice.FunctionApp(
+    "http",
     resource_group_name=resource_group.name,
-    app_service_plan_id=httpdotnet_plan.id,
-    storage_connection_string=httpdotnet_storage_account.primary_connection_string,
+    app_service_plan_id=http_plan.id,
+    storage_account_name=http_storage_account.name,
+    storage_account_access_key=http_storage_account.primary_access_key,
     version="~3",
     app_settings={
-        "runtime": "dotnet",
-        "WEBSITE_RUN_FROM_PACKAGE": httpdotnet_signed_blob_url,
+        "FUNCTIONS_WORKER_RUNTIME": "python",
+        "WEBSITE_RUN_FROM_PACKAGE": http_signed_blob_url,
     },
 )
 
-export("dotnet_endpoint", httpdotnet_function_app.default_hostname.apply(
-    lambda endpoint: "https://" + endpoint + "/api/HelloDotnet?name=Pulumi"))
+export("endpoint", http_function_app.default_hostname.apply(
+    lambda endpoint: "https://" + endpoint + "/api/HelloPython?name=Pulumi"))
