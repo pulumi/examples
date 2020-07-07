@@ -263,11 +263,11 @@ func TestAccAwsPyServerlessRaw(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-py-serverless-raw"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				integration.RunCommand(t, "dotnet publish", nil, path.Join(getCwd(t), "..", "..", "aws-py-serverless-raw", "app"), nil)
 				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
 					return assert.Contains(t, body, "{\"Path\":\"hello\",\"Count\":1}")
 				})
 			},
+			RunBuild: true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -508,11 +508,11 @@ func TestAccAwsTsServerlessRaw(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				integration.RunCommand(t, "dotnet publish", nil, path.Join(getCwd(t), "..", "..", "aws-py-serverless-raw", "app"), nil)
 				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
 					return assert.Contains(t, body, "{\"Path\":\"hello\",\"Count\":1}")
 				})
 			},
+			RunBuild: true,
 		})
 	integration.ProgramTest(t, &test)
 }
