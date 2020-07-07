@@ -504,7 +504,8 @@ func TestAccAwsTsS3LambdaCopyZip(t *testing.T) {
 }
 
 func TestAccAwsTsServerlessRaw(t *testing.T) {
-	err := exec.Command("dotnet publish", "app")
+	cmd := exec.Command("dotnet publish", "app")
+	err := cmd.Run()
 	if err != nil {
 		fmt.Printf("err: %v", err)
 		return
