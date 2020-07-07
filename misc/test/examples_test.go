@@ -260,7 +260,7 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 }
 
 func TestAccAwsPyServerlessRaw(t *testing.T) {
-	cmd := exec.Command("dotnet", "publish")
+	cmd := exec.Command("dotnet publish", "app")
 	cmd.Path = path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw", "app")
 	cmd.Dir = path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw")
 	err := cmd.Run()
