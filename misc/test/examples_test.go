@@ -505,6 +505,7 @@ func TestAccAwsTsS3LambdaCopyZip(t *testing.T) {
 
 func TestAccAwsTsServerlessRaw(t *testing.T) {
 	cmd := exec.Command("dotnet publish", "app")
+	cmd.Dir = path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw")
 	err := cmd.Run()
 	if err != nil {
 		fmt.Printf("err: %v", err)
