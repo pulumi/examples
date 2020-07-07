@@ -1,22 +1,10 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Azure Functions
+# Azure Functions in Python
 
-Azure Functions created from raw deployment packages in C#.
-
-C# is a precompiled language, and the deployment artifact contains compiled binaries. You will need the following tool to build this project:
-
-- [.NET Core SDK](https://dotnet.microsoft.com/download) for the .NET Function App
-
-Please remove the corresponding resources from the program in case you don't need those runtimes.
+Azure Functions developed and deployed with Python.
 
 ## Running the App
-
-1. Build and publish the .NET Function App project:
-
-    ```bash
-    $ dotnet publish dotnet
-    ```
 
 1. Create a new stack:
 
@@ -63,8 +51,8 @@ Please remove the corresponding resources from the program in case you don't nee
 1. Check the deployed function endpoints:
 
     ```bash
-    $ pulumi stack output dotnet_endpoint
-    https://http-dotnet1a2d3e4d.azurewebsites.net/api/HelloDotnet?name=Pulumi
-    $ curl "$(pulumi stack output dotnet_endpoint)"
-    Hello from .NET, Pulumi
+    $ pulumi stack output endpoint
+    https://http1a2d3e4d.azurewebsites.net/api/HelloPython?name=Pulumi
+    $ curl "$(pulumi stack output endpoint)"
+    Hello from Python, Pulumi!
     ```
