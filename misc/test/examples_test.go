@@ -504,12 +504,11 @@ func TestAccAwsTsS3LambdaCopyZip(t *testing.T) {
 }
 
 func TestAccAwsTsServerlessRaw(t *testing.T) {
-	cmd, err := exec.Command("dotnet publish", "app")
+	err := exec.Command("dotnet publish", "app")
 	if err != nil {
 		fmt.Printf("err: %v", err)
 		return
 	}
-	cmd.Run()
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw"),
