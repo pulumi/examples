@@ -260,6 +260,14 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 }
 
 func TestAccAwsPyServerlessRaw(t *testing.T) {
+	cmd := exec.Command("dotnet", "publish")
+	cmd.Path = path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw", "app")
+	cmd.Dir = path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw")
+	err := cmd.Run()
+	if err != nil {
+		fmt.Printf("err: %v", err)
+		return
+	}
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-py-serverless-raw"),
@@ -504,7 +512,8 @@ func TestAccAwsTsS3LambdaCopyZip(t *testing.T) {
 }
 
 func TestAccAwsTsServerlessRaw(t *testing.T) {
-	cmd := exec.Command("dotnet publish", "app")
+	cmd := exec.Command("dotnet", "publish")
+	cmd.Path = path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw", "app")
 	cmd.Dir = path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw")
 	err := cmd.Run()
 	if err != nil {
