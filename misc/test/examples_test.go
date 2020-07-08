@@ -119,7 +119,7 @@ func TestAccAwsCsAssumeRole(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-cs-assume-role", "create-role"),
 			Config: map[string]string{
-				"create-role:unprivilegedUsername": "unpriv",
+				"cs-create-role:unprivilegedUsername": "unpriv",
 			},
 		})
 
