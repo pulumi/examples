@@ -12,10 +12,19 @@ import (
 	"github.com/pulumi/pulumi-random/sdk/v2/go/random"
 	"github.com/pulumi/pulumi-tls/sdk/v2/go/tls"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
+
+		conf := config.New(ctx, "")
+
+		kubernetesVersion, err := conf.Try("kubernetesVersion")
+		if err != nil {
+			kubernetesVersion = "1.16.9"
+		}
+
 		// Create a resource group.
 		resourceGroup, err := core.NewResourceGroup(ctx, "aks-rg", nil)
 		if err != nil {
@@ -132,7 +141,7 @@ func main() {
 			LinuxProfile:           linuxProfileArgs,
 			WindowsProfile:         windowsProfileArgs,
 			ServicePrincipal:       spArgs,
-			KubernetesVersion:      pulumi.String("1.15.10"),
+			KubernetesVersion:      pulumi.String(kubernetesVersion),
 			RoleBasedAccessControl: roleArgs,
 			NetworkProfile:         networkArgs,
 		}

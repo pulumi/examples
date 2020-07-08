@@ -97,7 +97,7 @@ class AksStack : Stack
                 ClientId = adApp.ApplicationId,
                 ClientSecret = adSpPassword.Value,
             },
-            KubernetesVersion = "1.15.7",
+            KubernetesVersion = "1.16.9",
             RoleBasedAccessControl = new KubernetesClusterRoleBasedAccessControlArgs {Enabled = true},
             NetworkProfile = new KubernetesClusterNetworkProfileArgs
             {

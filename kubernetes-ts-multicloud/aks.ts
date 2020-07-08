@@ -98,7 +98,7 @@ export class AksCluster extends pulumi.ComponentResource {
                 clientId: adApp.applicationId,
                 clientSecret: adSpPassword.value,
             },
-            kubernetesVersion: "1.15.5",
+            kubernetesVersion: "1.16.9",
             roleBasedAccessControl: {enabled: true},
             networkProfile: {
                 networkPlugin: "azure",

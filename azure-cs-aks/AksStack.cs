@@ -6,7 +6,7 @@ using Pulumi.Azure.ContainerService;
 using Pulumi.Azure.ContainerService.Inputs;
 using Pulumi.Azure.Core;
 using Pulumi.Azure.Network;
-using Pulumi.Azure.Role;
+using Pulumi.Azure.Authorization;
 using Pulumi.Random;
 using Pulumi.Tls;
 
@@ -14,6 +14,9 @@ class AksStack : Stack
 {
     public AksStack()
     {
+        var config = new Pulumi.Config();
+        var kubernetesVersion = config.Get("kubernetesVersion") ?? "1.16.9";
+
         var resourceGroup = new ResourceGroup("aks-rg");
 
         var password = new RandomPassword("password", new RandomPasswordArgs
@@ -87,7 +90,7 @@ class AksStack : Stack
                 ClientId = adApp.ApplicationId,
                 ClientSecret = adSpPassword.Value,
             },
-            KubernetesVersion = "1.15.7",
+            KubernetesVersion = kubernetesVersion,
             RoleBasedAccessControl = new KubernetesClusterRoleBasedAccessControlArgs {Enabled = true},
             NetworkProfile = new KubernetesClusterNetworkProfileArgs
             {
