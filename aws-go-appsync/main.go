@@ -22,8 +22,8 @@ func main() {
 				},
 			},
 			HashKey:       pulumi.String("id"),
-			ReadCapacity:  pulumi.Int(15),
-			WriteCapacity: pulumi.Int(15),
+			ReadCapacity:  pulumi.Int(1),
+			WriteCapacity: pulumi.Int(1),
 		})
 		if err != nil {
 			return err
@@ -32,12 +32,14 @@ func main() {
 		// create IAM role and policy wiring
 		assumeRolePolicyJSON, err := json.Marshal(map[string]interface{}{
 			"Version": "2012-10-17",
-			"Statement": map[string]interface{}{
-				"Action": "sts:AssumeRole",
-				"Principal": map[string]interface{}{
-					"Service": "appsync.amazonaws.com",
+			"Statement": []interface{}{
+				map[string]interface{}{
+					"Action": "sts:AssumeRole",
+					"Principal": map[string]interface{}{
+						"Service": "appsync.amazonaws.com",
+					},
+					"Effect": "Allow",
 				},
-				"Effect": "Allow",
 			},
 		})
 		if err != nil {

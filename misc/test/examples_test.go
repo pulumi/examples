@@ -227,8 +227,25 @@ func TestAccAwsGoAppSync(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-go-appsync"),
-		})
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 15 * time.Minute
 
+				endpoint := stack.Outputs["endpoint"].(string)
+				queryParams := "?query=mutation%20AddTenant%20%7B%20addTenant%28id%3A%20%22123%22%2C%20name%3A%20%22FirstCorp%22%29%20%7B%20id%20name%20%7D%20%7D"
+
+				key := stack.Outputs["key"].(string)
+				headersMap := map[string]string{
+					"Content-Type": "application/graphql",
+					"x-api-key":    key,
+				}
+
+				assertHTTPResultShapeWithRetry(t, endpoint+queryParams, headersMap, maxWait, func(body string) bool {
+					return !strings.Contains(body, "AccessDeniedException")
+				}, func(body string) bool {
+					return assert.Contains(t, body, "FirstCorp")
+				})
+			},
+		})
 	integration.ProgramTest(t, &test)
 }
 
