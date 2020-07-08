@@ -3,6 +3,9 @@ description: Creates an Azure Kubernetes Service (AKS) cluster
 runtime: dotnet
 template:
   config:
-    sqlPassword:
-      description: SQL Server password (complex enough to satisfy Azure policy)
-      secret: true
+    azure:location:
+      description: The Azure location to use
+      default: westus
+    kubernetesVersion:
+      description: The Kubernetes version to deploy
+      default: 1.16.9
