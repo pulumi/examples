@@ -18,9 +18,12 @@ func main() {
 			Name: pulumi.String(unprivilegedUsername),
 		})
 
+		// additional_secret_outputs specify properties that must be encrypted as secrets
+		// https://www.pulumi.com/docs/intro/concepts/programming-model/#additionalsecretoutputs
+		secretString := []string{"secret"}
 		unprivilegedUserCreds, err := iam.NewAccessKey(ctx, "unprivileged-user-key", &iam.AccessKeyArgs{
 			User: unprivilegedUser.Name,
-		})
+		}, pulumi.AdditionalSecretOutputs(secretString))
 
 		if err != nil {
 			return err

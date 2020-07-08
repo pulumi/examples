@@ -28,9 +28,20 @@ Key ID and Secret associated with the User:
 ```
 $ pulumi stack output --json
 {
-    "accessKeyId": "AKIAI7JE74TLY2LOEIJA",
-    "secretAccessKey": "<redacted>",
-    "roleArn": "arn:aws:iam::<redacted>:role/allow-s3-management-ad477e6"
+    accessKeyId    : "AKIAY65FYVYP2MBSRQZK"
+    roleArn        : "arn:aws:iam::616138583583:role/allow-s3-management-2c45483"
+    secretAccessKey: "[secret]"
+}
+```
+
+If we just use the above command then the secretAccessKey would not be shown. In order to show the secret value use this
+
+```
+$ pulumi stack output --json --show-secrets
+{
+  "accessKeyId": "AKIAYJ7EUPHL3DSDH4CX",
+  "roleArn": "arn:aws:iam::571173272023:role/allow-s3-management-fcc71c0",
+  "secretAccessKey": "[plain text value]"
 }
 ```
 
@@ -44,7 +55,7 @@ directory, replacing `{YOUR_STACK_PATH/assume-role-create}` with the full name o
 $ cd assume-role
 $ npm install
 $ export AWS_ACCESS_KEY_ID="$(pulumi stack output --stack {YOUR_STACK_PATH/assume-role-create} accessKeyId)"
-$ export AWS_SECRET_ACCESS_KEY="$(pulumi stack output --stack {YOUR_STACK_PATH/assume-role-create} secretAccessKey)"
+$ export AWS_SECRET_ACCESS_KEY="$(pulumi stack output --stack {YOUR_STACK_PATH/assume-role-create} --show-secrets secretAccessKey)"
 ```
 
 The configuration variable `roleToAssumeARN` must be set to the ARN of the role allowing S3 access, and the AWS region
@@ -54,6 +65,12 @@ must be set to the region in which you wish to operate:
 $ pulumi stack init assume-role-assume
 $ pulumi config set roleToAssumeARN "$(pulumi stack output --stack assume-role-create roleArn)"
 $ pulumi config set aws:region us-east-1
+```
+
+Unset the AWS_SESSION_TOKEN or any additional credential setting if you have set for previous access
+
+```bash
+$ unset AWS_SESSION_TOKEN
 ```
 
 The program can then be run with `pulumi up`. You can verify that the role is indeed assumed by looking at the 

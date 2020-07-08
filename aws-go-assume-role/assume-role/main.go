@@ -7,22 +7,11 @@ import (
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
 )
 
-func GetRegion(ctx *pulumi.Context) string {
-	v, err := config.Try(ctx, "aws:region")
-	if err == nil {
-		return v
-	} else {
-		return err.Error()
-	}
-}
-
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-
+		region := config.Require(ctx, "aws:region")
 		config := config.New(ctx, "")
 		roleToAssumeARN := config.Require("roleToAssumeARN")
-
-		region := GetRegion(ctx)
 
 		provider, err := aws.NewProvider(ctx, "privileged", &aws.ProviderArgs{
 			AssumeRole: &aws.ProviderAssumeRoleArgs{

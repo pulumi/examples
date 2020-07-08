@@ -4,19 +4,9 @@ import pulumi_aws as aws
 from pulumi_aws.config.vars import region
 from pulumi import Config, ResourceOptions, export
 
-
-def require_region():
-    """
-    require_region fetches the AWS region, requiring that it exists. if it does
-    not exist, an exception is raised.
-    """
-    if not region:
-        raise Exception('No AWS region has been configured')
-    return region
-
-
 config = Config()
 role_to_assume_arn = config.require('roleToAssumeARN')
+aws_config = Config('aws')
 
 provider = aws.Provider(
     'privileged',
@@ -25,7 +15,7 @@ provider = aws.Provider(
         'session_name': 'PulumiSession',
         'externalId': 'PulumiApplication',
     },
-    region=require_region()
+    region=aws_config.require('region')
 )
 
 # Creates an AWS resource (S3 Bucket)

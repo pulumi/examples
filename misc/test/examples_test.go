@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"os/exec"
 	"path"
 	"strings"
 	"testing"
@@ -109,6 +108,18 @@ func TestAccAwsGoWebserver(t *testing.T) {
 				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World!")
 				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsCsAssumeRole(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-cs-assume-role", "create-role"),
+			Config: map[string]string{
+				"create-role:unprivilegedUsername": "unpriv",
 			},
 		})
 
@@ -252,28 +263,6 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAwsPyServerlessRaw(t *testing.T) {
-	cmd := exec.Command("dotnet publish", "app")
-	cmd.Path = path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw", "app")
-	cmd.Dir = path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw")
-	err := cmd.Run()
-	if err != nil {
-		fmt.Printf("err: %v", err)
-		return
-	}
-	test := getAWSBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "aws-py-serverless-raw"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
-					return assert.Contains(t, body, "{\"Path\":\"hello\",\"Count\":1}")
 				})
 			},
 		})
@@ -508,27 +497,6 @@ func TestAccAwsTsS3LambdaCopyZip(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-s3-lambda-copyzip"),
 		})
 
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAwsTsServerlessRaw(t *testing.T) {
-	cmd := exec.Command("dotnet", "publish")
-	cmd.Path = path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw", "app")
-	cmd.Dir = path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw")
-	err := cmd.Run()
-	if err != nil {
-		fmt.Printf("err: %v", err)
-		return
-	}
-	test := getAWSBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-serverless-raw"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
-					return assert.Contains(t, body, "{\"Path\":\"hello\",\"Count\":1}")
-				})
-			},
-		})
 	integration.ProgramTest(t, &test)
 }
 

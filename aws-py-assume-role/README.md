@@ -33,11 +33,11 @@ $ source venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
-Now create a new stack:
+Now create a new stack: 
 
 ```bash
 $ pulumi stack init assume-role-create
-$ pulumi config set create-role:unprivilegedUsername james+unpriv@mydomain.com
+$ pulumi config set create-role:unprivilegedUsername somebody@pulumi.com
 $ pulumi config set aws:region us-east-1
 $ pulumi up
 ```
@@ -50,23 +50,30 @@ $ pulumi stack output --json
 {
   "accessKeyId": "AKIAYJ7EUPHL3DSDH4CX",
   "roleArn": "arn:aws:iam::571173272023:role/allow-s3-management-fcc71c0",
-  "secretAccessKey": <redacted>
+  "secretAccessKey": [secret]
 }
 ```
+If we just use the above command then the secretAccessKey would not be shown. In order to show the secret value use this
 
+```
+$ pulumi stack output --json --show-secrets
+{
+  "accessKeyId": "AKIAYJ7EUPHL3DSDH4CX",
+  "roleArn": "arn:aws:iam::571173272023:role/allow-s3-management-fcc71c0",
+  "secretAccessKey": "[plain text value]"
+}
+```
 ### Part 2: Assuming the Role
 
 The Pulumi program in `assume-role` creates an S3 bucket after assuming the Role created in Part 1. It should be run
 with the unprivileged user credentials created in Part 1. This can be configured as follows, from the `assume-role`
-directory, replacing `assume-role-create` with the name of your stack from Part 1.
+directory, replacing `{YOUR_STACK_PATH/assume-role-create}` with the full name of your stack from Part 1. Full name of your stack is available at [`app.pulumi.com`][app]
 
 ```bash
 $ cd assume-role
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-$ export AWS_ACCESS_KEY_ID="$(pulumi stack output --stack assume-role-create accessKeyId)"
-$ export AWS_SECRET_ACCESS_KEY="$(pulumi stack output --stack assume-role-create secretAccessKey)"
+$ npm install
+$ export AWS_ACCESS_KEY_ID="$(pulumi stack output --stack {YOUR_STACK_PATH/assume-role-create} accessKeyId)"
+$ export AWS_SECRET_ACCESS_KEY="$(pulumi stack output --stack {YOUR_STACK_PATH/assume-role-create} --show-secrets secretAccessKey)"
 ```
 
 The configuration variable `roleToAssumeARN` must be set to the ARN of the role allowing S3 access, and the AWS region
@@ -74,8 +81,14 @@ must be set to the region in which you wish to operate:
 
 ```bash
 $ pulumi stack init assume-role-assume
-$ pulumi config set roleToAssumeARN "$(pulumi stack output --stack assume-role-create roleArn)"
+$ pulumi config set roleToAssumeARN "$(pulumi stack output --stack {YOUR_STACK_PATH/assume-role-create} roleArn)"
 $ pulumi config set aws:region us-east-1
+```
+
+Unset the AWS_SESSION_TOKEN or any additional credential setting if you have set for previous access
+
+```bash
+$ unset AWS_SESSION_TOKEN
 ```
 
 The program can then be run with `pulumi up`. You can verify that the role is indeed assumed by looking at the 
@@ -86,3 +99,5 @@ and ensuring creation is not successful.
 
 To clean up your resources, run `pulumi destroy` and respond yes to the
 confirmation prompt.
+
+[app]: https://app.pulumi.com/
