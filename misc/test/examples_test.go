@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"strings"
@@ -220,6 +221,34 @@ func TestAccAwsPyAppSync(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-py-appsync"),
 		})
 
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsGoAppSync(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-go-appsync"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 8 * time.Minute
+
+				endpoint := stack.Outputs["endpoint"].(string)
+				mutation := "mutation AddTenant { addTenant(id: \"123\", name: \"FirstCorp\") { id name } }"
+
+				finalURL := fmt.Sprintf("%s?query=%s", endpoint, url.QueryEscape(mutation))
+
+				key := stack.Outputs["key"].(string)
+				headersMap := map[string]string{
+					"Content-Type": "application/graphql",
+					"x-api-key":    key,
+				}
+
+				assertHTTPResultShapeWithRetry(t, finalURL, headersMap, maxWait, func(body string) bool {
+					return !strings.Contains(body, "AccessDeniedException")
+				}, func(body string) bool {
+					return assert.Contains(t, body, "FirstCorp")
+				})
+			},
+		})
 	integration.ProgramTest(t, &test)
 }
 

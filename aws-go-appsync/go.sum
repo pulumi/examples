@@ -151,10 +151,13 @@ github.com/pulumi/pulumi-aws v2.10.1+incompatible h1:7P6xqTEsNTCUDxbz8CjmLKXe5G+
 github.com/pulumi/pulumi-aws/sdk v1.28.0 h1:nFcKmX73Jkr2J9lNLlwm8nH/HmPmK43Mv5H3vHVLOiQ=
 github.com/pulumi/pulumi-aws/sdk v1.28.0/go.mod h1:5beaEM6OxcQDZxTBN1dnqAtL7BLE7kvaLq/3lFQwGK4=
 github.com/pulumi/pulumi-aws/sdk v1.31.0 h1:E6RfPg46zsDJLidyh1vC7Gq9M5zFbjnezJqcG7zKchw=
+github.com/pulumi/pulumi-aws/sdk v1.31.0/go.mod h1:8Z92TlFer1SqiPUgT2D/DwXrM9lOaevADPaQdB3BF4U=
 github.com/pulumi/pulumi-aws/sdk/v2 v2.0.0 h1:v5TnWss3bz8x0EYS0o7WmgEfVn5VtYm21HbTcvrNjhk=
 github.com/pulumi/pulumi-aws/sdk/v2 v2.0.0/go.mod h1:5Z9y0tdIB+8cBlLZhN/XCFvhnXoob4KTqfvJDOApKG4=
 github.com/pulumi/pulumi-aws/sdk/v2 v2.10.1 h1:yXW4m6RhFPyYg6ZisLFyy4ftVAVT9UJi4Ddi7AvkHNA=
 github.com/pulumi/pulumi-aws/sdk/v2 v2.10.1/go.mod h1:Ym4hqC6LOLnZQOtbcW4BkXKCFtAgyzbCGw4EotugYr8=
+github.com/pulumi/pulumi-random/sdk/v2 v2.1.3 h1:Onu+IWeOlc+A1bJkqtZOWiA+gBGhMcaOVSgDx+6pBtM=
+github.com/pulumi/pulumi-random/sdk/v2 v2.1.3/go.mod h1:PPzzdlKYXLuBjcl6T4FvvQgKBntKa9gMbZtgslBlVHc=
 github.com/pulumi/pulumi/sdk v0.0.0-20200325225746-80f1989600a3/go.mod h1:0jjygtqEwLnjNEL3zIn3ynjT/37ZJ42DZE6k2+2NAUM=
 github.com/pulumi/pulumi/sdk v1.13.1 h1:BX0ttL/g5ofKxkK2VY/gp8SdBxJi4eIyIG34JRn9ENU=
 github.com/pulumi/pulumi/sdk v1.13.1/go.mod h1:0jjygtqEwLnjNEL3zIn3ynjT/37ZJ42DZE6k2+2NAUM=
