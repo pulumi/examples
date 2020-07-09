@@ -19,10 +19,10 @@ func GetRegion(ctx *pulumi.Context) string {
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 
-		config := config.New(ctx, "")
-		roleToAssumeARN := config.Require("roleToAssumeARN")
+		region := config.Require(ctx, "aws:region")
 
-		region := GetRegion(ctx)
+		c := config.New(ctx, "")
+		roleToAssumeARN := c.Require("roleToAssumeARN")
 
 		provider, err := aws.NewProvider(ctx, "privileged", &aws.ProviderArgs{
 			AssumeRole: &aws.ProviderAssumeRoleArgs{
