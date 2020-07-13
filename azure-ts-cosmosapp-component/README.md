@@ -77,3 +77,11 @@ Document 'cosmos' not found
 ```
 
 Go to the Azure portal and add a document with the ID "cosmos" to receive a non-empty response.
+
+Unit testing:
+
+mocha -r ts-node/register unittests.ts
+
+Policy:
+
+pulumi up --policy-pack policy

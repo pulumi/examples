@@ -1,4 +1,4 @@
-// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import { CosmosClient } from "@azure/cosmos";
 import * as azure from "@pulumi/azure";
@@ -13,9 +13,17 @@ const resourceGroup = new azure.core.ResourceGroup("cosmosfunc-rg", {
     location: locations[0],
 });
 
+export const functions = new CosmosApp("functions", {
+    resourceGroup,
+    locations,
+    databaseName: "productsdb",
+    containerName: "products",
+    factory: buildFunctionApp,
+});
+
 function buildFunctionApp({ cosmosAccount, database, container, opts }: GlobalContext) {
     return ({ location }: RegionalContext) => {
-        const fn = new azure.appservice.HttpEventSubscription(`GetUrl-${location}`, {
+        const fn = new azure.appservice.HttpEventSubscription(`geturl-${location}`, {
             resourceGroup,
             location,
             route: "{key}",
@@ -51,11 +59,3 @@ function buildFunctionApp({ cosmosAccount, database, container, opts }: GlobalCo
         };
     };
 }
-
-export const functions = new CosmosApp("functions", {
-    resourceGroup,
-    locations,
-    databaseName: "productsdb",
-    containerName: "products",
-    factory: buildFunctionApp,
-});
