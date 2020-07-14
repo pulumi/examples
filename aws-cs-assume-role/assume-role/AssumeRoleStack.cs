@@ -1,8 +1,8 @@
+using System;
 using Pulumi;
 using Aws = Pulumi.Aws;
 using Input = Pulumi.Aws.Inputs;
 using AwsConfig = Pulumi.Aws.Config;
-using System;
 
 
 class AssumeRoleStack : Stack
@@ -12,8 +12,7 @@ class AssumeRoleStack : Stack
         var awsConfig = new Pulumi.Config("aws");
         var config = new Pulumi.Config();
         var roleToAssumeARN = config.Require("roleToAssumeARN");
-        var provider = new Aws.Provider("privileged", new Aws.ProviderArgs
-        {
+        var provider = new Aws.Provider("privileged", new Aws.ProviderArgs {
             AssumeRole = new Aws.Inputs.ProviderAssumeRoleArgs
             {
                 RoleArn = roleToAssumeARN,

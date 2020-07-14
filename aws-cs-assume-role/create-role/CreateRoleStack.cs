@@ -12,10 +12,10 @@ class CreateRoleStack : Stack
         var config = new Pulumi.Config();
         var unprivilegedUsername = config.Require("unprivilegedUsername");
         
-        var unprivilegedUser = new Iam.User("unprivilegedUser", new Iam.UserArgs
-        {
-			Name = unprivilegedUsername,
-		});
+        var unprivilegedUser = new Iam.User("unprivilegedUser", new Iam.UserArgs 
+	{
+	    Name = unprivilegedUsername,
+	});
 
         var unprivilegedUserCreds = new Iam.AccessKey("unprivileged-user-key", new Iam.AccessKeyArgs
         {
@@ -28,7 +28,7 @@ class CreateRoleStack : Stack
         var tempPolicy = unprivilegedUser.Arn.Apply((string arn) => {
 			AssumeRolePolicyArgs policyArgs = new AssumeRolePolicyArgs(arn);
 			return JsonSerializer.Serialize<AssumeRolePolicyArgs>(policyArgs);
-		});
+	});
 
         var allowS3ManagementRole = new Iam.Role("allow-s3-management", new Iam.RoleArgs
         {

@@ -34,6 +34,7 @@ $ pulumi stack output --json
     "roleArn": "arn:aws:iam::<redacted>:role/allow-s3-management-ad477e6"
 }
 ```
+
 If we just use the above command then the secretAccessKey would not be shown. In order to show the secret value use this
 
 ```

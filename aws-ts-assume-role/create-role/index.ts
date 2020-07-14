@@ -1,4 +1,4 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
@@ -15,7 +15,7 @@ const unprivilegedUserCreds = new aws.iam.AccessKey("unprivileged-user-key", {
 }, 
 // additional_secret_outputs specify properties that must be encrypted as secrets
 // https://www.pulumi.com/docs/intro/concepts/programming-model/#additionalsecretoutputs
-{additionalSecretOutputs: ["secret"]});
+{ additionalSecretOutputs: ["secret"] });
 
 const allowS3ManagementRole = new aws.iam.Role("allow-s3-management", {
     description: "Allow management of S3 buckets",

@@ -63,7 +63,7 @@ must be set to the region in which you wish to operate:
 
 ```bash
 $ pulumi stack init assume-role-assume
-$ pulumi config set roleToAssumeARN "$(pulumi stack output --stack assume-role-create roleArn)"
+$ pulumi config set roleToAssumeARN "$(pulumi stack output --stack {YOUR_STACK_PATH/assume-role-create} roleArn)"
 $ pulumi config set aws:region us-east-1
 ```
 
