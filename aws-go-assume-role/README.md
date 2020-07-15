@@ -1,17 +1,8 @@
 # AWS Resources Using AssumeRole
 
-This example shows how to use the AssumeRole functionality of the AWS provider
-to create resources in the security context of an IAM Role assumed by the IAM
-User running the Pulumi programs.
+This example shows how to use the AssumeRole functionality of the AWS provider to create resources in the security context of an IAM Role assumed by the IAM User running the Pulumi programs.
 
 ## Deploying the Example
-
-### Prerequisites
-
-1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
-3. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
-
 
 ### Part 1: Privileged Components
 
@@ -23,19 +14,8 @@ resources.
 You'll need to set the `create-role:unprivilegedUsername` configuration variable to the name of the unprivilged user, as
 well as the AWS region in which to operate.
 
-First, you need install dependencies. In this example we will install them in
-a virtual environment named `venv`.
-
 ```bash
 $ cd create-role
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-```
-
-Now create a new stack: 
-
-```bash
 $ pulumi stack init assume-role-create
 $ pulumi config set create-role:unprivilegedUsername somebody@pulumi.com
 $ pulumi config set aws:region us-east-1
@@ -48,11 +28,12 @@ Key ID and Secret associated with the User:
 ```
 $ pulumi stack output --json
 {
-  "accessKeyId": "AKIAYJ7EUPHL3DSDH4CX",
-  "roleArn": "arn:aws:iam::571173272023:role/allow-s3-management-fcc71c0",
-  "secretAccessKey": [secret]
+    accessKeyId    : "AKIAY65FYVYP2MBSRQZK"
+    roleArn        : "arn:aws:iam::616138583583:role/allow-s3-management-2c45483"
+    secretAccessKey: "[secret]"
 }
 ```
+
 If we just use the above command then the secretAccessKey would not be shown. In order to show the secret value use this
 
 ```
@@ -63,6 +44,7 @@ $ pulumi stack output --json --show-secrets
   "secretAccessKey": "[plain text value]"
 }
 ```
+
 ### Part 2: Assuming the Role
 
 The Pulumi program in `assume-role` creates an S3 bucket after assuming the Role created in Part 1. It should be run
@@ -94,10 +76,5 @@ $ unset AWS_SESSION_TOKEN
 The program can then be run with `pulumi up`. You can verify that the role is indeed assumed by looking at the 
 CloudTrail logs of the bucket creation operation, or by commenting out the `assumeRole` configuration in the provider
 and ensuring creation is not successful.
-
-### Clean up
-
-To clean up your resources, run `pulumi destroy` and respond yes to the
-confirmation prompt.
 
 [app]: https://app.pulumi.com/

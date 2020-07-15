@@ -33,7 +33,10 @@ unprivileged_user = aws.iam.User(
 
 unprivileged_user_creds = aws.iam.AccessKey(
     'unprivileged-user-key',
-    user=unprivileged_user.name
+    user=unprivileged_user.name,
+    # additional_secret_outputs specify properties that must be encrypted as secrets
+    # https://www.pulumi.com/docs/intro/concepts/programming-model/#additionalsecretoutputs
+    opts=ResourceOptions(additional_secret_outputs=["secret"])
 )
 
 allow_s3_management_role = aws.iam.Role('allow-s3-management',

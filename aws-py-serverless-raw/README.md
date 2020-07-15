@@ -15,12 +15,13 @@ AWS Lambda).
 
 ## Deploying and running the Pulumi App
 1. Install dependencies. In this example we will install them in a virtual environment named `venv`.
+
     ```bash
     $ python3 -m venv venv
     $ source venv/bin/activate
     $ pip install -r requirements.txt
     ```
-    
+
 1.  Create a new stack:
 
     ```bash

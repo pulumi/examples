@@ -109,6 +109,7 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
+[AssumeRole](aws-go-assume-role) | Use AssumeRole to create resources.
 [Fargate](aws-go-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
 [Lambda](aws-go-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
 [S3 Folder](aws-go-s3-folder) | Serve a static website on S3.
@@ -118,6 +119,7 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
+[AssumeRole](aws-cs-assume-role) | Use AssumeRole to create resources.
 [Fargate](aws-cs-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
 [Lambda](aws-cs-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
 [S3 Folder](aws-cs-s3-folder) | Serve a static website on S3.
