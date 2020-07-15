@@ -12,7 +12,8 @@ class AssumeRoleStack : Stack
         var awsConfig = new Pulumi.Config("aws");
         var config = new Pulumi.Config();
         var roleToAssumeARN = config.Require("roleToAssumeARN");
-        var provider = new Aws.Provider("privileged", new Aws.ProviderArgs {
+        var provider = new Aws.Provider("privileged", new Aws.ProviderArgs
+        {
             AssumeRole = new Aws.Inputs.ProviderAssumeRoleArgs
             {
                 RoleArn = roleToAssumeARN,
@@ -21,7 +22,7 @@ class AssumeRoleStack : Stack
             },
             Region = awsConfig.Require("region"),
         });
-        var bucket = new Aws.S3.Bucket("myBucket", null, new CustomResourceOptions{Provider = provider});
+        var bucket = new Aws.S3.Bucket("myBucket", null, new CustomResourceOptions { Provider = provider });
     }
 
     [Output]

@@ -11,35 +11,36 @@ class CreateRoleStack : Stack
     {
         var config = new Pulumi.Config();
         var unprivilegedUsername = config.Require("unprivilegedUsername");
-        
-        var unprivilegedUser = new Iam.User("unprivilegedUser", new Iam.UserArgs 
-	{
-	    Name = unprivilegedUsername,
-	});
+
+        var unprivilegedUser = new Iam.User("unprivilegedUser", new Iam.UserArgs
+        {
+            Name = unprivilegedUsername,
+        });
 
         var unprivilegedUserCreds = new Iam.AccessKey("unprivileged-user-key", new Iam.AccessKeyArgs
         {
             User = unprivilegedUser.Name,
-        }, 
+        },
         // additional_secret_outputs specify properties that must be encrypted as secrets
         // https://www.pulumi.com/docs/intro/concepts/programming-model/#additionalsecretoutputs
         new CustomResourceOptions { AdditionalSecretOutputs = { "secret" } });
 
-        var tempPolicy = unprivilegedUser.Arn.Apply((string arn) => {
-			AssumeRolePolicyArgs policyArgs = new AssumeRolePolicyArgs(arn);
-			return JsonSerializer.Serialize<AssumeRolePolicyArgs>(policyArgs);
-	});
+        var tempPolicy = unprivilegedUser.Arn.Apply((string arn) =>
+        {
+            AssumeRolePolicyArgs policyArgs = new AssumeRolePolicyArgs(arn);
+            return JsonSerializer.Serialize<AssumeRolePolicyArgs>(policyArgs);
+        });
 
         var allowS3ManagementRole = new Iam.Role("allow-s3-management", new Iam.RoleArgs
         {
             Description = "Allow management of S3 buckets",
             AssumeRolePolicy = tempPolicy
         });
-        
+
         var rolePolicy = new Iam.RolePolicy("allow-s3-management-policy", new Iam.RolePolicyArgs
         {
             Role = allowS3ManagementRole.Name,
-            Policy = 
+            Policy =
                 @"{
                 ""Version"": ""2012-10-17"",
                 ""Statement"": [{
@@ -50,8 +51,8 @@ class CreateRoleStack : Stack
                 }]
             }"
         },
-        new CustomResourceOptions{Parent = allowS3ManagementRole}
-        ); 
+        new CustomResourceOptions { Parent = allowS3ManagementRole }
+        );
         this.roleArn = allowS3ManagementRole.Arn;
         this.accessKeyId = unprivilegedUserCreds.Id;
         this.secretAccessKey = unprivilegedUserCreds.Secret;
@@ -60,9 +61,10 @@ class CreateRoleStack : Stack
     public class AssumeRolePolicyArgs
     {
         public string Version => "2012-10-17";
-        public StatementArgs Statement {get; private set;}
+        public StatementArgs Statement { get; private set; }
 
-        public AssumeRolePolicyArgs(string arn) {
+        public AssumeRolePolicyArgs(string arn)
+        {
             Statement = new StatementArgs(arn);
         }
 
@@ -71,18 +73,19 @@ class CreateRoleStack : Stack
     public class StatementArgs
     {
         public string Sid => "AllowAssumeRole";
-        public string Effect => "Allow";       
-        public PrincipalArgs Principal {get; private set;}
+        public string Effect => "Allow";
+        public PrincipalArgs Principal { get; private set; }
         public string Action => "sts:AssumeRole";
-        
-        public StatementArgs(string arn) {
+
+        public StatementArgs(string arn)
+        {
             Principal = new PrincipalArgs(arn);
         }
     }
 
     public class PrincipalArgs
     {
-        public string AWS {get; private set;}
+        public string AWS { get; private set; }
 
         public PrincipalArgs(string arn)
         {
@@ -91,14 +94,14 @@ class CreateRoleStack : Stack
     }
 
 
-    
+
 
     [Output]
-    public Output<string> roleArn { get; set;}
+    public Output<string> roleArn { get; set; }
     [Output]
-    public Output<string> accessKeyId { get; set;}
+    public Output<string> accessKeyId { get; set; }
     [Output]
-    public Output<string> secretAccessKey {get; set;}
-    
+    public Output<string> secretAccessKey { get; set; }
+
 
 }
