@@ -5,7 +5,7 @@ import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config("airflow");
-const dbPassword = config.require("dbPassword");
+const dbPassword = config.requireSecret("dbPassword");
 
 const vpc = awsx.ec2.Vpc.getDefault();
 
