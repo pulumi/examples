@@ -23,7 +23,7 @@ For more information on how to run this example, see: https://www.pulumi.com/doc
 1. Set the desired RDS password with:
 
     ```
-    $ pulumi config set airflow:dbPassword DESIREDPASSWORD
+    $ pulumi config set --secret airflow:dbPassword DESIREDPASSWORD
     ```
 
 1. Restore NPM modules via `yarn install`.
