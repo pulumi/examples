@@ -65,16 +65,16 @@ export class CosmosApp extends pulumi.ComponentResource {
             resourceGroupName: resourceGroup.name,
             accountName: cosmosAccount.name,
             name: args.databaseName,
-        }, opts);
+        }, { parent: cosmosAccount, ...opts });
 
         const container = new azure.cosmosdb.SqlContainer(`sql-${name}`, {
             resourceGroupName: resourceGroup.name,
             accountName: cosmosAccount.name,
             databaseName: database.name,
-        }, opts);
+        }, { parent: cosmosAccount, ...opts });
 
         // Traffic Manager as a global HTTP endpoint
-        const profile = new azure.trafficmanager.Profile(`tm${name}`, {
+        const profile = new azure.network.TrafficManagerProfile(`tm${name}`, {
             resourceGroupName: resourceGroup.name,
             trafficRoutingMethod: "Performance",
             dnsConfig: {
@@ -95,7 +95,7 @@ export class CosmosApp extends pulumi.ComponentResource {
             const app = buildLocation({ location });
 
             // An endpoint per region for Traffic Manager, link to the corresponding instance
-            return new azure.trafficmanager.Endpoint(`tm${name}${location}`.substring(0, 16), {
+            return new azure.network.TrafficManagerEndpoint(`tm${name}${location}`.substring(0, 16), {
                 resourceGroupName: resourceGroup.name,
                 profileName: profile.name,
                 type: app.id ? "azureEndpoints" : "externalEndpoints",
@@ -105,7 +105,7 @@ export class CosmosApp extends pulumi.ComponentResource {
             }, { parent: profile, deleteBeforeReplace: true, ...opts });
         }));
 
-        this.endpoint = pulumi.interpolate`http://${profile.fqdn}`;
+        this.endpoint = endpoints.apply(_ => pulumi.interpolate`http://${profile.fqdn}`);
 
         this.registerOutputs();
     }

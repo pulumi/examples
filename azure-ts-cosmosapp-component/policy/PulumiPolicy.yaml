@@ -1,0 +1,2 @@
+description: PaC-based integration tests to validate an Azure Cosmos DB deployments.
+runtime: nodejs

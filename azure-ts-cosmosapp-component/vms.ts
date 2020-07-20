@@ -48,7 +48,7 @@ function buildVMScaleSetApp({ cosmosAccount, database, container, opts }: Global
             port: 80,
         }, opts);
 
-        const rule = new azure.lb.Rule(`rule-${location}`, {
+        const rule = new azure.lb.Rule(`rl-${location}`, {
             resourceGroupName: resourceGroup.name,
             backendAddressPoolId: bpepool.id,
             backendPort: 80,
@@ -67,7 +67,7 @@ function buildVMScaleSetApp({ cosmosAccount, database, container, opts }: Global
 
         const subnet = new azure.network.Subnet(`subnet-${location}`, {
             resourceGroupName: resourceGroup.name,
-            addressPrefix: "10.0.2.0/24",
+            addressPrefixes: ["10.0.2.0/24"],
             virtualNetworkName: vnet.name,
         }, opts);
 
@@ -81,7 +81,7 @@ function buildVMScaleSetApp({ cosmosAccount, database, container, opts }: Global
                 return s;
             });
 
-        const scaleSet = new azure.compute.ScaleSet(`vmss-${location}`, {
+        const scaleSet = new azure.compute.ScaleSet(`vs-${location}`, {
             resourceGroupName: resourceGroup.name,
             location,
             networkProfiles: [{

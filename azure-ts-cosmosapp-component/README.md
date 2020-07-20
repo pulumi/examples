@@ -77,3 +77,19 @@ Document 'cosmos' not found
 ```
 
 Go to the Azure portal and add a document with the ID "cosmos" to receive a non-empty response.
+
+## Running Unit Tests
+
+The `unittests.ts` file contains two sample unit tests that can be run with Mocha:
+
+```
+mocha -r ts-node/register unittests.ts
+```
+
+## Running Policy Pack
+
+The `policy` folder contains two sample policies that can be applied with the `policy-pack` argument:
+
+```
+pulumi up --policy-pack policy
+```
