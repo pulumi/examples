@@ -10,7 +10,7 @@ class HubProps:
         firewall_address_space: str,
         hub_address_space: str,
         peer: str,
-        reference: str,
+        reference: StackReference,
         resource_group_name: str,
         stack: str,
         subnets: [str, str, str],
@@ -143,10 +143,6 @@ class Hub(ComponentResource):
                 subnet_id = hub_ab_sn.id,
             )
 
-        #ToDo requires Azure API version 2019-11-01 or later
-        #if props.forced_tunnel:
-        # https://docs.microsoft.com/en-us/azure/firewall/forced-tunneling
-
         # work around https://github.com/pulumi/pulumi/issues/4040
         hub_fw_ip = hub_fw.ip_configurations.apply(
             lambda ipc: ipc[0].get('private_ip_address')
@@ -174,6 +170,49 @@ class Hub(ComponentResource):
             stem = f'{name}-dmz',
             route_table_id = hub_dmz_rt.id,
             subnet_id = hub_dmz_sn.id,
+        )
+
+        #ToDo forced_tunnel requires Azure API version 2019-11-01 or later
+        # https://docs.microsoft.com/en-us/azure/firewall/forced-tunneling
+
+        # Route Table only to be associated with AzureFirewallSubnet
+        hub_fw_rt = vdc.route_table(
+            stem = f'{name}-fw',
+            disable_bgp_route_propagation = False,
+            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw], # avoid contention
+        ) # for routes to peered spokes and Internet (including forced_tunnel)
+        if props.forced_tunnel:
+            vdc.route_to_virtual_appliance(
+                stem = f'fw-tunnel',
+                route_table_name = hub_fw_rt.name,
+                address_prefix = '0.0.0.0/0',
+                next_hop_in_ip_address = props.forced_tunnel,
+            )
+        else:
+            vdc.route_to_internet(
+                stem = f'fw-internet',
+                route_table_name = hub_fw_rt.name,
+            )
+        hub_fw_sn_rta = vdc.subnet_route_table(
+            stem = f'{name}-fw',
+            route_table_id = hub_fw_rt.id,
+            subnet_id = hub_fw_sn.id,
+        )
+
+        # Route Table only to be associated with AzureFirewallManagementSubnet
+        hub_fwm_rt = vdc.route_table(
+            stem = f'{name}-fwm',
+            disable_bgp_route_propagation = True,
+            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw], # avoid contention
+        )
+        vdc.route_to_internet(
+            stem = f'fwm-internet',
+            route_table_name = hub_fwm_rt.name,
+        )
+        hub_fwm_sn_rta = vdc.subnet_route_table(
+            stem = f'{name}-fwm',
+            route_table_id = hub_fwm_rt.id,
+            subnet_id = hub_fwm_sn.id,
         )
 
         # Route Table only to be associated with hub shared services subnets
@@ -213,8 +252,7 @@ class Hub(ComponentResource):
 
         # VNet Peering between stacks using StackReference
         if props.peer:
-            peer_stack = StackReference(props.reference)
-            peer_hub_id = peer_stack.get_output('hub_id')
+            peer_hub_id = props.reference.get_output('hub_id')
 
             # VNet Peering (Global) in one direction from stack to peer
             hub_hub = vdc.vnet_peering(
@@ -227,9 +265,9 @@ class Hub(ComponentResource):
             )
 
             # need to invalidate system routes created by Global VNet Peering
-            peer_dmz_ar = peer_stack.get_output('dmz_ar') 
-            peer_fw_ip = peer_stack.get_output('fw_ip')
-            peer_hub_as = peer_stack.get_output('hub_as')
+            peer_dmz_ar = props.reference.get_output('dmz_ar') 
+            peer_fw_ip = props.reference.get_output('fw_ip')
+            peer_hub_as = props.reference.get_output('hub_as')
             
             for route in [
                 (f'dmz-{props.peer}-dmz', hub_dmz_rt.name, peer_dmz_ar),
@@ -262,12 +300,13 @@ class Hub(ComponentResource):
             )
 
         # assign properties to hub including from child resources
-        self.address_spaces = hub.address_spaces # informational
+        self.address_spaces = hub.address_spaces # exported
         self.dmz_ar = dmz_ar # used for routes to the hub
         self.dmz_rt_name = hub_dmz_rt.name # used to add routes to spokes
         self.er_gw = hub_er_gw # needed prior to VNet Peering from spokes
         self.fw = hub_fw # needed prior to VNet Peering from spokes
         self.fw_ip = hub_fw_ip # used for routes to the hub
+        self.fw_rt_name = hub_fw_rt.name # used for route to the peered spokes
         self.gw_rt_name = hub_gw_rt.name # used to add routes to spokes
         self.hub_as = props.hub_address_space # used for routes to the hub
         self.id = hub.id # exported and used for stack and spoke peering
@@ -275,7 +314,7 @@ class Hub(ComponentResource):
         self.name = hub.name # exported and used for spoke peering
         self.peer = props.peer # informational
         self.resource_group_name = props.resource_group_name # informational
-        self.subnets = hub.subnets # exported as informational
+        self.subnets = hub.subnets # informational
         self.stack = props.stack # informational
         self.stem = name # used for VNet Peering from spokes
         self.ss_rt_name = hub_ss_rt.name # used to add routes to spokes

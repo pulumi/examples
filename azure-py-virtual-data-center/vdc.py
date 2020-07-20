@@ -122,6 +122,17 @@ def route_table(stem, disable_bgp_route_propagation=None, depends_on=None):
     )
     return rt
 
+def route_to_internet(stem, route_table_name):
+    r_i = network.Route(
+        f'{stem}-r-',
+        resource_group_name = resource_group_name,
+        address_prefix = '0.0.0.0/0',
+        next_hop_type = 'Internet',
+        route_table_name = route_table_name,
+        opts = ResourceOptions(parent=self),
+    )
+    return r_i
+
 def route_to_virtual_appliance(
         stem,
         route_table_name,

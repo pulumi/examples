@@ -1,5 +1,5 @@
 from ipaddress import ip_network
-from pulumi import ComponentResource, ResourceOptions
+from pulumi import ComponentResource, ResourceOptions, StackReference
 from hub import Hub
 import vdc
 
@@ -7,14 +7,20 @@ class SpokeProps:
     def __init__(
         self,
         azure_bastion: bool,
+        fw_rt_name: str,
         hub: Hub,
+        peer: str,
+        reference: StackReference,
         resource_group_name: str,
         spoke_address_space: str,
         subnets: [str, str, str],
         tags: [str, str],
     ):
         self.azure_bastion = azure_bastion
+        self.fw_rt_name = fw_rt_name
         self.hub = hub
+        self.peer = peer
+        self.reference = reference
         self.resource_group_name = resource_group_name
         self.spoke_address_space = spoke_address_space
         self.subnets = subnets
@@ -64,6 +70,18 @@ class Spoke(ComponentResource):
             use_remote_gateways = True, # requires at least one gateway
             depends_on=[props.hub.er_gw, props.hub.vpn_gw],
         )
+
+        # add routes to spokes in peered stack
+        if props.peer:
+            peer_fw_ip = props.reference.get_output('fw_ip')
+            peer_spoke_as = props.reference.get_output(f'{name}_address_spaces')
+            for address_prefix in peer_spoke_as:
+                vdc.route_to_virtual_appliance(
+                    stem = f'fw-{props.peer}-{name}',
+                    route_table_name = props.fw_rt_name,
+                    address_prefix = address_prefix,
+                    next_hop_in_ip_address = peer_fw_ip,
+                ) # only one address_space per spoke at present...
 
         # Azure Bastion subnet and host (optional)
         if props.azure_bastion:
@@ -125,13 +143,13 @@ class Spoke(ComponentResource):
             )
 
         # assign properties to spoke including from child resources
-        self.address_spaces = spoke.address_spaces
+        self.address_spaces = spoke.address_spaces #exported
         self.hub = props.hub.id
         self.id = spoke.id # exported
         self.location = spoke.location
         self.name = spoke.name # exported
         self.resource_group_name = props.resource_group_name
-        self.subnets = spoke.subnets # exported
+        self.subnets = spoke.subnets
         self.stem = name
         self.tags = props.tags
         self.register_outputs({})

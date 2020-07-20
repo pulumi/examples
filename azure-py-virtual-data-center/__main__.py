@@ -32,7 +32,10 @@ hub = Hub('hub', # stem of child resource names (<4 chars)
 spoke1 = Spoke('s01', # stem of child resource names (<6 chars)
     SpokeProps(
         azure_bastion = config.azure_bastion,
+        fw_rt_name = hub.fw_rt_name,
         hub = hub,
+        peer = config.peer,
+        reference = config.reference,
         resource_group_name = resource_group_name,
         spoke_address_space = str(next(config.stack_sn)),
         subnets = [ # extra columns for future NSGs
@@ -47,7 +50,10 @@ spoke1 = Spoke('s01', # stem of child resource names (<6 chars)
 spoke2 = Spoke('s02', # stem of child resource names (<6 chars)
     SpokeProps(
         azure_bastion = config.azure_bastion,
+        fw_rt_name = hub.fw_rt_name,
         hub = hub,
+        peer = config.peer,
+        reference = config.reference,
         resource_group_name = resource_group_name,
         spoke_address_space = str(next(config.stack_sn)),
         subnets = [ # extra columns for future NSGs
@@ -65,10 +71,10 @@ export('fw_ip', hub.fw_ip) # required for stack peering
 export('hub_as', hub.hub_as) # required for stack peering
 export('hub_id', hub.id) # required for stack peering
 export('hub_name', hub.name)
-export('hub_subnets', hub.subnets)
+export('hub_address_spaces', hub.address_spaces)
 export('s01_id', spoke1.id)
 export('s01_name', spoke1.name)
-export('s01_subnets', spoke1.subnets)
+export('s01_address_spaces', spoke1.address_spaces)
 export('s02_id', spoke2.id)
 export('s02_name', spoke2.name)
-export('s02_subnets', spoke2.subnets)
+export('s02_address_spaces', spoke2.address_spaces)
