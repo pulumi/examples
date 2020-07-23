@@ -19,13 +19,13 @@ You should also ensure:
 
 ```bash
 # First, create a keyring
-gcloud kms keyrings create pulumi --location global
+gcloud kms keyrings create pulumi-example --location global
 
 # Then, create a key
-gcloud kms keys create pulumi-secrets  --purpose=encryption --keyring=test --location=global --labels app="pulumi",purpose="secrets"
+gcloud kms keys create pulumi-secrets  --purpose=encryption --keyring=pulumi-example --location=global --labels app="pulumi",purpose="secrets"
 
 # Finally, get the key path to use late:
-gcloud kms keys list --format=json --location global --keyring test --filter="labels.app=pulumi AND labels.purpose=secrets" | jq -r ".[].name"
+gcloud kms keys list --format=json --location global --keyring pulumi-example --filter="labels.app=pulumi AND labels.purpose=secrets" | jq -r ".[].name"
 ```
 
 _When creating your key, be sure to specify a permissions that restricts access to only those that need to use the key_
