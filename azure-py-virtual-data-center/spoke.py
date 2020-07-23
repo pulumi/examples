@@ -75,13 +75,13 @@ class Spoke(ComponentResource):
         if props.peer:
             peer_fw_ip = props.reference.get_output('fw_ip')
             peer_spoke_as = props.reference.get_output(f'{name}_address_spaces')
-            for address_prefix in peer_spoke_as:
-                vdc.route_to_virtual_appliance(
-                    stem = f'fw-{props.peer}-{name}',
-                    route_table_name = props.fw_rt_name,
-                    address_prefix = address_prefix,
-                    next_hop_in_ip_address = peer_fw_ip,
-                ) # only one address_space per spoke at present...
+            #for address_prefix in peer_spoke_as:
+            vdc.route_to_virtual_appliance(
+                stem = f'fw-{props.peer}-{name}',
+                route_table_name = props.fw_rt_name,
+                address_prefix = peer_spoke_as[0], #address_prefix,
+                next_hop_in_ip_address = peer_fw_ip,
+            ) # only one address_space per spoke at present...
 
         # Azure Bastion subnet and host (optional)
         if props.azure_bastion:
