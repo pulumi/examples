@@ -1,0 +1,12 @@
+name: gcp-ts-gke-serviceaccount
+description: A Google Kubernetes Engine (GKE) + Service account example
+runtime: nodejs
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:zone:
+      description: The Google Cloud zone
+    gcp:credentials:
+      description: Your GCP Service Account key contents for GKE Administration
+      secret: true
