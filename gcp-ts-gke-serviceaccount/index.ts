@@ -9,7 +9,7 @@ const name = config.get("name") ||
     "gke-serviceaccount-example";
 export const masterVersion = config.get("masterVersion") ||
     gcp.container.getEngineVersions().then(it => it.latestMasterVersion);
-const machineType = "n1-standard-1" || config.get("machineType")
+const machineType = "n1-standard-1" || config.get("machineType");
 
 // Create a service account
 const serviceAccount = new gcp.serviceAccount.Account("serviceAccount", {
@@ -19,13 +19,13 @@ const serviceAccount = new gcp.serviceAccount.Account("serviceAccount", {
 
 const serviceAccountIAM = new gcp.projects.IAMBinding("serviceAccount-pub", {
     role: "roles/pubsub.subscriber",
-    members: [pulumi.interpolate`serviceAccount:${serviceAccount.email}`]
-}, {parent: serviceAccount})
+    members: [pulumi.interpolate`serviceAccount:${serviceAccount.email}`],
+}, {parent: serviceAccount});
 
 const serviceAccountKey = new gcp.serviceAccount.Key("serviceAccount-key", {
     serviceAccountId: serviceAccount.name,
     publicKeyType: "TYPE_X509_PEM_FILE",
-}, {parent: serviceAccount, additionalSecretOutputs: ['privateKey']})
+}, {parent: serviceAccount, additionalSecretOutputs: ["privateKey"]});
 
 // Create a GKE cluster
 const cluster = new gcp.container.Cluster(name, {
@@ -90,18 +90,18 @@ const ns = new k8s.core.v1.Namespace("pubsub-ns", {
     metadata: {
         name: "pubsub",
         labels: appLabels,
-    }
+    },
 }, {provider: clusterProvider});
 
 
-const gcpCredentials = new k8s.core.v1.Secret('gcp-credentials', {
+const gcpCredentials = new k8s.core.v1.Secret("gcp-credentials", {
     metadata: {
         namespace: ns.metadata.name,
         labels: appLabels,
     },
-    type: 'Opaque',
+    type: "Opaque",
     stringData: {
-        'gcp-credentials.json': serviceAccountKey.privateKey.apply((x) => Buffer.from(x, 'base64').toString('utf8')),
+        "gcp-credentials.json": serviceAccountKey.privateKey.apply((x) => Buffer.from(x, "base64").toString("utf8")),
     },
 }, {provider: clusterProvider, parent: ns});
 
@@ -121,11 +121,11 @@ const deployment = new k8s.apps.v1.Deployment("pubsub",
                 spec: {
                     volumes: [
                         {
-                            name: 'google-cloud-key',
+                            name: "google-cloud-key",
                             secret: {
                                 secretName: gcpCredentials.metadata.name,
-                            }
-                        }
+                            },
+                        },
                     ],
                     containers: [
                         {
@@ -134,13 +134,13 @@ const deployment = new k8s.apps.v1.Deployment("pubsub",
                             volumeMounts: [
                                 {
                                     name: "google-cloud-key",
-                                    mountPath: "/var/secrets/google"
-                                }
+                                    mountPath: "/var/secrets/google",
+                                },
                             ],
                             env: [{
                                 name: "GOOGLE_APPLICATION_CREDENTIALS",
-                                value: "/var/secrets/google/gcp-credentials.json"
-                            }]
+                                value: "/var/secrets/google/gcp-credentials.json",
+                            }],
                         },
                     ],
                 },
@@ -148,6 +148,6 @@ const deployment = new k8s.apps.v1.Deployment("pubsub",
         },
     },
     {
-        provider: clusterProvider, parent: ns
+        provider: clusterProvider, parent: ns,
     },
 );
