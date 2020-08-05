@@ -87,9 +87,12 @@ app=appservice.AppService(
     resource_group_name=resource_group.name,
     app_service_plan_id=app_service_plan.id,
     app_settings={
-        "WEBSITE_RUN_FROM_PACKAGE": signed_blob_url,
-        "ApplicationInsights:InstrumentationKey": app_insights.instrumentation_key,
         "APPINSIGHTS_INSTRUMENTATIONKEY": app_insights.instrumentation_key,
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": app_insights.instrumentation_key.apply(
+            lambda key: "InstrumentationKey=" + key
+        ),
+        "ApplicationInsightsAgent_EXTENSION_VERSION": "~2",
+        "WEBSITE_RUN_FROM_PACKAGE": signed_blob_url,
     },
     connection_strings=[{
         "name": "db",

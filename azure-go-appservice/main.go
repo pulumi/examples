@@ -111,9 +111,10 @@ func main() {
 			Location:          resourceGroup.Location,
 			AppServicePlanId:  appServicePlan.ID(),
 			AppSettings: pulumi.StringMap{
-				"WEBSITE_RUN_FROM_ZIP":                   codeBlobURL,
-				"ApplicationInsights:InstrumentationKey": appInsights.InstrumentationKey,
-				"APPINSIGHTS_INSTRUMENTATIONKEY":         appInsights.InstrumentationKey,
+				"APPINSIGHTS_INSTRUMENTATIONKEY":             appInsights.InstrumentationKey,
+				"APPLICATIONINSIGHTS_CONNECTION_STRING":      pulumi.Sprintf("InstrumentationKey=%s", appInsights.InstrumentationKey),
+				"ApplicationInsightsAgent_EXTENSION_VERSION": pulumi.String("~2"),
+				"WEBSITE_RUN_FROM_PACKAGE":                   codeBlobURL,
 			},
 			ConnectionStrings: appservice.AppServiceConnectionStringArray{
 				appservice.AppServiceConnectionStringArgs{

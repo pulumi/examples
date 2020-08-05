@@ -83,9 +83,10 @@ const app = new azure.appservice.AppService(`${prefix}-as`, {
 
 
     appSettings: {
-        "WEBSITE_RUN_FROM_ZIP": codeBlobUrl,
-        "ApplicationInsights:InstrumentationKey": appInsights.instrumentationKey,
-        "APPINSIGHTS_INSTRUMENTATIONKEY": appInsights.instrumentationKey,
+        APPINSIGHTS_INSTRUMENTATIONKEY: appInsights.instrumentationKey,
+        APPLICATIONINSIGHTS_CONNECTION_STRING: pulumi.interpolate`InstrumentationKey=${appInsights.instrumentationKey}`,
+        ApplicationInsightsAgent_EXTENSION_VERSION: "~2",
+        WEBSITE_RUN_FROM_PACKAGE: codeBlobUrl,
     },
 
     connectionStrings: [{
