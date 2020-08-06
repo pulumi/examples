@@ -1,6 +1,8 @@
 // Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
+using System.Runtime.CompilerServices;
 using Pulumi;
+using Pulumi.Azure.AppInsights;
 using Pulumi.Azure.AppService;
 using Pulumi.Azure.AppService.Inputs;
 using Pulumi.Azure.Core;
@@ -47,6 +49,12 @@ class AppServiceStack : Stack
 
         var codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount);
 
+        var appInsights = new Insights("appInsights", new InsightsArgs
+        {
+            ApplicationType = "web",
+            ResourceGroupName = resourceGroup.Name
+        });
+
         var config = new Config();
         var username = config.Get("sqlAdmin") ?? "pulumi";
         var password = config.RequireSecret("sqlPassword");
@@ -72,6 +80,9 @@ class AppServiceStack : Stack
             AppSettings =
             {
                 {"WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl},
+                {"APPINSIGHTS_INSTRUMENTATIONKEY", appInsights.InstrumentationKey},
+                {"APPLICATIONINSIGHTS_CONNECTION_STRING", Output.Format(FormattableStringFactory.Create("InstrumentationKey={0}", appInsights.InstrumentationKey))},
+                {"ApplicationInsightsAgent_EXTENSION_VERSION", "~2"},
             },
             ConnectionStrings =
             {

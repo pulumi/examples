@@ -2,6 +2,7 @@
 
 open Pulumi
 open Pulumi.FSharp
+open Pulumi.Azure.AppInsights
 open Pulumi.Azure.AppService
 open Pulumi.Azure.AppService.Inputs
 open Pulumi.Azure.Core
@@ -43,6 +44,12 @@ let infra () =
 
     let codeBlobUrl = SharedAccessSignature.SignedBlobReadUrl(blob, storageAccount)
 
+    let appInsights = 
+        Insights("appInsights", 
+            InsightsArgs
+                (ApplicationType = input "web",
+                 ResourceGroupName = io resourceGroup.Name))
+
     let config = Config()
     let username = config.Get "sqlAdmin"
     let password = config.RequireSecret "sqlPassword"
@@ -73,13 +80,23 @@ let infra () =
            (Name = input "db",
             Type = input "SQLAzure",
             Value = io connectionString)
+            
+    let appInsightsConnectionString =
+        appInsights.InstrumentationKey
+        |> Outputs.apply(fun (key) ->
+            sprintf "InstrumentationKey=%s" key)
 
     let app = 
         AppService("app", 
             AppServiceArgs
                (ResourceGroupName = io resourceGroup.Name,
                 AppServicePlanId = io appServicePlan.Id,
-                AppSettings = inputMap ["WEBSITE_RUN_FROM_PACKAGE", io codeBlobUrl],
+                AppSettings = inputMap 
+                    ["WEBSITE_RUN_FROM_PACKAGE", io codeBlobUrl;
+                    "APPINSIGHTS_INSTRUMENTATIONKEY", io appInsights.InstrumentationKey;
+                    "APPLICATIONINSIGHTS_CONNECTION_STRING", io appInsightsConnectionString;
+                    "ApplicationInsightsAgent_EXTENSION_VERSION", input "~2"],
+
                 ConnectionStrings = inputList [input connectionStringSetting]))
 
     dict [("endpoint", app.DefaultSiteHostname :> obj)]
