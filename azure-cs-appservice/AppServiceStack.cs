@@ -1,6 +1,5 @@
 // Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
-using System.Runtime.CompilerServices;
 using Pulumi;
 using Pulumi.Azure.AppInsights;
 using Pulumi.Azure.AppService;
@@ -81,7 +80,7 @@ class AppServiceStack : Stack
             {
                 {"WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl},
                 {"APPINSIGHTS_INSTRUMENTATIONKEY", appInsights.InstrumentationKey},
-                {"APPLICATIONINSIGHTS_CONNECTION_STRING", Output.Format(FormattableStringFactory.Create("InstrumentationKey={0}", appInsights.InstrumentationKey))},
+                {"APPLICATIONINSIGHTS_CONNECTION_STRING", appInsights.InstrumentationKey.Apply(key => $"InstrumentationKey={key}")},
                 {"ApplicationInsightsAgent_EXTENSION_VERSION", "~2"},
             },
             ConnectionStrings =
