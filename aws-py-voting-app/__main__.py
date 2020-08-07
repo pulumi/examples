@@ -132,7 +132,7 @@ frontend_listener = aws.lb.Listener("frontend-cache",
 	}])
 
 frontend_image = docker.Image("frontend-image",
-    image_name="frontend/app",
+    image_name="./frontend",
     build=DockerBuild(
         target="dependencies",
     ),
