@@ -16,7 +16,6 @@ app_cluster = aws.ecs.Cluster("app-cluster")
 # Creating a default VPC and public subnets
 app_vpc = aws.ec2.get_vpc(default="true")
 app_vpc_subnets = aws.ec2.get_subnet_ids(vpc_id=app_vpc.id)
-appsd = aws.ec2.get_
 
 # Creating a Security Group that restricts incoming traffic to HTTP
 app_security_group = aws.ec2.SecurityGroup("web-secgrp",
@@ -80,22 +79,24 @@ redis_listener = aws.lb.Listener("redis-listener",
 
 # Creating a task definition for the Redis instance.
 redis_task_definition = aws.ecs.TaskDefinition("redis-task-definition",
-    family="redis-task-definition",
+    family="redis-task-definition-family",
     cpu="256",
     memory="512",
     network_mode="awsvpc",
     requires_compatibilities=["FARGATE"],
     execution_role_arn=app_exec_role.arn,
-    container_definitions={
-        "containers": {
-            "redis": {
-                "image": "redis:alpine", # A pre-built docker image with a functioning redis server
-                "memory": 512,
-                "portMappings": [redis_listener],
-                "command": ["redis-server", "--requirepass", redis_password],
-            },
-        }
-	})
+    container_definitions=json.dumps([{
+        "name": "redis-container",
+        "image": "redis:alpine", # A pre-built docker image with a functioning redis server
+        "memory": 512,
+        "essential": True,
+        "portMappings": [{
+            "containerPort": redis_port,
+            "hostPort": redis_port,
+            "protocol": "tcp"
+        }],
+        "command": ["redis-server", "--requirepass", redis_password],
+	}]))
 
 # Launching our Redis service on Fargate, using our configurations and load balancers
 redis_cache = aws.ecs.Service("redis-cache",
@@ -110,15 +111,15 @@ redis_cache = aws.ecs.Service("redis-cache",
 	},
     load_balancers=[{
 		"target_group_arn": redis_targetgroup.arn,
-		"container_name": "redis",
+		"container_name": "redis-container",
 		"container_port": redis_port,
 	}],
     opts=pulumi.ResourceOptions(depends_on=[redis_listener]),
 )
 
-# Creating a special endpoint for the Redis backend, which we will later provide 
-# to the Flask service
-redis_endpoint = redis_listener.default_actions["userInfoEndpoint"]
+# Creating a special endpoint for the Redis backend, which we will provide 
+# to the Flask service as an environment variable
+redis_endpoint = {"host": str(redis_balancer.dns_name), "port": str(redis_listener.port)}
 
 # The application's frontend: A Flask service
 
@@ -132,7 +133,7 @@ frontend_targetgroup = aws.lb.TargetGroup("frontend-targetgroup",
 # Creating a load balancer to spread out incoming requests
 frontend_balancer = aws.lb.LoadBalancer("frontend-balancer",
 	security_groups=[app_security_group.id],
-	subnets=app_vpc_subnets.ids)
+    subnets=app_vpc_subnets.ids)
 
 # Forwards all public traffic using port 80 to the Flask target group
 frontend_listener = aws.lb.Listener("frontend-listener",
@@ -143,12 +144,12 @@ frontend_listener = aws.lb.Listener("frontend-listener",
 		"target_group_arn": frontend_targetgroup.arn
 	}])
 
-# Creating a Docker image from the "./frontend" folder, which we will use
+# Creating a Docker image from "./frontend/Dockerfile", which we will use
 # to upload our app
-frontend_image = docker.Image("frontend-image",
-    image_name="./frontend",
-    build=DockerBuild(
-        target="dependencies",
+frontend_image = docker.Image("frontend-dockerimage",
+    image_name="frontend-dockerimage",
+    build=docker.DockerBuild(
+        context="./frontend",
     ),
     skip_push=True,
 )
@@ -161,18 +162,22 @@ frontend_task_definition = aws.ecs.TaskDefinition("frontend-task-definition",
     network_mode="awsvpc",
     requires_compatibilities=["FARGATE"],
     execution_role_arn=app_exec_role.arn,
-    container_definitions={
-        "votingAppFrontend": {
-            "image": frontend_image,
-            "memory": 512,
-            "portMappings": [frontendListener],
-            "environment": redisEndpoint.apply(lambda e => [ # The Redis endpoint we created is given to Flask, allowing it to communicate with the former
-                { "name": "REDIS", value: e["hostname"] },
-                { "name": "REDIS_PORT", value: e["port"] },
-                { "name": "REDIS_PWD", value: redis_password },
-            ]),
-        },
-	})
+    container_definitions=json.dumps([{
+        "name": "votingAppFrontend",
+        "image": "frontend-dockerimage",
+        "memory": 512,
+        "essential": True,
+        "portMappings": [{
+            "containerPort": 80,
+            "hostPort": 80,
+            "protocol": "tcp"
+        }],
+        "environment": [ # The Redis endpoint we created is given to Flask, allowing it to communicate with the former
+            { "name": "REDIS_HOST", "value": redis_endpoint["host"] },
+            { "name": "REDIS_PORT", "value": redis_endpoint["port"] },
+            { "name": "REDIS_PWD", "value": redis_password },
+        ],
+	}]))
 
 # Launching our Redis service on Fargate, using our configurations and load balancers
 flask_frontend = aws.ecs.Service("flask-service",
@@ -194,4 +199,5 @@ flask_frontend = aws.ecs.Service("flask-service",
 )
 
 # Exporting the url of our Flask frontend. We can now connect to our app
-pulumi.export("app-url", frontendListener.default_actions["userInfoEndpoint"])
+pulumi.export("app-url", frontend_balancer.dns_name)
+pulumi.export("redis-url", redis_balancer.dns_name)

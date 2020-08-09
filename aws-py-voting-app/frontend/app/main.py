@@ -16,7 +16,7 @@ button2 =       app.config['VOTE2VALUE']
 title =         app.config['TITLE']
 
 # Redis configurations
-redis_server =   os.environ['REDIS']
+redis_server =   os.environ['REDIS_HOST']
 redis_port =     os.environ['REDIS_PORT']
 redis_password = os.environ['REDIS_PWD']
 
