@@ -7,7 +7,7 @@ This blog post will feature an existing [Typescript voting app example](https://
 ---
 
 The first few lines of the __main\__.py file indicate which libraries need to be imported, and describe a pair of configuration options that will be used by the application.
-```
+```python
 import json
 import pulumi
 import pulumi_aws as aws
