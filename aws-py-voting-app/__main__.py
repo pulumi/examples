@@ -1,6 +1,7 @@
 # Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
 
 import json
+import base64
 import pulumi
 import pulumi_aws as aws
 import pulumi_docker as docker
@@ -196,7 +197,7 @@ redis_service = aws.ecs.Service("redis-service",
 
 # Creating a special endpoint for the Redis backend, which we will provide 
 # to the Flask frontend as an environment variable
-redis_endpoint = {"host": str(redis_balancer.dns_name), "port": str(redis_port)}
+redis_endpoint = {"host": redis_balancer.dns_name, "port": redis_port}
 
 # The application's frontend: A Flask service
 
@@ -230,17 +231,26 @@ flask_listener = aws.lb.Listener("flask-listener",
 
 # Creating a Docker image from "./frontend/Dockerfile", which we will use
 # to upload our app
+
+def get_registry_info(rid):
+    creds = aws.ecr.get_credentials(registry_id=rid)
+    decoded = base64.b64decode(creds.authorization_token).decode()
+    parts = decoded.split(':')
+    if len(parts) != 2:
+        raise Exception("Invalid credentials")
+    return docker.ImageRegistry(creds.proxy_endpoint, parts[0], parts[1])
+
+app_registry = app_ecr_repo.registry_id.apply(get_registry_info)
+
 flask_image = docker.Image("flask-dockerimage",
-    image_name="flask-dockerimage",
-    build=docker.DockerBuild(
-        context="./frontend",
-    ),
+    image_name=app_ecr_repo.repository_url,
+    build="./frontend",
     skip_push=False,
-    registry=app_ecr_repo
+    registry=app_registry
 )
-# docker.build_and_push_image("pulumi-user/flask-dockerimage:v1.0.0", "./frontend", app_ecr_repo.repository_url, flask_listener, flask_listener)
 
 # Creating a task definition for the Flask instance.
+
 flask_task_definition = aws.ecs.TaskDefinition("flask-task-definition",
     family="frontend-task-definition-family",
     cpu="256",
@@ -249,9 +259,9 @@ flask_task_definition = aws.ecs.TaskDefinition("flask-task-definition",
     requires_compatibilities=["FARGATE"],
     execution_role_arn=app_exec_role.arn,
     task_role_arn=app_task_role.arn,
-    container_definitions=json.dumps([{
+    container_definitions=pulumi.Output.all(flask_image.image_name, redis_endpoint).apply(lambda args: json.dumps([{
         "name": "flask-container",
-        "image": "flask-dockerimage",
+        "image": args[0],
         "memory": 512,
         "essential": True,
         "portMappings": [{
@@ -260,11 +270,12 @@ flask_task_definition = aws.ecs.TaskDefinition("flask-task-definition",
             "protocol": "tcp"
         }],
         "environment": [ # The Redis endpoint we created is given to Flask, allowing it to communicate with the former
-            { "name": "REDIS", "value": redis_endpoint["host"] },
-            { "name": "REDIS_PORT", "value": redis_endpoint["port"] },
+            { "name": "REDIS", "value": args[1]["host"] },
+            { "name": "REDIS_PORT", "value": str(args[1]["port"]) },
             { "name": "REDIS_PWD", "value": redis_password },
         ],
-	}]))
+    }])))
+
 
 # Launching our Redis service on Fargate, using our configurations and load balancers
 flask_service = aws.ecs.Service("flask-service",
