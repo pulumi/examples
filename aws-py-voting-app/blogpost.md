@@ -1,4 +1,4 @@
-    Creating a Python AWS Application Using Flask, Redis, and Pulumi
+    Creating a Python ECS Application Using Flask, Redis, and Pulumi
 
 Having recently begun developing with Pulumi, I have taken it upon myself to learn as much about its inner workings and processes as I could. To that end, I have decided to construct a production-level application using it, and to document each step that I take and its impact on my progress as I go along. 
 
@@ -82,8 +82,8 @@ app_security_group = aws.ec2.SecurityGroup("security-group",
 ```
 
 
-In order to allow our services to start, we create an Identity and Access Management role, and 
-attach execution permissions to it.
+In order to allow our services to start, we need to create an Identity and Access Management role,
+and attach execution permissions to it.
 ```python
 app_exec_role = aws.iam.Role("app-exec-role",
     assume_role_policy="""{
@@ -103,7 +103,261 @@ exec_policy_attachment = aws.iam.RolePolicyAttachment("app-exec-policy", role=ap
 	policy_arn="arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy")
 ```
 
----
+
+Likewise, our ECS service will need to have a task role to manage it, along with its own set 
+of permissions.
+```python
+app_task_role = aws.iam.Role("app-task-role",
+    assume_role_policy="""{
+        "Version": "2012-10-17",
+        "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+            },
+            "Effect": "Allow",
+            "Sid": ""
+        }]
+    }""")
+
+task_policy_attachment = aws.iam.RolePolicyAttachment("app-access-policy", role=app_task_role.name,
+	policy_arn="arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess")
+
+task_policy_attachment = aws.iam.RolePolicyAttachment("app-lambda-policy", role=app_task_role.name,
+	policy_arn="arn:aws:iam::aws:policy/AWSLambdaFullAccess")
+```
+
+
+An Elastic Container Registry Repository is used to store the application docker images that we want
+to run. The life cycle policy automatically removes the oldest untagged image that we uploaded.
+```python
+app_ecr_repo = aws.ecr.Repository("app-ecr-repo",
+    image_tag_mutability="MUTABLE")
+
+app_lifecycle_policy = aws.ecr.LifecyclePolicy("app-lifecycle-policy",
+    repository=app_ecr_repo.name,
+    policy="""{
+        "rules": [
+            {
+                "rulePriority": 10,
+                "description": "Remove untagged images",
+                "selection": {
+                    "tagStatus": "untagged",
+                    "countType": "imageCountMoreThan",
+                    "countNumber": 1
+                },
+                "action": {
+                    "type": "expire"
+                }
+            }
+        ]
+    }""")
+```
+
+
+With the basic infrastructure in place, we can now begin to set up the application itself. First,
+we will begin with the Redis backend.
+
+
+In order to allow Redis to communicate with the other services in our VPC, we need to create a target
+group, a balancer, and a listener for it.
+```python
+redis_targetgroup = aws.lb.TargetGroup("redis-targetgroup",
+	port=redis_port,
+	protocol="TCP",
+	target_type="ip",
+    stickiness= {
+        "enabled": False,
+        "type": "lb_cookie",
+    },
+	vpc_id=app_vpc.id)
+
+redis_balancer = aws.lb.LoadBalancer("redis-balancer",
+    load_balancer_type="network",
+    internal= False,
+    security_groups=[],
+	subnets=[app_vpc_subnet.id])
+
+redis_listener = aws.lb.Listener("redis-listener",
+	load_balancer_arn=redis_balancer.arn,
+	port=redis_port,
+    protocol="TCP",
+	default_actions=[{
+		"type": "forward",
+		"target_group_arn": redis_targetgroup.arn
+	}])
+```
+
+
+Every service running within ECS requires a task definition, specifying what hardware, internet, 
+and container settings it will use. 
+```python
+redis_task_definition = aws.ecs.TaskDefinition("redis-task-definition",
+    family="redis-task-definition-family",
+    cpu="256",
+    memory="512",
+    network_mode="awsvpc",
+    requires_compatibilities=["FARGATE"],
+    execution_role_arn=app_exec_role.arn,
+    task_role_arn=app_task_role.arn,
+    container_definitions=json.dumps([{
+        "name": "redis-container",
+        "image": "redis:alpine",
+        "memory": 512,
+        "essential": True,
+        "portMappings": [{
+            "containerPort": redis_port,
+            "hostPort": redis_port,
+            "protocol": "tcp"
+        }],
+        "command": ["redis-server", "--requirepass", redis_password],
+	}]))
+```
+
+
+Now that we have our task definition blueprint ready, we can launch a service using it. An 
+endpoint is created to hold information needed to connect the backend with the frontend.
+```python
+redis_service = aws.ecs.Service("redis-service",
+	cluster=app_cluster.arn,
+    desired_count=1,
+    launch_type="FARGATE",
+    task_definition=redis_task_definition.arn,
+    wait_for_steady_state=False,
+    network_configuration={
+		"assign_public_ip": "true",
+		"subnets": [app_vpc_subnet.id],
+		"security_groups": [app_security_group.id]
+	},
+    load_balancers=[{
+		"target_group_arn": redis_targetgroup.arn,
+		"container_name": "redis-container",
+		"container_port": redis_port,
+	}],
+    opts=pulumi.ResourceOptions(depends_on=[redis_listener]),
+)
+
+redis_endpoint = {"host": redis_balancer.dns_name, "port": redis_port}
+```
+
+
+The Redis backend is completed, and now all that's left is to create the Flask frontend.
+
+
+A similar set of a target group, balancer, and listener is created for the frontend. Unlike
+Redis, Flask will serve as the webpage, and as such needs to receive its data from port 80.
+```python
+flask_targetgroup = aws.lb.TargetGroup("flask-targetgroup",
+	port=80,
+	protocol="TCP",
+	target_type="ip",
+    stickiness= {
+        "enabled": False,
+        "type": "lb_cookie",
+    },
+	vpc_id=app_vpc.id)
+
+flask_balancer = aws.lb.LoadBalancer("flask-balancer",
+    load_balancer_type="network",
+    internal=False,
+    security_groups=[],
+    subnets=[app_vpc_subnet.id])
+
+flask_listener = aws.lb.Listener("flask-listener",
+	load_balancer_arn=flask_balancer.arn,
+	port=80,
+    protocol="TCP",
+	default_actions=[{
+		"type": "forward",
+		"target_group_arn": flask_targetgroup.arn
+	}])
+```
+
+
+The application is built into a docker image, and pushed to our ECR repository that was created
+earlier.
+```python
+def get_registry_info(rid):
+    creds = aws.ecr.get_credentials(registry_id=rid)
+    decoded = base64.b64decode(creds.authorization_token).decode()
+    parts = decoded.split(':')
+    if len(parts) != 2:
+        raise Exception("Invalid credentials")
+    return docker.ImageRegistry(creds.proxy_endpoint, parts[0], parts[1])
+
+app_registry = app_ecr_repo.registry_id.apply(get_registry_info)
+
+flask_image = docker.Image("flask-dockerimage",
+    image_name=app_ecr_repo.repository_url,
+    build="./frontend",
+    skip_push=False,
+    registry=app_registry
+)
+```
+
+
+A task definition is created for the frontend, this time using the flask image that we 
+built. The redis endpoint is passed in as a group of environment variables, informing our
+app of our database's host and port values.
+```python
+flask_task_definition = aws.ecs.TaskDefinition("flask-task-definition",
+    family="frontend-task-definition-family",
+    cpu="256",
+    memory="512",
+    network_mode="awsvpc",
+    requires_compatibilities=["FARGATE"],
+    execution_role_arn=app_exec_role.arn,
+    task_role_arn=app_task_role.arn,
+    container_definitions=pulumi.Output.all(flask_image.image_name, redis_endpoint).apply(lambda args: json.dumps([{
+        "name": "flask-container",
+        "image": args[0],
+        "memory": 512,
+        "essential": True,
+        "portMappings": [{
+            "containerPort": 80,
+            "hostPort": 80,
+            "protocol": "tcp"
+        }],
+        "environment": [
+            { "name": "REDIS", "value": args[1]["host"] },
+            { "name": "REDIS_PORT", "value": str(args[1]["port"]) },
+            { "name": "REDIS_PWD", "value": redis_password },
+        ],
+    }])))
+```
+
+
+The service for our Flask frontend is launched. It will now receive requests from the internet,
+process them, and change the Redis database accordingly.
+```python
+flask_service = aws.ecs.Service("flask-service",
+	cluster=app_cluster.arn,
+    desired_count=1,
+    launch_type="FARGATE",
+    task_definition=flask_task_definition.arn,
+    wait_for_steady_state=False,
+    network_configuration={
+		"assign_public_ip": "true",
+		"subnets": [app_vpc_subnet.id],
+		"security_groups": [app_security_group.id]
+	},
+    load_balancers=[{
+		"target_group_arn": flask_targetgroup.arn,
+		"container_name": "flask-container",
+		"container_port": 80,
+	}],
+    opts=pulumi.ResourceOptions(depends_on=[flask_listener]),
+)
+```
+
+
+To connect to our application, we simply export the DNS name of the Flask balancer, and
+open it in a browser window.
+
+```python
+pulumi.export("app-url", flask_balancer.dns_name)
+```
 
 The full code for the blog post can be [found on github.](https://github.com/jetvova/examples/tree/vova/aws-py-flask-redis-voting-app/aws-py-voting-app)
 

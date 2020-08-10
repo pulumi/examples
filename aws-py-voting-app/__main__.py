@@ -93,10 +93,10 @@ app_task_role = aws.iam.Role("app-task-role",
     }""")
 
 # Attaching execution permissions to the task role
-exec_policy_attachment = aws.iam.RolePolicyAttachment("app-access-policy", role=app_exec_role.name,
+task_policy_attachment = aws.iam.RolePolicyAttachment("app-access-policy", role=app_task_role.name,
 	policy_arn="arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess")
 
-exec_policy_attachment = aws.iam.RolePolicyAttachment("app-lambda-policy", role=app_exec_role.name,
+task_policy_attachment = aws.iam.RolePolicyAttachment("app-lambda-policy", role=app_task_role.name,
 	policy_arn="arn:aws:iam::aws:policy/AWSLambdaFullAccess")
 
 # Creating storage space to upload a docker image of our app to
@@ -231,7 +231,6 @@ flask_listener = aws.lb.Listener("flask-listener",
 
 # Creating a Docker image from "./frontend/Dockerfile", which we will use
 # to upload our app
-
 def get_registry_info(rid):
     creds = aws.ecr.get_credentials(registry_id=rid)
     decoded = base64.b64decode(creds.authorization_token).decode()
@@ -250,7 +249,6 @@ flask_image = docker.Image("flask-dockerimage",
 )
 
 # Creating a task definition for the Flask instance.
-
 flask_task_definition = aws.ecs.TaskDefinition("flask-task-definition",
     family="frontend-task-definition-family",
     cpu="256",
@@ -275,7 +273,6 @@ flask_task_definition = aws.ecs.TaskDefinition("flask-task-definition",
             { "name": "REDIS_PWD", "value": redis_password },
         ],
     }])))
-
 
 # Launching our Redis service on Fargate, using our configurations and load balancers
 flask_service = aws.ecs.Service("flask-service",
