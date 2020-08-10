@@ -1,4 +1,4 @@
-    Creating a Python AWS application using Flask, Redis, and Pulumi
+    Creating a Python AWS Application Using Flask, Redis, and Pulumi
 
 Having recently begun developing with Pulumi, I have taken it upon myself to learn as much about its inner workings and processes as I could. To that end, I have decided to construct a production-level application using it, and to document each step that I take and its impact on my progress as I go along. 
 
@@ -22,14 +22,14 @@ redis_port = 6379
 After setting up the imports and configurations, we create an Elastic Container Service Cluster. 
 A Cluster represent a group of tasks and services that work together for a certain purpose. In 
 this instance, the purpose is to provide users with a voting application.  
-```
+```python
 app_cluster = aws.ecs.Cluster("app-cluster")
 ```
 
 
 In order to allow different tasks within our cluster to communicate, we create a Virtual Private 
 Cloud and an associated subnet.
-```
+```python
 app_vpc = aws.ec2.Vpc("app-vpc",
     cidr_block="172.31.0.0/16",
     enable_dns_hostnames=True)
@@ -42,7 +42,7 @@ app_vpc_subnet = aws.ec2.Subnet("app-vpc-subnet",
 
 A gateway and routing table are needed to allow the VPC to communicate with the greater internet. 
 Once created, we declare that the routing table is associated with our VPC.
-```
+```python
 app_gateway = aws.ec2.InternetGateway("app-gateway",
     vpc_id=app_vpc.id)
 
@@ -63,7 +63,7 @@ app_routetable_association = aws.ec2.MainRouteTableAssociation("app_routetable_a
 
 To inform what kinds of internet traffic are and aren't allowed to connect with the application, 
 we create a firewall in the form of a security group.
-```
+```python
 app_security_group = aws.ec2.SecurityGroup("security-group",
 	vpc_id=app_vpc.id,
 	description="Enables HTTP access",
@@ -84,7 +84,7 @@ app_security_group = aws.ec2.SecurityGroup("security-group",
 
 In order to allow our services to start, we create an Identity and Access Management role, and 
 attach execution permissions to it.
-```
+```python
 app_exec_role = aws.iam.Role("app-exec-role",
     assume_role_policy="""{
         "Version": "2012-10-17",
