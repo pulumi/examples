@@ -1,9 +1,10 @@
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+
 package main
 
 import (
 	crontabs "kubernetes-go-crontabs/crontabs/v1"
 
-	// "github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/apiextensions"
 	v1 "github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/apiextensions/v1"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/meta/v1"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
@@ -60,6 +61,8 @@ func main() {
 			return err
 		}
 
+		// This is the what we would've wrote without crd2pulumi.
+		//
 		// cronTabInstance, err := apiextensions.NewCustomResource(ctx,
 		// 	"my-new-cron-object",
 		//	&apiextensions.CustomResourceArgs{

@@ -1,4 +1,4 @@
-// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import * as crontabs from "./crontabs";
 import * as k8s from "@pulumi/kubernetes";
@@ -8,7 +8,7 @@ import * as pulumi from "@pulumi/pulumi";
 Without crd2pulumi, we would have to write the following to create the CRD and
 provision an instance of it:
 
-const cronTabDefinition2 = new k8s.apiextensions.v1.CustomResourceDefinition(
+const cronTabDefinition = new k8s.apiextensions.v1.CustomResourceDefinition(
     "my-crontab-definition",
     {
         metadata: {
