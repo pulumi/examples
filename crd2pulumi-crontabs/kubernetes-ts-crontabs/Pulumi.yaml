@@ -1,0 +1,3 @@
+name: kubernetes-ts-crontabs
+runtime: nodejs
+description: A minimal Kubernetes TypeScript Pulumi program
