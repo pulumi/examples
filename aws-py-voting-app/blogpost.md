@@ -8,7 +8,7 @@ This blog post features recreating the existing [Typescript voting app example](
 
 ---
 
-The first few lines of the `__main\__.py` file indicate which libraries need to be imported, and describe a pair of configuration options that will be used by the application
+The first few lines of the `__main__.py` file indicate which libraries need to be imported, and describe a pair of configuration options that will be used by the application
 
 ```python
 import json
