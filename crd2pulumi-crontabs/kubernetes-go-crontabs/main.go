@@ -3,65 +3,26 @@
 package main
 
 import (
-	crontabs "kubernetes-go-crontabs/crontabs/v1"
+	crontabsv1 "kubernetes-go-crontabs/crontabs/v1"
 
-	v1 "github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/apiextensions/v1"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/meta/v1"
+	"github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/yaml"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := v1.NewCustomResourceDefinition(ctx, "cronTabDef",
-			&v1.CustomResourceDefinitionArgs{
-				Metadata: metav1.ObjectMetaArgs{
-					Name: pulumi.StringPtr("crontabs.stable.example.com"),
-				},
-				Spec: v1.CustomResourceDefinitionSpecArgs{
-					Group: pulumi.String("stable.example.com"),
-					Versions: v1.CustomResourceDefinitionVersionArray{
-						v1.CustomResourceDefinitionVersionArgs{
-							Name:    pulumi.String("v1"),
-							Served:  pulumi.Bool(true),
-							Storage: pulumi.Bool(true),
-							Schema: &v1.CustomResourceValidationArgs{
-								OpenAPIV3Schema: &v1.JSONSchemaPropsArgs{
-									Type: pulumi.StringPtr("object"),
-									Properties: v1.JSONSchemaPropsMap{
-										"spec": v1.JSONSchemaPropsArgs{
-											Type: pulumi.StringPtr("object"),
-											Properties: v1.JSONSchemaPropsMap{
-												"cronSpec": v1.JSONSchemaPropsArgs{
-													Type: pulumi.StringPtr("string"),
-												},
-												"image": v1.JSONSchemaPropsArgs{
-													Type: pulumi.StringPtr("string"),
-												},
-												"replicas": v1.JSONSchemaPropsArgs{
-													Type: pulumi.StringPtr("integer"),
-												},
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-					Scope: pulumi.String("Namespaced"),
-					Names: v1.CustomResourceDefinitionNamesArgs{
-						Plural:     pulumi.String("crontabs"),
-						Singular:   pulumi.StringPtr("crontab"),
-						Kind:       pulumi.String("CronTab"),
-						ShortNames: pulumi.StringArray{pulumi.String("ct")},
-					},
-				},
+		// Register the CronTab CRD.
+		_, err := yaml.NewConfigFile(ctx, "my-crontab-definition",
+			&yaml.ConfigFileArgs{
+				File: "../crontab.yaml",
 			},
 		)
 		if err != nil {
 			return err
 		}
 
-		// This is the what we would've wrote without crd2pulumi.
+		// Here's the old way using the untyped CustomResource API:
 		//
 		// cronTabInstance, err := apiextensions.NewCustomResource(ctx,
 		// 	"my-new-cron-object",
@@ -80,12 +41,12 @@ func main() {
 		//	},
 		// )
 
-		cronTabInstance, err := crontabs.NewCronTab(ctx, "my-new-cron-object",
-			&crontabs.CronTabArgs{
+		cronTabInstance, err := crontabsv1.NewCronTab(ctx, "my-new-cron-object",
+			&crontabsv1.CronTabArgs{
 				Metadata: metav1.ObjectMetaArgs{
 					Name: pulumi.StringPtr("my-new-cron-object"),
 				},
-				Spec: crontabs.CronTabSpecArgs{
+				Spec: crontabsv1.CronTabSpecArgs{
 					CronSpec: pulumi.StringPtr("* * * * *5"),
 					Image:    pulumi.StringPtr("my-awesome-cron-image"),
 				},
