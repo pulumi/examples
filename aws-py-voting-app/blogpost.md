@@ -1,12 +1,15 @@
-    Creating a Python ECS Application Using Flask, Redis, and Pulumi
+# Creating a Python AWS Application Using Flask, Redis, and Pulumi
 
-Having recently begun developing with Pulumi, I have taken it upon myself to learn as much about its inner workings and processes as I could. To that end, I have decided to construct a production-level application using it, and to document each step that I take and its impact on my progress as I go along. 
+*Meet Vova Ivanov---one of the Pulumi summer interns. He'll be writing about his experiences learning Pulumi while modernizing a web app and its underlying infrastructure.*
 
-This blog post will feature an existing [Typescript voting app example](https://www.pulumi.com/docs/tutorials/aws/aws-ts-voting-app/) be fully re-created step by step in Python, using Flask as the frontend, and Redis as the backend. In future blog posts, we will explore how to change the front and backends, how to upgrade the app with additional AWS services, and even how to migrate from one cloud provider to another.
+I've recently started developing with Pulumi, and have begun to explore its inner workings and mechanisms. I decided to construct a production-level application, and to document each step that I take and my progress as I go along.
+
+This blog post features recreating the existing [Typescript voting app example](https://www.pulumi.com/docs/tutorials/aws/aws-ts-voting-app/) step by step in Python with Flask as the frontend and Redis as the backend. In future blog posts, we will explore how to change the front and backends, how to upgrade the app with additional AWS services, and migrating from one cloud provider to another.
 
 ---
 
-The first few lines of the __main\__.py file indicate which libraries need to be imported, and describe a pair of configuration options that will be used by the application.
+The first few lines of the `__main\__.py` file indicate which libraries need to be imported, and describe a pair of configuration options that will be used by the application
+
 ```python
 import json
 import pulumi
@@ -18,17 +21,17 @@ redis_password = config.require("redis-password")
 redis_port = 6379
 ```
 
-
 After setting up the imports and configurations, we create an Elastic Container Service Cluster. 
 A Cluster represent a group of tasks and services that work together for a certain purpose. In 
 this instance, the purpose is to provide users with a voting application.  
+
 ```python
 app_cluster = aws.ecs.Cluster("app-cluster")
 ```
 
-
 In order to allow different tasks within our cluster to communicate, we create a Virtual Private 
 Cloud and an associated subnet.
+
 ```python
 app_vpc = aws.ec2.Vpc("app-vpc",
     cidr_block="172.31.0.0/16",
@@ -39,9 +42,9 @@ app_vpc_subnet = aws.ec2.Subnet("app-vpc-subnet",
     vpc_id=app_vpc)
 ```
 
-
 A gateway and routing table are needed to allow the VPC to communicate with the greater internet. 
 Once created, we declare that the routing table is associated with our VPC.
+
 ```python
 app_gateway = aws.ec2.InternetGateway("app-gateway",
     vpc_id=app_vpc.id)
@@ -60,9 +63,8 @@ app_routetable_association = aws.ec2.MainRouteTableAssociation("app_routetable_a
     vpc_id=app_vpc)
 ```
 
+To control traffic that is allowed to flow between applications running inside our VPC, we create a security group.
 
-To inform what kinds of internet traffic are and aren't allowed to connect with the application, 
-we create a firewall in the form of a security group.
 ```python
 app_security_group = aws.ec2.SecurityGroup("security-group",
 	vpc_id=app_vpc.id,
@@ -81,9 +83,9 @@ app_security_group = aws.ec2.SecurityGroup("security-group",
     }])
 ```
 
-
 In order to allow our services to start, we need to create an Identity and Access Management role,
 and attach execution permissions to it.
+
 ```python
 app_exec_role = aws.iam.Role("app-exec-role",
     assume_role_policy="""{
@@ -103,9 +105,9 @@ exec_policy_attachment = aws.iam.RolePolicyAttachment("app-exec-policy", role=ap
 	policy_arn="arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy")
 ```
 
-
 Likewise, our ECS service will need to have a task role to manage it, along with its own set 
 of permissions.
+
 ```python
 app_task_role = aws.iam.Role("app-task-role",
     assume_role_policy="""{
@@ -128,9 +130,9 @@ task_policy_attachment = aws.iam.RolePolicyAttachment("app-lambda-policy", role=
 	policy_arn="arn:aws:iam::aws:policy/AWSLambdaFullAccess")
 ```
 
-
 An Elastic Container Registry Repository is used to store the application docker images that we want
 to run. The life cycle policy automatically removes the oldest untagged image that we uploaded.
+
 ```python
 app_ecr_repo = aws.ecr.Repository("app-ecr-repo",
     image_tag_mutability="MUTABLE")
@@ -155,13 +157,12 @@ app_lifecycle_policy = aws.ecr.LifecyclePolicy("app-lifecycle-policy",
     }""")
 ```
 
-
 With the basic infrastructure in place, we can now begin to set up the application itself. First,
 we will begin with the Redis backend.
 
-
 In order to allow Redis to communicate with the other services in our VPC, we need to create a target
 group, a balancer, and a listener for it.
+
 ```python
 redis_targetgroup = aws.lb.TargetGroup("redis-targetgroup",
 	port=redis_port,
@@ -189,9 +190,9 @@ redis_listener = aws.lb.Listener("redis-listener",
 	}])
 ```
 
-
 Every service running within ECS requires a task definition, specifying what hardware, internet, 
 and container settings it will use. 
+
 ```python
 redis_task_definition = aws.ecs.TaskDefinition("redis-task-definition",
     family="redis-task-definition-family",
@@ -215,9 +216,9 @@ redis_task_definition = aws.ecs.TaskDefinition("redis-task-definition",
 	}]))
 ```
 
-
 Now that we have our task definition blueprint ready, we can launch a service using it. An 
 endpoint is created to hold information needed to connect the backend with the frontend.
+
 ```python
 redis_service = aws.ecs.Service("redis-service",
 	cluster=app_cluster.arn,
@@ -241,12 +242,11 @@ redis_service = aws.ecs.Service("redis-service",
 redis_endpoint = {"host": redis_balancer.dns_name, "port": redis_port}
 ```
 
-
 The Redis backend is completed, and now all that's left is to create the Flask frontend.
-
 
 A similar set of a target group, balancer, and listener is created for the frontend. Unlike
 Redis, Flask will serve as the webpage, and as such needs to receive its data from port 80.
+
 ```python
 flask_targetgroup = aws.lb.TargetGroup("flask-targetgroup",
 	port=80,
@@ -274,9 +274,9 @@ flask_listener = aws.lb.Listener("flask-listener",
 	}])
 ```
 
-
 The application is built into a docker image, and pushed to our ECR repository that was created
 earlier.
+
 ```python
 def get_registry_info(rid):
     creds = aws.ecr.get_credentials(registry_id=rid)
@@ -296,10 +296,10 @@ flask_image = docker.Image("flask-dockerimage",
 )
 ```
 
-
 A task definition is created for the frontend, this time using the flask image that we 
 built. The redis endpoint is passed in as a group of environment variables, informing our
 app of our database's host and port values.
+
 ```python
 flask_task_definition = aws.ecs.TaskDefinition("flask-task-definition",
     family="frontend-task-definition-family",
@@ -327,9 +327,9 @@ flask_task_definition = aws.ecs.TaskDefinition("flask-task-definition",
     }])))
 ```
 
-
 The service for our Flask frontend is launched. It will now receive requests from the internet,
 process them, and change the Redis database accordingly.
+
 ```python
 flask_service = aws.ecs.Service("flask-service",
 	cluster=app_cluster.arn,
@@ -351,7 +351,6 @@ flask_service = aws.ecs.Service("flask-service",
 )
 ```
 
-
 To connect to our application, we simply export the DNS name of the Flask balancer, and
 open it in a browser window.
 
@@ -359,15 +358,8 @@ open it in a browser window.
 pulumi.export("app-url", flask_balancer.dns_name)
 ```
 
+In this example, I showed how easy it is to convert infrastructure code defined in TypeScript to one defined in Python. Teams often choose to standardize on one language and Pulumi expands that choice, allowing them to standardize on one language for the frontend, the backend, and the infrastructure.
+
+Next week, I'll show how to further modernize the application by shifting the frontend from Flask to Django, and swapping out the database from Redis to Amazon RDS---using Pulumi to stand up new resources as I go. 
+
 The full code for the blog post can be [found on github.](https://github.com/jetvova/examples/tree/vova/aws-py-flask-redis-voting-app/aws-py-voting-app)
-
-
-
-
-
-
-
-
-
-
-
