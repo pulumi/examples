@@ -3,15 +3,15 @@ package main
 import (
 	"encoding/json"
 
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/cloudwatch"
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/dynamodb"
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/ec2"
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/ecr"
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/ecs"
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/iam"
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/kinesis"
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/sns"
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/sqs"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/cloudwatch"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/dynamodb"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/ec2"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/ecr"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/ecs"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/iam"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/kinesis"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/sns"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/sqs"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
 
