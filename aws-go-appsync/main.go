@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/appsync"
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/dynamodb"
-	"github.com/pulumi/pulumi-aws/sdk/v2/go/aws/iam"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/appsync"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/dynamodb"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/iam"
 	"github.com/pulumi/pulumi-random/sdk/v2/go/random"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
