@@ -1,15 +1,21 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Web Server Using Amazon EC2
+# Voting app Using Redis and Flask
 
-An example based on the Amazon sample at:
-http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applications.html. The example deploys an EC2 instance and opens port 80. 
+A simple voting app that uses Redis for a data store and a Python Flask app for the frontend. The example has been ported from https://github.com/Azure-Samples/azure-voting-app-redis.
+
+The example shows how easy it is to deploy containers into production and to connect them to one another. Since the example defines a custom container, Pulumi does the following:
+- Builds the Docker image
+- Provisions AWS Container Registry (ECR) instance
+- Pushes the image to the ECR instance
+- Creates a new ECS task definition, pointing to the ECR image definition
 
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 1. [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
+1. [Install Docker](https://docs.docker.com/engine/installation/)
 
 ## Deploying and running the program
 

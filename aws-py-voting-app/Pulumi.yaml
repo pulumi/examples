@@ -1,6 +1,6 @@
-name: webserver-py
+name: voting-app
 runtime: python
-description: Basic example of an AWS web server accessible over HTTP (in Python!)
+description: Voting app that uses containers
 template:
   config:
     aws:region:
