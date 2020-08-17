@@ -1,34 +1,21 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Voting app Using Redis and Flask
+# Pulumi Python Dynamic Resource demonstration
 
-A simple voting app that uses Redis for a data store and a Python Flask app for the frontend. The example has been ported from https://github.com/Azure-Samples/azure-voting-app-redis.
-
-The example shows how easy it is to deploy containers into production and to connect them to one another. Since the example defines a custom container, Pulumi does the following:
-- Builds the Docker image
-- Provisions AWS Container Registry (ECR) instance
-- Pushes the image to the ECR instance
-- Creates a new ECS task definition, pointing to the ECR image definition
+A simple example demonstrating how to write Dynamic Providers using Pulumi.
 
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 1. [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
-1. [Install Docker](https://docs.docker.com/engine/installation/)
 
 ## Deploying and running the program
-
-1. Install dependencies (a `virtualenv` is recommended - see [Pulumi Python docs](https://www.pulumi.com/docs/intro/languages/python/)):
-
-    ```bash
-    $ pip install -r requirements.txt
-    ```
 
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init aws-py-voting-app
+    $ pulumi stack init aws-py-dynamicresource
     ```
 
 1. Set the AWS region and the names and passwords for admin and user:
