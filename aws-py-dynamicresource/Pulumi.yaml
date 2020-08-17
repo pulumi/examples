@@ -1,0 +1,6 @@
+name: aws-py-dynamicresource
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: An example demonstrating Pulumi Dynamic Providers
