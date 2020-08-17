@@ -14,7 +14,7 @@ This example is inspired by [Docker's Getting Started Tutorial](https://docs.doc
 
 ## Running the Example
 
-Clone this repo and `cd` into it.
+Clone [the examples repo](https://github.com/pulumi/examples/tree/master/aws-py-fargate) and `cd` into it.
 
 Next, to deploy the application and its infrastructure, follow these steps:
 
