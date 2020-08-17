@@ -19,12 +19,6 @@ The example shows how easy it is to deploy containers into production and to con
 
 ## Deploying and running the program
 
-1. Install dependencies (a `virtualenv` is recommended - see [Pulumi Python docs](https://www.pulumi.com/docs/intro/languages/python/)):
-
-    ```bash
-    $ pip install -r requirements.txt
-    ```
-
 1. Create a new stack:
 
     ```bash
