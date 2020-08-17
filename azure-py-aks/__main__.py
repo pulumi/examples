@@ -36,7 +36,7 @@ sppwd = ServicePrincipalPassword(
 aks = KubernetesCluster(
     "aksCluster",
     resource_group_name=resource_group.name,
-    kubernetes_version="1.14.6",
+    kubernetes_version="1.18.6",
     dns_prefix="dns",
     linux_profile={"adminUsername": "aksuser", "ssh_key": {"keyData": SSHKEY}},
     service_principal={"client_id": app.application_id, "client_secret": sppwd.value},
