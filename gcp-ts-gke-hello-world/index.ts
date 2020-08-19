@@ -12,18 +12,35 @@ export const masterVersion = config.get("masterVersion") ||
 
 // Create a GKE cluster
 const cluster = new gcp.container.Cluster(name, {
-    initialNodeCount: 2,
-    minMasterVersion: masterVersion,
-    nodeVersion: masterVersion,
-    nodeConfig: {
-        machineType: "n1-standard-1",
-        oauthScopes: [
-            "https://www.googleapis.com/auth/compute",
-            "https://www.googleapis.com/auth/devstorage.read_only",
-            "https://www.googleapis.com/auth/logging.write",
-            "https://www.googleapis.com/auth/monitoring",
-        ],
-    },
+  // We can't create a cluster with no node pool defined, but we want to only use
+  // separately managed node pools. So we create the smallest possible default
+  // node pool and immediately delete it.
+  initialNodeCount: 1,
+  removeDefaultNodePool: true,
+
+  minMasterVersion: masterVersion,
+});
+
+const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
+  cluster: cluster.name,
+  initialNodeCount: 2,
+  location: cluster.location,
+  nodeConfig: {
+    preemptible: true,
+    machineType: "n1-standard-1",
+    oauthScopes: [
+      "https://www.googleapis.com/auth/compute",
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring"
+    ]
+  },
+  version: masterVersion,
+  management: {
+    autoRepair: true,
+  }
+}, {
+  dependsOn: [cluster]
 });
 
 // Export the Cluster name
