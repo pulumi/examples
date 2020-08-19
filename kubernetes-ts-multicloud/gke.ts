@@ -36,36 +36,36 @@ export class GkeCluster extends pulumi.ComponentResource {
 
         // Create the GKE cluster.
         const k8sCluster = new gcp.container.Cluster("cluster", {
-          // We can't create a cluster with no node pool defined, but we want to only use
-          // separately managed node pools. So we create the smallest possible default
-          // node pool and immediately delete it.
-          initialNodeCount: 1,
-          removeDefaultNodePool: true,
+            // We can't create a cluster with no node pool defined, but we want to only use
+            // separately managed node pools. So we create the smallest possible default
+            // node pool and immediately delete it.
+            initialNodeCount: 1,
+            removeDefaultNodePool: true,
 
-          minMasterVersion: engineVersion,
-          masterAuth: {username: "example-user", password: password},
+            minMasterVersion: engineVersion,
+            masterAuth: {username: "example-user", password: password},
         }, {parent: this});
 
         const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
-          cluster: k8sCluster.name,
-          initialNodeCount: 2,
-          location: k8sCluster.location,
-          nodeConfig: {
-            preemptible: true,
-            machineType: "n1-standard-1",
-            oauthScopes: [
-              "https://www.googleapis.com/auth/compute",
-              "https://www.googleapis.com/auth/devstorage.read_only",
-              "https://www.googleapis.com/auth/logging.write",
-              "https://www.googleapis.com/auth/monitoring"
-            ]
-          },
-          version: engineVersion,
-          management: {
-            autoRepair: true,
-          }
+            cluster: k8sCluster.name,
+            initialNodeCount: 2,
+            location: k8sCluster.location,
+            nodeConfig: {
+                preemptible: true,
+                machineType: "n1-standard-1",
+                oauthScopes: [
+                    "https://www.googleapis.com/auth/compute",
+                    "https://www.googleapis.com/auth/devstorage.read_only",
+                    "https://www.googleapis.com/auth/logging.write",
+                    "https://www.googleapis.com/auth/monitoring"
+                ]
+            },
+            version: engineVersion,
+            management: {
+                autoRepair: true,
+            }
         }, {
-          dependsOn: [k8sCluster]
+            dependsOn: [k8sCluster]
         });
 
         this.cluster = k8sCluster;

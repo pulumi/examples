@@ -15,29 +15,28 @@ export const k8sCluster = new gcp.container.Cluster("gke-cluster", {
 
     minMasterVersion: masterVersion,
     masterAuth: { username, password },
-
 });
 
 const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
-  cluster: k8sCluster.name,
-  initialNodeCount: nodeCount,
-  location: k8sCluster.location,
-  nodeConfig: {
-    preemptible: true,
-    machineType: nodeMachineType,
-    oauthScopes: [
-      "https://www.googleapis.com/auth/compute",
-      "https://www.googleapis.com/auth/devstorage.read_only",
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring"
-    ]
-  },
-  version: masterVersion,
-  management: {
-    autoRepair: true,
-  }
+    cluster: k8sCluster.name,
+    initialNodeCount: nodeCount,
+    location: k8sCluster.location,
+    nodeConfig: {
+        preemptible: true,
+        machineType: nodeMachineType,
+        oauthScopes: [
+            "https://www.googleapis.com/auth/compute",
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring"
+        ]
+    },
+    version: masterVersion,
+    management: {
+        autoRepair: true,
+    }
 }, {
-  dependsOn: [k8sCluster]
+    dependsOn: [k8sCluster]
 });
 
 // Manufacture a GKE-style Kubeconfig. Note that this is slightly "different" because of the way GKE requires
