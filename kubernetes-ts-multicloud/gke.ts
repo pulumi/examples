@@ -103,7 +103,10 @@ users:
         });
 
         // Export a Kubernetes provider instance that uses our cluster from above.
-        this.provider = new k8s.Provider("gke", {kubeconfig: k8sConfig}, {parent: this});
+        this.provider = new k8s.Provider("gke", {kubeconfig: k8sConfig}, {
+            parent: this,
+            dependsOn: [nodePool]
+        });
     }
 }
 

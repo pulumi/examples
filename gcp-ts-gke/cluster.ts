@@ -75,4 +75,6 @@ users:
 // Export a Kubernetes provider instance that uses our cluster from above.
 export const k8sProvider = new k8s.Provider("gkeK8s", {
     kubeconfig: k8sConfig,
+}, {
+    dependsOn: [nodePool]
 });

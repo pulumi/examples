@@ -83,6 +83,8 @@ users:
 // Create a Kubernetes provider instance that uses our cluster from above.
 const clusterProvider = new k8s.Provider(name, {
     kubeconfig: kubeconfig,
+}, {
+  dependsOn: [nodePool]
 });
 
 // Create a Kubernetes Namespace
