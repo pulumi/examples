@@ -7,19 +7,36 @@ import { clusterNodeCount, clusterNodeMachineType, clusterPassword, clusterUsern
 
 // Create the GKE cluster and export it.
 export const cluster = new gcp.container.Cluster("gke-cluster", {
-    initialNodeCount: clusterNodeCount,
-    nodeVersion: masterVersion,
+    // We can't create a cluster with no node pool defined, but we want to only use
+    // separately managed node pools. So we create the smallest possible default
+    // node pool and immediately delete it.
+    initialNodeCount: 1,
+    removeDefaultNodePool: true,
+
     minMasterVersion: masterVersion,
     masterAuth: { username: clusterUsername, password: clusterPassword },
+});
+
+const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
+    cluster: cluster.name,
+    initialNodeCount: clusterNodeCount,
+    location: cluster.location,
     nodeConfig: {
+        preemptible: true,
         machineType: clusterNodeMachineType,
         oauthScopes: [
             "https://www.googleapis.com/auth/compute",
             "https://www.googleapis.com/auth/devstorage.read_only",
             "https://www.googleapis.com/auth/logging.write",
-            "https://www.googleapis.com/auth/monitoring",
-        ],
+            "https://www.googleapis.com/auth/monitoring"
+        ]
     },
+    version: masterVersion,
+    management: {
+        autoRepair: true,
+    }
+}, {
+    dependsOn: [cluster]
 });
 
 // Manufacture a GKE-style Kubeconfig. Note that this is slightly "different" because of the way GKE requires
