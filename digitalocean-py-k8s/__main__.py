@@ -53,7 +53,7 @@ if domain_name:
 
     cname_record = do.DnsRecord(
         "do-domain-name",
-        domain=domain_name,
+        domain=domain.name,
         type="CNAME",
         name="www",
         value="@")
