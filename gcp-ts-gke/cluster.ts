@@ -9,7 +9,7 @@ import { masterVersion, nodeCount, nodeMachineType, password, username } from ".
 export const k8sCluster = new gcp.container.Cluster("gke-cluster", {
     // We can't create a cluster with no node pool defined, but we want to only use
     // separately managed node pools. So we create the smallest possible default
-    // node pool and immediately delete it. 
+    // node pool and immediately delete it.
     initialNodeCount: 1,
     removeDefaultNodePool: true,
 
@@ -28,15 +28,15 @@ const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
             "https://www.googleapis.com/auth/compute",
             "https://www.googleapis.com/auth/devstorage.read_only",
             "https://www.googleapis.com/auth/logging.write",
-            "https://www.googleapis.com/auth/monitoring"
-        ]
+            "https://www.googleapis.com/auth/monitoring",
+        ],
     },
     version: masterVersion,
     management: {
         autoRepair: true,
-    }
+    },
 }, {
-    dependsOn: [k8sCluster]
+    dependsOn: [k8sCluster],
 });
 
 // Manufacture a GKE-style Kubeconfig. Note that this is slightly "different" because of the way GKE requires
@@ -76,5 +76,5 @@ users:
 export const k8sProvider = new k8s.Provider("gkeK8s", {
     kubeconfig: k8sConfig,
 }, {
-    dependsOn: [nodePool]
+    dependsOn: [nodePool],
 });

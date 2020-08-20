@@ -57,15 +57,15 @@ export class GkeCluster extends pulumi.ComponentResource {
                     "https://www.googleapis.com/auth/compute",
                     "https://www.googleapis.com/auth/devstorage.read_only",
                     "https://www.googleapis.com/auth/logging.write",
-                    "https://www.googleapis.com/auth/monitoring"
-                ]
+                    "https://www.googleapis.com/auth/monitoring",
+                ],
             },
             version: engineVersion,
             management: {
                 autoRepair: true,
-            }
+            },
         }, {
-            dependsOn: [k8sCluster]
+            dependsOn: [k8sCluster],
         });
 
         this.cluster = k8sCluster;
@@ -105,7 +105,7 @@ users:
         // Export a Kubernetes provider instance that uses our cluster from above.
         this.provider = new k8s.Provider("gke", {kubeconfig: k8sConfig}, {
             parent: this,
-            dependsOn: [nodePool]
+            dependsOn: [nodePool],
         });
     }
 }

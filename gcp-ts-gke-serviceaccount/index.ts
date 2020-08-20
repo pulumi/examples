@@ -49,15 +49,15 @@ const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
             "https://www.googleapis.com/auth/compute",
             "https://www.googleapis.com/auth/devstorage.read_only",
             "https://www.googleapis.com/auth/logging.write",
-            "https://www.googleapis.com/auth/monitoring"
-        ]
+            "https://www.googleapis.com/auth/monitoring",
+        ],
     },
     version: masterVersion,
     management: {
         autoRepair: true,
-    }
+    },
 }, {
-    dependsOn: [cluster]
+    dependsOn: [cluster],
 });
 
 // Export the Cluster name
@@ -99,7 +99,7 @@ users:
 const clusterProvider = new k8s.Provider(name, {
     kubeconfig: kubeconfig,
 }, {
-    dependsOn: [nodePool]
+    dependsOn: [nodePool],
 });
 
 const appLabels = {appClass: "pubsub"};
