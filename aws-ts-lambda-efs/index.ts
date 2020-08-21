@@ -35,7 +35,7 @@ export = async () => {
                 subnetIds: vpc.privateSubnetIds,
                 securityGroupIds: [vpc.vpc.defaultSecurityGroupId],
             },
-            fileSystemConfigs: [{ arn: ap.arn, localMountPath: "/mnt/storage" }],
+            fileSystemConfig: { arn: ap.arn, localMountPath: "/mnt/storage" },
             callback: f,
         });
     }
