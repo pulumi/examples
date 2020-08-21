@@ -1,0 +1,95 @@
+backend:
+  name: github
+  # Replace this with the Github repo you want to make change
+  repo: your-github-repo
+  # This site_domain and base_url are sudo domains
+  # Replace site_domain with targetDomain pulumi stack configuration inside cms/infrastructure folder
+  # Replace base_url with targetDomain pulumi stack configuration inside cms-oauth/infrastructure folder
+  site_domain: https://some-cms-domain.pulumi-demos.com  
+  base_url: https://some-oauth-domain.pulumi-demos.com 
+  
+publish_mode: editorial_workflow
+
+# the media_folder's path is relative to this 
+media_folder: "../../../static/images"
+public_folder: "/images"
+
+collections: # A list of collection the CMS should be able to edit
+- name: "webinars" # Used in routes, ie.: /collections/webinars
+  label: "Webinars Pages" # Used in the UI, ie.: "New Post"
+  folder: "content/webinars" # The path to the folder where the documents are stored
+  media_folder: "{{media_folder}}/webinar"
+  public_folder: "{{public_folder}}/webinar"
+  path: "{{slug}}/index.md" # The webinar folderis structured as name-of-webinar/index.md
+  create: true # Allow users to create new documents in this collection
+  fields: # The fields each document in this collection have
+    - {label: "Title", name: "title", widget: string}
+    - {label: "Webinar Description", name: "meta_desc", widget: text}
+    - {label: "Featured Webinar?", name: "featured", widget: boolean, default: false, hint: "A featured webinar will display first in the list."}
+    - {label: "Pre-Recorded?", name: "pre_recorded", widget: boolean, default: false, hint: "If the video is pre-recorded or live."}
+    - {label: "Pulumi TV?", name: "pulumi_tv", widget: boolean, default: false, hint: "If the video is part of the PulumiTV series. Setting this value to true will list the video in the 'PulumiTV' section."}
+    - {label: "Preview Image", name: "preview_image", widget: image, hint: "The preview image will be shown on the list page."}
+    - {label: "Unlisted", name: "unlisted", widget: boolean, hint: "Webinars with unlisted as true will not be shown on the webinar list"}
+    - {label: "Gated?", name: "gated", widget: boolean, default: false, hint: "Gated webinars will have a registration form and the user will need to fill out the form before viewing."}
+    - {label: "Layout Type", name: "type", widget: string, hint: "The layout of the landing page."}
+    - {label: "External Webinars?", name: "external", widget: boolean, hint: "External webinars will link to an external page instead of a webinar landing/registration page."}
+    - {label: "URL Slug", name: "url_slug", widget: string, hint: "The url slug for the webinar landing page. If this is an external webinar, use the external URL as the value here."}
+    - label: "Hero"
+      name: "hero"
+      widget: "object"
+      hint: "The content of the hero section."
+      fields:
+        - {label: "Hero Title", name: "title", widget: string, hint: "The title text in the hero. This also serves as the pages header."}
+        - {label: "Hero Image", name: "image", widget: image, hint: "The image the appears on the right hand side of the hero."}
+    - label: "Main"
+      name: "main"
+      widget: object
+      hint: "Content for the left hand side section of the page."
+      fields:
+        - {label: "Main Title", name: "title", widget: string, hint: "Webinar Title"}
+        - {label: "Sortable Date", name: "sortable_date", widget: datetime, dateFormat: true, timeFormat: "HH:mm Z", format: "YYYY-MM-DDTHH:mm:00.000Z", pickerUtc: false, hint: "Sortable date. The datetime Hugo will use to sort the webinars in date order."}
+        - {label: "Duration", name: "duration", widget: string, hint: "Duration of the webinar."}
+        - {label: "Date Time", name: "datetime", widget: datetime, dateFormat: true, timeFormat: true, format: "ddd MMM DD, YYYY [AT] hh:mmA [PT]", hint: "The time is in Pacific Time"}
+        - {label: "Main Description", name: "description", widget: text, hint: "Description of Webinar"}
+        - label: "Presenters"
+          name: "presenters"
+          widget: list
+          allow_add: true
+          summary: "{{fields.name}} - {{fields.role}}"
+          fields:
+            - {label: "Presenter Name", name: "name", widget: string}
+            - {label: "Presenter Role", name: "role", widget: string}
+        - label: "Learning goals"
+          name: "learn"
+          widget: list
+          allow_add: true
+          summary: "{{fields.goal}}"
+          field: {label: "Learning Goal", name: "goal", widget: string}
+          hint: "A bullet point list containing what the user will learn during the webinar."
+    - label: "Form"
+      name: "form"
+      widget: object
+      hint: "The right hand side webinar section."
+      fields:
+        - {label: "GoToWebinar Key", name: "gotowebinar_key", widget: string, hint: "GoToWebinar webinar key. This key allows us to register people for webinars via the HubSpot form."}
+        - {label: "HubSpot Form Id", name: "hubspot_form_id", widget: string}
+- name: "events" # Used in routes, ie.: /admin/collections/:slug/edit
+  label: "Events Pages" # Used in the UI, ie.: "New Post"
+  folder: "content/events" # The path to the folder where the documents are stored
+  path: "{{slug}}/index.md"
+  create: true # Allow users to create new documents in this collection
+  fields: # The fields each document in this collection have
+        - {label: "Title", name: "title", widget: string}
+        - {label: "Unlisted?", name: "unlisted", widget: boolean, hint: "Events with unlisted as true will not be shown on the event list"}
+        - {label: "Block External Search Index?", name: "block_external_search_index", widget: boolean, hint: "Events with external registrations should not be indexed and have redirect to the external registration page."}
+        - {label: "Redirect Link", name: "redirect_to", widget: string}
+        - label: "Event Infomation"
+          name: "event"
+          widget: object
+          fields: 
+            - {label: "Activity Type", name: "type", widget: list, allow_add: true, hint: "The type of activities we will be doing at the event."}
+            - {label: "Location", name: "location", widget: string, hint: "The event address"}
+            - {label: "Start Date", name: "start_date", widget: date, format: "YYYY-MM-DD"}
+            - {label: "End Date", name: "end_date", widget: date, format: "YYYY-MM-DD"}
+            - {label: "Event Description", name: "description", widget: text, hint: "The event description shown on the event list page."}
+            - {label: "Registration Link", name: "registration_url", widget: string, hint: "The external registration url for the event list page."}
