@@ -1,4 +1,4 @@
-# AWS Golang EKS Cluster
+# AWS C# EKS Cluster
 This example creates an AWS EKS Cluster and deploys a sample container application to it
 
 ## Deploying the App
