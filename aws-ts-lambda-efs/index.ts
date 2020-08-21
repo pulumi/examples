@@ -91,6 +91,7 @@ export = async () => {
         fileSystemId: filesystem.id,
         authorizationConfig: { accessPointId: ap.id },
         rootDirectory: "/www",
+        transitEncryption: "ENABLED",
     };
 
     // Fargate Service
