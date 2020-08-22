@@ -585,6 +585,15 @@ func TestAccAwsTsTwitterAthena(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsTsLambdaEfs(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-lambda-efs"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAzureCsAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
