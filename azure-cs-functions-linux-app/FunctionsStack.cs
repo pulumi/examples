@@ -72,7 +72,8 @@ class FunctionsStack : Stack
                 {"WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl},
                 {"APPLICATIONINSIGHTS_CONNECTION_STRING", Output.Format($"InstrumentationKey={insights.InstrumentationKey}")}
             },
-            StorageConnectionString = storageAccount.PrimaryConnectionString,
+            StorageAccountName = storageAccount.Name,
+            StorageAccountAccessKey = storageAccount.PrimaryAccessKey,
             Version = "~3",
             OsType = "linux",
             SiteConfig = new FunctionAppSiteConfigArgs

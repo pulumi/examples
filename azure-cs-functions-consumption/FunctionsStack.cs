@@ -55,7 +55,8 @@ class FunctionsStack : Stack
                 {"runtime", "dotnet"},
                 {"WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl},
             },
-            StorageConnectionString = storageAccount.PrimaryConnectionString,
+            StorageAccountName = storageAccount.Name,
+            StorageAccountAccessKey = storageAccount.PrimaryAccessKey,
             Version = "~3"
         });
 
