@@ -6,7 +6,6 @@ import pulumi
 import pulumi_aws as aws
 import pulumi_docker as docker
 import pulumi_mysql as mysql
-from MySqlDynamicProvider import *
 
 # Get neccessary settings from the pulumi config
 config = pulumi.Config()
@@ -161,42 +160,23 @@ mysql_provider = mysql.Provider("mysql-provider",
 
 # Initializing a basic database on the RDS instance
 mysql_database = mysql.Database("mysql-database",
-    name="votes-database",
+    name="votes",
     opts=pulumi.ResourceOptions(provider=mysql_provider))
 
 # Creating a user which will be used to manage MySQL tables 
 mysql_user = mysql.User("mysql-standard-user",
     user=user_name,
-    host="example.com",
+    host="%", # "%" indicates that the connection is allowed to come from anywhere
     plaintext_password=user_password,
     opts=pulumi.ResourceOptions(provider=mysql_provider))
 
-# The user only needs the "SELECT" and "UPDATE" permissions to function
+# The user only needs the "SELECT", "UPDATE", "INSERT", and "DELETE" permissions to function
 mysql_access_grant = mysql.Grant("mysql-access-grant",
     user=mysql_user.user,
     host=mysql_user.host,
     database=mysql_database.name,
-    privileges= ["SELECT", "UPDATE"],
+    privileges= ["SELECT", "UPDATE", "INSERT", "DELETE"],
     opts=pulumi.ResourceOptions(provider=mysql_provider))
-
-# The database schema and initial data to be deployed to the database
-creation_script = """
-    CREATE TABLE votesTable (
-        choice_id int(10) NOT NULL AUTO_INCREMENT,
-        vote_count int(10) NOT NULL,
-        PRIMARY KEY (choice_id)
-    ) ENGINE=InnoDB;
-    INSERT INTO votesTable(choice_id, vote_count) VALUES (0,0);
-    INSERT INTO votesTable(choice_id, vote_count) VALUES (1,0);
-    """
-
-# The SQL commands the database performs when deleting the schema
-deletion_script = "DROP TABLE votesTable CASCADE"
-
-# Creating our dynamic resource to deploy the schema during `pulumi up`. The arguments
-# are passed in as a SchemaInputs object
-mysql_votes_table = Schema(name="mysql_votes_table",
-    args=SchemaInputs(admin_name, admin_password, mysql_rds_server.address, mysql_database.name, creation_script, deletion_script))
 
 # The application's frontend: A Django service
 
@@ -256,7 +236,13 @@ django_task_definition = aws.ecs.TaskDefinition("django-task-definition",
     requires_compatibilities=["FARGATE"],
     execution_role_arn=app_exec_role.arn,
     task_role_arn=app_task_role.arn,
-    container_definitions=pulumi.Output.all(django_image.image_name, redis_endpoint).apply(lambda args: json.dumps([{
+    container_definitions=pulumi.Output.all(
+            django_image.image_name,
+            mysql_database.name,
+            user_name,
+            user_password, 
+            mysql_rds_server.address,
+            mysql_rds_server.port).apply(lambda args: json.dumps([{
         "name": "django-container",
         "image": args[0],
         "memory": 512,
@@ -266,14 +252,16 @@ django_task_definition = aws.ecs.TaskDefinition("django-task-definition",
             "hostPort": 80,
             "protocol": "tcp"
         }],
-        "environment": [ # The Redis endpoint we created is given to Flask, allowing it to communicate with the former
-            { "name": "REDIS", "value": args[1]["host"] },
-            { "name": "REDIS_PORT", "value": str(args[1]["port"]) },
-            { "name": "REDIS_PWD", "value": redis_password },
+        "environment": [
+            { "name": "DATABASE_NAME", "value": args[1]  },
+            { "name": "USER_NAME", "value": args[2]  },
+            { "name": "USER_PASSWORD", "value": args[3]  },
+            { "name": "DATABASE_ADDRESS", "value": args[4]  },
+            { "name": "DATABASE_PORT", "value": str(int(args[5]))  },
         ],
     }])))
 
-# Launching our Redis service on Fargate, using our configurations and load balancers
+# Launching our Django service on Fargate, using our configurations and load balancers
 django_service = aws.ecs.Service("django-service",
 	cluster=app_cluster.arn,
     desired_count=1,
@@ -295,3 +283,5 @@ django_service = aws.ecs.Service("django-service",
 
 # Exporting the url of our Flask frontend. We can now connect to our app
 pulumi.export("app-url", django_balancer.dns_name)
+
+pulumi.export("RDS server", mysql_rds_server.endpoint)

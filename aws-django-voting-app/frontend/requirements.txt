@@ -1,0 +1,2 @@
+django==3.1
+mysqlclient==1.4.0
