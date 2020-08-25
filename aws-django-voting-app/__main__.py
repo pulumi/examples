@@ -9,11 +9,17 @@ import pulumi_mysql as mysql
 
 # Get neccessary settings from the pulumi config
 config = pulumi.Config()
-admin_name = config.require("sql-admin-name")
-admin_password = config.require_secret("sql-admin-password")
-user_name = config.require("sql-user-name")
-user_password = config.require_secret("sql-user-password")
+sql_admin_name = config.require("sql-admin-name")
+sql_admin_password = config.require_secret("sql-admin-password")
+sql_user_name = config.require("sql-user-name")
+sql_user_password = config.require_secret("sql-user-password")
+django_admin_name = config.require("django-admin-name")
+django_admin_password = config.require_secret("django-admin-password")
 availability_zone = pulumi.Config("aws").get("region")
+
+#Should be a random 50-character string
+django_secret_key = config.require_secret("django-secret-key")
+
 
 # The ECS cluster in which our application and databse will run
 app_cluster = aws.ecs.Cluster("app-cluster")
@@ -143,8 +149,8 @@ app_database_subnetgroup = aws.rds.SubnetGroup("app-database-subnetgroup",
 # An RDS instnace is created to hold our MySQL database
 mysql_rds_server = aws.rds.Instance("mysql-server",
     engine="mysql",
-    username=admin_name,
-    password=admin_password,
+    username=sql_admin_name,
+    password=sql_admin_password,
     instance_class="db.t2.micro",
     allocated_storage=20,
     skip_final_snapshot=True,
@@ -155,8 +161,8 @@ mysql_rds_server = aws.rds.Instance("mysql-server",
 # Creating a Pulumi MySQL provider to allow us to interact with the RDS instance
 mysql_provider = mysql.Provider("mysql-provider",
     endpoint=mysql_rds_server.endpoint,
-    username=admin_name,
-    password=admin_password)
+    username=sql_admin_name,
+    password=sql_admin_password)
 
 # Initializing a basic database on the RDS instance
 mysql_database = mysql.Database("mysql-database",
@@ -165,9 +171,9 @@ mysql_database = mysql.Database("mysql-database",
 
 # Creating a user which will be used to manage MySQL tables 
 mysql_user = mysql.User("mysql-standard-user",
-    user=user_name,
+    user=sql_user_name,
     host="%", # "%" indicates that the connection is allowed to come from anywhere
-    plaintext_password=user_password,
+    plaintext_password=sql_user_password,
     opts=pulumi.ResourceOptions(provider=mysql_provider))
 
 # The user only needs the "SELECT", "UPDATE", "INSERT", and "DELETE" permissions to function
@@ -243,9 +249,12 @@ django_database_task_definition = aws.ecs.TaskDefinition("django-database-task-d
     task_role_arn=app_task_role.arn,
     container_definitions=pulumi.Output.all(
             django_image.image_name,
+            django_secret_key,
             mysql_database.name,
-            admin_name,
-            admin_password, 
+            sql_admin_name,
+            sql_admin_password, 
+            django_admin_name,
+            django_admin_password, 
             mysql_rds_server.address,
             mysql_rds_server.port).apply(lambda args: json.dumps([{
         "name": "django-container",
@@ -258,11 +267,14 @@ django_database_task_definition = aws.ecs.TaskDefinition("django-database-task-d
             "protocol": "tcp"
         }],
         "environment": [
-            { "name": "DATABASE_NAME", "value": args[1]  },
-            { "name": "USER_NAME", "value": args[2]  },
-            { "name": "USER_PASSWORD", "value": args[3]  },
-            { "name": "DATABASE_ADDRESS", "value": args[4]  },
-            { "name": "DATABASE_PORT", "value": str(int(args[5]))  },
+            { "name": "SECRET_KEY", "value": args[1]  },
+            { "name": "DATABASE_NAME", "value": args[2]  },
+            { "name": "USER_NAME", "value": args[3]  },
+            { "name": "USER_PASSWORD", "value": args[4]  },
+            { "name": "DJANGO_NAME", "value": args[5]  },
+            { "name": "DJANGO_PASSWORD", "value": args[6]  },
+            { "name": "DATABASE_ADDRESS", "value": args[7]  },
+            { "name": "DATABASE_PORT", "value": str(int(args[8]))  },
         ],
         "logConfiguration": {
             "logDriver": "awslogs",
@@ -306,9 +318,10 @@ django_site_task_definition = aws.ecs.TaskDefinition("django-site-task-definitio
     task_role_arn=app_task_role.arn,
     container_definitions=pulumi.Output.all(
             django_image.image_name,
+            django_secret_key,
             mysql_database.name,
-            user_name,
-            user_password, 
+            sql_user_name,
+            sql_user_password, 
             mysql_rds_server.address,
             mysql_rds_server.port).apply(lambda args: json.dumps([{
         "name": "django-container",
@@ -321,11 +334,12 @@ django_site_task_definition = aws.ecs.TaskDefinition("django-site-task-definitio
             "protocol": "tcp"
         }],
         "environment": [
-            { "name": "DATABASE_NAME", "value": args[1]  },
-            { "name": "USER_NAME", "value": args[2]  },
-            { "name": "USER_PASSWORD", "value": args[3]  },
-            { "name": "DATABASE_ADDRESS", "value": args[4]  },
-            { "name": "DATABASE_PORT", "value": str(int(args[5]))  },
+            { "name": "SECRET_KEY", "value": args[1]  },
+            { "name": "DATABASE_NAME", "value": args[2]  },
+            { "name": "USER_NAME", "value": args[3]  },
+            { "name": "USER_PASSWORD", "value": args[4]  },
+            { "name": "DATABASE_ADDRESS", "value": args[5]  },
+            { "name": "DATABASE_PORT", "value": str(int(args[6]))  },
         ],
         "logConfiguration": {
             "logDriver": "awslogs",
