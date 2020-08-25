@@ -28,7 +28,7 @@ DEBUG = True
 
 # Once you know the full DNS name of your website, list it here to 
 # prevent HTTP Host Header attacks
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition

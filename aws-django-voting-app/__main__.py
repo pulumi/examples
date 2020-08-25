@@ -227,9 +227,77 @@ django_image = docker.Image("django-dockerimage",
     registry=app_registry
 )
 
-# Creating a task definition for the Flask instance.
-django_task_definition = aws.ecs.TaskDefinition("django-task-definition",
-    family="frontend-task-definition-family",
+django_log_group = aws.cloudwatch.LogGroup("django-log-group",
+    retention_in_days=1,
+    name="django-log-group"
+)
+
+# Creating a task definition for the Django instance.
+django_database_task_definition = aws.ecs.TaskDefinition("django-database-task-definition",
+    family="django_database_task_definition-family",
+    cpu="256",
+    memory="512",
+    network_mode="awsvpc",
+    requires_compatibilities=["FARGATE"],
+    execution_role_arn=app_exec_role.arn,
+    task_role_arn=app_task_role.arn,
+    container_definitions=pulumi.Output.all(
+            django_image.image_name,
+            mysql_database.name,
+            admin_name,
+            admin_password, 
+            mysql_rds_server.address,
+            mysql_rds_server.port).apply(lambda args: json.dumps([{
+        "name": "django-container",
+        "image": args[0],
+        "memory": 512,
+        "essential": True,
+        "portMappings": [{
+            "containerPort": 80,
+            "hostPort": 80,
+            "protocol": "tcp"
+        }],
+        "environment": [
+            { "name": "DATABASE_NAME", "value": args[1]  },
+            { "name": "USER_NAME", "value": args[2]  },
+            { "name": "USER_PASSWORD", "value": args[3]  },
+            { "name": "DATABASE_ADDRESS", "value": args[4]  },
+            { "name": "DATABASE_PORT", "value": str(int(args[5]))  },
+        ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "django-log-group",
+                "awslogs-region": "us-west-2",
+                "awslogs-stream-prefix": "djangoApp-database",           
+            },
+        },
+        "command": ["/app/setupDatabase.sh"]
+    }])))
+
+# Launching our Django service on Fargate, using our configurations and load balancers
+django_database_service = aws.ecs.Service("django-database-service",
+	cluster=app_cluster.arn,
+    desired_count=1,
+    launch_type="FARGATE",
+    task_definition=django_database_task_definition.arn,
+    wait_for_steady_state=False,
+    network_configuration={
+		"assign_public_ip": "true",
+		"subnets": [app_vpc_subnet.id],
+		"security_groups": [app_security_group.id]
+	},
+    load_balancers=[{
+		"target_group_arn": django_targetgroup.arn,
+		"container_name": "django-container",
+		"container_port": 80,
+	}],
+    opts=pulumi.ResourceOptions(depends_on=[django_listener]),
+)
+
+# Creating a task definition for the Django instance.
+django_site_task_definition = aws.ecs.TaskDefinition("django-site-task-definition",
+    family="django-site-task-definition-family",
     cpu="256",
     memory="512",
     network_mode="awsvpc",
@@ -259,14 +327,22 @@ django_task_definition = aws.ecs.TaskDefinition("django-task-definition",
             { "name": "DATABASE_ADDRESS", "value": args[4]  },
             { "name": "DATABASE_PORT", "value": str(int(args[5]))  },
         ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "django-log-group",
+                "awslogs-region": "us-west-2",
+                "awslogs-stream-prefix": "djangoApp-site",           
+            },
+        },
     }])))
 
 # Launching our Django service on Fargate, using our configurations and load balancers
-django_service = aws.ecs.Service("django-service",
+django_site_service = aws.ecs.Service("django-site-service",
 	cluster=app_cluster.arn,
     desired_count=1,
     launch_type="FARGATE",
-    task_definition=django_task_definition.arn,
+    task_definition=django_site_task_definition.arn,
     wait_for_steady_state=False,
     network_configuration={
 		"assign_public_ip": "true",
