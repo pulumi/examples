@@ -15,6 +15,9 @@ const cmsStackConfig = {
     githubSecret : pulumiConfig.requireSecret("githubSecret"),
     // The domain of the OAuth Server that we want
     targetDomain : pulumiConfig.require("targetDomain"),
+    // (Optional) the github scope we want CMS to edit, the values are in this link https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/
+    // You can also specify multiple scopes and separate by comma
+    githubScope: pulumiConfig.get("githubScope"),
     // (Optional) Port number of the target group if not specified use port 80
     targetGroupPort : pulumiConfig.getNumber("targetGroupPort")
 }
@@ -141,6 +144,9 @@ const sessionSecretRandomString = new random.RandomPassword("random", {
     length: 32,
 }, { additionalSecretOutputs: ["result"] });
 
+
+let inputGithubScope: pulumi.Input<string> = cmsStackConfig.githubScope!;
+
 // Create a Fargate service task that can scale out.
 const appService = new awsx.ecs.FargateService("app-svc", {
     cluster,
@@ -170,7 +176,11 @@ const appService = new awsx.ecs.FargateService("app-svc", {
                 {
                     name: "TARGET_PORT",
                     value: pulumi.interpolate `${inputTargetGroupPort}`
-                }
+                },
+                {
+                    name: "GITHUB_SCOPE",
+                    value: inputGithubScope
+                },
             ]
         },
     },

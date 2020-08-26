@@ -1,7 +1,7 @@
 backend:
   name: github
   # Replace this with the Github repo you want to make change
-  repo: your-github-repo
+  repo: github-username/target-github-repo
   # This site_domain and base_url are sudo domains
   # Replace site_domain with targetDomain pulumi stack configuration inside cms/infrastructure folder
   # Replace base_url with targetDomain pulumi stack configuration inside cms-oauth/infrastructure folder

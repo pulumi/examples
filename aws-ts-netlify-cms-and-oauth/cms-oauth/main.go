@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gorilla/pat"
 	"github.com/markbates/goth"
@@ -124,19 +125,38 @@ func init() {
 			fmt.Sprintf("%s/callback/gitlab", host),
 		)
 	}
-	goth.UseProviders(
-		github.New(
-			os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"),
-			// concatenate with the host name
-			fmt.Sprintf("%s/callback/github", host),
-			"public_repo",
-		),
-		bitbucket.New(
-			os.Getenv("BITBUCKET_KEY"), os.Getenv("BITBUCKET_SECRET"),
-			fmt.Sprintf("%s/callback//bitbucket", host),
-		),
-		gitlabProvider,
-	)
+
+	githubScope := os.Getenv("GITHUB_SCOPE")
+	if githubScope == "" {
+		goth.UseProviders(
+			github.New(
+				os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"),
+				// concatenate with the host name
+				fmt.Sprintf("%s/callback/github", host),
+				"public_repo",
+			),
+			bitbucket.New(
+				os.Getenv("BITBUCKET_KEY"), os.Getenv("BITBUCKET_SECRET"),
+				fmt.Sprintf("%s/callback//bitbucket", host),
+			),
+			gitlabProvider,
+		)
+	} else {
+		scopeArray := strings.Split(githubScope, ",")
+		goth.UseProviders(
+			github.New(
+				os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"),
+				// concatenate with the host name
+				fmt.Sprintf("%s/callback/github", host),
+				scopeArray...,
+			),
+			bitbucket.New(
+				os.Getenv("BITBUCKET_KEY"), os.Getenv("BITBUCKET_SECRET"),
+				fmt.Sprintf("%s/callback//bitbucket", host),
+			),
+			gitlabProvider,
+		)
+	}
 }
 
 func main() {
@@ -151,9 +171,15 @@ func main() {
 	//
 	http.Handle("/", router)
 	//
+	// if TARGET_PORT is unset or do not present then set it to be port 80
 	targetGroupPort := os.Getenv("TARGET_PORT")
+	if targetGroupPort == "" {
+		targetGroupPort = "80"
+	}
 	listenPort := ":" + targetGroupPort
 	fmt.Print("Started running on", listenPort, "\n")
 	// listen on port 80 where we created the target group
 	fmt.Println(http.ListenAndServe(listenPort, nil))
+}
+
 }
