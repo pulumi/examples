@@ -13,13 +13,14 @@ sql_admin_name = config.require("sql-admin-name")
 sql_admin_password = config.require_secret("sql-admin-password")
 sql_user_name = config.require("sql-user-name")
 sql_user_password = config.require_secret("sql-user-password")
-django_admin_name = config.require("django-admin-name")
-django_admin_password = config.require_secret("django-admin-password")
 availability_zone = pulumi.Config("aws").get("region")
 
-#Should be a random 50-character string
-django_secret_key = config.require_secret("django-secret-key")
+# Credentials for the Django site administration panel
+django_admin_name = config.require("django-admin-name")
+django_admin_password = config.require_secret("django-admin-password")
 
+# A random 50-character string
+django_secret_key = config.require_secret("django-secret-key")
 
 # The ECS cluster in which our application and databse will run
 app_cluster = aws.ecs.Cluster("app-cluster")
@@ -186,7 +187,7 @@ mysql_access_grant = mysql.Grant("mysql-access-grant",
 
 # The application's frontend: A Django service
 
-# Creating a target group through which the Flask frontend receives requests
+# Creating a target group through which the Django frontend receives requests
 django_targetgroup = aws.lb.TargetGroup("django-targetgroup",
 	port=80,
 	protocol="TCP",
@@ -233,12 +234,15 @@ django_image = docker.Image("django-dockerimage",
     registry=app_registry
 )
 
+# Creating a Cloudwatch instance to store the logs that the ECS services produce
 django_log_group = aws.cloudwatch.LogGroup("django-log-group",
     retention_in_days=1,
     name="django-log-group"
 )
 
-# Creating a task definition for the Django instance.
+# Creating a task definition for the first Django instance. This task definition 
+# will migrate the database, create a site admin account, and will automatcially 
+# exit when it is finished.
 django_database_task_definition = aws.ecs.TaskDefinition("django-database-task-definition",
     family="django_database_task_definition-family",
     cpu="256",
@@ -307,7 +311,8 @@ django_database_service = aws.ecs.Service("django-database-service",
     opts=pulumi.ResourceOptions(depends_on=[django_listener]),
 )
 
-# Creating a task definition for the Django instance.
+# Creating a task definition for the second Django instance. This instance will
+# act as the server, and will run indefinately
 django_site_task_definition = aws.ecs.TaskDefinition("django-site-task-definition",
     family="django-site-task-definition-family",
     cpu="256",
@@ -371,7 +376,6 @@ django_site_service = aws.ecs.Service("django-site-service",
     opts=pulumi.ResourceOptions(depends_on=[django_listener]),
 )
 
-# Exporting the url of our Flask frontend. We can now connect to our app
+# Exporting the url of our Django site. We can now connect to our app. To access
+# Django administration, add "/admin/" to the end of the url.
 pulumi.export("app-url", django_balancer.dns_name)
-
-pulumi.export("RDS server", mysql_rds_server.endpoint)
