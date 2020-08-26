@@ -11,6 +11,6 @@ ADD requirements.txt /
 
 RUN pip3 install -r requirements.txt
 
-ADD app /app
+ADD mysite /mysite
 
-CMD [ "python3", "app/manage.py", "runserver", "0.0.0.0:80" ]
+CMD [ "python3", "/mysite/manage.py", "runserver", "0.0.0.0:80" ]

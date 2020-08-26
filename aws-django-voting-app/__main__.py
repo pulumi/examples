@@ -288,7 +288,7 @@ django_database_task_definition = aws.ecs.TaskDefinition("django-database-task-d
                 "awslogs-stream-prefix": "djangoApp-database",           
             },
         },
-        "command": ["/app/setupDatabase.sh"]
+        "command": ["/mysite/setupDatabase.sh"]
     }])))
 
 # Launching our Django service on Fargate, using our configurations and load balancers
