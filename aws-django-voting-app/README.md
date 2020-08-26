@@ -1,8 +1,8 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Voting app Using Redis and Flask
+# Voting app Using Django and MySQL
 
-A simple voting app that uses Redis for a data store and a Python Flask app for the frontend. The example has been ported from https://github.com/Azure-Samples/azure-voting-app-redis.
+A simple voting app that uses MySQL for data storage and a Python Django app for the frontend. 
 
 The example shows how easy it is to deploy containers into production and to connect them to one another. Since the example defines a custom container, Pulumi does the following:
 - Builds the Docker image
@@ -22,18 +22,24 @@ The example shows how easy it is to deploy containers into production and to con
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init aws-py-voting-app
+    $ pulumi stack init aws-django-voting-app
     ```
 
-1. Set the AWS region and Redis password:
+1. Set the AWS region, the usernames and passwords for a set of accounts the project uses, and a random 50-character string to serve as Django's secret key:
 
     ```bash
     $ pulumi config set aws:region us-west-2
-    $ pulumi config set redis-password <PASSWORD> --secret
+    $ pulumi config set sql-admin-name <NAME>
+    $ pulumi config set sql-admin-password <PASSWORD> --secret
+    $ pulumi config set sql-user-name <NAME>
+    $ pulumi config set sql-user-password <PASSWORD> --secret
+    $ pulumi config set django-admin-name <NAME>
+    $ pulumi config set django-admin-password <PASSWORD> --secret
+    $ pulumi config set django_secret_key = <VALUE> --secret
     ```
 
 1. Create a Python virtualenv, activate it, and install dependencies:
-
+ 
     This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
 
     ```bash
@@ -44,55 +50,59 @@ The example shows how easy it is to deploy containers into production and to con
 
 1. Run `pulumi up -y` to deploy changes:
     ```bash
-    Updating (aws-py-voting-app):
-        Type                                  Name                            Status      Info
-    +   pulumi:pulumi:Stack                   webserver-py-aws-py-voting-app  created     
-    +   ├─ docker:image:Image                 flask-dockerimage               created     
-    +   ├─ aws:ec2:Vpc                        app-vpc                         created     
-    +   ├─ aws:ecs:Cluster                    app-cluster                     created     
-    +   ├─ aws:iam:Role                       app-exec-role                   created     
-    +   ├─ aws:iam:Role                       app-task-role                   created     
-    +   ├─ aws:ecr:Repository                 app-ecr-repo                    created     
-    +   ├─ aws:ecr:LifecyclePolicy            app-lifecycle-policy            created     
-    +   ├─ aws:iam:RolePolicyAttachment       app-exec-policy                 created     
-    +   ├─ aws:iam:RolePolicyAttachment       app-access-policy               created     
-    +   ├─ aws:iam:RolePolicyAttachment       app-lambda-policy               created     
-    +   ├─ aws:ecs:TaskDefinition             redis-task-definition           created     
-    +   ├─ aws:ec2:InternetGateway            app-gateway                     created     
-    +   ├─ aws:ec2:SecurityGroup              security-group                  created     
-    +   ├─ aws:ec2:Subnet                     app-vpc-subnet                  created     
-    +   ├─ aws:lb:TargetGroup                 redis-targetgroup               created     
-    +   ├─ aws:lb:TargetGroup                 flask-targetgroup               created     
-    +   ├─ aws:ec2:RouteTable                 app-routetable                  created     
-    +   ├─ aws:lb:LoadBalancer                redis-balancer                  created     
-    +   ├─ aws:lb:LoadBalancer                flask-balancer                  created     
-    +   ├─ aws:ec2:MainRouteTableAssociation  app_routetable_association      created     
-    +   ├─ aws:lb:Listener                    flask-listener                  created     
-    +   ├─ aws:lb:Listener                    redis-listener                  created     
-    +   ├─ aws:ecs:TaskDefinition             flask-task-definition           created     
-    +   ├─ aws:ecs:Service                    redis-service                   created     
-    +   └─ aws:ecs:Service                    flask-service                   created     
-
+    Updating (aws-django-voting-app):
+        Type                                  Name                              Status      Info
+    +   pulumi:pulumi:Stack                   voting-app-aws-django-voting-app  created     
+    +   ├─ docker:image:Image                 django-dockerimage                created     1 warning
+    +   ├─ aws:ec2:Vpc                        app-vpc                           created     
+    +   ├─ aws:ecs:Cluster                    app-cluster                       created     
+    +   ├─ aws:iam:Role                       app-exec-role                     created     
+    +   ├─ aws:iam:Role                       app-task-role                     created     
+    +   ├─ aws:ecr:Repository                 app-ecr-repo                      created     
+    +   ├─ aws:cloudwatch:LogGroup            django-log-group                  created     
+    +   ├─ aws:ecr:LifecyclePolicy            app-lifecycle-policy              created     
+    +   ├─ aws:iam:RolePolicyAttachment       app-exec-policy                   created     
+    +   ├─ aws:iam:RolePolicyAttachment       app-access-policy                 created     
+    +   ├─ aws:iam:RolePolicyAttachment       app-lambda-policy                 created     
+    +   ├─ aws:ec2:InternetGateway            app-gateway                       created     
+    +   ├─ aws:ec2:SecurityGroup              security-group                    created     
+    +   ├─ aws:ec2:Subnet                     app-vpc-subnet                    created     
+    +   ├─ aws:ec2:Subnet                     extra-rds-subnet                  created     
+    +   ├─ aws:lb:TargetGroup                 django-targetgroup                created     
+    +   ├─ aws:lb:LoadBalancer                django-balancer                   created     
+    +   ├─ aws:ec2:RouteTable                 app-routetable                    created     
+    +   ├─ aws:rds:SubnetGroup                app-database-subnetgroup          created     
+    +   ├─ aws:ec2:MainRouteTableAssociation  app_routetable_association        created     
+    +   ├─ aws:rds:Instance                   mysql-server                      created     
+    +   ├─ aws:lb:Listener                    django-listener                   created     
+    +   ├─ pulumi:providers:mysql             mysql-provider                    created     
+    +   ├─ mysql:index:Database               mysql-database                    created     
+    +   ├─ mysql:index:User                   mysql-standard-user               created     
+    +   ├─ mysql:index:Grant                  mysql-access-grant                created     
+    +   ├─ aws:ecs:TaskDefinition             django-site-task-definition       created     
+    +   ├─ aws:ecs:TaskDefinition             django-database-task-definition   created     
+    +   ├─ aws:ecs:Service                    django-site-service               created     
+    +   └─ aws:ecs:Service                    django-database-service           created     
+    
     Outputs:
-        app-url: "flask-balancer-3987b84-b596c9ee2027f152.elb.us-west-2.amazonaws.com"
+        app-url: "django-balancer-2f4f9fe-c6e6893a1972a811.elb.us-west-2.amazonaws.com"
 
     Resources:
-        + 26 created
+        + 31 created
 
-    Duration: 3m10s
+    Duration: 4m16s
     ```
 
-1. View the DNS address of the instance via `stack output`:
+1. View the DNS address of the instance via `pulumi stack output`:
 
     ```bash
     $ pulumi stack output
     Current stack outputs (1):
         OUTPUT   VALUE
-        app-url  flask-balancer-3987b84-b596c9ee2027f152.elb.us-west-2.amazonaws.com
-
+        app-url  django-balancer-2f4f9fe-c6e6893a1972a811.elb.us-west-2.amazonaws.com
     ```
 
-1.  Verify that the EC2 instance exists, by connecting to it in a browser window.
+1.  Verify that the ECS instance exists by connecting to it in a browser window.
 
 ## Clean up
 
