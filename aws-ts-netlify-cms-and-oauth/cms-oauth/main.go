@@ -181,5 +181,3 @@ func main() {
 	// listen on port 80 where we created the target group
 	fmt.Println(http.ListenAndServe(listenPort, nil))
 }
-
-}
