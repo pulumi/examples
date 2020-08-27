@@ -2,7 +2,7 @@
 FROM golang:1.13-alpine3.12 as buildenv
 RUN apk add --no-cache build-base git
 
-WORKDIR /go/src/github.com/zephyrz73/netlify-cms-oauth-provider-go
+WORKDIR /go/src/github.com/zephyrz73/aws-ts-netlify-cms-and-oauth/cms-oauth
 COPY ./ ./
 RUN go mod download
 
@@ -13,6 +13,6 @@ FROM alpine:3.12
 
 RUN apk --no-cache add ca-certificates
 
-COPY --from=buildenv /go/bin/netlify-cms-oauth-provider-go /go/bin/netlify-cms-oauth-provider-go
+COPY --from=buildenv /go/bin/aws-ts-netlify-cms-and-oauth /go/bin/aws-ts-netlify-cms-and-oauth
 
 CMD ["/go/bin/netlify-cms-oauth-provider-go", "--logtostderr"]
