@@ -1,21 +1,6 @@
 #!/bin/bash
 #
-# Configures the local AWS credentials and adds some useful functions to
-# the environment. For use in our CI/CD workflows where we use a common
-# set of environments and just provide an access key via environment variable.
-#
-# USAGE:
-# 1. Set the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment
-#    for the CI/CD workflow. They should be to a low privledged user.
-# 2. Source this file. It will create files in the ~/.aws folder and
-#    unset AWS_ACCESS_KEY_ID.
-#
-# After that, use the AWS SDK like normal. The default profile will use the
-# credentials in the initial environment variable. But you can easily change
-# AWS accounts by setting the AWS_PROFILE environment variable. (You will set
-# AWS_PROFILE="pulumi-ci" in most cases.)
-#
-# This script also exports two functions: assume_iam_role and unassume_iam_role
+# This script exports two functions: assume_iam_role and unassume_iam_role
 # which can be used to assume an IAM role without using AWS_PROFILE.
 
 # Function to use the current AWS credentials to assume an IAM Role.
@@ -66,35 +51,3 @@ if [ ! -z ${AWS_SECURITY_TOKEN} ]; then
     echo "ERROR: AWS_SECURITY_TOKEN is set. Something is not right. (In an assumed role?)"
 fi
 
-# Write the AWS access key found in an environment variable to disk, allowing for
-# transparent IAM role assumption via the AWS SDK.
-function write_aws_config_files() {
-    mkdir -p ${HOME}/.aws/
-
-    cat <<EOF >> ${HOME}/.aws/credentials
-[default]
-aws_access_key_id     = ${AWS_ACCESS_KEY_ID}
-aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
-EOF
-
-    cat <<EOF >> ${HOME}/.aws/config
-[default]
-region = us-west-2
-[profile pulumi-ci]
-role_arn = arn:aws:iam::894850187425:role/ContinuousDeliveryAdminRole
-source_profile = default
-EOF
-
-    # Unset AWS_ACCESS_* so that we don't get confused later when we use AWS_PROFILE.
-    echo "Unsetting AWS environment variables to rely on the credentials files."
-    unset {AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY}
-}
-
-if [ -f "${HOME}/.aws/config" -o -f "${HOME}/.aws/credentials" ]; then
-    echo "ERROR: ~/.aws/config or ~/.aws/credentials exist. Not overwriting."
-else
-    echo "Writing ~/.aws/config and ~/.aws/credentials"
-    write_aws_config_files
-fi
-
-echo "Current user: $(aws sts get-caller-identity | jq '.Arn')"
