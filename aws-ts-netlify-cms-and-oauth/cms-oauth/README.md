@@ -1,6 +1,8 @@
 # About the Project
 This OAuth Server Project is connected with CMS project which deploy on AWS S3 rather than on Netlify. In this way, it requires us to create a OAuth Client Server for Netlify CMS. Netlify use the Netlify Identity Service which provides OAuth provider server. Based on [Netlify's instruction](https://www.netlifycms.org/docs/external-oauth-clients/) of customize this step we need to provide our own OAuth client.
 
+In this example, we are using [Netlify CMS's Github backends](https://www.netlifycms.org/docs/github-backend/) for CMS, but the OAuth Provider code enabled more types of backends Bitbucket and Gitlab. If you are using these [backends](https://www.netlifycms.org/docs/backends-overview/), simply update the callback url you are register Github OAuth Applicationc (See step 1 in the Getting Started section) to be https://{{the domain of your OAuth App}}/bitbucket/callback or https://{{the domain of your OAuth App}}/gitlab/callback
+
 ## References
 The provider's content code is referencing to the [External OAuth Client example from Netlify CMS](https://www.netlifycms.org/docs/external-oauth-clients/). 
 Here are some reference:
@@ -18,10 +20,12 @@ Here are some reference:
 - ./main.go the code for the provider itself and it's front end
   - It is fetching the access token sent from Github API using Github's goth library. 
 - .github/workflow contain code for the workflow
-- scripts/assume-role.sh the script for assume role into the AWS admin account with IAM user role
 
-## Deployment to AWS
+## Infrastructure
 The OAuth Client Server was deployed on AWS using Pulumi. The Pulumi code use AWS Certificate Manager to create certificate and validate it. It is using AWS ECS Fargate to read docker image and establish a Fargate Service. Then it is also creating Alias Record on Route53 for the OAuth Server.
+
+### Assume Role (Optional)
+If you are working with an organization, it is better to ask for the AWS token for IAM user role that you could use to assume the admin role of your AWS account. In this way it is more secure. You could refer to the [aws-ts-assume-role example](https://github.com/pulumi/examples/tree/master/aws-ts-assume-role) for more information. There is also assume role example of different language in [our example repostiory](https://github.com/pulumi/examples)
 
 # Getting Start (Replace content in {{}} with correct informations)
 These steps are now automated using the Github Workflow. If you push to the master or merge a pull request, the OAuth Client Server would be automatically deployed. Open a new branch and push to the branch would only do a pulumi preview where the logs could be check on Github Actions.  
@@ -68,16 +72,6 @@ because it might cause the secret be stored inside the command memory
 $ pulumi config get netlify-cms-oauth-provider-infrastructure:githubKey
 $ pulumi config get netlify-cms-oauth-provider-infrastructure:githubSecret
 ```
-
-
-6. Don't forget to update AWS token before next step!!!!
-If you are working with an organization and assume role is needed:
- - you should ask your organization for creating new IAM user and providing credential for the user. Then after set credential as environment variable, assume the role of admin to your companies' production account use this:
-
- ```bash
- $ source ./scripts/assume-role.sh; assume_iam_role "{{IAM_ROLE_ARN}}" "cmsSession" "{{EXTERNAL_ID}}"
- ```
-IAM_ROLE_ARN and EXTERNAL_ID is the information provided by iam role we should assume. The script file in ./scripts/assume-role.sh contain assume_iam_role function
 
 ### Step 3. Running Infrastructure
 ```bash

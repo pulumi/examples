@@ -20,19 +20,6 @@ jobs:
 
         - name: Install pulumi deps
           run: yarn install --cwd infrastructure
-        
-        - name: Assume Role
-          env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            IAM_ROLE_ARN: ${{ secrets.IAM_ROLE_ARN }}
-            EXTERNAL_ID: ${{ secrets.EXTERNAL_ID }}
-          run: |
-              unset AWS_SESSION_TOKEN
-              source ./scripts/assume-role.sh; assume_iam_role "${{secrets.IAM_ROLE_ARN}}" "cmsOAuthSession" "${{secrets.EXTERNAL_ID}}"
-              echo '::set-env name=AWS_ACCESS_KEY_ID::'$AWS_ACCESS_KEY_ID
-              echo '::set-env name=AWS_SECRET_ACCESS_KEY::'$AWS_SECRET_ACCESS_KEY
-              echo '::set-env name=AWS_SESSION_TOKEN::'$AWS_SESSION_TOKEN
   
         - name: Preview infrastructure
           if: ${{ github.event_name == 'pull_request' }}
