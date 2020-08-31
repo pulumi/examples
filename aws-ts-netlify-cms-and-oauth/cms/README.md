@@ -32,7 +32,7 @@ Special thanks to the template provided by [@talves](https://github.com/ADARTA/n
 
 The infrastructure folder contain Pulumi code of deploying this CMS app onto the AWS S3, speeding up using AWS CloudFront, and certificate creation using AWS Certificate Manager. The general idea is deploy the CMS application as a static website onto the AWS. We already have a [Pulumi's static website creation example](https://github.com/pulumi/examples/tree/master/aws-ts-static-website) with explanation provided.
 
-The infrastructure takes three argument: pathToWebsiteContents,targetDomain, certificateArn.
+The infrastructure requires three stack configuration properties: `pathToWebsiteContents`, `targetDomain`, `certificateArn`.
 - pathToWebsiteContents
   - The path to the builded content of this React Website app.
   - Run a yarn build will create a build folder which contains the builded file and we should pass the directory of the build folder to this variable.
@@ -138,8 +138,8 @@ $ pulumi up
 - create a new branch at docs repo
 - open a pull request 
 - make initial commit to the branch
-- add tag to the commit says "drafts"
-- produce a card at the drafts column on the editorial workflow page (mentioned in 5. 6.)
+- Add tag to the PR that indicates that it is a "draft"
+- Adds a card in the drafts column on the editorial workflow page (more on the workflow UI below)
 
 5. Click the Back button to go back to the collections page and clicking the **Workflow** button would bring out the editorial workflow
 
