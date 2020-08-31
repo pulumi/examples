@@ -46,43 +46,42 @@ The infrastructure requires three stack configuration properties: `pathToWebsite
   - If you have already had a certificate inside the AWS's Certificate Manager for this CMS app, then put it's arn as the value for this variable
 
 ### Assume Role (Optional)
-If you are working with an organization, it is better to ask for the AWS token for IAM user role that you could use to assume the admin role of your AWS account. In this way it is more secure. You could refer to the [aws-ts-assume-role example](https://github.com/pulumi/examples/tree/master/aws-ts-assume-role) for more information. There is also assume role example of different language in [our example repostiory](https://github.com/pulumi/examples)
+It is recommended that you use assume an IAM role with more permissions in the _target_ AWS using a token for an IAM user in the _source_ account. To do this, you could refer to the [aws-ts-assume-role example](https://github.com/pulumi/examples/tree/master/aws-ts-assume-role) for more information. The example is available in multiple languages in our [examples repostiory](https://github.com/pulumi/examples).
 
-## Substitution for Netlify Identity Service: OAuth Client Server
-Deploying the CMS app on AWS but not Netlify cause we could not use the Netlify Identity Service with the Netlify console. Thus, we created a new OAuth Client Server follow [instruction of Netlify CMS](https://www.netlifycms.org/docs/external-oauth-clients/). In short it fetch access token from Github API to grant people access to use the CMS. The resource of the OAuth Server is inside the ./cms-oauth folder in the root directory.
+## Substitution for Netlify Identity Service: OAuth Server
+Since we are deploying the CMS app on AWS instead of Netlify we need to provide our own server to do the OAuth [authorization code grant flow](https://oauth.net/2/grant-types/authorization-code/). So we also deployed an OAuth Server. Here's the official Netlify documentation on using [external OAuth clients](https://www.netlifycms.org/docs/external-oauth-clients/). In short, the OAuth server fetches the access token from GitHub API to use the CMS. The code for the OAuth Server is inside the `./cms-oauth` folder in the root directory of this example.
 
 After deploying the cms-oauth web app, we should also put the domain of the oauth-server we build in the cms/public/config.yml's base_url configuration
 
 ## Code Path
 
-1. The enter point for this app was in **public/index.html** which includes multiple scripts and the div with id root for inserting the CMS content.
-
-1. **src/index.js** which create an App React DOM from **src/App.js** and insert into the div with id root in the public/index.html. 
+1.  Since the CMS is implemented as a React app, the entry point is in **public/index.html** which includes multiple scripts and the div with id `root` for rendering the CMS component inside it.
 
 1. App.js then create NetlifyCMS component instance from **src/components/NetlifyCMS** folder.
 
 1. **src/components/NetlifyCMS/index.js** specify the behavior for NetlifyCMS and we could register CMS custom templates, custom widget there. 
 
-1. CMS.init() will initialize CMS using **public/config.yml** which is the core of this app, which contains collection, backend settings, and other settings
+1. `CMS.init()` will initialize CMS using **public/config.yml** which is the core of this app, which contains collection, backend settings, and other settings.
 
 ## Development Details
-Now Github workflow was implemented. Directly push to master branch would automatically deploy cms to http://cms.corptron9000.pulumi.com/
+Now Github workflow was implemented. Directly push to master branch would automatically deploy cms.
 Open a new branch and commit to the new branch would only do a pulumi preview until merge, which you could see from the Github Actions. For testing:
 
 ### Local Development
 
-1. Specify the repo, site_domain and base_url in the cms/public/config.yml's backend block.
+1. Specify the `repo`, `site_domain` and `base_url` in the `cms/public/config.yml`'s backend block.
 ![First Step: change cms config](Readme-Screenshots/cms-config-setings.jpg)
-  repo is the target repo you would like CMS to view and make edits on
-  site_domain is the domain name for the CMS web application
-  base_url is the domain name for the oauth server that we specify in cms-oauth folder
+  `repo` is the target repo you would like CMS to view and make edits on
+  `site_domain` is the domain name for the CMS web application
+  `base_url` is the domain name for the OAuth server (deployed from the `cms-oauth` folder)
 
-1. To check if config.yml works and do a simple local deployment
+1. To run the CMS app locally, run:
 
 ```bash
 yarn start
 ```
-It would automatically update if you made another change to config.yml
+
+It would automatically update if you made another change to `config.yml`
 
 ### 
 1. Build the App
@@ -96,15 +95,15 @@ This would build the App and create a build folder under root directory.
 
 ```bash
 $ cd infrastructure
-$ pulumi stack init pulumi-website-cms
+$ pulumi stack init website-cms
 $ pulumi config set aws:region us-east-1
-$ pulumi config set pulumi-website-cms:pathToWebsiteContents ../build
-$ pulumi config set pulumi-website-cms:targetDomain https://some-cms-domain.pulumi-demos.com
+$ pulumi config set website-cms:pathToWebsiteContents ../build
+$ pulumi config set website-cms:targetDomain https://some-cms-domain.com
 # the targetDomain have to match what you put for site_domain inside the config file ./cms/public/config.yml
 ```
-- path to website contents would specify the folder generated by yarn build and upload that folder to S3
+- path to website contents would specify the folder generated by `yarn build` and upload that folder to S3
 
-- target domain is the domain for the App now it is as subdomain under pulumi-demos.net
+- target domain is the domain for the app
 
 4. Run pulumi up
 ```bash
@@ -112,6 +111,8 @@ $ pulumi up
 ```
 
 ## CMS UI Introduction
+
+> Before you can login into the CMS app, you must complete the steps in the OAuth server to either run it locally or deploy it to the cloud.
 
 1.  Open up a server with working example with
 
@@ -132,13 +133,11 @@ $ pulumi up
 
     ![entry page](Readme-Screenshots/entery_page.jpg)
 
-> For images uploads, currently all images that webinar pages requires would be uploaded to *static/images/webinar* related to root in docs repository including preview image and icon image.
-
-4. Click save button at the top of the editing page would 
-- create a new branch at docs repo
-- open a pull request 
-- make initial commit to the branch
-- Add tag to the PR that indicates that it is a "draft"
+4. Click **Save** button at the top of the editing page would 
+- Create a new branch in your target repo
+- Open a pull request 
+- Make initial commit to the branch
+- Adds tag to the PR that indicates that it is a "draft"
 - Adds a card in the drafts column on the editorial workflow page (more on the workflow UI below)
 
 5. Click the Back button to go back to the collections page and clicking the **Workflow** button would bring out the editorial workflow
