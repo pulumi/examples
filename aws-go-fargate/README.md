@@ -4,7 +4,7 @@
 
 This example shows authoring Infrastructure as Code in the [Go programming language](https://golang.org). It
 provisions a full [Amazon Elastic Container Service (ECS) "Fargate"](https://aws.amazon.com/ecs) cluster and
-related infrastructure, running a load-balanced NGINX web server accessible over the Internet on port 80.
+related infrastructure, building a docker image, pushing it to ECR, and using it to run a web server accessible over the Internet on port 80.
 This example is inspired by [Docker's Getting Started Tutorial](https://docs.docker.com/get-started/).
 
 ## Prerequisites
@@ -73,31 +73,11 @@ Next, to deploy the application and its infrastructure, follow these steps:
 
     ```bash
     $ curl http://$(pulumi stack output url)
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <title>Welcome to nginx!</title>
-    <style>
-        body {
-            width: 35em;
-            margin: 0 auto;
-            font-family: Tahoma, Verdana, Arial, sans-serif;
-        }
-    </style>
-    </head>
-    <body>
-    <h1>Welcome to nginx!</h1>
-    <p>If you see this page, the nginx web server is successfully installed and
-    working. Further configuration is required.</p>
-
-    <p>For online documentation and support please refer to
-    <a href="http://nginx.org/">nginx.org</a>.<br/>
-    Commercial support is available at
-    <a href="http://nginx.com/">nginx.com</a>.</p>
-
-    <p><em>Thank you for using nginx.</em></p>
-    </body>
-    </html>
+    42
+    $ curl http://$(pulumi stack output url)
+    19
+    $ curl http://$(pulumi stack output url)
+    88
     ```
 
 7. Try making some changes, rebuilding, and rerunning `pulumi up`. For example, let's scale up to 5 instances:

@@ -1,10 +1,16 @@
 package main
 
 import (
+	"encoding/base64"
+	"fmt"
+	"strings"
+
 	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/ec2"
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/ecr"
 	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/ecs"
 	elb "github.com/pulumi/pulumi-aws/sdk/v3/go/aws/elasticloadbalancingv2"
 	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/iam"
+	"github.com/pulumi/pulumi-docker/sdk/v2/go/docker"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
 
@@ -107,6 +113,54 @@ func main() {
 			return err
 		}
 
+		repo, err := ecr.NewRepository(ctx, "foo", &ecr.RepositoryArgs{})
+		if err != nil {
+			return err
+		}
+
+		repoCreds := repo.RegistryId.ApplyStringArray(func(rid string) ([]string, error) {
+			creds, err := ecr.GetCredentials(ctx, &ecr.GetCredentialsArgs{
+				RegistryId: rid,
+			})
+			if err != nil {
+				return nil, err
+			}
+			data, err := base64.StdEncoding.DecodeString(creds.AuthorizationToken)
+			if err != nil {
+				fmt.Println("error:", err)
+				return nil, err
+			}
+
+			return strings.Split(string(data), ":"), nil
+		})
+		repoUser := repoCreds.Index(pulumi.Int(0))
+		repoPass := repoCreds.Index(pulumi.Int(1))
+
+		image, err := docker.NewImage(ctx, "my-image", &docker.ImageArgs{
+			Build: docker.DockerBuildArgs{
+				Context: pulumi.String("./app"),
+			},
+			ImageName: repo.RepositoryUrl,
+			Registry: docker.ImageRegistryArgs{
+				Server:   repo.RepositoryUrl,
+				Username: repoUser,
+				Password: repoPass,
+			},
+		})
+
+		containerDef := image.ImageName.ApplyString(func(name string) (string, error) {
+			fmtstr := `[{
+				"name": "my-app",
+				"image": %q,
+				"portMappings": [{
+					"containerPort": 80,
+					"hostPort": 80,
+					"protocol": "tcp"
+				}]
+			}]`
+			return fmt.Sprintf(fmtstr, name), nil
+		})
+
 		// Spin up a load balanced service running NGINX.
 		appTask, err := ecs.NewTaskDefinition(ctx, "app-task", &ecs.TaskDefinitionArgs{
 			Family:                  pulumi.String("fargate-task-definition"),
@@ -115,15 +169,7 @@ func main() {
 			NetworkMode:             pulumi.String("awsvpc"),
 			RequiresCompatibilities: pulumi.StringArray{pulumi.String("FARGATE")},
 			ExecutionRoleArn:        taskExecRole.Arn,
-			ContainerDefinitions: pulumi.String(`[{
-    "name": "my-app",
-    "image": "nginx",
-    "portMappings": [{
-        "containerPort": 80,
-        "hostPort": 80,
-        "protocol": "tcp"
-    }]
-}]`),
+			ContainerDefinitions:    containerDef,
 		})
 		if err != nil {
 			return err
