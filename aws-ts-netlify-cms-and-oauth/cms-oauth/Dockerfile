@@ -2,7 +2,7 @@
 FROM golang:1.13-alpine3.12 as buildenv
 RUN apk add --no-cache build-base git
 
-WORKDIR /go/src/github.com/zephyrz73/aws-ts-netlify-cms-and-oauth/cms-oauth
+WORKDIR /go/src/github.com/pulumi/aws-ts-netlify-cms-and-oauth/cms-oauth
 COPY ./ ./
 RUN go mod download
 

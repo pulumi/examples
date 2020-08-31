@@ -49,7 +49,7 @@ function crawlDirectory(dir: string, f: (_: string) => void) {
     }
 }
 
-// Sync the contents of the source directory with the S3 bucket, which will in-turn show up on the CDN.
+// Sync the contents of the build directory with the S3 bucket, which will in-turn show up on the CDN. This method of uploading objects to S3 is idea for small apps that contain less than 100 files.
 const webContentsRootPath = path.join(process.cwd(), config.pathToWebsiteContents);
 console.log("Syncing contents from local disk at", webContentsRootPath);
 crawlDirectory(

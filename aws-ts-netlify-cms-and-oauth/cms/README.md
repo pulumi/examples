@@ -1,5 +1,4 @@
 
-# TRY PULUMI'S CMS AT http://cms.corptron9000.pulumi.com/
 ## Background Knowledges
 CMS stands for content management system, which facilitate creation and modification of digital content.
 
@@ -16,7 +15,7 @@ Special thanks to the template provided by [@talves](https://github.com/ADARTA/n
 ## File Path
 
 - .github/workflow
-  - The implementation of Github Actions and Github Workflow
+  - The implementation of Github Actions workflow
 - cms/infrastructure
   - The infrastructure of deploying cms app on AWS using Pulumi.
   - index.ts contain the code for the Pulumi program
@@ -31,7 +30,7 @@ Special thanks to the template provided by [@talves](https://github.com/ADARTA/n
 
 ## Infrastructure
 
-The infrastructure folder contain Pulumi code of deploying this CMS app onto the AWS S3, speeding up using AWS CloudFront, and certificate creation using AWS Certificate Manager. The general idea is deploy the CMS application as a static website onto the AWS. We already have a [Pulumi's static website creation example](https://github.com/pulumi/examples/tree/master/aws-ts-static-website) with explaination provided.
+The infrastructure folder contain Pulumi code of deploying this CMS app onto the AWS S3, speeding up using AWS CloudFront, and certificate creation using AWS Certificate Manager. The general idea is deploy the CMS application as a static website onto the AWS. We already have a [Pulumi's static website creation example](https://github.com/pulumi/examples/tree/master/aws-ts-static-website) with explanation provided.
 
 The infrastructure takes three argument: pathToWebsiteContents,targetDomain, certificateArn.
 - pathToWebsiteContents
@@ -142,17 +141,17 @@ $ pulumi up
 - add tag to the commit says "drafts"
 - produce a card at the drafts column on the editorial workflow page (mentioned in 5. 6.)
 
-5. Click Back Button would go back to collection page and click Workflow button would bring out the editorial workflow
+5. Click the Back button to go back to the collections page and clicking the **Workflow** button would bring out the editorial workflow
 
     ![workflow button](Readme-Screenshots/Workflow_button.jpg)
 
     ![Editorial Workflow](Readme-Screenshots/Editorial_Workflow.jpg)
 
-6. Move a change card from "Drafts" column to "In Review" column would remove "draft" tag of the commit on docs repo and create an "in-review" tag to the commits in docs repo 
+6. Moving a card from the "Drafts" column to the "In Review" column will remove the "draft" tag and apply an "in-review" tag on the PR
 
-7. Move a change card from "In Review" to "Ready" columns would change the commit tag to "ready"
+7. Similarly, moving a card from "In Review" to "Ready" columns would change the PR tag to "ready"
 
-8. Hover on the card in "Ready" column would show "publish change" button, which would merge the branch into the master branch.
+8. Hover on the card in "Ready" column would show **Publish change** button, which would merge the PR.
 
 
 
