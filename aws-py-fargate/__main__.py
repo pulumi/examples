@@ -6,47 +6,47 @@ import json
 cluster = aws.ecs.Cluster('cluster')
 
 # Read back the default VPC and public subnets, which we will use.
-default_vpc = aws.ec2.get_vpc(default='true')
+default_vpc = aws.ec2.get_vpc(default=True)
 default_vpc_subnets = aws.ec2.get_subnet_ids(vpc_id=default_vpc.id)
 
 # Create a SecurityGroup that permits HTTP ingress and unrestricted egress.
 group = aws.ec2.SecurityGroup('web-secgrp',
 	vpc_id=default_vpc.id,
 	description='Enable HTTP access',
-	ingress=[{
-		'protocol': 'tcp',
-		'from_port': 80,
-		'to_port': 80,
-		'cidr_blocks': ['0.0.0.0/0'],
-	}],
-  	egress=[{
-		'protocol': '-1',
-		'from_port': 0,
-		'to_port': 0,
-		'cidr_blocks': ['0.0.0.0/0'],
-	}]
+	ingress=[aws.ec2.SecurityGroupIngressArgs(
+		protocol='tcp',
+		from_port=80,
+		to_port=80,
+		cidr_blocks=['0.0.0.0/0'],
+	)],
+  	egress=[aws.ec2.SecurityGroupEgressArgs(
+		protocol='-1',
+		from_port=0,
+		to_port=0,
+		cidr_blocks=['0.0.0.0/0'],
+	)],
 )
 
 # Create a load balancer to listen for HTTP traffic on port 80.
 alb = aws.lb.LoadBalancer('app-lb',
 	security_groups=[group.id],
-	subnets=default_vpc_subnets.ids
+	subnets=default_vpc_subnets.ids,
 )
 
 atg = aws.lb.TargetGroup('app-tg',
 	port=80,
 	protocol='HTTP',
 	target_type='ip',
-	vpc_id=default_vpc.id
+	vpc_id=default_vpc.id,
 )
 
 wl = aws.lb.Listener('web',
 	load_balancer_arn=alb.arn,
 	port=80,
-	default_actions=[{
-		'type': 'forward',
-		'target_group_arn': atg.arn
-	}]
+	default_actions=[aws.lb.ListenerDefaultActionArgs(
+		type='forward',
+		target_group_arn=atg.arn,
+	)],
 )
 
 # Create an IAM role that can be used by our service's task.
@@ -61,12 +61,12 @@ role = aws.iam.Role('task-exec-role',
 			},
 			'Action': 'sts:AssumeRole',
 		}]
-	})
+	}),
 )
 
 rpa = aws.iam.RolePolicyAttachment('task-exec-policy',
 	role=role.name,
-	policy_arn='arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
+	policy_arn='arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy',
 )
 
 # Spin up a load balanced service running our container image.
@@ -93,16 +93,16 @@ service = aws.ecs.Service('app-svc',
     desired_count=3,
     launch_type='FARGATE',
     task_definition=task_definition.arn,
-    network_configuration={
-		'assign_public_ip': 'true',
-		'subnets': default_vpc_subnets.ids,
-		'security_groups': [group.id]
-	},
-    load_balancers=[{
-		'target_group_arn': atg.arn,
-		'container_name': 'my-app',
-		'container_port': 80
-	}],
+    network_configuration=aws.ecs.ServiceNetworkConfigurationArgs(
+		assign_public_ip=True,
+		subnets=default_vpc_subnets.ids,
+		security_groups=[group.id],
+	),
+    load_balancers=[aws.ecs.ServiceLoadBalancerArgs(
+		target_group_arn=atg.arn,
+		container_name='my-app',
+		container_port=80,
+	)],
     opts=ResourceOptions(depends_on=[wl]),
 )
 
