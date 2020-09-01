@@ -25,7 +25,7 @@ Here are some reference:
 The OAuth Client Server was deployed on AWS using Pulumi. The Pulumi code use AWS Certificate Manager to create certificate and validate it. It is using AWS ECS Fargate to read docker image and establish a Fargate Service. Then it is also creating Alias Record on Route53 for the OAuth Server.
 
 ### Assume Role (Optional)
-If you are working with an organization, it is better to ask for the AWS token for IAM user role that you could use to assume the admin role of your AWS account. In this way it is more secure. You could refer to the [aws-ts-assume-role example](https://github.com/pulumi/examples/tree/master/aws-ts-assume-role) for more information. There is also assume role example of different language in [our example repostiory](https://github.com/pulumi/examples)
+It is recommended that you use an IAM role with more permissions in the _target_ AWS using a token for an IAM user in the _source_ account. To do this, you could refer to the [aws-ts-assume-role example](https://github.com/pulumi/examples/tree/master/aws-ts-assume-role) for more information. The example is available in multiple languages in our [examples repostiory](https://github.com/pulumi/examples).
 
 # Getting Start (Replace content in {{}} with correct informations)
 These steps are now automated using the Github Workflow. If you push to the master or merge a pull request, the OAuth Client Server would be automatically deployed. Open a new branch and push to the branch would only do a pulumi preview where the logs could be check on Github Actions.  

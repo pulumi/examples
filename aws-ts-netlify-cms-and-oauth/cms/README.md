@@ -46,7 +46,7 @@ The infrastructure requires three stack configuration properties: `pathToWebsite
   - If you have already had a certificate inside the AWS's Certificate Manager for this CMS app, then put it's arn as the value for this variable
 
 ### Assume Role (Optional)
-It is recommended that you use assume an IAM role with more permissions in the _target_ AWS using a token for an IAM user in the _source_ account. To do this, you could refer to the [aws-ts-assume-role example](https://github.com/pulumi/examples/tree/master/aws-ts-assume-role) for more information. The example is available in multiple languages in our [examples repostiory](https://github.com/pulumi/examples).
+It is recommended that you use an IAM role with more permissions in the _target_ AWS using a token for an IAM user in the _source_ account. To do this, you could refer to the [aws-ts-assume-role example](https://github.com/pulumi/examples/tree/master/aws-ts-assume-role) for more information. The example is available in multiple languages in our [examples repostiory](https://github.com/pulumi/examples).
 
 ## Substitution for Netlify Identity Service: OAuth Server
 Since we are deploying the CMS app on AWS instead of Netlify we need to provide our own server to do the OAuth [authorization code grant flow](https://oauth.net/2/grant-types/authorization-code/). So we also deployed an OAuth Server. Here's the official Netlify documentation on using [external OAuth clients](https://www.netlifycms.org/docs/external-oauth-clients/). In short, the OAuth server fetches the access token from GitHub API to use the CMS. The code for the OAuth Server is inside the `./cms-oauth` folder in the root directory of this example.
