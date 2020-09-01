@@ -24,11 +24,11 @@ log_metric_filter = cloudwatch.LogMetricFilter(
     "mylogmetricfilter",
     pattern="",
     log_group_name=log_group.name,
-    metric_transformation={
-        "name": "EventCount",
-        "namespace": "YourNamespace",
-        "value": 1,
-    })
+    metric_transformation=cloudwatch.LogMetricFilterMetricTransformationArgs(
+        name="EventCount",
+        namespace="YourNamespace",
+        value="1",
+    ))
 
 log_stream = cloudwatch.LogStream(
     "mylogstream",
@@ -48,10 +48,10 @@ metric_alart = cloudwatch.MetricAlarm(
 ## DynamoDB
 db = dynamodb.Table(
     "mytable",
-    attributes=[{
-        "name": "Id",
-        "type": "S"
-    }],
+    attributes=[dynamodb.TableAttributeArgs(
+        name="Id",
+        type="S",
+    )],
     hash_key="Id",
     read_capacity=1,
     write_capacity=1)
@@ -61,12 +61,12 @@ eip = ec2.Eip("myeip")
 
 security_group = ec2.SecurityGroup(
     "mysecuritygroup",
-    ingress=[{
-        "protocol": "tcp",
-        "from_port": 80,
-        "to_port": 80,
-        "cidr_blocks": ["0.0.0.0/0"]
-    }])
+    ingress=[ec2.SecurityGroupIngressArgs(
+        protocol="tcp",
+        from_port=80,
+        to_port=80,
+        cidr_blocks=["0.0.0.0/0"]
+    )])
 
 vpc = ec2.Vpc(
     "myvpc",
@@ -78,10 +78,10 @@ igw = ec2.InternetGateway(
 
 public_route_table = ec2.RouteTable(
     "myroutetable",
-    routes=[{
-        "cidr_block": "0.0.0.0/0",
-        "gateway_id": igw.id
-    }],
+    routes=[ec2.RouteTableRouteArgs(
+        cidr_block="0.0.0.0/0",
+        gateway_id=igw.id
+    )],
     vpc_id=vpc.id)
 
 ## ECR
@@ -200,6 +200,6 @@ topic = sns.Topic("mytopic")
 
 topic_subscription = sns.TopicSubscription(
     "mytopicsubscription",
-    topic=topic,
+    topic=topic.arn,
     protocol="sqs",
     endpoint=queue.arn)
