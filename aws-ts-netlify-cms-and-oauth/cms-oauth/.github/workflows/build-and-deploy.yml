@@ -1,0 +1,47 @@
+name: Deploy OAuth Provider
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  deployOAuthProvider:
+    env: 
+      GOPATH: ${{ github.workspace }}
+    name: Install deps and update infrastructure
+    runs-on: ubuntu-latest
+    steps: 
+        - uses: actions/checkout@v2
+
+        - name: Install Pulumi CLI
+          uses: pulumi/action-install-pulumi-cli@releases/v1
+
+        - name: Install pulumi deps
+          run: yarn install --cwd infrastructure
+  
+        - name: Preview infrastructure
+          if: ${{ github.event_name == 'pull_request' }}
+          env:
+            # Setting AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN is optional
+            # in case your organization's AWS setup requires it
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+            PULUMI_STACK: ${{ secrets.PULUMI_STACK}}
+            PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          run:
+            pulumi preview --cwd infrastructure -s "${{ secrets.PULUMI_STACK }}"
+        
+        - name: Deploy infrastructure
+          if: ${{ github.event_name == 'push' }}
+          env:
+            # Setting AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN is optional
+            # in case your organization's AWS setup requires it
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+            PULUMI_STACK: ${{ secrets.PULUMI_STACK}}
+            PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          run: pulumi up --yes --cwd infrastructure -s "${{ secrets.PULUMI_STACK }}"

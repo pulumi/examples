@@ -1,0 +1,43 @@
+name: Deploy CMS
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  deployCMS:
+    name: Install deps and build site and deploy infrastructure
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install cms deps
+        run: yarn install
+
+      - name: Build cms
+        run: yarn build
+
+      - name: Install Pulumi CLI
+        uses: pulumi/action-install-pulumi-cli@releases/v1
+
+      - name: Install pulumi infrastructure deps
+        run: yarn install --cwd infrastructure 
+
+      - name: Preview infrastructure
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          PULUMI_STACK: ${{ secrets.PULUMI_STACK}}
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run:
+          pulumi preview --cwd infrastructure -s "${{ secrets.PULUMI_STACK }}"
+
+      - name: Deploy infrastructure
+        if: ${{ github.event_name == 'push' }}
+        env:
+          PULUMI_STACK: ${{ secrets.PULUMI_STACK}}
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run: pulumi up --yes --cwd infrastructure -s "${{ secrets.PULUMI_STACK }}"
+          

@@ -1,0 +1,18 @@
+backend:
+  name: github
+  # Replace this with the Github repo you want to make change
+  repo: github-username/target-github-repo
+  # This site_domain and base_url are sudo domains
+  # Replace site_domain with targetDomain pulumi stack configuration inside cms/infrastructure folder
+  # Replace base_url with targetDomain pulumi stack configuration inside cms-oauth/infrastructure folder
+  site_domain: https://some-cms-domain.com
+  base_url: https://some-oauth-domain.com
+  
+publish_mode: editorial_workflow
+
+# Check https://www.netlifycms.org/docs/configuration-options/#media-and-public-folders for setting them
+media_folder: "some-media-folder"
+public_folder: "some-public-folder"
+
+# Check https://www.netlifycms.org/docs/configuration-options/#configuration-file for configure your CMS
+collections:
