@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Azure App Service Cunning Docker Containers on Linux
+# Azure App Service Running Docker Containers on Linux
 
 Starting point for building a web application hosted in Azure App Service from Docker images.
 
