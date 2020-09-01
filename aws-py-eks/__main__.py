@@ -8,12 +8,14 @@ from pulumi_aws import eks
 eks_cluster = eks.Cluster(
     'eks-cluster',
     role_arn=iam.eks_role.arn,
-    tags= {'Name':'pulumi-eks-cluster'},
-    vpc_config = {
-        'publicAccessCidrs': ['0.0.0.0/0'],
-        'security_group_ids': [vpc.eks_security_group.id],
-        'subnet_ids': vpc.subnet_ids,
-    }
+    tags={
+        'Name': 'pulumi-eks-cluster',
+    },
+    vpc_config=eks.ClusterVpcConfigArgs(
+        public_access_cidrs=['0.0.0.0/0'],
+        security_group_ids=[vpc.eks_security_group.id],
+        subnet_ids=vpc.subnet_ids,
+    ),
 )
 
 eks_node_group = eks.NodeGroup(
@@ -23,13 +25,13 @@ eks_node_group = eks.NodeGroup(
     node_role_arn=iam.ec2_role.arn,
     subnet_ids=vpc.subnet_ids,
     tags={
-        'Name' : 'pulumi-cluster-nodeGroup'
+        'Name': 'pulumi-cluster-nodeGroup',
     },
-    scaling_config = {
-        'desired_size': 2,
-        'max_size': 2,
-        'min_size': 1,
-  },
+    scaling_config=eks.NodeGroupScalingConfigArgs(
+        desired_size=2,
+        max_size=2,
+        min_size=1,
+    ),
 )
 
 pulumi.export('cluster-name', eks_cluster.name)
