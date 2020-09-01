@@ -25,8 +25,8 @@ private_key_passphrase = config.get_secret('privateKeyPassphrase')
 secgrp = aws.ec2.SecurityGroup('secgrp',
     description='Foo',
     ingress=[
-        { 'protocol': 'tcp', 'from_port': 22, 'to_port': 22, 'cidr_blocks': ['0.0.0.0/0'] },
-        { 'protocol': 'tcp', 'from_port': 80, 'to_port': 80, 'cidr_blocks': ['0.0.0.0/0'] },
+        aws.ec2.SecurityGroupIngressArgs(protocol='tcp', from_port=22, to_port=22, cidr_blocks=['0.0.0.0/0']),
+        aws.ec2.SecurityGroupIngressArgs(protocol='tcp', from_port=80, to_port=80, cidr_blocks=['0.0.0.0/0']),
     ],
 )
 
@@ -34,10 +34,10 @@ secgrp = aws.ec2.SecurityGroup('secgrp',
 ami = aws.get_ami(
     owners=['amazon'],
     most_recent=True,
-    filters=[{
-        'name': 'name',
-        'values': ['amzn2-ami-hvm-2.0.????????-x86_64-gp2'],
-    }],
+    filters=[aws.GetAmiFilterArgs(
+        name='name',
+        values=['amzn2-ami-hvm-2.0.????????-x86_64-gp2'],
+    )],
 )
 
 # Create an EC2 server that we'll then provision stuff onto.
