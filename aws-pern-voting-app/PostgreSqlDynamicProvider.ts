@@ -3,21 +3,21 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as crypto from "crypto";
 
-// A class representing the arguments that the dynamic provider needs. Each argument 
+// A class representing the arguments that the dynamic provider needs. Each argument
 // will automatically be converted from Input[T] to T before being passed to the
 // functions in the provider
 export interface SchemaInputs {
-    creatorName: pulumi.Input<string>
-    creatorPassword: pulumi.Input<string>
-    serverAddress: pulumi.Input<string>
-    databaseName: pulumi.Input<string>
-    creationScript: pulumi.Input<string>
-    deletionScript: pulumi.Input<string>
-    postgresUserName: pulumi.Input<string>
+    creatorName: pulumi.Input<string>;
+    creatorPassword: pulumi.Input<string>;
+    serverAddress: pulumi.Input<string>;
+    databaseName: pulumi.Input<string>;
+    creationScript: pulumi.Input<string>;
+    deletionScript: pulumi.Input<string>;
+    postgresUserName: pulumi.Input<string>;
 }
 
-// The code for the dynamic provider that gives us our custom resource. It handles 
-// all the create, read, update, and delete operations the resource needs. 
+// The code for the dynamic provider that gives us our custom resource. It handles
+// all the create, read, update, and delete operations the resource needs.
 export class SchemaProvider implements pulumi.dynamic.ResourceProvider {
     // The function that is called when a new resource needs to be created
     async create(args: SchemaInputs): Promise<pulumi.dynamic.CreateResult> {
@@ -27,13 +27,13 @@ export class SchemaProvider implements pulumi.dynamic.ResourceProvider {
             password: args.creatorPassword,
             host: args.serverAddress,
             port: 2000,
-            database: args.databaseName
+            database: args.databaseName,
         });
-        const scriptExecuted = await pool.query(args.creationScript);        
+        const scriptExecuted = await pool.query(args.creationScript);
 
         // Closing the connection to the postgresql database
         await pool.end();
-        return {id: "postgresqlSchema-" + crypto.randomBytes(16).toString('hex'), outs: args};
+        return {id: "postgresqlSchema-" + crypto.randomBytes(16).toString("hex"), outs: args};
     }
 
     // The function that is called when an existing resource needs to be deleted
@@ -44,7 +44,7 @@ export class SchemaProvider implements pulumi.dynamic.ResourceProvider {
             password: args.creatorPassword,
             host: args.serverAddress,
             port: 2000,
-            database: args.databaseName
+            database: args.databaseName,
         });
         const scriptExecuted = await pool.query(args.deletionScript);
 
@@ -52,30 +52,30 @@ export class SchemaProvider implements pulumi.dynamic.ResourceProvider {
         await pool.end();
     }
 
-    // The function that determines if an existing resource whose inputs were 
+    // The function that determines if an existing resource whose inputs were
     // modified needs to be updated or entirely replaced
     async diff(id: string, oldArgs: SchemaInputs, newArgs: SchemaInputs): Promise<pulumi.dynamic.DiffResult> {
-        let changes: boolean = ((oldArgs.creatorName != newArgs.creatorName) || 
-            (oldArgs.creatorPassword != newArgs.creatorPassword) || (oldArgs.serverAddress != newArgs.serverAddress) ||
-            (oldArgs.databaseName != newArgs.databaseName) || (oldArgs.creationScript != newArgs.creationScript) ||
-            (oldArgs.deletionScript != newArgs.deletionScript));
+        const changes: boolean = ((oldArgs.creatorName !== newArgs.creatorName) ||
+            (oldArgs.creatorPassword !== newArgs.creatorPassword) || (oldArgs.serverAddress !== newArgs.serverAddress) ||
+            (oldArgs.databaseName !== newArgs.databaseName) || (oldArgs.creationScript !== newArgs.creationScript) ||
+            (oldArgs.deletionScript !== newArgs.deletionScript));
 
-        let replaces: string[] = [];
-        if (oldArgs.serverAddress != newArgs.serverAddress) { replaces.push("serverAddress") };
-        if (oldArgs.databaseName != newArgs.databaseName) { replaces.push("databaseName") };
-        if (oldArgs.creationScript != newArgs.creationScript) { replaces.push("creationScript") }; 
+        const replaces: string[] = [];
+        if (oldArgs.serverAddress !== newArgs.serverAddress) { replaces.push("serverAddress"); }
+        if (oldArgs.databaseName !== newArgs.databaseName) { replaces.push("databaseName"); }
+        if (oldArgs.creationScript !== newArgs.creationScript) { replaces.push("creationScript"); }
 
         return {
             // If the old and new inputs don't match, the resource needs to be updated/replaced
             changes: changes,
-            // If the replaces[] list is empty, nothing important was changed, and we do not have to 
+            // If the replaces[] list is empty, nothing important was changed, and we do not have to
             // replace the resource
             replaces: replaces,
             // An optional list of inputs that are always constant
             stables: [],
             // The existing resource is deleted before the new one is created
-            deleteBeforeReplace: true
-        }
+            deleteBeforeReplace: true,
+        };
     }
 
     // The function that updates an existing resource without deleting and
@@ -88,7 +88,7 @@ export class SchemaProvider implements pulumi.dynamic.ResourceProvider {
 
 // The main Schema resource that we instantiate in our infrastructure code
 export class Schema extends pulumi.dynamic.Resource {
-    // The inputs used by the dynamic provider are made implicitly availible as outputs 
+    // The inputs used by the dynamic provider are made implicitly availible as outputs
     public readonly creatorName!: pulumi.Output<string>;
     public readonly creatorPassword!: pulumi.Output<string>;
     public readonly serverAddress!: pulumi.Output<string>;

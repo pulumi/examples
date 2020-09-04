@@ -30,10 +30,10 @@ The example shows how easy it is to deploy containers into production and to con
 
     ```bash
     $ pulumi config set aws:region us-west-2
-    $ pulumi config set sql-admin-name <NAME>
-    $ pulumi config set sql-admin-password <PASSWORD> --secret
-    $ pulumi config set sql-user-name <NAME>
-    $ pulumi config set sql-user-password <PASSWORD> --secret
+    $ pulumi config set sqlAdminName <NAME>
+    $ pulumi config set sqlsqlAdminPassword <PASSWORD> --secret
+    $ pulumi config set sqlUserName <NAME>
+    $ pulumi config set sqlUserPassword <PASSWORD> --secret
     ```
 
 1. Restore NPM modules via `npm install` or `yarn install`.
