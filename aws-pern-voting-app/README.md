@@ -1,8 +1,8 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Voting app Using Redis and Flask
+# PERN Stack Voting App
 
-A simple voting app that uses Redis for a data store and a Python Flask app for the frontend. The example has been ported from https://github.com/Azure-Samples/azure-voting-app-redis.
+A simple voting app that uses React, Express, PostgreSQL, and NodeJS.
 
 The example shows how easy it is to deploy containers into production and to connect them to one another. Since the example defines a custom container, Pulumi does the following:
 - Builds the Docker image
@@ -12,100 +12,120 @@ The example shows how easy it is to deploy containers into production and to con
 
 ## Prerequisites
 
-To use this example, make sure [Docker](https://docs.docker.com/engine/installation/) is installed and running.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
+1. [Install Docker](https://docs.docker.com/engine/installation/)
 
 ## Deploying and running the program
 
-### Configure the deployment
 
-Note: some values in this example will be different from run to run.  These values are indicated
-with `***`.
-
-1.  Login via `pulumi login`.
-
-1.  Create a new stack:
-
-    ```
-    $ pulumi stack init voting-app-testing
-    ```
-
-1.  Set AWS as the provider:
-
-    ```
-    $ pulumi config set cloud:provider aws
-    ```
-
-1.  Configure Pulumi to use an AWS region that supports Fargate, which is currently only available in `us-east-1`, `us-east-2`, `us-west-2`, and `eu-west-1`:
-
-    ```
-    $ pulumi config set aws:region us-west-2
-    ```
-
-1.  Set a value for the Redis password. The value can be an encrypted secret, specified with the `--secret` flag. If this flag is not provided, the value will be saved as plaintext in `Pulumi.testing.yaml` (since `testing` is the current stack name).
-
-    ```
-    $ pulumi config set --secret redisPassword S3cr37Password
-    ```
-
-### Install dependencies
-
-1.  Restore NPM modules via `npm install` or `yarn install`.
-
-### Preview and deploy
-
-1.  Ensure the Docker daemon is running on your machine, then preview and deploy the program with `pulumi up`. The program deploys 24 resources and takes about 10 minutes to complete.
-
-1.  View the stack output properties via `pulumi stack output`. The stack output property `frontendUrl` is the URL and port of the deployed app:
+1. Create a new stack:
 
     ```bash
-    $ pulumi stack output frontendURL
-    ***.elb.us-west-2.amazonaws.com
+    $ pulumi stack init aws-pern-voting-app
     ```
 
-1.  In a browser, navigate to the URL for `frontendURL`. You should see the voting app webpage.
+1. Set the AWS region and the usernames and passwords for a set of accounts the project uses:
 
-   ![Voting app screenshot](./voting-app-webpage.png)
+    ```bash
+    $ pulumi config set aws:region us-west-2
+    $ pulumi config set sql-admin-name <NAME>
+    $ pulumi config set sql-admin-password <PASSWORD> --secret
+    $ pulumi config set sql-user-name <NAME>
+    $ pulumi config set sql-user-password <PASSWORD> --secret
+    ```
 
-### Delete resources
+1. Restore NPM modules via `npm install` or `yarn install`.
 
-When you're done, run `pulumi destroy` to delete the program's resources:
+1. Run `pulumi up -y` to deploy changes:
+    ```bash
+    Updating (aws-pern-voting-app):
+        Type                                          Name                                    Status       Info
+    +   pulumi:pulumi:Stack                           voting-app-aws-pern-voting-app          created
+    +   ├─ awsx:x:ecs:FargateTaskDefinition           server-side-service                     created
+    +   ├─ awsx:x:ecs:FargateTaskDefinition           server-side-service                     created 
+    +   │  ├─ aws:iam:Role                            server-side-service-execution           created      
+    +   ├─ awsx:x:ecs:FargateTaskDefinition           server-side-service                     created
+    +   │  ├─ aws:cloudwatch:LogGroup                 server-side-service                     created      
+    +   │  ├─ aws:iam:RolePolicyAttachment            server-side-service-task-fd1a00e5       created      
+    +   ├─ awsx:x:ecs:FargateTaskDefinition           server-side-service                     created
+    +   pulumi:pulumi:Stack                           voting-app-aws-pern-voting-app          created
+    +   pulumi:pulumi:Stack                           voting-app-aws-pern-voting-app          created
+    +   pulumi:pulumi:Stack                           voting-app-aws-pern-voting-app          created
+    +   pulumi:pulumi:Stack                           voting-app-aws-pern-voting-app          created
+    +   pulumi:pulumi:Stack                           voting-app-aws-pern-voting-app          created
+    +   pulumi:pulumi:Stack                           voting-app-aws-pern-voting-app          created
+    +   pulumi:pulumi:Stack                           voting-app-aws-pern-voting-app          created
+    +   │  ├─ aws:iam:Role                            client-side-service-execution           created      
+    +   │  ├─ aws:iam:Role                            client-side-service-execution           created      
+    +   │  ├─ aws:iam:Role                            client-side-service-execution           created      
+    +   │  ├─ aws:ecr:LifecyclePolicy                 client-side-service                     created      
+    +   │  ├─ aws:iam:RolePolicyAttachment            client-side-service-task-fd1a00e5       created     
+    +   │  ├─ aws:iam:RolePolicyAttachment            client-side-service-task-32be53a2       created     
+    +   │  ├─ aws:iam:RolePolicyAttachment            client-side-service-execution-9a42f520  created     
+    +   │  └─ aws:ecs:TaskDefinition                  client-side-service                     created     
+    +   ├─ awsx:lb:NetworkLoadBalancer                client-side-listener                    created     
+    +   │  ├─ awsx:lb:NetworkTargetGroup              client-side-listener                    created     
+    +   │  │  └─ aws:lb:TargetGroup                   client-side-listener                    created     
+    +   │  ├─ awsx:lb:NetworkListener                 client-side-listener                    created     
+    +   │  │  └─ aws:lb:Listener                      client-side-listener                    created     
+    +   │  └─ aws:lb:LoadBalancer                     client-side-listener                    created     
+    +   ├─ awsx:lb:NetworkLoadBalancer                server-side-listener                    created     
+    +   │  ├─ awsx:lb:NetworkTargetGroup              server-side-listener                    created     
+    +   │  │  └─ aws:lb:TargetGroup                   server-side-listener                    created     
+    +   │  ├─ awsx:lb:NetworkListener                 server-side-listener                    created     
+    +   │  │  └─ aws:lb:Listener                      server-side-listener                    created     
+    +   │  └─ aws:lb:LoadBalancer                     server-side-listener                    created     
+    +   ├─ awsx:x:ecs:FargateService                  client-side-service                     created     
+    +   │  └─ aws:ecs:Service                         client-side-service                     created     
+    +   ├─ awsx:x:ecs:Cluster                         default-cluster                         created     
+    +   │  ├─ awsx:x:ec2:SecurityGroup                default-cluster                         created     
+    +   │  │  ├─ awsx:x:ec2:EgressSecurityGroupRule   default-cluster-egress                  created     
+    +   │  │  │  └─ aws:ec2:SecurityGroupRule         default-cluster-egress                  created     
+    +   │  │  ├─ awsx:x:ec2:IngressSecurityGroupRule  default-cluster-ssh                     created     
+    +   │  │  │  └─ aws:ec2:SecurityGroupRule         default-cluster-ssh                     created     
+    +   │  │  ├─ awsx:x:ec2:IngressSecurityGroupRule  default-cluster-containers              created     
+    +   │  │  │  └─ aws:ec2:SecurityGroupRule         default-cluster-containers              created     
+    +   │  │  └─ aws:ec2:SecurityGroup                default-cluster                         created     
+    +   │  └─ aws:ecs:Cluster                         default-cluster                         created     
+    +   ├─ aws:ec2:Vpc                                app-vpc                                 created     
+    +   ├─ awsx:x:ec2:Vpc                             default-vpc                             created     
+    +   │  ├─ awsx:x:ec2:Subnet                       default-vpc-public-1                    created     
+    +   │  └─ awsx:x:ec2:Subnet                       default-vpc-public-0                    created     
+    +   ├─ aws:ec2:Subnet                             second-rds-subnet                       created     
+    +   ├─ aws:ec2:Subnet                             first-rds-subnet                        created     
+    +   ├─ aws:ec2:InternetGateway                    app-gateway                             created     
+    +   ├─ aws:ec2:SecurityGroup                      rds-security-group                      created     
+    +   ├─ aws:rds:SubnetGroup                        rds-subnet-group                        created     
+    +   ├─ aws:ec2:RouteTable                         app-routetable                          created     
+    +   ├─ aws:ec2:MainRouteTableAssociation          app-routetable-association              created     
+    +   ├─ aws:rds:Instance                           postgresql-rds-server                   created     
+    +   ├─ pulumi:providers:postgresql                postgresql-provider                     created     
+    +   ├─ postgresql:index:Database                  postgresql-database                     created     
+    +   ├─ postgresql:index:Role                      postgres-standard-role                  created     
+    +   └─ pulumi-nodejs:dynamic:Resource             postgresql-votes-schema                 created     
+    
+    Outputs:
+        URL: "client-side-listener-086d27d-bb5f264d141c31b7.elb.us-west-2.amazonaws.com"
 
-```
-$ pulumi destroy
-This will permanently destroy all resources in the 'testing' stack!
-Please confirm that this is what you'd like to do by typing ("testing"): testing
-```
+    Resources:
+        + 63 created
 
-## About the code
+    Duration: 4m2s
+    ```
 
-At the start of the program, the following lines retrieve the value for the Redis password by reading a [configuration value](https://www.pulumi.com/docs/reference/config/). This is the same value that was set above with the command `pulumi config set redisPassword <value>`:
+1. View the DNS address of the instance via `pulumi stack output`:
 
-```typescript
-let config = new pulumi.Config();
-let redisPassword = config.require("redisPassword");
-```
+    ```bash
+    $ pulumi stack output
+    Current stack outputs (1):
+        OUTPUT   VALUE
+        URL  client-side-listener-086d27d-bb5f264d141c31b7.elb.us-west-2.amazonaws.com
+    ```
 
-In the program, the value can be used like any other variable.
+1.  Verify that the ECS instance exists by connecting to it in a browser window.
 
-### Resources
+## Clean up
 
-The program provisions two top-level resources with the following commands:
-
-```typescript
-let redisCache = new awsx.ecs.FargateService("voting-app-cache", ... )
-let frontend = new awsx.ecs.FargateService("voting-app-frontend", ... )
-```
-
-The definition of `redisCache` uses the `image` property of `FargateService.taskDefinitionArgs` to point to an existing Docker image. In this case, this is the image `redis` at tag `alpine` on Docker Hub. The `redisPassword` variable is passed to the startup command for this image.
-
-The definition of `frontend` is more interesting, as it uses `image` property of `FargateService.taskDefinitionArgs` to point to a folder with a Dockerfile, which in this case is a Python Flask app. Pulumi automatically invokes `docker build` for you and pushes the container to ECR.
-
-So that the `frontend` container can connect to `redisCache`, the environment variables `REDIS`, `REDIS_PORT` are defined. Using the `redisListenre.endpoint` property, it's easy to declare the connection between the two containers.
-
-The Flask app uses these environment variables to connect to the Redis cache container. See the following in [`frontend/app/main.py`](frontend/app/main.py):
-
-```python
-redis_server =   os.environ['REDIS']
-redis_port =     os.environ['REDIS_PORT']
-redis_password = os.environ['REDIS_PWD']
-```
+To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
