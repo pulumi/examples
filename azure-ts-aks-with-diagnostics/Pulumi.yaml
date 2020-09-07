@@ -1,0 +1,13 @@
+name: azure-ts-aks-with-diagnostics
+runtime: nodejs
+description: Create an Azure Kubernetes Service (AKS) cluster and enable diagnostics
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    password:
+      description: Your cluster password
+      secret: true
+    sshPublicKey:
+      description: Your SSH public key (generate with `ssh-keygen -t rsa -f key.rsa`)
