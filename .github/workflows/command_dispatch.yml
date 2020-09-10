@@ -11,7 +11,7 @@ jobs:
       - name: Run Build
         uses: peter-evans/slash-command-dispatch@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.EVENT_PAT }}
           reaction-token: ${{ secrets.GITHUB_TOKEN }}
           commands: run-example-tests
           permission: write
