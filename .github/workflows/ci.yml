@@ -3,13 +3,8 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
-#  schedule:
-#    # * is a special character in YAML so you have to quote this string.
-#    # Run every day at 09:00AM.
-#    - cron:  '0 9 * * *'
+  repository_dispatch:
+    types: [run-example-tests-command]
 
 env:
   PULUMI_TEST_OWNER: ${{ secrets.PULUMI_TEST_OWNER }}
@@ -33,6 +28,24 @@ env:
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
   LINODE_API_TOKEN: ${{ secrets.LINODE_API_TOKEN }}
 jobs:
+  comment-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create URL to the run output
+        if: github.event_name == 'repository_dispatch'
+        id: vars
+        run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+      - name: Update with Result
+        if: github.event_name == 'repository_dispatch'
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+          body: |
+            Please view the results of the PR Build [Here][1]
+
+            [1]: ${{ steps.vars.outputs.run-url }}
   released:
     strategy:
       fail-fast: false

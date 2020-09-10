@@ -1,0 +1,19 @@
+name: Allow maintainers to test examples PRs
+on:
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  runForkedBranch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Build
+        uses: peter-evans/slash-command-dispatch@v2
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          reaction-token: ${{ secrets.GITHUB_TOKEN }}
+          commands: run-example-tests
+          permission: write
+          issue-type: pull-request
+          repository: pulumi/examples
