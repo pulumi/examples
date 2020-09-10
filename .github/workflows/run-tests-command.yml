@@ -1,11 +1,7 @@
 name: Run Examples Tests
 on:
-  push:
-    branches:
-      - master
-  schedule:
-    # Run every day at 09:00AM.
-    - cron: '0 9 * * *'
+  repository_dispatch:
+    types: [run-example-tests-command]
 
 env:
   PULUMI_TEST_OWNER: ${{ secrets.PULUMI_TEST_OWNER }}
@@ -29,6 +25,22 @@ env:
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
   LINODE_API_TOKEN: ${{ secrets.LINODE_API_TOKEN }}
 jobs:
+  comment-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create URL to the run output
+        id: vars
+        run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+      - name: Update with Result
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+          body: |
+            Please view the results of the PR Build [Here][1]
+
+            [1]: ${{ steps.vars.outputs.run-url }}
   released:
     strategy:
       fail-fast: false
@@ -107,13 +119,6 @@ jobs:
         run: make ensure
       - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
         run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
-      - if: failure() && github.event_name == 'push'
-        name: Notify Slack
-        uses: 8398a7/action-slack@v3
-        with:
-          author_name: Failure in ${{ matrix.clouds }}${{ matrix.languages }} Tests
-          fields: repo,commit,author,action
-          status: ${{ job.status }}
   lint:
     strategy:
       matrix:
@@ -137,13 +142,6 @@ jobs:
         run: make install
       - name: Lint typescript files
         run: make lint
-      - if: failure() && github.event_name == 'push'
-        name: Notify Slack
-        uses: 8398a7/action-slack@v3
-        with:
-          author_name: Failure in lint step
-          fields: repo,commit,author,action
-          status: ${{ job.status }}
   test-infra-setup:
     strategy:
       fail-fast: false
@@ -349,10 +347,3 @@ jobs:
           pulumi stack -s "${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}" -C misc/scripts/testinfra/ output kubeconfig >~/.kube/config
       - name: Run ${{ matrix.tests-set }} Tests
         run: make specific_test_set TestSet=Kubernetes
-      - if: failure() && github.event_name == 'push'
-        name: Notify Slack
-        uses: 8398a7/action-slack@v3
-        with:
-          author_name: 'Failure in Kubernetes Tests'
-          fields: repo,commit,author,action
-          status: ${{ job.status }}
