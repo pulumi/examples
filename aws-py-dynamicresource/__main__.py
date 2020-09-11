@@ -5,7 +5,7 @@ import base64
 import pulumi
 import pulumi_aws as aws
 import pulumi_mysql as mysql
-from MySqlDynamicProvider import *
+from mysql_dynamic_provider import *
 
 # Get neccessary settings from the pulumi config
 config = pulumi.Config()
