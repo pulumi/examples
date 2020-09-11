@@ -13,7 +13,7 @@ sql_admin_name = config.require("sql-admin-name")
 sql_admin_password = config.require_secret("sql-admin-password")
 sql_user_name = config.require("sql-user-name")
 sql_user_password = config.require_secret("sql-user-password")
-availability_zone = pulumi.Config("aws").get("region")
+availability_zone = aws.config.region
 
 # Credentials for the Django site administration panel
 django_admin_name = config.require("django-admin-name")
@@ -41,10 +41,10 @@ app_gateway = aws.ec2.InternetGateway("app-gateway",
 
 app_routetable = aws.ec2.RouteTable("app-routetable",
     routes=[
-        {
-            "cidr_block": "0.0.0.0/0",
-            "gateway_id": app_gateway.id,
-        }
+        aws.ec2.RouteTableRouteArgs(
+            cidr_block="0.0.0.0/0",
+            gateway_id=app_gateway.id,
+        )
     ],
     vpc_id=app_vpc.id)
 
@@ -57,18 +57,18 @@ app_routetable_association = aws.ec2.MainRouteTableAssociation("app_routetable_a
 app_security_group = aws.ec2.SecurityGroup("security-group",
 	vpc_id=app_vpc.id,
 	description="Enables HTTP access",
-    ingress=[{
-		'protocol': 'tcp',
-		'from_port': 0,
-		'to_port': 65535,
-		'cidr_blocks': ['0.0.0.0/0'],
-    }],
-    egress=[{
-		'protocol': '-1',
-		'from_port': 0,
-		'to_port': 0,
-		'cidr_blocks': ['0.0.0.0/0'],
-    }])
+    ingress=[aws.ec2.SecurityGroupIngressArgs(
+		protocol="tcp",
+		from_port=0,
+		to_port=65535,
+		cidr_blocks=["0.0.0.0/0"],
+    )],
+    egress=[aws.ec2.SecurityGroupEgressArgs(
+		protocol="-1",
+		from_port=0,
+		to_port=0,
+		cidr_blocks=["0.0.0.0/0"],
+    )])
 
 # Creating an IAM role used by Fargate to execute all our services
 app_exec_role = aws.iam.Role("app-exec-role",
@@ -192,10 +192,10 @@ django_targetgroup = aws.lb.TargetGroup("django-targetgroup",
 	port=80,
 	protocol="TCP",
 	target_type="ip",
-    stickiness= {
-        "enabled": False,
-        "type": "lb_cookie",
-    },
+    stickiness=aws.lb.TargetGroupStickinessArgs(
+        enabled=False,
+        type="lb_cookie",
+    ),
 	vpc_id=app_vpc.id)
 
 # Creating a load balancer to spread out incoming requests
@@ -210,10 +210,10 @@ django_listener = aws.lb.Listener("django-listener",
 	load_balancer_arn=django_balancer.arn,
 	port=80,
     protocol="TCP",
-	default_actions=[{
-		"type": "forward",
-		"target_group_arn": django_targetgroup.arn
-	}])
+    default_actions=[aws.lb.ListenerDefaultActionArgs(
+        type="forward",
+        target_group_arn=django_targetgroup.arn,
+    )])
 
 # Creating a Docker image from "./frontend/Dockerfile", which we will use
 # to upload our app
@@ -298,16 +298,16 @@ django_database_service = aws.ecs.Service("django-database-service",
     launch_type="FARGATE",
     task_definition=django_database_task_definition.arn,
     wait_for_steady_state=False,
-    network_configuration={
-		"assign_public_ip": "true",
-		"subnets": [app_vpc_subnet.id],
-		"security_groups": [app_security_group.id]
-	},
-    load_balancers=[{
-		"target_group_arn": django_targetgroup.arn,
-		"container_name": "django-container",
-		"container_port": 80,
-	}],
+    network_configuration=aws.ecs.ServiceNetworkConfigurationArgs(
+        assign_public_ip=True,
+        subnets=[app_vpc_subnet.id],
+        security_groups=[app_security_group.id],
+    ),
+    load_balancers=[aws.ecs.ServiceLoadBalancerArgs(
+        target_group_arn=django_targetgroup.arn,
+        container_name="django-container",
+        container_port=80,
+    )],
     opts=pulumi.ResourceOptions(depends_on=[django_listener]),
 )
 
@@ -363,16 +363,16 @@ django_site_service = aws.ecs.Service("django-site-service",
     launch_type="FARGATE",
     task_definition=django_site_task_definition.arn,
     wait_for_steady_state=False,
-    network_configuration={
-		"assign_public_ip": "true",
-		"subnets": [app_vpc_subnet.id],
-		"security_groups": [app_security_group.id]
-	},
-    load_balancers=[{
-		"target_group_arn": django_targetgroup.arn,
-		"container_name": "django-container",
-		"container_port": 80,
-	}],
+    network_configuration=aws.ecs.ServiceNetworkConfigurationArgs(
+        assign_public_ip=True,
+        subnets=[app_vpc_subnet.id],
+        security_groups=[app_security_group.id],
+    ),
+    load_balancers=[aws.ecs.ServiceLoadBalancerArgs(
+        target_group_arn=django_targetgroup.arn,
+        container_name="django-container",
+        container_port=80,
+    )],
     opts=pulumi.ResourceOptions(depends_on=[django_listener]),
 )
 

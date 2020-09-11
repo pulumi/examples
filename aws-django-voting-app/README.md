@@ -5,6 +5,7 @@
 A simple voting app that uses MySQL for data storage and a Python Django app for the frontend. 
 
 The example shows how easy it is to deploy containers into production and to connect them to one another. Since the example defines a custom container, Pulumi does the following:
+
 - Builds the Docker image
 - Provisions AWS Container Registry (ECR) instance
 - Pushes the image to the ECR instance
@@ -49,6 +50,7 @@ The example shows how easy it is to deploy containers into production and to con
     ```
 
 1. Run `pulumi up -y` to deploy changes:
+
     ```bash
     Updating (aws-django-voting-app):
         Type                                  Name                              Status      Info
