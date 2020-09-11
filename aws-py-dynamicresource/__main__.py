@@ -13,7 +13,7 @@ admin_name = config.require("sql-admin-name")
 admin_password = config.require_secret("sql-admin-password")
 user_name = config.require("sql-user-name")
 user_password = config.require_secret("sql-user-password")
-availability_zone = pulumi.Config("aws").get("region")
+availability_zone = aws.config.region
 
 # Creating a VPC and a public subnet
 app_vpc = aws.ec2.Vpc("app-vpc",
@@ -31,10 +31,10 @@ app_gateway = aws.ec2.InternetGateway("app-gateway",
 
 app_routetable = aws.ec2.RouteTable("app-routetable",
     routes=[
-        {
-            "cidr_block": "0.0.0.0/0",
-            "gateway_id": app_gateway.id,
-        }
+        aws.ec2.RouteTableRouteArgs(
+            cidr_block="0.0.0.0/0",
+            gateway_id=app_gateway.id,
+        )
     ],
     vpc_id=app_vpc.id)
 
@@ -48,18 +48,18 @@ app_routetable_association = aws.ec2.MainRouteTableAssociation("app_routetable_a
 app_security_group = aws.ec2.SecurityGroup("security-group",
 	vpc_id=app_vpc.id,
 	description="Enables HTTP access",
-    ingress=[{
-		"protocol": "tcp",
-		"from_port": 0,
-		"to_port": 65535,
-		"cidr_blocks": ["0.0.0.0/0"],
-    }],
-    egress=[{
-		"protocol": "-1",
-		"from_port": 0,
-		"to_port": 0,
-		"cidr_blocks": ["0.0.0.0/0"],
-    }])
+    ingress=[aws.ec2.SecurityGroupIngressArgs(
+		protocol="tcp",
+		from_port=0,
+		to_port=65535,
+		cidr_blocks=["0.0.0.0/0"],
+    )],
+    egress=[aws.ec2.SecurityGroupEgressArgs(
+		protocol="-1",
+		from_port=0,
+		to_port=0,
+		cidr_blocks=["0.0.0.0/0"],
+    )])
 
 # Creating an RDS instance requires having two subnets
 extra_rds_subnet = aws.ec2.Subnet("extra-rds-subnet",

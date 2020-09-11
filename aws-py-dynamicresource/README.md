@@ -39,6 +39,7 @@ A simple example demonstrating how to write Dynamic Providers using Pulumi.
     ```
 
 1. Run `pulumi up -y` to deploy changes:
+
     ```bash
     Updating (aws-py-dynamicresource):
         Type                                  Name                                           Status      
