@@ -1,4 +1,4 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
@@ -12,8 +12,7 @@ const sqlAdminName = config.require("sql-admin-name");
 const sqlAdminPassword = config.requireSecret("sql-admin-password");
 const sqlUserName = config.require("sql-user-name");
 const sqlUserPassword = config.requireSecret("sql-user-password");
-const awsConfig = new pulumi.Config("aws");
-const availabilityZone = awsConfig.get("region");
+const availabilityZone = aws.config.region;
 
 const appVpc = new aws.ec2.Vpc("app-vpc", {
     cidrBlock: "172.31.0.0/16",
