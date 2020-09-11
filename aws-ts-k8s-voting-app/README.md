@@ -94,6 +94,7 @@ The example shows how easy it is to deploy a containerized application to Amazon
      
     Outputs:
         URL: "a6d06dd637ba84d839b36e22ea4fd2e0-1378265413.us-west-2.elb.amazonaws.com"
+        kubeConfig: ...
 
     Resources:
         + 48 created

@@ -99,11 +99,12 @@ const databaseDeployment = new k8s.apps.v1.Deployment(databaseAppName, {
 });
 
 const databasesideListener = new k8s.core.v1.Service("database-side-listener", {
-    metadata: { labels: databaseAppLabels },
+    metadata: { labels: databaseDeployment.metadata.labels },
     spec: {
         type: "LoadBalancer",
         ports: [{ port: 5432, targetPort: "http" }],
         selector: databaseAppLabels,
+        publishNotReadyAddresses: false,
     }}, {
     provider: eksCluster.provider,
     }
@@ -198,11 +199,12 @@ const serverDeployment = new k8s.apps.v1.Deployment("server-side-service", {
 });
 
 const serversideListener = new k8s.core.v1.Service("server-side-listener", {
-    metadata: { labels: serverAppLabels },
+    metadata: { labels: serverDeployment.metadata.labels },
     spec: {
         type: "LoadBalancer",
         ports: [{ port: 5000, targetPort: "http" }],
         selector: serverAppLabels,
+        publishNotReadyAddresses: false,
     }}, {
     provider: eksCluster.provider,
     }
@@ -239,14 +241,16 @@ const clientDeployment = new k8s.apps.v1.Deployment("client-side-service", {
 });
 
 const clientsideListener = new k8s.core.v1.Service("client-side-listener", {
-    metadata: { labels: clientAppLabels },
+    metadata: { labels: clientDeployment.metadata.labels },
     spec: {
         type: "LoadBalancer",
         ports: [{ port: 3000, targetPort: "http" }],
         selector: clientAppLabels,
+        publishNotReadyAddresses: false,
     }}, {
     provider: eksCluster.provider,
     }
 );
 
+export const kubeConfig = eksCluster.kubeconfig;
 export const URL = clientsideListener.status.loadBalancer.ingress[0].hostname;
