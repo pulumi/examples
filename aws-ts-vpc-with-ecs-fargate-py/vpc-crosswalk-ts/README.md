@@ -9,6 +9,11 @@ This example uses [Pulumi CrossWalk for AWS](https://www.pulumi.com/docs/guides/
 ### Why would you do this?  
 An example showing that you can easily infrastructure written in a different language than the one you are used to.
 
+## Prerequisites
+
+* [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+* [Configure Pulumi to Use AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
+
 ### Where are the settings? 
  The settings are in `Pulumi`.stackname`.yaml`
  You will be creating a new file that holds your configs
@@ -139,7 +144,7 @@ You need to select `yes` to continue.  The url will look similar to the url belo
       pulumic_vpc_number_of_nat_gateways  3
       ```
 
-9. Grab the stack reference path.  This is in the last line. 
+9. Grab the [`stackreference`](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies).  This is in the last line. 
    ```
       $ pulumi stack
    ```
