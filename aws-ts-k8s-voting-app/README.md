@@ -42,76 +42,63 @@ The example shows how easy it is to deploy a containerized application to Amazon
 1. Run `pulumi up -y` to deploy changes:
     ```bash
     Updating (aws-ts-k8s-voting-app):
-        Type                                Name                                          Plan       
-        pulumi:pulumi:Stack                 voting-app-aws-ts-k8s-voting-app                         
-    -   ├─ pulumi-nodejs:dynamic:Resource   postgresql-votes-schema                       created     
-    -   ├─ kubernetes:apps:Deployment       server-side-service                           created     
-    -   ├─ postgresql:index:Database           postgresql-database                           created     
-    -   pulumi:pulumi:Stack                    voting-app-aws-ts-k8s-voting-app              created     
-    -   ├─ pulumi:providers:postgresql         postgresql-provider                           created     
-    -   ├─ kubernetes:apps:Deployment          client-side-service                           created     
-    -   ├─ kubernetes:core:Service             server-side-listener                          created     
-    -   ├─ kubernetes:apps:Deployment          database-side-service                         created     
-    -   ├─ kubernetes:core:Service             client-side-listener                          created     
-    -   ├─ kubernetes:core:Service             database-side-listener                        created     
-    -   ├─ awsx:ecr:Repository                 client-side-service                           created     
-    -   │  ├─ aws:ecr:LifecyclePolicy          client-side-service                           created     
-    -   │  └─ aws:ecr:Repository               client-side-service                           created     
-    -   ├─ awsx:ecr:Repository                 database-side-service                         created     
-    -   │  ├─ aws:ecr:LifecyclePolicy          database-side-service                         created     
-    -   │  └─ aws:ecr:Repository               database-side-service                         created     
-    -   ├─ awsx:ecr:Repository                 server-side-service                           created     
-    -   │  ├─ aws:ecr:LifecyclePolicy          server-side-service                           created     
-    -   │  └─ aws:ecr:Repository               server-side-service                           created     
-    -   ├─ aws:ebs:Volume                      storage-volume                                created     
-    -   └─ eks:index:Cluster                   eksCluster                                    created     
-    -      ├─ pulumi:providers:kubernetes      eksCluster-provider                           created     
-    -      ├─ aws:cloudformation:Stack         eksCluster-nodes                              created     
-    -      ├─ aws:ec2:LaunchConfiguration      eksCluster-nodeLaunchConfiguration            created     
-    -      ├─ aws:ec2:SecurityGroupRule        eksCluster-eksNodeIngressRule                 created     
-    -      ├─ aws:ec2:SecurityGroupRule        eksCluster-eksNodeInternetEgressRule          created     
-    -      ├─ aws:ec2:SecurityGroupRule        eksCluster-eksClusterIngressRule              created     
-    -      ├─ aws:ec2:SecurityGroupRule        eksCluster-eksNodeClusterIngressRule          created     
-    -      ├─ kubernetes:core:ConfigMap        eksCluster-nodeAccess                         created     
-    -      ├─ aws:ec2:SecurityGroupRule        eksCluster-eksExtApiServerClusterIngressRule  created     
-    -      ├─ aws:ec2:SecurityGroup            eksCluster-nodeSecurityGroup                  created     
-    -      ├─ pulumi:providers:kubernetes      eksCluster-eks-k8s                            created     
-    -      ├─ pulumi-nodejs:dynamic:Resource   eksCluster-vpc-cni                            created     
-    -      ├─ aws:iam:InstanceProfile          eksCluster-instanceProfile                    created     
-    -      ├─ aws:eks:Cluster                  eksCluster-eksCluster                         created     
-    -      ├─ aws:ec2:SecurityGroupRule        eksCluster-eksClusterInternetEgressRule       created     
-    -      ├─ pulumi-nodejs:dynamic:Resource   eksCluster-cfnStackName                       created     
-    -      ├─ eks:index:ServiceRole            eksCluster-eksRole                            created     
-    -      │  ├─ aws:iam:RolePolicyAttachment  eksCluster-eksRole-90eb1c99                   created     
-    -      │  ├─ aws:iam:RolePolicyAttachment  eksCluster-eksRole-4b490823                   created     
-    -      │  └─ aws:iam:Role                  eksCluster-eksRole-role                       created     
-    -      ├─ aws:ec2:SecurityGroup            eksCluster-eksClusterSecurityGroup            created     
-    -      └─ eks:index:ServiceRole            eksCluster-instanceRole                       created     
-    -         ├─ aws:iam:RolePolicyAttachment  eksCluster-instanceRole-03516f97              created     
-    -         ├─ aws:iam:RolePolicyAttachment  eksCluster-instanceRole-e1b295bd              created     
-    -         ├─ aws:iam:RolePolicyAttachment  eksCluster-instanceRole-3eb088f2              created     
-    -         └─ aws:iam:Role                  eksCluster-instanceRole-role                  created     
-     
+        Type                                   Name                                          Status      
+    +   pulumi:pulumi:Stack                    voting-app-aws-ts-k8s-voting-app              created     
+    +   ├─ awsx:ecr:Repository                 server-side-service                           created     
+    +   │  ├─ aws:ecr:Repository               server-side-service                           created     
+    +   │  └─ aws:ecr:LifecyclePolicy          server-side-service                           created     
+    +   ├─ awsx:ecr:Repository                 client-side-service                           created     
+    +   │  ├─ aws:ecr:Repository               client-side-service                           created     
+    +   │  └─ aws:ecr:LifecyclePolicy          client-side-service                           created     
+    +   ├─ eks:index:Cluster                   eksCluster                                    created     
+    +   │  ├─ eks:index:ServiceRole            eksCluster-eksRole                            created     
+    +   │  │  ├─ aws:iam:Role                  eksCluster-eksRole-role                       created     
+    +   │  │  ├─ aws:iam:RolePolicyAttachment  eksCluster-eksRole-4b490823                   created     
+    +   │  │  └─ aws:iam:RolePolicyAttachment  eksCluster-eksRole-90eb1c99                   created     
+    +   │  ├─ eks:index:ServiceRole            eksCluster-instanceRole                       created     
+    +   │  │  ├─ aws:iam:Role                  eksCluster-instanceRole-role                  created     
+    +   │  │  ├─ aws:iam:RolePolicyAttachment  eksCluster-instanceRole-e1b295bd              created     
+    +   │  │  ├─ aws:iam:RolePolicyAttachment  eksCluster-instanceRole-3eb088f2              created     
+    +   │  │  └─ aws:iam:RolePolicyAttachment  eksCluster-instanceRole-03516f97              created     
+    +   │  ├─ pulumi-nodejs:dynamic:Resource   eksCluster-cfnStackName                       created     
+    +   │  ├─ aws:ec2:SecurityGroup            eksCluster-eksClusterSecurityGroup            created     
+    +   │  ├─ aws:ec2:SecurityGroupRule        eksCluster-eksClusterInternetEgressRule       created     
+    +   │  ├─ aws:eks:Cluster                  eksCluster-eksCluster                         created     
+    +   │  ├─ aws:iam:InstanceProfile          eksCluster-instanceProfile                    created     
+    +   │  ├─ aws:ec2:SecurityGroup            eksCluster-nodeSecurityGroup                  created     
+    +   │  ├─ aws:ec2:SecurityGroupRule        eksCluster-eksNodeClusterIngressRule          created     
+    +   │  ├─ aws:ec2:SecurityGroupRule        eksCluster-eksNodeIngressRule                 created     
+    +   │  ├─ aws:ec2:SecurityGroupRule        eksCluster-eksNodeInternetEgressRule          created     
+    +   │  ├─ aws:ec2:SecurityGroupRule        eksCluster-eksClusterIngressRule              created     
+    +   │  ├─ aws:ec2:SecurityGroupRule        eksCluster-eksExtApiServerClusterIngressRule  created     
+    +   │  ├─ aws:ec2:LaunchConfiguration      eksCluster-nodeLaunchConfiguration            created     
+    +   │  ├─ pulumi:providers:kubernetes      eksCluster-eks-k8s                            created     
+    +   │  ├─ pulumi-nodejs:dynamic:Resource   eksCluster-vpc-cni                            created     
+    +   │  ├─ kubernetes:core:ConfigMap        eksCluster-nodeAccess                         created     
+    +   │  ├─ aws:cloudformation:Stack         eksCluster-nodes                              created     
+    +   │  └─ pulumi:providers:kubernetes      eksCluster-provider                           created     
+    +   ├─ awsx:ecr:Repository                 database-side-service                         created     
+    +   │  ├─ aws:ecr:Repository               database-side-service                         created     
+    +   │  └─ aws:ecr:LifecyclePolicy          database-side-service                         created     
+    +   ├─ aws:ebs:Volume                      storage-volume                                created     
+    +   ├─ kubernetes:apps:Deployment          database-side-service                         created     
+    +   ├─ kubernetes:core:Service             database-side-listener                        created     
+    +   ├─ kubernetes:apps:Deployment          server-side-service                           created     
+    +   ├─ kubernetes:core:Service             server-side-listener                          created     
+    +   ├─ kubernetes:apps:Deployment          client-side-service                           created     
+    +   └─ kubernetes:core:Service             client-side-listener                          created     
+    
     Outputs:
-        URL: "a6d06dd637ba84d839b36e22ea4fd2e0-1378265413.us-west-2.elb.amazonaws.com"
-        kubeConfig: ...
+        URL       : "ab368f798ca564be295df514dfbc7a0e-519435073.us-west-2.elb.amazonaws.com"
+        kubeConfig: {...}
 
     Resources:
-        + 48 created
+        + 44 created
 
-    Duration: 18m28s
+    Duration: 15m45s
     ```
 
-1. View the DNS address of the instance via `pulumi stack output`:
-
-    ```bash
-    $ pulumi stack output
-    Current stack outputs (1):
-        OUTPUT   VALUE
-        URL  a6d06dd637ba84d839b36e22ea4fd2e0-1378265413.us-west-2.elb.amazonaws.com
-    ```
-
-1.  Verify that the ECS instance exists by connecting to it in a browser window.
+1.  Verify that the ECS instance exists by connecting to it on port 3000 in a browser window.
 
 ## Clean up
 

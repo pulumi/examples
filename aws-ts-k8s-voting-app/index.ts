@@ -4,10 +4,9 @@ import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import * as eks from "@pulumi/eks";
 import * as k8s from "@pulumi/kubernetes";
-import * as postgresql from "@pulumi/postgresql";
 import * as pulumi from "@pulumi/pulumi";
-import { Schema } from "./postgresql_dynamic_provider";
 
+// Getting necessary settings from the Pulumi config
 const config = new pulumi.Config();
 const sqlAdminName = config.require("sql-admin-name");
 const sqlAdminPassword = config.requireSecret("sql-admin-password");
@@ -16,7 +15,7 @@ const sqlUserPassword = config.requireSecret("sql-user-password");
 const awsConfig = new pulumi.Config("aws");
 const region = aws.config.region;
 
-// Creating an EKS cluster
+// Creating an EKS cluster in which our project will run
 const eksCluster = new eks.Cluster("eksCluster", {
     name: "eksCluster",
     instanceType: "t2.medium",
@@ -31,8 +30,10 @@ const eksCluster = new eks.Cluster("eksCluster", {
     ],
 });
 
+// To prevent information in the PostgreSQL database from being lost in the case of a shutdown or reset,
+// everything will be stored inside an Elastic Block Store volume
 const ebsVolume = new aws.ebs.Volume("storage-volume", {
-    size: 10,
+    size: 1,
     type: "gp2",
     availabilityZone: region + "a",
     encrypted: true,
@@ -40,6 +41,11 @@ const ebsVolume = new aws.ebs.Volume("storage-volume", {
     protect: false,
 });
 
+const databaseName = "votes";
+
+
+// Creating a Kubernetes deployment for the PostgreSQL database. A single pod will receive queries, and will
+// modify the data accordingly
 const databaseAppName = "database-side-service";
 const databaseAppLabels = { appClass: databaseAppName };
 const databaseDeployment = new k8s.apps.v1.Deployment(databaseAppName, {
@@ -55,10 +61,14 @@ const databaseDeployment = new k8s.apps.v1.Deployment(databaseAppName, {
                     image: awsx.ecr.buildAndPushImage("database-side-service", "./databaseside").image(),
                     ports: [{ name: "http", containerPort: 5432 }],
                     env: [
+                        { name: "DATABASE_NAME", value: databaseName },
                         { name: "ADMIN_NAME", value: sqlAdminName },
                         { name: "ADMIN_PASSWORD", value: sqlAdminPassword },
+                        { name: "USER_NAME", value: sqlUserName },
+                        { name: "USER_PASSWORD", value: sqlUserPassword },
+
                     ],
-                    volumeMounts: [{
+                    volumeMounts: [{  // The EBS volume is mounted to the pod, allowing the database to permanently store data
                         name: "persistent-volume",
                         mountPath: "/persistentVolume"
                     }],
@@ -75,7 +85,7 @@ const databaseDeployment = new k8s.apps.v1.Deployment(databaseAppName, {
                         volumeID: ebsVolume.id,
                     },
                 }],
-                affinity: {  // We configure database pods to only launch in the same zone as the EBS volume
+                affinity: {  // The pod is configured to always launch in the same availability zone as the EBS volume
                     nodeAffinity: {
                         requiredDuringSchedulingIgnoredDuringExecution: {
                             nodeSelectorTerms: [{
@@ -91,17 +101,19 @@ const databaseDeployment = new k8s.apps.v1.Deployment(databaseAppName, {
             }
         },
         strategy: {
-            type: "Recreate" // Kubernetes is configured to delete before replace to avoid a deadlock between the old and new pods both trying to attach to one volume
+            type: "Recreate"
         } 
     }}, {
-    deleteBeforeReplace: true,  // Pulumi is configured to delete before replace to avoid a deadlock between the old and new pods both trying to attach to one volume
+    deleteBeforeReplace: true,
     provider: eksCluster.provider,
 });
 
+// A Kubernetes service is created for the database using an internal IP address. Other components within
+// the cluster can now communicate with it
 const databasesideListener = new k8s.core.v1.Service("database-side-listener", {
     metadata: { labels: databaseDeployment.metadata.labels },
     spec: {
-        type: "LoadBalancer",
+        type: "ClusterIP",
         ports: [{ port: 5432, targetPort: "http" }],
         selector: databaseAppLabels,
         publishNotReadyAddresses: false,
@@ -110,60 +122,10 @@ const databasesideListener = new k8s.core.v1.Service("database-side-listener", {
     }
 );
 
-const postgresqlAddress = databasesideListener.status.loadBalancer.ingress[0].hostname;
+const postgresqlAddress = databasesideListener.spec.clusterIP;
 
-const postgresqlProvider = new postgresql.Provider("postgresql-provider", {
-        host: postgresqlAddress,
-        port: 5432,
-        username: sqlAdminName,
-        password: sqlAdminPassword,
-        superuser: false,
-        sslmode: "disable",
-});
-
-const postgresDatabase = new postgresql.Database("postgresql-database", {
-    name: "votes"}, {
-    provider: postgresqlProvider,
-});
-
-const postgresUser = new postgresql.Role("postgres-standard-role", {
-    name: sqlUserName,
-    password: sqlUserPassword,
-    superuser: false,
-    login: true,
-    connectionLimit: -1}, {
-    provider: postgresqlProvider,
-});
-
-// The database schema and initial data to be deployed to the database
-const creationScript = `
-    CREATE SCHEMA voting_app;
-    CREATE TABLE voting_app.choice(
-        choice_id SERIAL PRIMARY KEY,
-        text VARCHAR(255) NOT NULL,
-        vote_count INTEGER NOT NULL
-    );
-    GRANT USAGE ON SCHEMA voting_app TO ${sqlUserName};
-    GRANT SELECT, UPDATE ON ALL TABLES IN SCHEMA voting_app TO ${sqlUserName};
-    INSERT INTO voting_app.choice (text, vote_count) VALUES('Tabs', 0);
-    INSERT INTO voting_app.choice (text, vote_count) VALUES('Spaces', 0);
-`;
-
-// The SQL commands the database performs when deleting the schema
-const deletionScript = "DROP SCHEMA IF EXISTS voting_app CASCADE";
-
-// Creating our dynamic resource to deploy the schema during `pulumi up`. The arguments
-// are passed in as a SchemaInputs object
-const postgresqlVotesSchema = new Schema("postgresql-votes-schema", {
-    creatorName: sqlAdminName,
-    creatorPassword: sqlAdminPassword,
-    serverAddress: postgresqlAddress,
-    databaseName: postgresDatabase.name,
-    creationScript: creationScript,
-    deletionScript: deletionScript,
-    postgresUserName: postgresUser.name,
-});
-
+// Creating a deployment for the server which receives requests from the users, and translates them into
+// queries for the database. Any number of pods can be created for this deployment
 const serverAppName = "server";
 const serverAppLabels = { appClass: serverAppName };
 const serverDeployment = new k8s.apps.v1.Deployment("server-side-service", {
@@ -183,7 +145,7 @@ const serverDeployment = new k8s.apps.v1.Deployment("server-side-service", {
                         { name: "USER_PASSWORD", value: sqlUserPassword },
                         { name: "POSTGRES_ADDRESS", value: postgresqlAddress },
                         { name: "POSTGRES_PORT", value: String(5432) },
-                        { name: "DATABASE_NAME", value: postgresDatabase.name },
+                        { name: "DATABASE_NAME", value: databaseName },
                     ],
                     resources: {
                         limits: {
@@ -198,6 +160,8 @@ const serverDeployment = new k8s.apps.v1.Deployment("server-side-service", {
     provider: eksCluster.provider,
 });
 
+// A service is created for the server to open it to the internet. Anyone can send commands to the
+// service's Load Balancer, which will autimatically distribute them across the availible pods. 
 const serversideListener = new k8s.core.v1.Service("server-side-listener", {
     metadata: { labels: serverDeployment.metadata.labels },
     spec: {
@@ -210,6 +174,8 @@ const serversideListener = new k8s.core.v1.Service("server-side-listener", {
     }
 );
 
+// The final deployment is created for the client compoment. It acts as the main web page of the
+// voting application
 const clientAppName = "client";
 const clientAppLabels = { appClass: clientAppName };
 const clientDeployment = new k8s.apps.v1.Deployment("client-side-service", {
@@ -240,6 +206,9 @@ const clientDeployment = new k8s.apps.v1.Deployment("client-side-service", {
     provider: eksCluster.provider,
 });
 
+
+// Like with the server, a Load Balancer service is created for the clientside component. Users
+// will connect to it using port 3000, and will be balanced across the availible pods
 const clientsideListener = new k8s.core.v1.Service("client-side-listener", {
     metadata: { labels: clientDeployment.metadata.labels },
     spec: {
@@ -252,5 +221,7 @@ const clientsideListener = new k8s.core.v1.Service("client-side-listener", {
     }
 );
 
+// Exporting the KubeConfig of the cluster, and the URL of the clientside listener. We can now
+// use the URL to connect to our application
 export const kubeConfig = eksCluster.kubeconfig;
 export const URL = clientsideListener.status.loadBalancer.ingress[0].hostname;

@@ -1,5 +1,7 @@
 #!/bin/bash
 set -exu
+# find /persistentVolume
+
 FILE=/persistentVolume/postgresqlDb/postgresql.conf
 
 chown postgres:postgres /persistentVolume
@@ -18,12 +20,27 @@ else
     su postgres -c "/usr/lib/postgresql/10/bin/pg_ctl -D /persistentVolume/postgresqlDb --wait -l logfile start"
     
     set +x
-    echo "psql -U postgres -c \"CREATE ROLE $ADMIN_NAME LOGIN SUPERUSER PASSWORD '*********';\""
-    echo "psql -U postgres -c \"ALTER ROLE `postgres` WITH NOLOGIN\";"
+    echo "psql -U postgres -c \"CREATE ROLE $ADMIN_NAME LOGIN SUPERUSER PASSWORD *********;\""
     psql -U postgres -c "CREATE ROLE $ADMIN_NAME LOGIN SUPERUSER PASSWORD '$ADMIN_PASSWORD';"
-    psql -U postgres -c "ALTER ROLE `postgres` WITH NOLOGIN;"
-
+    echo "psql -U postgres -c \"CREATE USER $USER_NAME WITH PASSWORD *********;\""
+    psql -U postgres -c "CREATE USER $USER_NAME WITH PASSWORD '$USER_PASSWORD';"
+    echo "psql -U postgres -c \"ALTER ROLE postgres WITH NOLOGIN;\""
+    psql -U postgres -c "ALTER ROLE postgres WITH NOLOGIN;"
     set -x
+
+    psql -U $ADMIN_NAME -d postgres -c "CREATE DATABASE $DATABASE_NAME;"
+    psql -U $ADMIN_NAME -d $DATABASE_NAME -c "
+        CREATE SCHEMA voting_app;
+        CREATE TABLE voting_app.choice(
+            choice_id SERIAL PRIMARY KEY,
+            text VARCHAR(255) NOT NULL,
+            vote_count INTEGER NOT NULL
+        );       
+        GRANT USAGE ON SCHEMA voting_app TO $USER_NAME;
+        GRANT SELECT, UPDATE ON ALL TABLES IN SCHEMA voting_app TO $USER_NAME;
+        INSERT INTO voting_app.choice (text, vote_count) VALUES('Tabs', 0);
+        INSERT INTO voting_app.choice (text, vote_count) VALUES('Spaces', 0);
+    "
     su postgres -c "/usr/lib/postgresql/10/bin/pg_ctl -D /persistentVolume/postgresqlDb --wait -l logfile stop"
 fi
 
