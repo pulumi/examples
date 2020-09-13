@@ -1,9 +1,6 @@
 #!/bin/bash
 set -exu
-# find /persistentVolume
-
 FILE=/persistentVolume/postgresqlDb/postgresql.conf
-
 chown postgres:postgres /persistentVolume
 
 if test -f "$FILE"; then
