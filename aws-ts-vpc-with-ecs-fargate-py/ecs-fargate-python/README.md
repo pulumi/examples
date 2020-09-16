@@ -73,8 +73,10 @@ Task                    Enabled
 4. Populate the config.
 
    Here are aws [endpoints](https://docs.aws.amazon.com/general/latest/gr/rande.html)
-
-   Note: the mystackpath is the key.  The value for it will be your `stackreference` from the vpc:
+   
+   The [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) constructor takes as input a string of the form `org/project/stack`, and lets you access the outputs of that stack.  This format is ONLY for the SaaS based backend of pulumi(not for self-hosted).
+   
+   Note: The key is `mystackpath`.  The value for it will be your `stackreference` from the vpc:
 
    e.g.:  `team-qa/crosswalk-vpc/vpc-fargate-dev`
    ```
