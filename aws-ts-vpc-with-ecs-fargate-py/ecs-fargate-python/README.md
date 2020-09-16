@@ -47,7 +47,7 @@ Task                    Enabled
 
 ## Running the Example
 
- 1. Initialize a new stack called: `ecs-fargate-dev` via [pulumi config](https://www.pulumi.com/docs/reference/cli/pulumi_config_set/). 
+ 1. Initialize a new stack called: `ecs-fargate-dev` via [pulumi stack init](https://www.pulumi.com/docs/reference/cli/pulumi_stack_init/). 
       ```
       $ pulumi stack init ecs-fargate-dev
       ```
