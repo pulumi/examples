@@ -26,10 +26,9 @@ pulumi_public_subnets = mycrosswalkvpc.get_output("pulumi_vpc_public_subnet_ids"
 pulumi_az_amount = mycrosswalkvpc.get_output("pulumi_vpc_az_zones")
 env_stack = get_stack()
 env_project = get_project()
-config_file = "Pulumi." + env_stack + ".yaml"
 
 # common tags
-my_tags = {"application":"fargate", "crosswalk-vpc":"yes", "demo":"yes", "costcenter":"1234", "env":"dev", "vpc_name": pulumi_vpc_name, "vpc_cidr":pulumi_vpc_cidr, "pulumi:project":env_project, "pulumi:stack":env_stack, "pulumi:Config":config_file}
+my_tags = {"application":"fargate", "crosswalk-vpc":"yes", "demo":"yes", "costcenter":"1234", "env":"dev", "vpc_name": pulumi_vpc_name, "vpc_cidr":pulumi_vpc_cidr, "pulumi:project":env_project, "pulumi:stack":env_stack}
 
 # Step 1.1: Create the Task Execution IAM Role https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-cli-tutorial-fargate.html
 # IAM Role: https://www.pulumi.com/docs/reference/pkg/aws/iam/role/
