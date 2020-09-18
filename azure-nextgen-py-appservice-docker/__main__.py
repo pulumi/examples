@@ -1,3 +1,5 @@
+# Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+
 import pulumi
 from pulumi_azure_nextgen.containerregistry import latest as containerregistry
 from pulumi_azure_nextgen.resources import latest as resources
@@ -6,9 +8,12 @@ from pulumi_azure_nextgen.web import latest as web
 import pulumi_docker as docker
 import pulumi_random as random
 
+config = pulumi.Config()
+location = config.get("location") or "WestUS"
+
 resource_group = resources.ResourceGroup("resourceGroup",
     resource_group_name="appservice-docker-rg",
-    location="WestUS")
+    location=location)
 
 plan = web.AppServicePlan("plan",
     resource_group_name=resource_group.name,

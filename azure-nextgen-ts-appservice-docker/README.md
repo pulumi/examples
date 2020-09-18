@@ -23,6 +23,12 @@ The example shows two scenarios:
     $ az login
     ```
 
+1.  Restore NPM dependencies:
+
+    ```
+    $ npm install
+    ```
+    
 1. Set the azure location in which to run the test:
     
     ```

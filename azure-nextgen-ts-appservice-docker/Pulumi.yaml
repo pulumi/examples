@@ -5,4 +5,4 @@ template:
   config:
     location:
       description: Azure region to deploy resources to
-      secret: false
+      default: WestUS
