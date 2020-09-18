@@ -1,5 +1,6 @@
 import iam
 import vpc
+import utils
 import pulumi
 from pulumi_aws import eks
 
@@ -33,3 +34,4 @@ eks_node_group = eks.NodeGroup(
 )
 
 pulumi.export('cluster-name', eks_cluster.name)
+pulumi.export('kubeconfig', utils.generate_kube_config(eks_cluster))
