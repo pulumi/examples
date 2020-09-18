@@ -1,0 +1,11 @@
+name: voting-app
+runtime: nodejs
+description: Voting app that uses containers
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    redisPassword:
+      description: The Redis password
+      secret: true
