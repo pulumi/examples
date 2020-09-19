@@ -9,7 +9,7 @@ Starting point for building web application hosted in Azure Container Instances.
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init azure-appservice
+    $ pulumi stack init dev
     ```
 
 1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
@@ -21,27 +21,22 @@ Starting point for building web application hosted in Azure Container Instances.
 1. Set the azure location in which to run the test:
     
     ```
-    $ pulumi config set azure:location westus2
-    ```
-
-1. Define SQL Server password (make it complex enough to satisfy Azure policy):
-
-    ```
-    pulumi config set --secret sqlPassword <value>
+    $ pulumi config set location westus2
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...
 
     Performing changes:
     ...
-    info: 10 changes performed:
-        + 10 resources created
-    Update duration: 1m14.59910109s
+    Resources:
+        + 3 created
+
+    Duration: 1m18s
     ```
 
 1.  Check the deployed endpoint:

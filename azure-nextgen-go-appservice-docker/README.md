@@ -1,18 +1,20 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Azure App Service with SQL Database and Application Insights
+# Azure App Service Running Docker Containers on Linux
 
-Starting point for building web application hosted in Azure App Service.
+Starting point for building web application hosted in Azure App Service from Docker images.
 
-Provisions Azure SQL Database and Azure Application Insights to be used in combination
-with App Service.
+The example shows two scenarios:
+
+- Deploying an existing image from Docker Hub
+- Deploying a new custom registry in Azure Container Registry, building a custom Docker image, and running the image from the custom registry
 
 ## Running the App
 
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init azure-appservice
+    $ pulumi stack init dev
     ```
 
 1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
@@ -24,27 +26,22 @@ with App Service.
 1. Set the azure location in which to run the test:
     
     ```
-    $ pulumi config set azure:location westus2
-    ```
-
-1. Define SQL Server password (make it complex enough to satisfy Azure policy):
-
-    ```
-    pulumi config set --secret sqlPassword <value>
+    $ pulumi config set location westus2
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...
 
     Performing changes:
     ...
-    info: 10 changes performed:
-        + 10 resources created
-    Update duration: 1m14.59910109s
+    Resources:
+        + 8 created
+
+    Duration: 56s
     ```
 
 1.  Check the deployed website endpoint:

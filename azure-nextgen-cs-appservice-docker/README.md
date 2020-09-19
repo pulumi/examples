@@ -47,14 +47,14 @@ The example shows two scenarios:
 1.  Check the deployed endpoints:
 
     ```
-    $ pulumi stack output helloEndpoint
+    $ pulumi stack output HelloEndpoint
     http://hello-app-91dfea.azurewebsites.net/hello
-    $ curl "$(pulumi stack output helloEndpoint)"
+    $ curl "$(pulumi stack output HelloEndpoint)"
     Hello, world!
 
-    $ pulumi stack output getStartedEndpoint
+    $ pulumi stack output GetStartedEndpoint
     http://get-started-15da13.azurewebsites.net
-    $ curl "$(pulumi stack output getStartedEndpoint)"
+    $ curl "$(pulumi stack output GetStartedEndpoint)"
     <html>
     <body>
     <h1>Your custom docker image is running in Azure App Service!</h1>
