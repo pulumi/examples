@@ -9,8 +9,6 @@
   <ItemGroup>
     <PackageReference Include="Pulumi" Version="2.*" />
     <PackageReference Include="Pulumi.AzureNextGen" Version="0.*" />
-    <PackageReference Include="Pulumi.Docker" Version="2.*" />
-    <PackageReference Include="Pulumi.Random" Version="2.*" />
   </ItemGroup>
 
 </Project>

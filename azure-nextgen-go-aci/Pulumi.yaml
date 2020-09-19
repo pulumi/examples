@@ -1,0 +1,8 @@
+name: azureng-go-aci
+runtime: go
+description: Creates Azure Container Instance with a public IP
+template:
+  config:
+    location:
+      description: Azure region to deploy resources to
+      default: WestUS

@@ -1,13 +1,8 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Azure App Service Running Docker Containers on Linux
+# Azure Container Instances on Linux
 
-Starting point for building a web application hosted in Azure App Service from Docker images.
-
-The example shows two scenarios:
-
-- Deploying an existing image from Docker Hub
-- Deploying a new custom registry in Azure Container Registry, building a custom Docker image, and running the image from the custom registry
+Starting point for building web application hosted in Azure Container Instances.
 
 ## Running the App
 
@@ -49,26 +44,20 @@ The example shows two scenarios:
     Performing changes:
     ...
     Resources:
-        + 8 created
+        + 3 created
 
-    Duration: 56s
+    Duration: 1m18s
     ```
 
-1. Check the deployed endpoints:
+1. Check the deployed endpoint:
 
-    ```bash
-    $ pulumi stack output helloEndpoint
-    http://hello-app91dfea21.azurewebsites.net/hello
-    $ curl "$(pulumi stack output helloEndpoint)"
-    Hello, world!
     ```
-    
-    $ pulumi stack output getStartedEndpoint
-    http://get-started-15da13.azurewebsites.net
-    $ curl "$(pulumi stack output getStartedEndpoint)"
+    $ pulumi stack output containerIPv4Address
+    13.83.66.37
+    $ curl "$(pulumi stack output containerIPv4Address)"
     <html>
-    <body>
-    <h1>Your custom docker image is running in Azure App Service!</h1>
-    </body>
-    </html>
+    <head>
+        <title>Welcome to Azure Container Instances!</title>
+    </head>
+    ...
     ```
