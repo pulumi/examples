@@ -1,0 +1,6 @@
+name: azure-nextgen-py-aks
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Using azure-nextgen provider to create AKS cluster with python

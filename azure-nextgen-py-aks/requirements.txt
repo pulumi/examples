@@ -1,0 +1,6 @@
+pulumi>=2.0.0,<3.0.0
+pulumi-azuread>=2.4.0
+pulumi-azure-nextgen>=0.1.0
+pulumi-random>=2.2.0
+pulumi-tls>=2.2.0
+pulumi-azure>=3.0.0,<4.0.0

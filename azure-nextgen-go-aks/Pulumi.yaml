@@ -1,0 +1,3 @@
+name: azure-nextgen-go-aks
+runtime: go
+description: An minimal Azure Kubernetes Service Go Pulumi program
