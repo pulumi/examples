@@ -23,7 +23,7 @@ The example shows two scenarios:
     $ az login
     ```
     
-1. Set the azure location in which to run the test:
+1. Set the Azure region location to use:
     
     ```
     $ pulumi config set location westus2

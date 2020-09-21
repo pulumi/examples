@@ -7,7 +7,6 @@ import * as tls from "@pulumi/tls";
 import * as containerservice from "@pulumi/azure-nextgen/containerservice/latest";
 import * as resources from "@pulumi/azure-nextgen/resources/latest";
 
-const config = new pulumi.Config();
 // Create an Azure Resource Group
 const resourceGroup = new resources.ResourceGroup("resourceGroup", {
     resourceGroupName: "azure-nextgen-go-aks",
@@ -15,7 +14,7 @@ const resourceGroup = new resources.ResourceGroup("resourceGroup", {
 });
 
 // Create an AD service principal
-const adApp = new azuread.Application("aks")
+const adApp = new azuread.Application("aks");
 const adSp = new azuread.ServicePrincipal("aksSp", {
     applicationId: adApp.applicationId,
 });
@@ -40,6 +39,7 @@ const sshKey = new tls.PrivateKey("ssh-key", {
 });
 
 
+const config = new pulumi.Config();
 const managedClusterName = config.get("managedClusterName") || "azure-nextgen-aks";
 const cluster = new containerservice.ManagedCluster("managedClusterResource", {
     resourceGroupName: resourceGroup.name,
@@ -71,7 +71,7 @@ const cluster = new containerservice.ManagedCluster("managedClusterResource", {
         },
     },
     location: resourceGroup.location,
-    nodeResourceGroup: `MC_azure-nextgen-go_${managedClusterName}_westus`,
+    nodeResourceGroup: `MC_azure-nextgen-go_${managedClusterName}`,
     resourceName: managedClusterName,
     servicePrincipalProfile: {
         clientId: adApp.applicationId,
