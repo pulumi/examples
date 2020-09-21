@@ -6,6 +6,7 @@ build/
 node_modules/
 *.pyc
 .Python
+venv/
 include/
 lib/
 yarn.lock
