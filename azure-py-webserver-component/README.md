@@ -88,8 +88,6 @@ the virtual machine that we are going to create.
         + 8 created
 
     Duration: 2m9s
-
-    Permalink: https://app.pulumi.com/clstokes/azure-py-webserver-component/dev/updates/3
     ```
 
 1. Get the IP address of the newly-created instance from the stack's outputs: 
@@ -148,7 +146,6 @@ the virtual machine that we are going to create.
 
     Duration: 4m28s
 
-    Permalink: https://app.pulumi.com/clstokes/azure-py-webserver-component/dev/updates/4
     The resources in the stack have been deleted, but the history and configuration associated with the stack are still maintained.
     If you want to remove the stack completely, run 'pulumi stack rm dev'.
     ```

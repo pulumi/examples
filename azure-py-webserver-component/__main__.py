@@ -14,7 +14,7 @@ net = network.VirtualNetwork(
     resource_group_name=resource_group.name,
     location=resource_group.location,
     address_spaces=["10.0.0.0/16"],
-    subnets=[{"name": "default", "address_prefix": "10.0.1.0/24"}],
+    subnets=[network.VirtualNetworkSubnetArgs(name="default", address_prefix="10.0.1.0/24")],
     opts=ResourceOptions(parent=resource_group),
 )
 
@@ -22,7 +22,7 @@ subnet = network.Subnet(
     "server-subnet",
     resource_group_name=resource_group.name,
     virtual_network_name=net.name,
-    address_prefix="10.0.2.0/24",
+    address_prefixes=["10.0.2.0/24"],
     opts=ResourceOptions(parent=net),
 )
 
