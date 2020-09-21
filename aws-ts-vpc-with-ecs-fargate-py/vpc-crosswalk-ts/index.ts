@@ -24,7 +24,6 @@ const baseTags = {
 }
 
 // Allocate a new VPC with the CIDR range from config file:
-//const vpc = new awsx.ec2.Vpc(`${vpc_name}`, {
   const vpc = new awsx.ec2.Vpc(vpc_name, {
     cidrBlock: vpc_cidr,
     numberOfAvailabilityZones: zone_number,
