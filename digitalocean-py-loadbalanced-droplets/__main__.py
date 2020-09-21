@@ -27,16 +27,16 @@ for x in range(0, droplet_count):
 loadbalancer = do.LoadBalancer(
     "public",
     droplet_tag=droplet_type_tag.name,
-    forwarding_rules=[{
-        "entry_port": 80,
-        "entry_protocol": "http",
-        "target_port": 80,
-        "target_protocol": "http",
-    }],
-    healthcheck={
-        "port": 80,
-        "protocol": "tcp",
-    },
+    forwarding_rules=[do.LoadBalancerForwardingRuleArgs(
+        entry_port=80,
+        entry_protocol="http",
+        target_port=80,
+        target_protocol="http",
+    )],
+    healthcheck=do.LoadBalancerHealthcheckArgs(
+        port=80,
+        protocol="tcp",
+    ),
     region=region,
 )
 
