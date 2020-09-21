@@ -165,6 +165,6 @@ You need to select `yes` to continue.  The url will look similar to the url belo
 
 10. Cleanup.  Destroy the vpc only if all there are no other resources running in it such as ecs fargate.
    ```
-   $ pulumi destroy
+   $ pulumi destroy -y
    $ pulumi rm vpc-fargate
    ```
