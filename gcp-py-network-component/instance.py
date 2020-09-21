@@ -31,10 +31,10 @@ class Server(ComponentResource):
 
         firewall = compute.Firewall(name,
                                     network=args.subnet.network,
-                                    allows=[{
-                                        "protocol": "tcp",
-                                        "ports": args.ports,
-                                    }],
+                                    allows=[compute.FirewallAllowArgs(
+                                        protocol="tcp",
+                                        ports=args.ports,
+                                    )],
                                     target_tags=[args.service_name],
                                     opts=ResourceOptions(parent=self)
                                     )
@@ -45,17 +45,17 @@ class Server(ComponentResource):
 
         self.instance = compute.Instance(name,
                                          machine_type=args.machine_type,
-                                         boot_disk={
-                                             "initializeParams": {
-                                                 "image": "ubuntu-os-cloud/ubuntu-1804-lts"
-                                             }
-                                         },
-                                         network_interfaces=[{
-                                             "subnetwork": args.subnet.self_link,
-                                             "accessConfigs": [{
-                                                 "nat_ip": addr.address
-                                             }]
-                                         }],
+                                         boot_disk=compute.InstanceBootDiskArgs(
+                                             initialize_params=compute.InstanceBootDiskInitializeParamsArgs(
+                                                 image="ubuntu-os-cloud/ubuntu-1804-lts"
+                                             )
+                                         ),
+                                         network_interfaces=[compute.InstanceNetworkInterfaceArgs(
+                                             subnetwork=args.subnet.self_link,
+                                             access_configs=[compute.InstanceNetworkInterfaceAccessConfigArgs(
+                                                 nat_ip=addr.address
+                                             )]
+                                         )],
                                          tags=[args.service_name],
                                          metadata=args.metadata,
                                          metadata_startup_script=args.metadata_startup_script,

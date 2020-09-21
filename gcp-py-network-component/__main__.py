@@ -1,4 +1,4 @@
-from pulumi import export, ResourceOptions
+from pulumi import export
 from pulumi_gcp import compute
 from config import project, owner, subnet_cidr_blocks, nginx_install_script
 import instance
@@ -26,4 +26,4 @@ nginx_instance = instance.Server(f"{project}-{nginx_service_name}",
 
 export('network', network.network.name)
 export('nginx_public_ip',
-       nginx_instance.instance.network_interfaces[0]["accessConfigs"][0]["natIp"])
+       nginx_instance.instance.network_interfaces.apply(lambda ni: ni[0].access_configs[0].nat_ip))
