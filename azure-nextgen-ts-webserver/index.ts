@@ -1,7 +1,10 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
-import * as azure from "@pulumi/azure-nextgen";
 import * as pulumi from "@pulumi/pulumi";
+
+import * as compute from "@pulumi/azure-nextgen/compute/latest";
+import * as network from "@pulumi/azure-nextgen/network/latest";
+import * as resources from "@pulumi/azure-nextgen/resources/latest";
 
 // Get the desired username and password for our VM.
 const config = new pulumi.Config();
@@ -10,13 +13,13 @@ const username = config.require("username");
 const password = config.requireSecret("password");
 
 // All resources will share a resource group.
-const resourceGroupName = new azure.resources.latest.ResourceGroup("server-rg", {
+const resourceGroupName = new resources.ResourceGroup("server-rg", {
     resourceGroupName: "server-rg",
     location,
 }).name;
 
 // Create a network and subnet for all VMs.
-const network = new azure.network.latest.VirtualNetwork("server-network", {
+const virtualNetwork = new network.VirtualNetwork("server-network", {
     resourceGroupName,
     location,
     virtualNetworkName: "server-network",
@@ -28,20 +31,20 @@ const network = new azure.network.latest.VirtualNetwork("server-network", {
 });
 
 // Now allocate a public IP and assign it to our NIC.
-const publicIp = new azure.network.latest.PublicIPAddress("server-ip", {
+const publicIp = new network.PublicIPAddress("server-ip", {
     resourceGroupName,
     location,
     publicIpAddressName: "server-ip",
     publicIPAllocationMethod: "Dynamic",
 });
 
-const networkInterface = new azure.network.latest.NetworkInterface("server-nic", {
+const networkInterface = new network.NetworkInterface("server-nic", {
     resourceGroupName,
     location,
     networkInterfaceName: "server-nic",
     ipConfigurations: [{
         name: "webserveripcfg",
-        subnet: { id: network.subnets[0].id },
+        subnet: { id: virtualNetwork.subnets[0].id },
         privateIPAllocationMethod: "Dynamic",
         publicIPAddress: { id: publicIp.id },
     }],
@@ -52,7 +55,7 @@ echo "Hello, World!" > index.html
 nohup python -m SimpleHTTPServer 80 &`;
 
 // Now create the VM, using the resource group and NIC allocated above.
-const vm = new azure.compute.latest.VirtualMachine("server-vm", {
+const vm = new compute.VirtualMachine("server-vm", {
     resourceGroupName,
     location,
     vmName: "server-vm",
@@ -90,7 +93,7 @@ const vm = new azure.compute.latest.VirtualMachine("server-vm", {
 const done = pulumi.all({ _: vm.id, name: publicIp.name, resourceGroupName: resourceGroupName });
 
 export const ipAddress = done.apply(async (d) => {
-    return azure.network.latest.getPublicIPAddress({
+    return network.getPublicIPAddress({
         resourceGroupName: d.resourceGroupName,
         publicIpAddressName: d.name,
     }).then(ip => ip.ipAddress);
