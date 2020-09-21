@@ -122,7 +122,7 @@ front_end_listener = aws.lb.Listener(
 
 #  tags for task definition
 task_definition_tags = dict(my_tags)
-task_definition_tags.update({"Name":"pulumi-fargate-alb"})
+task_definition_tags.update({"Name":"pulumi-fargate-task-definition"})
 
 # Task Definition https://www.pulumi.com/docs/reference/pkg/aws/ecs/taskdefinition/
 task_definition = aws.ecs.TaskDefinition(
