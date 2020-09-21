@@ -11,11 +11,11 @@ if config.require("isMinikube") == "true":
 
 instance = jenkins.Instance(
     name=pulumi.get_stack(),
-    credentials= {
+    credentials={
         "username": config.require("username"),
         "password": config.require("password"),
     },
-    resources= {
+    resources={
         "memory": "512Mi",
         "cpu": "100m",
     },
