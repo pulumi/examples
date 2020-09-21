@@ -1,4 +1,4 @@
-module github.com/pulumi/examples/azure-go-appservice
+module github.com/pulumi/examples/azure-go-aci
 
 go 1.13
 

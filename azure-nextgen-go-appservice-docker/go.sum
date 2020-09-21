@@ -146,6 +146,8 @@ github.com/prometheus/procfs v0.0.0-20181005140218-185b4288413d/go.mod h1:c3At6R
 github.com/prometheus/procfs v0.0.0-20190507164030-5867b95ac084/go.mod h1:TjEm7ze935MbeOT/UhFTIMYKhuLP4wbCsTZCD3I8kEA=
 github.com/prometheus/tsdb v0.7.1/go.mod h1:qhTCs0VvXwvX/y3TZrWD7rabWM+ijKTux40TwIPHuXU=
 github.com/pulumi/pulumi-azure-nextgen/sdk v0.0.0-20200917212940-17e4216af957 h1:DwdT4joCbXzHKKrKZdNfidlYC+R7oEv6z0adjuC8M5s=
+github.com/pulumi/pulumi-azure-nextgen/sdk v0.1.0 h1:SsGy/cyrdbPblNaOUF3do+FQreYSOcIWBrKBn0XG2O4=
+github.com/pulumi/pulumi-azure-nextgen/sdk v0.1.0/go.mod h1:fkyDtuEem8AYbINvR7y5i7EyVEqWa5lyi0B15D/yRLo=
 github.com/pulumi/pulumi-azure/sdk/v3 v3.0.0 h1:UK9og7uTSwXQrDbYJxGYKLIpTGF6ffQGQum8KiYmP4U=
 github.com/pulumi/pulumi-azure/sdk/v3 v3.0.0/go.mod h1:hZf4OGDeY+7Wbdq/3CbeuhbtRQw2UsRzs95f7mlCjfE=
 github.com/pulumi/pulumi-docker v1.5.0 h1:Wg94ooWKcOpI2A+rsbuEtD2i+o5IGeZY1e9sdhqeDKk=
