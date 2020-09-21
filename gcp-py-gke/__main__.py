@@ -1,16 +1,17 @@
 from pulumi import Config, export, get_project, get_stack, Output, ResourceOptions
 from pulumi_gcp.config import project, zone
-from pulumi_gcp.container import Cluster, get_engine_versions
+from pulumi_gcp.container import Cluster, ClusterMasterAuthArgs, ClusterNodeConfigArgs
 from pulumi_kubernetes import Provider
-from pulumi_kubernetes.apps.v1 import Deployment
-from pulumi_kubernetes.core.v1 import Service
+from pulumi_kubernetes.apps.v1 import Deployment, DeploymentSpecArgs
+from pulumi_kubernetes.core.v1 import ContainerArgs, PodSpecArgs, PodTemplateSpecArgs, Service, ServicePortArgs, ServiceSpecArgs
+from pulumi_kubernetes.meta.v1 import LabelSelectorArgs, ObjectMetaArgs
 from pulumi_random import RandomPassword
 
 # Read in some configurable settings for our cluster:
 config = Config(None)
 
 # nodeCount is the number of cluster nodes to provision. Defaults to 3 if unspecified.
-NODE_COUNT = config.get('node_count') or 3
+NODE_COUNT = config.get_int('node_count') or 3
 # nodeMachineType is the machine type to use for cluster nodes. Defaults to n1-standard-1 if unspecified.
 # See https://cloud.google.com/compute/docs/machine-types for more details on available machine types.
 NODE_MACHINE_TYPE = config.get('node_machine_type') or 'n1-standard-1'
@@ -26,16 +27,16 @@ k8s_cluster = Cluster('gke-cluster',
     initial_node_count=NODE_COUNT,
     node_version=MASTER_VERSION,
     min_master_version=MASTER_VERSION,
-    master_auth={ 'username': USERNAME, 'password': PASSWORD },
-    node_config={
-        'machine_type': NODE_MACHINE_TYPE,
-        'oauth_scopes': [
+    master_auth=ClusterMasterAuthArgs(username=USERNAME, password=PASSWORD),
+    node_config=ClusterNodeConfigArgs(
+        machine_type=NODE_MACHINE_TYPE,
+        oauth_scopes=[
             'https://www.googleapis.com/auth/compute',
             'https://www.googleapis.com/auth/devstorage.read_only',
             'https://www.googleapis.com/auth/logging.write',
             'https://www.googleapis.com/auth/monitoring'
         ],
-    },
+    ),
 )
 
 # Manufacture a GKE-style Kubeconfig. Note that this is slightly "different" because of the way GKE requires
@@ -74,25 +75,25 @@ k8s_provider = Provider('gke_k8s', kubeconfig=k8s_config)
 # Create a canary deployment to test that this cluster works.
 labels = { 'app': 'canary-{0}-{1}'.format(get_project(), get_stack()) }
 canary = Deployment('canary',
-    spec={
-        'selector': { 'matchLabels': labels },
-        'replicas': 1,
-        'template': {
-            'metadata': { 'labels': labels },
-            'spec': { 'containers': [{ 'name': 'nginx', 'image': 'nginx' }] },
-        },
-    }, __opts__=ResourceOptions(provider=k8s_provider)
+    spec=DeploymentSpecArgs(
+        selector=LabelSelectorArgs(match_labels=labels),
+        replicas=1,
+        template=PodTemplateSpecArgs(
+            metadata=ObjectMetaArgs(labels=labels),
+            spec=PodSpecArgs(containers=[ContainerArgs(name='nginx', image='nginx')]),
+        ),
+    ), __opts__=ResourceOptions(provider=k8s_provider)
 )
 
 ingress = Service('ingress',
-    spec={
-        'type': 'LoadBalancer',
-        'selector': labels,
-        'ports': [{'port': 80}],
-    }, __opts__=ResourceOptions(provider=k8s_provider)
+    spec=ServiceSpecArgs(
+        type='LoadBalancer',
+        selector=labels,
+        ports=[ServicePortArgs(port=80)],
+    ), __opts__=ResourceOptions(provider=k8s_provider)
 )
 
 # Finally, export the kubeconfig so that the client can easily access the cluster.
 export('kubeconfig', k8s_config)
 # Export the k8s ingress IP to access the canary deployment
-export('ingress_ip', Output.all(ingress.status['load_balancer']['ingress'][0]['ip']))
+export('ingress_ip', ingress.status.apply(lambda status: status.load_balancer.ingress[0].ip))
