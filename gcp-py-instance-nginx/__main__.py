@@ -10,14 +10,14 @@ firewall = compute.Firewall(
     "poc",
     network=network.self_link,
     allows=[
-        {
-            "protocol": "tcp",
-            "ports": ["22"]
-        },
-        {
-            "protocol": "tcp",
-            "ports": ["80"]
-        }
+        compute.FirewallAllowArgs(
+            protocol="tcp",
+            ports=["22"]
+        ),
+        compute.FirewallAllowArgs(
+            protocol="tcp",
+            ports=["80"]
+        ),
     ]
 )
 
@@ -33,18 +33,18 @@ instance_addr = compute.address.Address("poc")
 instance = compute.Instance(
     "poc",
     machine_type="f1-micro",
-    boot_disk={
-        "initializeParams": {
-            "image": "ubuntu-os-cloud/ubuntu-1804-bionic-v20200414"
-        }
-    },
+    boot_disk=compute.InstanceBootDiskArgs(
+        initialize_params=compute.InstanceBootDiskInitializeParamsArgs(
+            image="ubuntu-os-cloud/ubuntu-1804-bionic-v20200414"
+        ),
+    ),
     network_interfaces=[
-        {
-            "network": network.id,
-            "accessConfigs": [{
-                "nat_ip": instance_addr.address
-            }]
-        }
+        compute.InstanceNetworkInterfaceArgs(
+            network=network.id,
+            access_configs=[compute.InstanceNetworkInterfaceAccessConfigArgs(
+                nat_ip=instance_addr.address
+            )]
+        )
     ],
     metadata_startup_script=script,
 )
@@ -72,33 +72,33 @@ spec:
 container_instance = compute.Instance(
     "poc-container-instance",
     machine_type="f1-micro",
-    boot_disk={
-        "initializeParams": {
-            "image": "cos-cloud/cos-stable-81-12871-69-0"
-        }
-    },
+    boot_disk=compute.InstanceBootDiskArgs(
+        initialize_params=compute.InstanceBootDiskInitializeParamsArgs(
+            image="cos-cloud/cos-stable-81-12871-69-0",
+        )
+    ),
     metadata={
         "gce-container-declaration": container_instance_metadata_script,
     },
     network_interfaces=[
-        {
-            "network": network.id,
-            "accessConfigs": [{
-                "nat_ip": container_instance_addr.address
-            }]
-        }
+        compute.InstanceNetworkInterfaceArgs(
+            network=network.id,
+            access_configs=[compute.InstanceNetworkInterfaceAccessConfigArgs(
+                nat_ip=container_instance_addr.address
+            )]
+        )
     ],
-    service_account={
-        "email": "default",
-        "scopes": [
+    service_account=compute.InstanceServiceAccountArgs(
+        email="default",
+        scopes=[
             "https://www.googleapis.com/auth/devstorage.read_only",
-            "https://www.googleapis.com/auth/logging.write", 
-            "https://www.googleapis.com/auth/monitoring.write", 
-            "https://www.googleapis.com/auth/service.management.readonly", 
-            "https://www.googleapis.com/auth/servicecontrol", 
-            "https://www.googleapis.com/auth/trace.append", 
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring.write",
+            "https://www.googleapis.com/auth/service.management.readonly",
+            "https://www.googleapis.com/auth/servicecontrol",
+            "https://www.googleapis.com/auth/trace.append",
         ],
-    },
+    ),
 )
 
 pulumi.export("container_instance_name", container_instance.name)
