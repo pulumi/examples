@@ -47,12 +47,17 @@ The example shows two scenarios:
 1.  Check the deployed website endpoint:
 
     ```
-    $ pulumi stack output endpoint
-    https://azpulumi-as0ef47193.azurewebsites.net
-    $ curl "$(pulumi stack output endpoint)"
+    $ pulumi stack output helloEndpoint
+    http://hello-app-91dfea.azurewebsites.net/hello
+    $ curl "$(pulumi stack output helloEndpoint)"
+    Hello, world!
+
+    $ pulumi stack output getStartedEndpoint
+    http://get-started-15da13.azurewebsites.net
+    $ curl "$(pulumi stack output getStartedEndpoint)"
     <html>
-        <body>
-            <h1>Greetings from Azure App Service!</h1>
-        </body>
+    <body>
+    <h1>Your custom docker image is running in Azure App Service!</h1>
+    </body>
     </html>
     ```
