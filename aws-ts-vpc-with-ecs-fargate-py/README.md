@@ -20,7 +20,7 @@ The vpc [outputs](https://www.pulumi.com/docs/reference/cli/pulumi_stack_output/
 
 ### Which Backend are we using?
 
-We are going to use [Pulumi Service backend](https://www.pulumi.com/docs/intro/concepts/state/#pulumi-service-backend) for saving states/checkpoints.
+We are going to use [Pulumi Service backend](https://www.pulumi.com/docs/intro/concepts/state/#pulumi-service-backend) for state storage.
 
 ## Running the Example
 

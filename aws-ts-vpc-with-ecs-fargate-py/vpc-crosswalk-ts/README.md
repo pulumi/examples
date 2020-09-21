@@ -7,7 +7,7 @@
 This example uses [Pulumi CrossWalk for AWS](https://www.pulumi.com/docs/guides/crosswalk/aws/#pulumi-crosswalk-for-aws) for deploying your own vpc using crosswalk [VPC](https://www.pulumi.com/docs/guides/crosswalk/aws/vpc/).  The VPC is built in `typescript`
 
 ### Why would you do this?  
-An example showing that you can easily infrastructure written in a different language than the one you are used to.
+An example showing that you can easily integrate infrastructure from another Pulumi application written in a different language than the one you are used to.
 
 ## Prerequisites
 
@@ -144,7 +144,7 @@ You need to select `yes` to continue.  The url will look similar to the url belo
       pulumic_vpc_number_of_nat_gateways  3
       ```
 
-9. Grab the [`stackreference`](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies).  This is in the last line. 
+9. The value to use in a [`StackReference`](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) can be retrieved from the last line. 
    ```
       $ pulumi stack
    ```
@@ -166,5 +166,5 @@ You need to select `yes` to continue.  The url will look similar to the url belo
 10. Cleanup.  Destroy the vpc only if all there are no other resources running in it such as ecs fargate.
    ```
    $ pulumi destroy -y
-   $ pulumi rm vpc-fargate
+   $ pulumi stack rm vpc-fargate
    ```
