@@ -1,8 +1,9 @@
 import pulumi_digitalocean as do
-from pulumi import Config, export, Output, ResourceOptions
+from pulumi import Config, export, ResourceOptions, CustomTimeouts
 from pulumi_kubernetes import Provider
-from pulumi_kubernetes.apps.v1 import Deployment
-from pulumi_kubernetes.core.v1 import Service
+from pulumi_kubernetes.apps.v1 import Deployment, DeploymentSpecArgs
+from pulumi_kubernetes.core.v1 import ContainerArgs, PodSpecArgs, PodTemplateSpecArgs, Service, ServicePortArgs, ServiceSpecArgs
+from pulumi_kubernetes.meta.v1 import LabelSelectorArgs, ObjectMetaArgs
 
 config = Config()
 node_count = config.get_float("nodeCount") or 3
@@ -13,35 +14,35 @@ cluster = do.KubernetesCluster(
     "do-cluster",
     region="sfo2",
     version="latest",
-    node_pool={
-        "name": "default",
-        "size": "s-2vcpu-2gb",
-        "node_count": node_count
-    })
+    node_pool=do.KubernetesClusterNodePoolArgs(
+        name="default",
+        size="s-2vcpu-2gb",
+        node_count=node_count
+    ))
 
-k8s_provider = Provider("do-k8s", kubeconfig=cluster.kube_configs[0]["rawConfig"] )
+k8s_provider = Provider("do-k8s", kubeconfig=cluster.kube_configs.apply(lambda c: c[0].raw_config))
 
 app_labels = { "app": "app-nginx" }
 app = Deployment(
     "do-app-dep",
-    spec={
-        'selector': { 'matchLabels': app_labels },
-        'replicas': 1,
-        'template': {
-            'metadata': { 'labels': app_labels },
-            'spec': { 'containers': [{ 'name': 'nginx', 'image': 'nginx' }] },
-        },
-    }, __opts__=ResourceOptions(provider=k8s_provider))
+    spec=DeploymentSpecArgs(
+        selector=LabelSelectorArgs(match_labels=app_labels),
+        replicas=1,
+        template=PodTemplateSpecArgs(
+            metadata=ObjectMetaArgs(labels=app_labels),
+            spec=PodSpecArgs(containers=[ContainerArgs(name='nginx', image='nginx')]),
+        ),
+    ), __opts__=ResourceOptions(provider=k8s_provider))
 
 ingress = Service(
     'do-app-svc',
-    spec={
-        'type': 'LoadBalancer',
-        'selector': app_labels,
-        'ports': [{'port': 80}],
-    }, __opts__=ResourceOptions(provider=k8s_provider, custom_timeouts={"create":"15m", "delete": "15m"}))
+    spec=ServiceSpecArgs(
+        type='LoadBalancer',
+        selector=app_labels,
+        ports=[ServicePortArgs(port=80)],
+    ), __opts__=ResourceOptions(provider=k8s_provider, custom_timeouts=CustomTimeouts(create="15m", delete="15m")))
 
-ingress_ip=ingress.status['load_balancer']['ingress'][0]['ip']
+ingress_ip = ingress.status.apply(lambda s: s.load_balancer.ingress[0].ip)
 
 export('ingress_ip', ingress_ip)
 
