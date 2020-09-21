@@ -1,0 +1,11 @@
+{
+    "name": "azure-nextgen-ts-aci",
+    "version": "1.0.0",
+    "devDependencies": {
+        "@types/node": "^8.0.0"
+    },
+    "dependencies": {
+        "@pulumi/azure-nextgen": "^0.1.0",
+        "@pulumi/pulumi": "^2.0.0"
+    }
+}

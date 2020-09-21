@@ -1,0 +1,8 @@
+name: azureng-ts-appservice-docker
+runtime: nodejs
+description: Creates Azure App Service and Deploys Docker images to
+template:
+  config:
+    location:
+      description: Azure region to deploy resources to
+      default: WestUS

@@ -1,0 +1,8 @@
+name: azureng-cs-appservice-docker
+runtime: dotnet
+description: Creates Azure App Service and Deploys Docker images to
+template:
+  config:
+    location:
+      description: Azure region to deploy resources to
+      default: WestUS
