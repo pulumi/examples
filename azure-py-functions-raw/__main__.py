@@ -32,14 +32,14 @@ def get_sas(args):
         start="2020-01-01",
         expiry="2030-01-01",
         container_name=args[2],
-        permissions={
-            "read": "true",
-            "write": "false",
-            "delete": "false",
-            "list": "false",
-            "add": "false",
-            "create": "false"
-        }
+        permissions=storage.GetAccountBlobContainerSASPermissionsArgs(
+            read=True,
+            write=False,
+            delete=False,
+            list=False,
+            add=False,
+            create=False,
+        )
     )
     return f"https://{args[0]}.blob.core.windows.net/{args[2]}/{args[3]}{blob_sas.sas}"
 
@@ -53,11 +53,11 @@ http_plan=appservice.Plan(
     "http",
     resource_group_name=resource_group.name,
     kind="Linux",
-    sku={
-        "tier": "Dynamic",
-        "size": "Y1"
-    },
-    reserved="true"
+    sku=appservice.PlanSkuArgs(
+        tier="Dynamic",
+        size="Y1"
+    ),
+    reserved=True,
 )
 
 http_function_app=appservice.FunctionApp(
