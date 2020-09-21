@@ -14,16 +14,17 @@ config = Config()
 mystackpath = config.get("mystackpath")
 
 # setting the StackReference
-mycrosswalkvpc = StackReference(f"{mystackpath}")
+#mycrosswalkvpc = StackReference(f"{mystackpath}")
+mycrosswalkvpc = StackReference(mystackpath)
 
 # Get all network values from previously created vpc #
-pulumi_vpc = mycrosswalkvpc.get_output("pulumi_vpc_id")
-pulumi_vpc_name = mycrosswalkvpc.get_output("pulumi_vpc_name")
-pulumi_vpc_cidr = mycrosswalkvpc.get_output("pulumi_vpc_cidr")
-pulumi_vpc_id = mycrosswalkvpc.get_output("pulumi_vpc_id")
-pulumi_private_subnets = mycrosswalkvpc.get_output("pulumi_vpc_private_subnet_ids")
-pulumi_public_subnets = mycrosswalkvpc.get_output("pulumi_vpc_public_subnet_ids")
-pulumi_az_amount = mycrosswalkvpc.get_output("pulumi_vpc_az_zones")
+pulumi_vpc = mycrosswalkvpc.require_output("pulumi_vpc_id")
+pulumi_vpc_name = mycrosswalkvpc.require_output("pulumi_vpc_name")
+pulumi_vpc_cidr = mycrosswalkvpc.require_output("pulumi_vpc_cidr")
+pulumi_vpc_id = mycrosswalkvpc.require_output("pulumi_vpc_id")
+pulumi_private_subnets = mycrosswalkvpc.require_output("pulumi_vpc_private_subnet_ids")
+pulumi_public_subnets = mycrosswalkvpc.require_output("pulumi_vpc_public_subnet_ids")
+pulumi_az_amount = mycrosswalkvpc.require_output("pulumi_vpc_az_zones")
 env_stack = get_stack()
 env_project = get_project()
 
