@@ -1,22 +1,20 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import * as k8s from "@pulumi/kubernetes";
-import * as pulumi from "@pulumi/pulumi";
 
-// Minikube does not implement services of type `LoadBalancer`; require the user to specify if we're
-// running on minikube, and if so, create only services of type ClusterIP.
-const config = new pulumi.Config();
-if (config.require("isMinikube") === "true") {
-    throw new Error("This example does not yet support minikube");
-}
-
-// Deploy the latest version of the stable/wordpress chart.
-const wordpress = new k8s.helm.v2.Chart("wpdev", {
-    repo: "stable",
-    version: "2.1.3",
+// Deploy the bitnami/wordpress chart.
+const wordpress = new k8s.helm.v3.Chart("wpdev", {
+    version: "9.6.0",
     chart: "wordpress",
+    fetchOpts: {
+        repo: "https://charts.bitnami.com/bitnami"
+    }
 });
 
-// Export the public IP for Wordpress.
+// Get the status field from the wordpress service, and then grab a reference to the ingress field.
 const frontend = wordpress.getResourceProperty("v1/Service", "wpdev-wordpress", "status");
-export const frontendIp = frontend.apply(status => status.loadBalancer.ingress[0].ip);
+const ingress = frontend.loadBalancer.ingress[0];
+
+// Export the public IP for Wordpress.
+// Depending on the k8s cluster, this value may be an IP address or a hostname.
+export const frontendIp = ingress.apply(x => x.ip ?? x.hostname);
