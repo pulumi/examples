@@ -1,13 +1,13 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import { ChatPostMessageArguments } from "@slack/web-api";
+import { IncomingWebhookSendArguments } from "@slack/webhook";
 
 // Return a formatted copy of the Slack message object, based on the kind of Pulumi webhook received.
 // See the Pulumi and Slack webhook documentation for details.
 // https://www.pulumi.com/docs/intro/console/extensions/webhooks/
 // https://api.slack.com/docs/message-attachments
-export function formatSlackMessage(kind: string, payload: object, messageArgs: ChatPostMessageArguments): ChatPostMessageArguments {
-    const cloned: ChatPostMessageArguments = Object.assign({}, messageArgs) as ChatPostMessageArguments;
+export function formatSlackMessage(kind: string, payload: object, messageArgs: IncomingWebhookSendArguments): IncomingWebhookSendArguments {
+    const cloned: IncomingWebhookSendArguments = Object.assign({}, messageArgs) as IncomingWebhookSendArguments;
 
     switch (kind) {
         case "stack":
@@ -24,7 +24,7 @@ export function formatSlackMessage(kind: string, payload: object, messageArgs: C
     }
 }
 
-function formatStack(payload: any, args: ChatPostMessageArguments): ChatPostMessageArguments {
+function formatStack(payload: any, args: IncomingWebhookSendArguments): IncomingWebhookSendArguments {
     const summary = `${payload.organization.githubLogin}/${payload.projectName}/${payload.stackName} ${payload.action}.`;
     args.text = summary;
     args.attachments = [
@@ -47,7 +47,7 @@ function formatStack(payload: any, args: ChatPostMessageArguments): ChatPostMess
     return args;
 }
 
-function formatTeam(payload: any, args: ChatPostMessageArguments): ChatPostMessageArguments {
+function formatTeam(payload: any, args: IncomingWebhookSendArguments): IncomingWebhookSendArguments {
     const summary = `${payload.organization.githubLogin} team ${payload.action}.`;
     args.text = summary;
     args.attachments = [
@@ -90,7 +90,7 @@ function formatTeam(payload: any, args: ChatPostMessageArguments): ChatPostMessa
     return args;
 }
 
-function formatUpdate(kind: "stack_preview" | "stack_update", payload: any, args: ChatPostMessageArguments): ChatPostMessageArguments {
+function formatUpdate(kind: "stack_preview" | "stack_update", payload: any, args: IncomingWebhookSendArguments): IncomingWebhookSendArguments {
     const summary = `${payload.organization.githubLogin}/${payload.projectName}/${payload.stackName} ${payload.kind} ${payload.result}.`;
     args.text = `${resultEmoji(payload.result)} ${summary}`;
     args.attachments = [
@@ -131,7 +131,7 @@ function formatUpdate(kind: "stack_preview" | "stack_update", payload: any, args
     return args;
 }
 
-function formatPing(payload: any, args: ChatPostMessageArguments) {
+function formatPing(payload: any, args: IncomingWebhookSendArguments) {
     args.text = payload.message;
     return args;
 }
