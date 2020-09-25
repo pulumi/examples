@@ -1,4 +1,4 @@
-from pulumi import Config, export, asset, Output, ComponentResource, ResourceOptions
+from pulumi import asset, Input, Output, ComponentResource, ResourceOptions
 from pulumi_azure import core, compute, network
 
 
@@ -7,8 +7,8 @@ class WebServerArgs:
         self,
         resource_group: core.ResourceGroup,
         subnet: network.Subnet,
-        username: str,
-        password: str,
+        username: Input[str],
+        password: Input[str],
     ):
         self.resource_group = resource_group
         self.subnet = subnet
@@ -35,12 +35,12 @@ class WebServer(ComponentResource):
             resource_group_name=args.resource_group.name,
             location=args.resource_group.location,
             ip_configurations=[
-                {
-                    "name": "webserveripcfg",
-                    "subnet_id": args.subnet.id,
-                    "private_ip_address_allocation": "Dynamic",
-                    "public_ip_address_id": public_ip.id,
-                }
+                network.NetworkInterfaceIpConfigurationArgs(
+                    name="webserveripcfg",
+                    subnet_id=args.subnet.id,
+                    private_ip_address_allocation="Dynamic",
+                    public_ip_address_id=public_ip.id,
+                )
             ],
             opts=child_opts,
         )
@@ -57,20 +57,25 @@ class WebServer(ComponentResource):
             vm_size="Standard_A0",
             delete_data_disks_on_termination=True,
             delete_os_disk_on_termination=True,
-            os_profile={
-                "computer_name": "hostname",
-                "admin_username": args.username,
-                "admin_password": args.password,
-                "custom_data": userdata,
-            },
-            os_profile_linux_config={"disable_password_authentication": False},
-            storage_os_disk={"create_option": "FromImage", "name": "myosdisk1"},
-            storage_image_reference={
-                "publisher": "canonical",
-                "offer": "UbuntuServer",
-                "sku": "16.04-LTS",
-                "version": "latest",
-            },
+            os_profile=compute.VirtualMachineOsProfileArgs(
+                computer_name="hostname",
+                admin_username=args.username,
+                admin_password=args.password,
+                custom_data=userdata,
+            ),
+            os_profile_linux_config=compute.VirtualMachineOsProfileLinuxConfigArgs(
+                disable_password_authentication=False,
+            ),
+            storage_os_disk=compute.VirtualMachineStorageOsDiskArgs(
+                create_option="FromImage",
+                name="myosdisk1",
+            ),
+            storage_image_reference=compute.VirtualMachineStorageImageReferenceArgs(
+                publisher="canonical",
+                offer="UbuntuServer",
+                sku="16.04-LTS",
+                version="latest",
+            ),
             opts=child_opts,
         )
 

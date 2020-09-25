@@ -28,6 +28,19 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
     $ pip3 install -r requirements.txt
     ```
 
+1. Specify the Azure location to use:
+
+    ```bash
+    $ pulumi config set azure:location WestUS
+    ```
+
+1. Define Spark username and password (make it complex enough to satisfy Azure policy):
+
+    ```bash
+    $ pulumi config set username <value>
+    $ pulumi config set --secret password <value>
+    ```
+
 1. Run `pulumi up` to preview and deploy changes:
 
     ``` bash

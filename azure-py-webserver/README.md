@@ -36,13 +36,13 @@ This example deploys an Azure Virtual Machine and starts an HTTP server on it.
 the virtual machine that we are going to create.
 
     ```bash
-    $ pulumi config set azure-web:username myusername
+    $ pulumi config set username myusername
     ```
 
     The password is a secret, so we can ask Pulumi to encrypt the configuration:
 
     ```bash
-    $ pulumi config set --secret azure-web:password Hunter2hunter2
+    $ pulumi config set --secret password Hunter2hunter2
     ```
 
 1. Run `pulumi up` to preview and deploy the changes:
@@ -82,25 +82,23 @@ the virtual machine that we are going to create.
         + 7 created
 
     Duration: 2m55s
-
-    Permalink: https://app.pulumi.com/swgillespie/azure-py-webserver/azuredev/updates/3
     ```
 
-1. Get the IP address of the newly-created instance from the stack's outputs: 
+2. Get the IP address of the newly-created instance from the stack's outputs:
 
     ```bash
     $ pulumi stack output public_ip
     137.117.15.111
     ```
 
-1. Check to see that your server is now running:
+3. Check to see that your server is now running:
 
     ```bash
     $ curl http://$(pulumi stack output public_ip)
     Hello, World!
     ```
 
-1. Destroy the stack:
+4. Destroy the stack:
 
     ```bash
     ▶ pulumi destroy --yes
@@ -133,6 +131,4 @@ the virtual machine that we are going to create.
         - 7 deleted
 
     Duration: 3m49s
-
-    Permalink: https://app.pulumi.com/swgillespie/azure-py-webserver/azuredev/updates/4
     ```

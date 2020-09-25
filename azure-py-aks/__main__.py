@@ -1,10 +1,24 @@
 import pulumi
 from pulumi import ResourceOptions
 from pulumi_kubernetes import Provider
-from pulumi_kubernetes.apps.v1 import Deployment
-from pulumi_kubernetes.core.v1 import Service
+from pulumi_kubernetes.apps.v1 import Deployment, DeploymentSpecArgs
+from pulumi_kubernetes.core.v1 import (
+    ContainerArgs,
+    PodSpecArgs,
+    PodTemplateSpecArgs,
+    Service,
+    ServicePortArgs,
+    ServiceSpecArgs,
+)
+from pulumi_kubernetes.meta.v1 import LabelSelectorArgs, ObjectMetaArgs
 from pulumi_azure.core import ResourceGroup
-from pulumi_azure.containerservice import KubernetesCluster
+from pulumi_azure.containerservice import (
+    KubernetesCluster,
+    KubernetesClusterDefaultNodePoolArgs,
+    KubernetesClusterLinuxProfileArgs,
+    KubernetesClusterLinuxProfileSshKeyArgs,
+    KubernetesClusterServicePrincipalArgs,
+)
 from pulumi_azuread import Application, ServicePrincipal, ServicePrincipalPassword
 
 # read and set config values
@@ -38,13 +52,21 @@ aks = KubernetesCluster(
     resource_group_name=resource_group.name,
     kubernetes_version="1.18.6",
     dns_prefix="dns",
-    linux_profile={"adminUsername": "aksuser", "ssh_key": {"keyData": SSHKEY}},
-    service_principal={"client_id": app.application_id, "client_secret": sppwd.value},
-    default_node_pool={
-        "name": "type1",
-        "node_count": 2,
-        "vm_size": "Standard_B2ms",
-    },
+    linux_profile=KubernetesClusterLinuxProfileArgs(
+        admin_username="aksuser",
+        ssh_key=KubernetesClusterLinuxProfileSshKeyArgs(
+            key_data=SSHKEY
+        )
+    ),
+    service_principal=KubernetesClusterServicePrincipalArgs(
+        client_id=app.application_id,
+        client_secret=sppwd.value
+    ),
+    default_node_pool=KubernetesClusterDefaultNodePoolArgs(
+        name="type1",
+        node_count=2,
+        vm_size="Standard_B2ms",
+    ),
 )
 
 k8s_provider = Provider(
@@ -54,21 +76,21 @@ k8s_provider = Provider(
 labels = {"app": "nginx"}
 nginx = Deployment(
     "k8s-nginx",
-    spec={
-        "selector": {"matchLabels": labels},
-        "replicas": 1,
-        "template": {
-            "metadata": {"labels": labels},
-            "spec": {"containers": [{"name": "nginx", "image": "nginx"}]},
-        },
-    },
-    __opts__=ResourceOptions(parent=k8s_provider, provider=k8s_provider),
+    spec=DeploymentSpecArgs(
+        selector=LabelSelectorArgs(match_labels=labels),
+        replicas=1,
+        template=PodTemplateSpecArgs(
+            metadata=ObjectMetaArgs(labels=labels),
+            spec=PodSpecArgs(containers=[ContainerArgs(name="nginx", image="nginx")]),
+        ),
+    ),
+    opts=ResourceOptions(parent=k8s_provider, provider=k8s_provider),
 )
 
 ingress = Service(
     "k8s-nginx",
-    spec={"type": "LoadBalancer", "selector": labels, "ports": [{"port": 80}]},
-    __opts__=ResourceOptions(parent=k8s_provider, provider=k8s_provider),
+    spec=ServiceSpecArgs(type="LoadBalancer", selector=labels, ports=[ServicePortArgs(port=80)]),
+    opts=ResourceOptions(parent=k8s_provider, provider=k8s_provider),
 )
 
 pulumi.export("kubeconfig", aks.kube_config_raw)

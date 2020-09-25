@@ -7,10 +7,10 @@ from pulumi_aws import dynamodb, iam, appsync
 table = dynamodb.Table(
     "tenants",
     hash_key="id",
-    attributes=[{
-        "name": "id",
-        "type": "S"
-    }],
+    attributes=[dynamodb.TableAttributeArgs(
+        name="id",
+        type="S"
+    )],
     read_capacity=1,
     write_capacity=1)
 
@@ -44,7 +44,7 @@ policy = iam.Policy(
 
 attachment = iam.RolePolicyAttachment(
     "iam-policy-attachment",
-    role=role,
+    role=role.name,
     policy_arn=policy.arn)
 
 ## GraphQL Schema
@@ -82,8 +82,8 @@ api_key = appsync.ApiKey(
 random_string = random.RandomString(
     "random-datasource-name",
     length=15,
-    special="false",
-    number="false",
+    special=False,
+    number=False,
 )
 
 ## Link a data source to the Dynamo DB Table
@@ -92,9 +92,9 @@ data_source = appsync.DataSource(
     name=random_string.result,
     api_id=api.id,
     type="AMAZON_DYNAMODB",
-    dynamodb_config={
-        "table_name": table.name
-    },
+    dynamodb_config=appsync.DataSourceDynamodbConfigArgs(
+        table_name=table.name,
+    ),
     service_role_arn=role.arn)
 
 ## A resolver for the [getTenantById] query

@@ -1,5 +1,5 @@
 from pulumi import StackReference, Config, export
-from pulumi_aws import get_ami, ec2
+from pulumi_aws import get_ami, ec2, GetAmiFilterArgs
 
 config = Config()
 company_stack = StackReference(config.require("companyStack"))
@@ -13,13 +13,13 @@ combines_tags = {
 }
 
 ami_id = get_ami(
-    most_recent="true",
+    most_recent=True,
     owners=["099720109477"],
     filters=[
-        {
-            "name":"name",
-            "values":["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
-        }]
+        GetAmiFilterArgs(
+            name="name",
+            values=["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+        )]
 ).id
 
 instance = ec2.Instance(

@@ -34,6 +34,6 @@ frontend = ServiceDeployment(
     replicas=3,
     ports=[80],
     allocate_ip_address=True,
-    is_minikube=config.get_bool("isMinikube"))
+    is_minikube=isMinikube)
 
 pulumi.export("frontend_ip", frontend.ip_address)

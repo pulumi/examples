@@ -13,8 +13,19 @@
 #  limitations under the License.
 
 import pulumi
-from pulumi_kubernetes.apps.v1 import Deployment
-from pulumi_kubernetes.core.v1 import Service, Namespace
+from pulumi_kubernetes.apps.v1 import Deployment, DeploymentSpecArgs
+from pulumi_kubernetes.core.v1 import (
+	ContainerArgs,
+	ContainerPortArgs,
+	EnvVarArgs,
+	PodSpecArgs,
+	PodTemplateSpecArgs,
+	ResourceRequirementsArgs,
+	Service,
+	ServicePortArgs,
+	ServiceSpecArgs,
+)
+from pulumi_kubernetes.meta.v1 import LabelSelectorArgs, ObjectMetaArgs
 
 # Minikube does not implement services of type `LoadBalancer`; require the user to specify if we're
 # running on minikube, and if so, create only services of type ClusterIP.
@@ -27,46 +38,46 @@ redis_leader_labels = {
 
 redis_leader_deployment = Deployment(
 	"redis-leader",
-	spec={
-		"selector": {
-			"match_labels": redis_leader_labels,
-		},
-		"replicas": 1,
-		"template": {
-			"metadata": {
-				"labels": redis_leader_labels,
-			},
-			"spec": {
-				"containers": [{
-					"name": "redis-leader",
-					"image": "redis",
-					"resources": {
-						"requests": {
+	spec=DeploymentSpecArgs(
+		selector=LabelSelectorArgs(
+			match_labels=redis_leader_labels,
+		),
+		replicas=1,
+		template=PodTemplateSpecArgs(
+			metadata=ObjectMetaArgs(
+				labels=redis_leader_labels,
+			),
+			spec=PodSpecArgs(
+				containers=[ContainerArgs(
+					name="redis-leader",
+					image="redis",
+					resources=ResourceRequirementsArgs(
+						requests={
 							"cpu": "100m",
 							"memory": "100Mi",
 						},
-					},
-					"ports": [{
-						"container_port": 6379,
-					}],
-				}],
-			},
-		},
-	})
+					),
+					ports=[ContainerPortArgs(
+						container_port=6379,
+					)],
+				)],
+			),
+		),
+	))
 
 redis_leader_service = Service(
 	"redis-leader",
-	metadata={
-		"name": "redis-leader",
-		"labels": redis_leader_labels
-	},
-	spec={
-		"ports": [{
-			"port": 6379,
-			"target_port": 6379,
-		}],
-		"selector": redis_leader_labels
-	})
+	metadata=ObjectMetaArgs(
+		name="redis-leader",
+		labels=redis_leader_labels
+	),
+	spec=ServiceSpecArgs(
+		ports=[ServicePortArgs(
+			port=6379,
+			target_port=6379,
+		)],
+		selector=redis_leader_labels
+	))
 
 redis_replica_labels = {
 	"app": "redis-replica",
@@ -74,54 +85,54 @@ redis_replica_labels = {
 
 redis_replica_deployment = Deployment(
 	"redis-replica",
-	spec={
-		"selector": {
-			"match_labels": redis_replica_labels
-		},
-		"replicas": 1,
-		"template": {
-			"metadata": {
-				"labels": redis_replica_labels,
-			},
-			"spec": {
-				"containers": [{
-					"name": "redis-replica",
-					"image": "pulumi/guestbook-redis-replica",
-					"resources": {
-						"requests": {
+	spec=DeploymentSpecArgs(
+		selector=LabelSelectorArgs(
+			match_labels=redis_replica_labels
+		),
+		replicas=1,
+		template=PodTemplateSpecArgs(
+			metadata=ObjectMetaArgs(
+				labels=redis_replica_labels,
+			),
+			spec=PodSpecArgs(
+				containers=[ContainerArgs(
+					name="redis-replica",
+					image="pulumi/guestbook-redis-replica",
+					resources=ResourceRequirementsArgs(
+						requests={
 							"cpu": "100m",
 							"memory": "100Mi",
 						},
-					},
-					"env": [{
-						"name": "GET_HOSTS_FROM",
-						"value": "dns",
+					),
+					env=[EnvVarArgs(
+						name="GET_HOSTS_FROM",
+						value="dns",
 						# If your cluster config does not include a dns service, then to instead access an environment
 						# variable to find the leader's host, comment out the 'value: dns' line above, and
 						# uncomment the line below:
 						# value: "env"
-					}],
-					"ports": [{
-						"container_port": 6379,
-					}],
-				}],
-			},
-		},
-	})
+					)],
+					ports=[ContainerPortArgs(
+						container_port=6379,
+					)],
+				)],
+			),
+		),
+	))
 
 redis_replica_service = Service(
 	"redis-replica",
-	metadata={
-		"name": "redis-replica",
-		"labels": redis_replica_labels
-	},
-	spec={
-		"ports": [{
-			"port": 6379,
-			"target_port": 6379,
-		}],
-		"selector": redis_replica_labels
-	})
+	metadata=ObjectMetaArgs(
+		name="redis-replica",
+		labels=redis_replica_labels
+	),
+	spec=ServiceSpecArgs(
+		ports=[ServicePortArgs(
+			port=6379,
+			target_port=6379,
+		)],
+		selector=redis_replica_labels
+	))
 
 # Frontend
 frontend_labels = {
@@ -130,59 +141,59 @@ frontend_labels = {
 
 frontend_deployment = Deployment(
 	"frontend",
-	spec={
-		"selector": {
-			"match_labels": frontend_labels,
-		},
-		"replicas": 3,
-		"template": {
-			"metadata": {
-				"labels": frontend_labels,
-			},
-			"spec": {
-				"containers": [{
-					"name": "php-redis",
-					"image": "pulumi/guestbook-php-redis",
-					"resources": {
-						"requests": {
+	spec=DeploymentSpecArgs(
+		selector=LabelSelectorArgs(
+			match_labels=frontend_labels,
+		),
+		replicas=3,
+		template=PodTemplateSpecArgs(
+			metadata=ObjectMetaArgs(
+				labels=frontend_labels,
+			),
+			spec=PodSpecArgs(
+				containers=[ContainerArgs(
+					name="php-redis",
+					image="pulumi/guestbook-php-redis",
+					resources=ResourceRequirementsArgs(
+						requests={
 							"cpu": "100m",
 							"memory": "100Mi",
 						},
-					},
-					"env": [{
-						"name": "GET_HOSTS_FROM",
-						"value": "dns",
+					),
+					env=[EnvVarArgs(
+						name="GET_HOSTS_FROM",
+						value="dns",
 						# If your cluster config does not include a dns service, then to instead access an environment
 						# variable to find the leader's host, comment out the 'value: dns' line above, and
 						# uncomment the line below:
 						# "value": "env"
-					}],
-					"ports": [{
-						"container_port": 80,
-					}],
-				}],
-			},
-		},
-	})
+					)],
+					ports=[ContainerPortArgs(
+						container_port=80,
+					)],
+				)],
+			),
+		),
+	))
 
 frontend_service = Service(
 	"frontend",
-	metadata={
-		"name": "frontend",
-		"labels": frontend_labels,
-	},
-	spec={
-		"type": "ClusterIP" if isMinikube else "LoadBalancer",
-		"ports": [{
-			"port": 80
-		}],
-		"selector": frontend_labels,
-	})
+	metadata=ObjectMetaArgs(
+		name="frontend",
+		labels=frontend_labels,
+	),
+	spec=ServiceSpecArgs(
+		type="ClusterIP" if isMinikube else "LoadBalancer",
+		ports=[ServicePortArgs(
+			port=80
+		)],
+		selector=frontend_labels,
+	))
 
 frontend_ip = ""
 if isMinikube:
-	frontend_ip = frontend_service.spec.apply(lambda spec: spec.get("cluster_ip", ""))
+	frontend_ip = frontend_service.spec.apply(lambda spec: spec.cluster_ip or "")
 else:
-	ingress = frontend_service.status.apply(lambda status: status["load_balancer"]["ingress"][0])
-	frontend_ip = ingress.apply(lambda ingress: ingress.get("ip", ingress.get("hostname", "")))
+	ingress = frontend_service.status.apply(lambda status: status.load_balancer.ingress[0])
+	frontend_ip = ingress.apply(lambda ingress: ingress.ip or ingress.hostname or "")
 pulumi.export("frontend_ip", frontend_ip)

@@ -19,11 +19,11 @@ def bastion_host(stem, subnet_id, depends_on=None):
     ab = compute.BastionHost(
         f'{stem}-ab-',
         resource_group_name = resource_group_name,
-        ip_configuration = {
-            'name': f'{stem}-ab-ipconf',
-            'publicIpAddressId': ab_pip.id,
-            'subnet_id': subnet_id,
-        },
+        ip_configuration = compute.BastionHostIpConfigurationArgs(
+            name = f'{stem}-ab-ipconf',
+            public_ip_address_id = ab_pip.id,
+            subnet_id = subnet_id,
+        ),
         tags = tags,
         opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
@@ -43,11 +43,11 @@ def expressroute_gateway(stem, subnet_id, depends_on=None):
         sku = 'Standard',
         type = 'ExpressRoute',
         vpn_type = 'RouteBased',
-        ip_configurations = [{
-            'name': f'{stem}-er-gw-ipconf',
-            'publicIpAddressId': er_gw_pip.id,
-            'subnet_id': subnet_id,
-        }],
+        ip_configurations = [network.VirtualNetworkGatewayIpConfigurationArgs(
+            name = f'{stem}-er-gw-ipconf',
+            public_ip_address_id = er_gw_pip.id,
+            subnet_id = subnet_id,
+        )],
         tags = tags,
         opts = ResourceOptions(
             parent=self,
@@ -82,11 +82,11 @@ def firewall(stem, fw_sn_id, fwm_sn_id, depends_on=None):
         f'{stem}-fw-',
         resource_group_name = resource_group_name,
 #        sku = 'AZFW_VNet', # not required but distinguishes from 'AZFW_Hub'
-        ip_configurations = [{
-            'name': f'{stem}-fw-ipconf',
-            'publicIpAddressId': fw_pip.id,
-            'subnet_id': fw_sn_id,
-        }],
+        ip_configurations = [network.FirewallIpConfigurationArgs(
+            name = f'{stem}-fw-ipconf',
+            public_ip_address_id = fw_pip.id,
+            subnet_id = fw_sn_id,
+        )],
 #        management_ip_configuration = { # requires api 2019-11-01 or later
 #            'name': f'{stem}-fwm-ipconf',
 #            'publicIpAddressId': fwm_pip.id,
@@ -248,11 +248,11 @@ def vpn_gateway(stem, subnet_id, depends_on=None):
         sku = 'VpnGw1',
         type = 'Vpn',
         vpn_type = 'RouteBased',
-        ip_configurations = [{
-            'name': f'{stem}-vpn-gw-ipconf',
-            'publicIpAddressId': vpn_gw_pip.id,
-            'subnet_id': subnet_id,
-        }],
+        ip_configurations = [network.VirtualNetworkGatewayIpConfigurationArgs(
+            name=f'{stem}-vpn-gw-ipconf',
+            public_ip_address_id=vpn_gw_pip.id,
+            subnet_id=subnet_id,
+        )],
         tags = tags,
         opts = ResourceOptions(
             parent=self,

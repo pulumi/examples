@@ -21,7 +21,7 @@ app_vpc = aws.ec2.Vpc("app-vpc",
 
 app_vpc_subnet = aws.ec2.Subnet("app-vpc-subnet",
     cidr_block="172.31.32.0/20",
-    vpc_id=app_vpc)
+    vpc_id=app_vpc.id)
 
 # Creating a gateway to the web for the VPC
 app_gateway = aws.ec2.InternetGateway("app-gateway",
@@ -29,34 +29,34 @@ app_gateway = aws.ec2.InternetGateway("app-gateway",
 
 app_routetable = aws.ec2.RouteTable("app-routetable",
     routes=[
-        {
-            "cidr_block": "0.0.0.0/0",
-            "gateway_id": app_gateway.id,
-        }
+        aws.ec2.RouteTableRouteArgs(
+            cidr_block="0.0.0.0/0",
+            gateway_id=app_gateway.id,
+        )
     ],
     vpc_id=app_vpc.id)
 
 # Associating our gateway with our VPC, to allow our app to communicate with the greater internet
 app_routetable_association = aws.ec2.MainRouteTableAssociation("app_routetable_association",
     route_table_id=app_routetable.id,
-    vpc_id=app_vpc)
+    vpc_id=app_vpc.id)
 
 # Creating a Security Group that restricts incoming traffic to HTTP
 app_security_group = aws.ec2.SecurityGroup("security-group",
 	vpc_id=app_vpc.id,
 	description="Enables HTTP access",
-    ingress=[{
-		'protocol': 'tcp',
-		'from_port': 0,
-		'to_port': 65535,
-		'cidr_blocks': ['0.0.0.0/0'],
-    }],
-    egress=[{
-		'protocol': '-1',
-		'from_port': 0,
-		'to_port': 0,
-		'cidr_blocks': ['0.0.0.0/0'],
-    }])
+    ingress=[aws.ec2.SecurityGroupIngressArgs(
+		protocol='tcp',
+		from_port=0,
+		to_port=65535,
+		cidr_blocks=['0.0.0.0/0'],
+    )],
+    egress=[aws.ec2.SecurityGroupEgressArgs(
+		protocol='-1',
+		from_port=0,
+		to_port=0,
+		cidr_blocks=['0.0.0.0/0'],
+    )])
 
 # Creating an IAM role used by Fargate to execute all our services
 app_exec_role = aws.iam.Role("app-exec-role",
@@ -130,16 +130,16 @@ redis_targetgroup = aws.lb.TargetGroup("redis-targetgroup",
 	port=redis_port,
 	protocol="TCP",
 	target_type="ip",
-    stickiness= {
-        "enabled": False,
-        "type": "lb_cookie",
-    },
+    stickiness=aws.lb.TargetGroupStickinessArgs(
+        enabled=False,
+        type="lb_cookie",
+    ),
 	vpc_id=app_vpc.id)
 
 # Creating a load balancer to spread out incoming requests
 redis_balancer = aws.lb.LoadBalancer("redis-balancer",
     load_balancer_type="network",
-    internal= False,
+    internal=False,
     security_groups=[],
 	subnets=[app_vpc_subnet.id])
 
@@ -148,10 +148,10 @@ redis_listener = aws.lb.Listener("redis-listener",
 	load_balancer_arn=redis_balancer.arn,
 	port=redis_port,
     protocol="TCP",
-	default_actions=[{
-		"type": "forward",
-		"target_group_arn": redis_targetgroup.arn
-	}])
+	default_actions=[aws.lb.ListenerDefaultActionArgs(
+		type="forward",
+		target_group_arn=redis_targetgroup.arn
+	)])
 
 # Creating a task definition for the Redis instance.
 redis_task_definition = aws.ecs.TaskDefinition("redis-task-definition",
@@ -182,20 +182,20 @@ redis_service = aws.ecs.Service("redis-service",
     launch_type="FARGATE",
     task_definition=redis_task_definition.arn,
     wait_for_steady_state=False,
-    network_configuration={
-		"assign_public_ip": "true",
-		"subnets": [app_vpc_subnet.id],
-		"security_groups": [app_security_group.id]
-	},
-    load_balancers=[{
-		"target_group_arn": redis_targetgroup.arn,
-		"container_name": "redis-container",
-		"container_port": redis_port,
-	}],
+    network_configuration=aws.ecs.ServiceNetworkConfigurationArgs(
+		assign_public_ip=True,
+		subnets=[app_vpc_subnet.id],
+		security_groups=[app_security_group.id]
+	),
+    load_balancers=[aws.ecs.ServiceLoadBalancerArgs(
+		target_group_arn=redis_targetgroup.arn,
+		container_name="redis-container",
+		container_port=redis_port,
+	)],
     opts=pulumi.ResourceOptions(depends_on=[redis_listener]),
 )
 
-# Creating a special endpoint for the Redis backend, which we will provide 
+# Creating a special endpoint for the Redis backend, which we will provide
 # to the Flask frontend as an environment variable
 redis_endpoint = {"host": redis_balancer.dns_name, "port": redis_port}
 
@@ -206,10 +206,10 @@ flask_targetgroup = aws.lb.TargetGroup("flask-targetgroup",
 	port=80,
 	protocol="TCP",
 	target_type="ip",
-    stickiness= {
-        "enabled": False,
-        "type": "lb_cookie",
-    },
+    stickiness=aws.lb.TargetGroupStickinessArgs(
+        enabled=False,
+        type="lb_cookie",
+    ),
 	vpc_id=app_vpc.id)
 
 # Creating a load balancer to spread out incoming requests
@@ -224,10 +224,10 @@ flask_listener = aws.lb.Listener("flask-listener",
 	load_balancer_arn=flask_balancer.arn,
 	port=80,
     protocol="TCP",
-	default_actions=[{
-		"type": "forward",
-		"target_group_arn": flask_targetgroup.arn
-	}])
+	default_actions=[aws.lb.ListenerDefaultActionArgs(
+		type="forward",
+		target_group_arn=flask_targetgroup.arn
+	)])
 
 # Creating a Docker image from "./frontend/Dockerfile", which we will use
 # to upload our app
@@ -281,16 +281,16 @@ flask_service = aws.ecs.Service("flask-service",
     launch_type="FARGATE",
     task_definition=flask_task_definition.arn,
     wait_for_steady_state=False,
-    network_configuration={
-		"assign_public_ip": "true",
-		"subnets": [app_vpc_subnet.id],
-		"security_groups": [app_security_group.id]
-	},
-    load_balancers=[{
-		"target_group_arn": flask_targetgroup.arn,
-		"container_name": "flask-container",
-		"container_port": 80,
-	}],
+    network_configuration=aws.ecs.ServiceNetworkConfigurationArgs(
+		assign_public_ip=True,
+		subnets=[app_vpc_subnet.id],
+		security_groups=[app_security_group.id]
+	),
+    load_balancers=[aws.ecs.ServiceLoadBalancerArgs(
+		target_group_arn=flask_targetgroup.arn,
+		container_name="flask-container",
+		container_port=80,
+	)],
     opts=pulumi.ResourceOptions(depends_on=[flask_listener]),
 )
 

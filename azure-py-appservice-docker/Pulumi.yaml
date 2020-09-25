@@ -6,3 +6,6 @@ template:
     azure:environment:
       description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
       default: public
+    azure:location:
+      description: The Azure location to use
+      default: WestUS

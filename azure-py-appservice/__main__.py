@@ -19,10 +19,10 @@ app_service_plan = appservice.Plan(
     "appservice-asp",
     resource_group_name=resource_group.name,
     kind="App",
-    sku={
-        "tier": "Basic",
-        "size": "B1",
-    })
+    sku=appservice.PlanSkuArgs(
+        tier="Basic",
+        size="B1",
+    ))
 
 storage_container = storage.Container(
     "appservice-c",
@@ -42,14 +42,14 @@ def get_sas(args):
         start="2020-01-01",
         expiry="2030-01-01",
         container_name=args[2],
-        permissions={
-            "read": "true",
-            "write": "false",
-            "delete": "false",
-            "list": "false",
-            "add": "false",
-            "create": "false"
-        }
+        permissions=storage.GetAccountBlobContainerSASPermissionsArgs(
+            read=True,
+            write=False,
+            delete=False,
+            list=False,
+            add=False,
+            create=False,
+        )
     )
     return f"https://{args[0]}.blob.core.windows.net/{args[2]}/{args[3]}{blob_sas.sas}"
 
@@ -94,11 +94,11 @@ app=appservice.AppService(
         "ApplicationInsightsAgent_EXTENSION_VERSION": "~2",
         "WEBSITE_RUN_FROM_PACKAGE": signed_blob_url,
     },
-    connection_strings=[{
-        "name": "db",
-        "type": "SQLAzure",
-        "value": connection_string
-    }]
+    connection_strings=[appservice.AppServiceConnectionStringArgs(
+        name="db",
+        type="SQLAzure",
+        value=connection_string,
+    )]
 )
 
 export("endpoint", app.default_site_hostname.apply(

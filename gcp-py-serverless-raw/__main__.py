@@ -16,7 +16,7 @@ py_function = cloudfunctions.Function(
     runtime="python37",
     source_archive_object=py_bucket_object.name,
     entry_point="handler",
-    trigger_http="true",
+    trigger_http=True,
     available_memory_mb=128,
 )
 
@@ -44,7 +44,7 @@ go_function = cloudfunctions.Function(
     runtime="go111",
     source_archive_object=go_bucket_object.name,
     entry_point="Handler",
-    trigger_http="true",
+    trigger_http=True,
     available_memory_mb=128,
 )
 

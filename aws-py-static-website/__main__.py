@@ -34,10 +34,10 @@ certificate_arn = stack_config.get('certificateArn')
 content_bucket = pulumi_aws.s3.Bucket('contentBucket',
     bucket=target_domain,
     acl='public-read',
-    website={
-        'index_document': 'index.html',
-        'error_document': '404.html'
-    })
+    website=pulumi_aws.s3.BucketWebsiteArgs(
+        index_document='index.html',
+        error_document='404.html'
+    ))
 
 def crawl_directory(content_dir, f):
     """
@@ -63,7 +63,7 @@ def bucket_object_converter(filepath):
         relative_path,
         key=relative_path,
         acl='public-read',
-        bucket=content_bucket,
+        bucket=content_bucket.id,
         content_type=mime_type,
         source=FileAsset(filepath),
         opts=ResourceOptions(parent=content_bucket)
@@ -91,12 +91,12 @@ if certificate_arn is None:
     # Create a validation record to prove that we own the domain.
     cert_validation_domain = pulumi_aws.route53.Record(f'{target_domain}-validation',
         name=certificate.domain_validation_options.apply(
-            lambda o: o[0]['resourceRecordName']),
+            lambda o: o[0].resource_record_name),
         zone_id=hzid,
         type=certificate.domain_validation_options.apply(
-            lambda o: o[0]['resourceRecordType']),
+            lambda o: o[0].resource_record_type),
         records=[certificate.domain_validation_options.apply(
-            lambda o: o[0]['resourceRecordValue'])],
+            lambda o: o[0].resource_record_value)],
         ttl=TEN_MINUTES)
 
     # Create a special resource to await complete validation of the cert.
@@ -117,53 +117,53 @@ cdn = pulumi_aws.cloudfront.Distribution('cdn',
     aliases=[
         target_domain
     ],
-    origins=[{
-        'originId': content_bucket.arn,
-        'domain_name': content_bucket.website_endpoint,
-        'customOriginConfig': {
-            'originProtocolPolicy': 'http-only',
-            'httpPort': 80,
-            'httpsPort': 443,
-            'originSslProtocols': ['TLSv1.2'],
-        }
-    }],
+    origins=[pulumi_aws.cloudfront.DistributionOriginArgs(
+        origin_id=content_bucket.arn,
+        domain_name=content_bucket.website_endpoint,
+        custom_origin_config=pulumi_aws.cloudfront.DistributionOriginCustomOriginConfigArgs(
+            origin_protocol_policy='http-only',
+            http_port=80,
+            https_port=443,
+            origin_ssl_protocols=['TLSv1.2'],
+        )
+    )],
     default_root_object='index.html',
-    default_cache_behavior={
-        'targetOriginId': content_bucket.arn,
-        'viewerProtocolPolicy': 'redirect-to-https',
-        'allowedMethods': ['GET', 'HEAD', 'OPTIONS'],
-        'cachedMethods': ['GET', 'HEAD', 'OPTIONS'],
-        'forwardedValues': {
-            'cookies': { 'forward': 'none' },
-            'queryString': False,
-        },
-        'minTtl': 0,
-        'defaultTtl': TEN_MINUTES,
-        'maxTtl': TEN_MINUTES,
-    },
+    default_cache_behavior=pulumi_aws.cloudfront.DistributionDefaultCacheBehaviorArgs(
+        target_origin_id=content_bucket.arn,
+        viewer_protocol_policy='redirect-to-https',
+        allowed_methods=['GET', 'HEAD', 'OPTIONS'],
+        cached_methods=['GET', 'HEAD', 'OPTIONS'],
+        forwarded_values=pulumi_aws.cloudfront.DistributionDefaultCacheBehaviorForwardedValuesArgs(
+            cookies=pulumi_aws.cloudfront.DistributionDefaultCacheBehaviorForwardedValuesCookiesArgs(forward='none'),
+            query_string=False,
+        ),
+        min_ttl=0,
+        default_ttl=TEN_MINUTES,
+        max_ttl=TEN_MINUTES,
+    ),
     # PriceClass_100 is the lowest cost tier (US/EU only).
     price_class= 'PriceClass_100',
-    custom_error_responses=[{
-            'errorCode': 404,
-            'responseCode': 404,
-            'responsePagePath': '/404.html'
-        }],
+    custom_error_responses=[pulumi_aws.cloudfront.DistributionCustomErrorResponseArgs(
+        error_code=404,
+        response_code=404,
+        response_page_path='/404.html'
+    )],
     # Use the certificate we generated for this distribution.
-    viewer_certificate={
-        'acmCertificateArn': certificate_arn,
-        'sslSupportMethod': 'sni-only',
-    },
-    restrictions={
-        'geoRestriction': {
-            'restrictionType': 'none'
-        }
-    },
+    viewer_certificate=pulumi_aws.cloudfront.DistributionViewerCertificateArgs(
+        acm_certificate_arn=certificate_arn,
+        ssl_support_method='sni-only',
+    ),
+    restrictions=pulumi_aws.cloudfront.DistributionRestrictionsArgs(
+        geo_restriction=pulumi_aws.cloudfront.DistributionRestrictionsGeoRestrictionArgs(
+            restriction_type='none'
+        )
+    ),
     # Put access logs in the log bucket we created earlier.
-    logging_config={
-        'bucket': logs_bucket.bucket_domain_name,
-        'includeCookies': False,
-        'prefix': f'${target_domain}/',
-    },
+    logging_config=pulumi_aws.cloudfront.DistributionLoggingConfigArgs(
+        bucket=logs_bucket.bucket_domain_name,
+        include_cookies=False,
+        prefix=f'${target_domain}/',
+    ),
     # CloudFront typically takes 15 minutes to fully deploy a new distribution.
     # Skip waiting for that to complete.
     wait_for_deployment=False)
@@ -179,11 +179,11 @@ def create_alias_record(target_domain, distribution):
         zone_id=hzid,
         type='A',
         aliases=[
-            {
-                'name': distribution.domain_name,
-                'zoneId': distribution.hosted_zone_id,
-                'evaluateTargetHealth': True
-            }
+            pulumi_aws.route53.RecordAliasArgs(
+                name=distribution.domain_name,
+                zone_id=distribution.hosted_zone_id,
+                evaluate_target_health=True,
+            )
         ]
     )
 

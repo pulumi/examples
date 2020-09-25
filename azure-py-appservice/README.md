@@ -31,10 +31,16 @@ with App Service.
     $ pip3 install -r requirements.txt
     ```
 
+1. Specify the Azure location to use:
+
+    ```bash
+    $ pulumi config set azure:location WestUS
+    ```
+
 1. Define SQL Server password (make it complex enough to satisfy Azure policy):
 
     ```bash
-    pulumi config set --secret sqlPassword <value>
+    $ pulumi config set --secret sqlPassword <value>
     ```
 
 1. Run `pulumi up` to preview and deploy changes:

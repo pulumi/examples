@@ -29,7 +29,7 @@ container = storage.Container(
 administrator_login_password = random.RandomPassword(
     "password",
     length=16,
-    special="true",
+    special=True,
 ).result
 
 sql_server = sql.SqlServer(
@@ -61,10 +61,10 @@ app_service_plan = appservice.Plan(
     "asp",
     resource_group_name=resource_group.name,
     kind="App",
-    sku={
-        "tier": "Basic",
-        "size": "B1"
-    }
+    sku=appservice.PlanSkuArgs(
+        tier="Basic",
+        size="B1"
+    )
 )
 
 blob = storage.Blob(
@@ -84,11 +84,11 @@ vault = keyvault.KeyVault(
     resource_group_name=resource_group.name,
     sku_name="standard",
     tenant_id=tenant_id,
-    access_policies=[{
-        "tenant_id": tenant_id,
-        "object_id": current_principal,
-        "secret_permissions": ["delete", "get", "list", "set"]
-    }]
+    access_policies=[keyvault.KeyVaultAccessPolicyArgs(
+        tenant_id=tenant_id,
+        object_id=current_principal,
+        secret_permissions=["delete", "get", "list", "set"]
+    )]
 )
 
 def get_sas(args):
@@ -97,14 +97,14 @@ def get_sas(args):
         start="2020-01-01",
         expiry="2030-01-01",
         container_name=args[2],
-        permissions={
-            "read": "true",
-            "write": "false",
-            "delete": "false",
-            "list": "false",
-            "add": "false",
-            "create": "false"
-        }
+        permissions=storage.GetAccountBlobContainerSASPermissionsArgs(
+            read=True,
+            write=False,
+            delete=False,
+            list=False,
+            add=False,
+            create=False,
+        )
     )
     return f"https://{args[0]}.blob.core.windows.net/{args[2]}/{args[3]}{blob_sas.sas}"
 
@@ -127,22 +127,22 @@ app = appservice.AppService(
     "app",
     resource_group_name=resource_group.name,
     app_service_plan_id=app_service_plan.id,
-    identity={
-        "type": "SystemAssigned",
-    },
+    identity=appservice.AppServiceIdentityArgs(
+        type="SystemAssigned",
+    ),
     app_settings={
         "WEBSITE_RUN_FROM_ZIP": secret_uri.apply(lambda args: "@Microsoft.KeyVault(SecretUri=" + args + ")"),
-        "StorageBlobUrl": text_blob.url
+        "StorageBlobUrl": text_blob.url,
     },
-    connection_strings=[{
-        "name": "db",
-        "value": connection_string,
-        "type": "SQLAzure"
-    }]
+    connection_strings=[appservice.AppServiceConnectionStringArgs(
+        name="db",
+        value=connection_string,
+        type="SQLAzure",
+    )]
 )
 
 ## Work around a preview issue https://github.com/pulumi/pulumi-azure/issues/192
-principal_id = app.identity["principal_id"] or "11111111-1111-1111-1111-111111111111"
+principal_id = app.identity.apply(lambda id: id.principal_id or "11111111-1111-1111-1111-111111111111")
 
 policy = keyvault.AccessPolicy(
     "app-policy",

@@ -5,9 +5,10 @@ import os
 from pulumi import export, FileAsset
 from pulumi_aws import s3
 
-web_bucket = s3.Bucket('s3-website-bucket', website={
-    "index_document": "index.html"
-})
+web_bucket = s3.Bucket('s3-website-bucket',
+    website=s3.BucketWebsiteArgs(
+        index_document="index.html",
+    ))
 
 content_dir = "www"
 for file in os.listdir(content_dir):
@@ -39,5 +40,5 @@ bucket_policy = s3.BucketPolicy("bucket-policy",
     policy=bucket_name.apply(public_read_policy_for_bucket))
 
 # Export the name of the bucket
-export('bucket_name',  web_bucket.id)
+export('bucket_name', web_bucket.id)
 export('website_url', web_bucket.website_endpoint)

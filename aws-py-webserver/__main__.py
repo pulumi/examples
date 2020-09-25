@@ -5,15 +5,18 @@ import pulumi_aws as aws
 
 size = 't2.micro'
 
-ami = aws.get_ami(most_recent="true",
+ami = aws.get_ami(most_recent=True,
                   owners=["137112412989"],
-                  filters=[{"name":"name","values":["amzn-ami-hvm-*"]}])
+                  filters=[aws.GetAmiFilterArgs(name="name", values=["amzn-ami-hvm-*"])])
 
 group = aws.ec2.SecurityGroup('web-secgrp',
     description='Enable HTTP access',
-    ingress=[
-        { 'protocol': 'tcp', 'from_port': 80, 'to_port': 80, 'cidr_blocks': ['0.0.0.0/0'] }
-    ])
+    ingress=[aws.ec2.SecurityGroupIngressArgs(
+        protocol='tcp',
+        from_port=80,
+        to_port=80,
+        cidr_blocks=['0.0.0.0/0'],
+    )])
 
 user_data = """
 #!/bin/bash
