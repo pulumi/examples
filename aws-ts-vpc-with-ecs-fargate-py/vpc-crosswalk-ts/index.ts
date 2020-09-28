@@ -10,7 +10,6 @@ const vpc_cidr = config.require("vpc_cidr");
 const number_of_nat_gateways = config.requireNumber("number_of_nat_gateways");
 
 const baseTags = {
-    //Name: `${vpc_name}`,
     "Name": `${vpc_name}`,
     "availability_zones_used": `${zone_number}`,
     "cidr_block": `${vpc_cidr}`,
