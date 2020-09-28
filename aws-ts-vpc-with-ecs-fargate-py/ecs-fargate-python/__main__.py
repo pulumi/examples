@@ -111,7 +111,7 @@ alb_target_group = aws.lb.TargetGroup(
 front_end_listener = aws.lb.Listener(
     "pulumi-fargate-listener",
     load_balancer_arn=alb.arn,
-    port = "80",
+    port = 80,
     protocol = "HTTP",
     default_actions=[{
         "type": "forward",
