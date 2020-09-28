@@ -11,7 +11,7 @@ import pulumi_aws as aws
 config = Config()
 
 # reading in vpc StackReference Path from local config
-mystackpath = config.get("mystackpath")
+mystackpath = config.require("mystackpath")
 
 # setting the StackReference
 mycrosswalkvpc = StackReference(mystackpath)
