@@ -14,7 +14,6 @@ config = Config()
 mystackpath = config.get("mystackpath")
 
 # setting the StackReference
-#mycrosswalkvpc = StackReference(f"{mystackpath}")
 mycrosswalkvpc = StackReference(mystackpath)
 
 # Get all network values from previously created vpc #
