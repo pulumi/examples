@@ -1,0 +1,29 @@
+name: azure-py-vdc
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: A minimal Azure Virtual Data Center described in Python
+template:
+  config:
+    azure_bastion:
+      description: Azure Bastion provides secure RDP and SSH connectivity to VMs
+      default: "false"
+    firewall_address_space:
+      description: Address space in the hub for Azure Firewall and DMZ
+      default: 192.168.100.0/24
+    forced_tunnel:
+      description: Route all Internet-bound traffic to a designated next hop (preview)
+      default: "false"
+    hub_address_space:
+      description: Address space in the hub for connectivity and shared services subnets
+      default: 10.100.0.0/16
+    location:
+        description: Azure region to deploy to (e.g. `australiaeast` or `australiasoutheast`)
+        default: australiaeast
+    org:
+      description: Pulumi organization in which this project resides (from app.pulumi.com)
+    peer:
+      description: Another stack in same organization and project to peer hubs with (optional)
+    suffix:
+      description: A string appended to each name (max 6 chars) for uniqueness
