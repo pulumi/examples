@@ -35,7 +35,7 @@ default_tags = {
 azure_bastion = config.get_bool('azure_bastion')
 
 # Azure Firewall to route all Internet-bound traffic to designated next hop
-forced_tunnel = config.get_bool('forced_tunnel')
+forced_tunnel = config.get('forced_tunnel')
 # turn off SNAT (private_ranges not yet available on Azure API?)
 # https://docs.microsoft.com/en-us/azure/firewall/snat-private-range
 if forced_tunnel:

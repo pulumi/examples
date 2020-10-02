@@ -75,39 +75,76 @@ class Hub(ComponentResource):
             ],
         )
 
-        # Azure will deploy gateways into this subnet
+        # GatewaySubnet and Route Table
+        hub_gw_rt = vdc.route_table(
+            stem = f'{name}-gw',
+            disable_bgp_route_propagation = False,
+        )
         hub_gw_sn = vdc.subnet_special(
             stem = f'{name}-gw',
             name = 'GatewaySubnet', # name required
             virtual_network_name = hub.name,
             address_prefix = gws_ar,
+            route_table_id = hub_gw_rt.id,
         )
 
-        # A perimeter network for Internet-facing services
+        # DMZ subnet and Route Table
+        hub_dmz_rt = vdc.route_table(
+            stem = f'{name}-dmz',
+            disable_bgp_route_propagation = True,
+        )
         hub_dmz_sn = vdc.subnet_special( #ToDo add NSG
             stem = f'{name}-dmz',
             name = 'DMZ', # name not required but preferred
             virtual_network_name = hub.name,
             address_prefix = dmz_ar,
+            route_table_id = hub_dmz_rt.id,
         )
 
-        # Azure will deploy the firewall into this subnet 
+        # AzureFirewallSubnet and Route Table 
+        hub_fw_rt = vdc.route_table(
+            stem = f'{name}-fw',
+            disable_bgp_route_propagation = False,
+        )
         hub_fw_sn = vdc.subnet_special(
             stem = f'{name}-fw',
             name = 'AzureFirewallSubnet', # name required
             virtual_network_name = hub.name,
             address_prefix = str(fws_nw),
+            route_table_id = hub_fw_rt.id,
         )
-
-        # Azure requires this subnet in case of forced_tunnel
+        # AzureFirewallManagementSubnet and Route Table 
+        hub_fwm_rt = vdc.route_table(
+            stem = f'{name}-fwm',
+            disable_bgp_route_propagation = True,
+        )
         hub_fwm_sn = vdc.subnet_special(
             stem = f'{name}-fwm',
             name = 'AzureFirewallManagementSubnet', # name required
             virtual_network_name = hub.name,
             address_prefix = str(fwm_nw),
+            route_table_id = hub_fwm_rt.id,
+        )
+        # https://docs.microsoft.com/en-us/azure/firewall/forced-tunneling
+        # for routes to peered spokes and Internet (including forced_tunnel)
+        if props.forced_tunnel:
+            vdc.route_to_virtual_appliance(
+                stem = f'fw-tunnel',
+                route_table_name = hub_fw_rt.name,
+                address_prefix = '0.0.0.0/0',
+                next_hop_ip_address = props.forced_tunnel,
+            )
+        else:
+            vdc.route_to_internet(
+                stem = f'fw-internet',
+                route_table_name = hub_fw_rt.name,
+            )
+        vdc.route_to_internet(
+            stem = f'fwm-internet',
+            route_table_name = hub_fwm_rt.name,
         )
 
-        # Gateways and Firewall depends_on special subnets
+        # Firewall and Gateways depends_on special subnets
         # to avoid contention in the Azure control plane
 
         # Azure Firewall
@@ -151,95 +188,21 @@ class Hub(ComponentResource):
             lambda ipc: ipc[0].get('private_ip_address')
         )
 
-        # Route Table only to be associated with GatewaySubnet
-        hub_gw_rt = vdc.route_table(
-            stem = f'{name}-gw',
-            disable_bgp_route_propagation = False,
-            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw], # avoid contention
-        )
-        hub_gw_sn_rta = vdc.subnet_route_table(
-            stem = f'{name}-gw',
-            virtual_network_name = hub.name,
-            route_table_id = hub_gw_rt.id,
-            subnet_id = hub_gw_sn.id,
-        )
-
-        # Route Table only to be associated with DMZ subnet
-        hub_dmz_rt = vdc.route_table(
-            stem = f'{name}-dmz',
-            disable_bgp_route_propagation = True,
-            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw], # avoid contention
-        )
-        hub_dmz_sn_rta = vdc.subnet_route_table(
-            stem = f'{name}-dmz',
-            virtual_network_name = hub.name,
-            route_table_id = hub_dmz_rt.id,
-            subnet_id = hub_dmz_sn.id,
-        )
-
-        #ToDo forced_tunnel requires Azure API version 2019-11-01 or later
-        # https://docs.microsoft.com/en-us/azure/firewall/forced-tunneling
-
-        # Route Table only to be associated with AzureFirewallSubnet
-        hub_fw_rt = vdc.route_table(
-            stem = f'{name}-fw',
-            disable_bgp_route_propagation = False,
-            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw], # avoid contention
-        ) # for routes to peered spokes and Internet (including forced_tunnel)
-        if props.forced_tunnel:
-            vdc.route_to_virtual_appliance(
-                stem = f'fw-tunnel',
-                route_table_name = hub_fw_rt.name,
-                address_prefix = '0.0.0.0/0',
-                next_hop_in_ip_address = props.forced_tunnel,
-            )
-        else:
-            vdc.route_to_internet(
-                stem = f'fw-internet',
-                route_table_name = hub_fw_rt.name,
-            )
-        hub_fw_sn_rta = vdc.subnet_route_table(
-            stem = f'{name}-fw',
-            virtual_network_name = hub.name,
-            route_table_id = hub_fw_rt.id,
-            subnet_id = hub_fw_sn.id,
-        )
-
-        # Route Table only to be associated with AzureFirewallManagementSubnet
-        hub_fwm_rt = vdc.route_table(
-            stem = f'{name}-fwm',
-            disable_bgp_route_propagation = True,
-            depends_on = [hub_er_gw, hub_fw, hub_vpn_gw], # avoid contention
-        )
-        vdc.route_to_internet(
-            stem = f'fwm-internet',
-            route_table_name = hub_fwm_rt.name,
-        )
-        hub_fwm_sn_rta = vdc.subnet_route_table(
-            stem = f'{name}-fwm',
-            virtual_network_name = hub.name,
-            route_table_id = hub_fwm_rt.id,
-            subnet_id = hub_fwm_sn.id,
-        )
-
-        # Route Table only to be associated with hub shared services subnets
+        # Route Table to be associated with all hub shared services subnets
         hub_ss_rt = vdc.route_table(
             stem = f'{name}-ss',
             disable_bgp_route_propagation = True,
             depends_on = [hub_er_gw, hub_fw, hub_vpn_gw], # avoid contention
         )
-
-        # protect intra-GatewaySubnet traffic from being redirected
+        # It is very important to ensure that there is never a route with an
+        # address_prefix which covers the AzureFirewallSubnet.
+        # Protect intra-GatewaySubnet traffic from being redirected:
         vdc.route_to_virtual_network(
             stem = f'gw-gw',
             route_table_name = hub_gw_rt.name,
             address_prefix = gws_ar,
         )
-
-        # it is very important to ensure that there is never a route with an
-        # address_prefix which covers the AzureFirewallSubnet.
-
-        # partially or fully invalidate system routes to redirect traffic
+        # Partially or fully invalidate system routes to redirect traffic:
         for route in [
             (f'gw-dmz', hub_gw_rt.name, dmz_ar),
             (f'gw-hub', hub_gw_rt.name, props.hub_address_space),
@@ -254,13 +217,12 @@ class Hub(ComponentResource):
                 stem = route[0],
                 route_table_name = route[1],
                 address_prefix = route[2],
-                next_hop_in_ip_address = hub_fw_ip,
+                next_hop_ip_address = hub_fw_ip,
             )
 
         # VNet Peering between stacks using StackReference
         if props.peer:
             peer_hub_id = props.reference.get_output('hub_id')
-
             # VNet Peering (Global) in one direction from stack to peer
             hub_hub = vdc.vnet_peering(
                 stem = props.stack,
@@ -270,12 +232,10 @@ class Hub(ComponentResource):
                 allow_forwarded_traffic = True,
                 allow_gateway_transit = False, # as both hubs have gateways
             )
-
             # need to invalidate system routes created by Global VNet Peering
             peer_dmz_ar = props.reference.get_output('dmz_ar') 
             peer_fw_ip = props.reference.get_output('fw_ip')
             peer_hub_as = props.reference.get_output('hub_as')
-            
             for route in [
                 (f'dmz-{props.peer}-dmz', hub_dmz_rt.name, peer_dmz_ar),
                 (f'dmz-{props.peer}-hub', hub_dmz_rt.name, peer_hub_as),
@@ -288,7 +248,7 @@ class Hub(ComponentResource):
                     stem = route[0],
                     route_table_name = route[1],
                     address_prefix = route[2],
-                    next_hop_in_ip_address = peer_fw_ip,
+                    next_hop_ip_address = peer_fw_ip,
                 )
         
         # shared services subnets starting with the second subnet
@@ -298,17 +258,12 @@ class Hub(ComponentResource):
                 stem = f'{name}-{subnet[0]}',
                 virtual_network_name = hub.name,
                 address_prefix = str(next_sn),
-                depends_on = [hub_ss_rt], # avoid contention
-            )
-            hub_sn_rta = vdc.subnet_route_table(
-                stem = f'{name}-{subnet[0]}',
-                virtual_network_name = hub.name,
                 route_table_id = hub_ss_rt.id,
-                subnet_id = hub_sn.id,
+                depends_on = [hub_ss_rt], # avoid contention
             )
 
         # assign properties to hub including from child resources
-        self.address_spaces = hub.address_spaces # exported
+        self.address_space = hub.address_space # exported
         self.dmz_ar = dmz_ar # used for routes to the hub
         self.dmz_rt_name = hub_dmz_rt.name # used to add routes to spokes
         self.er_gw = hub_er_gw # needed prior to VNet Peering from spokes

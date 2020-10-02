@@ -75,10 +75,10 @@ export('fw_ip', hub.fw_ip) # required for stack peering
 export('hub_as', hub.hub_as) # required for stack peering
 export('hub_id', hub.id) # required for stack peering
 export('hub_name', hub.name)
-export('hub_address_spaces', hub.address_spaces)
+export('hub_address_space', hub.address_space)
 export('s01_id', spoke1.id)
 export('s01_name', spoke1.name)
-export('s01_address_spaces', spoke1.address_spaces)
+export('s01_address_space', spoke1.address_space)
 export('s02_id', spoke2.id)
 export('s02_name', spoke2.name)
-export('s02_address_spaces', spoke2.address_spaces)
+export('s02_address_space', spoke2.address_space)

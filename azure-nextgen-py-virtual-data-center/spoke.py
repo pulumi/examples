@@ -83,7 +83,7 @@ class Spoke(ComponentResource):
                 stem = f'fw-{props.peer}-{name}',
                 route_table_name = props.fw_rt_name,
                 address_prefix = peer_spoke_as[0], #address_prefix,
-                next_hop_in_ip_address = peer_fw_ip,
+                next_hop_ip_address = peer_fw_ip,
             ) # only one address_space per spoke at present...
 
         # Azure Bastion subnet and host (optional)
@@ -127,7 +127,7 @@ class Spoke(ComponentResource):
                 stem = route[0],
                 route_table_name = route[1],
                 address_prefix = route[2],
-                next_hop_in_ip_address = props.hub.fw_ip,
+                next_hop_ip_address = props.hub.fw_ip,
             )
 
         # ordinary spoke subnets starting with the second subnet
@@ -137,17 +137,12 @@ class Spoke(ComponentResource):
                 stem = f'{name}-{subnet[0]}',
                 virtual_network_name = spoke.name,
                 address_prefix = str(next_sn),
-                depends_on = [spoke_rt], # avoid contention
-            )
-            spoke_sn_rta = vdc.subnet_route_table(
-                stem = f'{name}-{subnet[0]}',
-                virtual_network_name = spoke.name,
                 route_table_id = spoke_rt.id,
-                subnet_id = spoke_sn.id,
+                depends_on = [spoke_rt], # avoid contention
             )
 
         # assign properties to spoke including from child resources
-        self.address_spaces = spoke.address_spaces #exported
+        self.address_space = spoke.address_space #exported
         self.hub = props.hub.id
         self.id = spoke.id # exported
         self.location = spoke.location
