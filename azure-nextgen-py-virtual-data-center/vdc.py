@@ -10,12 +10,24 @@ from pulumi_azure_nextgen.compute import latest as compute
 # vdc.tags = props.tags
 # vdc.self = self
 
-def bastion_host(stem, subnet_id, depends_on=None):
+def bastion_host(stem, virtual_network_name, address_prefix, depends_on=None):
+    ab_sn = network.Subnet(f'{stem}-ab-sn',
+        subnet_name = 'AzureBastionSubnet', # name required
+        resource_group_name = resource_group_name,
+        virtual_network_name = virtual_network_name,
+        address_prefix = address_prefix,
+        opts = ResourceOptions(
+            parent=self,
+            delete_before_replace=True,
+            depends_on=depends_on,
+        ),
+    )
     ab_pip = network.PublicIPAddress(f'{stem}-ab-pip',
         public_ip_address_name = f'{stem}-ab-pip-{suffix}',
         resource_group_name = resource_group_name,
+        location = location,
         sku = {
-            'PublicIPAddressSku': 'Standard',
+            'name': 'Standard',
         },
         public_ip_allocation_method = 'Static',
         tags = tags,
@@ -24,10 +36,15 @@ def bastion_host(stem, subnet_id, depends_on=None):
     ab = network.BastionHost(f'{stem}-ab',
         bastion_host_name = f'{stem}-ab-{suffix}',
         resource_group_name = resource_group_name,
+        location = location,
         ip_configurations = [{
             'name': f'{stem}-ab-ipconf',
-            'publicIPAddress': ab_pip.id,
-            'subnet': subnet_id,
+            'publicIPAddress': {
+                'id': ab_pip.id,
+            },
+            'subnet': {
+                'id': ab_sn.id,
+            },
         }],
         tags = tags,
         opts = ResourceOptions(parent=self, depends_on=depends_on),
@@ -38,6 +55,7 @@ def expressroute_gateway(stem, subnet_id, depends_on=None):
     er_gw_pip = network.PublicIPAddress(f'{stem}-er-gw-pip',
         public_ip_address_name = f'{stem}-er-gw-pip-{suffix}',
         resource_group_name = resource_group_name,
+        location = location,
         public_ip_allocation_method = 'Dynamic',
         tags = tags,
         opts = ResourceOptions(parent=self),
@@ -45,16 +63,22 @@ def expressroute_gateway(stem, subnet_id, depends_on=None):
     er_gw = network.VirtualNetworkGateway(f'{stem}-er-gw',
         virtual_network_gateway_name = f'{stem}-er-gw-{suffix}',    
         resource_group_name = resource_group_name,
+        location = location,
         sku = {
-            'name': 'Standard'
+            'name': 'Standard',
+            'tier': 'Standard',
         },
         gateway_type = 'ExpressRoute',
         vpn_type = 'RouteBased',
         enable_bgp = True,
         ip_configurations = [{
             'name': f'{stem}-er-gw-ipconf',
-            'public_ip_address': er_gw_pip.id,
-            'subnet': subnet_id,
+            'publicIPAddress': {
+                'id': er_gw_pip.id,
+            },
+            'subnet': {
+                'id': subnet_id,
+            },
         }],
         tags = tags,
         opts = ResourceOptions(
@@ -73,8 +97,9 @@ def firewall(stem, fw_sn_id, fwm_sn_id, depends_on=None):
     fw_pip = network.PublicIPAddress(f'{stem}-fw-pip',
         public_ip_address_name = f'{stem}-fw-pip-{suffix}',
         resource_group_name = resource_group_name,
+        location = location,
         sku = {
-            'PublicIPAddressSku': 'Standard',
+            'name': 'Standard',
         },
         public_ip_allocation_method = 'Static',
         tags = tags,
@@ -83,8 +108,9 @@ def firewall(stem, fw_sn_id, fwm_sn_id, depends_on=None):
     fwm_pip = network.PublicIPAddress(f'{stem}-fwm-pip',
         public_ip_address_name = f'{stem}-fwm-pip-{suffix}',
         resource_group_name = resource_group_name,
+        location = location,
         sku = {
-            'PublicIPAddressSku': 'Standard',
+            'name': 'Standard',
         },
         public_ip_allocation_method = 'Static',
         tags = tags,
@@ -93,19 +119,28 @@ def firewall(stem, fw_sn_id, fwm_sn_id, depends_on=None):
     fw = network.AzureFirewall(f'{stem}-fw',
         azure_firewall_name = f'{stem}-fw-{suffix}',
         resource_group_name = resource_group_name,
+        location = location,
         sku = { # not required but distinguishes from 'AZFW_Hub'
             'name': 'AZFW_VNet',
             'tier': 'Standard',
         },
         ip_configurations = [{
             'name': f'{stem}-fw-ipconf',
-            'public_ip_address': fw_pip.id,
-            'subnet': fw_sn_id,
+            'publicIPAddress': {
+                'id': fw_pip.id,
+            },
+            'subnet': {
+                'id': fw_sn_id,
+            },
         }],
         management_ip_configuration = {
             'name': f'{stem}-fwm-ipconf',
-            'public_ip_address': fwm_pip.id,
-            'subnet': fwm_sn_id,
+            'publicIPAddress': {
+                'id': fwm_pip.id,
+            },
+            'subnet': {
+                'id': fwm_sn_id,
+            },
         },
         tags = tags,
         opts = ResourceOptions(
@@ -132,6 +167,7 @@ def route_table(stem, disable_bgp_route_propagation=None, depends_on=None):
     rt = network.RouteTable(f'{stem}-rt',
         route_table_name = f'{stem}-rt-{suffix}',
         resource_group_name = resource_group_name,
+        location = location,
         disable_bgp_route_propagation = disable_bgp_route_propagation,
         tags = tags,
         opts = ResourceOptions(parent=self, depends_on=depends_on),
@@ -181,7 +217,7 @@ def subnet(
         stem,
         virtual_network_name,
         address_prefix,
-        route_table_id=None,
+        route_table_id,
         depends_on=None,
     ):
     sn = network.Subnet(f'{stem}-sn',
@@ -189,7 +225,9 @@ def subnet(
         resource_group_name = resource_group_name,
         virtual_network_name = virtual_network_name,
         address_prefix = address_prefix,
-        route_table = route_table_id,
+        route_table = {
+            'id': route_table_id,
+        },
         opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     return sn
@@ -199,7 +237,7 @@ def subnet_special(
         name,
         virtual_network_name,
         address_prefix,
-        route_table_id=None,
+        route_table_id,
         depends_on=None,
     ):
     sn = network.Subnet(f'{stem}-sn',
@@ -207,7 +245,9 @@ def subnet_special(
         resource_group_name = resource_group_name,
         virtual_network_name = virtual_network_name,
         address_prefix = address_prefix,
-        route_table = route_table_id,
+        route_table = {
+            'id': route_table_id,
+        },
         opts = ResourceOptions(
             parent=self,
             delete_before_replace=True,
@@ -220,6 +260,7 @@ def virtual_network(stem, address_spaces):
     vn = network.VirtualNetwork(f'{stem}-vn',
         virtual_network_name = f'{stem}-vn-{suffix}',
         resource_group_name = resource_group_name,
+        location = location,
         address_space = {
             'address_prefixes': address_spaces
         },
@@ -242,7 +283,9 @@ def vnet_peering(
             virtual_network_peering_name = f'{stem}-{peer}-vnp-{suffix}',
             resource_group_name = resource_group_name,
             virtual_network_name = virtual_network_name,
-            remote_virtual_network = remote_virtual_network_id,
+            remote_virtual_network = {
+                'id': remote_virtual_network_id
+            },
             allow_forwarded_traffic = allow_forwarded_traffic,
             allow_gateway_transit = allow_gateway_transit,
             use_remote_gateways = use_remote_gateways,
@@ -255,6 +298,7 @@ def vpn_gateway(stem, subnet_id, depends_on=None):
     vpn_gw_pip = network.PublicIPAddress(f'{stem}-vpn-gw-pip',
         public_ip_address_name = f'{stem}-vpn-gw-pip-{suffix}',
         resource_group_name = resource_group_name,
+        location = location,
         public_ip_allocation_method = 'Dynamic',
         tags = tags,
         opts = ResourceOptions(parent=self),
@@ -262,17 +306,22 @@ def vpn_gateway(stem, subnet_id, depends_on=None):
     vpn_gw = network.VirtualNetworkGateway(f'{stem}-vpn-gw',
         virtual_network_gateway_name = f'{stem}-vpn-gw-{suffix}',
         resource_group_name = resource_group_name,
+        location = location,
         sku = {
             'name': 'VpnGw1',
-            'tier': 'Standard',
+            'tier': 'VpnGw1',
         },
         gateway_type = 'Vpn',
         vpn_type = 'RouteBased',
         enable_bgp = True,
         ip_configurations = [{
             'name': f'{stem}-vpn-gw-ipconf',
-            'public_ip_address': vpn_gw_pip.id,
-            'subnet': subnet_id,
+            'publicIPAddress': {
+                'id': vpn_gw_pip.id,
+            },
+            'subnet': {
+                'id': subnet_id,
+            },
         }],
         tags = tags,
         opts = ResourceOptions(

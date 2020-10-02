@@ -9,6 +9,7 @@ class SpokeProps:
         azure_bastion: bool,
         fw_rt_name: str,
         hub: Hub,
+        location: str,
         peer: str,
         reference: StackReference,
         resource_group_name: str,
@@ -20,6 +21,7 @@ class SpokeProps:
         self.azure_bastion = azure_bastion
         self.fw_rt_name = fw_rt_name
         self.hub = hub
+        self.location = location
         self.peer = peer
         self.reference = reference
         self.resource_group_name = resource_group_name
@@ -34,6 +36,7 @@ class Spoke(ComponentResource):
         super().__init__('vdc:network:Spoke', name, {}, opts)
 
         # set required vdc variables before calling functions
+        vdc.location = props.location
         vdc.resource_group_name = props.resource_group_name
         vdc.suffix = props.suffix
         vdc.tags = props.tags
@@ -88,16 +91,11 @@ class Spoke(ComponentResource):
 
         # Azure Bastion subnet and host (optional)
         if props.azure_bastion:
-            spoke_ab_sn = vdc.subnet_special(
-                stem = f'{name}-ab',
-                name = 'AzureBastionSubnet',
+            spoke_ab = vdc.bastion_host(
+                stem = name,
                 virtual_network_name = spoke.name,
                 address_prefix = str(abs_nw),
                 depends_on = [hub_spoke, spoke_hub], # avoid contention
-            )
-            spoke_ab = vdc.bastion_host(
-                stem = name,
-                subnet_id = spoke_ab_sn.id,
             )
 
         # Route Table only to be associated with ordinary spoke subnets

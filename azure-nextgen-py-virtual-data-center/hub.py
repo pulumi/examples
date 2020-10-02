@@ -9,6 +9,7 @@ class HubProps:
         forced_tunnel: bool,
         firewall_address_space: str,
         hub_address_space: str,
+        location: str,
         peer: str,
         reference: StackReference,
         resource_group_name: str,
@@ -21,6 +22,7 @@ class HubProps:
         self.forced_tunnel = forced_tunnel
         self.firewall_address_space = firewall_address_space
         self.hub_address_space = hub_address_space
+        self.location = location
         self.peer = peer
         self.reference = reference
         self.resource_group_name = resource_group_name
@@ -34,6 +36,7 @@ class Hub(ComponentResource):
         super().__init__('vdc:network:Hub', name, {}, opts)
 
         # set required vdc variables before calling functions
+        vdc.location = props.location
         vdc.resource_group_name = props.resource_group_name
         vdc.suffix = props.suffix
         vdc.tags = props.tags
@@ -101,22 +104,14 @@ class Hub(ComponentResource):
             route_table_id = hub_dmz_rt.id,
         )
 
-        # AzureFirewallSubnet and Route Table 
-        hub_fw_rt = vdc.route_table(
-            stem = f'{name}-fw',
-            disable_bgp_route_propagation = False,
-        )
-        hub_fw_sn = vdc.subnet_special(
-            stem = f'{name}-fw',
-            name = 'AzureFirewallSubnet', # name required
-            virtual_network_name = hub.name,
-            address_prefix = str(fws_nw),
-            route_table_id = hub_fw_rt.id,
-        )
         # AzureFirewallManagementSubnet and Route Table 
         hub_fwm_rt = vdc.route_table(
             stem = f'{name}-fwm',
             disable_bgp_route_propagation = True,
+        )
+        vdc.route_to_internet(
+            stem = f'fwm-internet',
+            route_table_name = hub_fwm_rt.name,
         )
         hub_fwm_sn = vdc.subnet_special(
             stem = f'{name}-fwm',
@@ -124,6 +119,11 @@ class Hub(ComponentResource):
             virtual_network_name = hub.name,
             address_prefix = str(fwm_nw),
             route_table_id = hub_fwm_rt.id,
+        )
+        # AzureFirewallSubnet and Route Table 
+        hub_fw_rt = vdc.route_table(
+            stem = f'{name}-fw',
+            disable_bgp_route_propagation = False,
         )
         # https://docs.microsoft.com/en-us/azure/firewall/forced-tunneling
         # for routes to peered spokes and Internet (including forced_tunnel)
@@ -139,9 +139,12 @@ class Hub(ComponentResource):
                 stem = f'fw-internet',
                 route_table_name = hub_fw_rt.name,
             )
-        vdc.route_to_internet(
-            stem = f'fwm-internet',
-            route_table_name = hub_fwm_rt.name,
+        hub_fw_sn = vdc.subnet_special(
+            stem = f'{name}-fw',
+            name = 'AzureFirewallSubnet', # name required
+            virtual_network_name = hub.name,
+            address_prefix = str(fws_nw),
+            route_table_id = hub_fw_rt.id,
         )
 
         # Firewall and Gateways depends_on special subnets
@@ -171,21 +174,16 @@ class Hub(ComponentResource):
 
         # Azure Bastion subnet and host (optional)
         if props.azure_bastion:
-            hub_ab_sn = vdc.subnet_special( #ToDo add NSG if required
-                stem = f'{name}-ab',
-                name = 'AzureBastionSubnet', # name required
+            hub_ab = vdc.bastion_host(
+                stem = name,
                 virtual_network_name = hub.name,
                 address_prefix = str(abs_nw),
                 depends_on = [hub_er_gw, hub_fw, hub_vpn_gw],# avoid contention
             )
-            hub_ab = vdc.bastion_host(
-                stem = name,
-                subnet_id = hub_ab_sn.id,
-            )
 
         # work around https://github.com/pulumi/pulumi/issues/4040
         hub_fw_ip = hub_fw.ip_configurations.apply(
-            lambda ipc: ipc[0].get('private_ip_address')
+            lambda ipc: ipc[0].get('privateIPAddress')
         )
 
         # Route Table to be associated with all hub shared services subnets
