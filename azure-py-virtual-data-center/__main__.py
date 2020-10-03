@@ -4,7 +4,7 @@ from hub import HubProps, Hub
 from spoke import SpokeProps, Spoke
 from pulumi import export
 
-# set required vdc variable before calling function
+# set required vdc variables before calling function
 vdc.tags = config.default_tags
 # all resources will be created in configuration location
 resource_group_name = vdc.resource_group(config.stack)
@@ -65,16 +65,12 @@ spoke2 = Spoke('s02', # stem of child resource names (<6 chars)
     ),
 )
 
-# export information about the stack
-export('dmz_ar', hub.dmz_ar) # required for stack peering
-export('fw_ip', hub.fw_ip) # required for stack peering
-export('hub_as', hub.hub_as) # required for stack peering
-export('hub_id', hub.id) # required for stack peering
-export('hub_name', hub.name)
-export('hub_address_spaces', hub.address_spaces)
+# export information about the stack required for stack peering
+export('dmz_ar', hub.dmz_ar)
+export('fw_ip', hub.fw_ip)
+export('hub_as', hub.address_space)
+export('hub_id', hub.id)
+export('s01_as', spoke1.address_space)
 export('s01_id', spoke1.id)
-export('s01_name', spoke1.name)
-export('s01_address_spaces', spoke1.address_spaces)
+export('s02_as', spoke2.address_space)
 export('s02_id', spoke2.id)
-export('s02_name', spoke2.name)
-export('s02_address_spaces', spoke2.address_spaces)

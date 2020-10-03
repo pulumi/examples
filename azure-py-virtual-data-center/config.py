@@ -29,24 +29,19 @@ default_tags = {
 azure_bastion = config.get_bool('azure_bastion')
 
 # Azure Firewall to route all Internet-bound traffic to designated next hop
-forced_tunnel = config.get_bool('forced_tunnel')
-# turn off SNAT (private_ranges not yet available on Azure API?)
-# https://docs.microsoft.com/en-us/azure/firewall/snat-private-range
-if forced_tunnel:
-    ft_ip = ip_address(forced_tunnel)
-    if ft_ip.is_private:
-        private_ranges = 'IANAPrivateRanges'
-    else:
-        private_ranges = '0.0.0.0./0'
+forced_tunnel = config.get('forced_tunnel')
 
-# another stack in the same project and organization may be peered
+# another stack may be peered in the same project, even across organizations
 peer = config.get('peer')
-if peer:
-    org = config.require('org')
-    project = get_project()
-    reference = StackReference(f'{org}/{project}/{peer}')
-else:
+if not peer:
     reference = None
+else:
+    org = config.get('org')
+    if org:
+        project = get_project()
+        reference = StackReference(f'{org}/{project}/{peer}')
+    else:
+        reference = StackReference(f'//{peer}')
 
 # validate firewall_address_space and hub_address_space
 firewall_address_space = config.require('firewall_address_space')
