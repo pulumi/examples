@@ -48,8 +48,8 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```
     Optional:
     ```bash
-    $ pulumi config set azure_bastion             "true"
-    $ pulumi config set forced_tunnel             "10.0.100.1"
+    $ pulumi config set azure_bastion             true
+    $ pulumi config set forced_tunnel             10.0.100.1
     ```
 
 1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
@@ -61,98 +61,102 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 1. After a while, your Production stack will be ready.
 
     ```
-    Updating (prod):
-         Type                                             Name               Status
-     +   pulumi:pulumi:Stack                              azure-py-vdc-prod  created
-     +   ├─ vdc:network:Hub                               hub                created
-     +   │  ├─ azure:network:VirtualNetwork               hub-vn-            created
-     +   │  ├─ azure:network:PublicIp                     hub-vpn-gw-pip-    created
-     +   │  ├─ azure:network:PublicIp                     hub-fw-pip-        created
-     +   │  ├─ azure:network:PublicIp                     hub-er-gw-pip-     created
-     +   │  ├─ azure:network:Subnet                       hub-gw-sn          created
-     +   │  ├─ azure:network:Subnet                       hub-dmz-sn         created
-     +   │  ├─ azure:network:Subnet                       hub-fw-sn          created
-     +   │  ├─ azure:network:Subnet                       hub-fwm-sn         created
-     +   │  ├─ azure:network:VirtualNetworkGateway        hub-vpn-gw-        created
-     +   │  ├─ azure:network:Firewall                     hub-fw-            created
-     +   │  ├─ azure:network:VirtualNetworkGateway        hub-er-gw-         created
-     +   │  ├─ azure:network:RouteTable                   hub-gw-rt-         created
-     +   │  ├─ azure:network:RouteTable                   hub-dmz-rt-        created
-     +   │  ├─ azure:network:RouteTable                   hub-ss-rt-         created
-     +   │  ├─ azure:network:Route                        ss-dg-r-           created
-     +   │  ├─ azure:network:Route                        ss-dmz-r-          created
-     +   │  ├─ azure:network:Route                        ss-gw-r-           created
-     +   │  ├─ azure:network:Subnet                       hub-domain-sn-     created
-     +   │  ├─ azure:network:Subnet                       hub-files-sn-      created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-dmz-sn-rta     created
-     +   │  ├─ azure:network:Route                        dmz-dg-r-          created
-     +   │  ├─ azure:network:Route                        dmz-dmz-r-         created
-     +   │  ├─ azure:network:Route                        dmz-hub-r-         created
-     +   │  ├─ azure:network:Route                        gw-gw-r-           created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-gw-sn-rta      created
-     +   │  ├─ azure:network:Route                        gw-dmz-r-          created
-     +   │  ├─ azure:network:Route                        gw-hub-r-          created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-domain-sn-rta  created
-     +   │  └─ azure:network:SubnetRouteTableAssociation  hub-files-sn-rta   created
-     +   ├─ vdc:network:Spoke                             s01                created
-     +   │  ├─ azure:network:VirtualNetwork               s01-vn-            created
-     +   │  ├─ azure:network:VirtualNetworkPeering        s01-hub-vnp-       created
-     +   │  ├─ azure:network:VirtualNetworkPeering        hub-s01-vnp-       created
-     +   │  ├─ azure:network:Route                        ss-s01-r-          created
-     +   │  ├─ azure:network:Route                        dmz-s01-r-         created
-     +   │  ├─ azure:network:Route                        gw-s01-r-          created
-     +   │  ├─ azure:network:RouteTable                   s01-rt-            created
-     +   │  ├─ azure:network:Route                        s01-dg-r-          created
-     +   │  ├─ azure:network:Route                        s01-dmz-r-         created
-     +   │  ├─ azure:network:Subnet                       s01-web-sn-        created
-     +   │  ├─ azure:network:Route                        s01-hub-r-         created
-     +   │  ├─ azure:network:Subnet                       s01-db-sn-         created
-     +   │  ├─ azure:network:Subnet                       s01-app-sn-        created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  s01-web-sn-rta     created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  s01-db-sn-rta      created
-     +   │  └─ azure:network:SubnetRouteTableAssociation  s01-app-sn-rta     created
-     +   ├─ vdc:network:Spoke                             s02                created
-     +   │  ├─ azure:network:VirtualNetwork               s02-vn-            created
-     +   │  ├─ azure:network:VirtualNetworkPeering        hub-s02-vnp-       created
-     +   │  ├─ azure:network:VirtualNetworkPeering        s02-hub-vnp-       created
-     +   │  ├─ azure:network:Route                        ss-s02-r-          created
-     +   │  ├─ azure:network:Route                        dmz-s02-r-         created
-     +   │  ├─ azure:network:Route                        gw-s02-r-          created
-     +   │  ├─ azure:network:RouteTable                   s02-rt-            created
-     +   │  ├─ azure:network:Route                        s02-dg-r-          created
-     +   │  ├─ azure:network:Route                        s02-dmz-r-         created
-     +   │  ├─ azure:network:Route                        s02-hub-r-         created
-     +   │  ├─ azure:network:Subnet                       s02-app-sn-        created
-     +   │  ├─ azure:network:Subnet                       s02-web-sn-        created
-     +   │  ├─ azure:network:Subnet                       s02-db-sn-         created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  s02-app-sn-rta     created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  s02-web-sn-rta     created
-     +   │  └─ azure:network:SubnetRouteTableAssociation  s02-db-sn-rta      created
-     +   └─ azure:core:ResourceGroup                      prod-vdc-rg-       created
-
-    Outputs:
-        dmz_ar  : "192.168.100.128/25"
-        fw_ip   : "192.168.100.4"
-        hub_as  : "10.100.0.0/16"
-        hub_id  : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-79a57e4b/providers/Microsoft.Network/virtualNetworks/hub-vn-46689586"
-        hub_name: "hub-vn-46689586"
-        s01_id  : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-79a57e4b/providers/Microsoft.Network/virtualNetworks/s01-vn-c2d9fe6f"
-        s01_name: "s01-vn-c2d9fe6f"
-        s02_id  : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-79a57e4b/providers/Microsoft.Network/virtualNetworks/s02-vn-61f44736"
-        s02_name: "s02-vn-61f44736"
-
-    Resources:
-        + 66 created
-
-    Duration: 31m27s
+    Updating (prod)
     
-    Permalink: https://app.pulumi.com/organization/azure-py-vdc/prod/updates/1
+    View Live: https://app.pulumi.com/organization/azure-py-vdc/prod/updates/1
+    
+         Type                                                      Name               Status       
+     +   pulumi:pulumi:Stack                                       azure-py-vdc-prod  creating
+     +   ├─ vdc:network:Hub                                        hub                creating.
+     +   │  ├─ azure-nextgen:network/latest:VirtualNetwork         hub-vn             created
+     +   │  ├─ azure-nextgen:network/latest:RouteTable             hub-gw-rt          created
+     +   │  ├─ azure-nextgen:network/latest:RouteTable             hub-fwm-rt         created
+     +   │  ├─ azure-nextgen:network/latest:RouteTable             hub-dmz-rt         created
+     +   │  ├─ azure-nextgen:network/latest:RouteTable             hub-fw-rt          created
+     +   │  ├─ azure-nextgen:network/latest:PublicIPAddress        hub-fwm-pip        created
+     +   ├─ vdc:network:Hub                                        hub                creating...
+     +   │  ├─ azure-nextgen:network/latest:PublicIPAddress        hub-vpn-gw-pip     created
+     +   │  ├─ azure-nextgen:network/latest:PublicIPAddress        hub-er-gw-pip      created
+     +   │  ├─ azure-nextgen:network/latest:PublicIPAddress        hub-ab-pip         created
+     +   │  ├─ azure-nextgen:network/latest:Route                  gw-gw-r            created
+     +   │  ├─ azure-nextgen:network/latest:Route                  fwm-internet-r     created
+     +   ├─ vdc:network:Hub                                        hub                creating..
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 hub-gw-sn          created
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 hub-fwm-sn         created
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 hub-fw-sn          created
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 hub-dmz-sn         created
+     +   │  ├─ azure-nextgen:network/latest:AzureFirewall          hub-fw             created
+     +   │  ├─ azure-nextgen:network/latest:VirtualNetworkGateway  hub-vpn-gw         created
+     +   │  ├─ azure-nextgen:network/latest:VirtualNetworkGateway  hub-er-gw          created
+     +   ├─ vdc:network:Hub                                        hub                creating...
+     +   │  ├─ azure-nextgen:network/latest:Route                  gw-hub-r           created
+     +   ├─ vdc:network:Hub                                        hub                creating
+     +   │  ├─ azure-nextgen:network/latest:Route                  dmz-hub-r          created
+     +   ├─ vdc:network:Hub                                        hub                creating.
+     +   │  ├─ azure-nextgen:network/latest:RouteTable             hub-ss-rt          created
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 hub-ab-sn          created
+     +   │  ├─ azure-nextgen:network/latest:BastionHost            hub-ab             creating...
+     +   │  ├─ azure-nextgen:network/latest:Route                  ss-dg-r            created
+     +   │  ├─ azure-nextgen:network/latest:Route                  ss-dmz-r           created
+     +   │  ├─ azure-nextgen:network/latest:Route                  ss-gw-r            created
+     +   │  ├─ azure-nextgen:network/latest:BastionHost            hub-ab             creating
+     +   │  └─ azure-nextgen:network/latest:Subnet                 hub-files-sn       created
+     +   ├─ vdc:network:Spoke                                      s01                creating..
+     +   │  ├─ azure-nextgen:network/latest:VirtualNetwork         s01-vn             created
+     +   │  ├─ azure-nextgen:network/latest:PublicIPAddress        s01-ab-pip         created
+     +   │  ├─ azure-nextgen:network/latest:Route                  dmz-s01-r          created
+     +   ├─ vdc:network:Spoke                                      s01                creating...
+     +   │  ├─ azure-nextgen:network/latest:VirtualNetworkPeering  hub-s01-vnp        created
+     +   │  ├─ azure-nextgen:network/latest:VirtualNetworkPeering  s01-hub-vnp        created
+     +   │  ├─ azure-nextgen:network/latest:Route                  ss-s01-r           created
+     +   │  ├─ azure-nextgen:network/latest:RouteTable             s01-rt             created
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 s01-ab-sn          created
+     +   │  ├─ azure-nextgen:network/latest:BastionHost            s01-ab             created
+     +   │  ├─ azure-nextgen:network/latest:Route                  s01-dg-r           created
+     +   │  ├─ azure-nextgen:network/latest:Route                  s01-dmz-r          created
+     +   │  ├─ azure-nextgen:network/latest:Route                  s01-hub-r          created
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 s01-app-sn         created
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 s01-web-sn         created
+     +   │  └─ azure-nextgen:network/latest:Subnet                 s01-db-sn          created
+     +   ├─ vdc:network:Spoke                                      s02                created
+     +   │  ├─ azure-nextgen:network/latest:VirtualNetwork         s02-vn             created
+     +   │  ├─ azure-nextgen:network/latest:PublicIPAddress        s02-ab-pip         created
+     +   │  ├─ azure-nextgen:network/latest:Route                  gw-s02-r           created
+     +   │  ├─ azure-nextgen:network/latest:Route                  dmz-s02-r          created
+     +   │  ├─ azure-nextgen:network/latest:VirtualNetworkPeering  hub-s02-vnp        created
+     +   │  ├─ azure-nextgen:network/latest:VirtualNetworkPeering  s02-hub-vnp        created
+     +   │  ├─ azure-nextgen:network/latest:Route                  ss-s02-r           created
+     +   │  ├─ azure-nextgen:network/latest:RouteTable             s02-rt             created
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 s02-ab-sn          created
+     +   │  ├─ azure-nextgen:network/latest:Route                  s02-dg-r           created
+     +   │  ├─ azure-nextgen:network/latest:Route                  s02-dmz-r          created
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 s02-web-sn         created
+     +   │  ├─ azure-nextgen:network/latest:Route                  s02-hub-r          created
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 s02-app-sn         created
+     +   │  ├─ azure-nextgen:network/latest:Subnet                 s02-db-sn          created
+     +   │  └─ azure-nextgen:network/latest:BastionHost            s02-ab             created
+     +   └─ azure-nextgen:resources/latest:ResourceGroup           prod-vdc-rg        created
+    
+    Outputs:
+        dmz_ar           : "192.168.200.128/25"
+        fw_ip            : "192.168.200.4"
+        hub_as           : "10.200.0.0/16"
+        hub_id           : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-021020/providers/Microsoft.Network/virtualNetworks/hub-vn-021020"
+        s01_as           : "10.201.0.0/16"
+        s01_id           : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-021020/providers/Microsoft.Network/virtualNetworks/s01-vn-021020"
+        s02_as           : "10.202.0.0/16"
+        s02_id           : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-021020/providers/Microsoft.Network/virtualNetworks/s02-vn-021020"
+    
+    Resources:
+        + 70 created
+    
+    Duration: 31m14s
 
     ```
     
     Feel free to modify your program, and then run `pulumi up` again. Pulumi automatically detects differences and makes the minimal changes necessary to achieved the desired state. If any changes to resources are made outside of Pulumi, you should first do a `pulumi refresh` so that Pulumi can discover the actual situation, and then `pulumi up` to return to desired state.
    
-    Note that because most resources are [auto-named](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming), the trailing dashes that you see above will actually be followed by random suffixes that appear in the Outputs and in Azure.
+    Note that autonaming is not yet implemented in azure-nextgen.
 
 1. Create another new stack intended for Disaster Recovery (following the example):
 
@@ -172,8 +176,8 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```
     Optional:
     ```bash
-    $ pulumi config set azure_bastion             "true"
-    $ pulumi config set forced_tunnel             "10.0.200.1"
+    $ pulumi config set azure_bastion             true
+    $ pulumi config set forced_tunnel             10.0.200.1
     ```
 
 1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:

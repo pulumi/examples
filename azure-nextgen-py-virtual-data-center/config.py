@@ -1,5 +1,6 @@
 from ipaddress import ip_address, ip_network
 from pulumi import Config, get_stack, get_project, StackReference
+from random import randrange
 
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -22,8 +23,10 @@ config = Config()
 # retrieve the location
 location = config.require('location')
 
-# retrieve an optional suffix to append to every name
+# retrieve an optional suffix or set to a random integer
 suffix = config.get('suffix')
+if not suffix:
+    suffix = randrange(0,1000,1)
 
 # set default tags to be applied to all taggable resources
 stack = get_stack()
@@ -36,23 +39,18 @@ azure_bastion = config.get_bool('azure_bastion')
 
 # Azure Firewall to route all Internet-bound traffic to designated next hop
 forced_tunnel = config.get('forced_tunnel')
-# turn off SNAT (private_ranges not yet available on Azure API?)
-# https://docs.microsoft.com/en-us/azure/firewall/snat-private-range
-if forced_tunnel:
-    ft_ip = ip_address(forced_tunnel)
-    if ft_ip.is_private:
-        private_ranges = 'IANAPrivateRanges'
-    else:
-        private_ranges = '0.0.0.0./0'
 
-# another stack in the same project and organization may be peered
+# another stack may be peered in the same project, even across organizations
 peer = config.get('peer')
-if peer:
-    org = config.require('org')
-    project = get_project()
-    reference = StackReference(f'{org}/{project}/{peer}')
-else:
+if not peer:
     reference = None
+else:
+    org = config.get('org')
+    if org:
+        project = get_project()
+        reference = StackReference(f'{org}/{project}/{peer}')
+    else:
+        reference = StackReference(f'//{peer}')
 
 # validate firewall_address_space and hub_address_space
 firewall_address_space = config.require('firewall_address_space')

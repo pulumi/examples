@@ -1,4 +1,4 @@
-from ipaddress import ip_network
+from ipaddress import ip_network, ip_address
 from pulumi import ComponentResource, ResourceOptions, StackReference
 import vdc
 
@@ -38,9 +38,9 @@ class Hub(ComponentResource):
         # set required vdc variables before calling functions
         vdc.location = props.location
         vdc.resource_group_name = props.resource_group_name
+        vdc.self = self
         vdc.suffix = props.suffix
         vdc.tags = props.tags
-        vdc.self = self
 
         # calculate the subnets in the firewall_address_space
         fwz_nw = ip_network(props.firewall_address_space)
@@ -127,18 +127,25 @@ class Hub(ComponentResource):
         )
         # https://docs.microsoft.com/en-us/azure/firewall/forced-tunneling
         # for routes to peered spokes and Internet (including forced_tunnel)
-        if props.forced_tunnel:
+        if not props.forced_tunnel:
+            vdc.route_to_internet(
+                stem = f'fw-internet',
+                route_table_name = hub_fw_rt.name,
+            )
+        else:
             vdc.route_to_virtual_appliance(
                 stem = f'fw-tunnel',
                 route_table_name = hub_fw_rt.name,
                 address_prefix = '0.0.0.0/0',
                 next_hop_ip_address = props.forced_tunnel,
             )
-        else:
-            vdc.route_to_internet(
-                stem = f'fw-internet',
-                route_table_name = hub_fw_rt.name,
-            )
+            # turn off SNAT if the next_hop_ip_address is public
+            # https://docs.microsoft.com/en-us/azure/firewall/snat-private-range
+            ft_ip = ip_address(props.forced_tunnel)
+            if ft_ip.is_private:
+                private_ranges = 'IANAPrivateRanges'
+            else:
+                private_ranges = '0.0.0.0/0'
         hub_fw_sn = vdc.subnet_special(
             stem = f'{name}-fw',
             name = 'AzureFirewallSubnet', # name required
@@ -155,6 +162,7 @@ class Hub(ComponentResource):
             stem = name,
             fw_sn_id = hub_fw_sn.id,
             fwm_sn_id = hub_fwm_sn.id,
+            private_ranges = private_ranges,
             depends_on = [hub_dmz_sn, hub_fw_sn, hub_fwm_sn, hub_gw_sn],
         )
 
@@ -261,7 +269,7 @@ class Hub(ComponentResource):
             )
 
         # assign properties to hub including from child resources
-        self.address_space = hub.address_space # exported
+        self.address_space = props.hub_address_space # used for routes to the hub
         self.dmz_ar = dmz_ar # used for routes to the hub
         self.dmz_rt_name = hub_dmz_rt.name # used to add routes to spokes
         self.er_gw = hub_er_gw # needed prior to VNet Peering from spokes
@@ -269,7 +277,6 @@ class Hub(ComponentResource):
         self.fw_ip = hub_fw_ip # used for routes to the hub
         self.fw_rt_name = hub_fw_rt.name # used for route to the peered spokes
         self.gw_rt_name = hub_gw_rt.name # used to add routes to spokes
-        self.hub_as = props.hub_address_space # used for routes to the hub
         self.id = hub.id # exported and used for stack and spoke peering
         self.location = hub.location # informational
         self.name = hub.name # exported and used for spoke peering

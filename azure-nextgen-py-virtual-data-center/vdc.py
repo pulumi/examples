@@ -5,10 +5,11 @@ from pulumi_azure_nextgen.network import latest as network
 from pulumi_azure_nextgen.compute import latest as compute
 
 # Variables that may need to be injected before calling functions:
+# vdc.location = props.location
 # vdc.resource_group_name = props.resource_group_name
+# vdc.self = self
 # vdc.suffix = props.suffix
 # vdc.tags = props.tags
-# vdc.self = self
 
 def bastion_host(stem, virtual_network_name, address_prefix, depends_on=None):
     ab_sn = network.Subnet(f'{stem}-ab-sn',
@@ -93,7 +94,7 @@ def expressroute_gateway(stem, subnet_id, depends_on=None):
     )
     return er_gw
 
-def firewall(stem, fw_sn_id, fwm_sn_id, depends_on=None):
+def firewall(stem, fw_sn_id, fwm_sn_id, private_ranges, depends_on=None):
     fw_pip = network.PublicIPAddress(f'{stem}-fw-pip',
         public_ip_address_name = f'{stem}-fw-pip-{suffix}',
         resource_group_name = resource_group_name,
@@ -120,7 +121,10 @@ def firewall(stem, fw_sn_id, fwm_sn_id, depends_on=None):
         azure_firewall_name = f'{stem}-fw-{suffix}',
         resource_group_name = resource_group_name,
         location = location,
-        sku = { # not required but distinguishes from 'AZFW_Hub'
+        additional_properties = {
+            "Network.SNAT.PrivateRanges": private_ranges,
+        },
+        sku = {
             'name': 'AZFW_VNet',
             'tier': 'Standard',
         },
@@ -155,7 +159,7 @@ def firewall(stem, fw_sn_id, fwm_sn_id, depends_on=None):
     )
     return fw
 
-def resource_group(stem, location):
+def resource_group(stem):
     rg = resources.ResourceGroup(f'{stem}-vdc-rg',
         resource_group_name = f'{stem}-vdc-rg-{suffix}',
         location = location,
