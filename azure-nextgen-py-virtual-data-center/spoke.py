@@ -13,6 +13,7 @@ class SpokeProps:
         peer: str,
         reference: StackReference,
         resource_group_name: str,
+        separator: str,
         spoke_address_space: str,
         subnets: [str, str, str],
         suffix: str,
@@ -25,6 +26,7 @@ class SpokeProps:
         self.peer = peer
         self.reference = reference
         self.resource_group_name = resource_group_name
+        self.separator = separator
         self.spoke_address_space = spoke_address_space
         self.subnets = subnets
         self.suffix = suffix
@@ -38,6 +40,7 @@ class Spoke(ComponentResource):
         # set required vdc variables before calling functions
         vdc.location = props.location
         vdc.resource_group_name = props.resource_group_name
+        vdc.s = props.separator
         vdc.self = self
         vdc.suffix = props.suffix
         vdc.tags = props.tags
@@ -53,6 +56,8 @@ class Spoke(ComponentResource):
         first_sn = next_sn.subnets(new_prefix=27) # subdivide if possible
         abs_nw = next(first_sn) # AzureBastionSubnet /27 or greater
 
+        s = props.separator
+
         # Azure Virtual Network to be peered to the hub
         spoke = vdc.virtual_network(name, [props.spoke_address_space])
 
@@ -63,7 +68,7 @@ class Spoke(ComponentResource):
             peer = name,
             remote_virtual_network_id = spoke.id,
             allow_gateway_transit = True,
-            depends_on=[spoke, props.hub.er_gw, props.hub.vpn_gw],
+            depends_on=[spoke],
         )
 
         # VNet Peering from spoke to the hub
@@ -77,15 +82,38 @@ class Spoke(ComponentResource):
             depends_on=[spoke, props.hub.er_gw, props.hub.vpn_gw],
         )
 
-        # add routes to spokes in peered stack
-        if props.peer:
-            peer_fw_ip = props.reference.get_output('fw_ip')
-            peer_spoke_as = props.reference.get_output(f'{name}_as')
+        # Route Table to be associated with all ordinary spoke subnets
+        spoke_rt = vdc.route_table(
+            stem = f'{name}',
+            disable_bgp_route_propagation = True,
+        )
+        # it is very important to ensure that there is never a route with an
+        # address_prefix which covers the AzureFirewallSubnet, and as VNet
+        # Peering may not be specified as next_hop_type, a separate address
+        # space for the firewall in the hub makes for simpler routes
+        for route in [
+            (f'dmz{s}{name}', props.hub.dmz_rt_name, props.spoke_address_space),
+            (f'gw{s}{name}', props.hub.gw_rt_name, props.spoke_address_space),
+            (f'ss{s}{name}', props.hub.ss_rt_name, props.spoke_address_space),
+            (f'{name}{s}dg', spoke_rt.name, '0.0.0.0/0'),
+            (f'{name}{s}dmz', spoke_rt.name, props.hub.dmz_ar),
+            (f'{name}{s}hub', spoke_rt.name, props.hub.address_space),
+        ]:
             vdc.route_to_virtual_appliance(
-                stem = f'fw-{props.peer}-{name}',
-                route_table_name = props.fw_rt_name,
-                address_prefix = peer_spoke_as,
-                next_hop_ip_address = peer_fw_ip,
+                stem = route[0],
+                route_table_name = route[1],
+                address_prefix = route[2],
+                next_hop_ip_address = props.hub.fw_ip,
+            )
+        # ordinary spoke subnets starting with the second subnet
+        for subnet in props.subnets:
+            next_sn = next(subnets)
+            spoke_sn = vdc.subnet(
+                stem = f'{name}{s}{subnet[0]}',
+                virtual_network_name = spoke.name,
+                address_prefix = str(next_sn),
+                route_table_id = spoke_rt.id,
+                depends_on = [spoke_rt, hub_spoke, spoke_hub],
             )
 
         # Azure Bastion subnet and host (optional)
@@ -94,48 +122,18 @@ class Spoke(ComponentResource):
                 stem = name,
                 virtual_network_name = spoke.name,
                 address_prefix = str(abs_nw),
-                depends_on = [spoke, hub_spoke, spoke_hub],
+                depends_on = [spoke],
             )
 
-        # Route Table only to be associated with ordinary spoke subnets
-        spoke_rt = vdc.route_table(
-            stem = f'{name}',
-            disable_bgp_route_propagation = True,
-            depends_on = [spoke, hub_spoke, spoke_hub],
-        )
-
-        # VNet Peering may not be specified as next_hop_type, so a separate
-        # hub address space from the firewall is necessary to allow routes
-        # from spokes to remain unchanged when hub subnets are added
-
-        # it is very important to ensure that there is never a route with an
-        # address_prefix which covers the AzureFirewallSubnet.
-
-        # partially or fully invalidate system routes to redirect traffic
-        for route in [
-            (f'dmz-{name}', props.hub.dmz_rt_name, props.spoke_address_space),
-            (f'gw-{name}', props.hub.gw_rt_name, props.spoke_address_space),
-            (f'ss-{name}', props.hub.ss_rt_name, props.spoke_address_space),
-            (f'{name}-dg', spoke_rt.name, '0.0.0.0/0'),
-            (f'{name}-dmz', spoke_rt.name, props.hub.dmz_ar),
-            (f'{name}-hub', spoke_rt.name, props.hub.address_space),
-        ]:
-            vdc.route_to_virtual_appliance(
-                stem = route[0],
-                route_table_name = route[1],
-                address_prefix = route[2],
-                next_hop_ip_address = props.hub.fw_ip,
-            )
-
-        # ordinary spoke subnets starting with the second subnet
-        for subnet in props.subnets:
-            next_sn = next(subnets)
-            spoke_sn = vdc.subnet(
-                stem = f'{name}-{subnet[0]}',
-                virtual_network_name = spoke.name,
-                address_prefix = str(next_sn),
-                route_table_id = spoke_rt.id,
-                depends_on = [spoke, spoke_rt],
+        # add route from firewall to corresponding spoke in peered stack
+        if props.peer:
+            peer_fw_ip = props.reference.get_output('fw_ip')
+            peer_spoke_as = props.reference.get_output(f'{name}_as')
+            fw_peer_spoke = vdc.route_to_virtual_appliance(
+                stem = f'fw{s}{props.peer}{s}{name}',
+                route_table_name = props.fw_rt_name,
+                address_prefix = peer_spoke_as,
+                next_hop_ip_address = peer_fw_ip,
             )
 
         # assign properties to spoke including from child resources

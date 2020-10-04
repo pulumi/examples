@@ -6,6 +6,7 @@ from pulumi import export
 
 # set required vdc variables before calling function
 vdc.location = config.location
+vdc.s = config.separator
 vdc.suffix = config.suffix
 vdc.tags = config.default_tags
 # all resources will be created in configuration location
@@ -22,6 +23,7 @@ hub = Hub('hub', # stem of child resource names (<4 chars)
         peer = config.peer,
         reference = config.reference,
         resource_group_name = resource_group_name,
+        separator = config.separator,
         stack = config.stack,
         subnets = [ # extra columns for future NSGs
             ('domain', 'any', 'any'),
@@ -42,6 +44,7 @@ spoke1 = Spoke('s01', # stem of child resource names (<6 chars)
         peer = config.peer,
         reference = config.reference,
         resource_group_name = resource_group_name,
+        separator = config.separator,
         spoke_address_space = str(next(config.stack_sn)),
         subnets = [ # extra columns for future NSGs
             ('web', 'any', 'app'),
@@ -62,6 +65,7 @@ spoke2 = Spoke('s02', # stem of child resource names (<6 chars)
         peer = config.peer,
         reference = config.reference,
         resource_group_name = resource_group_name,
+        separator = config.separator,
         spoke_address_space = str(next(config.stack_sn)),
         subnets = [ # extra columns for future NSGs
             ('web', 'any', 'app'),

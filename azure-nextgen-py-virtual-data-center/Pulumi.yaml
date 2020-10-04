@@ -27,6 +27,8 @@ template:
       description: Another stack in same organization and project to peer hubs with (optional)
     project:
       description: Another project defining a stack with the same hub and spoke names to peer with (optional)
+    separator:
+      description: A dash (-) breaks up names by default; specify valid character or ' ' for none (optional)
     suffix:
-      description: A string appended to each name (optional, otherwise a random number is generated)
+      description: A short string appended to each name to allow multiple stacks (optional)
       default: ae

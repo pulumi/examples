@@ -1,6 +1,5 @@
 from ipaddress import ip_address, ip_network
 from pulumi import Config, get_stack, get_project, StackReference
-from random import randrange
 
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -24,9 +23,16 @@ config = Config()
 location = config.require('location')
 
 # retrieve an optional suffix or set to a random integer
+separator = config.get('separator')
+if not separator:
+    separator = '-'
+else:
+    separator = separator[0]
+if separator == ' ':
+    separator = ''
 suffix = config.get('suffix')
 if not suffix:
-    suffix = randrange(0,1000,1)
+    suffix = ''
 
 # set default tags to be applied to all taggable resources
 stack = get_stack()
@@ -45,7 +51,11 @@ org = config.get('org')
 peer = config.get('peer')
 project = config.get('project')
 if org and not project:
-    project = config.get('project')
+    project = get_project()
+if not org:
+    org = ''
+if not project:
+    project = ''
 if not peer:
     reference = None
 else:
