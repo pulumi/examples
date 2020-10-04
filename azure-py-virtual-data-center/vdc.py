@@ -129,12 +129,13 @@ def route_table(stem, disable_bgp_route_propagation=None, depends_on=None):
     return rt
 
 def route_to_internet(stem, route_table_name):
-    r_i = network.Route(f'{stem}-r-',
+    r_i = network.Route(f'{stem}-r',
+        name = 'FirewallDefaultRoute', # name required
         resource_group_name = resource_group_name,
         address_prefix = '0.0.0.0/0',
         next_hop_type = 'Internet',
         route_table_name = route_table_name,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, delete_before_replace=True),
     )
     return r_i
 

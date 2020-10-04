@@ -36,7 +36,11 @@ org = config.get('org')
 peer = config.get('peer')
 project = config.get('project')
 if org and not project:
-    project = config.get('project')
+    project = get_project()
+if not org:
+    org = ""
+if not project:
+    project = ""
 if not peer:
     reference = None
 else:
