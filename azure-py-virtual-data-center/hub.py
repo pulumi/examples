@@ -270,7 +270,7 @@ class Hub(ComponentResource):
                 stem = name,
                 virtual_network_name = hub.name,
                 address_prefix = str(abs_nw),
-                depends_on = [hub_gw_sn],
+                depends_on = [hub_er_gw, hub_vpn_gw],
             )
 
         # VNet Peering between stacks using StackReference (optional)
