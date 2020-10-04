@@ -190,8 +190,8 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```
     Optional:
     ```bash
-    $ pulumi config set azure_bastion            "true"
-    $ pulumi config set forced_tunnel            "10.0.200.1"
+    $ pulumi config set azure_bastion            true
+    $ pulumi config set forced_tunnel            10.0.200.1
     ```
 
 1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
@@ -202,13 +202,12 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
 1. Once you have both Production and Disaster Recovery stacks (ideally in paired regions), you can connect their hubs using Global (between regions) VNet Peering:
 
+    Required:
     ```bash
     $ pulumi stack select prod
-    $ pulumi config set org <your Pulumi organization>
     $ pulumi config set peer dr
     $ pulumi up
     $ pulumi stack select dr
-    $ pulumi config set org <your Pulumi organization>
     $ pulumi config set peer prod
     $ pulumi up
     ```
