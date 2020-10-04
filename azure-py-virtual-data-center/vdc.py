@@ -24,7 +24,7 @@ def bastion_host(stem, virtual_network_name, address_prefix, depends_on=None):
         sku = 'Standard',
         allocation_method = 'Static',
         tags = tags,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     ab = compute.BastionHost(f'{stem}-ab-',
         resource_group_name = resource_group_name,
@@ -43,7 +43,7 @@ def expressroute_gateway(stem, subnet_id, depends_on=None):
         resource_group_name = resource_group_name,
         allocation_method = 'Dynamic',
         tags = tags,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     er_gw = network.VirtualNetworkGateway(f'{stem}-er-gw-',
         resource_group_name = resource_group_name,
@@ -74,14 +74,14 @@ def firewall(stem, fw_sn_id, fwm_sn_id, private_ranges, depends_on=None):
         sku = 'Standard',
         allocation_method = 'Static',
         tags = tags,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     fwm_pip = network.PublicIp(f'{stem}-fwm-pip-',
         resource_group_name = resource_group_name,
         sku = 'Standard',
         allocation_method = 'Static',
         tags = tags,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     fw = network.Firewall(f'{stem}-fw-',
         resource_group_name = resource_group_name,
@@ -180,7 +180,7 @@ def subnet(
     rta = network.SubnetRouteTableAssociation(f'{stem}-sn-rta',
         route_table_id = route_table_id,
         subnet_id = sn.id,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     return sn
 
@@ -206,7 +206,7 @@ def subnet_special(
     rta = network.SubnetRouteTableAssociation(f'{stem}-sn-rta',
         route_table_id = route_table_id,
         subnet_id = sn.id,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     return sn
 
@@ -246,7 +246,7 @@ def vpn_gateway(stem, subnet_id, depends_on=None):
         resource_group_name = resource_group_name,
         allocation_method = 'Dynamic',
         tags = tags,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     vpn_gw = network.VirtualNetworkGateway(f'{stem}-vpn-gw-',
         resource_group_name = resource_group_name,

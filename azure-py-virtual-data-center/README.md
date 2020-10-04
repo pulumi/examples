@@ -42,15 +42,15 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
     Required:
     ```bash
-    $ pulumi config set azure:environment           public
-    $ pulumi config set azure:location              australiaeast
-    $ pulumi config set firewall_address_space      192.168.100.0/24
-    $ pulumi config set hub_address_space           10.100.0.0/16
+    $ pulumi config set azure:environment        public
+    $ pulumi config set azure:location           australiaeast
+    $ pulumi config set firewall_address_space   192.168.100.0/24
+    $ pulumi config set hub_address_space        10.100.0.0/16
     ```
     Optional:
     ```bash
-    $ pulumi config set azure_bastion               "true"
-    $ pulumi config set forced_tunnel               "10.0.100.1"
+    $ pulumi config set azure_bastion            "true"
+    $ pulumi config set forced_tunnel            "10.0.100.1"
     ```
 
 1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
@@ -167,15 +167,15 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
     Required:
     ```bash
-    $ pulumi config set azure:environment           public
-    $ pulumi config set azure:location              australiasoutheast
-    $ pulumi config set firewall_address_space      192.168.200.0/24
-    $ pulumi config set hub_address_space           10.200.0.0/16
+    $ pulumi config set azure:environment        public
+    $ pulumi config set azure:location           australiasoutheast
+    $ pulumi config set firewall_address_space   192.168.200.0/24
+    $ pulumi config set hub_address_space        10.200.0.0/16
     ```
     Optional:
     ```bash
-    $ pulumi config set azure_bastion               "true"
-    $ pulumi config set forced_tunnel               "10.0.200.1"
+    $ pulumi config set azure_bastion            "true"
+    $ pulumi config set forced_tunnel            "10.0.200.1"
     ```
 
 1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
@@ -196,7 +196,12 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set peer prod
     $ pulumi up
     ```
-    Note: it isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program, which is why you need to set the `org` configuration variable for each stack that needs to peer with another stack.
+    Optional (for each stack):
+    ```bash
+    $ pulumi config set org         organization
+    $ pulumi config set project     project
+    ```
+    Note: you may specify another organization and/or project (hub and spoke names should be the same). It isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program.
 
     If you later destroy a stack, you need to remove the corresponding `peer` variable in the other stack and run `pulumi up`. If you want to tear down the peerings, you should remove the `peer` variables in both stacks and run `pulumi up`:
 
