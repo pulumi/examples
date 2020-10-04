@@ -22,7 +22,7 @@ config = Config()
 # retrieve the location
 location = config.require('location')
 
-# retrieve an optional suffix or set to a random integer
+# retrieve optional separator choice and suffix
 separator = config.get('separator')
 if not separator:
     separator = '-'
