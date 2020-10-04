@@ -41,16 +41,15 @@ azure_bastion = config.get_bool('azure_bastion')
 forced_tunnel = config.get('forced_tunnel')
 
 # another stack may be peered in the same project, even across organizations
+org = config.get('org')
 peer = config.get('peer')
+project = config.get('project')
+if org and not project:
+    project = config.get('project')
 if not peer:
     reference = None
 else:
-    org = config.get('org')
-    if org:
-        project = get_project()
-        reference = StackReference(f'{org}/{project}/{peer}')
-    else:
-        reference = StackReference(f'//{peer}')
+    reference = StackReference(f'{org}/{project}/{peer}')
 
 # validate firewall_address_space and hub_address_space
 firewall_address_space = config.require('firewall_address_space')

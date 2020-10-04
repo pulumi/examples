@@ -89,6 +89,7 @@ class Hub(ComponentResource):
             virtual_network_name = hub.name,
             address_prefix = gws_ar,
             route_table_id = hub_gw_rt.id,
+            depends_on = [hub, hub_gw_rt],
         )
 
         # DMZ subnet and Route Table
@@ -102,6 +103,7 @@ class Hub(ComponentResource):
             virtual_network_name = hub.name,
             address_prefix = dmz_ar,
             route_table_id = hub_dmz_rt.id,
+            depends_on = [hub, hub_dmz_rt],
         )
 
         # AzureFirewallManagementSubnet and Route Table 
@@ -119,7 +121,9 @@ class Hub(ComponentResource):
             virtual_network_name = hub.name,
             address_prefix = str(fwm_nw),
             route_table_id = hub_fwm_rt.id,
+            depends_on = [hub, hub_fwm_rt],
         )
+
         # AzureFirewallSubnet and Route Table 
         hub_fw_rt = vdc.route_table(
             stem = f'{name}-fw',
@@ -152,6 +156,7 @@ class Hub(ComponentResource):
             virtual_network_name = hub.name,
             address_prefix = str(fws_nw),
             route_table_id = hub_fw_rt.id,
+            depends_on = [hub, hub_fw_rt],
         )
 
         # Firewall and Gateways depends_on special subnets

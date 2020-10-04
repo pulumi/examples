@@ -1,4 +1,4 @@
-name: azure-py-vdc
+name: azureng-py-vdc
 runtime:
   name: python
   options:
@@ -7,13 +7,14 @@ description: A minimal Azure Virtual Data Center described in Python
 template:
   config:
     azure_bastion:
-      description: Azure Bastion provides secure RDP and SSH connectivity to VMs
+      description: Azure Bastion provides secure RDP and SSH connectivity to VMs (optional)
       default: false
     firewall_address_space:
       description: Address space in the hub for Azure Firewall and DMZ
       default: 192.168.100.0/24
     forced_tunnel:
-      description: Route all Internet-bound traffic to this designated next hop IP address
+      description: Route all Internet-bound traffic to this designated next hop IP address (optional)
+      default: 10.0.100.1
     hub_address_space:
       description: Address space in the hub for connectivity and shared services subnets
       default: 10.100.0.0/16
@@ -24,6 +25,8 @@ template:
       description: Pulumi organization in which this project resides (optional)
     peer:
       description: Another stack in same organization and project to peer hubs with (optional)
+    project:
+      description: Another project defining a stack with the same hub and spoke names to peer with (optional)
     suffix:
-      description: A string appended to each name (max 6 chars)
+      description: A string appended to each name (optional, otherwise a random number is generated)
       default: ae

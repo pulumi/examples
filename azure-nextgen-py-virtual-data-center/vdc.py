@@ -32,7 +32,7 @@ def bastion_host(stem, virtual_network_name, address_prefix, depends_on=None):
         },
         public_ip_allocation_method = 'Static',
         tags = tags,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     ab = network.BastionHost(f'{stem}-ab',
         bastion_host_name = f'{stem}-ab-{suffix}',
@@ -59,7 +59,7 @@ def expressroute_gateway(stem, subnet_id, depends_on=None):
         location = location,
         public_ip_allocation_method = 'Dynamic',
         tags = tags,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     er_gw = network.VirtualNetworkGateway(f'{stem}-er-gw',
         virtual_network_gateway_name = f'{stem}-er-gw-{suffix}',    
@@ -104,7 +104,7 @@ def firewall(stem, fw_sn_id, fwm_sn_id, private_ranges, depends_on=None):
         },
         public_ip_allocation_method = 'Static',
         tags = tags,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     fwm_pip = network.PublicIPAddress(f'{stem}-fwm-pip',
         public_ip_address_name = f'{stem}-fwm-pip-{suffix}',
@@ -115,7 +115,7 @@ def firewall(stem, fw_sn_id, fwm_sn_id, private_ranges, depends_on=None):
         },
         public_ip_allocation_method = 'Static',
         tags = tags,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     fw = network.AzureFirewall(f'{stem}-fw',
         azure_firewall_name = f'{stem}-fw-{suffix}',
@@ -305,7 +305,7 @@ def vpn_gateway(stem, subnet_id, depends_on=None):
         location = location,
         public_ip_allocation_method = 'Dynamic',
         tags = tags,
-        opts = ResourceOptions(parent=self),
+        opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
     vpn_gw = network.VirtualNetworkGateway(f'{stem}-vpn-gw',
         virtual_network_gateway_name = f'{stem}-vpn-gw-{suffix}',

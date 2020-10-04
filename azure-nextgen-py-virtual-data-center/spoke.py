@@ -63,7 +63,7 @@ class Spoke(ComponentResource):
             peer = name,
             remote_virtual_network_id = spoke.id,
             allow_gateway_transit = True,
-            depends_on=[props.hub.er_gw, props.hub.vpn_gw], # avoid contention
+            depends_on=[spoke, props.hub.er_gw, props.hub.vpn_gw],
         )
 
         # VNet Peering from spoke to the hub
@@ -74,7 +74,7 @@ class Spoke(ComponentResource):
             remote_virtual_network_id = props.hub.id,
             allow_forwarded_traffic = True,
             use_remote_gateways = True, # requires at least one gateway
-            depends_on=[props.hub.er_gw, props.hub.vpn_gw],
+            depends_on=[spoke, props.hub.er_gw, props.hub.vpn_gw],
         )
 
         # add routes to spokes in peered stack
@@ -94,14 +94,14 @@ class Spoke(ComponentResource):
                 stem = name,
                 virtual_network_name = spoke.name,
                 address_prefix = str(abs_nw),
-                depends_on = [hub_spoke, spoke_hub], # avoid contention
+                depends_on = [spoke, hub_spoke, spoke_hub],
             )
 
         # Route Table only to be associated with ordinary spoke subnets
         spoke_rt = vdc.route_table(
             stem = f'{name}',
             disable_bgp_route_propagation = True,
-            depends_on = [hub_spoke, spoke_hub], # avoid contention
+            depends_on = [spoke, hub_spoke, spoke_hub],
         )
 
         # VNet Peering may not be specified as next_hop_type, so a separate
@@ -135,7 +135,7 @@ class Spoke(ComponentResource):
                 virtual_network_name = spoke.name,
                 address_prefix = str(next_sn),
                 route_table_id = spoke_rt.id,
-                depends_on = [spoke_rt], # avoid contention
+                depends_on = [spoke, spoke_rt],
             )
 
         # assign properties to spoke including from child resources
