@@ -7,6 +7,7 @@ from pulumi_azure_nextgen.compute import latest as compute
 # Variables that may need to be injected before calling functions:
 # vdc.location = props.location
 # vdc.resource_group_name = props.resource_group_name
+# vdc.s = props.separator
 # vdc.self = self
 # vdc.suffix = props.suffix
 # vdc.tags = props.tags
