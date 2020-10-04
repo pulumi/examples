@@ -122,7 +122,7 @@ class Spoke(ComponentResource):
                 stem = name,
                 virtual_network_name = spoke.name,
                 address_prefix = str(abs_nw),
-                depends_on = [spoke],
+                depends_on = [hub_spoke, spoke_hub, spoke_rt],
             )
 
         # add route from firewall to corresponding spoke in peered stack

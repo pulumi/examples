@@ -73,6 +73,8 @@ class Hub(ComponentResource):
         dmz_ar = str(dmz_nw)
         gws_ar = str(gws_nw)
 
+        s = props.separator
+
         # Azure Virtual Network to which spokes will be peered
         # separate address spaces to simplify custom routing
         hub = vdc.virtual_network(name, [
@@ -80,8 +82,6 @@ class Hub(ComponentResource):
                 props.hub_address_space,
             ],
         )
-
-        s = props.separator
 
         # AzureFirewallManagementSubnet and Route Table
         # https://docs.microsoft.com/en-us/azure/firewall/forced-tunneling
@@ -281,7 +281,7 @@ class Hub(ComponentResource):
                 stem = name,
                 virtual_network_name = hub.name,
                 address_prefix = str(abs_nw),
-                depends_on = [hub],
+                depends_on = [hub_er_gw, hub_vpn_gw],
             )
 
         # VNet Peering between stacks using StackReference (optional)
