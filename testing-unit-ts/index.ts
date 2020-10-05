@@ -10,10 +10,19 @@ export const group = new aws.ec2.SecurityGroup("web-secgrp", {
     ],
 });
 
+const amiId = aws.getAmi({
+    mostRecent: true,
+    owners: ["099720109477"],
+    filters: [{
+        name: "name",
+        values: ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"],
+    }],
+}).then(ami => ami.id);
+
 export const server = new aws.ec2.Instance("web-server-www", {
     instanceType: "t2.micro",
-    securityGroups: [ group.name ], // reference the group object above
-    ami: "ami-c55673a0",            // AMI for us-east-2 (Ohio),
+    vpcSecurityGroupIds: [ group.id ], // reference the group object above
+    ami: amiId,
     // comment to fail a test:
     tags: { Name: "www-server" },   // name tag
     // uncomment to fail a test:

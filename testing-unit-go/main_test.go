@@ -13,12 +13,22 @@ import (
 type mocks int
 
 // Create the mock.
-func (mocks) NewResource(typeToken, name string, inputs resource.PropertyMap, provider, id string) (string, resource.PropertyMap, error) {
-	return name + "_id", inputs, nil
+func (mocks) NewResource(token, name string, inputs resource.PropertyMap, provider, id string) (string, resource.PropertyMap, error) {
+	outputs := inputs.Mappable()
+	if token == "aws:ec2/instance:Instance" {
+		outputs["publicIp"] = "203.0.113.12"
+		outputs["publicDns"] = "ec2-203-0-113-12.compute-1.amazonaws.com"
+	}
+	return name + "_id", resource.NewPropertyMapFromMap(outputs), nil
 }
 
 func (mocks) Call(token string, args resource.PropertyMap, provider string) (resource.PropertyMap, error) {
-	return args, nil
+	outputs := map[string]interface{}{}
+	if token == "aws:index/getAmi:getAmi" {
+		outputs["architecture"] = "x86_64"
+		outputs["id"] = "ami-0eb1f3cdeeb8eed2a"
+	}
+	return resource.NewPropertyMapFromMap(outputs), nil
 }
 
 // Applying unit tests.
@@ -33,7 +43,7 @@ func TestInfrastructure(t *testing.T) {
 		// Test if the service has tags and a name tag.
 		pulumi.All(infra.server.URN(), infra.server.Tags).ApplyT(func(all []interface{}) error {
 			urn := all[0].(pulumi.URN)
-			tags := all[1].(map[string]interface{})
+			tags := all[1].(map[string]string)
 
 			assert.Containsf(t, tags, "Name", "missing a Name tag on server %v", urn)
 			wg.Done()

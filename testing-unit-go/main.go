@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws"
 	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/ec2"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
@@ -32,14 +33,29 @@ func createInfrastructure(ctx *pulumi.Context) (*infrastructure, error) {
 		return nil, err
 	}
 
+	mostRecent := true
+	ami, err := aws.GetAmi(ctx, &aws.GetAmiArgs{
+		Filters: []aws.GetAmiFilter{
+			{
+				Name:   "name",
+				Values: []string{"ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"},
+			},
+		},
+		Owners:     []string{"137112412989"},
+		MostRecent: &mostRecent,
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	const userData = `#!/bin/bash echo "Hello, World!" > index.html nohup python -m SimpleHTTPServer 80 &`
 
 	server, err := ec2.NewInstance(ctx, "web-server-www", &ec2.InstanceArgs{
-		InstanceType:   pulumi.String("t2-micro"),
-		SecurityGroups: pulumi.StringArray{group.ID()}, // reference the group object above
-		Ami:            pulumi.String("ami-c55673a0"),  // AMI for us-east-2 (Ohio)
+		InstanceType:        pulumi.String("t2-micro"),
+		VpcSecurityGroupIds: pulumi.StringArray{group.ID()}, // reference the group object above
+		Ami:                 pulumi.String(ami.Id),
 		// Comment out to fail a test:
-		Tags: pulumi.Map{"Name": pulumi.String("webserver")},
+		Tags: pulumi.StringMap{"Name": pulumi.String("webserver")},
 		// Uncomment to fail a test:
 		//UserData:       pulumi.String(userData),      // start a simple web server
 	})

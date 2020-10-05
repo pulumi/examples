@@ -1,14 +1,47 @@
 // Copyright 2016-2020, Pulumi Corporation
 
-using System;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
-using Moq;
 using Pulumi;
 using Pulumi.Testing;
 
 namespace UnitTesting
 {
+    class Mocks : IMocks
+    {
+        public Task<(string id, object state)> NewResourceAsync(string type, string name, ImmutableDictionary<string, object> inputs, string? provider, string? id)
+        {
+            var outputs = ImmutableDictionary.CreateBuilder<string, object>();
+            
+            // Forward all input parameters as resource outputs, so that we could test them.
+            outputs.AddRange(inputs);
+            
+            if (type == "aws:ec2/instance:Instance")
+            {
+                outputs.Add("publicIp", "203.0.113.12");
+                outputs.Add("publicDns", "ec2-203-0-113-12.compute-1.amazonaws.com");
+            }
+
+            // Default the resource ID to `{name}_id`.
+            // We could also format it as `/subscription/abc/resourceGroups/xyz/...` if that was important for tests.
+            id ??= $"{name}_id";
+            return Task.FromResult((id, (object)outputs));
+        }
+
+        public Task<object> CallAsync(string token, ImmutableDictionary<string, object> inputs, string? provider)
+        {
+            var outputs = ImmutableDictionary.CreateBuilder<string, object>();
+
+            if (token == "aws:index/getAmi:getAmi")
+            {
+                outputs.Add("architecture", "x86_64");
+                outputs.Add("id", "ami-0eb1f3cdeeb8eed2a");
+            }
+
+            return Task.FromResult((object)outputs);
+        }
+    }
+
     /// <summary>
     /// Helper methods to streamlines unit testing experience.
     /// </summary>
@@ -19,13 +52,7 @@ namespace UnitTesting
         /// </summary>
         public static Task<ImmutableArray<Resource>> RunAsync<T>() where T : Stack, new()
         {
-            var mocks = new Mock<IMocks>();
-            mocks.Setup(m => m.NewResourceAsync(It.IsAny<string>(), It.IsAny<string>(),
-                    It.IsAny<ImmutableDictionary<string, object>>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync((string type, string name, ImmutableDictionary<string, object> inputs, string? provider, string? id) => (name + "_id", inputs));
-            mocks.Setup(m => m.CallAsync(It.IsAny<string>(), It.IsAny<ImmutableDictionary<string, object>>(), It.IsAny<string>()))
-                .ReturnsAsync((string token, ImmutableDictionary<string, object> args, string? provider) => args);
-            return Deployment.TestAsync<T>(mocks.Object, new TestOptions { IsPreview = false });
+            return Deployment.TestAsync<T>(new Mocks(), new TestOptions { IsPreview = false });
         }
 
         /// <summary>
