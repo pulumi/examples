@@ -2,9 +2,21 @@ import unittest
 import pulumi
 
 class MyMocks(pulumi.runtime.Mocks):
-    def new_resource(self, type_, name, inputs, provider, id_):
-        return [name + '_id', inputs]
+    def new_resource(self, token, name, inputs, provider, id_):
+        outputs = inputs
+        if token == "aws:ec2/instance:Instance":
+            outputs = {
+                **inputs,
+                "publicIp": "203.0.113.12",
+                "publicDns": "ec2-203-0-113-12.compute-1.amazonaws.com",
+            }
+        return [name + '_id', outputs]
     def call(self, token, args, provider):
+        if token == "aws:index/getAmi:getAmi":
+            return {
+                "architecture": "x86_64",
+                "id": "ami-0eb1f3cdeeb8eed2a",
+            }
         return {}
 
 pulumi.runtime.set_mocks(MyMocks())
