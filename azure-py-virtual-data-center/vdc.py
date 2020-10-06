@@ -14,9 +14,9 @@ def bastion_host(stem, virtual_network_name, address_prefix, depends_on=None):
         virtual_network_name = virtual_network_name,
         address_prefixes = [address_prefix],
         opts = ResourceOptions(
-            parent=self,
-            delete_before_replace=True,
-            depends_on=depends_on,
+            parent = self,
+            delete_before_replace = True,
+            depends_on = depends_on,
         ),
     )
     ab_pip = network.PublicIp(f'{stem}-ab-pip-',
@@ -57,12 +57,12 @@ def expressroute_gateway(stem, subnet_id, depends_on=None):
         )],
         tags = tags,
         opts = ResourceOptions(
-            parent=self,
-            depends_on=depends_on,
-            custom_timeouts=CustomTimeouts(
-                create='1h',
-                update='1h',
-                delete='1h',
+            parent = self,
+            depends_on = depends_on,
+            custom_timeouts = CustomTimeouts(
+                create = '1h',
+                update = '1h',
+                delete = '1h',
             ),
         ),
     )
@@ -94,19 +94,19 @@ def firewall(stem, fw_sn_id, fwm_sn_id, private_ranges, depends_on=None):
             public_ip_address_id = fw_pip.id,
             subnet_id = fw_sn_id,
         )],
-        management_ip_configuration = {
-            'name': f'{stem}-fwm-ipconf',
-            'publicIpAddressId': fwm_pip.id,
-            'subnet_id': fwm_sn_id,
-        },
+        management_ip_configuration = network.FirewallIpConfigurationArgs(
+            name = f'{stem}-fwm-ipconf',
+            public_ip_address_id = fwm_pip.id,
+            subnet_id = fwm_sn_id,
+        ),
         tags = tags,
         opts = ResourceOptions(
-            parent=self,
-            depends_on=depends_on,
-            custom_timeouts=CustomTimeouts(
-                create='1h',
-                update='1h',
-                delete='1h',
+            parent = self,
+            depends_on = depends_on,
+            custom_timeouts = CustomTimeouts(
+                create = '1h',
+                update = '1h',
+                delete = '1h',
             ),
         ),
     )
@@ -170,7 +170,7 @@ def subnet(
         virtual_network_name,
         address_prefix,
         route_table_id,
-        depends_on=None,
+        depends_on = None,
     ):
     sn = network.Subnet(f'{stem}-sn-',
         resource_group_name = resource_group_name,
@@ -191,7 +191,7 @@ def subnet_special(
         virtual_network_name,
         address_prefix,
         route_table_id,
-        depends_on=None,
+        depends_on = None,
     ):
     sn = network.Subnet(f'{stem}-sn',
         name = name,
@@ -199,9 +199,9 @@ def subnet_special(
         virtual_network_name = virtual_network_name,
         address_prefixes = [address_prefix],
         opts = ResourceOptions(
-            parent=self,
-            delete_before_replace=True,
-            depends_on=depends_on,
+            parent = self,
+            delete_before_replace = True,
+            depends_on = depends_on,
         ),
     )
     rta = network.SubnetRouteTableAssociation(f'{stem}-sn-rta',
@@ -225,10 +225,10 @@ def vnet_peering(
         virtual_network_name,
         peer,
         remote_virtual_network_id,
-        allow_forwarded_traffic=None,
-        allow_gateway_transit=None,
-        use_remote_gateways=None,
-        depends_on=None,
+        allow_forwarded_traffic = None,
+        allow_gateway_transit = None,
+        use_remote_gateways = None,
+        depends_on = None,
     ):
         vnp = network.VirtualNetworkPeering(f'{stem}-{peer}-vnp-',
             resource_group_name = resource_group_name,
@@ -256,18 +256,18 @@ def vpn_gateway(stem, subnet_id, depends_on=None):
         vpn_type = 'RouteBased',
         enable_bgp = True,
         ip_configurations = [network.VirtualNetworkGatewayIpConfigurationArgs(
-            name=f'{stem}-vpn-gw-ipconf',
-            public_ip_address_id=vpn_gw_pip.id,
-            subnet_id=subnet_id,
+            name = f'{stem}-vpn-gw-ipconf',
+            public_ip_address_id = vpn_gw_pip.id,
+            subnet_id = subnet_id,
         )],
         tags = tags,
         opts = ResourceOptions(
-            parent=self,
-            depends_on=depends_on,
-            custom_timeouts=CustomTimeouts(
-                create='1h',
-                update='1h',
-                delete='1h',
+            parent = self,
+            depends_on = depends_on,
+            custom_timeouts = CustomTimeouts(
+                create = '1h',
+                update = '1h',
+                delete = '1h',
             ),
         ),
     )
