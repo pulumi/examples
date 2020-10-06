@@ -2,7 +2,6 @@ from pulumi import ResourceOptions
 from pulumi.resource import CustomTimeouts
 from pulumi_azure_nextgen.resources import latest as resources
 from pulumi_azure_nextgen.network import latest as network
-from pulumi_azure_nextgen.compute import latest as compute
 
 # Variables that may need to be injected before calling functions:
 # vdc.location = props.location
