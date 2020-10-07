@@ -21,7 +21,7 @@ This example uses `pulumi.ComponentResource` as described [here](https://www.pul
 # Running the Example
 
 After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory and run the following commands.
-   
+
 1. (recommended) Create a Python virtualenv, activate it, and install the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program:
 
     ```bash
@@ -168,9 +168,9 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     Duration: 41m34s
 
     ```
-    
+
     Feel free to modify your program, and then run `pulumi up` again. Pulumi automatically detects differences and makes the minimal changes necessary to achieved the desired state. If any changes to resources are made outside of Pulumi, you should first do a `pulumi refresh` so that Pulumi can discover the actual situation, and then `pulumi up` to return to desired state.
-   
+
     Note that because most resources are [auto-named](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming), the trailing dashes that you see above will actually be followed by random suffixes that appear in the Outputs and in Azure.
 
 1. Create another new stack intended for Disaster Recovery (following the example):
@@ -178,7 +178,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi stack init dr
     ```
-    
+
     This will also appear within your Pulumi organization under the `azure-py-vdc` project (as specified in `Pulumi.yaml`).
 
 1. Set the configuration variables for this stack which will be stored in a new `Pulumi.dr.yaml` file (change the values below to suit yourself):
@@ -218,6 +218,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set org         organization
     $ pulumi config set project     project
     ```
+
     Note: you may specify another organization and/or project (corresponding hub and spoke names should be the same). It isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program.
 
     If you later destroy a stack, you need to remove the corresponding `peer` variable in the other stack and run `pulumi up`. If you want to tear down the peerings, you should remove the `peer` variables in both stacks and run `pulumi up`:

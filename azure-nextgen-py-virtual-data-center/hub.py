@@ -73,6 +73,7 @@ class Hub(ComponentResource):
         dmz_ar = str(dmz_nw)
         gws_ar = str(gws_nw)
 
+        # set the separator to be used in resource names
         s = props.separator
 
         # Azure Virtual Network to which spokes will be peered
@@ -314,7 +315,7 @@ class Hub(ComponentResource):
                     address_prefix = route[2],
                     next_hop_ip_address = peer_fw_ip,
                 )
-        
+
         # assign properties to hub including from child resources
         self.address_space = props.hub_address_space # used for routes to the hub
         self.dmz_ar = dmz_ar # used for routes to the hub

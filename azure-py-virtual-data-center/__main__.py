@@ -20,7 +20,7 @@ hub = Hub('hub', # stem of child resource names (<4 chars)
         reference = config.reference,
         resource_group_name = resource_group_name,
         stack = config.stack,
-        subnets = [ # extra columns for future NSGs
+        subnets = [ # extra columns for future ASGs
             ('domain', 'any', 'any'),
             ('files', 'any', 'none'),
         ],
@@ -38,7 +38,7 @@ spoke1 = Spoke('s01', # stem of child resource names (<6 chars)
         reference = config.reference,
         resource_group_name = resource_group_name,
         spoke_address_space = str(next(config.stack_sn)),
-        subnets = [ # extra columns for future NSGs
+        subnets = [ # extra columns for future ASGs
             ('web', 'any', 'app'),
             ('app', 'web', 'db'),
             ('db', 'app', 'none'),
@@ -56,7 +56,7 @@ spoke2 = Spoke('s02', # stem of child resource names (<6 chars)
         reference = config.reference,
         resource_group_name = resource_group_name,
         spoke_address_space = str(next(config.stack_sn)),
-        subnets = [ # extra columns for future NSGs
+        subnets = [ # extra columns for future ASGs
             ('web', 'any', 'app'),
             ('app', 'web', 'db'),
             ('db', 'app', 'none'),

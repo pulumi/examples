@@ -19,8 +19,8 @@ template:
       description: Address space in the hub for connectivity and shared services subnets
       default: 10.100.0.0/16
     location:
-        description: Azure region to deploy to (e.g. `australiaeast` or `australiasoutheast`)
-        default: australiaeast
+      description: Azure region to deploy to (e.g. `australiaeast` or `australiasoutheast`)
+      default: australiaeast
     org:
       description: Pulumi organization in which this project resides (optional)
     peer:

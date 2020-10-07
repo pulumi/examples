@@ -81,6 +81,6 @@ if sup_diff <= 0:
 stack_sn = super_nw.subnets(prefixlen_diff=sup_diff)
 hub_as = next(stack_sn)
 while hub_as < hub_nw:
-      hub_as = next(stack_sn)
+    hub_as = next(stack_sn)
 if hub_address_space != str(hub_as):
     raise ConfigError(['hub_address_space'], 'check assumptions')

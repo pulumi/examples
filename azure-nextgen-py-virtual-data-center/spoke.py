@@ -56,6 +56,7 @@ class Spoke(ComponentResource):
         first_sn = next_sn.subnets(new_prefix=27) # subdivide if possible
         abs_nw = next(first_sn) # AzureBastionSubnet /27 or greater
 
+        # set the separator to be used in resource names
         s = props.separator
 
         # Azure Virtual Network to be peered to the hub

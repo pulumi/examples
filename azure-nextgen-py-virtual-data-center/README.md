@@ -35,7 +35,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi stack init prod
     ```
-    
+
     This will appear within your Pulumi organization under the `azure-py-vdc` project (as specified in `Pulumi.yaml`).
 
 1. Set the configuration variables for this stack to suit yourself, following guidance in `Pulumi.yaml`. This will create a new `Pulumi.prod.yaml` file (named after the stack) in which to store them:
@@ -53,7 +53,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set separator                " "
     $ pulumi config set suffix                   "ae"
     ```
-    
+
     Note that it is advisable to add Azure Bastion on the second pass to avoid contention.
 
 1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
@@ -156,9 +156,9 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
     Duration: 34m34s
     ```
-    
+
     Feel free to modify your program, and then run `pulumi up` again. Pulumi automatically detects differences and makes the minimal changes necessary to achieved the desired state. If any changes to resources are made outside of Pulumi, you should first do a `pulumi refresh` so that Pulumi can discover the actual situation, and then `pulumi up` to return to desired state.
-   
+
     Note that auto-naming is not yet implemented in azure-nextgen. Instead the same suffix is appended to each physical name so that multiple stacks may be created without conflict.
 
 1. Create another new stack intended for Disaster Recovery (following the example):
@@ -166,7 +166,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi stack init dr
     ```
-    
+
     This will also appear within your Pulumi organization under the `azure-py-vdc` project (as specified in `Pulumi.yaml`).
 
 1. Set the configuration variables for this stack which will be stored in a new `Pulumi.dr.yaml` file (change the values below to suit yourself):
@@ -207,6 +207,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set org         organization
     $ pulumi config set project     project
     ```
+
     Note: you may specify another organization and/or project (corresponding hub and spoke names should be the same). It isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program.
 
     If you later destroy a stack, you need to remove the corresponding `peer` variable in the other stack and run `pulumi up`. If you want to tear down the peerings, you should remove the `peer` variables in both stacks and run `pulumi up`:

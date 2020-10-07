@@ -23,7 +23,7 @@ template:
     azure-py-vdc:peer:
       description: Another stack in same organization and project to peer hubs with (optional)
     azure-py-vdc:project:
-        description: Another project defining a stack with the same hub and spoke names to peer with (optional)  
+      description: Another project defining a stack with the same hub and spoke names to peer with (optional)  
     azure:environment:
       description: Azure environment to use (`public`, `usgovernment`, `german`, `china`)
       default: public
