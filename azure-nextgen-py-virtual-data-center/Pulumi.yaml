@@ -1,4 +1,4 @@
-name: azure-py-vdc
+name: azureng-py-vdc
 runtime:
   name: python
   options:
@@ -6,27 +6,29 @@ runtime:
 description: A minimal Azure Virtual Data Center described in Python
 template:
   config:
-    azure-py-vdc:azure_bastion:
+    azure_bastion:
       description: Azure Bastion provides secure RDP and SSH connectivity to VMs (optional)
       default: false
-    azure-py-vdc:firewall_address_space:
+    firewall_address_space:
       description: Address space in the hub for Azure Firewall and DMZ
       default: 192.168.100.0/24
-    azure-py-vdc:forced_tunnel:
+    forced_tunnel:
       description: Route all Internet-bound traffic to this designated next hop IP address (optional)
       default: 10.0.100.1
-    azure-py-vdc:hub_address_space:
+    hub_address_space:
       description: Address space in the hub for connectivity and shared services subnets
       default: 10.100.0.0/16
-    azure-py-vdc:org:
-      description: Pulumi organization in which this project resides (optional)
-    azure-py-vdc:peer:
-      description: Another stack in same organization and project to peer hubs with (optional)
-    azure-py-vdc:project:
-      description: Another project defining a stack with the same hub and spoke names to peer with (optional)  
-    azure:environment:
-      description: Azure environment to use (`public`, `usgovernment`, `german`, `china`)
-      default: public
-    azure:location:
-      description: Azure region to use (e.g. `australiaeast` or `australiasoutheast`)
+    location:
+      description: Azure region to deploy to (e.g. `australiaeast` or `australiasoutheast`)
       default: australiaeast
+    org:
+      description: Pulumi organization in which this project resides (optional)
+    peer:
+      description: Another stack in same organization and project to peer hubs with (optional)
+    project:
+      description: Another project defining a stack with the same hub and spoke names to peer with (optional)
+    separator:
+      description: A dash (-) breaks up names by default; specify valid character or ' ' for none (optional)
+    suffix:
+      description: A short string appended to each name to allow multiple stacks (optional)
+      default: ae

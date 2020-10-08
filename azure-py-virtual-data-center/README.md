@@ -21,7 +21,7 @@ This example uses `pulumi.ComponentResource` as described [here](https://www.pul
 # Running the Example
 
 After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory and run the following commands.
-   
+
 1. (recommended) Create a Python virtualenv, activate it, and install the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program:
 
     ```bash
@@ -42,16 +42,18 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
     Required:
     ```bash
-    $ pulumi config set azure:environment           public
-    $ pulumi config set azure:location              australiaeast
-    $ pulumi config set firewall_address_space      192.168.100.0/24
-    $ pulumi config set hub_address_space           10.100.0.0/16
+    $ pulumi config set azure:environment        public
+    $ pulumi config set azure:location           australiaeast
+    $ pulumi config set firewall_address_space   192.168.100.0/24
+    $ pulumi config set hub_address_space        10.100.0.0/16
     ```
     Optional:
     ```bash
-    $ pulumi config set azure_bastion               "true"
-    $ pulumi config set forced_tunnel               "10.0.100.1"
+    $ pulumi config set azure_bastion            "true"
+    $ pulumi config set forced_tunnel            "10.0.100.1"
     ```
+    
+    Note that it is advisable to add Azure Bastion on the second pass to avoid contention.
 
 1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
 
@@ -62,97 +64,113 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 1. After a while, your Production stack will be ready.
 
     ```
-    Updating (prod):
+    Updating (prod)
+
+    View Live: https://app.pulumi.com/organization/azure-py-vdc/prod/updates/1
+
          Type                                             Name               Status
      +   pulumi:pulumi:Stack                              azure-py-vdc-prod  created
      +   ├─ vdc:network:Hub                               hub                created
      +   │  ├─ azure:network:VirtualNetwork               hub-vn-            created
-     +   │  ├─ azure:network:PublicIp                     hub-vpn-gw-pip-    created
-     +   │  ├─ azure:network:PublicIp                     hub-fw-pip-        created
-     +   │  ├─ azure:network:PublicIp                     hub-er-gw-pip-     created
-     +   │  ├─ azure:network:Subnet                       hub-gw-sn          created
-     +   │  ├─ azure:network:Subnet                       hub-dmz-sn         created
-     +   │  ├─ azure:network:Subnet                       hub-fw-sn          created
+     +   │  ├─ azure:network:RouteTable                   hub-fwm-rt-        created
+     +   │  ├─ azure:network:RouteTable                   hub-fw-rt-         created
+     +   │  ├─ azure:network:Route                        fwm-internet-r-    created
+     +   │  ├─ azure:network:Route                        fw-tunnel-r-       created
      +   │  ├─ azure:network:Subnet                       hub-fwm-sn         created
-     +   │  ├─ azure:network:VirtualNetworkGateway        hub-vpn-gw-        created
+     +   │  ├─ azure:network:Subnet                       hub-fw-sn          created
+     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-fwm-sn-rta     created
+     +   │  ├─ azure:network:PublicIp                     hub-fw-pip-        created
+     +   │  ├─ azure:network:PublicIp                     hub-fwm-pip-       created
+     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-fw-sn-rta      created
      +   │  ├─ azure:network:Firewall                     hub-fw-            created
-     +   │  ├─ azure:network:VirtualNetworkGateway        hub-er-gw-         created
-     +   │  ├─ azure:network:RouteTable                   hub-gw-rt-         created
      +   │  ├─ azure:network:RouteTable                   hub-dmz-rt-        created
+     +   │  ├─ azure:network:Route                        dmz-dg-r-          created
+     +   │  ├─ azure:network:Route                        dmz-dmz-r-         created
+     +   │  ├─ azure:network:Route                        dmz-hub-r-         created
+     +   │  ├─ azure:network:Subnet                       hub-dmz-sn         created
+     +   │  ├─ azure:network:RouteTable                   hub-gw-rt-         created
+     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-dmz-sn-rta     created
+     +   │  ├─ azure:network:Route                        gw-gw-r-           created
+     +   │  ├─ azure:network:Route                        gw-dmz-r-          created
+     +   │  ├─ azure:network:Route                        gw-hub-r-          created
+     +   │  ├─ azure:network:Subnet                       hub-gw-sn          created
+     +   │  ├─ azure:network:PublicIp                     hub-vpn-gw-pip-    created
+     +   │  ├─ azure:network:PublicIp                     hub-er-gw-pip-     created
+     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-gw-sn-rta      created
+     +   │  ├─ azure:network:VirtualNetworkGateway        hub-vpn-gw-        created
+     +   │  ├─ azure:network:VirtualNetworkGateway        hub-er-gw-         created
      +   │  ├─ azure:network:RouteTable                   hub-ss-rt-         created
      +   │  ├─ azure:network:Route                        ss-dg-r-           created
      +   │  ├─ azure:network:Route                        ss-dmz-r-          created
      +   │  ├─ azure:network:Route                        ss-gw-r-           created
      +   │  ├─ azure:network:Subnet                       hub-domain-sn-     created
      +   │  ├─ azure:network:Subnet                       hub-files-sn-      created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-dmz-sn-rta     created
-     +   │  ├─ azure:network:Route                        dmz-dg-r-          created
-     +   │  ├─ azure:network:Route                        dmz-dmz-r-         created
-     +   │  ├─ azure:network:Route                        dmz-hub-r-         created
-     +   │  ├─ azure:network:Route                        gw-gw-r-           created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-gw-sn-rta      created
-     +   │  ├─ azure:network:Route                        gw-dmz-r-          created
-     +   │  ├─ azure:network:Route                        gw-hub-r-          created
+     +   │  ├─ azure:network:PublicIp                     hub-ab-pip-        created
+     +   │  ├─ azure:network:Subnet                       hub-ab-sn          created
+     +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-files-sn-rta   created
      +   │  ├─ azure:network:SubnetRouteTableAssociation  hub-domain-sn-rta  created
-     +   │  └─ azure:network:SubnetRouteTableAssociation  hub-files-sn-rta   created
+     +   │  └─ azure:compute:BastionHost                  hub-ab-            created
      +   ├─ vdc:network:Spoke                             s01                created
      +   │  ├─ azure:network:VirtualNetwork               s01-vn-            created
-     +   │  ├─ azure:network:VirtualNetworkPeering        s01-hub-vnp-       created
-     +   │  ├─ azure:network:VirtualNetworkPeering        hub-s01-vnp-       created
-     +   │  ├─ azure:network:Route                        ss-s01-r-          created
-     +   │  ├─ azure:network:Route                        dmz-s01-r-         created
-     +   │  ├─ azure:network:Route                        gw-s01-r-          created
      +   │  ├─ azure:network:RouteTable                   s01-rt-            created
+     +   │  ├─ azure:network:VirtualNetworkPeering        hub-s01-vnp-       created
      +   │  ├─ azure:network:Route                        s01-dg-r-          created
-     +   │  ├─ azure:network:Route                        s01-dmz-r-         created
-     +   │  ├─ azure:network:Subnet                       s01-web-sn-        created
      +   │  ├─ azure:network:Route                        s01-hub-r-         created
+     +   │  ├─ azure:network:Route                        s01-dmz-r-         created
+     +   │  ├─ azure:network:Route                        dmz-s01-r-         created
+     +   ├─ vdc:network:Spoke                             s01                created
+     +   │  ├─ azure:network:Route                        ss-s01-r-          created
+     +   ├─ vdc:network:Spoke                             s01                created
+     +   ├─ vdc:network:Spoke                             s01                created
+     +   │  ├─ azure:network:Subnet                       s01-web-sn-        created
      +   │  ├─ azure:network:Subnet                       s01-db-sn-         created
+     +   │  ├─ azure:network:Subnet                       s01-ab-sn          created
      +   │  ├─ azure:network:Subnet                       s01-app-sn-        created
      +   │  ├─ azure:network:SubnetRouteTableAssociation  s01-web-sn-rta     created
      +   │  ├─ azure:network:SubnetRouteTableAssociation  s01-db-sn-rta      created
+     +   │  ├─ azure:compute:BastionHost                  s01-ab-            created
      +   │  └─ azure:network:SubnetRouteTableAssociation  s01-app-sn-rta     created
      +   ├─ vdc:network:Spoke                             s02                created
      +   │  ├─ azure:network:VirtualNetwork               s02-vn-            created
-     +   │  ├─ azure:network:VirtualNetworkPeering        hub-s02-vnp-       created
-     +   │  ├─ azure:network:VirtualNetworkPeering        s02-hub-vnp-       created
-     +   │  ├─ azure:network:Route                        ss-s02-r-          created
-     +   │  ├─ azure:network:Route                        dmz-s02-r-         created
-     +   │  ├─ azure:network:Route                        gw-s02-r-          created
      +   │  ├─ azure:network:RouteTable                   s02-rt-            created
+     +   │  ├─ azure:network:VirtualNetworkPeering        hub-s02-vnp-       created
      +   │  ├─ azure:network:Route                        s02-dg-r-          created
      +   │  ├─ azure:network:Route                        s02-dmz-r-         created
      +   │  ├─ azure:network:Route                        s02-hub-r-         created
-     +   │  ├─ azure:network:Subnet                       s02-app-sn-        created
+     +   │  ├─ azure:network:Route                        dmz-s02-r-         created
+     +   │  ├─ azure:network:Route                        gw-s02-r-          created
+     +   │  ├─ azure:network:Route                        ss-s02-r-          created
+     +   │  ├─ azure:network:VirtualNetworkPeering        s02-hub-vnp-       created
+     +   │  ├─ azure:network:PublicIp                     s02-ab-pip-        created
      +   │  ├─ azure:network:Subnet                       s02-web-sn-        created
+     +   │  ├─ azure:network:Subnet                       s02-app-sn-        created
+     +   │  ├─ azure:network:Subnet                       s02-ab-sn          created
      +   │  ├─ azure:network:Subnet                       s02-db-sn-         created
-     +   │  ├─ azure:network:SubnetRouteTableAssociation  s02-app-sn-rta     created
      +   │  ├─ azure:network:SubnetRouteTableAssociation  s02-web-sn-rta     created
+     +   │  ├─ azure:network:SubnetRouteTableAssociation  s02-app-sn-rta     created
+     +   │  ├─ azure:compute:BastionHost                  s02-ab-            created
      +   │  └─ azure:network:SubnetRouteTableAssociation  s02-db-sn-rta      created
      +   └─ azure:core:ResourceGroup                      prod-vdc-rg-       created
 
     Outputs:
-        dmz_ar  : "192.168.100.128/25"
-        fw_ip   : "192.168.100.4"
-        hub_as  : "10.100.0.0/16"
-        hub_id  : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-79a57e4b/providers/Microsoft.Network/virtualNetworks/hub-vn-46689586"
-        hub_name: "hub-vn-46689586"
-        s01_id  : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-79a57e4b/providers/Microsoft.Network/virtualNetworks/s01-vn-c2d9fe6f"
-        s01_name: "s01-vn-c2d9fe6f"
-        s02_id  : "/subscriptions/subscription/resourceGroups/prod-vdc-rg-79a57e4b/providers/Microsoft.Network/virtualNetworks/s02-vn-61f44736"
-        s02_name: "s02-vn-61f44736"
+        dmz_ar: "192.168.100.128/25"
+        fw_ip : "192.168.100.4"
+        hub_as: "10.100.0.0/16"
+        hub_id: "/subscriptions/subscription/resourceGroups/prod-vdc-rg-7652071b/providers/Microsoft.Network/virtualNetworks/hub-vn-4805c98e"
+        s01_as: "10.101.0.0/16"
+        s01_id: "/subscriptions/subscription/resourceGroups/prod-vdc-rg-7652071b/providers/Microsoft.Network/virtualNetworks/s01-vn-99afe43a"
+        s02_as: "10.102.0.0/16"
+        s02_id: "/subscriptions/subscription/resourceGroups/prod-vdc-rg-7652071b/providers/Microsoft.Network/virtualNetworks/s02-vn-ebd4ec2e"
 
     Resources:
-        + 66 created
+        + 82 created
 
-    Duration: 31m27s
-    
-    Permalink: https://app.pulumi.com/organization/azure-py-vdc/prod/updates/1
+    Duration: 41m34s
 
     ```
-    
+
     Feel free to modify your program, and then run `pulumi up` again. Pulumi automatically detects differences and makes the minimal changes necessary to achieved the desired state. If any changes to resources are made outside of Pulumi, you should first do a `pulumi refresh` so that Pulumi can discover the actual situation, and then `pulumi up` to return to desired state.
-   
+
     Note that because most resources are [auto-named](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming), the trailing dashes that you see above will actually be followed by random suffixes that appear in the Outputs and in Azure.
 
 1. Create another new stack intended for Disaster Recovery (following the example):
@@ -160,22 +178,22 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi stack init dr
     ```
-    
+
     This will also appear within your Pulumi organization under the `azure-py-vdc` project (as specified in `Pulumi.yaml`).
 
 1. Set the configuration variables for this stack which will be stored in a new `Pulumi.dr.yaml` file (change the values below to suit yourself):
 
     Required:
     ```bash
-    $ pulumi config set azure:environment           public
-    $ pulumi config set azure:location              australiasoutheast
-    $ pulumi config set firewall_address_space      192.168.200.0/24
-    $ pulumi config set hub_address_space           10.200.0.0/16
+    $ pulumi config set azure:environment        public
+    $ pulumi config set azure:location           australiasoutheast
+    $ pulumi config set firewall_address_space   192.168.200.0/24
+    $ pulumi config set hub_address_space        10.200.0.0/16
     ```
     Optional:
     ```bash
-    $ pulumi config set azure_bastion               "true"
-    $ pulumi config set forced_tunnel               "10.0.200.1"
+    $ pulumi config set azure_bastion            true
+    $ pulumi config set forced_tunnel            10.0.200.1
     ```
 
 1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
@@ -186,17 +204,22 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
 1. Once you have both Production and Disaster Recovery stacks (ideally in paired regions), you can connect their hubs using Global (between regions) VNet Peering:
 
+    Required:
     ```bash
     $ pulumi stack select prod
-    $ pulumi config set org <your Pulumi organization>
     $ pulumi config set peer dr
     $ pulumi up
     $ pulumi stack select dr
-    $ pulumi config set org <your Pulumi organization>
     $ pulumi config set peer prod
     $ pulumi up
     ```
-    Note: it isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program, which is why you need to set the `org` configuration variable for each stack that needs to peer with another stack.
+    Optional (for each stack):
+    ```bash
+    $ pulumi config set org         organization
+    $ pulumi config set project     project
+    ```
+
+    Note: you may specify another organization and/or project (corresponding hub and spoke names should be the same). It isn't yet [possible](https://github.com/pulumi/pulumi/issues/2800) to discover the Pulumi organization from within the program.
 
     If you later destroy a stack, you need to remove the corresponding `peer` variable in the other stack and run `pulumi up`. If you want to tear down the peerings, you should remove the `peer` variables in both stacks and run `pulumi up`:
 
