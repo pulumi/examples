@@ -19,6 +19,22 @@ class ConfigError(Error):
 # retrieve the stack configuration data
 config = Config()
 
+# retrieve the location
+location = config.get('location')
+if not location:
+    config.require('azure:location')
+# retrieve optional separator choice and suffix
+separator = config.get('separator')
+if not separator:
+    separator = '-'
+else:
+    separator = separator[0]
+if separator == ' ':
+    separator = ''
+suffix = config.get('suffix')
+if not suffix:
+    suffix = ''
+
 # set default tags to be applied to all taggable resources
 stack = get_stack()
 default_tags = {
@@ -40,9 +56,9 @@ project = config.get('project')
 if org and not project:
     project = get_project()
 if not org:
-    org = ""
+    org = ''
 if not project:
-    project = ""
+    project = ''
 if not peer:
     reference = None
 else:

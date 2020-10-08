@@ -18,12 +18,20 @@ template:
     azure-py-vdc:hub_address_space:
       description: Address space in the hub for connectivity and shared services subnets
       default: 10.100.0.0/16
+    azure-py-vdc:location:
+      description: Azure region to deploy to (e.g. `australiaeast` or `australiasoutheast`)
+      default: australiaeast
     azure-py-vdc:org:
       description: Pulumi organization in which this project resides (optional)
     azure-py-vdc:peer:
       description: Another stack in same organization and project to peer hubs with (optional)
     azure-py-vdc:project:
-      description: Another project defining a stack with the same hub and spoke names to peer with (optional)  
+      description: Another project defining a stack with the same hub and spoke names to peer with (optional)
+    azure-py-vdc:separator:
+      description: A dash (-) breaks up names by default; specify valid character or ' ' for none (optional)
+    azure-py-vdc:suffix:
+      description: A short string appended to each name to allow multiple stacks (optional)
+      default: ae
     azure:environment:
       description: Azure environment to use (`public`, `usgovernment`, `german`, `china`)
       default: public

@@ -42,8 +42,6 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
     Required:
     ```bash
-    $ pulumi config set azure:environment        public
-    $ pulumi config set azure:location           australiaeast
     $ pulumi config set firewall_address_space   192.168.100.0/24
     $ pulumi config set hub_address_space        10.100.0.0/16
     ```
@@ -51,9 +49,12 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi config set azure_bastion            "true"
     $ pulumi config set forced_tunnel            "10.0.100.1"
+    $ pulumi config set azure:environment        public
+    $ pulumi config set azure:location           australiaeast
+    $ pulumi config set location                 australiaeast
     ```
     
-    Note that it is advisable to add Azure Bastion on the second pass to avoid contention.
+    Note that location must be set in one form or another. It is advisable to enable Azure Bastion on a second pass to avoid contention.
 
 1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
 
@@ -185,8 +186,6 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
     Required:
     ```bash
-    $ pulumi config set azure:environment        public
-    $ pulumi config set azure:location           australiasoutheast
     $ pulumi config set firewall_address_space   192.168.200.0/24
     $ pulumi config set hub_address_space        10.200.0.0/16
     ```
@@ -194,7 +193,12 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi config set azure_bastion            true
     $ pulumi config set forced_tunnel            10.0.200.1
+    $ pulumi config set azure:environment        public
+    $ pulumi config set azure:location           australiasoutheast
+    $ pulumi config set location                 australiasoutheast
     ```
+
+    Note that location must be set in one form or another. It is advisable to enable Azure Bastion on a second pass to avoid contention.
 
 1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
 
