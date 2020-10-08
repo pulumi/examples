@@ -54,7 +54,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set suffix                   "ae"
     ```
 
-    Note that it is advisable to add Azure Bastion on the second pass to avoid contention.
+    Note that it is advisable to enable Azure Bastion on a second pass to avoid contention.
 
 1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
 
@@ -184,6 +184,8 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi config set separator                "_"    
     $ pulumi config set suffix                   "ase"
     ```
+
+    Note that it is advisable to enable Azure Bastion on a second pass to avoid contention.
 
 1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
 

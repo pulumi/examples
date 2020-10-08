@@ -20,6 +20,7 @@ class ConfigError(Error):
 config = Config()
 
 # retrieve the location
+# https://github.com/pulumi/pulumi-azure-nextgen/issues/6
 location = config.require('location')
 
 # retrieve optional separator choice and suffix

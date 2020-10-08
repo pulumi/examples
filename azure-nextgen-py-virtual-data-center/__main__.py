@@ -9,7 +9,6 @@ vdc.location = config.location
 vdc.s = config.separator
 vdc.suffix = config.suffix
 vdc.tags = config.default_tags
-# all resources will be created in configuration location
 resource_group_name = vdc.resource_group(config.stack)
 
 # single hub with gateways, firewall, DMZ, shared services, bastion (optional)
