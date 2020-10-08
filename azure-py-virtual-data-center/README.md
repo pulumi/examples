@@ -47,8 +47,8 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```
     Optional:
     ```bash
-    $ pulumi config set azure_bastion            "true"
-    $ pulumi config set forced_tunnel            "10.0.100.1"
+    $ pulumi config set azure_bastion            true
+    $ pulumi config set forced_tunnel            10.0.100.1
     $ pulumi config set azure:environment        public
     $ pulumi config set azure:location           australiaeast
     $ pulumi config set location                 australiaeast
@@ -167,7 +167,6 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
         + 82 created
 
     Duration: 41m34s
-
     ```
 
     Feel free to modify your program, and then run `pulumi up` again. Pulumi automatically detects differences and makes the minimal changes necessary to achieved the desired state. If any changes to resources are made outside of Pulumi, you should first do a `pulumi refresh` so that Pulumi can discover the actual situation, and then `pulumi up` to return to desired state.
