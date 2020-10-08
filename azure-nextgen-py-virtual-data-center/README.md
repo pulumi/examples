@@ -159,7 +159,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
     Feel free to modify your program, and then run `pulumi up` again. Pulumi automatically detects differences and makes the minimal changes necessary to achieved the desired state. If any changes to resources are made outside of Pulumi, you should first do a `pulumi refresh` so that Pulumi can discover the actual situation, and then `pulumi up` to return to desired state.
 
-    Note that auto-naming is not yet implemented in azure-nextgen. Instead the same suffix is appended to each physical name so that multiple stacks may be created without conflict.
+    Note that auto-naming is not yet implemented in azure-nextgen. Instead the same suffix may be appended to each physical name so that multiple stacks may be created without conflict.
 
 1. Create another new stack intended for Disaster Recovery (following the example):
 
