@@ -49,12 +49,14 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi config set azure_bastion            true
     $ pulumi config set forced_tunnel            10.0.100.1
+    $ pulumi config set location                 australiaeast
+    $ pulumi config set separator                ' '
+    $ pulumi config set suffix                   ae
     $ pulumi config set azure:environment        public
     $ pulumi config set azure:location           australiaeast
-    $ pulumi config set location                 australiaeast
     ```
     
-    Note that location must be set in one form or another. It is advisable to enable Azure Bastion on a second pass to avoid contention.
+    Note that it is advisable to enable Azure Bastion on a second pass to avoid contention. Location must be set one way or the another.
 
 1. Deploy the `prod` stack with the `pulumi up` command. This may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
 
@@ -192,12 +194,14 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi config set azure_bastion            true
     $ pulumi config set forced_tunnel            10.0.200.1
+    $ pulumi config set location                 australiasoutheast
+    $ pulumi config set separator                _    
+    $ pulumi config set suffix                   ase
     $ pulumi config set azure:environment        public
     $ pulumi config set azure:location           australiasoutheast
-    $ pulumi config set location                 australiasoutheast
     ```
 
-    Note that location must be set in one form or another. It is advisable to enable Azure Bastion on a second pass to avoid contention.
+    Note that it is advisable to enable Azure Bastion on a second pass to avoid contention. Location must be set one way or the another.
 
 1. Deploy the `dr` stack with the `pulumi up` command. Once again, this may take up to an hour to provision all the Azure resources specified, including gateways, firewall and bastion hosts:
 

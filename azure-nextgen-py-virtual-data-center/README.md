@@ -50,8 +50,8 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi config set azure_bastion            true
     $ pulumi config set forced_tunnel            10.0.100.1
-    $ pulumi config set separator                " "
-    $ pulumi config set suffix                   "ae"
+    $ pulumi config set separator                ' '
+    $ pulumi config set suffix                   ae
     ```
 
     Note that it is advisable to enable Azure Bastion on a second pass to avoid contention.
@@ -159,7 +159,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
 
     Feel free to modify your program, and then run `pulumi up` again. Pulumi automatically detects differences and makes the minimal changes necessary to achieved the desired state. If any changes to resources are made outside of Pulumi, you should first do a `pulumi refresh` so that Pulumi can discover the actual situation, and then `pulumi up` to return to desired state.
 
-    Note that auto-naming is not yet implemented in azure-nextgen. Instead the same suffix may be appended to each physical name so that multiple stacks may be created without conflict.
+    Note that [auto-naming](https://github.com/pulumi/pulumi-azure-nextgen/issues/5) is not yet implemented in azure-nextgen. Instead the same suffix may be appended to each physical name so that multiple stacks may be created without conflict.
 
 1. Create another new stack intended for Disaster Recovery (following the example):
 
@@ -167,7 +167,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     $ pulumi stack init dr
     ```
 
-    This will also appear within your Pulumi organization under the `azure-py-vdc` project (as specified in `Pulumi.yaml`).
+    This will also appear within your Pulumi organization under the `azureng-py-vdc` project (as specified in `Pulumi.yaml`).
 
 1. Set the configuration variables for this stack which will be stored in a new `Pulumi.dr.yaml` file (change the values below to suit yourself):
 
@@ -181,8 +181,8 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi config set azure_bastion            true
     $ pulumi config set forced_tunnel            10.0.200.1
-    $ pulumi config set separator                "_"    
-    $ pulumi config set suffix                   "ase"
+    $ pulumi config set separator                _    
+    $ pulumi config set suffix                   ase
     ```
 
     Note that it is advisable to enable Azure Bastion on a second pass to avoid contention.
