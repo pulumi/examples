@@ -11,7 +11,7 @@ from pulumi_azure import core, network, compute
 # vdc.tags = props.tags
 
 def bastion_host(stem, virtual_network_name, address_prefix, depends_on=None):
-    ab_sn = network.Subnet(f'{stem}{s}ab{s}sn{suffix}',
+    ab_sn = network.Subnet(f'{stem}{s}ab{s}sn',
         name = 'AzureBastionSubnet', # name required
         resource_group_name = resource_group_name,
         virtual_network_name = virtual_network_name,
@@ -34,7 +34,7 @@ def bastion_host(stem, virtual_network_name, address_prefix, depends_on=None):
         resource_group_name = resource_group_name,
         location = location,
         ip_configuration = compute.BastionHostIpConfigurationArgs(
-            name = f'{stem}{s}ab{s}ipc{s}{suffix}',
+            name = f'{stem}{s}ab{s}ipc',
             public_ip_address_id = ab_pip.id,
             subnet_id = ab_sn.id,
         ),
@@ -58,7 +58,7 @@ def expressroute_gateway(stem, subnet_id, depends_on=None):
         type = 'ExpressRoute',
         vpn_type = 'RouteBased',
         ip_configurations = [network.VirtualNetworkGatewayIpConfigurationArgs(
-            name = f'{stem}{s}er{s}gw{s}ipc{s}{suffix}',
+            name = f'{stem}{s}er{s}gw{s}ipc',
             public_ip_address_id = er_gw_pip.id,
             subnet_id = subnet_id,
         )],
@@ -100,12 +100,12 @@ def firewall(stem, fw_sn_id, fwm_sn_id, private_ranges, depends_on=None):
 #        },
 #        sku = 'AZFW_VNet',
         ip_configurations = [network.FirewallIpConfigurationArgs(
-            name = f'{stem}{s}fw{s}ipc{s}{suffix}',
+            name = f'{stem}{s}fw{s}ipc',
             public_ip_address_id = fw_pip.id,
             subnet_id = fw_sn_id,
         )],
         management_ip_configuration = network.FirewallIpConfigurationArgs(
-            name = f'{stem}{s}fwm{s}ipc{s}{suffix}',
+            name = f'{stem}{s}fwm{s}ipc',
             public_ip_address_id = fwm_pip.id,
             subnet_id = fwm_sn_id,
         ),
@@ -140,7 +140,7 @@ def route_table(stem, disable_bgp_route_propagation=None, depends_on=None):
     return rt
 
 def route_to_internet(stem, route_table_name):
-    r_i = network.Route(f'{stem}{s}r{s}{suffix}',
+    r_i = network.Route(f'{stem}{s}r',
         name = 'FirewallDefaultRoute', # name required
         resource_group_name = resource_group_name,
         address_prefix = '0.0.0.0/0',
@@ -156,7 +156,7 @@ def route_to_virtual_appliance(
         address_prefix,
         next_hop_ip_address,
     ):
-    r_va = network.Route(f'{stem}{s}r{s}{suffix}',
+    r_va = network.Route(f'{stem}{s}r',
         resource_group_name = resource_group_name,
         address_prefix = address_prefix,
         next_hop_type = 'VirtualAppliance',
@@ -167,7 +167,7 @@ def route_to_virtual_appliance(
     return r_va
 
 def route_to_virtual_network(stem, route_table_name, address_prefix):
-    r_vn = network.Route(f'{stem}{s}r{s}{suffix}',
+    r_vn = network.Route(f'{stem}{s}r',
         resource_group_name = resource_group_name,
         address_prefix = address_prefix,
         next_hop_type = 'VnetLocal',
@@ -183,13 +183,13 @@ def subnet(
         route_table_id,
         depends_on = None,
     ):
-    sn = network.Subnet(f'{stem}{s}sn{s}{suffix}',
+    sn = network.Subnet(f'{stem}{s}sn',
         resource_group_name = resource_group_name,
         virtual_network_name = virtual_network_name,
         address_prefixes = [address_prefix],
         opts = ResourceOptions(parent=self, depends_on=depends_on),
     )
-    rta = network.SubnetRouteTableAssociation(f'{stem}{s}sn{s}rta{s}{suffix}',
+    rta = network.SubnetRouteTableAssociation(f'{stem}{s}sn{s}rta',
         route_table_id = route_table_id,
         subnet_id = sn.id,
         opts = ResourceOptions(parent=self, depends_on=depends_on),
@@ -204,7 +204,7 @@ def subnet_special(
         route_table_id,
         depends_on = None,
     ):
-    sn = network.Subnet(f'{stem}{s}sn{s}{suffix}',
+    sn = network.Subnet(f'{stem}{s}sn',
         name = name,
         resource_group_name = resource_group_name,
         virtual_network_name = virtual_network_name,
@@ -215,7 +215,7 @@ def subnet_special(
             depends_on = depends_on,
         ),
     )
-    rta = network.SubnetRouteTableAssociation(f'{stem}{s}sn{s}rta{s}{suffix}',
+    rta = network.SubnetRouteTableAssociation(f'{stem}{s}sn{s}rta',
         route_table_id = route_table_id,
         subnet_id = sn.id,
         opts = ResourceOptions(parent=self, depends_on=depends_on),
@@ -270,7 +270,7 @@ def vpn_gateway(stem, subnet_id, depends_on=None):
         vpn_type = 'RouteBased',
         enable_bgp = True,
         ip_configurations = [network.VirtualNetworkGatewayIpConfigurationArgs(
-            name = f'{stem}{s}vpn{s}gw{s}ipc{s}{suffix}',
+            name = f'{stem}{s}vpn{s}gw{s}ipc',
             public_ip_address_id = vpn_gw_pip.id,
             subnet_id = subnet_id,
         )],

@@ -21,8 +21,7 @@ config = Config()
 
 # retrieve the location
 location = config.get('location')
-if not location:
-    config.require('azure:location')
+
 # retrieve optional separator choice and suffix
 separator = config.get('separator')
 if not separator:
