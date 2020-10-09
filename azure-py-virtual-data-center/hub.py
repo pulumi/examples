@@ -148,7 +148,7 @@ class Hub(ComponentResource):
 
         # work around https://github.com/pulumi/pulumi/issues/4040
         hub_fw_ip = hub_fw.ip_configurations.apply(
-            lambda ipc: ipc[0].get('private_ip_address')
+            lambda ipc: ipc[0].private_ip_address
         )
         # It is very important to ensure that there is never a route with an
         # address_prefix which covers the AzureFirewallSubnet.
