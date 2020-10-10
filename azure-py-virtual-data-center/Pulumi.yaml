@@ -22,11 +22,11 @@ template:
       description: Azure region to deploy to (e.g. `australiaeast` or `australiasoutheast`)
       default: australiaeast
     org:
-      description: Pulumi organization in which this project resides (optional)
+      description: Another organization having a project and stack to peer with (optional)
     peer:
-      description: Another stack in same organization and project to peer hubs with (optional)
+      description: Another stack having corresponding Outputs to peer with (optional)
     project:
-      description: Another project defining a stack with the same hub and spoke names to peer with (optional)
+      description: Another project having a stack to peer with (optional)
     separator:
       description: A dash (-) breaks up names by default; specify valid character or ' ' for none (optional)
     suffix:

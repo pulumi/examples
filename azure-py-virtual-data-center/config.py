@@ -21,23 +21,25 @@ config = Config()
 
 # retrieve the location
 location = config.get('location')
+if not location:
+    azcfg = Config('azure')
+    azloc = azcfg.require('location')
 
 # retrieve optional separator choice and suffix
-separator = config.get('separator')
-if not separator:
-    separator = '-'
-else:
-    separator = separator[0]
+separator = config.get('separator') or '-'
+separator = separator[0]
 if separator == ' ':
     separator = ''
-suffix = config.get('suffix')
-if not suffix:
-    suffix = ''
+suffix = config.get('suffix') or ''
 
-# set default tags to be applied to all taggable resources
+# retrieve project and stack (org not yet available)
+project = get_project()
 stack = get_stack()
+# set default tags to be applied to all taggable resources
 default_tags = {
-    'environment': stack
+    'manager': 'pulumi',
+    'project': project,
+    'stack': stack,
 }
 
 # Azure Bastion hosts in hub and spokes (until functional across peerings)
@@ -49,19 +51,19 @@ if forced_tunnel:
     ft_ip = ip_address(forced_tunnel) # check IP address is valid
 
 # another stack may be peered in the same project, even across organizations
-org = config.get('org')
 peer = config.get('peer')
-project = config.get('project')
-if org and not project:
-    project = get_project()
-if not org:
-    org = ''
-if not project:
-    project = ''
+porg = config.get('org')
+proj = config.get('project')
+if porg and not proj: # assume the same project in other organization
+    proj = project
+if not porg: # assume the same organization
+    porg = ''
+if not proj: # assume the same project
+    proj = ''
 if not peer:
     reference = None
 else:
-    reference = StackReference(f'{org}/{project}/{peer}')
+    reference = StackReference(f'{porg}/{proj}/{peer}')
 
 # validate firewall_address_space and hub_address_space
 firewall_address_space = config.require('firewall_address_space')
