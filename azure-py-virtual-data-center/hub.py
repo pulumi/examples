@@ -289,34 +289,32 @@ class Hub(ComponentResource):
         if props.peer:
             peer_hub_id = props.reference.get_output('hub_id')
             # VNet Peering (Global) in one direction from stack to peer
-            if peer_hub_id:
-                hub_hub = vdc.vnet_peering(
-                    stem = props.stack,
-                    virtual_network_name = hub.name,
-                    peer = props.peer,
-                    remote_virtual_network_id = peer_hub_id,
-                    allow_forwarded_traffic = True,
-                    allow_gateway_transit = False, # as both hubs have gateways
+            hub_hub = vdc.vnet_peering(
+                stem = props.stack,
+                virtual_network_name = hub.name,
+                peer = props.peer,
+                remote_virtual_network_id = peer_hub_id,
+                allow_forwarded_traffic = True,
+                allow_gateway_transit = False, # as both hubs have gateways
+            )
+            # need to invalidate system routes created by VNet Peering
+            peer_dmz_ar = props.reference.get_output('dmz_ar') 
+            peer_fw_ip = props.reference.get_output('fw_ip')
+            peer_hub_as = props.reference.get_output('hub_as')   
+            for route in [
+                (f'dmz{s}{props.peer}{s}dmz', hub_dmz_rt.name, peer_dmz_ar),
+                (f'dmz{s}{props.peer}{s}hub', hub_dmz_rt.name, peer_hub_as),
+                (f'gw{s}{props.peer}{s}dmz', hub_gw_rt.name, peer_dmz_ar),
+                (f'gw{s}{props.peer}{s}hub', hub_gw_rt.name, peer_hub_as),
+                (f'ss{s}{props.peer}{s}dmz', hub_ss_rt.name, peer_dmz_ar),
+                (f'ss{s}{props.peer}{s}hub', hub_ss_rt.name, peer_hub_as),
+            ]:
+                vdc.route_to_virtual_appliance(
+                    stem = route[0],
+                    route_table_name = route[1],
+                    address_prefix = route[2],
+                    next_hop_ip_address = peer_fw_ip,
                 )
-                # need to invalidate system routes created by VNet Peering
-                peer_dmz_ar = props.reference.get_output('dmz_ar') 
-                peer_fw_ip = props.reference.get_output('fw_ip')
-                peer_hub_as = props.reference.get_output('hub_as')   
-                if hub_hub and peer_dmz_ar and peer_fw_ip and peer_hub_as:
-                    for route in [
-                        (f'dmz{s}{props.peer}{s}dmz', hub_dmz_rt.name, peer_dmz_ar),
-                        (f'dmz{s}{props.peer}{s}hub', hub_dmz_rt.name, peer_hub_as),
-                        (f'gw{s}{props.peer}{s}dmz', hub_gw_rt.name, peer_dmz_ar),
-                        (f'gw{s}{props.peer}{s}hub', hub_gw_rt.name, peer_hub_as),
-                        (f'ss{s}{props.peer}{s}dmz', hub_ss_rt.name, peer_dmz_ar),
-                        (f'ss{s}{props.peer}{s}hub', hub_ss_rt.name, peer_hub_as),
-                    ]:
-                        vdc.route_to_virtual_appliance(
-                            stem = route[0],
-                            route_table_name = route[1],
-                            address_prefix = route[2],
-                            next_hop_ip_address = peer_fw_ip,
-                        )
 
         # assign properties to hub including from child resources
         self.address_space = props.hub_address_space # used for routes to the hub

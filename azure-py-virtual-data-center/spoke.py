@@ -130,13 +130,12 @@ class Spoke(ComponentResource):
         if props.peer:
             peer_fw_ip = props.reference.get_output('fw_ip')
             peer_spoke_as = props.reference.get_output(f'{name}_as')
-            if peer_fw_ip and peer_spoke_as:
-                fw_peer_spoke = vdc.route_to_virtual_appliance(
-                    stem = f'fw{s}{props.peer}{s}{name}',
-                    route_table_name = props.fw_rt_name,
-                    address_prefix = peer_spoke_as,
-                    next_hop_ip_address = peer_fw_ip,
-                )
+            fw_peer_spoke = vdc.route_to_virtual_appliance(
+                stem = f'fw{s}{props.peer}{s}{name}',
+                route_table_name = props.fw_rt_name,
+                address_prefix = peer_spoke_as,
+                next_hop_ip_address = peer_fw_ip,
+            )
 
         # assign properties to spoke including from child resources
         self.address_space = props.spoke_address_space
