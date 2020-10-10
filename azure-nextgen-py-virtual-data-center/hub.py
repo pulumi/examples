@@ -146,7 +146,7 @@ class Hub(ComponentResource):
             depends_on = [hub_fw_sn, hub_fwm_sn],
         )
 
-        # work around https://github.com/pulumi/pulumi/issues/4040
+        # wait for the private ip address of the firewall to become available
         hub_fw_ip = hub_fw.ip_configurations.apply(
             lambda ipc: ipc[0].private_ip_address
         )
