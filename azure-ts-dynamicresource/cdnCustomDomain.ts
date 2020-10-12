@@ -179,7 +179,16 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
                 inputs.resourceGroupName,
                 inputs.profileName,
                 inputs.endpointName,
-                this.name);
+                this.name,
+                {
+                    customDomainHttpsParameters: {
+                        certificateSource: "Cdn",
+                        certificateSourceParameters: {
+                            certificateType: "Dedicated"
+                        },
+                        protocolType: "ServerNameIndication"
+                    }
+                });
         }
 
         const outs: DynamicProviderOutputs = {
