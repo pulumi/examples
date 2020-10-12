@@ -285,7 +285,7 @@ export class CDNCustomDomainResource extends pulumi.dynamic.Resource {
     public readonly provisioningState: pulumi.Output<string>;
     public readonly resourceState: pulumi.Output<cdnManagement.CdnManagementModels.CustomDomainResourceState>;
     public readonly type: pulumi.Output<string>;
-    
+
     constructor(name: string, args: CustomDomainOptions, opts?: pulumi.CustomResourceOptions) {
         super(new CDNCustomDomainResourceProvider(name), `azure:cdn:Endpoint:CustomDomains:${name}`, args, opts);
     }
