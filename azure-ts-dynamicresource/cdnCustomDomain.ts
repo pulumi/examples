@@ -1,5 +1,4 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
-
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
 
@@ -8,11 +7,11 @@ import { ServiceClientCredentials } from "@azure/ms-rest-js";
 import * as msRestAzure from "@azure/ms-rest-nodeauth";
 
 /**
- * CustomDomainOptions represents the inputs to the dynamic resource.
- * Any property of type `Input<T>` will automatically be resolved to their type `T`
- * by the custom dynamic resource before passing them to the functions in the
- * dynamic resource provider.
- */
+* CustomDomainOptions represents the inputs to the dynamic resource.
+* Any property of type `Input<T>` will automatically be resolved to their type `T`
+* by the custom dynamic resource before passing them to the functions in the
+* dynamic resource provider.
+*/
 export interface CustomDomainOptions {
     resourceGroupName: pulumi.Input<string>;
     profileName: pulumi.Input<string>;
@@ -22,10 +21,10 @@ export interface CustomDomainOptions {
 }
 
 /**
- * DynamicProviderInputs represents the inputs that are passed as inputs
- * to each function in the implementation of a `pulumi.dynamic.ResourceProvider`.
- * The property names in this must match `CustomDomainOptions`.
- */
+* DynamicProviderInputs represents the inputs that are passed as inputs
+* to each function in the implementation of a `pulumi.dynamic.ResourceProvider`.
+* The property names in this must match `CustomDomainOptions`.
+*/
 interface DynamicProviderInputs {
     resourceGroupName: string;
     profileName: string;
@@ -35,9 +34,9 @@ interface DynamicProviderInputs {
 }
 
 /**
- * DynamicProviderOutputs represents the output type of `create` function in the
- * dynamic resource provider.
- */
+* DynamicProviderOutputs represents the output type of `create` function in the
+* dynamic resource provider.
+*/
 interface DynamicProviderOutputs extends DynamicProviderInputs, cdnManagement.CdnManagementModels.CustomDomainsCreateResponse {
     name: string;
 }
@@ -49,12 +48,12 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         this.name = name;
     }
 
-    private async getCDNManagementClient(): Promise<cdnManagement.CdnManagementClient> {
-        let clientID = azure.config.clientId;
-        let clientSecret = azure.config.clientSecret;
-        let tenantID = azure.config.tenantId;
-        let subscriptionID = azure.config.subscriptionId;
-        let credentials: ServiceClientCredentials;
+private async getCDNManagementClient(): Promise<cdnManagement.CdnManagementClient> {
+    let clientID = azure.config.clientId;
+    let clientSecret = azure.config.clientSecret;
+    let tenantID = azure.config.tenantId;
+    let subscriptionID = azure.config.subscriptionId;
+    let credentials: ServiceClientCredentials;
 
         // If at least one of them is empty, try looking at the env vars.
         if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
@@ -77,7 +76,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
             credentials = await msRestAzure.loginWithServicePrincipalSecret(clientID, clientSecret, tenantID);
         }
 
-        return new cdnManagement.CdnManagementClient(credentials, subscriptionID);
+        return new cdnManagement.CdnManagementClient(<any>credentials, subscriptionID);
     }
 
     async check(olds: DynamicProviderInputs, news: DynamicProviderInputs): Promise<pulumi.dynamic.CheckResult> {
@@ -179,16 +178,7 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
                 inputs.resourceGroupName,
                 inputs.profileName,
                 inputs.endpointName,
-                this.name,
-                {
-                    customDomainHttpsParameters: {
-                        certificateSource: "Cdn",
-                        certificateSourceParameters: {
-                            certificateType: "Dedicated"
-                        },
-                        protocolType: "ServerNameIndication"
-                    }
-                });
+                this.name);
         }
 
         const outs: DynamicProviderOutputs = {
@@ -234,8 +224,8 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
     }
 
     /**
-     * The only thing that the update method really updates in the custom domain is the HTTPS enablement.
-     */
+    * The only thing that the update method really updates in the custom domain is the HTTPS enablement.
+    */
     async update(id: string, currentOutputs: DynamicProviderOutputs, newInputs: DynamicProviderInputs): Promise<pulumi.dynamic.UpdateResult> {
         const cdnClient = await this.getCDNManagementClient();
         if (newInputs.httpsEnabled) {
@@ -243,8 +233,16 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
                 newInputs.resourceGroupName,
                 newInputs.profileName,
                 newInputs.endpointName,
-                this.name);
-
+                this.name,
+                {
+                    customDomainHttpsParameters: {
+                        certificateSource: "Cdn",
+                        certificateSourceParameters: {
+                            certificateType: "Dedicated"
+                        },
+                        protocolType: "ServerNameIndication"
+                    }
+                });
             currentOutputs.httpsEnabled = true;
             return { outs: currentOutputs };
         }
@@ -261,20 +259,20 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
 }
 
 /**
- * CDNCustomDomainResource is a resource that can be used to create
- * custom domains against Azure CDN resources.
- * The Azure CDN resource itself must exist in order to create a custom domain for it.
- *
- * Outputs from the dynamic resource provider must be declared in the dynamic resource itself
- * as `public readonly` members with the type `Output<T>`. These are automatically set by the dynamic
- * provider engine. The names of these properties must match the names of the properties exactly as
- * returned in the outputs of the dynamic resource provider functions.
- */
+* CDNCustomDomainResource is a resource that can be used to create
+* custom domains against Azure CDN resources.
+* The Azure CDN resource itself must exist in order to create a custom domain for it.
+*
+* Outputs from the dynamic resource provider must be declared in the dynamic resource itself
+* as `public readonly` members with the type `Output<T>`. These are automatically set by the dynamic
+* provider engine. The names of these properties must match the names of the properties exactly as
+* returned in the outputs of the dynamic resource provider functions.
+*/
 export class CDNCustomDomainResource extends pulumi.dynamic.Resource {
     /**
-     * These are the same properties that were originally passed as inputs, but available as outputs
-     * for convenience. The names of these properties must match with `CustomDomainOptions`.
-     */
+    * These are the same properties that were originally passed as inputs, but available as outputs
+    * for convenience. The names of these properties must match with `CustomDomainOptions`.
+    */
     public readonly resourceGroupName: pulumi.Output<string>;
     public readonly profileName: pulumi.Output<string>;
     public readonly endpointName: pulumi.Output<string>;
@@ -287,7 +285,6 @@ export class CDNCustomDomainResource extends pulumi.dynamic.Resource {
     public readonly provisioningState: pulumi.Output<string>;
     public readonly resourceState: pulumi.Output<cdnManagement.CdnManagementModels.CustomDomainResourceState>;
     public readonly type: pulumi.Output<string>;
-
     constructor(name: string, args: CustomDomainOptions, opts?: pulumi.CustomResourceOptions) {
         super(new CDNCustomDomainResourceProvider(name), `azure:cdn:Endpoint:CustomDomains:${name}`, args, opts);
     }
