@@ -48,12 +48,12 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
         this.name = name;
     }
 
-private async getCDNManagementClient(): Promise<cdnManagement.CdnManagementClient> {
-    let clientID = azure.config.clientId;
-    let clientSecret = azure.config.clientSecret;
-    let tenantID = azure.config.tenantId;
-    let subscriptionID = azure.config.subscriptionId;
-    let credentials: ServiceClientCredentials;
+    private async getCDNManagementClient(): Promise<cdnManagement.CdnManagementClient> {
+        let clientID = azure.config.clientId;
+        let clientSecret = azure.config.clientSecret;
+        let tenantID = azure.config.tenantId;
+        let subscriptionID = azure.config.subscriptionId;
+        let credentials: ServiceClientCredentials;
 
         // If at least one of them is empty, try looking at the env vars.
         if (!clientID || !clientSecret || !tenantID || !subscriptionID) {
@@ -270,9 +270,9 @@ private async getCDNManagementClient(): Promise<cdnManagement.CdnManagementClien
  */
 export class CDNCustomDomainResource extends pulumi.dynamic.Resource {
     /**
-    * These are the same properties that were originally passed as inputs, but available as outputs
-    * for convenience. The names of these properties must match with `CustomDomainOptions`.
-    */
+     * These are the same properties that were originally passed as inputs, but available as outputs
+     * for convenience. The names of these properties must match with `CustomDomainOptions`.
+     */
     public readonly resourceGroupName: pulumi.Output<string>;
     public readonly profileName: pulumi.Output<string>;
     public readonly endpointName: pulumi.Output<string>;
@@ -285,6 +285,7 @@ export class CDNCustomDomainResource extends pulumi.dynamic.Resource {
     public readonly provisioningState: pulumi.Output<string>;
     public readonly resourceState: pulumi.Output<cdnManagement.CdnManagementModels.CustomDomainResourceState>;
     public readonly type: pulumi.Output<string>;
+    
     constructor(name: string, args: CustomDomainOptions, opts?: pulumi.CustomResourceOptions) {
         super(new CDNCustomDomainResourceProvider(name), `azure:cdn:Endpoint:CustomDomains:${name}`, args, opts);
     }
