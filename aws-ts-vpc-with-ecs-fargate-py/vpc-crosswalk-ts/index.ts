@@ -10,23 +10,23 @@ const vpc_cidr = config.require("vpc_cidr");
 const number_of_nat_gateways = config.requireNumber("number_of_nat_gateways");
 
 const baseTags = {
-    "Name": `${vpc_name}`,
-    "availability_zones_used": `${zone_number}`,
-    "cidr_block": `${vpc_cidr}`,
-    "crosswalk":"yes",
-    "number_of_nat_gateways": `${number_of_nat_gateways}`,
-    "demo": "true",
-    "pulumi:Project": pulumi.getProject(),
-    "pulumi:Stack": pulumi.getStack(),
-    "cost_center": "1234",
+  "Name": `${vpc_name}`,
+  "availability_zones_used": `${zone_number}`,
+  "cidr_block": `${vpc_cidr}`,
+  "crosswalk": "yes",
+  "number_of_nat_gateways": `${number_of_nat_gateways}`,
+  "demo": "true",
+  "pulumi:Project": pulumi.getProject(),
+  "pulumi:Stack": pulumi.getStack(),
+  "cost_center": "1234",
 }
 
 // Allocate a new VPC with the CIDR range from config file:
-  const vpc = new awsx.ec2.Vpc(vpc_name, {
-    cidrBlock: vpc_cidr,
-    numberOfAvailabilityZones: zone_number,
-    numberOfNatGateways: number_of_nat_gateways,
-    tags: baseTags,
+const vpc = new awsx.ec2.Vpc(vpc_name, {
+  cidrBlock: vpc_cidr,
+  numberOfAvailabilityZones: zone_number,
+  numberOfNatGateways: number_of_nat_gateways,
+  tags: baseTags,
 
 });
 
