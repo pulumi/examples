@@ -34,7 +34,7 @@ function authenticateRequest(req: awsx.apigateway.Request): awsx.apigateway.Resp
         return undefined;
     }
 
-    const payload = req.body!.toString();
+    const payload = Buffer.from(req.body!.toString(), req.isBase64Encoded ? "base64" : "utf8");
     const hmacAlg = crypto.createHmac("sha256", stackConfig.sharedSecret);
     const hmac = hmacAlg.update(payload).digest("hex");
 
