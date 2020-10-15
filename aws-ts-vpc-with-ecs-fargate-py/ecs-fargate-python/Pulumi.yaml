@@ -1,0 +1,6 @@
+name: fargate-with-crosswalk-vpc
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Fargate with crosswalk vpc
