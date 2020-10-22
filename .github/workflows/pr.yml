@@ -12,5 +12,8 @@ jobs:
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@master
         with:
-          message: 'Thank you for opening a PR! Please stand-by for one of the project maintainers to run the tests'
+          message: |
+            PR is now waiting for a maintainer to run the acceptance tests.
+
+            **Note for the maintainer:** To run the acceptance tests, please comment */run-example-tests* on the PR
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -819,8 +819,8 @@ func TestAccAzurePyWebserver(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-webserver"),
 			Config: map[string]string{
-				"azure-web:username": "testuser",
-				"azure-web:password": "testTEST1234+-*/",
+				"username": "testuser",
+				"password": "testTEST1234+-*/",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPHelloWorld(t, stack.Outputs["public_ip"], nil)

@@ -209,7 +209,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create test infra
         run: |
-          make setup_test_infra StackName="${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}"
+          make setup_test_infra StackName="${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}"
   test-infra-destroy:
     needs: kubernetes
     strategy:
@@ -276,7 +276,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Destroy test infra
         run: |
-          make destroy_test_infra StackName="${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}"
+          make destroy_test_infra StackName="${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}"
   kubernetes:
     needs: test-infra-setup
     strategy:
