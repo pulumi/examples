@@ -1,7 +1,6 @@
 # Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import pulumi_aws as aws
-from pulumi_aws.config.vars import region
 from pulumi import Config, ResourceOptions, export
 
 config = Config()
@@ -12,6 +11,9 @@ provider = aws.Provider(
     'privileged',
     assume_role={
         'role_arn': role_to_assume_arn,
+        # session name can contain only the following special characters =,.@-
+        # if any other special character is used, an error stating that the role
+        # cannot be assumed will be returned
         'session_name': 'PulumiSession',
         'externalId': 'PulumiApplication',
     },
