@@ -7,8 +7,8 @@ const wordpress = new k8s.helm.v3.Chart("wpdev", {
     version: "9.6.0",
     chart: "wordpress",
     fetchOpts: {
-        repo: "https://charts.bitnami.com/bitnami"
-    }
+        repo: "https://charts.bitnami.com/bitnami",
+    },
 });
 
 // Get the status field from the wordpress service, and then grab a reference to the ingress field.

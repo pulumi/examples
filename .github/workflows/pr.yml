@@ -17,3 +17,26 @@ jobs:
 
             **Note for the maintainer:** To run the acceptance tests, please comment */run-example-tests* on the PR
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  lint:
+    strategy:
+      matrix:
+        platform: [ ubuntu-latest ]
+        yarn-version: [ 1.13.0 ]
+        node-version: [ 12.x ]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Yarn
+        run: curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version ${{ matrix.yarn-version }}
+      - name: Update PATH for Yarn
+        run: |
+          echo "::add-path::$HOME/.yarn/bin"
+          echo "::add-path::$HOME/.config/yarn/global/node_modules/.bin"
+      - name: setup linting tool
+        run: make install
+      - name: Lint typescript files
+        run: make lint

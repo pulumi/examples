@@ -70,14 +70,14 @@ const databaseDeployment = new k8s.apps.v1.Deployment(databaseAppName, {
                     ],
                     volumeMounts: [{  // The EBS volume is mounted to the pod, allowing the database to permanently store data
                         name: "persistent-volume",
-                        mountPath: "/persistentVolume"
+                        mountPath: "/persistentVolume",
                     }],
                     resources: {
                         limits: {
                             memory: "1Gi",
-                            cpu: "1000m" 
-                        }
-                    }
+                            cpu: "1000m",
+                        },
+                    },
                 }],
                 volumes: [{
                     name: "persistent-volume",
@@ -93,16 +93,16 @@ const databaseDeployment = new k8s.apps.v1.Deployment(databaseAppName, {
                                     key: "failure-domain.beta.kubernetes.io/zone",
                                     operator: "In",
                                     values: [ebsVolume.availabilityZone],
-                                }]
-                            }]
-                        }
-                    }
-                }
-            }
+                                }],
+                            }],
+                        },
+                    },
+                },
+            },
         },
         strategy: {
-            type: "Recreate"
-        } 
+            type: "Recreate",
+        },
     }}, {
     deleteBeforeReplace: true,
     provider: eksCluster.provider,
@@ -119,7 +119,7 @@ const databasesideListener = new k8s.core.v1.Service("database-side-listener", {
         publishNotReadyAddresses: false,
     }}, {
     provider: eksCluster.provider,
-    }
+    },
 );
 
 const postgresqlAddress = databasesideListener.spec.clusterIP;
@@ -150,18 +150,18 @@ const serverDeployment = new k8s.apps.v1.Deployment("server-side-service", {
                     resources: {
                         limits: {
                             memory: "500Mi",
-                            cpu: "500m" 
-                        }
-                    }
+                            cpu: "500m",
+                        },
+                    },
                 }],
-            }
-        }
+            },
+        },
     }}, {
     provider: eksCluster.provider,
 });
 
 // A service is created for the server to open it to the internet. Anyone can send commands to the
-// service's Load Balancer, which will autimatically distribute them across the availible pods. 
+// service's Load Balancer, which will autimatically distribute them across the availible pods.
 const serversideListener = new k8s.core.v1.Service("server-side-listener", {
     metadata: { labels: serverDeployment.metadata.labels },
     spec: {
@@ -171,7 +171,7 @@ const serversideListener = new k8s.core.v1.Service("server-side-listener", {
         publishNotReadyAddresses: false,
     }}, {
     provider: eksCluster.provider,
-    }
+    },
 );
 
 // The final deployment is created for the client compoment. It acts as the main web page of the
@@ -196,12 +196,12 @@ const clientDeployment = new k8s.apps.v1.Deployment("client-side-service", {
                     resources: {
                         limits: {
                             memory: "500Mi",
-                            cpu: "500m" 
-                        }
+                            cpu: "500m",
+                        },
                     },
                 }],
-            }
-        }
+            },
+        },
     }}, {
     provider: eksCluster.provider,
 });
@@ -218,7 +218,7 @@ const clientsideListener = new k8s.core.v1.Service("client-side-listener", {
         publishNotReadyAddresses: false,
     }}, {
     provider: eksCluster.provider,
-    }
+    },
 );
 
 // Exporting the KubeConfig of the cluster, and the URL of the clientside listener. We can now
