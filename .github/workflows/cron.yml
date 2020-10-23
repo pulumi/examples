@@ -2,8 +2,11 @@ name: Run Examples Tests
 on:
   schedule:
     # Run every day at 09:00AM.
-    - cron: '0 17 * * *'
+    - cron: '0 9 * * *'
   workflow_dispatch:
+  repository_dispatch:
+    types:
+      - trigger-cron
 
 env:
   PULUMI_TEST_OWNER: ${{ secrets.PULUMI_TEST_OWNER }}
