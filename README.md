@@ -11,6 +11,19 @@ Platform](https://github.com/pulumi/pulumi-gcp), `kubernetes` for
 
 See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on getting started with Pulumi.
 
+## Checking Out a Single Example
+
+You can checkout only the examples you want by using a [sparse checkout](https://git-scm.com/docs/git-sparse-checkout). The following example shows how checkout only the example you want.
+
+```bash
+$ mkdir examples && cd examples
+$ git init
+$ git remote add origin -f https://github.com/pulumi/examples/
+$ git config core.sparseCheckout true
+$ echo <example> >> .git/info/sparse-checkout
+$ git pull origin master
+```
+
 ## Outline
 
 - [AWS](#aws)
@@ -20,14 +33,14 @@ See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on
     - [Go](#go)
     - [C#](#c)
     - [F#](#f)
-- [Azure](#azure) 
+- [Azure](#azure)
     - [TypeScript](#typescript-1)
     - [JavaScript](#javascript-1)
     - [Python](#python-1)
     - [Go](#go-1)
     - [C#](#c-1)
     - [F#](#f-1)
-- [GCP](#gcp) 
+- [GCP](#gcp)
     - [TypeScript](#typescript-2)
     - [JavaScript](#javascript-2)
     - [Python](#python-2)
@@ -46,7 +59,7 @@ See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on
 - [Twilio](#twilio)
 - [Linode](#linode)
 - [Packet](#packet)
-- [Testing](#testing) 
+- [Testing](#testing)
 
 ## AWS
 
@@ -73,7 +86,7 @@ Example   | Description |
 [Serverless Datawarehouse](aws-ts-serverless-datawarehouse) | Deploy a serverless data warehouse.
 [Slackbot](aws-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
 [Stack Reference](aws-ts-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
-[Static Website](aws-ts-static-website) | Serve a static website using S3, CloudFront, Route53, and Certificate Manager. 
+[Static Website](aws-ts-static-website) | Serve a static website using S3, CloudFront, Route53, and Certificate Manager.
 [Step Functions](aws-ts-stepfunctions) | Use Step Functions with a Lambda function.
 [Thumbnailer](aws-ts-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
 [Twitter](aws-ts-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
@@ -274,7 +287,7 @@ Example   | Description |
 [Multicloud](kubernetes-ts-multicloud) | Create managed Kubernetes clusters using AKS, EKS, and GKE, and deploy the application on each cluster.
 [nginx server](kubernetes-ts-nginx) | Deploy a replicated nginx server to a Kubernetes cluster, using TypeScript and no YAML.
 [Sock Shop](kubernetes-ts-sock-shop) | Deploy a version of the standard Sock Shop microservices reference app.
-[Staged App Rollout](kubernetes-ts-staged-rollout-with-prometheus) | Create a staged rollout gated by checking that the P90 response time reported by Prometheus is less than some amount. 
+[Staged App Rollout](kubernetes-ts-staged-rollout-with-prometheus) | Create a staged rollout gated by checking that the P90 response time reported by Prometheus is less than some amount.
 [Wordpress Helm Chart](kubernetes-ts-helm-wordpress) | Use the Helm API to deploy v2.1.3 of the Wordpress Helm Chart to a Kubernetes cluster.
 
 ### Python
@@ -345,7 +358,7 @@ Example   | Description |
 ### TypeScript
 Example   | Description |
 --------- | --------- |
-[Buckets](multicloud-ts-buckets) | Use a single Pulumi program to provision resources in both AWS and GCP. 
+[Buckets](multicloud-ts-buckets) | Use a single Pulumi program to provision resources in both AWS and GCP.
 
 ## F5
 
