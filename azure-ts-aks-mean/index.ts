@@ -36,10 +36,9 @@ const mongoConnStrings = new k8s.core.v1.Secret(
 );
 
 // Boot up nodejs Helm chart example using CosmosDB in place of in-cluster MongoDB.
-const node = new k8s.helm.v2.Chart(
+const node = new k8s.helm.v3.Chart(
     "node",
     {
-        repo: "bitnami",
         chart: "node",
         version: "4.0.1",
         fetchOpts: {
