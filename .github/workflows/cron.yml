@@ -1,9 +1,9 @@
 name: Run Examples Tests
 on:
-  workflow_dispatch:
   schedule:
     # Run every day at 09:00AM.
     - cron: '0 9 * * *'
+  workflow_dispatch:
 
 env:
   PULUMI_TEST_OWNER: ${{ secrets.PULUMI_TEST_OWNER }}
