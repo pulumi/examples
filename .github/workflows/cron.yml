@@ -2,7 +2,7 @@ name: Run Examples Tests
 on:
   schedule:
     # Run every day at 09:00AM.
-    - cron: '0 9 * * *'
+    - cron: '0 17 * * *'
   workflow_dispatch:
 
 env:
