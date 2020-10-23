@@ -1,8 +1,6 @@
 name: Run Examples Tests
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
   schedule:
     # Run every day at 09:00AM.
     - cron: '0 9 * * *'
@@ -40,6 +38,7 @@ jobs:
         node-version: [10.x]
         python-version: [3.7]
         dotnet-version: ['3.1.100']
+        examples-test-matrix: ['--no-latest-cli', '--no-latest-packages']
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Install DotNet ${{ matrix.dotnet-version }}
@@ -91,9 +90,12 @@ jobs:
       - name: Login to Google Cloud Registry
         run: |
           gcloud --quiet auth configure-docker
-      - name: Install Pulumi CLI
-        uses: pulumi/action-install-pulumi-cli@releases/v1
       - uses: actions/checkout@v2
+      - name: Checkout Scripts Repo
+        uses: actions/checkout@v2
+        with:
+          path: ci-scripts
+          repository: pulumi/scripts
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -103,6 +105,15 @@ jobs:
           role-duration-seconds: 3600
           role-session-name: examples@githubActions
           role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+      - name: scripts/run-at-head ${{ matrix.examples-test-matrix }}
+        run: ./ci-scripts/ci/run-at-head ${{ matrix.examples-test-matrix }}
+      - if: matrix.examples-test-matrix == '--no-latest-cli'
+        name: Install Pulumi CLI
+        uses: pulumi/action-install-pulumi-cli@releases/v1
+      - if: matrix.examples-test-matrix == '--no-latest-packages'
+        name: Set Pulumi to PATH
+        run: |
+          echo "::add-path::$HOME/.pulumi/bin"
       - name: Install Go dependencies
         run: make ensure
       - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
