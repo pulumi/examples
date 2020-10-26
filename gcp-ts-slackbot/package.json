@@ -2,7 +2,7 @@
     "name": "gcp-ts-slackbot",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/gcp": "^3.0.0",
+        "@pulumi/gcp": "^4.0.0",
         "@pulumi/pulumi": "^2.0.0",
         "@google-cloud/firestore": "^1.2.0",
         "@google-cloud/pubsub": "^0.28.1",
