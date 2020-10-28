@@ -15,7 +15,7 @@ const stackConfig = {
     // webhook's settings.
     sharedSecret: config.get("sharedSecret"),
 
-    slackWebhook: config.require("slackWebhook"),
+    slackWebhook: config.requireSecret("slackWebhook"),
     slackChannel: config.require("slackChannel"),
 };
 
@@ -47,6 +47,9 @@ function authenticateRequest(req: awsx.apigateway.Request): awsx.apigateway.Resp
     return undefined;
 }
 
+// unsecret the webhook so we can add it to the handler
+(<any>stackConfig.slackWebhook).isSecret = false;
+
 const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
     restApiArgs: {
         binaryMediaTypes: ["application/json"],
@@ -74,7 +77,7 @@ const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
             const parsedPayload = JSON.parse(payload);
             const prettyPrintedPayload = JSON.stringify(parsedPayload, null, 2);
 
-            const webhook = new IncomingWebhook(stackConfig.slackWebhook);
+            const webhook = new IncomingWebhook(stackConfig.slackWebhook.get());
 
             const fallbackText = `Pulumi Service Webhook (\`${webhookKind}\`)\n` + "```\n" + prettyPrintedPayload + "```\n";
             const messageArgs: IncomingWebhookSendArguments = {
