@@ -2,7 +2,7 @@
 
 import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
-import { ChatPostMessageArguments, WebClient } from "@slack/web-api";
+import { IncomingWebhook, IncomingWebhookSendArguments } from "@slack/webhook";
 
 import * as crypto from "crypto";
 
@@ -15,7 +15,7 @@ const stackConfig = {
     // webhook's settings.
     sharedSecret: config.get("sharedSecret"),
 
-    slackToken: config.require("slackToken"),
+    slackWebhook: config.requireSecret("slackWebhook"),
     slackChannel: config.require("slackChannel"),
 };
 
@@ -47,6 +47,9 @@ function authenticateRequest(req: awsx.apigateway.Request): awsx.apigateway.Resp
     return undefined;
 }
 
+// unsecret the webhook so we can add it to the handler
+(<any>stackConfig.slackWebhook).isSecret = false;
+
 const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
     restApiArgs: {
         binaryMediaTypes: ["application/json"],
@@ -74,19 +77,18 @@ const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
             const parsedPayload = JSON.parse(payload);
             const prettyPrintedPayload = JSON.stringify(parsedPayload, null, 2);
 
-            const client = new WebClient(stackConfig.slackToken);
+            const webhook = new IncomingWebhook(stackConfig.slackWebhook.get());
 
             const fallbackText = `Pulumi Service Webhook (\`${webhookKind}\`)\n` + "```\n" + prettyPrintedPayload + "```\n";
-            const messageArgs: ChatPostMessageArguments = {
+            const messageArgs: IncomingWebhookSendArguments = {
                 channel: stackConfig.slackChannel,
                 text: fallbackText,
-                as_user: true,
             };
 
             // Format the Slack message based on the kind of webhook received.
             const formattedMessageArgs = formatSlackMessage(webhookKind, parsedPayload, messageArgs);
 
-            await client.chat.postMessage(formattedMessageArgs);
+            await webhook.send(formattedMessageArgs);
             return { statusCode: 200, body: `posted to Slack channel ${stackConfig.slackChannel}\n` };
         },
     }],

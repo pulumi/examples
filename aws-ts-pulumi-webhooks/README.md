@@ -28,7 +28,7 @@ After cloning this repo, run these commands from the working directory:
 
 1. Create a [Slack App](https://api.slack.com/apps):
 
-    - Give your app the [`chat:write`](https://api.slack.com/scopes/chat:write) scope by going to `Features -> OAuth & Permissions -> Scopes` from your Slack app's API page.
+    - Give your app the [`incoming-webhook`](https://api.slack.com/scopes/incoming-webhook) scope.
 
     - Add your Slack app to the Slack channel in which you want to post webhook events.
 
@@ -38,10 +38,10 @@ After cloning this repo, run these commands from the working directory:
     pulumi config set aws:region <your-region>
     ```
 
-1. Set the Slack token for your app. You can find yours by going to `Features -> OAuth & Permissions -> OAuth Tokens & Redirect URLs -> Tokens for Your Workspace` from your Slack app's API page.
+1. Set the Slack webhook for your app. You can find yours by going to `Features -> Incoming Webhooks` from your Slack app's API page.
 
     ```bash
-    pulumi config set slackToken --secret <your-token>
+    pulumi config set slackWebhook --secret <webhook-url>
     ```
 
 1. Set the Slack channel for your app. This should be the same channel in which you added your Slack app. For example, `#pulumi-events`.
