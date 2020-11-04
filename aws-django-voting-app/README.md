@@ -36,7 +36,7 @@ The example shows how easy it is to deploy containers into production and to con
     $ pulumi config set sql-user-password <PASSWORD> --secret
     $ pulumi config set django-admin-name <NAME>
     $ pulumi config set django-admin-password <PASSWORD> --secret
-    $ pulumi config set django_secret_key = <VALUE> --secret
+    $ pulumi config set django-secret-key <VALUE> --secret
     ```
 
 1. Create a Python virtualenv, activate it, and install dependencies:
