@@ -43,6 +43,7 @@ printf 'ExecStart=/usr/bin/java -Xmx2048M -Xms512M -XX:+UseG1GC -jar server.jar 
 printf 'ExecStop=/opt/minecraft/tools/mcrcon/mcrcon -H 127.0.0.1 -P 25575 -p strongpassword stop\n'  >> /etc/systemd/system/minecraft.service
 printf '[Install]\nWantedBy=multi-user.target\n'  >> /etc/systemd/system/minecraft.service
 
+# start the service
 systemctl daemon-reload
 systemctl start minecraft
 systemctl enable minecraft

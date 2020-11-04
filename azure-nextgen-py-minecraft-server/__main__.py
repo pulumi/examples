@@ -3,14 +3,10 @@
 import provisioners
 import pulumi
 import base64
-from provisioners import ConnectionArgs
 from pulumi import Config, Output, export
 from pulumi_azure_nextgen.compute import latest as compute
 from pulumi_azure_nextgen.network import latest as network
 from pulumi_azure_nextgen.resources import latest as resources
-
-# If keyName is provided, an existing KeyPair is used, else if publicKey is provided a new KeyPair
-# derived from the publicKey is created.
 
 # Get the config ready to go.
 config = Config()
@@ -29,10 +25,12 @@ def decode_key(key):
 private_key = config.require_secret('privateKey').apply(decode_key)
 private_key_passphrase = config.get_secret('privateKeyPassphrase')
 
+# Create a resource group to hold project resources.
 resource_group = resources.ResourceGroup("server-rg",
     resource_group_name="minecraft",
     location=location)
 
+# Create a virtual network resource.
 net = network.VirtualNetwork(
     "server-network",
     resource_group_name=resource_group.name,
@@ -47,6 +45,7 @@ net = network.VirtualNetwork(
     )]
 )
 
+# Create a public IP to enable access on the Internet.
 public_ip = network.PublicIPAddress(
     "server-ip",
     resource_group_name=resource_group.name,
@@ -55,6 +54,7 @@ public_ip = network.PublicIPAddress(
     public_ip_allocation_method="Dynamic"
 )
 
+# Create the network interface for the server.
 network_iface = network.NetworkInterface(
     "server-nic",
     resource_group_name=resource_group.name,
@@ -68,8 +68,10 @@ network_iface = network.NetworkInterface(
     )]
 )
 
+# Create path to store ssh keys as a string.
 ssh_path= "".join(["/home/",admin_username,"/.ssh/authorized_keys"])
 
+# Create the virtual machine.
 server = compute.VirtualMachine(
     "server-vm",
     resource_group_name= resource_group.name,
@@ -113,12 +115,14 @@ server = compute.VirtualMachine(
     ),
 )
 
+# Get IP address as an output.
 combined_output = Output.all(server.id, public_ip.name, resource_group.name)
 public_ip_addr = combined_output.apply(
     lambda lst: network.get_public_ip_address(
         public_ip_address_name=lst[1],
         resource_group_name=lst[2]))
 
+# Create connection object to server.
 conn = provisioners.ConnectionArgs(
     host= public_ip_addr.ip_address,
     username=admin_username,
@@ -126,7 +130,7 @@ conn = provisioners.ConnectionArgs(
     private_key_passphrase=private_key_passphrase,
 )
 
-# Copy a config file to our server.
+# Copy install script to server.
 cp_config = provisioners.CopyFile('config',
     conn=conn,
     src='install.sh',
@@ -134,7 +138,7 @@ cp_config = provisioners.CopyFile('config',
     opts=pulumi.ResourceOptions(depends_on=[server]),
 )
 
-# # Execute a basic command on our server.
+# Execute install script on server.
 install = provisioners.RemoteExec('install',
     conn=conn,
     commands=['sudo chmod 755 install.sh && sudo ./install.sh'],
