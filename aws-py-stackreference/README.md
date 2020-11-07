@@ -70,16 +70,22 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Permalink: https://app.pulumi.com/clstokes/aws-py-stackreference-company/dev/updates/1
     ```
 
+1. Deactivate the virtual environment
+
+    ```bash
+    $ deactivate
+    ```
+
 1. Change directory to `department` and install dependencies.
 
     ```bash
-    $ cd ../company
+    $ cd ../department
     ````
-   
+
 1. Create a Python virtualenv, activate it, and install dependencies:
 
    ```bash
-   $ virtualenv -p python3 venv
+   $ python3 -m venv venv
    $ source venv/bin/activate
    $ pip3 install -r requirements.txt
    ```
@@ -125,6 +131,12 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Permalink: https://app.pulumi.com/clstokes/aws-py-stackreference-department/dev/updates/1
     ```
 
+1. Deactivate the virtual environment
+
+    ```bash
+    $ deactivate
+    ```
+
 1. Change directory to `team` and install dependencies.
 
     ```bash
@@ -134,7 +146,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
 1. Create a Python virtualenv, activate it, and install dependencies:
 
    ```
-   $ virtualenv -p python3 venv
+   $ python3 -m venv venv
    $ source venv/bin/activate
    $ pip3 install -r requirements.txt
    ```
@@ -195,6 +207,11 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Permalink: https://app.pulumi.com/clstokes/aws-py-stackreference-team/dev/updates/1
     ```
 
+1. Deactivate the virtual environment
+
+    ```bash
+    $ deactivate
+    ```
 
 ## Clean Up
 
