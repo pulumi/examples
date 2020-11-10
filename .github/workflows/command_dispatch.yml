@@ -13,7 +13,7 @@ jobs:
         with:
           token: ${{ secrets.EVENT_PAT }}
           reaction-token: ${{ secrets.GITHUB_TOKEN }}
-          commands: run-example-tests
+          commands: run-example-tests commitRef=${{ github.head_ref }}
           permission: write
           issue-type: pull-request
           repository: pulumi/examples

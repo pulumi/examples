@@ -25,6 +25,7 @@ env:
   GOOGLE_ZONE: "us-central1-a"
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
   LINODE_API_TOKEN: ${{ secrets.LINODE_API_TOKEN }}
+  COMMIT_REF: ${{ github.event.client_payload.slash_command.args.named.commitRef }}
 jobs:
   comment-notification:
     runs-on: ubuntu-latest
@@ -129,6 +130,8 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ env.COMMIT_REF }}
       - name: Setup node
         uses: actions/setup-node@v1
         with:
