@@ -25,7 +25,6 @@ env:
   GOOGLE_ZONE: "us-central1-a"
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
   LINODE_API_TOKEN: ${{ secrets.LINODE_API_TOKEN }}
-  COMMIT_REF: ${{ github.event.client_payload.slash_command.args.named.commitRef }}
 jobs:
   comment-notification:
     runs-on: ubuntu-latest
@@ -131,7 +130,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ env.COMMIT_REF }}
+          ref: "refs/remotes/pull/${{ github.event.client_payload.github.payload.issue.number }}/merge"
       - name: Setup node
         uses: actions/setup-node@v1
         with:

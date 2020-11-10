@@ -17,5 +17,3 @@ jobs:
           permission: write
           issue-type: pull-request
           repository: pulumi/examples
-          static-args: |
-            commitRef=${{ github.ref }}
