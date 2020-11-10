@@ -496,7 +496,7 @@ func TestAccAwsTsPulumiWebhooks(t *testing.T) {
 			Config: map[string]string{
 				"cloud:provider":                      "aws",
 				"aws-ts-pulumi-webhooks:slackChannel": "general",
-				"aws-ts-pulumi-webhooks:slackToken":   "12345",
+				"aws-ts-pulumi-webhooks:slackWebhook": "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
 			},
 		})
 
