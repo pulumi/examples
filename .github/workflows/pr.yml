@@ -22,7 +22,7 @@ jobs:
       matrix:
         platform: [ ubuntu-latest ]
         yarn-version: [ 1.13.0 ]
-        node-version: [ 12.x ]
+        node-version: [ 14.x ]
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
