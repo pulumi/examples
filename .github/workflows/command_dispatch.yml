@@ -18,4 +18,4 @@ jobs:
           issue-type: pull-request
           repository: pulumi/examples
           static-args: |
-            commitRef=${{ github.head_ref }}
+            commitRef=${{ github.ref }}
