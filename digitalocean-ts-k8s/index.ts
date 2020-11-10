@@ -14,7 +14,7 @@ const domainName = config.get("domainName");
 // kubeconfig to make it easy to access from the kubectl command line.
 const cluster = new digitalocean.KubernetesCluster("do-cluster", {
     region: digitalocean.Regions.SFO2,
-    version: digitalocean.getKubernetesVersions({versionPrefix: "1.16"}).then(p => p.latestVersion),
+    version: digitalocean.getKubernetesVersions().then(p => p.latestVersion),
     nodePool: {
         name: "default",
         size: digitalocean.DropletSlugs.DropletS2VCPU2GB,

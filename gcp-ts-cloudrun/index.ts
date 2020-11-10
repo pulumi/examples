@@ -36,7 +36,7 @@ const iamHello = new gcp.cloudrun.IamMember("hello-everyone", {
 });
 
 // Export the URL
-export const helloUrl = helloService.status.url;
+export const helloUrl = helloService.statuses[0].url;
 
 
 // -------------------------------------- //
@@ -80,4 +80,4 @@ const iamRuby = new gcp.cloudrun.IamMember("ruby-everyone", {
 });
 
 // Export the URL
-export const rubyUrl = rubyService.status.url;
+export const rubyUrl = rubyService.statuses[0].url;
