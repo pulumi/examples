@@ -29,6 +29,10 @@ jobs:
   comment-notification:
     runs-on: ubuntu-latest
     steps:
+      - name: Inspect contexts
+        run: |
+          echo "The github context is:"
+          echo "${{ toJson(github) }}"
       - name: Create URL to the run output
         id: vars
         run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
