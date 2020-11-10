@@ -184,10 +184,10 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
                     customDomainHttpsParameters: {
                         certificateSource: "Cdn",
                         certificateSourceParameters: {
-                            certificateType: "Dedicated"
+                            certificateType: "Dedicated",
                         },
-                        protocolType: "ServerNameIndication"
-                    }
+                        protocolType: "ServerNameIndication",
+                    },
                 });
         }
 
@@ -248,10 +248,10 @@ class CDNCustomDomainResourceProvider implements pulumi.dynamic.ResourceProvider
                     customDomainHttpsParameters: {
                         certificateSource: "Cdn",
                         certificateSourceParameters: {
-                            certificateType: "Dedicated"
+                            certificateType: "Dedicated",
                         },
-                        protocolType: "ServerNameIndication"
-                    }
+                        protocolType: "ServerNameIndication",
+                    },
                 });
 
             currentOutputs.httpsEnabled = true;
