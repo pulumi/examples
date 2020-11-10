@@ -108,6 +108,8 @@ jobs:
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@releases/v1
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ env.PR_COMMIT_SHA }}
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -209,6 +211,8 @@ jobs:
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@releases/v1
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ env.PR_COMMIT_SHA }}
       - name: Create test infra
         run: |
           make setup_test_infra StackName="${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}"
@@ -276,6 +280,8 @@ jobs:
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@releases/v1
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ env.PR_COMMIT_SHA }}
       - name: Destroy test infra
         run: |
           make destroy_test_infra StackName="${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}"
@@ -343,6 +349,8 @@ jobs:
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@releases/v1
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ env.PR_COMMIT_SHA }}
       - name: Install Go dependencies
         run: make ensure
       - name: Setup Config
