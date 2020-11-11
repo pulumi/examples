@@ -360,20 +360,3 @@ jobs:
           pulumi stack -s "${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output kubeconfig >~/.kube/config
       - name: Run ${{ matrix.tests-set }} Tests
         run: make specific_test_set TestSet=Kubernetes
-  status-comment-notification:
-    runs-on: ubuntu-latest
-    needs: [released, kubernetes]
-    if: ${{ always() }}
-    steps:
-      - name: Update with Build Status
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
-          body: |
-            The result of the builds is as follows:
-
-            * "Released" Job - ${{ released.status }}
-            * "Kubernetes" Job - ${{ kubernetes.status }}
-            * "Linting" Job - ${{ lint.status }}
