@@ -365,7 +365,6 @@ jobs:
     needs: [released, kubernetes]
     if: ${{ always() }}
     steps:
-      - if
       - name: Update with Build Status
         uses: peter-evans/create-or-update-comment@v1
         with:
