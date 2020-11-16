@@ -142,8 +142,8 @@ jobs:
         run: curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version ${{ matrix.yarn-version }}
       - name: Update PATH for Yarn
         run: |
-          echo "::add-path::$HOME/.yarn/bin"
-          echo "::add-path::$HOME/.config/yarn/global/node_modules/.bin"
+          echo "$HOME/.yarn/bin" >> $GITHUB_PATH
+          echo "$HOME/.config/yarn/global/node_modules/.bin" >> $GITHUB_PATH
       - name: setup linting tool
         run: make install
       - name: Lint typescript files
