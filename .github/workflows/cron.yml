@@ -113,7 +113,7 @@ jobs:
         run: ./ci-scripts/ci/run-at-head ${{ matrix.examples-test-matrix }}
       - if: matrix.examples-test-matrix == '--no-latest-cli'
         name: Install Pulumi CLI
-        uses: pulumi/action-install-pulumi-cli@releases/v1
+        uses: pulumi/action-install-pulumi-cli@v1.0.0
       - if: matrix.examples-test-matrix == '--no-latest-packages'
         name: Set Pulumi to PATH
         run: |
@@ -220,7 +220,7 @@ jobs:
         run: |
           gcloud --quiet auth configure-docker
       - name: Install Pulumi CLI
-        uses: pulumi/action-install-pulumi-cli@releases/v1
+        uses: pulumi/action-install-pulumi-cli@v1.0.0
       - uses: actions/checkout@v2
       - name: Create test infra
         run: |
@@ -287,7 +287,7 @@ jobs:
         run: |
           gcloud --quiet auth configure-docker
       - name: Install Pulumi CLI
-        uses: pulumi/action-install-pulumi-cli@releases/v1
+        uses: pulumi/action-install-pulumi-cli@v1.0.0
       - uses: actions/checkout@v2
       - name: Destroy test infra
         run: |
@@ -354,7 +354,7 @@ jobs:
         run: |
           gcloud --quiet auth configure-docker
       - name: Install Pulumi CLI
-        uses: pulumi/action-install-pulumi-cli@releases/v1
+        uses: pulumi/action-install-pulumi-cli@v1.0.0
       - uses: actions/checkout@v2
       - name: Install Go dependencies
         run: make ensure
