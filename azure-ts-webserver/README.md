@@ -12,6 +12,8 @@ This example provisions a Linux web server in an Azure Virtual Machine and gives
 
 ## Running the App
 
+After cloning this repo, from this working directory, run these commands:
+
 1.  Create a new stack:
 
     ```
