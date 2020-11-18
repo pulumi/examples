@@ -61,13 +61,14 @@ After cloning this repo, run these commands from the working directory:
 	pulumi up
 	```
 
-5. Call our Lambda function from the AWS CLI with "foo" (which the CLI expects to be base64 encoded):
+5. Call our Lambda function from the AWS CLI with "foo" as the payload:
 
 	```bash
 	aws lambda invoke \
 	--function-name $(pulumi stack output lambda) \
 	--region $(pulumi config get aws:region) \
-	--payload 'ImZvbyI=' \
+	--cli-binary-format raw-in-base64-out \
+	--payload '"foo"' \
 	output.json
 
 	cat output.json # view the output file with your tool of choice
