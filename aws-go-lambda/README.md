@@ -1,5 +1,5 @@
 # AWS Golang Lambda
-This example creates a lambda that does a simple `ToUpper` on the string input and returns it.
+This example creates an AWS Lambda function that does a simple `ToUpper` on the string input and returns it.
 
 ## Deploying the App
 
@@ -50,6 +50,7 @@ After cloning this repo, run these commands from the working directory:
 	```
 
 3. Set the required configuration variables for this program:
+
 	```bash
 	pulumi config set aws:region us-east-1
 	```
@@ -60,12 +61,13 @@ After cloning this repo, run these commands from the working directory:
 	pulumi up
 	```
 
-5. Call our lambda function from the aws cli:
+5. Call our Lambda function from the AWS CLI with "foo" as the payload:
 
 	```bash
 	aws lambda invoke \
 	--function-name $(pulumi stack output lambda) \
 	--region $(pulumi config get aws:region) \
+	--cli-binary-format raw-in-base64-out \
 	--payload '"foo"' \
 	output.json
 
@@ -73,7 +75,7 @@ After cloning this repo, run these commands from the working directory:
 	# "FOO"
 	```
 
-6. From there, feel free to experiment. Simply making edits, rebuilding your handler, and running `pulumi up` will update your lambda.
+6. From there, feel free to experiment. Simply making edits, rebuilding your handler, and running `pulumi up` will update your function.
 
 7. Afterwards, destroy your stack and remove it:
 
