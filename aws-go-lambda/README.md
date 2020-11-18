@@ -61,7 +61,7 @@ After cloning this repo, run these commands from the working directory:
 	pulumi up
 	```
 
-5. Call our Lambda function from the aws CLI with "foo" as a base64-encoded payload:
+5. Call our Lambda function from the AWS CLI with "foo" (which the CLI expects to be base64 encoded):
 
 	```bash
 	aws lambda invoke \
