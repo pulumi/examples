@@ -39,7 +39,7 @@ export class Provisioner<T, U> extends pulumi.dynamic.Resource {
                 return { id: uuid.v4(), outs: inputs };
             },
         };
-        super(provider, name, { dep: props.dep, result: null }, opts);
+        super(provider, name, { dep: props.dep, changeToken: props.changeToken, result: null }, opts);
     }
 }
 
