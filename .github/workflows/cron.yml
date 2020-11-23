@@ -360,7 +360,13 @@ jobs:
       - name: Login to Google Cloud Registry
         run: |
           gcloud --quiet auth configure-docker
-      - name: Install Pulumi CLI
+      - if: env.PULUMI_VERSION != ''
+        name: Install Specific Version of Pulumi CLI
+        uses: pulumi/action-install-pulumi-cli@v1.0.1
+        with:
+          pulumi-version: ${{ env.PULUMI_VERSION }}
+      - if: env.PULUMI_VERSION == ''
+        name: Install Latest Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
       - uses: actions/checkout@v2
       - name: Install Go dependencies
