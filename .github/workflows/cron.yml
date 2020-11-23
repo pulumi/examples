@@ -30,6 +30,7 @@ env:
   GOOGLE_ZONE: "us-central1-a"
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
   LINODE_API_TOKEN: ${{ secrets.LINODE_API_TOKEN }}
+  PULUMI_VERSION: ${{ github.event.client_payload.ref }}
 jobs:
   released:
     strategy:
@@ -110,14 +111,20 @@ jobs:
           role-session-name: examples@githubActions
           role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
       - name: scripts/run-at-head ${{ matrix.examples-test-matrix }}
+        if: env.PULUMI_VERSION == ''
         run: ./ci-scripts/ci/run-at-head ${{ matrix.examples-test-matrix }}
-      - if: matrix.examples-test-matrix == '--no-latest-cli'
+      - if: matrix.examples-test-matrix == '--no-latest-cli' && env.PULUMI_VERSION == ''
         name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
-      - if: matrix.examples-test-matrix == '--no-latest-packages'
+      - if: matrix.examples-test-matrix == '--no-latest-packages'  && env.PULUMI_VERSION == ''
         name: Set Pulumi to PATH
         run: |
           echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
+      - if: env.PULUMI_VERSION != ''
+        name: Install Specific Version of Pulumi CLI
+        uses: pulumi/action-install-pulumi-cli@v1.0.1
+        with:
+          pulumi-version: ${{ env.PULUMI_VERSION }}
       - name: Install Go dependencies
         run: make ensure
       - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
