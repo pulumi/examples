@@ -6,6 +6,8 @@ name: New Pull request Open
 
 jobs:
   comment-on-pr:
+    # We only care about commenting on a PR if the PR is from a fork
+    if: github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
