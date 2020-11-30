@@ -1,8 +1,7 @@
 name: New Pull request Open
 "on":
-  pull_request:
-    branches:
-      - master
+  pull_request_target:
+    types: [opened, edited]
 
 jobs:
   comment-on-pr:
