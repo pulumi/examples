@@ -30,23 +30,9 @@ env:
   LINODE_API_TOKEN: ${{ secrets.LINODE_API_TOKEN }}
   PR_COMMIT_SHA: ${{ github.event.client_payload.pull_request.head.sha }}
 jobs:
-  comment-on-pr:
-    # We only care about commenting on a PR if the PR is from a fork
-    if: github.event.pull_request.head.repo.full_name != github.repository
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Comment PR
-        uses: thollander/actions-comment-pull-request@master
-        with:
-          message: |
-            PR is now waiting for a maintainer to run the acceptance tests.
-
-            **Note for the maintainer:** To run the acceptance tests, please comment */run-example-tests* on the PR
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   comment-notification:
-    # We only care about commenting on a PR if the PR is from a fork
-    if: github.event.pull_request.head.repo.full_name != github.repository
+    # We only care about adding the result to the PR if it's a repository_dispatch event
+    if: github.event_name == 'repository_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Create URL to the run output
@@ -143,31 +129,6 @@ jobs:
         run: make ensure
       - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
         run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
-  lint:
-    strategy:
-      matrix:
-        platform: [ubuntu-latest]
-        yarn-version: [1.13.0]
-        node-version: [14.x]
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ env.PR_COMMIT_SHA }}
-      - name: Setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install Yarn
-        run: curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version ${{ matrix.yarn-version }}
-      - name: Update PATH for Yarn
-        run: |
-          echo "$HOME/.yarn/bin" >> $GITHUB_PATH
-          echo "$HOME/.config/yarn/global/node_modules/.bin" >> $GITHUB_PATH
-      - name: setup linting tool
-        run: make install
-      - name: Lint typescript files
-        run: make lint
   test-infra-setup:
     strategy:
       fail-fast: false
