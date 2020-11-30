@@ -12,13 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Comment PR
-        uses: thollander/actions-comment-pull-request@master
+        uses: thollander/actions-comment-pull-request@v1.0.1
         with:
           message: |
             PR is now waiting for a maintainer to run the acceptance tests.
 
             **Note for the maintainer:** To run the acceptance tests, please comment */run-example-tests* on the PR
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.EVENT_PAT }}
   lint:
     strategy:
       matrix:
