@@ -18,7 +18,7 @@ jobs:
             PR is now waiting for a maintainer to run the acceptance tests.
 
             **Note for the maintainer:** To run the acceptance tests, please comment */run-example-tests* on the PR
-          GITHUB_TOKEN: ${{ secrets.EVENT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   lint:
     strategy:
       matrix:
