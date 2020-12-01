@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-iam-authenticator
+  namespace: kube-system
+  labels:
+    k8s-app: aws-iam-authenticator
+data:
+  config.yaml: |
+    clusterID: {{CLUSTER_NAME}}
