@@ -21,7 +21,7 @@ const thumbnailer = new aws.lambda.Function("thumbnailer", {
     packageType: "Image",
     imageUri: image.imageValue,
     role: role.arn,
-    timeout: 60,
+    timeout: 900,
 });
 
 // When a new video is uploaded, run the FFMPEG task on the video file.
