@@ -76,6 +76,7 @@ Example   | Description |
 [EKS - Hello World](aws-ts-eks-hello-world) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then a Kubernetes namespace and nginx deployment into the cluster.
 [EKS - Migrate Node Groups](aws-ts-migrate-nodegroups) | Create an EKS cluster and node group to use for workload migration with zero downtime.
 [Fargate](aws-ts-hello-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
+[Lambda Thumbnailer](aws-ts-lambda-thumbnailer) | Create a video thumbnail extractor using serverless functions.
 [Miniflux](aws-ts-pulumi-miniflux) | Stand up an RSS Service using Fargate and RDS.
 [Pulumi Webhooks](aws-ts-pulumi-webhooks) | Create a Pulumi `cloud.HttpEndpoint` that receives webhook events delivered by the Pulumi Service, then echos the event to Slack.
 [RDS and Airflow](aws-ts-airflow) | Deploy a RDS Postgres instance and containerized Airflow.
