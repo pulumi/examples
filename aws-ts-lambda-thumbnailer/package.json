@@ -1,0 +1,10 @@
+{
+    "name": "video-thumbnailer-lambda",
+    "version": "0.1.0",
+    "main": "index.js",
+    "dependencies": {
+        "@pulumi/pulumi": "^2.0.0",
+        "@pulumi/aws": "^3.17.0",
+        "@pulumi/awsx": "^0.20.0"
+    }
+}
