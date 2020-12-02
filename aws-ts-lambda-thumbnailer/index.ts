@@ -12,9 +12,9 @@ const image = awsx.ecr.buildAndPushImage("sampleapp", {
 const role = new aws.iam.Role("thumbnailerRole", {
     assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: "lambda.amazonaws.com" }),
 });
-new aws.iam.RolePolicyAttachment("lambdaFullAccess", {
+const lambdaFullAccess =  new aws.iam.RolePolicyAttachment("lambdaFullAccess", {
     role: role.name,
-    policyArn: aws.iam.ManagedPolicies.AWSLambdaFullAccess
+    policyArn: aws.iam.ManagedPolicies.AWSLambdaFullAccess,
 });
 
 const thumbnailer = new aws.lambda.Function("thumbnailer", {
