@@ -1,9 +1,9 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as helm from "@pulumi/kubernetes/helm";
+import * as k8s from "@pulumi/kubernetes";
 import { k8sCluster, k8sProvider } from "./cluster";
 
-const apache = new helm.v2.Chart(
+const apache = new k8s.helm.v3.Chart(
     "apache",
     {
         repo: "bitnami",
