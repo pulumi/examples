@@ -35,7 +35,7 @@ After cloning this repo, from this working directory, run these commands:
 
 1. Create a new Pulumi stack, which is an isolated deployment target for this example:
 
-    This will initialize the Pulumi program in TypeScript.
+    This will initialize the Pulumi program in Golang.
 
     ```bash
     $ pulumi stack init
