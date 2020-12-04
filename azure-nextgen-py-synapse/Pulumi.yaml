@@ -1,0 +1,3 @@
+name: azure-nextgen-py-synapse
+runtime: python
+description: Creates Azure Synapse workspace with SQL and Spark pools
