@@ -1,0 +1,12 @@
+{
+    "name": "azure-nextgen-ts-synapse",
+    "version": "1.0.0",
+    "devDependencies": {
+        "@types/node": "^8.0.0"
+    },
+    "dependencies": {
+        "@pulumi/azure-nextgen": "^0.2.8",
+        "@pulumi/pulumi": "^2.0.0",
+        "@pulumi/random": "^2.0.0"
+    }
+}
