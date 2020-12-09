@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Amazon EKS Distroy Cluster
+# Amazon EKS Distro Cluster
 
 This example deploys an Amazon EKS Distro cluster using a [dynamic provider](https://www.pulumi.com/docs/intro/concepts/programming-model/#dynamicproviders) which utilizes [kops](https://github.com/kubernetes/kops)
 
