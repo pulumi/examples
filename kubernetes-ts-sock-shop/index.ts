@@ -26,6 +26,9 @@ const cartsDb = new k8s.apps.v1.Deployment("carts-db", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "carts-db",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -103,6 +106,9 @@ const carts = new k8s.apps.v1.Deployment("carts", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "carts",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -196,6 +202,9 @@ const catalogDb = new k8s.apps.v1.Deployment("catalog-db", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "catalogue-db",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -262,6 +271,9 @@ const catalog = new k8s.apps.v1.Deployment("catalog", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "catalogue",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -327,6 +339,9 @@ const frontend = new k8s.apps.v1.Deployment("front-end", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "front-end",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -402,6 +417,9 @@ const ordersDb = new k8s.apps.v1.Deployment("orders-db", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "orders-db",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -479,6 +497,9 @@ const orders = new k8s.apps.v1.Deployment("orders", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "orders",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -572,6 +593,9 @@ const payment = new k8s.apps.v1.Deployment("payment", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "payment",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -640,6 +664,9 @@ const queueMaster = new k8s.apps.v1.Deployment("queue-master", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "queue-master",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -698,6 +725,9 @@ const rabbitmq = new k8s.apps.v1.Deployment("rabbitmq", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "rabbitmq",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -764,6 +794,9 @@ const shipping = new k8s.apps.v1.Deployment("shipping", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "shipping",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -857,6 +890,9 @@ const userDb = new k8s.apps.v1.Deployment("user-db", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "user-db",
+        }},
         template: {
             metadata: {
                 labels: {
@@ -934,6 +970,9 @@ const user = new k8s.apps.v1.Deployment("user", {
     },
     spec: {
         replicas: 1,
+        selector: {matchLabels: {
+            name: "user",
+        }},
         template: {
             metadata: {
                 labels: {
