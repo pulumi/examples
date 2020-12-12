@@ -1619,8 +1619,6 @@ func getBaseOptions(t *testing.T) integration.ProgramTestOptions {
 		Tracing:              "https://tracing.pulumi-engineering.com/collector/api/v1/spans",
 		ExpectRefreshChanges: true,
 		Overrides:            overrides,
-		Quick:                true,
-		SkipRefresh:          true,
 		RetryFailedSteps:     true,
 	}
 
