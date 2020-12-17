@@ -31,7 +31,7 @@ env:
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
   LINODE_API_TOKEN: ${{ secrets.LINODE_API_TOKEN }}
   PULUMI_VERSION: ${{ github.event.client_payload.ref }}
-  PULUMI_EXPERIMENTAL_RESOURCE_REFERENCES: 1
+  PULUMI_ENABLE_RESOURCE_REFERENCES: 1
 jobs:
   released:
     strategy:
