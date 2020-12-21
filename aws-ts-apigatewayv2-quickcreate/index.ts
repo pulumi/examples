@@ -30,21 +30,20 @@ const lambda = new aws.lambda.Function("lambdaFunction", {
      runtime: "nodejs12.x",
      role: lambdaRole.arn,
      handler: "index.handler",
-     
 });
 
 // Give API Gateway permissions to invoke the Lambda
 const lambdaPermission = new aws.lambda.Permission("lambdapermission", {
     action: "lambda:InvokeFunction",
     principal: "apigateway.amazonaws.com",
-    function: lambda
+    function: lambda,
 });
 
 // Set up the API Gateway
 const apigw = new aws.apigatewayv2.Api("httpApiGateway", {
     protocolType: "HTTP",
     routeKey: "GET /",
-    target: lambda.invokeArn
+    target: lambda.invokeArn,
 });
 
 export const endpoint = apigw.apiEndpoint;
