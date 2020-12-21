@@ -41,7 +41,7 @@ with `***`.
     +   └─ aws:lambda:Permission         lambdapermission                         created
 
     Outputs:
-        endpoint: "https://wcj63c5fsa.execute-api.eu-west-1.amazonaws.com"
+        endpoint: "https://****.execute-api.us-east-2.amazonaws.com"
 
     Resources:
         + 6 created
@@ -55,7 +55,7 @@ with `***`.
     $ pulumi stack output
     Current stack outputs (1):
         OUTPUT            VALUE
-        endpoint          https://***.execute-api.eu-west-1.amazonaws.com
+        endpoint          https://***.execute-api.us-east-2.amazonaws.com
 
     $ curl $(pulumi stack output endpoint)
     Hello, Pulumi!
