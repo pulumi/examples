@@ -37,7 +37,7 @@ const lambda = new aws.lambda.Function("lambdaFunction", {
 });
 
 // Give API Gateway permissions to invoke the Lambda
-new aws.lambda.Permission("lambdapermission", {
+new aws.lambda.Permission("lambdaPermission", {
   action: "lambda:InvokeFunction",
   principal: "apigateway.amazonaws.com",
   function: lambda,
