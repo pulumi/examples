@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# AWS API Gateway V2 HTTP API
+# AWS API Gateway V2 HTTP API Quickstart
 
 Set up a simple HTTP API using AWS API Gateway V2 
 
