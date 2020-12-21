@@ -33,7 +33,7 @@ const lambdaRole = new aws.iam.Role("lambdaRole", {
   },
 });
 
-new aws.iam.RolePolicyAttachment("lambdaRoleAttachment", {
+const lambadRoleAttachment = new aws.iam.RolePolicyAttachment("lambdaRoleAttachment", {
   role: lambdaRole,
   policyArn: aws.iam.ManagedPolicies.AWSLambdaFullAccess,
 });
@@ -51,7 +51,7 @@ const apigw = new aws.apigatewayv2.Api("httpApiGateway", {
   protocolType: "HTTP",
 });
 
-new aws.lambda.Permission("lambdaPermission", {
+const lambdaPermission = new aws.lambda.Permission("lambdaPermission", {
   action: "lambda:InvokeFunction",
   principal: "apigateway.amazonaws.com",
   function: lambda,
