@@ -11,6 +11,15 @@ import time
 from typing import Any, Optional
 from typing_extensions import TypedDict
 from uuid import uuid4
+import hashlib
+
+
+def sha256sum(filename):
+    h  = hashlib.sha256()
+    with open(filename, 'rb') as f:
+        data = f.read()
+        h.update(data)
+    return h.hexdigest()
 
 # ConnectionArgs tells a provisioner how to access a remote resource. It includes the hostname
 # and optional port (default is 22), username, password, and private key information.
@@ -115,6 +124,7 @@ class CopyFile(dynamic.Resource):
                 'conn': conn,
                 'src': src,
                 'dest': dest,
+                'fileHash': sha256sum(src),
             },
             opts,
         )
