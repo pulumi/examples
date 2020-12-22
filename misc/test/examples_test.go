@@ -498,6 +498,20 @@ func TestAccAwsTsPulumiWebhooks(t *testing.T) {
 				"aws-ts-pulumi-webhooks:slackChannel": "general",
 				"aws-ts-pulumi-webhooks:slackWebhook": "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
 			},
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			//   ~  aws:apigateway:RestApi pulumi-webhook-handler update [diff: ~binaryMediaTypes]
+			//   ++ aws:apigateway:Deployment pulumi-webhook-handler create replacement [diff: ~variables]
+			//   +- aws:apigateway:Deployment pulumi-webhook-handler replace [diff: ~variables]
+			//   ++ aws:lambda:Permission pulumi-webhook-handler-fa520765 create replacement [diff: ~sourceArn]
+			//   +- aws:lambda:Permission pulumi-webhook-handler-fa520765 replace [diff: ~sourceArn]
+			//   ++ aws:lambda:Permission pulumi-webhook-handler-c171fd88 create replacement [diff: ~sourceArn]
+			//   +- aws:lambda:Permission pulumi-webhook-handler-c171fd88 replace [diff: ~sourceArn]
+			//   ~  aws:apigateway:Stage pulumi-webhook-handler update [diff: ~deployment]
+			//   -- aws:lambda:Permission pulumi-webhook-handler-fa520765 delete original [diff: ~sourceArn]
+			//   -- aws:lambda:Permission pulumi-webhook-handler-c171fd88 delete original [diff: ~sourceArn]
+			//   -- aws:apigateway:Deployment pulumi-webhook-handler delete original [diff: ~variables]
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -564,6 +578,10 @@ func TestAccAwsTsThumbnailer(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-thumbnailer"),
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			//  ~  aws:lambda:Function onNewVideo update [diff: ~code]
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -589,6 +607,13 @@ func TestAccAwsTsLambdaEfs(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-lambda-efs"),
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			//  ++ aws:ecs:TaskDefinition nginx create replacement [diff: ~volumes]
+			//  +- aws:ecs:TaskDefinition nginx replace [diff: ~volumes]
+			//  ~  aws:ecs:Service nginx update [diff: ~taskDefinition]
+			//  -- aws:ecs:TaskDefinition nginx delete original [diff: ~volumes]
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -1065,6 +1090,14 @@ func TestAccCloudJsThumbnailer(t *testing.T) {
 			Config: map[string]string{
 				"cloud-aws:useFargate": "true",
 			},
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			// ++ aws:ecs:TaskDefinition ffmpegThumbTask create replacement [diff: ~containerDefinitions]
+			// +- aws:ecs:TaskDefinition ffmpegThumbTask replace [diff: ~containerDefinitions]
+			// ~  aws:lambda:Function onNewVideo update [diff: ~code]
+			// ~  aws:s3:BucketNotification onNewVideo update [diff: ~lambdaFunctions]
+			// -- aws:ecs:TaskDefinition ffmpegThumbTask delete original [diff: ~containerDefinitions]
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -1080,6 +1113,16 @@ func TestAccCloudJsThumbnailerMachineLearning(t *testing.T) {
 				"cloud-aws:computeIAMRolePolicyARNs": "arn:aws:iam::aws:policy/AWSLambdaFullAccess,arn:aws:iam::aws:" +
 					"policy/AmazonEC2ContainerServiceFullAccess,arn:aws:iam::aws:policy/AmazonRekognitionFullAccess",
 			},
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			//  ++ aws:ecs:TaskDefinition ffmpegThumbTask create replacement [diff: ~containerDefinitions]
+			//  +- aws:ecs:TaskDefinition ffmpegThumbTask replace [diff: ~containerDefinitions]
+			//  ~  aws:lambda:Function AmazonRekognitionTopic_labelResults update [diff: ~code]
+			//  ++ aws:sns:TopicSubscription AmazonRekognitionTopic_labelResults create replacement [diff: ~endpoint]
+			//  +- aws:sns:TopicSubscription AmazonRekognitionTopic_labelResults replace [diff: ~endpoint]
+			//  -- aws:sns:TopicSubscription AmazonRekognitionTopic_labelResults delete original [diff: ~endpoint]
+			//  -- aws:ecs:TaskDefinition ffmpegThumbTask delete original [diff: ~containerDefinitions]
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)

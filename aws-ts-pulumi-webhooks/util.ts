@@ -6,7 +6,7 @@ import { IncomingWebhookSendArguments } from "@slack/webhook";
 // See the Pulumi and Slack webhook documentation for details.
 // https://www.pulumi.com/docs/intro/console/extensions/webhooks/
 // https://api.slack.com/docs/message-attachments
-export function formatSlackMessage(kind: string, payload: object, messageArgs: IncomingWebhookSendArguments): IncomingWebhookSendArguments {
+export function formatSlackMessage(kind: string | undefined, payload: object, messageArgs: IncomingWebhookSendArguments): IncomingWebhookSendArguments {
     const cloned: IncomingWebhookSendArguments = Object.assign({}, messageArgs) as IncomingWebhookSendArguments;
 
     switch (kind) {

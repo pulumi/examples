@@ -111,7 +111,7 @@ const carts = new k8s.apps.v1.Deployment("carts", {
         selector: {
             matchLabels: {
                 name: "carts",
-            }
+            },
         },
         template: {
             metadata: {
@@ -209,7 +209,7 @@ const catalogDb = new k8s.apps.v1.Deployment("catalog-db", {
         selector: {
             matchLabels: {
                 name: "catalogue-db",
-            }
+            },
         },
         template: {
             metadata: {
@@ -280,7 +280,7 @@ const catalog = new k8s.apps.v1.Deployment("catalog", {
         selector: {
             matchLabels: {
                 name: "catalogue",
-            }
+            },
         },
         template: {
             metadata: {
@@ -350,7 +350,7 @@ const frontend = new k8s.apps.v1.Deployment("front-end", {
         selector: {
             matchLabels: {
                 name: "front-end",
-            }
+            },
         },
         template: {
             metadata: {
@@ -430,7 +430,7 @@ const ordersDb = new k8s.apps.v1.Deployment("orders-db", {
         selector: {
             matchLabels: {
                 name: "orders-db",
-            }
+            },
         },
         template: {
             metadata: {
@@ -512,7 +512,7 @@ const orders = new k8s.apps.v1.Deployment("orders", {
         selector: {
             matchLabels: {
                 name: "orders",
-            }
+            },
         },
         template: {
             metadata: {
@@ -610,7 +610,7 @@ const payment = new k8s.apps.v1.Deployment("payment", {
         selector: {
             matchLabels: {
                 name: "payment",
-            }
+            },
         },
         template: {
             metadata: {
@@ -683,7 +683,7 @@ const queueMaster = new k8s.apps.v1.Deployment("queue-master", {
         selector: {
             matchLabels: {
                 name: "queue-master",
-            }
+            },
         },
         template: {
             metadata: {
@@ -746,7 +746,7 @@ const rabbitmq = new k8s.apps.v1.Deployment("rabbitmq", {
         selector: {
             matchLabels: {
                 name: "rabbitmq",
-            }
+            },
         },
         template: {
             metadata: {
@@ -817,7 +817,7 @@ const shipping = new k8s.apps.v1.Deployment("shipping", {
         selector: {
             matchLabels: {
                 name: "shipping",
-            }
+            },
         },
         template: {
             metadata: {
@@ -915,7 +915,7 @@ const userDb = new k8s.apps.v1.Deployment("user-db", {
         selector: {
             matchLabels: {
                 name: "user-db",
-            }
+            },
         },
         template: {
             metadata: {
@@ -997,7 +997,7 @@ const user = new k8s.apps.v1.Deployment("user", {
         selector: {
             matchLabels: {
                 name: "user",
-            }
+            },
         },
         template: {
             metadata: {
