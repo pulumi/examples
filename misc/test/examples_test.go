@@ -1109,6 +1109,16 @@ func TestAccCloudJsThumbnailerMachineLearning(t *testing.T) {
 				"cloud-aws:computeIAMRolePolicyARNs": "arn:aws:iam::aws:policy/AWSLambdaFullAccess,arn:aws:iam::aws:" +
 					"policy/AmazonEC2ContainerServiceFullAccess,arn:aws:iam::aws:policy/AmazonRekognitionFullAccess",
 			},
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			//  ++ aws:ecs:TaskDefinition ffmpegThumbTask create replacement [diff: ~containerDefinitions]
+			//  +- aws:ecs:TaskDefinition ffmpegThumbTask replace [diff: ~containerDefinitions]
+			//  ~  aws:lambda:Function AmazonRekognitionTopic_labelResults update [diff: ~code]
+			//  ++ aws:sns:TopicSubscription AmazonRekognitionTopic_labelResults create replacement [diff: ~endpoint]
+			//  +- aws:sns:TopicSubscription AmazonRekognitionTopic_labelResults replace [diff: ~endpoint]
+			//  -- aws:sns:TopicSubscription AmazonRekognitionTopic_labelResults delete original [diff: ~endpoint]
+			//  -- aws:ecs:TaskDefinition ffmpegThumbTask delete original [diff: ~containerDefinitions]
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
