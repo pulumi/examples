@@ -578,6 +578,10 @@ func TestAccAwsTsThumbnailer(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-thumbnailer"),
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			//  ~  aws:lambda:Function onNewVideo update [diff: ~code]
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
