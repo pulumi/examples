@@ -3,8 +3,7 @@ import json
 import pulumi
 import pulumi_aws as aws
 
-aws_config = pulumi.Config("aws")
-region = aws_config.get("region") or "us-east-1" 
+region = aws.config.region or "us-east-1" 
 avail_zone = region+"a" # e.g. us-east-1a 
 
 stack_config = pulumi.Config("cfg")
