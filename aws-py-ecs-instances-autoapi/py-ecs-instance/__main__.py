@@ -1,7 +1,4 @@
-# Deploys ECS with EC2 container instances (as opposed to using Fargate).
-#
-
-"""An AWS Python Pulumi program"""
+"""Deploys ECS with EC2 container instances (as opposed to using Fargate)."""
 import json
 import pulumi
 import pulumi_aws as aws
