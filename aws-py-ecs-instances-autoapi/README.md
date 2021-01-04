@@ -4,7 +4,7 @@ This example demonstrates three use-cases:
 
 - AWS ECS using Container Instances (Python): A Python Pulumi program that stands up a custom AWS ECS cluster that uses instances instead of fargate for the infrastructure.
 - Automation API Orchestration: Destroying this stack without any sort of orchestration will fail due to this issue in the underlying provider: https://github.com/hashicorp/terraform-provider-aws/issues/4852. So, Automation API to the rescue. By orchestrating sizing of the autoscaling group to 0 before the destroy, the destroy is able to complete as expected.
-- Automation API cross-language support: Although the automation logic is written in typescript/node, the ECS cluster stack is written in python.
+- Automation API cross-language support: Although the automation logic is written in TypeScript, the ECS cluster stack is written in Python.
 
 ## Project Structure
 
