@@ -1,7 +1,7 @@
 import { LocalProgramArgs, LocalWorkspace } from "@pulumi/pulumi/x/automation";
 import * as upath from "upath";
 
-const process = require('process');
+const process = require("process");
 
 const args = process.argv.slice(2);
 let destroy = false;
