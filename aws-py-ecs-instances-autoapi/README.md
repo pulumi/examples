@@ -26,7 +26,7 @@ This directory contains the automation api code (`index.ts`) that handles deploy
 
 To run this example you'll need a few pre-reqs:
 
-1. A Pulumi CLI installation ([v2.12.0](https://www.pulumi.com/docs/get-started/install/versions/) or later)
+1. A Pulumi CLI installation ([v2.15.6](https://www.pulumi.com/docs/get-started/install/versions/) or later)
 2. Python 3.6+
 3. The AWS CLI, with appropriate credentials.
 
