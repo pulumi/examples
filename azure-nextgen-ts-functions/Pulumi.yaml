@@ -1,0 +1,8 @@
+name: azure-nextgen-ts-functions
+runtime: nodejs
+description: Creates and deploys an Azure Function App
+template:
+  config:
+    location:
+      description: Azure region to deploy resources to
+      default: WestUS
