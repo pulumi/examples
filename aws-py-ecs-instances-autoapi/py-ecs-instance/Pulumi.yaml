@@ -1,0 +1,6 @@
+name: aws-py-ecs-instances-autoapi
+description: A container running in AWS ECS Container Instance, using Python infrastructure as code
+runtime:
+  name: python
+  options:
+    virtualenv: venv

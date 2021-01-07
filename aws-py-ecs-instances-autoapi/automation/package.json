@@ -1,0 +1,18 @@
+{
+  "name": "automation",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "repository": "github.com/pulumi/automation-api-examples",
+  "author": "EvanBoyle",
+  "license": "MIT",
+  "dependencies": {
+    "@pulumi/aws": "^3.6.1",
+    "@pulumi/pulumi": "^2.12.0",
+    "@types/node": "^14.14.20",
+    "ts-node": "^9.0.0",
+    "upath": "^2.0.0"
+  },
+  "scripts": {
+    "start": "./node_modules/ts-node/dist/bin.js index.ts"
+  }
+}
