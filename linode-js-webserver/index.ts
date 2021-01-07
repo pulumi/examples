@@ -20,7 +20,7 @@ const stackscript = new linode.StackScript("simple-server", {
 
 const linodeInstance = new linode.Instance("instance", {
   instanceType: "g6-nanode-1",
-  stackscriptId: stackscript,
+  stackscriptId: stackscript.id,
   image: debian9,
   region: "us-east",
   // Include all "LISH" registered SSH Keys
