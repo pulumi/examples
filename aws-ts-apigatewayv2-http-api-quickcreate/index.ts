@@ -21,7 +21,7 @@ const lambdaRole = new aws.iam.Role("lambdaRole", {
 });
 
 // Attach the fullaccess policy to the Lambda role created above
-new aws.iam.RolePolicyAttachment("lambdaRoleAttachment", {
+const rolepolicyattachment = new aws.iam.RolePolicyAttachment("lambdaRoleAttachment", {
   role: lambdaRole,
   policyArn: aws.iam.ManagedPolicies.AWSLambdaFullAccess,
 });
@@ -37,7 +37,7 @@ const lambda = new aws.lambda.Function("lambdaFunction", {
 });
 
 // Give API Gateway permissions to invoke the Lambda
-new aws.lambda.Permission("lambdaPermission", {
+const lambdapermission = new aws.lambda.Permission("lambdaPermission", {
   action: "lambda:InvokeFunction",
   principal: "apigateway.amazonaws.com",
   function: lambda,
