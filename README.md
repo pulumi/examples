@@ -68,6 +68,7 @@ $ git pull origin master
 Example   | Description |
 --------- | --------- |
 [API Gateway](aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
+[API Gateway HTTP API with routes](aws-ts-apigatewayv2-http-api) | Deploy a HTTP API that invokes a lambda.
 [Apigateway - Auth0](aws-ts-apigateway-auth0) | Deploy a simple REST API protected by Auth0.
 [AppSync](aws-ts-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
 [AssumeRole](aws-ts-assume-role) | Use AssumeRole to create resources.

@@ -1,0 +1,3 @@
+name: aws-ts-apigatewayv2-http-api
+runtime: nodejs
+description: Example of using AWS API Gateway v2 HTTP API
