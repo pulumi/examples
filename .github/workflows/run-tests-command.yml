@@ -340,6 +340,6 @@ jobs:
       - name: Setup Config
         run: |
           mkdir -p "$HOME/.kube/"
-          pulumi stack -s "${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output kubeconfig >~/.kube/config
+          pulumi stack -s "${{ secrets.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
       - name: Run ${{ matrix.tests-set }} Tests
         run: make specific_test_set TestSet=Kubernetes
