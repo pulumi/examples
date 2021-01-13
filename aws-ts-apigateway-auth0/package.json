@@ -5,7 +5,7 @@
     },
     "dependencies": {
         "@pulumi/aws": "^3.0.0",
-        "@pulumi/awsx": "^0.20.0",
+        "@pulumi/awsx": "^0.23.0",
         "@pulumi/pulumi": "^2.0.0",
         "@types/auth0-js": "^9.10.1",
         "@types/jsonwebtoken": "^8.3.2",
