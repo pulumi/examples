@@ -22,7 +22,7 @@ class CreateRoleStack : Stack
             User = unprivilegedUser.Name,
         },
         // additional_secret_outputs specify properties that must be encrypted as secrets
-        // https://www.pulumi.com/docs/intro/concepts/programming-model/#additionalsecretoutputs
+        // https://www.pulumi.com/docs/intro/concepts/resources/#additionalsecretoutputs
         new CustomResourceOptions { AdditionalSecretOutputs = { "secret" } });
 
         var tempPolicy = unprivilegedUser.Arn.Apply((string arn) =>

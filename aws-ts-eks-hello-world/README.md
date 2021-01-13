@@ -218,7 +218,7 @@ After cloning this repo, from this working directory, run these commands:
     the minimally disruptive change to achieve the desired state.
 
 	> **Note:** Pulumi auto-generates a suffix for all objects.
-    > See the [Pulumi Programming Model](https://www.pulumi.com/docs/intro/concepts/programming-model/#autonaming) for more info.
+    > See the [Pulumi Programming Model](https://www.pulumi.com/docs/intro/concepts/resources/#autonaming) for more info.
     >
     > ```
     > deploymentName : "helloworld-58jkmc7c"

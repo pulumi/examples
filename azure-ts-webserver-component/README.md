@@ -4,7 +4,7 @@
 
 This example provisions a configurable number of Linux web servers in an Azure Virtual Machine, and returns the
 resulting public IP addresses. This example uses a reusable [Pulumi component](
-https://www.pulumi.com/docs/intro/concepts/programming-model/#components) to simplify the creation of new virtual machines. By
+https://www.pulumi.com/docs/intro/concepts/resources/#components) to simplify the creation of new virtual machines. By
 defining a `WebServer` class, we can hide many details (see [here](./webserver.ts) for its definition).
 
 ## Prerequisites

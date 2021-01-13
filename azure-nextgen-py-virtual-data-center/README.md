@@ -10,7 +10,7 @@ With minimal configuration, matching stacks may be deployed in Azure [paired reg
 
 Although the VDC pattern is in widespread use, Azure now offers a managed service intended to replace it, comprising Virtual Hub along with partner SD-WAN components, with a [migration plan](https://docs.microsoft.com/en-us/azure/virtual-wan/migrate-from-hub-spoke-topology) that illustrates the differences between the two patterns. But if you want or need to manage your own network infrastructure, VDC is still relevant.
 
-This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components) which demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction. It also demonstrates use of `pulumi.StackReference` as described [here](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) to relate multiple stacks. Finally, it uses Python's ```ipaddress``` module to simplify and validate configuration of network addresses.
+This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/resources/#components) which demonstrates how multiple low-level resources can be composed into a higher-level, reusable abstraction. It also demonstrates use of `pulumi.StackReference` as described [here](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) to relate multiple stacks. Finally, it uses Python's ```ipaddress``` module to simplify and validate configuration of network addresses.
 
 ## Prerequisites
 

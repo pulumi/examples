@@ -142,4 +142,4 @@ endpoint.get("/url", async (req, res) => { // this function is the body of the L
 
 Pulumi creates a Lambda function that contains the anonymous function passed to `endpoint.get`. Note that the value of `urlTable` is "captured." This means that `urlTable.scan` is turned into an API call on Dynamo DB, using the physical identifier for `urlTable`. There's no need to store this information in an environment variable; Pulumi wires everything up for you.
 
-To learn more about runtime and deployment time code, see [Programming Model](https://www.pulumi.com/docs/intro/concepts/programming-model/) in the Pulumi documentation.
+To learn more about runtime and deployment time code, see [Architecture and Concepts](https://www.pulumi.com/docs/intro/concepts/) in the Pulumi documentation.

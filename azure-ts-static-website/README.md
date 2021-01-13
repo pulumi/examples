@@ -4,7 +4,7 @@
 
 This example configures [Static website hosting in Azure Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website). One complication is the fact that the Static Website feature of Storage Accounts is not part of Azure Resource Manager, and is not configurable directly via Pulumi Azure provider.
 
-As a workaround, a custom [dynamic provider](https://www.pulumi.com/docs/intro/concepts/programming-model/#dynamicproviders) and a dynamic resource are created. The provider delegates the setup to Azure CLI commands, while still providing Pulumi experience and lifecycle management.
+As a workaround, a custom [dynamic provider](https://www.pulumi.com/docs/intro/concepts/resources/#dynamicproviders) and a dynamic resource are created. The provider delegates the setup to Azure CLI commands, while still providing Pulumi experience and lifecycle management.
 
 In addition to the Storage itself, a CDN is configured to serve files from the Blob container origin. This may be useful if you need to serve files via HTTPS from a custom domain (not shown in the example).
 

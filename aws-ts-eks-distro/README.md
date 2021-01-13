@@ -2,7 +2,7 @@
 
 # Amazon EKS Distro Cluster
 
-This example deploys an Amazon EKS Distro cluster using a [dynamic provider](https://www.pulumi.com/docs/intro/concepts/programming-model/#dynamicproviders) which utilizes [kops](https://github.com/kubernetes/kops)
+This example deploys an Amazon EKS Distro cluster using a [dynamic provider](https://www.pulumi.com/docs/intro/concepts/resources/#dynamicproviders) which utilizes [kops](https://github.com/kubernetes/kops)
 
 ## Deploying the App
 

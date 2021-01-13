@@ -14,7 +14,7 @@ const unprivilegedUserCreds = new aws.iam.AccessKey("unprivileged-user-key", {
     user: unprivilegedUser.name,
 }, 
 // additional_secret_outputs specify properties that must be encrypted as secrets
-// https://www.pulumi.com/docs/intro/concepts/programming-model/#additionalsecretoutputs
+// https://www.pulumi.com/docs/intro/concepts/resources/#additionalsecretoutputs
 { additionalSecretOutputs: ["secret"] });
 
 const allowS3ManagementRole = new aws.iam.Role("allow-s3-management", {
