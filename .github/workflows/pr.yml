@@ -1,6 +1,6 @@
 name: New Pull request Open
 "on":
-  pull_request:
+  pull_request_target:
 
 jobs:
   comment-on-pr:
