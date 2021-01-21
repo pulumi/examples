@@ -64,7 +64,7 @@ const blob = new azure.storage.Blob("zip", {
     storageContainerName: storageContainer.name,
     type: "Block",
 
-    source: new pulumi.asset.FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish"),
+    source: new pulumi.asset.FileArchive("./webapp/bin/Debug/netcoreapp3.1/publish"),
 });
 
 const clientConfig = azure.core.getClientConfig({ async: true });

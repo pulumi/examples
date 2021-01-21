@@ -72,7 +72,7 @@ blob = storage.Blob(
     storage_account_name=storage_account.name,
     storage_container_name=container.name,
     type="Block",
-    source=asset.FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish")
+    source=asset.FileArchive("./webapp/bin/Debug/netcoreapp3.1/publish")
 )
 
 client_config = core.get_client_config()
