@@ -84,7 +84,7 @@ class AppStack : Stack
             StorageAccountName = storageAccount.Name,
             StorageContainerName = storageContainer.Name,
             Type = "Block",
-            Source = new FileArchive("./webapp/bin/Debug/netcoreapp2.2/publish"),
+            Source = new FileArchive("./webapp/bin/Debug/netcoreapp3.1/publish"),
         });
 
         var clientConfig = Output.Create(GetClientConfig.InvokeAsync());
