@@ -43,7 +43,7 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
    you may also configure your `kubectl` client using the `kubeconfig` configuration:
 
    ```bash
-   $ pulumi stack output kubeconfig > kubeconfig.yaml
+   $ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
    $ kubectl get namespaces
    ....
    ```

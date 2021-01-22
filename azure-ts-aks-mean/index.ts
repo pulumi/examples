@@ -54,7 +54,7 @@ const node = new k8s.helm.v3.Chart(
 );
 
 // Export kubeconfig file, cluster name, and public IP address for Kubernetes application. These can
-// be accessed from the CLI, like: `pulumi stack output kubeconfig > kubeconfig.yaml`.
+// be accessed from the CLI, like: `pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml`.
 export const kubeconfig = k8sCluster.kubeConfigRaw;
 export const cluster = k8sCluster.name;
 export const frontendAddress = node

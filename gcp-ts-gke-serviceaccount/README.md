@@ -94,7 +94,7 @@ After cloning this repo, from this working directory, run these commands:
     stack output in the CLI, as Pulumi facilitates exporting these objects for us.
 
     ```bash
-    $ pulumi stack output kubeconfig > kubeconfig
+    $ pulumi stack output kubeconfig --show-secrets > kubeconfig
     $ export KUBECONFIG=$PWD/kubeconfig
     $ kubectl version
     $ kubectl cluster-info

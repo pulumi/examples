@@ -66,7 +66,7 @@ $ pulumi up --yes
 This will prompt you to create a stack if you haven't done so already. When the deploy is ready you can export the kubernetes config with
 
 ```bash
-$ pulumi stack output kubeconfig > kubeconfig.yaml
+$ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
 ```
 
 and then test the deployment with

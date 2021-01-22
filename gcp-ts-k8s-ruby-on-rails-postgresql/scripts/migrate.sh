@@ -3,7 +3,7 @@
 set -ex
 
 export KUBECONFIG=$(mktemp)
-pulumi stack output kubeConfig > $KUBECONFIG
+pulumi stack output kubeconfig --show-secrets > $KUBECONFIG
 
 DEPLOYMENT=$(pulumi stack output appName)
 if [ -z "$DEPLOYMENT" ]; then

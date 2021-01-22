@@ -83,7 +83,7 @@ After cloning this repo, `cd` into it and run these commands. A GKE Kubernetes c
    For instance:
 
    ```bash
-   $ pulumi stack output kubeconfig > kubeconfig.yaml
+   $ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
    $ KUBECONFIG=./kubeconfig.yaml kubectl get po
    NAME                              READY     STATUS    RESTARTS   AGE
    canary-n7wfhtrp-fdbfd897b-lrm58   1/1       Running   0          58s

@@ -61,7 +61,7 @@ After cloning this repo, `cd` into it and run these commands.
    Using these output variables, you may configure your `kubectl` client using the `kubeConfig` configuration:
 
    ```bash
-   $ pulumi stack output kubeConfig > kubeconfig.yaml
+   $ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
    $ KUBECONFIG=./kubeconfig.yaml kubectl get deployment
    NAME           READY     UP-TO-DATE     AVAILABLE    AGE
    keda-edge      1/1       1              1            9m

@@ -146,7 +146,7 @@ After cloning this repo, from this working directory, run these commands:
     stack output in the CLI, as Pulumi facilitates exporting these objects for us.
 
     ```bash
-    $ pulumi stack output kubeconfig > kubeconfig
+    $ pulumi stack output kubeconfig --show-secrets > kubeconfig
     $ export KUBECONFIG=$PWD/kubeconfig
     $ export KUBERNETES_VERSION=1.11.6 && sudo curl -s -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/amd64/kubectl && sudo chmod +x /usr/local/bin/kubectl
 

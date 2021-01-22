@@ -48,7 +48,7 @@ After cloning this repo, from this working directory, run these commands:
    be available as an output. You can save this kubeconfig to a file like so:
 
     ```bash
-    $ pulumi stack output kubeconfig >kubeconfig.json
+    $ pulumi stack output kubeconfig --show-secrets >kubeconfig.json
     ```
 
     Once you have this file in hand, you can interact with your new cluster as usual via `kubectl`:

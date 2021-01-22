@@ -17,7 +17,7 @@ deploy: build ## Deploy with -y
 	pulumi up -y
 
 exportconfig: ## Exports the kubernetes config
-	pulumi stack output kubeconfig > kubeconfig.yaml
+	pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
 
 destroy: build ## Destroy with -y
 	pulumi destroy -y

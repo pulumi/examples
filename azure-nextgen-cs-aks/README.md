@@ -44,7 +44,7 @@ After cloning this repo, from this working directory, run these commands:
 1. After 3-4 minutes, your cluster will be ready, and the kubeconfig YAML you'll use to connect to the cluster will be available as an output. You can save this kubeconfig to a file like so:
 
     ```bash
-    $ pulumi stack output KubeConfig > kubeconfig.yaml
+    $ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
     ```
 
     Once you have this file in hand, you can interact with your new cluster as usual via `kubectl`:

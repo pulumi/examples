@@ -90,7 +90,7 @@ After cloning this repo, from this working directory, run these commands:```
    use that when running the `kubectl` command. For instance, this lists your pods:
 
     ```bash
-    $ pulumi stack output kubeconfig > kubeconfig
+    $ pulumi stack output kubeconfig --show-secrets > kubeconfig
     $ KUBECONFIG=./kubeconfig kubectl get pods
     ```
 

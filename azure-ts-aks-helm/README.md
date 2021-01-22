@@ -61,7 +61,7 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
    And you may also configure your `kubectl` client using the `kubeConfig` configuration:
 
    ```bash
-   $ pulumi stack output kubeConfig > kubeconfig.yaml
+   $ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
    $ KUBECONFIG=./kubeconfig.yaml kubectl get service
    NAME            TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)                      AGE
    apache-apache   LoadBalancer   10.0.125.196   40.76.52.208   80:32080/TCP,443:31419/TCP   9m
