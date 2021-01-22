@@ -11,7 +11,7 @@ class TestS3(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.STACK_NAME = 'dev'
+        cls.STACK_NAME = 'staging'
         cls.REGION_NAME = 'eu-north-1'
         cls.WORK_DIR = os.path.join(os.path.dirname(__file__))
         cls.FILE_NAME = 'bucket.txt'
