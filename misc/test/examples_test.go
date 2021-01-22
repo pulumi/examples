@@ -1289,21 +1289,6 @@ func TestAccDigitalOceanCsLoadbalancedDroplets(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccLinodeJsWebserver(t *testing.T) {
-	test := getBaseOptions(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "linode-js-webserver"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				endpoint := stack.Outputs["instanceIP"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
-					return assert.Contains(t, body, "Hello, World!")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
 func TestAccGcpGoFunctions(t *testing.T) {
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
