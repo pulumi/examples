@@ -1,0 +1,17 @@
+name: gcp-py-cloudrun-cloudsql
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Basic example of a Google Cloud Run and Google Cloud SQL deployment
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:zone:
+      description: The Google Cloud zone
+    db-name:
+      description: Name and Username of Cloud SQL database
+    db-password:
+      description: Password used in Cloud SQL database
+      secret: true
