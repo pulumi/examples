@@ -8,14 +8,12 @@ This integration test is using Pulumi automation api [Automation API](https://ww
 | YES | YES|Input|
 | No | YES|Output|
 
-
-
 ## Test Case
-To create a s3 bucket and upload a html file, 
+To create a s3 bucket and upload a file
 
  1. Create the stack with a bucket
- 3. Verfiy S3 bucket name and regaion in Output
- 4. Using client to check the S3 name agaion
+ 3. Verify S3 bucket name and region in Output
+ 4. Using client to check the S3 name again
  5. Using client to upload a file
  6. Deleting that file
  7. Delete the stack with the bucket
@@ -37,20 +35,23 @@ python -m unittest test_s3_it.py
 ```
 
 ## Test Life Cycle
-Firslty, to create a stack for all the use cases, we can get all the output from stack, then you can assert any output value you defined in advance. In the end, don't forget destory the stack. 
+ - create a stack for all the use cases, to get all the output from stack
+ - assert any output value you defined in advance.
+ - In the end, don't forget destroy the stack. 
 ```
 from pulumi.x import automation as auto
 
 class TestS3(unittest.TestCase):  
   
     @classmethod  
-  def setUpClass(cls) -> None:  
+    def setUpClass(cls) -> None:  
       ....
-        cls.stack = auto.create_or_select_stack(stack_name=cls.STACK_NAME, work_dir=cls.WORK_DIR)  
+        cls.stack = auto.create_or_select_stack(stack_name=cls.STACK_NAME, work_dir=cls.WORK_DIR) 
+        cls.outputs = cls.stack.outputs() 
        ...
           
     @classmethod  
-  def tearDownClass(cls) -> None:  
+    def tearDownClass(cls) -> None:  
         cls.stack.destroy(on_output=print)  
   
     def test_s3_output_case(self):  
