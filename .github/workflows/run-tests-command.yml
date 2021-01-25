@@ -113,6 +113,7 @@ jobs:
           gcloud --quiet auth configure-docker
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
+      - run: echo "Currently Pulumi $(pulumi version) is installed"
       - uses: actions/checkout@v2
         with:
           ref: ${{ env.PR_COMMIT_SHA }}
@@ -192,6 +193,7 @@ jobs:
           gcloud --quiet auth configure-docker
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
+      - run: echo "Currently Pulumi $(pulumi version) is installed"
       - uses: actions/checkout@v2
         with:
           ref: ${{ env.PR_COMMIT_SHA }}
@@ -262,6 +264,7 @@ jobs:
           gcloud --quiet auth configure-docker
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
+      - run: echo "Currently Pulumi $(pulumi version) is installed"
       - uses: actions/checkout@v2
         with:
           ref: ${{ env.PR_COMMIT_SHA }}
@@ -332,6 +335,7 @@ jobs:
           gcloud --quiet auth configure-docker
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
+      - run: echo "Currently Pulumi $(pulumi version) is installed"
       - uses: actions/checkout@v2
         with:
           ref: ${{ env.PR_COMMIT_SHA }}
