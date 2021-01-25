@@ -15,11 +15,11 @@ lint:
 	tslint -c tslint.json **/*.ts
 
 only_test:
-	cd misc/test && go test ./... --timeout 4h -v -count=1 -short -parallel 40
+	cd misc/test && go test ./... --timeout 4h -v -count=1 -short -parallel 40 --tags=all
 
 specific_test_set:
 	echo "running $(TestSet) Acceptance Tests"
-	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel 40 --run=TestAcc$(TestSet)
+	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel 40 --tags=all --run=TestAcc$(TestSet)
 
 setup_test_infra:
 	echo "Setting up test infra"
