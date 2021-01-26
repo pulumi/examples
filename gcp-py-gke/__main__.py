@@ -82,7 +82,7 @@ canary = Deployment('canary',
             metadata=ObjectMetaArgs(labels=labels),
             spec=PodSpecArgs(containers=[ContainerArgs(name='nginx', image='nginx')]),
         ),
-    ), __opts__=ResourceOptions(provider=k8s_provider)
+    ), opts=ResourceOptions(provider=k8s_provider)
 )
 
 ingress = Service('ingress',
@@ -90,7 +90,7 @@ ingress = Service('ingress',
         type='LoadBalancer',
         selector=labels,
         ports=[ServicePortArgs(port=80)],
-    ), __opts__=ResourceOptions(provider=k8s_provider)
+    ), opts=ResourceOptions(provider=k8s_provider)
 )
 
 # Finally, export the kubeconfig so that the client can easily access the cluster.
