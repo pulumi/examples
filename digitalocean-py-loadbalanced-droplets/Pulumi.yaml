@@ -1,3 +1,6 @@
 name: digitalocean-py-loadbalanced-droplets
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Basic example of load balanced droplets on DigitalOcean in Python

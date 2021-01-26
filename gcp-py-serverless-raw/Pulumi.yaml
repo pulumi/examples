@@ -1,5 +1,8 @@
 name: serverless-py
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Basic example of a serverless Python and Go GCP functions (in Python)
 template:
   config:

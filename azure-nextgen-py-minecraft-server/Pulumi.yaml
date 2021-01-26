@@ -1,5 +1,8 @@
 name: azure-py-webserver
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Basic example of an Azure web server accessible over HTTP
 template:
   config:

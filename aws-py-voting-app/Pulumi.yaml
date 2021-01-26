@@ -1,5 +1,8 @@
 name: voting-app
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Voting app that uses containers
 template:
   config:

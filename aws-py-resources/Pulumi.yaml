@@ -1,6 +1,9 @@
 name: aws-py-resources
-description: A Pulumi program that demonstrates creating various AWS resources in PYthon
-runtime: python
+description: A Pulumi program that demonstrates creating various AWS resources in Python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 template:
   config:
     aws:region:

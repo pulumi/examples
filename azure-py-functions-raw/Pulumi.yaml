@@ -1,5 +1,8 @@
 name: azure-py-functions-raw
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Azure Functions created from raw deployment packages in C# (written in Python)
 template:
   config:

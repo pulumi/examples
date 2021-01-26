@@ -1,3 +1,6 @@
 name: kubernetes-py-guestbook
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Kubernetes Guestbook example based on https://kubernetes.io/docs/tutorials/stateless-application/guestbook/

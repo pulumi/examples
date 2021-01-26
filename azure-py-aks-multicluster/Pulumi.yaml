@@ -1,5 +1,8 @@
 name: azure-py-aks-multicluster
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Create multiple Azure Kubernetes Service (AKS) clusters in different regions and with different node counts (written in Python)
 template:
   config:
