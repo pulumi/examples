@@ -5,8 +5,11 @@ using Pulumi.AzureNextGen.Authorization.Latest;
 using Pulumi.AzureNextGen.EventGrid.Latest;
 using Pulumi.AzureNextGen.Storage.Latest;
 using System;
-using System.Threading.Tasks;
 using AzureNextGen = Pulumi.AzureNextGen;
+using Pulumi.AzureNextGen.KeyVault.Latest;
+using Pulumi.AzureNextGen.Resources.Latest;
+using Pulumi.AzureNextGen.EventGrid.Latest.Inputs;
+using Pulumi.AzureNextGen.KeyVault.Latest.Inputs;
 
 class AppStack : Stack
 {
@@ -17,7 +20,7 @@ class AppStack : Stack
     {
         var config = new Config();
         var resourceGroupName = config.Require("resourceGroupNameParam");
-        var resourceGroupVar = Output.Create(AzureNextGen.Resources.Latest.GetResourceGroup.InvokeAsync(new AzureNextGen.Resources.Latest.GetResourceGroupArgs
+        var resourceGroupVar = Output.Create(GetResourceGroup.InvokeAsync(new GetResourceGroupArgs
         {
             ResourceGroupName = resourceGroupName,
         }));
@@ -33,9 +36,6 @@ class AppStack : Stack
             ServerName = Output.Format($"{resourceNamePrefix}-sql"),
             Version = "12.0",
         });
-
-        //var firewall = new AzureNextGen.Sql.Latest.FirewallRule("firewall", new AzureNextGen.Sql.Latest.FirewallRuleArgs { 
-        //    FirewallRuleName  = ""
 
         var clientConfig = Output.Create(GetClientConfig.InvokeAsync());
         var tenantId = clientConfig.Apply(c => c.TenantId);
@@ -215,7 +215,7 @@ class AppStack : Stack
                     SubjectEndsWith = "sqlPassword",
                     IncludedEventTypes = { "Microsoft.KeyVault.SecretNearExpiry" },
                 },
-                Destination = new AzureNextGen.EventGrid.Latest.Inputs.AzureFunctionEventSubscriptionDestinationArgs
+                Destination = new AzureFunctionEventSubscriptionDestinationArgs
                 {
                     ResourceId = Output.Format($"{functionApp.Id}/functions/AKVSQLRotation"),
                     EndpointType = "AzureFunction",
@@ -242,13 +242,13 @@ class AppStack : Stack
         //    },
         //};
 
-        new AzureNextGen.KeyVault.Latest.Secret("secret",
-            new AzureNextGen.KeyVault.Latest.SecretArgs
+        new Secret("secret",
+            new SecretArgs
             {
                 SecretName = secretNameParam,
                 VaultName = keyVault.Name,
                 ResourceGroupName = resourceGroupName,
-                Properties = new AzureNextGen.KeyVault.Latest.Inputs.SecretPropertiesArgs { Value = Guid.NewGuid().ToString() },
+                Properties = new SecretPropertiesArgs { Value = Guid.NewGuid().ToString() },
             });
     }
 }
