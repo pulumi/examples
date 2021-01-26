@@ -126,6 +126,7 @@ jobs:
         uses: pulumi/action-install-pulumi-cli@v1.0.1
         with:
           pulumi-version: ${{ env.PULUMI_VERSION }}
+      - run: echo "Currently Pulumi $(pulumi version) is installed"
       - name: Install Go dependencies
         run: make ensure
       - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
@@ -229,6 +230,7 @@ jobs:
           gcloud --quiet auth configure-docker
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
+      - run: echo "Currently Pulumi $(pulumi version) is installed"
       - uses: actions/checkout@v2
       - name: Create test infra
         run: |
@@ -296,6 +298,7 @@ jobs:
           gcloud --quiet auth configure-docker
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
+      - run: echo "Currently Pulumi $(pulumi version) is installed"
       - uses: actions/checkout@v2
       - name: Destroy test infra
         run: |
@@ -369,6 +372,7 @@ jobs:
       - if: env.PULUMI_VERSION == ''
         name: Install Latest Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v1.0.1
+      - run: echo "Currently Pulumi $(pulumi version) is installed"
       - uses: actions/checkout@v2
       - name: Install Go dependencies
         run: make ensure
