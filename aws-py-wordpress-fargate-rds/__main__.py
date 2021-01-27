@@ -13,7 +13,7 @@ import frontend
 
 # Get config data
 config = pulumi.Config()
-service_name = config.get("service_name') or 'wp-example'
+service_name = config.get('service_name') or 'wp-example'
 db_name=config.get('db_name') or 'lampdb'
 db_user=config.get('db_user') or 'admin'
 

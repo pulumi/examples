@@ -30,7 +30,7 @@ Note: some values in this example will be different from run to run.
 1. Create a new stack:
 
    ```bash
-   $ pulumi stack init wordpress-testing
+   $ pulumi stack init lamp-test
    ```
 
 1. Set the AWS region:
