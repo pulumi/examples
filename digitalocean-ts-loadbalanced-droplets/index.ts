@@ -1,11 +1,12 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
+import * as pulumi from "@pulumi/pulumi";
 import * as digitalocean from "@pulumi/digitalocean";
 
 const dropletCount = 3;
 const region = digitalocean.Regions.NYC3;
 
-const dropletTypeTag = new digitalocean.Tag("demo-app");
+const dropletTypeTag = new digitalocean.Tag(`demo-app-${pulumi.getStack()}`);
 const userData =
     `#!/bin/bash
   sudo apt-get update
