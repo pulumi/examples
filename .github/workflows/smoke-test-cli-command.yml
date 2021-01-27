@@ -15,34 +15,14 @@ env:
   GOOGLE_REGION: us-central1
   GOOGLE_ZONE: us-central1-a
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
-  PR_COMMIT_SHA: ${{ github.event.client_payload.pull_request.head.sha }}
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_API: https://api.pulumi-staging.io
   PULUMI_TEST_OWNER: moolumi
+  PULUMI_VERSION: ${{ github.event.client_payload.ref }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 jobs:
-  comment-notification:
-    if: github.event_name == 'repository_dispatch'
-    name: comment-notification
-    runs-on: ubuntu-latest
-    steps:
-    - id: vars
-      name: Create URL to the run output
-      run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
-    - name: Update with Result
-      uses: peter-evans/create-or-update-comment@v1
-      with:
-        body: |-
-          Please view the results of the PR Build [Here][1]
-
-          [1]: ${{ steps.vars.outputs.run-url }}
-        issue-number: ${{ github.event.client_payload.github.payload.issue.number
-          }}
-        repository: ${{ github.event.client_payload.github.payload.repository.full_name
-          }}
-        token: ${{ secrets.GITHUB_TOKEN }}
   kubernetes:
-    name: kubernetes
+    name: smoke-test-cli-on-kubernetes
     needs: test-infra-setup
     runs-on: ${{ matrix.platform }}
     steps:
@@ -105,8 +85,10 @@ jobs:
       with:
         path: ci-scripts
         repository: pulumi/scripts
-    - name: Install Latest Stable Pulumi CLI
+    - name: Install Specific Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v1.0.1
+      with:
+        pulumi-version: ${{ env.PULUMI_VERSION }}
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Go Dependencies
       run: make ensure
@@ -129,37 +111,8 @@ jobs:
         - ubuntu-latest
         python-version:
         - "3.7"
-  linting:
-    name: lint
-    runs-on: ${{ matrix.platform }}
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{matrix.node-version}}
-    - name: Install Yarn
-      run: curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version ${{ matrix.yarn-version
-        }}
-    - name: Update PATH for Yarn
-      run: |-
-        echo "$HOME/.yarn/bin" >> $GITHUB_PATH
-        echo "$HOME/.config/yarn/global/node_modules/.bin" >> $GITHUB_PATH
-    - name: Setup linting tool
-      run: make install
-    - name: Lint typescript files
-      run: make lint
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version:
-        - 14.x
-        platform:
-        - ubuntu-latest
-        yarn-version:
-        - 1.13.0
   providers:
-    name: run-provider-tests
+    name: smoke-test-cli-on-providers
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Install DotNet ${{ matrix.dotnet-version }}
@@ -221,8 +174,10 @@ jobs:
       with:
         path: ci-scripts
         repository: pulumi/scripts
-    - name: Install Latest Stable Pulumi CLI
+    - name: Install Specific Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v1.0.1
+      with:
+        pulumi-version: ${{ env.PULUMI_VERSION }}
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
       run: make ensure
@@ -422,11 +377,8 @@ jobs:
         - ubuntu-latest
         python-version:
         - "3.7"
-name: Run Examples Tests From PR
+name: Smoke Specific Version of CLI
 "on":
-  pull_request:
-    branches:
-    - master
   repository_dispatch:
     types:
-    - run-example-tests-command
+    - smoke-test-cli

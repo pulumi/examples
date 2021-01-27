@@ -1,42 +1,18 @@
-name: New Pull request Open
-"on":
-  pull_request_target:
-
 jobs:
   comment-on-pr:
-    # We only care about commenting on a PR if the PR is from a fork
     if: github.event.pull_request.head.repo.full_name != github.repository
+    name: comment-on-pr
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Comment PR
-        uses: thollander/actions-comment-pull-request@1.0.1
-        with:
-          message: |
-            PR is now waiting for a maintainer to run the acceptance tests.
+    - uses: actions/checkout@v2
+    - name: Comment PR
+      uses: thollander/actions-comment-pull-request@1.0.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        message: |-
+          PR is now waiting for a maintainer to run the acceptance tests.
 
-            **Note for the maintainer:** To run the acceptance tests, please comment */run-example-tests* on the PR
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  lint:
-    strategy:
-      matrix:
-        platform: [ ubuntu-latest ]
-        yarn-version: [ 1.13.0 ]
-        node-version: [ 14.x ]
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install Yarn
-        run: curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version ${{ matrix.yarn-version }}
-      - name: Update PATH for Yarn
-        run: |
-          echo "$HOME/.yarn/bin" >> $GITHUB_PATH
-          echo "$HOME/.config/yarn/global/node_modules/.bin" >> $GITHUB_PATH
-      - name: setup linting tool
-        run: make install
-      - name: Lint typescript files
-        run: make lint
+          **Note for the maintainer:** To run the acceptance tests, please comment */run-example-tests* on the PR
+name: New Pull request Open
+"on":
+  pull_request_target: {}
