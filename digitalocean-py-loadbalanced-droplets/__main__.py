@@ -1,5 +1,5 @@
 import pulumi_digitalocean as do
-from pulumi import export
+from pulumi import export, get_stack
 
 droplet_count = 3
 region = "nyc3"
@@ -9,8 +9,8 @@ user_data = """#!/bin/bash
   sudo apt-get install -y nginx
 """
 
-droplet_type_tag = do.Tag("demo-app")
-
+droplet_type = "demo-app-%s" %get_stack()
+droplet_type_tag = do.Tag(droplet_type)
 
 for x in range(0, droplet_count):
     instance_name = "web-%s" %x
