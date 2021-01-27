@@ -13,39 +13,47 @@ using Pulumi.AzureNextGen.KeyVault.Latest.Inputs;
 
 class AppStack : Stack
 {
-    //[Output]
-    //public WebEndpoint
-
     public AppStack()
     {
         var config = new Config();
         var resourceGroupName = config.Require("resourceGroupNameParam");
-        var resourceGroupVar = Output.Create(GetResourceGroup.InvokeAsync(new GetResourceGroupArgs
+        var resourceGroup = Output.Create(GetResourceGroup.InvokeAsync(new GetResourceGroupArgs
         {
             ResourceGroupName = resourceGroupName,
         }));
 
-        var resourceNamePrefix = Output.Create(config.Get("resourceNamePrefixParam")) ?? resourceGroupVar.Apply(resourceGroupVar => resourceGroupVar.Name)!;
+        var resourceNamePrefix = Output.Create(config.Get("resourceNamePrefixParam")) ?? resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Name)!;
         var sqlAdminLogin = config.Get("sqlAdminLoginParam") ?? "sqlAdmin";
-        var serverResource = new AzureNextGen.Sql.V20190601Preview.Server("serverResource", new AzureNextGen.Sql.V20190601Preview.ServerArgs
+        var sqlAdminPassword = Guid.NewGuid().ToString();
+        var sqlServer = new AzureNextGen.Sql.V20190601Preview.Server("serverResource", new AzureNextGen.Sql.V20190601Preview.ServerArgs
         {
             AdministratorLogin = sqlAdminLogin,
-            AdministratorLoginPassword = "Simple123",
-            Location = resourceGroupVar.Apply(resourceGroupVar => resourceGroupVar.Location),
+            AdministratorLoginPassword = sqlAdminPassword,
+            Location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location),
             ResourceGroupName = resourceGroupName,
             ServerName = Output.Format($"{resourceNamePrefix}-sql"),
             Version = "12.0",
         });
 
+        new Pulumi.Azure.Sql.FirewallRule("firewallRule",
+            new Pulumi.Azure.Sql.FirewallRuleArgs
+            {
+                Name = "AllowAllWindowsAzureIps",
+                ServerName = sqlServer.Name,
+                ResourceGroupName = resourceGroupName,
+                StartIpAddress = "0.0.0.0",
+                EndIpAddress = "0.0.0.0",
+            });
+
         var clientConfig = Output.Create(GetClientConfig.InvokeAsync());
         var tenantId = clientConfig.Apply(c => c.TenantId);
 
         var storageAccountName = Output.Format($"{resourceNamePrefix}funcstorage");
-        var storageAccountResource = new AzureNextGen.Storage.V20190401.StorageAccount("storageAccountResource", new AzureNextGen.Storage.V20190401.StorageAccountArgs
+        var storageAccount = new AzureNextGen.Storage.V20190401.StorageAccount("storageAccountResource", new AzureNextGen.Storage.V20190401.StorageAccountArgs
         {
             AccountName = storageAccountName,
             Kind = "Storage",
-            Location = resourceGroupVar.Apply(resourceGroupVar => resourceGroupVar.Location),
+            Location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location),
             ResourceGroupName = resourceGroupName,
             Sku = new AzureNextGen.Storage.V20190401.Inputs.SkuArgs
             {
@@ -54,9 +62,9 @@ class AppStack : Stack
         });
 
         var functionAppName = Output.Format($"{resourceNamePrefix}-func");
-        var componentResource = new AzureNextGen.Insights.V20180501Preview.Component("componentResource", new AzureNextGen.Insights.V20180501Preview.ComponentArgs
+        var appInsights = new AzureNextGen.Insights.V20180501Preview.Component("componentResource", new AzureNextGen.Insights.V20180501Preview.ComponentArgs
         {
-            Location = resourceGroupVar.Apply(resourceGroupVar => resourceGroupVar.Location),
+            Location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location),
             RequestSource = "IbizaWebAppExtensionCreate",
             ResourceGroupName = resourceGroupName,
             ResourceName = functionAppName,
@@ -68,12 +76,12 @@ class AppStack : Stack
             },
         });
 
-        var secretNameParam = config.Get("secretNameParam") ?? "sqlPassword";
+        var secretName = config.Get("secretNameParam") ?? "sqlPassword";
 
-        var repoURLParam = config.Get("repoURLParam") ?? "https://github.com/jlichwa/KeyVault-Rotation-SQLPassword-Csharp.git";
-        var serverfarmResource = new AzureNextGen.Web.V20180201.AppServicePlan("serverfarmResource", new AzureNextGen.Web.V20180201.AppServicePlanArgs
+        var repoUrl = config.Get("repoURLParam") ?? "https://github.com/MisinformedDNA/KeyVault-Rotation-SQLPassword-Csharp.git";
+        var appService = new AzureNextGen.Web.V20180201.AppServicePlan("serverfarmResource", new AzureNextGen.Web.V20180201.AppServicePlanArgs
         {
-            Location = resourceGroupVar.Apply(resourceGroupVar => resourceGroupVar.Location),
+            Location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location),
             Name = functionAppName,
             ResourceGroupName = resourceGroupName,
             Sku = new AzureNextGen.Web.V20180201.Inputs.SkuDescriptionArgs
@@ -83,7 +91,7 @@ class AppStack : Stack
             },
         });
 
-        var storageKey = storageAccountResource.Name.Apply(a =>
+        var storageKey = storageAccount.Name.Apply(a =>
         {
             var task = ListStorageAccountKeys.InvokeAsync(new ListStorageAccountKeysArgs { AccountName = a, ResourceGroupName = resourceGroupName });
             return Output.Create(task).Apply(t => t.Keys[0].Value);
@@ -94,9 +102,9 @@ class AppStack : Stack
             Kind = "functionapp",
             Name = functionAppName,
             ResourceGroupName = resourceGroupName,
-            ServerFarmId = serverfarmResource.Id,
-            Location = resourceGroupVar.Apply(r => r.Location),
-            Identity = new AzureNextGen.Web.V20181101.Inputs.ManagedServiceIdentityArgs {  Type = AzureNextGen.Web.V20181101.ManagedServiceIdentityType.SystemAssigned },
+            ServerFarmId = appService.Id,
+            Location = resourceGroup.Apply(r => r.Location),
+            Identity = new AzureNextGen.Web.V20181101.Inputs.ManagedServiceIdentityArgs { Type = AzureNextGen.Web.V20181101.ManagedServiceIdentityType.SystemAssigned },
             SiteConfig = new AzureNextGen.Web.V20181101.Inputs.SiteConfigArgs
             {
                 AppSettings =
@@ -134,7 +142,7 @@ class AppStack : Stack
                     new AzureNextGen.Web.V20181101.Inputs.NameValuePairArgs
                     {
                         Name = "APPINSIGHTS_INSTRUMENTATIONKEY",
-                        Value = componentResource.InstrumentationKey,
+                        Value = appInsights.InstrumentationKey,
                     },
                 },
             },
@@ -155,20 +163,20 @@ class AppStack : Stack
             {
                 Name = functionApp.Name,
                 IsManualIntegration = true,
-                Branch = "master",
-                RepoUrl = repoURLParam,
+                Branch = "logging",
+                RepoUrl = repoUrl,
                 ResourceGroupName = resourceGroupName,
             });
 
         var keyVault = new AzureNextGen.KeyVault.V20180214.Vault("vaultResource", new AzureNextGen.KeyVault.V20180214.VaultArgs
         {
-            Location = resourceGroupVar.Apply(resourceGroupVar => resourceGroupVar.Location),
+            Location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location),
             Properties = new AzureNextGen.KeyVault.V20180214.Inputs.VaultPropertiesArgs
             {
                 AccessPolicies = { new AzureNextGen.KeyVault.V20180214.Inputs.AccessPolicyEntryArgs
                 {
                     TenantId = tenantId,
-                    ObjectId = functionApp.Identity.Apply(i => i.PrincipalId),
+                    ObjectId = functionApp.Identity.Apply(i => i!.PrincipalId),
                     Permissions = new AzureNextGen.KeyVault.V20180214.Inputs.PermissionsArgs
                     {
                         Secrets = { "get", "list", "set" },
@@ -189,7 +197,7 @@ class AppStack : Stack
             VaultName = Output.Format($"{resourceNamePrefix}-kv"),
         });
 
-        var eventSubscriptionNameVar = $"{keyVault.Name}-{secretNameParam}-{functionAppName}";
+        var eventSubscriptionNameVar = $"{keyVault.Name}-{secretName}-{functionAppName}";
 
         var topicName = "SecretExpiry";
         var topic = new AzureNextGen.EventGrid.V20200401Preview.SystemTopic("eventGridTopic",
@@ -198,16 +206,16 @@ class AppStack : Stack
                 SystemTopicName = topicName,
                 Source = keyVault.Id,
                 TopicType = "microsoft.keyvault.vaults",
-                Location = resourceGroupVar.Apply(r => r.Location),
-                ResourceGroupName = resourceGroupVar.Apply(r => r.Name),
+                Location = resourceGroup.Apply(r => r.Location),
+                ResourceGroupName = resourceGroup.Apply(r => r.Name),
             });
 
-        var eventSubscriptionResource = new AzureNextGen.EventGrid.V20200401Preview.SystemTopicEventSubscription("secretExpiryEvent",
+        var eventSubscription = new AzureNextGen.EventGrid.V20200401Preview.SystemTopicEventSubscription("secretExpiryEvent",
             new AzureNextGen.EventGrid.V20200401Preview.SystemTopicEventSubscriptionArgs
             {
                 EventSubscriptionName = "secretExpiryEvent",
                 SystemTopicName = topicName,
-                ResourceGroupName = resourceGroupVar.Apply(r => r.Name),
+                ResourceGroupName = resourceGroup.Apply(r => r.Name),
                 //Scope = topic.Id,
                 Filter = new AzureNextGen.EventGrid.V20200401Preview.Inputs.EventSubscriptionFilterArgs
                 {
@@ -242,13 +250,19 @@ class AppStack : Stack
         //    },
         //};
 
-        new Secret("secret",
+        var expiresAt = DateTimeOffset.Now.AddMinutes(1).ToUnixTimeSeconds();
+        var secret = new Secret("secret",
             new SecretArgs
             {
-                SecretName = secretNameParam,
+                SecretName = secretName,
                 VaultName = keyVault.Name,
                 ResourceGroupName = resourceGroupName,
-                Properties = new SecretPropertiesArgs { Value = Guid.NewGuid().ToString() },
+                Tags = { { "CredentialId", sqlAdminLogin }, { "ProviderAddress", sqlServer.Id }, { "ValidityPeriodDays", "1" } },
+                Properties = new SecretPropertiesArgs
+                {
+                    Value = sqlAdminPassword,
+                    Attributes = new SecretAttributesArgs { Expires = (int)expiresAt },
+                },
             });
     }
 }
