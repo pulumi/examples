@@ -82,7 +82,7 @@ const handler = eventRule.onEvent("on-timer-event", async() => {
 
 // athena setup
 const athena = new aws.athena.Database("tweets_database_1",
-    { name: "tweets_database_1", bucket: bucket.id, forceDestroy: true },
+    { bucket: bucket.id, forceDestroy: true },
 );
 
 // Sadly, there isn't support for Athena tables in Terraform.
