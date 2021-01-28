@@ -78,7 +78,6 @@ class AppStack : Stack
 
         var secretName = config.Get("secretNameParam") ?? "sqlPassword";
 
-        var repoUrl = config.Get("repoURLParam") ?? "https://github.com/MisinformedDNA/KeyVault-Rotation-SQLPassword-Csharp.git";
         var appService = new AzureNextGen.Web.V20180201.AppServicePlan("serverfarmResource", new AzureNextGen.Web.V20180201.AppServicePlanArgs
         {
             Location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location),
@@ -163,8 +162,8 @@ class AppStack : Stack
             {
                 Name = functionApp.Name,
                 IsManualIntegration = true,
-                Branch = "logging",
-                RepoUrl = repoUrl,
+                Branch = "main",
+                RepoUrl = config.Get("repoURLParam") ?? "https://github.com/Azure-Samples/KeyVault-Rotation-SQLPassword-Csharp.git",
                 ResourceGroupName = resourceGroupName,
             });
 
