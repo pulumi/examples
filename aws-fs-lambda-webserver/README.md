@@ -17,7 +17,7 @@ After cloning this repo, from this working directory, run these commands:
 1. Build and publish the lambda function, making the output available to our Pulumi program. 
 
 ```bash
-dotnet publish ./LambdaWebService
+dotnet publish ./LambdaWebServer
 ```
 
 2. Execute our Pulumi program to archive our published function output, and create our lambda. 

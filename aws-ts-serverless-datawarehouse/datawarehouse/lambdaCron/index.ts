@@ -41,10 +41,10 @@ export class LambdaCronJob extends pulumi.ComponentResource {
             }
         }
 
-        // always attach the lambda policy for logging, etc.
+        // always attach the lambda policy for logging
         const loggingAttachment = new aws.iam.RolePolicyAttachment(`${name}-Attachment-lambda`, {
             role: partitionRole,
-            policyArn: aws.iam.ManagedPolicies.AWSLambdaFullAccess,
+            policyArn: aws.iam.ManagedPolicy.AWSLambdaBasicExecutionRole,
         }, options);
 
         const cron = new aws.cloudwatch.EventRule(`${name}-cron`, {

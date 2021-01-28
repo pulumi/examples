@@ -30,7 +30,7 @@ export = async () => {
     // Lambda
     function efsvpcCallback(name: string, f: aws.lambda.Callback<awsx.apigateway.Request, awsx.apigateway.Response>) {
         return new aws.lambda.CallbackFunction(name, {
-            policies: [aws.iam.ManagedPolicies.AWSLambdaVPCAccessExecutionRole, aws.iam.ManagedPolicies.AWSLambdaFullAccess],
+            policies: [aws.iam.ManagedPolicy.AWSLambdaVPCAccessExecutionRole, aws.iam.ManagedPolicy.LambdaFullAccess],
             vpcConfig: {
                 subnetIds: vpc.privateSubnetIds,
                 securityGroupIds: [vpc.vpc.defaultSecurityGroupId],

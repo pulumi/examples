@@ -31,73 +31,73 @@ with `***`.
 1.  Configure the Lambda function role so that it can access Rekognition:
 
     ```
-    $ pulumi config set cloud-aws:computeIAMRolePolicyARNs arn:aws:iam::aws:policy/AWSLambdaFullAccess,arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess,arn:aws:iam::aws:policy/AmazonRekognitionFullAccess
+    $ pulumi config set cloud-aws:computeIAMRolePolicyARNs arn:aws:iam::aws:policy/AWSLambdaExecute,arn:aws:iam::aws:policy/AWSLambda_FullAccess,arn:aws:iam::aws:policy/AmazonECS_FullAccess,arn:aws:iam::aws:policy/AmazonRekognitionFullAccess,arn:aws:iam::aws:policy/IAMFullAccess
     ```
 
 1.  Restore NPM modules via `npm install` or `yarn install`.
 
-1.  Preview and deploy the app via `pulumi up`. The preview will take some time, as it builds a Docker container. A total of 48 resources are created.
+1.  Preview and deploy the app via `pulumi up`. The preview will take some time, as it builds a Docker container. A total of 54 resources are created.
 
     ```
     $ pulumi up
-    Previewing update of stack 'thumbnailer-rekognition'
-    ...
+    Previewing update (thumbnailer-rekognition)
 
-    Performing changes:
+    View Live: https://app.pulumi.com/***
 
-        Type                                Name                                                         Status        Info
-    *   global                                    global                                                 unchanged     1 info message. info: Building container image 'p
-    +   pulumi:pulumi:Stack                       video-thumbnailer-rekognition                          created       1 info message. info: 88888b9b1b5b: Pushed
-    +   ├─ awsx:network:Network              default-vpc                                            created
-    +   ├─ awsx:network:Network              default-vpc                                            created
-    +   ├─ cloud:global:infrastructure            global-infrastructure                                  created
-    +   ├─ cloud:global:infrastructure            global-infrastructure                                  created
-    +   │  ├─ aws:iam:Role                        pulumi-donna-t-execution                               created
-    +   ├─ cloud:global:infrastructure            global-infrastructure                                  created
-    +   ├─ cloud:global:infrastructure            global-infrastructure                                  created
-    +   ├─ cloud:global:infrastructure            global-infrastructure                                  created
-    +   ├─ cloud:bucket:Bucket                    bucket                                                 created
-    +   │  ├─ cloud:function:Function             onNewVideo                                             created
-    +   │  │  └─ aws:serverless:Function          onNewVideo                                             created
-    +   │  │  └─ aws:serverless:Function          onNewVideo                                             created
-    +   │  │  └─ aws:serverless:Function          onNewVideo                                             created
-    +   │  │  └─ aws:serverless:Function          onNewVideo                                             created
-    +   │  │  └─ aws:serverless:Function          onNewVideo                                             created
-    +   │  ├─ cloud:function:Function             onNewThumbnail                                         created
-    +   │  │  └─ aws:serverless:Function          onNewThumbnail                                         created
-    +   │  │  └─ aws:serverless:Function          onNewThumbnail                                         created
-    +   │  │     ├─ aws:iam:RolePolicyAttachment  onNewThumbnail-32be53a2                                created
-    +   │  │     ├─ aws:iam:RolePolicyAttachment  onNewThumbnail-fd1a00e5                                created
-    +   │  │     └─ aws:lambda:Function           onNewThumbnail                                         created
-    +   │  ├─ aws:s3:Bucket                       bucket                                                 created
-    +   │  ├─ aws:lambda:Permission               onNewVideo                                             created
-    +   │  ├─ aws:lambda:Permission               onNewThumbnail                                         created
-    +   │  └─ aws:s3:BucketNotification           bucket                                                 created
-    +   ├─ cloud:topic:Topic                      AmazonRekognitionTopic                                 created
-    +   │  └─ aws:sns:Topic                       AmazonRekognitionTopic                                 created
-    +   ├─ aws:iam:Role                           rekognition-role                                       created
-    +   ├─ cloud:function:Function                AmazonRekognitionTopic_labelResults                    created
-    +   │  └─ aws:serverless:Function             AmazonRekognitionTopic_labelResults                    created
-    +   │     ├─ aws:iam:Role                     AmazonRekognitionTopic_labelResults                    created
-    +   │     ├─ aws:iam:RolePolicyAttachment     AmazonRekognitionTopic_labelResults-32be53a2           created
-    +   │     ├─ aws:iam:RolePolicyAttachment     AmazonRekognitionTopic_labelResults-fd1a00e5           created
-    +   │     └─ aws:lambda:Function              AmazonRekognitionTopic_labelResults                    created
-    +   ├─ cloud:task:Task                        ffmpegThumbTask                                        created
-    +   │  ├─ aws:cloudwatch:LogGroup             ffmpegThumbTask                                        created
-    +   │  └─ aws:ecs:TaskDefinition              ffmpegThumbTask                                        created
-    +   ├─ awsx:cluster:Cluster              pulumi-donna-thum-global                               created
-    +   │  ├─ aws:ecs:Cluster                     pulumi-donna-thum-global                               created
-    +   │  └─ aws:ec2:SecurityGroup               pulumi-donna-thum-global                               created
-    +   ├─ aws:iam:RolePolicyAttachment           rekognition-access                                     created
-    +   ├─ aws:lambda:Permission                  AmazonRekognitionTopic_labelResults                    created
-    +   └─ aws:sns:TopicSubscription              AmazonRekognitionTopic_labelResults                    created
-
-    ...
-    info: 44 changes performed:
-        + 44 resources created
-    Update duration: ***
-
-    Permalink: https://app.pulumi.com/***
+        Type                                  Name                                   Plan       
+    +   pulumi:pulumi:Stack                   video-thumbnailer-rekognition-rek-dev  create...  
+    +   ├─ cloud:topic:Topic                  AmazonRekognitionTopic                 create     
+    +   │  ├─ aws:sns:TopicEventSubscription  AmazonRekognitionTopic_labelResults    create     
+    +   │  ├─ aws:iam:Role                    AmazonRekognitionTopic_labelResults    create     
+    +   │  └─ aws:sns:Topic                   AmazonRekognitionTopic                 create     
+    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-b5aeb6b6  create..   
+    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-0cbb1731  create..   
+    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-4aaabb8e  create..   
+    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-2d3346de  create..   
+    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-2d3346de  create     
+    +   │  ├─ aws:iam:Role                    pulumi-rek-dev-execution                      create     
+    +   │  ├─ aws:iam:Role                    pulumi-rek-dev-task                           create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-dev-execution                      create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-task-0cbb1731                      create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-task-2d3346de                      create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-task-b5aeb6b6                      create     
+    +   │  └─ aws:iam:RolePolicyAttachment    pulumi-rek-task-4aaabb8e                      create     
+    +   ├─ awsx:cluster:Cluster               pulumi-rek-dev-global                         create     
+    +   │  └─ aws:ecs:Cluster                 pulumi-rek-dev-global                         create     
+    +   ├─ cloud:bucket:Bucket                bucket                                        create     
+    +   │  ├─ aws:s3:BucketEventSubscription  onNewVideo                                    create     
+    +   pulumi:pulumi:Stack                   video-thumbnailer-rekognition-rek-dev         create     
+    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create     
+    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create     
+    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create     
+    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create     
+    +   │  │  └─ aws:lambda:Permission        AmazonRekognitionTopic_labelResults           create     
+    +   pulumi:pulumi:Stack                   video-thumbnailer-rekognition-rek-dev         create     
+    +   │  ├─ aws:iam:Role                    onNewThumbnail                                create     
+    +   │  ├─ aws:iam:Role                    onNewVideo                                    create     
+    +   │  ├─ aws:s3:Bucket                   bucket                                        create     
+    +   │  │  └─ aws:s3:BucketNotification    onNewVideo                                    create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-0cbb1731                       create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-b5aeb6b6                       create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-2d3346de                       create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-4aaabb8e                       create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-4aaabb8e                           create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-b5aeb6b6                           create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-0cbb1731                           create     
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-2d3346de                           create     
+    +   │  ├─ aws:lambda:Function             onNewThumbnail                                create     
+    +   │  └─ aws:lambda:Function             onNewVideo                                    create     
+    +   ├─ cloud:task:Task                    ffmpegThumbTask                               create     
+    +   │  ├─ aws:cloudwatch:LogGroup         ffmpegThumbTask                               create     
+    +   │  └─ aws:ecs:TaskDefinition          ffmpegThumbTask                               create     
+    +   ├─ aws:ecr:Repository                 pulum-dc8d99de-container                      create     
+    +   ├─ aws:iam:Role                       rekognition-role                              create     
+    +   ├─ aws:iam:RolePolicyAttachment       rekognition-access                            create     
+    +   ├─ aws:ecr:LifecyclePolicy            pulum-dc8d99de-container                      create     
+    +   └─ awsx:network:Network               default-vpc                                   create     
+    
+    Resources:
+    + 54 to create
     ```
 
 1.  Upload a video:

@@ -23,7 +23,7 @@ const lambdaRole = new aws.iam.Role("lambdaRole", {
 // Attach the fullaccess policy to the Lambda role created above
 const rolepolicyattachment = new aws.iam.RolePolicyAttachment("lambdaRoleAttachment", {
   role: lambdaRole,
-  policyArn: aws.iam.ManagedPolicies.AWSLambdaFullAccess,
+  policyArn: aws.iam.ManagedPolicy.AWSLambdaBasicExecutionRole,
 });
 
 // Create the Lambda to execute

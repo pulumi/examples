@@ -7,7 +7,12 @@ open Pulumi.Aws.Lambda
 
 module ManagedPolicies =
     let AWSLambdaBasicExecutionRole = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-    let AWSLambdaFullAccess         = "arn:aws:iam::aws:policy/AWSLambdaFullAccess"
+    let AWSLambdaExecute         = "arn:aws:iam::aws:policy/AWSLambdaExecute"
+
+[<AutoOpen>]
+module Helpers =
+    let inputLeft<'a, 'b>(v: 'a) : InputUnion<'a, 'b> = InputUnion.op_Implicit v
+    let inputRight<'a, 'b>(v: 'b) : InputUnion<'a, 'b> = InputUnion.op_Implicit v
 
 let openApiSpec (name, arn) =
     let quotedTitle = "\"" + name + "api\""
@@ -57,7 +62,6 @@ let addInvokePermission name accountId functionArn executionArn =
             Action = input "lambda:InvokeFunction",
             Function = functionArn,
             Principal = input "apigateway.amazonaws.com",
-            SourceAccount = accountId,
             SourceArn = executionArn,
             StatementIdPrefix = input "lambdaPermission"
         )
@@ -88,14 +92,14 @@ let infra () =
                 )
             )
 
-    RolePolicyAttachment("lambdaS3ReadOnlyAccess", RolePolicyAttachmentArgs(Role = io lambdaRole.Id, PolicyArn = input ManagedPolicies.AWSLambdaFullAccess))         |> ignore
+    RolePolicyAttachment("lambdaS3ReadOnlyAccess", RolePolicyAttachmentArgs(Role = io lambdaRole.Id, PolicyArn = input ManagedPolicies.AWSLambdaExecute))            |> ignore
     RolePolicyAttachment("lambdaBasicExecution",   RolePolicyAttachmentArgs(Role = io lambdaRole.Id, PolicyArn = input ManagedPolicies.AWSLambdaBasicExecutionRole)) |> ignore
 
     let lambda =
         Function(
             "basicLambda",
             FunctionArgs(
-                Runtime = input "dotnetcore3.1",
+                Runtime = inputRight Pulumi.Aws.Lambda.Runtime.DotnetCore3d1,
                 Code    = input (FileArchive "../LambdaWebServer/bin/Debug/netcoreapp3.1/publish" :> Archive),
                 Handler = input "LambdaWebServer::Setup+LambdaEntryPoint::FunctionHandlerAsync",
                 Role    = io lambdaRole.Arn,

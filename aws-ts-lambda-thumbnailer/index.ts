@@ -12,9 +12,9 @@ const image = awsx.ecr.buildAndPushImage("sampleapp", {
 const role = new aws.iam.Role("thumbnailerRole", {
     assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: "lambda.amazonaws.com" }),
 });
-const lambdaFullAccess =  new aws.iam.RolePolicyAttachment("lambdaFullAccess", {
+const lambdaS3Access =  new aws.iam.RolePolicyAttachment("lambdaFullAccess", {
     role: role.name,
-    policyArn: aws.iam.ManagedPolicies.AWSLambdaFullAccess,
+    policyArn: aws.iam.ManagedPolicy.AWSLambdaExecute,
 });
 
 const thumbnailer = new aws.lambda.Function("thumbnailer", {
@@ -44,6 +44,6 @@ bucket.onObjectCreated("onNewThumbnail", new aws.lambda.CallbackFunction<aws.s3.
         }
     },
     policies: [
-        aws.iam.ManagedPolicies.AWSLambdaFullAccess,                 // Provides wide access to "serverless" services (Dynamo, S3, etc.)
+        aws.iam.ManagedPolicy.AWSLambdaExecute,                 // Provides wide access to Lambda and S3
     ],
 }), { filterSuffix: ".jpg" });
