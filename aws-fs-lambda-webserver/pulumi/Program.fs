@@ -9,11 +9,6 @@ module ManagedPolicies =
     let AWSLambdaBasicExecutionRole = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
     let AWSLambdaExecute         = "arn:aws:iam::aws:policy/AWSLambdaExecute"
 
-[<AutoOpen>]
-module Helpers =
-    let inputLeft<'a, 'b>(v: 'a) : InputUnion<'a, 'b> = InputUnion.op_Implicit v
-    let inputRight<'a, 'b>(v: 'b) : InputUnion<'a, 'b> = InputUnion.op_Implicit v
-
 let openApiSpec (name, arn) =
     let quotedTitle = "\"" + name + "api\""
     let quotedUri   = sprintf "\"arn:aws:apigateway:%s:lambda:path/2015-03-31/functions/%s/invocations\"" Pulumi.Aws.Config.Region arn
