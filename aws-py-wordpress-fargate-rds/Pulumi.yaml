@@ -1,0 +1,6 @@
+name: wordpress-ecs-rds
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Deploys WordPress in ECS Fargate with RDS backend.
