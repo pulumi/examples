@@ -1,17 +1,22 @@
 // Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
+using System;
 using Pulumi;
 using Pulumi.AzureNextGen.Authorization.Latest;
-using Pulumi.AzureNextGen.EventGrid.Latest;
-using Pulumi.AzureNextGen.Storage.Latest;
-using System;
-using AzureNextGen = Pulumi.AzureNextGen;
+using Pulumi.AzureNextGen.EventGrid.V20200401Preview.Inputs;
+using Pulumi.AzureNextGen.EventGrid.V20200401Preview;
+using Pulumi.AzureNextGen.Insights.Latest;
 using Pulumi.AzureNextGen.KeyVault.Latest;
-using Pulumi.AzureNextGen.Resources.Latest;
-using Pulumi.AzureNextGen.EventGrid.Latest.Inputs;
 using Pulumi.AzureNextGen.KeyVault.Latest.Inputs;
+using Pulumi.AzureNextGen.Resources.Latest;
+using Pulumi.AzureNextGen.Sql.Latest;
+using Pulumi.AzureNextGen.Storage.Latest;
+using Pulumi.AzureNextGen.Web.Latest;
+using Pulumi.AzureNextGen.Web.Latest.Inputs;
+using KeyVault = Pulumi.AzureNextGen.KeyVault.Latest;
+using Storage = Pulumi.AzureNextGen.Storage.Latest;
 
-class AppStack : Stack
+internal class AppStack : Stack
 {
     public AppStack()
     {
@@ -25,11 +30,12 @@ class AppStack : Stack
         var resourceNamePrefix = Output.Create(config.Get("resourceNamePrefixParam")) ?? resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Name)!;
         var sqlAdminLogin = config.Get("sqlAdminLoginParam") ?? "sqlAdmin";
         var sqlAdminPassword = Guid.NewGuid().ToString();
-        var sqlServer = new AzureNextGen.Sql.V20190601Preview.Server("serverResource", new AzureNextGen.Sql.V20190601Preview.ServerArgs
+        var location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location);
+        var sqlServer = new Server("serverResource", new ServerArgs
         {
             AdministratorLogin = sqlAdminLogin,
             AdministratorLoginPassword = sqlAdminPassword,
-            Location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location),
+            Location = location,
             ResourceGroupName = resourceGroupName,
             ServerName = Output.Format($"{resourceNamePrefix}-sql"),
             Version = "12.0",
@@ -49,22 +55,22 @@ class AppStack : Stack
         var tenantId = clientConfig.Apply(c => c.TenantId);
 
         var storageAccountName = Output.Format($"{resourceNamePrefix}funcstorage");
-        var storageAccount = new AzureNextGen.Storage.V20190401.StorageAccount("storageAccountResource", new AzureNextGen.Storage.V20190401.StorageAccountArgs
+        var storageAccount = new StorageAccount("storageAccountResource", new StorageAccountArgs
         {
             AccountName = storageAccountName,
             Kind = "Storage",
-            Location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location),
+            Location = location,
             ResourceGroupName = resourceGroupName,
-            Sku = new AzureNextGen.Storage.V20190401.Inputs.SkuArgs
+            Sku = new Storage.Inputs.SkuArgs
             {
                 Name = "Standard_LRS"
             },
         });
 
         var functionAppName = Output.Format($"{resourceNamePrefix}-func");
-        var appInsights = new AzureNextGen.Insights.V20180501Preview.Component("componentResource", new AzureNextGen.Insights.V20180501Preview.ComponentArgs
+        var appInsights = new Component("componentResource", new ComponentArgs
         {
-            Location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location),
+            Location = location,
             RequestSource = "IbizaWebAppExtensionCreate",
             ResourceGroupName = resourceGroupName,
             ResourceName = functionAppName,
@@ -78,12 +84,12 @@ class AppStack : Stack
 
         var secretName = config.Get("secretNameParam") ?? "sqlPassword";
 
-        var appService = new AzureNextGen.Web.V20180201.AppServicePlan("serverfarmResource", new AzureNextGen.Web.V20180201.AppServicePlanArgs
+        var appService = new AppServicePlan("serverfarmResource", new AppServicePlanArgs
         {
-            Location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location),
+            Location = location,
             Name = functionAppName,
             ResourceGroupName = resourceGroupName,
-            Sku = new AzureNextGen.Web.V20180201.Inputs.SkuDescriptionArgs
+            Sku = new SkuDescriptionArgs
             {
                 Name = "Y1",
                 Tier = "Dynamic",
@@ -96,49 +102,49 @@ class AppStack : Stack
             return Output.Create(task).Apply(t => t.Keys[0].Value);
         });
 
-        var functionApp = new AzureNextGen.Web.V20181101.WebApp("siteResource", new AzureNextGen.Web.V20181101.WebAppArgs
+        var functionApp = new WebApp("siteResource", new WebAppArgs
         {
             Kind = "functionapp",
             Name = functionAppName,
             ResourceGroupName = resourceGroupName,
             ServerFarmId = appService.Id,
             Location = resourceGroup.Apply(r => r.Location),
-            Identity = new AzureNextGen.Web.V20181101.Inputs.ManagedServiceIdentityArgs { Type = AzureNextGen.Web.V20181101.ManagedServiceIdentityType.SystemAssigned },
-            SiteConfig = new AzureNextGen.Web.V20181101.Inputs.SiteConfigArgs
+            Identity = new ManagedServiceIdentityArgs { Type = ManagedServiceIdentityType.SystemAssigned },
+            SiteConfig = new SiteConfigArgs
             {
                 AppSettings =
                 {
-                    new AzureNextGen.Web.V20181101.Inputs.NameValuePairArgs
+                    new NameValuePairArgs
                     {
                         Name = "AzureWebJobsStorage",
                         Value = Output.Format($"DefaultEndpointsProtocol=https;AccountName={storageAccountName};AccountKey={storageKey}"),
                     },
-                    new AzureNextGen.Web.V20181101.Inputs.NameValuePairArgs
+                    new NameValuePairArgs
                     {
                         Name = "FUNCTIONS_EXTENSION_VERSION",
                         Value = "~3",
                     },
-                    new AzureNextGen.Web.V20181101.Inputs.NameValuePairArgs
+                    new NameValuePairArgs
                     {
                         Name = "FUNCTIONS_WORKER_RUNTIME",
                         Value = "dotnet",
                     },
-                    new AzureNextGen.Web.V20181101.Inputs.NameValuePairArgs
+                    new NameValuePairArgs
                     {
                         Name = "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
                         Value = Output.Format($"DefaultEndpointsProtocol=https;AccountName={storageAccountName};EndpointSuffix=core.windows.net;AccountKey={storageKey}"),
                     },
-                    new AzureNextGen.Web.V20181101.Inputs.NameValuePairArgs
+                    new NameValuePairArgs
                     {
                         Name = "WEBSITE_CONTENTSHARE",
                         Value = functionAppName.Apply(n => n.ToLower()),
                     },
-                    new AzureNextGen.Web.V20181101.Inputs.NameValuePairArgs
+                    new NameValuePairArgs
                     {
                         Name = "WEBSITE_NODE_DEFAULT_VERSION",
                         Value = "~10",
                     },
-                    new AzureNextGen.Web.V20181101.Inputs.NameValuePairArgs
+                    new NameValuePairArgs
                     {
                         Name = "APPINSIGHTS_INSTRUMENTATIONKEY",
                         Value = appInsights.InstrumentationKey,
@@ -147,18 +153,8 @@ class AppStack : Stack
             },
         });
 
-        //new Pulumi.Azure.AppService.FunctionApp("", new Pulumi.Azure.AppService.FunctionAppArgs
-        //{
-        //    SourceControl = new Pulumi.Azure.AppService.Inputs.FunctionAppSourceControlArgs
-        //    {
-        //        ManualIntegration = true,
-        //        Branch = "master",
-        //        RepoUrl = repoURLParam,
-        //    }
-        //});
-
-        new AzureNextGen.Web.V20181101.WebAppSourceControl("sourceControl",
-            new AzureNextGen.Web.V20181101.WebAppSourceControlArgs
+        new WebAppSourceControl("sourceControl",
+            new WebAppSourceControlArgs
             {
                 Name = functionApp.Name,
                 IsManualIntegration = true,
@@ -167,16 +163,16 @@ class AppStack : Stack
                 ResourceGroupName = resourceGroupName,
             });
 
-        var keyVault = new AzureNextGen.KeyVault.V20180214.Vault("vaultResource", new AzureNextGen.KeyVault.V20180214.VaultArgs
+        var keyVault = new Vault("vaultResource", new VaultArgs
         {
-            Location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location),
-            Properties = new AzureNextGen.KeyVault.V20180214.Inputs.VaultPropertiesArgs
+            Location = location,
+            Properties = new VaultPropertiesArgs
             {
-                AccessPolicies = { new AzureNextGen.KeyVault.V20180214.Inputs.AccessPolicyEntryArgs
+                AccessPolicies = { new AccessPolicyEntryArgs
                 {
                     TenantId = tenantId,
                     ObjectId = functionApp.Identity.Apply(i => i!.PrincipalId),
-                    Permissions = new AzureNextGen.KeyVault.V20180214.Inputs.PermissionsArgs
+                    Permissions = new PermissionsArgs
                     {
                         Secrets = { "get", "list", "set" },
                     },
@@ -185,10 +181,10 @@ class AppStack : Stack
                 EnabledForDeployment = false,
                 EnabledForDiskEncryption = false,
                 EnabledForTemplateDeployment = false,
-                Sku = new AzureNextGen.KeyVault.V20180214.Inputs.SkuArgs
+                Sku = new SkuArgs
                 {
                     Family = "A",
-                    Name = AzureNextGen.KeyVault.V20180214.SkuName.Standard,
+                    Name = KeyVault.SkuName.Standard,
                 },
                 TenantId = tenantId,
             },
@@ -196,11 +192,9 @@ class AppStack : Stack
             VaultName = Output.Format($"{resourceNamePrefix}-kv"),
         });
 
-        var eventSubscriptionNameVar = $"{keyVault.Name}-{secretName}-{functionAppName}";
-
         var topicName = "SecretExpiry";
-        var topic = new AzureNextGen.EventGrid.V20200401Preview.SystemTopic("eventGridTopic",
-            new AzureNextGen.EventGrid.V20200401Preview.SystemTopicArgs
+        var topic = new SystemTopic("eventGridTopic",
+            new SystemTopicArgs
             {
                 SystemTopicName = topicName,
                 Source = keyVault.Id,
@@ -209,14 +203,14 @@ class AppStack : Stack
                 ResourceGroupName = resourceGroup.Apply(r => r.Name),
             });
 
-        var eventSubscription = new AzureNextGen.EventGrid.V20200401Preview.SystemTopicEventSubscription("secretExpiryEvent",
-            new AzureNextGen.EventGrid.V20200401Preview.SystemTopicEventSubscriptionArgs
+        var eventSubscription = new SystemTopicEventSubscription("secretExpiryEvent",
+            new SystemTopicEventSubscriptionArgs
             {
-                EventSubscriptionName = "secretExpiryEvent",
+                EventSubscriptionName = Output.Format($"{keyVault.Name}-{secretName}-{functionAppName}"),
                 SystemTopicName = topicName,
                 ResourceGroupName = resourceGroup.Apply(r => r.Name),
                 //Scope = topic.Id,
-                Filter = new AzureNextGen.EventGrid.V20200401Preview.Inputs.EventSubscriptionFilterArgs
+                Filter = new EventSubscriptionFilterArgs
                 {
                     SubjectBeginsWith = "sqlPassword",
                     SubjectEndsWith = "sqlPassword",
@@ -230,24 +224,6 @@ class AppStack : Stack
                     PreferredBatchSizeInKilobytes = 64,
                 },
             });
-
-        //var accessPolicyResource = new Pulumi.Azure.KeyVault.AccessPolicy("webAppPolicy",
-        //    new Pulumi.Azure.KeyVault.AccessPolicyArgs
-        //    {
-        //        KeyVaultId = vaultResource.Id,
-        //        TenantId = tenantId,
-        //        ObjectId = functionApp.Identity.Apply(i => i.PrincipalId),
-        //        SecretPermissions = { "get", "list", "set" }
-        //    });
-        //var accessPolicyResourc2 = new AzureNextGen.KeyVault.Latest.Inputs.AccessPolicyEntryArgs
-        //{
-        //    TenantId = tenantId,
-        //    ObjectId = functionApp.Identity.Apply(i => i.PrincipalId),
-        //    Permissions = new AzureNextGen.KeyVault.Latest.Inputs.PermissionsArgs
-        //    {
-        //        Secrets = { "get", "list", "set" },
-        //    },
-        //};
 
         var expiresAt = DateTimeOffset.Now.AddMinutes(1).ToUnixTimeSeconds();
         var secret = new Secret("secret",
