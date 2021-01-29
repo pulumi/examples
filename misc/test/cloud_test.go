@@ -85,8 +85,11 @@ func TestAccCloudJsThumbnailerMachineLearning(t *testing.T) {
 			Config: map[string]string{
 				// use us-west-2 to assure fargate
 				"cloud-aws:useFargate": "true",
-				"cloud-aws:computeIAMRolePolicyARNs": "arn:aws:iam::aws:policy/AWSLambdaFullAccess,arn:aws:iam::aws:" +
-					"policy/AmazonEC2ContainerServiceFullAccess,arn:aws:iam::aws:policy/AmazonRekognitionFullAccess",
+				"cloud-aws:computeIAMRolePolicyARNs": "arn:aws:iam::aws:policy/AWSLambda_FullAccess," +
+					"arn:aws:iam::aws:policy/AWSLambdaExecute," +
+					"arn:aws:iam::aws:policy/AmazonECS_FullAccess," +
+					"arn:aws:iam::aws:policy/AmazonRekognitionFullAccess," +
+					"arn:aws:iam::aws:policy/IAMFullAccess",
 			},
 			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
 			//  ++ aws:ecs:TaskDefinition ffmpegThumbTask create replacement [diff: ~containerDefinitions]

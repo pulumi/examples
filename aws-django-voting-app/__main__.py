@@ -87,7 +87,7 @@ app_exec_role = aws.iam.Role("app-exec-role",
 
 # Attaching execution permissions to the exec role
 exec_policy_attachment = aws.iam.RolePolicyAttachment("app-exec-policy", role=app_exec_role.name,
-    policy_arn="arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy")
+    policy_arn=aws.iam.ManagedPolicy.AMAZON_ECS_TASK_EXECUTION_ROLE_POLICY)
 
 # Creating an IAM role used by Fargate to manage tasks
 app_task_role = aws.iam.Role("app-task-role",
@@ -106,10 +106,7 @@ app_task_role = aws.iam.Role("app-task-role",
 
 # Attaching execution permissions to the task role
 task_policy_attachment = aws.iam.RolePolicyAttachment("app-access-policy", role=app_task_role.name,
-    policy_arn="arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess")
-
-task_policy_attachment = aws.iam.RolePolicyAttachment("app-lambda-policy", role=app_task_role.name,
-    policy_arn="arn:aws:iam::aws:policy/AWSLambdaFullAccess")
+    policy_arn=aws.iam.ManagedPolicy.AMAZON_ECS_FULL_ACCESS)
 
 # Creating storage space to upload a docker image of our app to
 app_ecr_repo = aws.ecr.Repository("app-ecr-repo",

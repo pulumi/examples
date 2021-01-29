@@ -94,10 +94,7 @@ app_task_role = aws.iam.Role("app-task-role",
 
 # Attaching execution permissions to the task role
 task_policy_attachment = aws.iam.RolePolicyAttachment("app-access-policy", role=app_task_role.name,
-	policy_arn="arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess")
-
-task_policy_attachment = aws.iam.RolePolicyAttachment("app-lambda-policy", role=app_task_role.name,
-	policy_arn="arn:aws:iam::aws:policy/AWSLambdaFullAccess")
+	policy_arn=aws.iam.ManagedPolicy.AMAZON_ECS_FULL_ACCESS)
 
 # Creating storage space to upload a docker image of our app to
 app_ecr_repo = aws.ecr.Repository("app-ecr-repo",

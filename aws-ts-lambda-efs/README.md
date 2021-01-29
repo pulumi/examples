@@ -130,7 +130,7 @@ After cloning this repo, `cd` into it and run these commands:
 
     ```bash
     $ curl -X POST -d '<h1>Hello world</h1>' $(pulumi stack output url)files/index.html
-    $ curl -X GET $(pulumi stack output url)files/file.txt
+    $ curl -X GET $(pulumi stack output url)files/index.html
     <h1>Hello world</h1>
     ```
 

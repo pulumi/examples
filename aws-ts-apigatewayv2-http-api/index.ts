@@ -33,9 +33,9 @@ const lambdaRole = new aws.iam.Role("lambdaRole", {
   },
 });
 
-const lambadRoleAttachment = new aws.iam.RolePolicyAttachment("lambdaRoleAttachment", {
+const lambdaRoleAttachment = new aws.iam.RolePolicyAttachment("lambdaRoleAttachment", {
   role: lambdaRole,
-  policyArn: aws.iam.ManagedPolicies.AWSLambdaFullAccess,
+  policyArn: aws.iam.ManagedPolicy.AWSLambdaBasicExecutionRole,
 });
 
 const lambda = new aws.lambda.Function("lambdaFunction", {
