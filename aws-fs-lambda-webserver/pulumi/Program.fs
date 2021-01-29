@@ -99,7 +99,7 @@ let infra () =
         Function(
             "basicLambda",
             FunctionArgs(
-                Runtime = inputRight Pulumi.Aws.Lambda.Runtime.DotnetCore3d1,
+                Runtime = inputUnion2Of2 Pulumi.Aws.Lambda.Runtime.DotnetCore3d1,
                 Code    = input (FileArchive "../LambdaWebServer/bin/Debug/netcoreapp3.1/publish" :> Archive),
                 Handler = input "LambdaWebServer::Setup+LambdaEntryPoint::FunctionHandlerAsync",
                 Role    = io lambdaRole.Arn,
@@ -147,4 +147,3 @@ let infra () =
 [<EntryPoint>]
 let main _argv =
     Deployment.run infra
-
