@@ -3,9 +3,9 @@
     "dependencies": {
         "@types/node": "^8.0.0",
         "@pulumi/aws": "^1.0.0",
-        "@pulumi/awsx": "^0.20.0",
+        "@pulumi/awsx": "^0.24.0",
         "@pulumi/kubernetes": "^2.0.0",
-        "@pulumi/eks": "^0.19.0",
+        "@pulumi/eks": "^0.22.0",
         "@pulumi/pulumi": "^2.0.0"
     }
 }
