@@ -42,6 +42,8 @@ jobs:
           }}
         token: ${{ secrets.GITHUB_TOKEN }}
   kubernetes:
+    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
+      == github.repository
     name: kubernetes
     needs: test-infra-setup
     runs-on: ${{ matrix.platform }}
@@ -130,6 +132,8 @@ jobs:
         python-version:
         - "3.7"
   linting:
+    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
+      == github.repository
     name: lint
     runs-on: ${{ matrix.platform }}
     steps:
@@ -159,6 +163,8 @@ jobs:
         yarn-version:
         - 1.13.0
   providers:
+    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
+      == github.repository
     name: run-provider-tests
     runs-on: ${{ matrix.platform }}
     steps:
@@ -238,7 +244,6 @@ jobs:
         - Azure
         - Gcp
         - Packet
-        - Linode
         - Cloud
         dotnet-version:
         - 3.1.301
@@ -341,6 +346,8 @@ jobs:
         python-version:
         - "3.7"
   test-infra-setup:
+    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
+      == github.repository
     name: test-infra-setup
     runs-on: ${{ matrix.platform }}
     steps:
