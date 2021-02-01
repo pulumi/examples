@@ -1,4 +1,4 @@
-// +build kubernetes all
+// +build Kubernetes all
 
 package test
 

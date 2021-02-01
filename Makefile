@@ -21,6 +21,10 @@ specific_test_set:
 	echo "running $(TestSet) Acceptance Tests"
 	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel 40 --tags=all --run=TestAcc$(TestSet)
 
+specific_tag_set:
+	echo "running $(TagSet)$(TestSet) Acceptance Tests"
+	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel 40 --tags=$(TagSet) --run=TestAcc$(TagSet)$(TestSet)
+
 setup_test_infra:
 	echo "Setting up test infra"
 	./misc/scripts/create-ci-cluster.sh $(StackName)

@@ -1,4 +1,4 @@
-// +build azure all
+// +build Azure all
 
 package test
 

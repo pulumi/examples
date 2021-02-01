@@ -1,4 +1,4 @@
-// +build cloud all
+// +build Cloud all
 
 package test
 

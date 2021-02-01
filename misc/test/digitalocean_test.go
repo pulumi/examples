@@ -1,4 +1,4 @@
-// +build digitalocean all
+// +build DigitalOcean all
 
 package test
 

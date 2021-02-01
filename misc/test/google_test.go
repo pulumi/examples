@@ -1,4 +1,4 @@
-// +build google all
+// +build Gcp all
 
 package test
 

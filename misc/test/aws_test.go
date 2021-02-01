@@ -1,4 +1,4 @@
-// +build aws all
+// +build Aws all
 
 package test
 
