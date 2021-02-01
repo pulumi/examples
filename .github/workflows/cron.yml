@@ -212,7 +212,7 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v1.0.1
     - name: Running ci-scripts/run-at-head with ${{ matrix.examples-test-matrix }}
         configuration
-      run: ./ci-scripts/ci/run-at-head ${{ matrix.examples-test-matrix }}
+      run: ./ci-scripts/ci/run-at-head --${{ matrix.examples-test-matrix }}
     - if: matrix.examples-test-matrix == 'no-latest-packages'
       run: echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
     - run: echo "Currently Pulumi $(pulumi version) is installed"
