@@ -207,13 +207,13 @@ internal class AppStack : Stack
             new SystemTopicEventSubscriptionArgs
             {
                 EventSubscriptionName = Output.Format($"{keyVault.Name}-{secretName}-{functionAppName}"),
-                SystemTopicName = topicName,
+                SystemTopicName = topic.Name,
                 ResourceGroupName = resourceGroup.Apply(r => r.Name),
                 //Scope = topic.Id,
                 Filter = new EventSubscriptionFilterArgs
                 {
-                    SubjectBeginsWith = "sqlPassword",
-                    SubjectEndsWith = "sqlPassword",
+                    SubjectBeginsWith = secretName,
+                    SubjectEndsWith = secretName,
                     IncludedEventTypes = { "Microsoft.KeyVault.SecretNearExpiry" },
                 },
                 Destination = new AzureFunctionEventSubscriptionDestinationArgs
@@ -239,6 +239,70 @@ internal class AppStack : Stack
                     Attributes = new SecretAttributesArgs { Expires = (int)expiresAt },
                 },
             });
+
+        #region WebApp
+
+        var webAppAppService = new AppServicePlan("webAppServerfarmResource", new AppServicePlanArgs
+        {
+            Location = location,
+            Name = Output.Format($"{resourceNamePrefix}-app"),
+            ResourceGroupName = resourceGroupName,
+            Sku = new SkuDescriptionArgs
+            {
+                Name = "F1",
+            },
+        });
+
+        var webApp = new WebApp("webAppResource", new WebAppArgs
+        {
+            Kind = "app",
+            Name = Output.Format($"{resourceNamePrefix}-app"),
+            ResourceGroupName = resourceGroupName,
+            ServerFarmId = webAppAppService.Id,
+            Location = location,
+            Identity = new ManagedServiceIdentityArgs { Type = ManagedServiceIdentityType.SystemAssigned },
+            SiteConfig = new SiteConfigArgs
+            {
+                AppSettings =
+                {
+                    new NameValuePairArgs
+                    {
+                        Name = "DataSource",
+                        Value = Output.Format($"{sqlServer.Name}.database.windows.net"),
+                    },
+                    new NameValuePairArgs
+                    {
+                        Name = "KeyVaultName",
+                        Value = keyVault.Name,
+                    },
+                    new NameValuePairArgs
+                    {
+                        Name = "SecretName",
+                        Value = secretName,
+                    },
+                },
+            },
+        });
+
+        new WebAppSourceControl("webAppSourceControl",
+            new WebAppSourceControlArgs
+            {
+                Name = webApp.Name,
+                IsManualIntegration = true,
+                Branch = "main",
+                RepoUrl = config.Get("repoURLParam") ?? "https://github.com/Azure-Samples/KeyVault-Rotation-SQLPassword-Csharp-WebApp.git",
+                ResourceGroupName = resourceGroupName,
+            });
+
+        var accessPolSicyResource = new Pulumi.Azure.KeyVault.AccessPolicy("webAppPolicy",
+            new Pulumi.Azure.KeyVault.AccessPolicyArgs
+            {
+                KeyVaultId = keyVault.Id,
+                TenantId = tenantId,
+                ObjectId = webApp.Identity.Apply(i => i!.PrincipalId),
+                SecretPermissions = { "get", "list", "set" }
+            });
+
+        #endregion
     }
 }
-
