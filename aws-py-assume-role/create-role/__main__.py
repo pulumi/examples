@@ -35,7 +35,7 @@ unprivileged_user_creds = aws.iam.AccessKey(
     'unprivileged-user-key',
     user=unprivileged_user.name,
     # additional_secret_outputs specify properties that must be encrypted as secrets
-    # https://www.pulumi.com/docs/intro/concepts/programming-model/#additionalsecretoutputs
+    # https://www.pulumi.com/docs/intro/concepts/resources/#additionalsecretoutputs
     opts=ResourceOptions(additional_secret_outputs=["secret"])
 )
 

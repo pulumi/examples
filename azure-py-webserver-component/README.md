@@ -2,7 +2,7 @@
 
 # Web Server Using Azure Virtual Machine with ComponentResource
 
-This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/programming-model/#components) 
+This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/resources/#components) 
 to create and deploy an Azure Virtual Machine and starts a HTTP server on it.
 
 The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources 
