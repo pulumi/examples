@@ -47,6 +47,7 @@ class TestS3(unittest.TestCase):
     def setUpClass(cls) -> None:  
       ....
         cls.stack = auto.create_or_select_stack(stack_name=cls.STACK_NAME, work_dir=cls.WORK_DIR) 
+		cls.stack.up(output=print)
         cls.outputs = cls.stack.outputs() 
        ...
           
