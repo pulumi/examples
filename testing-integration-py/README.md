@@ -35,9 +35,9 @@ python -m unittest test_s3_it.py
 ```
 
 ## Test Life Cycle
- - create a stack for all the use cases, to get all the output from stack
- - assert any output value you defined in advance.
- - In the end, don't forget destroy the stack. 
+ - Create a stack and export the desired outputs.
+ - Validate any output values you defined in advance.
+ - In the end, don't forget to destroy the stack. 
 ```
 from pulumi.x import automation as auto
 
