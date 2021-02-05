@@ -53,7 +53,8 @@ class TestS3(unittest.TestCase):
           
     @classmethod  
     def tearDownClass(cls) -> None:  
-        cls.stack.destroy(on_output=print)  
+        cls.stack.destroy(on_output=print)
+        cls.stack.workspace.remove_stack(cls.STACK_NAME)  
   
     def test_s3_output_case(self):  
     ...
