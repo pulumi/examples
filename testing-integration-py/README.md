@@ -21,7 +21,7 @@ To create a s3 bucket and upload a file
 
 ## Precondition
 
-you meed create the credential file yourself. By default, its location is at ~/.aws/credentials, and And access key has the permission for S3 bucket.
+You need to create the credential file yourself. By default, its location is at ~/.aws/credentials. Your access key needs the correct permissions for S3 bucket and object creation/deletion.
 ```
 [default]
 aws_access_key_id = YOUR_ACCESS_KEY
