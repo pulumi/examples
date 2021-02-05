@@ -12,7 +12,7 @@ domain_name = config.get("domainName")
 
 cluster = do.KubernetesCluster(
     "do-cluster",
-    region="sfo2",
+    region="nyc3",
     version="latest",
     node_pool=do.KubernetesClusterNodePoolArgs(
         name="default",

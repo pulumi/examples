@@ -22,7 +22,7 @@ class KubernetesStack : Stack
 
         var cluster = new KubernetesCluster("do-cluser", new KubernetesClusterArgs
         {
-            Region = "sfo2",
+            Region = "nyc3",
             Version = "latest",
             NodePool = new KubernetesClusterNodePoolArgs
             {
