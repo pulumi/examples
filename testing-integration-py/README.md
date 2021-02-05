@@ -1,7 +1,7 @@
 
 # Integration Testing of Pulumi programs in Python
 
-This integration test is using Pulumi automation api [Automation API](https://www.pulumi.com/blog/automation-api/) and [Python Unittest](https://docs.python.org/3/library/unittest.html)  to simulate integration test in Pulumi without native python integration library. 
+This integration test is using Pulumi [Automation API](https://www.pulumi.com/blog/automation-api/) and [Python Unittest](https://docs.python.org/3/library/unittest.html)  to simulate integration test in Pulumi without native python integration library. 
 
 | UnitTest | Integration Test |Target|
 |--|--|--|
