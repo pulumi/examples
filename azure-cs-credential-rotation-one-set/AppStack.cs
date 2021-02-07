@@ -203,13 +203,12 @@ internal class AppStack : Stack
                 ResourceGroupName = resourceGroup.Apply(r => r.Name),
             });
 
-        var eventSubscription = new SystemTopicEventSubscription("secretExpiryEvent",
+        var eventSubscription = new SystemTopicEventSubscription("eventSubscription",
             new SystemTopicEventSubscriptionArgs
             {
                 EventSubscriptionName = Output.Format($"{keyVault.Name}-{secretName}-{functionAppName}"),
                 SystemTopicName = topic.Name,
                 ResourceGroupName = resourceGroup.Apply(r => r.Name),
-                //Scope = topic.Id,
                 Filter = new EventSubscriptionFilterArgs
                 {
                     SubjectBeginsWith = secretName,
