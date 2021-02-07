@@ -17,7 +17,6 @@ mystackpath = config.require("mystackpath")
 mycrosswalkvpc = StackReference(mystackpath)
 
 # Get all network values from previously created vpc #
-pulumi_vpc = mycrosswalkvpc.require_output("pulumi_vpc_id")
 pulumi_vpc_name = mycrosswalkvpc.require_output("pulumi_vpc_name")
 pulumi_vpc_cidr = mycrosswalkvpc.require_output("pulumi_vpc_cidr")
 pulumi_vpc_id = mycrosswalkvpc.require_output("pulumi_vpc_id")
@@ -69,7 +68,7 @@ sec_tags.update({"Name": "pulumi-fargate-security-group"})
 sgroup = aws.ec2.SecurityGroup(
     'pulumi-fargate-sg',
     description='Enable HTTP access',
-    vpc_id=pulumi_vpc,
+    vpc_id=pulumi_vpc_id,
     ingress=[
         {'protocol': 'tcp', 'from_port': 80,
             'to_port': 80, 'cidr_blocks': ['0.0.0.0/0']}
@@ -108,7 +107,7 @@ alb_target_group = aws.lb.TargetGroup(
     port=80,
     protocol="HTTP",
     target_type="ip",
-    vpc_id=pulumi_vpc
+    vpc_id=pulumi_vpc_id
 )
 
 # Create Listener  https://www.pulumi.com/docs/reference/pkg/aws/alb/listener/
