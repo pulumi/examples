@@ -1,0 +1,6 @@
+name: s3-py-it
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: A Integration Testing of s3 use case
