@@ -15,14 +15,14 @@ env:
   GOOGLE_REGION: us-central1
   GOOGLE_ZONE: us-central1-a
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
+  PROVIDER_TESTS_TAG: ${{ github.event.client_payload.ref }}
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_API: https://api.pulumi-staging.io
   PULUMI_TEST_OWNER: moolumi
-  PULUMI_VERSION: ${{ github.event.client_payload.ref }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 jobs:
   kubernetes:
-    name: smoke-test-cli-on-kubernetes
+    name: smoke-test-kubernetes-provider
     needs: test-infra-setup
     runs-on: ${{ matrix.platform }}
     steps:
@@ -96,8 +96,8 @@ jobs:
       run: |-
         mkdir -p "$HOME/.kube/"
         pulumi stack -s "${{ env.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
-    - name: Run ${{ matrix.tests-set }} Tests
-      run: make specific_test_set TestSet=Kubernetes
+    - name: Run Kubernetes Smoke Tests
+      run: make specific_tag_set TagSet=Kubernetes
     strategy:
       fail-fast: false
       matrix:
@@ -112,7 +112,7 @@ jobs:
         python-version:
         - "3.7"
   providers:
-    name: smoke-test-cli-on-providers
+    name: smoke-test-providers
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Install DotNet ${{ matrix.dotnet-version }}
@@ -181,19 +181,12 @@ jobs:
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
       run: make ensure
-    - name: Running ${{ matrix.clouds }}${{ matrix.languages }} Tests
-      run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages
+    - name: Running ${{ env.PROVIDER_TESTS_TAG }}${{ matrix.languages }} Smoke Tests
+      run: make specific_tag_set TestSet=${{ matrix.languages }} TagSet=${{ env.PROVIDER_TESTS_TAG
         }}
     strategy:
       fail-fast: false
       matrix:
-        clouds:
-        - DigitalOcean
-        - Aws
-        - Azure
-        - Gcp
-        - Packet
-        - Cloud
         dotnet-version:
         - 3.1.301
         go-version:
@@ -375,7 +368,7 @@ jobs:
         - ubuntu-latest
         python-version:
         - "3.7"
-name: Smoke Test Specific Version of CLI
+name: Smoke Test Latest Provider Release
 "on":
   repository_dispatch:
     types:

@@ -253,7 +253,6 @@ jobs:
         python-version:
         - "3.7"
   test-infra-destroy:
-    if: ${{ always() }} && github.event.pull_request.head.repo.full_name == github.repository
     name: test-infra-destroy
     needs: kubernetes
     runs-on: ${{ matrix.platform }}
