@@ -1,18 +1,21 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Managing Secrets and Secure Access in Azure Applications
+# Automate the rotation of a secret for resources that use one set of authentication credentials
 
-[Managed identities](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/) for Azure resources provides Azure services with an automatically managed identity in Azure Active Directory (Azure AD).
+Modeled after [Microsoft ARM documentation](https://docs.microsoft.com/en-us/azure/key-vault/secrets/tutorial-rotation)
 
 This example demonstrates using a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
 
 The application consists of several parts:
 
-- An ASP.NET Application which reads data from a SQL Database and from a file in Blob Storage
-- App Service which host the application. The application binaries are placed in Blob Storage, with Blob Url placed as a secret in Azure Key Vault
-- App Service has a Managed Identity enabled
-- The identify is granted access to the SQL Server, Blob Storage, and Key Vault
-- No secret information is placed in App Service configuration: all access rights are derived from Active Directory
+- A SQL Server to rotate credendials
+- A KeyVault that stores the credentials of the SQL Server
+- A KeyVault that is only accessible to the WebApp and Function (through Managed Identity)
+- An Azure Function that generates a new secret and sets it in SQL Server and Key Vault
+- An Azure WebApp that shows that the secret is changing and still accessible
+- An EventGrid subscription to receive SecretNearExpiry events from KeyVault and, in turn, call the Azure Function
+
+## IMPORTANT: For example purposes, new secrets are continually generated. Make sure to change the validityPeriod or destory the stack when you are done.
 
 ## Deploying the App
 
@@ -43,33 +46,18 @@ To deploy your infrastructure, follow the below steps.
     $ dotnet publish webapp
     ```
 
-1. Set an appropriate Azure location like:
-
-    ```
-    $ pulumi config set azure:location westus
-    ```
-
 1.  Run `pulumi up` to preview and deploy changes:
 
     ```
     $ pulumi up
-    Previewing changes:
-    ...
-
-    Performing changes:
-    ...
-    info: 15 changes performed:
-        + 15 resources created
-    Update duration: 4m16s
     ```
 
 1.  Check the deployed website endpoint:
 
     ```
-    $ pulumi stack output Endpoint
+    $ pulumi stack output WebAppEndpoint
     https://app129968b8.azurewebsites.net/
-    $ curl "$(pulumi stack output Endpoint)"
-    Hello 311378b3-16b7-4889-a8d7-2eb77478beba@50f73f6a-e8e3-46b6-969c-bf026712a650! Here is your...
+    $ Start-Process "$(pulumi stack output WebAppEndpoint)"
     ```
 
 1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.

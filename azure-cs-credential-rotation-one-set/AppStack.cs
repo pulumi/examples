@@ -18,17 +18,20 @@ using Storage = Pulumi.AzureNextGen.Storage.Latest;
 
 internal class AppStack : Stack
 {
+    [Output]
+    public Output<string> WebAppEndpoint { get; set; }
+
     public AppStack()
     {
         var config = new Config();
-        var resourceGroupName = config.Require("resourceGroupNameParam");
+        var resourceGroupName = config.Require("resourceGroupName");
         var resourceGroup = Output.Create(GetResourceGroup.InvokeAsync(new GetResourceGroupArgs
         {
             ResourceGroupName = resourceGroupName,
         }));
 
-        var resourceNamePrefix = Output.Create(config.Get("resourceNamePrefixParam")) ?? resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Name)!;
-        var sqlAdminLogin = config.Get("sqlAdminLoginParam") ?? "sqlAdmin";
+        var resourceNamePrefix = Output.Create(config.Get("resourceNamePrefix")) ?? resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Name)!;
+        var sqlAdminLogin = config.Get("sqlAdminLogin") ?? "sqlAdmin";
         var sqlAdminPassword = Guid.NewGuid().ToString();
         var location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location);
         var sqlServer = new Server("sqlServer", new ServerArgs
@@ -82,7 +85,7 @@ internal class AppStack : Stack
             },
         });
 
-        var secretName = config.Get("secretNameParam") ?? "sqlPassword";
+        var secretName = config.Get("secretName") ?? "sqlPassword";
 
         var appService = new AppServicePlan("functionApp-appService", new AppServicePlanArgs
         {
@@ -159,7 +162,7 @@ internal class AppStack : Stack
                 Name = functionApp.Name,
                 IsManualIntegration = true,
                 Branch = "main",
-                RepoUrl = config.Get("repoURLParam") ?? "https://github.com/Azure-Samples/KeyVault-Rotation-SQLPassword-Csharp.git",
+                RepoUrl = config.Get("functionAppRepoURL") ?? "https://github.com/Azure-Samples/KeyVault-Rotation-SQLPassword-Csharp.git",
                 ResourceGroupName = resourceGroupName,
             });
 
@@ -286,13 +289,15 @@ internal class AppStack : Stack
             },
         });
 
+        this.WebAppEndpoint = webApp.DefaultHostName;
+
         new WebAppSourceControl("webApp-sourceControl",
             new WebAppSourceControlArgs
             {
                 Name = webApp.Name,
                 IsManualIntegration = true,
                 Branch = "main",
-                RepoUrl = config.Get("repoURLParam") ?? "https://github.com/Azure-Samples/KeyVault-Rotation-SQLPassword-Csharp-WebApp.git",
+                RepoUrl = config.Get("webAppRepoURL") ?? "https://github.com/Azure-Samples/KeyVault-Rotation-SQLPassword-Csharp-WebApp.git",
                 ResourceGroupName = resourceGroupName,
             });
 
