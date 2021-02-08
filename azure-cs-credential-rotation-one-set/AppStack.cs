@@ -31,7 +31,7 @@ internal class AppStack : Stack
         var sqlAdminLogin = config.Get("sqlAdminLoginParam") ?? "sqlAdmin";
         var sqlAdminPassword = Guid.NewGuid().ToString();
         var location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location);
-        var sqlServer = new Server("serverResource", new ServerArgs
+        var sqlServer = new Server("sqlServer", new ServerArgs
         {
             AdministratorLogin = sqlAdminLogin,
             AdministratorLoginPassword = sqlAdminPassword,
@@ -55,7 +55,7 @@ internal class AppStack : Stack
         var tenantId = clientConfig.Apply(c => c.TenantId);
 
         var storageAccountName = Output.Format($"{resourceNamePrefix}funcstorage");
-        var storageAccount = new StorageAccount("storageAccountResource", new StorageAccountArgs
+        var storageAccount = new StorageAccount("storageAccount", new StorageAccountArgs
         {
             AccountName = storageAccountName,
             Kind = "Storage",
@@ -68,7 +68,7 @@ internal class AppStack : Stack
         });
 
         var functionAppName = Output.Format($"{resourceNamePrefix}-func");
-        var appInsights = new Component("componentResource", new ComponentArgs
+        var appInsights = new Component("appInsights", new ComponentArgs
         {
             Location = location,
             RequestSource = "IbizaWebAppExtensionCreate",
@@ -84,7 +84,7 @@ internal class AppStack : Stack
 
         var secretName = config.Get("secretNameParam") ?? "sqlPassword";
 
-        var appService = new AppServicePlan("serverfarmResource", new AppServicePlanArgs
+        var appService = new AppServicePlan("functionApp-appService", new AppServicePlanArgs
         {
             Location = location,
             Name = functionAppName,
@@ -102,7 +102,7 @@ internal class AppStack : Stack
             return Output.Create(task).Apply(t => t.Keys[0].Value);
         });
 
-        var functionApp = new WebApp("siteResource", new WebAppArgs
+        var functionApp = new WebApp("functionApp", new WebAppArgs
         {
             Kind = "functionapp",
             Name = functionAppName,
@@ -153,7 +153,7 @@ internal class AppStack : Stack
             },
         });
 
-        new WebAppSourceControl("sourceControl",
+        var functionAppSourceControl = new WebAppSourceControl("functionApp-sourceControl",
             new WebAppSourceControlArgs
             {
                 Name = functionApp.Name,
@@ -163,7 +163,7 @@ internal class AppStack : Stack
                 ResourceGroupName = resourceGroupName,
             });
 
-        var keyVault = new Vault("vaultResource", new VaultArgs
+        var keyVault = new Vault("keyVault", new VaultArgs
         {
             Location = location,
             Properties = new VaultPropertiesArgs
@@ -187,6 +187,7 @@ internal class AppStack : Stack
                     Name = KeyVault.SkuName.Standard,
                 },
                 TenantId = tenantId,
+                EnableSoftDelete = false,
             },
             ResourceGroupName = resourceGroupName,
             VaultName = Output.Format($"{resourceNamePrefix}-kv"),
@@ -222,7 +223,8 @@ internal class AppStack : Stack
                     MaxEventsPerBatch = 1,
                     PreferredBatchSizeInKilobytes = 64,
                 },
-            });
+            },
+            new CustomResourceOptions { DependsOn = { functionAppSourceControl } });
 
         var expiresAt = DateTimeOffset.Now.AddMinutes(1).ToUnixTimeSeconds();
         var secret = new Secret("secret",
@@ -237,11 +239,12 @@ internal class AppStack : Stack
                     Value = sqlAdminPassword,
                     Attributes = new SecretAttributesArgs { Expires = (int)expiresAt },
                 },
-            });
+            },
+            new CustomResourceOptions { DependsOn = { eventSubscription } }); 
 
         #region WebApp
 
-        var webAppAppService = new AppServicePlan("webAppServerfarmResource", new AppServicePlanArgs
+        var webAppAppService = new AppServicePlan("webApp-appService", new AppServicePlanArgs
         {
             Location = location,
             Name = Output.Format($"{resourceNamePrefix}-app"),
@@ -252,7 +255,7 @@ internal class AppStack : Stack
             },
         });
 
-        var webApp = new WebApp("webAppResource", new WebAppArgs
+        var webApp = new WebApp("webApp", new WebAppArgs
         {
             Kind = "app",
             Name = Output.Format($"{resourceNamePrefix}-app"),
@@ -283,7 +286,7 @@ internal class AppStack : Stack
             },
         });
 
-        new WebAppSourceControl("webAppSourceControl",
+        new WebAppSourceControl("webApp-sourceControl",
             new WebAppSourceControlArgs
             {
                 Name = webApp.Name,
