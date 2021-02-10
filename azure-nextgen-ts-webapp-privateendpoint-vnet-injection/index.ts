@@ -53,7 +53,7 @@ const site1 = new azure_nextgen.web.v20190801.WebApp("backendApp", {
 });
 
 const webappDnsName = ".azurewebsites.net";
-new azure_nextgen.web.v20190801.WebAppHostNameBinding("hostNameBindingSite1", {
+const hostnameBinding1 = new azure_nextgen.web.v20190801.WebAppHostNameBinding("hostNameBindingSite1", {
     hostName: pulumi.interpolate `${site1.name}${webappDnsName}`,
     hostNameType: "Verified",
     name: pulumi.interpolate `${site1.name}${webappDnsName}`,
@@ -69,13 +69,12 @@ const site2 = new azure_nextgen.web.v20190801.WebApp("frontendApp", {
     name: site2NameParam,
     resourceGroupName: resourceGroup.name,
     serverFarmId: serverfarm.id,
-    
     siteConfig: {
         ftpsState: azure_nextgen.web.v20190801.FtpsState.AllAllowed,
     },
 });
 
-new azure_nextgen.web.v20190801.WebAppHostNameBinding("hostNameBindingSite2", {
+const hostnameBinding2 = new azure_nextgen.web.v20190801.WebAppHostNameBinding("hostNameBindingSite2", {
     hostName: pulumi.interpolate `${site2.name}${webappDnsName}`,
     hostNameType: "Verified",
     name: pulumi.interpolate `${site2.name}${webappDnsName}`,
@@ -133,7 +132,7 @@ const privateEndpoint = new azure_nextgen.network.v20200501.PrivateEndpoint("pri
 });
 
 // Setup a private DNS Zone for private endpoint
-new azure_nextgen.network.v20200301.PrivateDnsZoneGroup("privateDnsZoneGroup", {
+const privateDNSZoneGroup = new azure_nextgen.network.v20200301.PrivateDnsZoneGroup("privateDnsZoneGroup", {
     privateDnsZoneConfigs: [{
         name: "config1",
         privateDnsZoneId: privateDnsZone.id,
@@ -142,7 +141,7 @@ new azure_nextgen.network.v20200301.PrivateDnsZoneGroup("privateDnsZoneGroup", {
     privateEndpointName: privateEndpoint.name,
     resourceGroupName: resourceGroup.name,
 });
-new azure_nextgen.network.v20180901.VirtualNetworkLink("virtualNetworkLink", {
+const virtualNetworkLink = new azure_nextgen.network.v20180901.VirtualNetworkLink("virtualNetworkLink", {
     location: "global",
     privateZoneName: privateDnsZone.name,
     registrationEnabled: false,
@@ -168,7 +167,7 @@ const subnet2 = new azure_nextgen.network.v20200401.Subnet("subnet2", {
     virtualNetworkName: virtualNetwork.name,
 });
 
-new azure_nextgen.web.v20190801.WebAppSwiftVirtualNetworkConnection("virtualNetworkConnForSite2", {
+const virtualNetworkConn = new azure_nextgen.web.v20190801.WebAppSwiftVirtualNetworkConnection("virtualNetworkConnForSite2", {
     name: site2.name,
     resourceGroupName: resourceGroup.name,
     subnetResourceId: subnet2.id,
