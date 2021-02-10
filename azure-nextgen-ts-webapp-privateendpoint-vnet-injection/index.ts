@@ -51,7 +51,7 @@ const backendApp = new web.WebApp("backendApp", {
     },
 });
 
-export const backendURL = backendApp.defaultHostName
+export const backendURL = backendApp.defaultHostName;
 
 // Setup frontend app
 const frontendName = pulumi.interpolate`frontend${rand.result}`;
@@ -66,7 +66,7 @@ const frontendApp = new web.WebApp("frontendApp", {
     },
 });
 
-export const frontEndURL = frontendApp.defaultHostName
+export const frontEndURL = frontendApp.defaultHostName;
 
 // Setup a vnet
 const virtualNetworkCIDR = config.get("virtualNetworkCIDR") || "10.200.0.0/16";
@@ -124,7 +124,7 @@ const privateDNSZoneGroup = new network.PrivateDnsZoneGroup("privateDnsZoneGroup
     resourceGroupName: resourceGroup.name,
 });
 
-export const privateEndpointURL = privateDNSZoneGroup.privateDnsZoneConfigs.apply(zoneConfigs => zoneConfigs![0].recordSets[0].fqdn)
+export const privateEndpointURL = privateDNSZoneGroup.privateDnsZoneConfigs.apply(zoneConfigs => zoneConfigs![0].recordSets[0].fqdn);
 
 const virtualNetworkLink = new pvtnetwork.VirtualNetworkLink("virtualNetworkLink", {
     location: "global",
