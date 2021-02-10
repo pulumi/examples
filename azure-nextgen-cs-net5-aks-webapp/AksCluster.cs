@@ -70,7 +70,7 @@ class AksCluster : ComponentResource
             },
             DnsPrefix = "demoapppulumiaks",
             EnableRBAC = true,
-            Identity = new ManagedClusterIdentityArgs { Type ="SystemAssigned" },
+            Identity = new ManagedClusterIdentityArgs { Type = ResourceIdentityType.SystemAssigned },
             KubernetesVersion = args?.KubernetesVersion ?? "1.16.13",
             LinuxProfile = new ContainerServiceLinuxProfileArgs
             {
