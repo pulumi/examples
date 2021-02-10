@@ -245,8 +245,6 @@ internal class AppStack : Stack
             },
             new CustomResourceOptions { DependsOn = { eventSubscription } }); 
 
-        #region WebApp
-
         var webAppAppService = new AppServicePlan("webApp-appService", new AppServicePlanArgs
         {
             Location = location,
@@ -301,7 +299,7 @@ internal class AppStack : Stack
                 ResourceGroupName = resourceGroupName,
             });
 
-        var accessPolSicyResource = new Pulumi.Azure.KeyVault.AccessPolicy("webAppPolicy",
+        var accessPolicyResource = new Pulumi.Azure.KeyVault.AccessPolicy("webAppPolicy",
             new Pulumi.Azure.KeyVault.AccessPolicyArgs
             {
                 KeyVaultId = keyVault.Id,
@@ -309,7 +307,5 @@ internal class AppStack : Stack
                 ObjectId = webApp.Identity.Apply(i => i!.PrincipalId),
                 SecretPermissions = { "get", "list", "set" }
             });
-
-        #endregion
     }
 }
