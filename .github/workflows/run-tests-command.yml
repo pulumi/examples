@@ -244,6 +244,7 @@ jobs:
         - Azure
         - Gcp
         - Packet
+        - EquinixMetal
         - Cloud
         dotnet-version:
         - 3.1.301
