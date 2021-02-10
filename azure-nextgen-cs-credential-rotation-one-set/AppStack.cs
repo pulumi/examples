@@ -15,6 +15,7 @@ using Pulumi.AzureNextGen.Web.Latest;
 using Pulumi.AzureNextGen.Web.Latest.Inputs;
 using KeyVault = Pulumi.AzureNextGen.KeyVault.Latest;
 using Storage = Pulumi.AzureNextGen.Storage.Latest;
+using ManagedServiceIdentityType = Pulumi.AzureNextGen.Web.Latest.ManagedServiceIdentityType;
 
 internal class AppStack : Stack
 {
@@ -24,23 +25,21 @@ internal class AppStack : Stack
     public AppStack()
     {
         var config = new Config();
-        var resourceGroupName = config.Require("resourceGroupName");
-        var resourceGroup = Output.Create(GetResourceGroup.InvokeAsync(new GetResourceGroupArgs
-        {
-            ResourceGroupName = resourceGroupName,
-        }));
+        var resourceGroupName = config.Get("resourceGroupName") ?? "rotatesecretoneset";
+        var resourceNamePrefix = config.Get("resourceNamePrefix") ?? resourceGroupName;
+        var location = config.Get("location") ?? "EastUS";
 
-        var resourceNamePrefix = Output.Create(config.Get("resourceNamePrefix")) ?? resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Name)!;
+        var resourceGroup = new ResourceGroup("resourceGroup", new ResourceGroupArgs { ResourceGroupName = resourceGroupName, Location = location });
+
         var sqlAdminLogin = config.Get("sqlAdminLogin") ?? "sqlAdmin";
         var sqlAdminPassword = Guid.NewGuid().ToString();
-        var location = resourceGroup.Apply(resourceGroupVar => resourceGroupVar.Location);
         var sqlServer = new Server("sqlServer", new ServerArgs
         {
             AdministratorLogin = sqlAdminLogin,
             AdministratorLoginPassword = sqlAdminPassword,
             Location = location,
-            ResourceGroupName = resourceGroupName,
-            ServerName = Output.Format($"{resourceNamePrefix}-sql"),
+            ResourceGroupName = resourceGroup.Name,
+            ServerName = $"{resourceNamePrefix}-sql",
             Version = "12.0",
         });
 
@@ -49,7 +48,7 @@ internal class AppStack : Stack
             {
                 Name = "AllowAllWindowsAzureIps",
                 ServerName = sqlServer.Name,
-                ResourceGroupName = resourceGroupName,
+                ResourceGroupName = resourceGroup.Name,
                 StartIpAddress = "0.0.0.0",
                 EndIpAddress = "0.0.0.0",
             });
@@ -57,13 +56,13 @@ internal class AppStack : Stack
         var clientConfig = Output.Create(GetClientConfig.InvokeAsync());
         var tenantId = clientConfig.Apply(c => c.TenantId);
 
-        var storageAccountName = Output.Format($"{resourceNamePrefix}funcstorage");
+        var storageAccountName = $"st{resourceNamePrefix}";
         var storageAccount = new StorageAccount("storageAccount", new StorageAccountArgs
         {
             AccountName = storageAccountName,
             Kind = "Storage",
             Location = location,
-            ResourceGroupName = resourceGroupName,
+            ResourceGroupName = resourceGroup.Name,
             Sku = new Storage.Inputs.SkuArgs
             {
                 Name = "Standard_LRS"
@@ -75,7 +74,7 @@ internal class AppStack : Stack
         {
             Location = location,
             RequestSource = "IbizaWebAppExtensionCreate",
-            ResourceGroupName = resourceGroupName,
+            ResourceGroupName = resourceGroup.Name,
             ResourceName = functionAppName,
             ApplicationType = "web",
             Kind = "web",
@@ -91,7 +90,7 @@ internal class AppStack : Stack
         {
             Location = location,
             Name = functionAppName,
-            ResourceGroupName = resourceGroupName,
+            ResourceGroupName = resourceGroup.Name,
             Sku = new SkuDescriptionArgs
             {
                 Name = "Y1",
@@ -109,9 +108,9 @@ internal class AppStack : Stack
         {
             Kind = "functionapp",
             Name = functionAppName,
-            ResourceGroupName = resourceGroupName,
+            ResourceGroupName = resourceGroup.Name,
             ServerFarmId = appService.Id,
-            Location = resourceGroup.Apply(r => r.Location),
+            Location = resourceGroup.Location,
             Identity = new ManagedServiceIdentityArgs { Type = ManagedServiceIdentityType.SystemAssigned },
             SiteConfig = new SiteConfigArgs
             {
@@ -163,7 +162,7 @@ internal class AppStack : Stack
                 IsManualIntegration = true,
                 Branch = "main",
                 RepoUrl = config.Get("functionAppRepoURL") ?? "https://github.com/Azure-Samples/KeyVault-Rotation-SQLPassword-Csharp.git",
-                ResourceGroupName = resourceGroupName,
+                ResourceGroupName = resourceGroup.Name,
             });
 
         var keyVault = new Vault("keyVault", new VaultArgs
@@ -192,7 +191,7 @@ internal class AppStack : Stack
                 TenantId = tenantId,
                 EnableSoftDelete = false,
             },
-            ResourceGroupName = resourceGroupName,
+            ResourceGroupName = resourceGroup.Name,
             VaultName = Output.Format($"{resourceNamePrefix}-kv"),
         });
 
@@ -203,8 +202,8 @@ internal class AppStack : Stack
                 SystemTopicName = topicName,
                 Source = keyVault.Id,
                 TopicType = "microsoft.keyvault.vaults",
-                Location = resourceGroup.Apply(r => r.Location),
-                ResourceGroupName = resourceGroup.Apply(r => r.Name),
+                Location = resourceGroup.Location,
+                ResourceGroupName = resourceGroup.Name,
             });
 
         var eventSubscription = new SystemTopicEventSubscription("eventSubscription",
@@ -212,7 +211,7 @@ internal class AppStack : Stack
             {
                 EventSubscriptionName = Output.Format($"{keyVault.Name}-{secretName}-{functionAppName}"),
                 SystemTopicName = topic.Name,
-                ResourceGroupName = resourceGroup.Apply(r => r.Name),
+                ResourceGroupName = resourceGroup.Name,
                 Filter = new EventSubscriptionFilterArgs
                 {
                     SubjectBeginsWith = secretName,
@@ -235,7 +234,7 @@ internal class AppStack : Stack
             {
                 SecretName = secretName,
                 VaultName = keyVault.Name,
-                ResourceGroupName = resourceGroupName,
+                ResourceGroupName = resourceGroup.Name,
                 Tags = { { "CredentialId", sqlAdminLogin }, { "ProviderAddress", sqlServer.Id }, { "ValidityPeriodDays", "1" } },
                 Properties = new SecretPropertiesArgs
                 {
@@ -249,7 +248,7 @@ internal class AppStack : Stack
         {
             Location = location,
             Name = Output.Format($"{resourceNamePrefix}-app"),
-            ResourceGroupName = resourceGroupName,
+            ResourceGroupName = resourceGroup.Name,
             Sku = new SkuDescriptionArgs
             {
                 Name = "F1",
@@ -260,7 +259,7 @@ internal class AppStack : Stack
         {
             Kind = "app",
             Name = Output.Format($"{resourceNamePrefix}-app"),
-            ResourceGroupName = resourceGroupName,
+            ResourceGroupName = resourceGroup.Name,
             ServerFarmId = webAppAppService.Id,
             Location = location,
             Identity = new ManagedServiceIdentityArgs { Type = ManagedServiceIdentityType.SystemAssigned },
@@ -296,7 +295,7 @@ internal class AppStack : Stack
                 IsManualIntegration = true,
                 Branch = "main",
                 RepoUrl = config.Get("webAppRepoURL") ?? "https://github.com/Azure-Samples/KeyVault-Rotation-SQLPassword-Csharp-WebApp.git",
-                ResourceGroupName = resourceGroupName,
+                ResourceGroupName = resourceGroup.Name,
             });
 
         var accessPolicyResource = new Pulumi.Azure.KeyVault.AccessPolicy("webAppPolicy",
