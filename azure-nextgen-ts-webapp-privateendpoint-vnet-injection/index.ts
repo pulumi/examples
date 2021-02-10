@@ -53,13 +53,6 @@ const site1 = new azure_nextgen.web.v20190801.WebApp("backendApp", {
 });
 
 const webappDnsName = ".azurewebsites.net";
-const hostnameBinding1 = new azure_nextgen.web.v20190801.WebAppHostNameBinding("hostNameBindingSite1", {
-    hostName: pulumi.interpolate `${site1.name}${webappDnsName}`,
-    hostNameType: "Verified",
-    name: pulumi.interpolate `${site1.name}${webappDnsName}`,
-    resourceGroupName: resourceGroup.name,
-    siteName: site1.name,
-});
 
 // Setup frontend app
 const site2NameParam = config.get("site2NameParam") || pulumi.interpolate `webapp2${rand.result}`;
@@ -72,14 +65,6 @@ const site2 = new azure_nextgen.web.v20190801.WebApp("frontendApp", {
     siteConfig: {
         ftpsState: azure_nextgen.web.v20190801.FtpsState.AllAllowed,
     },
-});
-
-const hostnameBinding2 = new azure_nextgen.web.v20190801.WebAppHostNameBinding("hostNameBindingSite2", {
-    hostName: pulumi.interpolate `${site2.name}${webappDnsName}`,
-    hostNameType: "Verified",
-    name: pulumi.interpolate `${site2.name}${webappDnsName}`,
-    resourceGroupName: resourceGroup.name,
-    siteName: site2.name,
 });
 
 const virtualNetworkNameParam = config.get("virtualNetworkNameParam") || "vnet";
