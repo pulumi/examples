@@ -1,3 +1,5 @@
+// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
+
 import * as azure_nextgen from "@pulumi/azure-nextgen";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
@@ -31,10 +33,13 @@ const serverfarm = new azure_nextgen.web.v20190801.AppServicePlan("serverfarm", 
     },
 });
 
+// To get a random suffix
 const rand = new random.RandomString("random", {
     length: 5,
     special: false,
 });
+
+// Setup backend app
 const site1NameParam = config.get("site1NameParam") || pulumi.interpolate `webapp1${rand.result}`;
 const site1 = new azure_nextgen.web.v20190801.WebApp("backendApp", {
     kind: "app",
@@ -56,6 +61,7 @@ new azure_nextgen.web.v20190801.WebAppHostNameBinding("hostNameBindingSite1", {
     siteName: site1.name,
 });
 
+// Setup frontend app
 const site2NameParam = config.get("site2NameParam") || pulumi.interpolate `webapp2${rand.result}`;
 const site2 = new azure_nextgen.web.v20190801.WebApp("frontendApp", {
     kind: "app",
@@ -80,6 +86,8 @@ new azure_nextgen.web.v20190801.WebAppHostNameBinding("hostNameBindingSite2", {
 const virtualNetworkNameParam = config.get("virtualNetworkNameParam") || "vnet";
 const privateDNSZoneName = "privatelink.azurewebsites.net";
 const virtualNetworkCIDRParam = config.get("virtualNetworkCIDRParam") || "10.200.0.0/16";
+
+// Setup a vnet
 const virtualNetwork = new azure_nextgen.network.v20200401.VirtualNetwork("virtualNetwork", {
     addressSpace: {
         addressPrefixes: [virtualNetworkCIDRParam],
@@ -88,6 +96,7 @@ const virtualNetwork = new azure_nextgen.network.v20200401.VirtualNetwork("virtu
     resourceGroupName: resourceGroup.name,
     virtualNetworkName: virtualNetworkNameParam,
 });
+// Setup private DNS zone
 const privateDnsZone = new azure_nextgen.network.v20180901.PrivateZone("privateDnsZone", {
     location: "global",
     privateZoneName: privateDNSZoneName,
@@ -99,6 +108,7 @@ const privateEndpointNameParam = config.get("privateEndpointNameParam") || "Priv
 const privateLinkConnectionNameParam = config.get("privateLinkConnectionNameParam") || "PrivateEndpointLink1";
 const subnet1NameParam = config.get("subnet1NameParam") || "SubnetForSite1";
 const subnet1CIDRParam = config.get("subnet1CIDRParam") || "10.200.1.0/24";
+// Setup a private subnet
 const subnet1 = new azure_nextgen.network.v20200401.Subnet("subnet1", {
     addressPrefix: subnet1CIDRParam,
     privateEndpointNetworkPolicies: "Disabled",
@@ -106,6 +116,8 @@ const subnet1 = new azure_nextgen.network.v20200401.Subnet("subnet1", {
     subnetName: subnet1NameParam,
     virtualNetworkName: virtualNetwork.name,
 });
+
+// Private endpoint in the private subnet for site1 (backend)
 const privateEndpoint = new azure_nextgen.network.v20200501.PrivateEndpoint("privateEndpoint", {
     location: locationParam,
     privateEndpointName: privateEndpointNameParam,
@@ -119,6 +131,8 @@ const privateEndpoint = new azure_nextgen.network.v20200501.PrivateEndpoint("pri
         id: subnet1.id,
     },
 });
+
+// Setup a private DNS Zone for private endpoint
 new azure_nextgen.network.v20200301.PrivateDnsZoneGroup("privateDnsZoneGroup", {
     privateDnsZoneConfigs: [{
         name: "config1",
@@ -139,6 +153,7 @@ new azure_nextgen.network.v20180901.VirtualNetworkLink("virtualNetworkLink", {
     virtualNetworkLinkName: pulumi.interpolate `${privateDNSZoneName}-link`,
 });
 
+// Now setup subnet for site2 (frontend)
 const subnet2NameParam = config.get("subnet2NameParam") || "SubnetForSite2";
 const subnet2CIDRParam = config.get("subnet2CIDRParam") || "10.200.2.0/24";
 const subnet2 = new azure_nextgen.network.v20200401.Subnet("subnet2", {
