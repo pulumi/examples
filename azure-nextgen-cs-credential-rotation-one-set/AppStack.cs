@@ -69,7 +69,7 @@ internal class AppStack : Stack
             },
         });
 
-        var functionAppName = Output.Format($"{resourceNamePrefix}-func");
+        var functionAppName = $"{resourceNamePrefix}-func";
         var appInsights = new Component("appInsights", new ComponentArgs
         {
             Location = location,
@@ -139,7 +139,7 @@ internal class AppStack : Stack
                     new NameValuePairArgs
                     {
                         Name = "WEBSITE_CONTENTSHARE",
-                        Value = functionAppName.Apply(n => n.ToLower()),
+                        Value = functionAppName.ToLower(),
                     },
                     new NameValuePairArgs
                     {
@@ -192,7 +192,7 @@ internal class AppStack : Stack
                 EnableSoftDelete = false,
             },
             ResourceGroupName = resourceGroup.Name,
-            VaultName = Output.Format($"{resourceNamePrefix}-kv"),
+            VaultName = $"{resourceNamePrefix}-kv",
         });
 
         var topicName = "SecretExpiry";
@@ -247,7 +247,7 @@ internal class AppStack : Stack
         var webAppAppService = new AppServicePlan("webApp-appService", new AppServicePlanArgs
         {
             Location = location,
-            Name = Output.Format($"{resourceNamePrefix}-app"),
+            Name = $"{resourceNamePrefix}-app",
             ResourceGroupName = resourceGroup.Name,
             Sku = new SkuDescriptionArgs
             {
@@ -258,7 +258,7 @@ internal class AppStack : Stack
         var webApp = new WebApp("webApp", new WebAppArgs
         {
             Kind = "app",
-            Name = Output.Format($"{resourceNamePrefix}-app"),
+            Name = $"{resourceNamePrefix}-app",
             ResourceGroupName = resourceGroup.Name,
             ServerFarmId = webAppAppService.Id,
             Location = location,
