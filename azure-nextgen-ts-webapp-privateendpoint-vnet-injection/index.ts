@@ -1,6 +1,6 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-// pvt DNS zone and virtual network link are only available on this version
+// Private DNS zone and virtual network link are only available on this version
 import * as pvtnetwork from "@pulumi/azure-nextgen/network/v20180901";
 import * as network from "@pulumi/azure-nextgen/network/v20200401";
 import * as resources from "@pulumi/azure-nextgen/resources/latest";
