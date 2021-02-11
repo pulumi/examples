@@ -44,9 +44,6 @@ const backendApp = new web.WebApp("backendApp", {
     name: backendName,
     resourceGroupName: resourceGroup.name,
     serverFarmId: serverfarm.id,
-    siteConfig: {
-        ftpsState: web.FtpsState.AllAllowed,
-    },
 });
 
 export const backendURL = backendApp.defaultHostName;
