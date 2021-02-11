@@ -43,10 +43,10 @@ internal class AppStack : Stack
             Version = "12.0",
         });
 
-        new Pulumi.Azure.Sql.FirewallRule("firewallRule",
-            new Pulumi.Azure.Sql.FirewallRuleArgs
+        new FirewallRule("firewallRule",
+            new FirewallRuleArgs
             {
-                Name = "AllowAllWindowsAzureIps",
+                FirewallRuleName = "AllowAllWindowsAzureIps",
                 ServerName = sqlServer.Name,
                 ResourceGroupName = resourceGroup.Name,
                 StartIpAddress = "0.0.0.0",
@@ -165,20 +165,52 @@ internal class AppStack : Stack
                 ResourceGroupName = resourceGroup.Name,
             });
 
+        var webAppAppService = new AppServicePlan("webApp-appService", new AppServicePlanArgs
+        {
+            Location = location,
+            Name = $"{resourceNamePrefix}-app",
+            ResourceGroupName = resourceGroup.Name,
+            Sku = new SkuDescriptionArgs
+            {
+                Name = "F1",
+            },
+        });
+
+        var webApp = new WebApp("webApp", new WebAppArgs
+        {
+            Kind = "app",
+            Name = $"{resourceNamePrefix}-app",
+            ResourceGroupName = resourceGroup.Name,
+            ServerFarmId = webAppAppService.Id,
+            Location = location,
+            Identity = new ManagedServiceIdentityArgs { Type = ManagedServiceIdentityType.SystemAssigned },
+        });
+
         var keyVault = new Vault("keyVault", new VaultArgs
         {
             Location = location,
             Properties = new VaultPropertiesArgs
             {
-                AccessPolicies = { new AccessPolicyEntryArgs
+                AccessPolicies =
                 {
-                    TenantId = tenantId,
-                    ObjectId = functionApp.Identity.Apply(i => i!.PrincipalId),
-                    Permissions = new PermissionsArgs
+                    new AccessPolicyEntryArgs
                     {
-                        Secrets = { "get", "list", "set" },
+                        TenantId = tenantId,
+                        ObjectId = functionApp.Identity.Apply(i => i!.PrincipalId),
+                        Permissions = new PermissionsArgs
+                        {
+                            Secrets = { "get", "list", "set" },
+                        },
                     },
-                }
+                    new AccessPolicyEntryArgs
+                    {
+                        TenantId = tenantId,
+                        ObjectId = webApp.Identity.Apply(i => i!.PrincipalId),
+                        Permissions = new PermissionsArgs
+                        {
+                            Secrets = { "get", "list", "set" },
+                        },
+                    },
                 },
                 EnabledForDeployment = false,
                 EnabledForDiskEncryption = false,
@@ -189,7 +221,7 @@ internal class AppStack : Stack
                     Name = KeyVault.SkuName.Standard,
                 },
                 TenantId = tenantId,
-                EnableSoftDelete = false,
+                EnableSoftDelete = false,   // NOTE: This should be enabled in production.
             },
             ResourceGroupName = resourceGroup.Name,
             VaultName = $"{resourceNamePrefix}-kv",
@@ -242,49 +274,20 @@ internal class AppStack : Stack
                     Attributes = new SecretAttributesArgs { Expires = (int)expiresAt },
                 },
             },
-            new CustomResourceOptions { DependsOn = { eventSubscription } }); 
+            new CustomResourceOptions { DependsOn = { eventSubscription } });
 
-        var webAppAppService = new AppServicePlan("webApp-appService", new AppServicePlanArgs
-        {
-            Location = location,
-            Name = $"{resourceNamePrefix}-app",
-            ResourceGroupName = resourceGroup.Name,
-            Sku = new SkuDescriptionArgs
+        new WebApplicationSettings("webApp-appSettings",
+            new WebApplicationSettingsArgs
             {
-                Name = "F1",
-            },
-        });
-
-        var webApp = new WebApp("webApp", new WebAppArgs
-        {
-            Kind = "app",
-            Name = $"{resourceNamePrefix}-app",
-            ResourceGroupName = resourceGroup.Name,
-            ServerFarmId = webAppAppService.Id,
-            Location = location,
-            Identity = new ManagedServiceIdentityArgs { Type = ManagedServiceIdentityType.SystemAssigned },
-            SiteConfig = new SiteConfigArgs
-            {
-                AppSettings =
+                Name = webApp.Name,
+                ResourceGroupName = resourceGroup.Name,
+                Properties =
                 {
-                    new NameValuePairArgs
-                    {
-                        Name = "DataSource",
-                        Value = Output.Format($"{sqlServer.Name}.database.windows.net"),
-                    },
-                    new NameValuePairArgs
-                    {
-                        Name = "KeyVaultName",
-                        Value = keyVault.Name,
-                    },
-                    new NameValuePairArgs
-                    {
-                        Name = "SecretName",
-                        Value = secretName,
-                    },
+                    { "DataSource", Output.Format($"{sqlServer.Name}.database.windows.net") },
+                    { "KeyVaultName", keyVault.Name },
+                    { "SecretName", secretName },
                 },
-            },
-        });
+            });
 
         this.WebAppEndpoint = webApp.DefaultHostName;
 
@@ -296,15 +299,6 @@ internal class AppStack : Stack
                 Branch = "main",
                 RepoUrl = config.Get("webAppRepoURL") ?? "https://github.com/Azure-Samples/KeyVault-Rotation-SQLPassword-Csharp-WebApp.git",
                 ResourceGroupName = resourceGroup.Name,
-            });
-
-        var accessPolicyResource = new Pulumi.Azure.KeyVault.AccessPolicy("webAppPolicy",
-            new Pulumi.Azure.KeyVault.AccessPolicyArgs
-            {
-                KeyVaultId = keyVault.Id,
-                TenantId = tenantId,
-                ObjectId = webApp.Identity.Apply(i => i!.PrincipalId),
-                SecretPermissions = { "get", "list", "set" }
             });
     }
 }
