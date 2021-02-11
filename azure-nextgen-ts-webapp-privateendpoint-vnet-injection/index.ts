@@ -1,10 +1,8 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-// Private DNS zone and virtual network link are only available on this version
-import * as pvtnetwork from "@pulumi/azure-nextgen/network/v20180901";
-import * as network from "@pulumi/azure-nextgen/network/v20200401";
+import * as network from "@pulumi/azure-nextgen/network/latest";
 import * as resources from "@pulumi/azure-nextgen/resources/latest";
-import * as web from "@pulumi/azure-nextgen/web/v20190801";
+import * as web from "@pulumi/azure-nextgen/web/latest";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 
@@ -80,7 +78,7 @@ const virtualNetwork = new network.VirtualNetwork("virtualNetwork", {
 });
 
 // Setup private DNS zone
-const privateDnsZone = new pvtnetwork.PrivateZone("privateDnsZone", {
+const privateDnsZone = new network.PrivateZone("privateDnsZone", {
     location: "global",
     privateZoneName: "privatelink.azurewebsites.net",
     resourceGroupName: resourceGroup.name,
@@ -126,7 +124,7 @@ const privateDNSZoneGroup = new network.PrivateDnsZoneGroup("privateDnsZoneGroup
 
 export const privateEndpointURL = privateDNSZoneGroup.privateDnsZoneConfigs.apply(zoneConfigs => zoneConfigs![0].recordSets[0].fqdn);
 
-const virtualNetworkLink = new pvtnetwork.VirtualNetworkLink("virtualNetworkLink", {
+const virtualNetworkLink = new network.VirtualNetworkLink("virtualNetworkLink", {
     location: "global",
     privateZoneName: privateDnsZone.name,
     registrationEnabled: false,
