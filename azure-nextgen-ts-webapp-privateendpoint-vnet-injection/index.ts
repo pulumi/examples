@@ -56,9 +56,6 @@ const frontendApp = new web.WebApp("frontendApp", {
     name: frontendName,
     resourceGroupName: resourceGroup.name,
     serverFarmId: serverfarm.id,
-    siteConfig: {
-        ftpsState: web.FtpsState.AllAllowed,
-    },
 });
 
 export const frontEndURL = frontendApp.defaultHostName;
@@ -72,7 +69,7 @@ const virtualNetwork = new network.VirtualNetwork("virtualNetwork", {
     location: location,
     resourceGroupName: resourceGroup.name,
     virtualNetworkName: "vnet",
-});
+}, {ignoreChanges: ["subnets"]}); // https://github.com/pulumi/pulumi-azure-nextgen/issues/103
 
 // Setup private DNS zone
 const privateDnsZone = new network.PrivateZone("privateDnsZone", {
