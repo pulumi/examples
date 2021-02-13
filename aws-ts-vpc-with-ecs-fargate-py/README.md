@@ -15,7 +15,7 @@ The [vpc](https://www.pulumi.com/docs/guides/crosswalk/aws/vpc/) is built using 
 The ecs cluster is built in `python`.
 
 ### How do we connect infrastructure written in typescript with python?
-We do this via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies).
+We do this via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#stackreferences).
 The vpc [outputs](https://www.pulumi.com/docs/reference/cli/pulumi_stack_output/) will be read as inputs in the ecs fargate.
 
 ### Which Backend are we using?
