@@ -18,7 +18,6 @@ const resourceGroup = new resources.ResourceGroup("resourceGroup", {
 
 const serverfarm = new web.AppServicePlan("serverfarm", {
     kind: "app",
-    location: location,
     name: "appServerFarm",
     resourceGroupName: resourceGroup.name,
     sku: {
@@ -40,7 +39,6 @@ const rand = new random.RandomString("random", {
 const backendName = pulumi.interpolate`backend${rand.result}`;
 const backendApp = new web.WebApp("backendApp", {
     kind: "app",
-    location: location,
     name: backendName,
     resourceGroupName: resourceGroup.name,
     serverFarmId: serverfarm.id,
@@ -52,7 +50,6 @@ export const backendURL = backendApp.defaultHostName;
 const frontendName = pulumi.interpolate`frontend${rand.result}`;
 const frontendApp = new web.WebApp("frontendApp", {
     kind: "app",
-    location: location,
     name: frontendName,
     resourceGroupName: resourceGroup.name,
     serverFarmId: serverfarm.id,
@@ -66,7 +63,6 @@ const virtualNetwork = new network.VirtualNetwork("virtualNetwork", {
     addressSpace: {
         addressPrefixes: [virtualNetworkCIDR],
     },
-    location: location,
     resourceGroupName: resourceGroup.name,
     virtualNetworkName: "vnet",
 }, {ignoreChanges: ["subnets"]}); // https://github.com/pulumi/pulumi-azure-nextgen/issues/103
@@ -92,7 +88,6 @@ const backendSubnet = new network.Subnet("backendSubnet", {
 
 // Private endpoint in the private subnet for backend
 const privateEndpoint = new network.PrivateEndpoint("privateEndpointForBackend", {
-    location: location,
     privateEndpointName: "privateEndpointForBackend",
     privateLinkServiceConnections: [{
         groupIds: ["sites"],
