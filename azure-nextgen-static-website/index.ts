@@ -13,31 +13,31 @@ const randomSuffix = new random.RandomString("random", {
     upper: false,
 });
 
-const resourceGroup = new resources.ResourceGroup("resourceGroup", {
-    resourceGroupName: pulumi.interpolate `rg${randomSuffix.result}`,
-    location: "westus",
-});
-
 const config = new pulumi.Config();
+const location = config.get("location") || "westus";
 const storageAccountName = config.get("storageAccountName") || pulumi.interpolate `site${randomSuffix.result}`;
 const cdnEndpointName = config.get("cdnEndpointName") || pulumi.interpolate `cdn-endpnt-${storageAccountName}`;
 const cdnProfileName = config.get("cdnProfileName") || pulumi.interpolate `cdn-profile-${storageAccountName}`;
+
+const resourceGroup = new resources.ResourceGroup("resourceGroup", {
+    resourceGroupName: pulumi.interpolate `rg${randomSuffix.result}`,
+    location: location,
+});
 
 const profile = new cdn.Profile("profile", {
     profileName: cdnProfileName,
     resourceGroupName: resourceGroup.name,
     sku: {
-        name: "Premium_Verizon",
+        name: cdn.SkuName.Standard_Microsoft,
     },
-    tags: {},
 });
 
 const storageAccount = new storage.StorageAccount("storageAccount", {
-    accessTier: "Hot",
+    accessTier: storage.AccessTier.Hot,
     accountName: storageAccountName,
     enableHttpsTrafficOnly: true,
     encryption: {
-        keySource: "Microsoft.Storage",
+        keySource: storage.KeySource.Microsoft_Storage,
         services: {
             blob: {
                 enabled: true,
@@ -49,16 +49,13 @@ const storageAccount = new storage.StorageAccount("storageAccount", {
     },
     kind: storage.Kind.StorageV2,
     networkRuleSet: {
-        bypass: "AzureServices",
-        defaultAction: "Allow",
-        ipRules: [],
-        virtualNetworkRules: [],
+        bypass: storage.Bypass.AzureServices,
+        defaultAction: storage.DefaultAction.Allow,
     },
     resourceGroupName: resourceGroup.name,
     sku: {
-        name: "Standard_LRS",
+        name: storage.SkuName.Standard_LRS,
     },
-    tags: {},
 });
 
 const endpointOrigin = storageAccount.primaryEndpoints.apply(ep => ep.web.replace("https://", "").replace("/", ""));
@@ -67,19 +64,17 @@ const endpoint = new cdn.Endpoint("CDNEndpoint", {
     contentTypesToCompress: [],
     endpointName: cdnEndpointName,
     isCompressionEnabled: false,
-    isHttpAllowed: true,
+    isHttpAllowed: false,
     isHttpsAllowed: true,
     originHostHeader: endpointOrigin,
     origins: [{
         hostName: endpointOrigin,
-        httpPort: 80,
         httpsPort: 443,
         name: pulumi.interpolate `${cdnEndpointName}-origin-${randomSuffix.result}`,
     }],
     profileName: profile.name,
-    queryStringCachingBehavior: "NotSet",
+    queryStringCachingBehavior: cdn.QueryStringCachingBehavior.NotSet,
     resourceGroupName: resourceGroup.name,
-    tags: {},
 });
 
 // Enable static website support
