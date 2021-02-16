@@ -1,3 +1,6 @@
 name: equinix-metal-py-webserver
 description: A simple server on Equinix Metal.
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
