@@ -141,7 +141,7 @@ class AppServiceStack : Stack
         this.Endpoint = app.DefaultHostName;
     }
 
-    static private Output<string> signedBlobReadUrl(Blob blob, BlobContainer container, StorageAccount account, ResourceGroup resourceGroup)
+    private static Output<string> SignedBlobReadUrl(Blob blob, BlobContainer container, StorageAccount account, ResourceGroup resourceGroup)
     {
         return Output.Tuple<string, string, string, string>(
             blob.Name, container.Name, account.Name, resourceGroup.Name).Apply(t =>
