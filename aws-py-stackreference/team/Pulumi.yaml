@@ -1,5 +1,8 @@
 name: aws-py-stackreference-team
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: An AWS Python Pulumi program demonstrating sharing configuration
   via StackReference resources
 template:

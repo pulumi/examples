@@ -1,6 +1,9 @@
 name: static-website
 description: Static website example
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 template:
   config:
     aws:region:

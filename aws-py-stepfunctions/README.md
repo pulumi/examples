@@ -5,11 +5,6 @@
 A basic example that demonstrates using AWS Step Functions with a Lambda function, written in Python.
 
 ```bash
-# Create virtual environment and install dependencies
-python3 -m venv venv
-source venv/bin/activate
-pip install -r ./requirements.txt
-
 # Create and configure a new stack
 pulumi stack init stepfunctions-dev
 pulumi config set aws:region us-east-2

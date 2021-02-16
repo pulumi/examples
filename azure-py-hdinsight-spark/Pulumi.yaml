@@ -1,5 +1,8 @@
 name: azure-py-hdinsight-spark
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Spark on Azure HDInsight example in Python
 template:
   config:

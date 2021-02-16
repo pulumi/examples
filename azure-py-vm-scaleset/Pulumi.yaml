@@ -1,5 +1,8 @@
 name: azure-py-vm-scaleset
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Basic example of nginx deployed in Azure VM Scale Sets written in Python
 template:
   config:

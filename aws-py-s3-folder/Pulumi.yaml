@@ -1,3 +1,6 @@
 name: aws-py-s3-folder
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: A minimal AWS Python Pulumi program

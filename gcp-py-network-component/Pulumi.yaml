@@ -1,5 +1,8 @@
 name: gcp-py-network-component
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: A Google Cloud Python Pulumi program using ComponentResource
 template:
   config:

@@ -1,3 +1,6 @@
 name: digitalocean-py-k8s
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Provision a DigitalOcean Kubernetes cluster and deploy to it in Python

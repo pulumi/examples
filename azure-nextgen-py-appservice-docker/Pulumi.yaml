@@ -1,5 +1,8 @@
 name: azureng-py-appservice-docker
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Creates Azure App Service and Deploys Docker images to
 template:
   config:

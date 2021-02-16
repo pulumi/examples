@@ -16,15 +16,7 @@ this example. If this is your first time using Pulumi for Kubernetes, we recomme
 
 ## Running the App
 
-After cloning this repo, `cd` into this directory and install dependencies:
-
-```bash
-    $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
-```
-
-Afterwards, create a new stack, a logical deployment target that we'll deploy into:
+After cloning this repo, `cd` into this directory and create a new stack, a logical deployment target that we'll deploy into:
 
 ```bash
     $ pulumi stack init dev

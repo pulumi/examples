@@ -1,3 +1,6 @@
 name: aws-py-ec2-provisioners
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: An example of manually configuring an AWS EC2 virtual machine

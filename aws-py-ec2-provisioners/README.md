@@ -10,14 +10,6 @@ https://github.com/pulumi/pulumi/issues/1691 tracks designing and developing a c
 
 First, create a stack, using `pulumi stack init`.
 
-Now, we need to ensure that our dependencies are installed:
-
-```
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ pip3 install -r requirements.txt
-```
-
 Next, generate an OpenSSH keypair for use with your server - as per the AWS [Requirements][1]
 
 ```

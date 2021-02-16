@@ -1,5 +1,8 @@
 name: webserver-py
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Basic example of an AWS web server accessible over HTTP (in Python!)
 template:
   config:

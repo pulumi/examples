@@ -1,3 +1,6 @@
 name: azure-py-webserver-component
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: An Azure example using Python to provision a webserver using ComponentResource

@@ -1,5 +1,8 @@
 name: aws-py-eks
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: A minimal AWS Python EKS example cluster
 template:
   config:

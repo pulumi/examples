@@ -1,3 +1,7 @@
 name: aws-py-fargate
 description: A container running in AWS ECS Fargate, using Python infrastructure as code
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+

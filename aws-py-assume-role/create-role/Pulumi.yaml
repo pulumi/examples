@@ -1,3 +1,6 @@
 name: create-role
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Demonstrate use of AWS AssumeRole Functionality

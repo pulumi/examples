@@ -1,6 +1,9 @@
 name: stepfunctions-py
 description: Basic example of AWS Step Functions in Python
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 template:
   config:
     aws:region:

@@ -16,14 +16,6 @@ To deploy your infrastructure, follow the below steps.
 
 ## Deploying and running the program
 
-1. Install dependencies (a `virtualenv` is recommended - see [Pulumi Python docs](https://www.pulumi.com/docs/intro/languages/python/)):
-
-    ```
-    $ virtualenv -p python3 venv
-    $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
-    ```
-
 1.  Create a new stack:
 
     ```

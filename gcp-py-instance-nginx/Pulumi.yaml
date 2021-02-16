@@ -1,3 +1,6 @@
 name: gcp-instance-nginx
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Deploy a Nginx Server in a GCP instance

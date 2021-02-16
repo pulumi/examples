@@ -1,5 +1,8 @@
 name: aws-py-appsync
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Basic example of defining an AWS AppSync endpoint from Pulumi in Python
 template:
   config:

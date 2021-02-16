@@ -1,5 +1,8 @@
 name: azure-py-appservice-docker
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: Creates Azure App Service running Docker containers on Linux in Python
 template:
   config:

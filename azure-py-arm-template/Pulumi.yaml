@@ -1,3 +1,6 @@
 name: azure-arm-template
-runtime: python
+runtime:
+  name: python
+  options:
+    virtualenv: venv
 description: An example of deploying an Azure Resource Manager (ARM) template using Pulumi.
