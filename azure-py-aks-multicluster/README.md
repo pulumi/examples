@@ -27,16 +27,6 @@ After cloning this repo, `cd` into it and run these commands.
     ```bash
     $ pulumi stack init dev
     ```
-   
-1.  Create a Python virtualenv, activate it, and install dependencies:
-
-    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
-
-    ```
-    $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
-    ```
 
 1. Set the required configuration variables for this program:
 

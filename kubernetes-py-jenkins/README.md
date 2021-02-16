@@ -19,14 +19,6 @@ Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
 > docs](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types) for more
 > details.
 
-Install dependencies:
-
-```bash
-    $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
-```
-
 Create a new stack:
 
 ```bash

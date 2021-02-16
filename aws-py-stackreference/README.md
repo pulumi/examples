@@ -19,16 +19,6 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     $ cd company
     ````
 
-1. Create a Python virtualenv, activate it, and install dependencies:
-
-    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
-
-    ```bash
-    $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
-    ```
-
 1. Create a new stack:
 
     ```bash
@@ -70,25 +60,11 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Permalink: https://app.pulumi.com/clstokes/aws-py-stackreference-company/dev/updates/1
     ```
 
-1. Deactivate the virtual environment
-
-    ```bash
-    $ deactivate
-    ```
-
 1. Change directory to `department` and install dependencies.
 
     ```bash
     $ cd ../department
     ````
-
-1. Create a Python virtualenv, activate it, and install dependencies:
-
-   ```bash
-   $ python3 -m venv venv
-   $ source venv/bin/activate
-   $ pip3 install -r requirements.txt
-   ```
 
 1. Create a new stack:
 
@@ -131,25 +107,11 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Permalink: https://app.pulumi.com/clstokes/aws-py-stackreference-department/dev/updates/1
     ```
 
-1. Deactivate the virtual environment
-
-    ```bash
-    $ deactivate
-    ```
-
 1. Change directory to `team` and install dependencies.
 
     ```bash
     $ cd ../team
     ````
-
-1. Create a Python virtualenv, activate it, and install dependencies:
-
-   ```
-   $ python3 -m venv venv
-   $ source venv/bin/activate
-   $ pip3 install -r requirements.txt
-   ```
 
 1. Create a new stack:
 
@@ -205,12 +167,6 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizin
     Duration: 28s
 
     Permalink: https://app.pulumi.com/clstokes/aws-py-stackreference-team/dev/updates/1
-    ```
-
-1. Deactivate the virtual environment
-
-    ```bash
-    $ deactivate
     ```
 
 ## Clean Up

@@ -18,14 +18,6 @@ We will be deploying to Azure, so you will need an Azure account. If you don't h
 [sign up for free here](https://azure.microsoft.com/en-us/free/). [Follow the instructions
 here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect Pulumi to your Azure account.
 
-Now, set up a Python virtual environment, activate it, and install dependencies.
-
-```bash
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ pip3 install -r requirements.txt
-```
-
 ## Running the App
 
 1. Create a new stack:

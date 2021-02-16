@@ -14,7 +14,7 @@ An example of writing mock-based unit tests with both infrastructure definition 
 
 2.  Run the tests:
 
-    ``` 
+    ```
     $ python -m unittest
 
     ------------------------------------------------------------

@@ -23,19 +23,10 @@ resources.
 You'll need to set the `create-role:unprivilegedUsername` configuration variable to the name of the unprivilged user, as
 well as the AWS region in which to operate.
 
-First, you need install dependencies. In this example we will install them in
-a virtual environment named `venv`.
+First, you need to create a new stack:
 
 ```bash
 $ cd create-role
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-```
-
-Now create a new stack: 
-
-```bash
 $ pulumi stack init assume-role-create
 $ pulumi config set create-role:unprivilegedUsername somebody@pulumi.com
 $ pulumi config set aws:region us-east-1
@@ -70,8 +61,7 @@ with the unprivileged user credentials created in Part 1. This can be configured
 directory, replacing `{YOUR_STACK_PATH/assume-role-create}` with the full name of your stack from Part 1. Full name of your stack is available at [`app.pulumi.com`][app]
 
 ```bash
-$ cd assume-role
-$ npm install
+$ cd ../assume-role
 $ export AWS_ACCESS_KEY_ID="$(pulumi stack output --stack {YOUR_STACK_PATH/assume-role-create} accessKeyId)"
 $ export AWS_SECRET_ACCESS_KEY="$(pulumi stack output --stack {YOUR_STACK_PATH/assume-role-create} --show-secrets secretAccessKey)"
 ```

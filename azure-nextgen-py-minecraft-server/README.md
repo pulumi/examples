@@ -12,14 +12,6 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
 
 ## Deploying and running the program
 
-1. Set up a virtual Python environment and install dependencies
-
-    ```bash
-    $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
-    ```
-
 1. Create a new stack:
 
     ```bash
@@ -167,10 +159,4 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
         - 8 deleted
 
     Duration: 4m33s
-    ```
-
-1. Leave the virtual environment.
-
-    ```
-    $ deactivate
     ```

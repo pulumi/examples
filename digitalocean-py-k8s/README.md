@@ -29,16 +29,6 @@ After cloning this repo, from this working directory, run these commands:```
     $ pulumi stack init dev
     ```
 
-1. Create a Python virtualenv, activate it, and install dependencies:
-
-    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
-
-    ```bash
-    $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
-    ```
-
 1. Configure Pulumi to use your DigitalOcean personal access token:
 
     ```bash

@@ -24,23 +24,13 @@ Next, to deploy the application and its infrastructure, follow these steps:
     $ pulumi stack init dev
     ```
 
-2. Set your desired AWS region:
+1. Set your desired AWS region:
 
     ```bash
     $ pulumi config set aws:region us-east-1 # any valid AWS region will work
     ```
 
-3. Create a Python virtualenv, activate it, and install dependencies:
-
-    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
-
-    ```bash
-    $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
-    ```
-
-4. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
+1. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
    includes all of the required AWS resources (clusters, services, and the like). Don't worry if it's more than
    you expected -- this is one of the benefits of Pulumi, it configures everything so that so you don't need to!
 
@@ -77,7 +67,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
 
    Notice that the automatically assigned load-balancer URL is printed as a stack output.
 
-5. At this point, your app is running -- let's curl it. The CLI makes it easy to grab the URL:
+1. At this point, your app is running -- let's curl it. The CLI makes it easy to grab the URL:
 
     ```bash
     $ curl http://$(pulumi stack output url)
@@ -110,7 +100,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
    
 **Please Note**: It may take a few minutes for the app to start up. Until that point, you may receive a 503 error response code.
 
-6. Try making some changes, and rerunning `pulumi up`. For example, let's scale up to 3 instances:
+1. Try making some changes, and rerunning `pulumi up`. For example, let's scale up to 3 instances:
 
     Running `pulumi up` will show you the delta and then, after confirming, will deploy just those changes:
 
@@ -139,7 +129,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
     Permalink: https://app.pulumi.com/acmecorp/aws-python-fargate/dev/updates/2
     ```
 
-7. Once you are done, you can destroy all of the resources, and the stack:
+1. Once you are done, you can destroy all of the resources, and the stack:
 
     ```bash
     $ pulumi destroy
