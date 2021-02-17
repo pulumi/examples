@@ -1,4 +1,4 @@
-// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
 using Pulumi;
 using Pulumi.AzureNextGen.Insights.Latest;
@@ -12,7 +12,7 @@ class FunctionsStack : Stack
 {
     public FunctionsStack()
     {
-        var resourceGroup = new ResourceGroup("functions-rg", new ResourceGroupArgs { ResourceGroupName = "functions-rg", Location = "westus2" });
+        var resourceGroup = new ResourceGroup("functions-rg", new ResourceGroupArgs { ResourceGroupName = "functions-rg" });
 
         var storageAccount = new StorageAccount("sa", new StorageAccountArgs
         {
@@ -33,11 +33,11 @@ class FunctionsStack : Stack
             // Run on Linux
             Kind = "Linux",
 
-            // Premium SKU
+            // Consumption plan SKU
             Sku = new SkuDescriptionArgs
             {
-                Tier = "PremiumV2",
-                Name = "P1v2"
+                Tier = "Dynamic",
+                Name = "Y1"
             },
 
             // For Linux, you need to change the plan to have Reserved = true property.
@@ -77,12 +77,11 @@ class FunctionsStack : Stack
         var app = new WebApp("app", new WebAppArgs
         {
             Name = "function-app-py",
+            Kind = "FunctionApp",
             ResourceGroupName = resourceGroup.Name,
             ServerFarmId = appServicePlan.Id,
             SiteConfig = new SiteConfigArgs
             {
-                AlwaysOn = true,
-                LinuxFxVersion = "DOCKER|mcr.microsoft.com/azure-functions/python:2.0",
                 AppSettings = new[]
                 {
                     new NameValuePairArgs{
@@ -100,7 +99,7 @@ class FunctionsStack : Stack
                     new NameValuePairArgs{
                         Name = "APPLICATIONINSIGHTS_CONNECTION_STRING",
                         Value = Output.Format($"InstrumentationKey={appInsights.InstrumentationKey}"),
-                    }
+                    },
                 },
             },
         });
@@ -110,7 +109,7 @@ class FunctionsStack : Stack
 
     [Output] public Output<string> Endpoint { get; set; }
 
-    static private Output<string> signedBlobReadUrl(Blob blob, BlobContainer container, StorageAccount account, ResourceGroup resourceGroup)
+    private static Output<string> signedBlobReadUrl(Blob blob, BlobContainer container, StorageAccount account, ResourceGroup resourceGroup)
     {
         return Output.Tuple<string, string, string, string>(
             blob.Name, container.Name, account.Name, resourceGroup.Name).Apply(t =>
