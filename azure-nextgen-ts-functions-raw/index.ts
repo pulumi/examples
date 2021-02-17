@@ -11,7 +11,7 @@ const resourceGroup = new resources.ResourceGroup("windowsrg", {
     location: "westus",
 });
 
-const storageAccount = new storage.StorageAccount("functionsa2021", {
+const storageAccount = new storage.StorageAccount("functionsa", {
     accountName: "functionsa2021",
     resourceGroupName: resourceGroup.name,
     kind: storage.Kind.StorageV2,
@@ -57,7 +57,6 @@ const dotnetApp = new web.WebApp("http-dotnet", {
             { name: "runtime", value: "dotnet" },
             { name: "FUNCTIONS_WORKER_RUNTIME", value: "dotnet" },
             { name: "WEBSITE_RUN_FROM_PACKAGE", value: dotnetBlobSignedURL },
-            { name: "WEBSITE_NODE_DEFAULT_VERSION", value: "~12" },
             { name: "FUNCTIONS_EXTENSION_VERSION", value: "~3" },
         ],
     },
@@ -143,7 +142,7 @@ const javaApp = new web.WebApp("http-java", {
 });
 
 // Create a dedicated resource group for Linux App Service Plan - require for Python
-const linuxResourceGroup = new resources.ResourceGroup("linuxrg", { resourceGroupName: "linuxrg2021" });
+const linuxResourceGroup = new resources.ResourceGroup("linuxrg", { resourceGroupName: "linuxrg" });
 
 // Python Function App won't run on Windows Consumption Plan, so we create a Linux Consumption Plan instead
 const linuxPlan = new web.AppServicePlan("linux-asp", {
@@ -216,7 +215,6 @@ const premiumApp = new web.WebApp("http-premium", {
             { name: "runtime", value: "dotnet" },
             { name: "WEBSITE_RUN_FROM_PACKAGE", value: premiumBlobSignedURL },
             { name: "FUNCTIONS_EXTENSION_VERSION", value: "~3" },
-            { name: "WEBSITE_NODE_DEFAULT_VERSION", value: "~12" },
         ],
     },
 });
