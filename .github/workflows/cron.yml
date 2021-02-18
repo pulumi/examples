@@ -228,7 +228,8 @@ jobs:
         clouds:
         - DigitalOcean
         - Aws
-        - Azure
+        - AzureClassic
+        - AzureNextgen
         - Gcp
         - EquinixMetal
         - Packet

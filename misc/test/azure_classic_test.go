@@ -1,4 +1,4 @@
-// +build Azure all
+// +build Azure_classic all
 
 package test
 
@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAccAzureCsAppService(t *testing.T) {
+func TestAccAzureClassicCsAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-cs-appservice"),
@@ -29,7 +29,7 @@ func TestAccAzureCsAppService(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureCsWebserver(t *testing.T) {
+func TestAccAzureClassicCsWebserver(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-cs-webserver"),
@@ -43,7 +43,7 @@ func TestAccAzureCsWebserver(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureFsAppService(t *testing.T) {
+func TestAccAzureClassicFsAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-fs-appservice"),
@@ -60,7 +60,7 @@ func TestAccAzureFsAppService(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureGoAci(t *testing.T) {
+func TestAccAzureClassicGoAci(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aci"),
@@ -74,7 +74,7 @@ func TestAccAzureGoAci(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureGoAks(t *testing.T) {
+func TestAccAzureClassicGoAks(t *testing.T) {
 	t.Skip("The credentials in ServicePrincipalProfile were invalid")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
@@ -89,7 +89,7 @@ func TestAccAzureGoAks(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureGoAksMulticluster(t *testing.T) {
+func TestAccAzureClassicGoAksMulticluster(t *testing.T) {
 	skipIfShort(t)
 	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
@@ -104,7 +104,7 @@ func TestAccAzureGoAksMulticluster(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureGoAppservice(t *testing.T) {
+func TestAccAzureClassicGoAppservice(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-go-appservice"),
@@ -121,7 +121,7 @@ func TestAccAzureGoAppservice(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureGoWebserverComponent(t *testing.T) {
+func TestAccAzureClassicGoWebserverComponent(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-go-webserver-component"),
@@ -134,7 +134,7 @@ func TestAccAzureGoWebserverComponent(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureJsWebserver(t *testing.T) {
+func TestAccAzureClassicJsWebserver(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-js-webserver"),
@@ -150,7 +150,7 @@ func TestAccAzureJsWebserver(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzurePyAks(t *testing.T) {
+func TestAccAzureClassicPyAks(t *testing.T) {
 	t.Skip("The credentials in ServicePrincipalProfile were invalid")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
@@ -164,7 +164,7 @@ func TestAccAzurePyAks(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzurePyAppService(t *testing.T) {
+func TestAccAzureClassicPyAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-appservice"),
@@ -181,7 +181,7 @@ func TestAccAzurePyAppService(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzurePyAppServiceDocker(t *testing.T) {
+func TestAccAzureClassicPyAppServiceDocker(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-appservice-docker"),
@@ -195,7 +195,7 @@ func TestAccAzurePyAppServiceDocker(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzurePyArmTemplate(t *testing.T) {
+func TestAccAzureClassicPyArmTemplate(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-arm-template"),
@@ -204,7 +204,7 @@ func TestAccAzurePyArmTemplate(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzurePyHdInsightSpark(t *testing.T) {
+func TestAccAzureClassicPyHdInsightSpark(t *testing.T) {
 	t.Skip("Skipping HDInsights tests due to a stuck cluster in the account")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
@@ -218,7 +218,7 @@ func TestAccAzurePyHdInsightSpark(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzurePyVmScaleSet(t *testing.T) {
+func TestAccAzureClassicPyVmScaleSet(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-vm-scaleset"),
@@ -232,7 +232,7 @@ func TestAccAzurePyVmScaleSet(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzurePyWebserver(t *testing.T) {
+func TestAccAzureClassicPyWebserver(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-webserver"),
@@ -248,7 +248,7 @@ func TestAccAzurePyWebserver(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsAppService(t *testing.T) {
+func TestAccAzureClassicTsAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-appservice"),
@@ -265,7 +265,7 @@ func TestAccAzureTsAppService(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsAppServiceDocker(t *testing.T) {
+func TestAccAzureClassicTsAppServiceDocker(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-appservice-docker"),
@@ -279,7 +279,7 @@ func TestAccAzureTsAppServiceDocker(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsArmTemplate(t *testing.T) {
+func TestAccAzureClassicTsArmTemplate(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-arm-template"),
@@ -288,7 +288,7 @@ func TestAccAzureTsArmTemplate(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsFunctions(t *testing.T) {
+func TestAccAzureClassicTsFunctions(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-functions"),
@@ -302,7 +302,7 @@ func TestAccAzureTsFunctions(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsHdInsightSpark(t *testing.T) {
+func TestAccAzureClassicTsHdInsightSpark(t *testing.T) {
 	t.Skip("Skipping HDInsights tests due to a stuck cluster in the account")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
@@ -316,7 +316,7 @@ func TestAccAzureTsHdInsightSpark(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsStreamAnalytics(t *testing.T) {
+func TestAccAzureClassicTsStreamAnalytics(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-stream-analytics"),
@@ -325,7 +325,7 @@ func TestAccAzureTsStreamAnalytics(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsVmScaleset(t *testing.T) {
+func TestAccAzureClassicTsVmScaleset(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-vm-scaleset"),
@@ -339,7 +339,7 @@ func TestAccAzureTsVmScaleset(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsWebserver(t *testing.T) {
+func TestAccAzureClassicTsWebserver(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-webserver"),
@@ -357,7 +357,7 @@ func TestAccAzureTsWebserver(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsAksHelm(t *testing.T) {
+func TestAccAzureClassicTsAksHelm(t *testing.T) {
 	skipIfShort(t)
 	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
@@ -377,7 +377,7 @@ func TestAccAzureTsAksHelm(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsAksKeda(t *testing.T) {
+func TestAccAzureClassicTsAksKeda(t *testing.T) {
 	skipIfShort(t)
 	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
@@ -388,7 +388,7 @@ func TestAccAzureTsAksKeda(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsAksMulticluster(t *testing.T) {
+func TestAccAzureClassicTsAksMulticluster(t *testing.T) {
 	skipIfShort(t)
 	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
@@ -403,7 +403,7 @@ func TestAccAzureTsAksMulticluster(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsCosmosDbLogicApp(t *testing.T) {
+func TestAccAzureClassicTsCosmosDbLogicApp(t *testing.T) {
 	skipIfShort(t)
 	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
@@ -414,7 +414,7 @@ func TestAccAzureTsCosmosDbLogicApp(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsWebserverComponent(t *testing.T) {
+func TestAccAzureClassicTsWebserverComponent(t *testing.T) {
 	t.Skip("Skipping Azure tests temporarily")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
