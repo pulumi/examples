@@ -1,3 +1,5 @@
+# Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
+
 import pulumi
 import pulumi_azure_nextgen as azure_nextgen
 import pulumi_random as random
@@ -9,9 +11,6 @@ random_suffix = random.RandomString("randomSuffix",
     upper=False)
 
 config = pulumi.Config()
-location = config.get("location")
-if location is None:
-    location = "westus"
 storage_account_name = config.get("storageAccountName")
 if storage_account_name is None:
     storage_account_name = random_suffix.result.apply(lambda result: f"site{result}")
@@ -23,8 +22,7 @@ if cdn_profile_name is None:
     cdn_profile_name = storage_account_name.apply(lambda result: f"cdn-profile-{result}")
 
 resource_group = azure_nextgen.resources.latest.ResourceGroup("resourceGroup",
-    resource_group_name=random_suffix.result.apply(lambda result: f"rg{result}"),
-    location=location)
+    resource_group_name=random_suffix.result.apply(lambda result: f"rg{result}"))
 
 profile = azure_nextgen.cdn.latest.Profile("profile",
     profile_name=cdn_profile_name,
