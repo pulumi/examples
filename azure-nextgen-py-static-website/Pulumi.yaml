@@ -1,0 +1,11 @@
+name: azure-nextgen-ts-static-website
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: An example of a static website hosted on Azure Blob Storage + Azure CDN.
+template:
+  config:
+    location:
+      description: The Azure location to deploy to
+      default: westus
