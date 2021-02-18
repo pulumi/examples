@@ -1,0 +1,12 @@
+{
+    "name": "azure-ts-functions-raw",
+    "version": "1.0.0",
+    "devDependencies": {
+        "@types/node": "^8.0.0"
+    },
+    "dependencies": {
+        "@pulumi/azure": "^3.0.0",
+        "@pulumi/azure-nextgen": "^0.6.1",
+        "@pulumi/pulumi": "^2.0.0"
+    }
+}
