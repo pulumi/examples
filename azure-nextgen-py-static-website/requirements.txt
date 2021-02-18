@@ -1,0 +1,4 @@
+pulumi>=2.0.0,<3.0.0
+pulumi-random>=3.0.0
+pulumi-azure-nextgen>=0.6.1
+typing_extensions>=3.7.4
