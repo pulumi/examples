@@ -14,14 +14,12 @@ const randomSuffix = new random.RandomString("random", {
 });
 
 const config = new pulumi.Config();
-const location = config.get("location") || "westus";
 const storageAccountName = config.get("storageAccountName") || pulumi.interpolate `site${randomSuffix.result}`;
 const cdnEndpointName = config.get("cdnEndpointName") || pulumi.interpolate `cdn-endpnt-${storageAccountName}`;
 const cdnProfileName = config.get("cdnProfileName") || pulumi.interpolate `cdn-profile-${storageAccountName}`;
 
 const resourceGroup = new resources.ResourceGroup("resourceGroup", {
     resourceGroupName: pulumi.interpolate `rg${randomSuffix.result}`,
-    location: location,
 });
 
 const profile = new cdn.Profile("profile", {
