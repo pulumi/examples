@@ -13,6 +13,7 @@ using Pulumi.AzureNextGen.Sql.Latest;
 using Pulumi.AzureNextGen.Storage.Latest;
 using Pulumi.AzureNextGen.Web.Latest;
 using Pulumi.AzureNextGen.Web.Latest.Inputs;
+using Pulumi.Random;
 using KeyVault = Pulumi.AzureNextGen.KeyVault.Latest;
 using Storage = Pulumi.AzureNextGen.Storage.Latest;
 using ManagedServiceIdentityType = Pulumi.AzureNextGen.Web.Latest.ManagedServiceIdentityType;
@@ -32,7 +33,7 @@ internal class AppStack : Stack
         var resourceGroup = new ResourceGroup("resourceGroup", new ResourceGroupArgs { ResourceGroupName = resourceGroupName, Location = location });
 
         var sqlAdminLogin = config.Get("sqlAdminLogin") ?? "sqlAdmin";
-        var sqlAdminPassword = Guid.NewGuid().ToString();
+        var sqlAdminPassword = new RandomUuid("sqlPassword").Result;
         var sqlServer = new Server("sqlServer", new ServerArgs
         {
             AdministratorLogin = sqlAdminLogin,
@@ -56,7 +57,7 @@ internal class AppStack : Stack
         var clientConfig = Output.Create(GetClientConfig.InvokeAsync());
         var tenantId = clientConfig.Apply(c => c.TenantId);
 
-        var storageAccountName = $"st{resourceNamePrefix}";
+        var storageAccountName = $"{resourceNamePrefix}store";
         var storageAccount = new StorageAccount("storageAccount", new StorageAccountArgs
         {
             AccountName = storageAccountName,
