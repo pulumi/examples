@@ -372,4 +372,4 @@ name: Smoke Test Latest Provider Release
 "on":
   repository_dispatch:
     types:
-    - smoke-test-cli
+    - smoke-test-provider
