@@ -38,7 +38,6 @@ internal class AppStack : Stack
         {
             AdministratorLogin = sqlAdminLogin,
             AdministratorLoginPassword = sqlAdminPassword,
-            Location = location,
             ResourceGroupName = resourceGroup.Name,
             ServerName = $"{resourceNamePrefix}-sql",
             Version = "12.0",
@@ -62,7 +61,6 @@ internal class AppStack : Stack
         {
             AccountName = storageAccountName,
             Kind = "Storage",
-            Location = location,
             ResourceGroupName = resourceGroup.Name,
             Sku = new Storage.Inputs.SkuArgs
             {
@@ -73,7 +71,6 @@ internal class AppStack : Stack
         var functionAppName = $"{resourceNamePrefix}-func";
         var appInsights = new Component("appInsights", new ComponentArgs
         {
-            Location = location,
             RequestSource = "IbizaWebAppExtensionCreate",
             ResourceGroupName = resourceGroup.Name,
             ResourceName = functionAppName,
@@ -89,7 +86,6 @@ internal class AppStack : Stack
 
         var appService = new AppServicePlan("functionApp-appService", new AppServicePlanArgs
         {
-            Location = location,
             Name = functionAppName,
             ResourceGroupName = resourceGroup.Name,
             Sku = new SkuDescriptionArgs
@@ -111,7 +107,6 @@ internal class AppStack : Stack
             Name = functionAppName,
             ResourceGroupName = resourceGroup.Name,
             ServerFarmId = appService.Id,
-            Location = resourceGroup.Location,
             Identity = new ManagedServiceIdentityArgs { Type = ManagedServiceIdentityType.SystemAssigned },
             SiteConfig = new SiteConfigArgs
             {
@@ -168,7 +163,6 @@ internal class AppStack : Stack
 
         var webAppAppService = new AppServicePlan("webApp-appService", new AppServicePlanArgs
         {
-            Location = location,
             Name = $"{resourceNamePrefix}-app",
             ResourceGroupName = resourceGroup.Name,
             Sku = new SkuDescriptionArgs
@@ -183,13 +177,11 @@ internal class AppStack : Stack
             Name = $"{resourceNamePrefix}-app",
             ResourceGroupName = resourceGroup.Name,
             ServerFarmId = webAppAppService.Id,
-            Location = location,
             Identity = new ManagedServiceIdentityArgs { Type = ManagedServiceIdentityType.SystemAssigned },
         });
 
         var keyVault = new Vault("keyVault", new VaultArgs
         {
-            Location = location,
             Properties = new VaultPropertiesArgs
             {
                 AccessPolicies =
@@ -235,7 +227,6 @@ internal class AppStack : Stack
                 SystemTopicName = topicName,
                 Source = keyVault.Id,
                 TopicType = "microsoft.keyvault.vaults",
-                Location = resourceGroup.Location,
                 ResourceGroupName = resourceGroup.Name,
             });
 
