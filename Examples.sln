@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTesting", "testing-unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Functions.LinuxApp", "azure-cs-functions-linux-app\Azure.Functions.LinuxApp.csproj", "{B3739A06-5343-4990-A48B-E5BEFAC5678A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CredentialRotation.OneSet", "azure-nextgen-cs-credential-rotation-one-set\Azure.CredentialRotation.OneSet.csproj", "{34988495-6782-4AE3-9224-DE26A8FA1C61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,10 @@ Global
 		{B3739A06-5343-4990-A48B-E5BEFAC5678A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3739A06-5343-4990-A48B-E5BEFAC5678A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3739A06-5343-4990-A48B-E5BEFAC5678A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34988495-6782-4AE3-9224-DE26A8FA1C61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34988495-6782-4AE3-9224-DE26A8FA1C61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34988495-6782-4AE3-9224-DE26A8FA1C61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34988495-6782-4AE3-9224-DE26A8FA1C61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
