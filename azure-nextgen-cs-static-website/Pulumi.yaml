@@ -1,0 +1,3 @@
+name: azure-nextgen-cs-static-website
+runtime: dotnet
+description: An example of a static website hosted on Azure Blob Storage + Azure CDN.
