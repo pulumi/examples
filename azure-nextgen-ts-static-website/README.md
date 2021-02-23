@@ -28,6 +28,12 @@ In addition to the Storage itself, a CDN is configured to serve files from the B
     $ npm install
     ```
 
+1.  Set the Azure region location to use:
+
+    ```
+    $ pulumi config set azure-nextgen:location westus
+    ```
+
 1.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
