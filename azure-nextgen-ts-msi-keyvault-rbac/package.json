@@ -1,0 +1,15 @@
+{
+    "name": "azure-msi-keyvault-rbac",
+    "version": "1.0.0",
+    "devDependencies": {
+        "@types/node": "^8.0.0"
+    },
+    "dependencies": {
+        "@azure/arm-sql": "^7.0.2",
+        "@azure/ms-rest-nodeauth": "^3.0.0",
+        "@pulumi/azure": "^3.0.0",
+        "@pulumi/azure-nextgen": "^0.6.1",
+        "@pulumi/pulumi": "^2.0.0",
+        "@pulumi/random": "^2.0.0"
+    }
+}
