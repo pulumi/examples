@@ -9,12 +9,10 @@ import * as web from "@pulumi/azure-nextgen/web/latest";
 import * as pulumi from "@pulumi/pulumi";
 
 // Create an Azure Resource Group
-const resourceGroup = new resources.ResourceGroup("logicappdemo-rg", {
-    resourceGroupName: "logicappdemo-rg",
-});
+const resourceGroup = new resources.ResourceGroup("resourceGroup", {resourceGroupName: "logicappdemo-rg"});
 
 // Create an Azure resource (Storage Account)
-const storageAccount = new storage.StorageAccount("logicappdemosa", {
+const storageAccount = new storage.StorageAccount("storageAccount", {
     accountName: "logicappdemosa21",
     resourceGroupName: resourceGroup.name,
     sku: {
@@ -24,11 +22,14 @@ const storageAccount = new storage.StorageAccount("logicappdemosa", {
 });
 
 // Cosmos DB Account
-const cosmosdbAccount = new documentdb.DatabaseAccount("logicappdemo-cdb", {
+const cosmosdbAccount = new documentdb.DatabaseAccount("cosmosdbAccount", {
     accountName: "logicappdemo-cdb",
     resourceGroupName: resourceGroup.name,
     databaseAccountOfferType: documentdb.DatabaseAccountOfferType.Standard,
-    locations: [{ locationName: resourceGroup.location, failoverPriority: 0 }],
+    locations: [{
+        locationName: resourceGroup.location,
+        failoverPriority: 0,
+    }],
     consistencyPolicy: {
         defaultConsistencyLevel: documentdb.DefaultConsistencyLevel.Session,
     },
@@ -45,7 +46,7 @@ const db = new documentdb.SqlResourceSqlDatabase("db", {
 });
 
 // Cosmos DB SQL Container
-const dbContainer = new documentdb.SqlResourceSqlContainer("container", {
+const dbContainer = new documentdb.SqlResourceSqlContainer("dbContainer", {
     containerName: "container",
     resourceGroupName: resourceGroup.name,
     accountName: cosmosdbAccount.name,
@@ -55,24 +56,19 @@ const dbContainer = new documentdb.SqlResourceSqlContainer("container", {
     },
 });
 
-const accountKeys = pulumi.all([resourceGroup.name, cosmosdbAccount.name]).apply(async args => {
-    const resourceGroupName = args[0];
-    const accountName = args[1];
-    const accountKeys = documentdb.listDatabaseAccountKeys({
-        accountName: accountName,
+const accountKeys = pulumi
+    .all([cosmosdbAccount.name, resourceGroup.name])
+    .apply(([cosmosdbAccountName, resourceGroupName]) => documentdb.listDatabaseAccountKeys({
+        accountName: cosmosdbAccountName,
         resourceGroupName: resourceGroupName,
-    });
-    return await accountKeys;
-});
+    }));
 
 const clientConfig = pulumi.output(authorization.getClientConfig());
 
 const apiId = pulumi.interpolate`/subscriptions/${clientConfig.subscriptionId}/providers/Microsoft.Web/locations/${resourceGroup.location}/managedApis/documentdb`;
 
-/*
- * API Connection to be used in a Logic App
- */
-const connection = new web.Connection("cosmosdbConnection", {
+// API Connection to be used in a Logic App
+const connection = new web.Connection("connection", {
     connectionName: "cosmosdbConnection",
     resourceGroupName: resourceGroup.name,
     properties: {
@@ -87,9 +83,7 @@ const connection = new web.Connection("cosmosdbConnection", {
     },
 });
 
-/*
- * Logic App with an HTTP trigger and Cosmos DB action
- */
+// Logic App with an HTTP trigger and Cosmos DB action
 const workflow = new logic.Workflow("workflow", {
     workflowName: "httpToCosmos",
     resourceGroupName: resourceGroup.name,
@@ -125,7 +119,7 @@ const workflow = new logic.Workflow("workflow", {
                     },
                     host: {
                         connection: {
-                            name: "@parameters('$connections')['documentdb']['connectionId']",
+                            name: `@parameters('$connections')['documentdb']['connectionId']`,
                         },
                     },
                     method: "post",
@@ -147,9 +141,13 @@ const workflow = new logic.Workflow("workflow", {
     },
 });
 
-const callbackUrls = pulumi.all([resourceGroup.name, workflow.name]).apply(args => {
-    return logic.listWorkflowTriggerCallbackUrl({ resourceGroupName: args[0], workflowName: args[1], triggerName: "Receive_post" });
-});
+const callbackUrls = pulumi
+    .all([resourceGroup.name, workflow.name])
+    .apply(([resourceGroupName, workflowName]) => logic.listWorkflowTriggerCallbackUrl({
+        resourceGroupName: resourceGroupName,
+        workflowName: workflowName,
+        triggerName: "Receive_post",
+    }));
 
 // Export the HTTP endpoint
 export const endpoint = callbackUrls.value;

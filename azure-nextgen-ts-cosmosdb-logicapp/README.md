@@ -49,7 +49,7 @@ With the native Azure provider we can directly use the Azure resource manager AP
 4. At this point, you have a Cosmos DB collection and a Logic App listening to HTTP requests. You can trigger the Logic App with a `curl` command:
 
     ```
-    $ curl -X POST '$(pulumi stack output endpoint)' -d '"Hello World"' -H 'Content-Type: application/json'
+    $ curl -X POST "$(pulumi stack output endpoint)" -d '"Hello World"' -H 'Content-Type: application/json'
     ```
 
     The POST body will be saved into a new document in the Cosmos DB collection.
