@@ -182,7 +182,7 @@ class MyStack : Stack
             },
             Parameters =
             {
-                { "connections", new Logic.Inputs.WorkflowParameterArgs
+                { "$connections", new Logic.Inputs.WorkflowParameterArgs
                 {
                     Value = new Dictionary<string, object>
                     {
