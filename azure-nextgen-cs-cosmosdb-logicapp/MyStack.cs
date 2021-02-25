@@ -1,6 +1,7 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
 using Pulumi;
+using System.Collections.Generic;
 using Authorization = Pulumi.AzureNextGen.Authorization.Latest;
 using DocumentDB = Pulumi.AzureNextGen.DocumentDB.Latest;
 using Logic = Pulumi.AzureNextGen.Logic.Latest;
@@ -115,54 +116,55 @@ class MyStack : Stack
             },
         });
 
+        // Logic App with an HTTP trigger and Cosmos DB action
         var workflow = new Logic.Workflow("workflow", new Logic.WorkflowArgs
         {
             WorkflowName = "httpToCosmos",
             ResourceGroupName = resourceGroup.Name,
-            Definition = 
+            Definition = new Dictionary<string, object>
             {
                 { "$schema", "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#" },
                 { "contentVersion", "1.0.0.0" },
-                { "parameters", 
+                { "parameters", new Dictionary<string, object>
                 {
-                    { "$connections",
+                    { "$connections",new Dictionary<string, object>
                     {
-                        { "defaultValue",  },
+                        { "defaultValue", new Dictionary<string, object>() },
                         { "type", "Object" },
                     } },
                 } },
-                { "triggers", 
+                { "triggers", new Dictionary<string, object>
                 {
-                    { "Receive_post", 
+                    { "Receive_post", new Dictionary<string, object>
                     {
                         { "type", "Request" },
                         { "kind", "Http" },
-                        { "inputs", 
+                        { "inputs", new Dictionary<string, object>
                         {
                             { "method", "POST" },
-                            { "schema", 
+                            { "schema", new Dictionary<string, object>
                             {
-                                { "properties",  },
+                                { "properties", new Dictionary<string, object>() },
                                 { "type", "object" },
                             } },
                         } },
                     } },
                 } },
-                { "actions", 
+                { "actions", new Dictionary<string, object>
                 {
-                    { "write_body", 
+                    { "write_body", new Dictionary<string, object>
                     {
                         { "type", "ApiConnection" },
-                        { "inputs", 
+                        { "inputs", new Dictionary<string, object>
                         {
-                            { "body", 
+                            { "body", new Dictionary<string, object>
                             {
                                 { "data", "@triggerBody()" },
                                 { "id", "@utcNow()" },
                             } },
-                            { "host", 
+                            { "host", new Dictionary<string, object>
                             {
-                                { "$connection",
+                                { "$connection",new Dictionary<string, object>
                                 {
                                     { "name", "@parameters('$connections')['documentdb']['connectionId']" },
                                 } },
@@ -178,13 +180,13 @@ class MyStack : Stack
                     } },
                 } },
             },
-            Parameters = 
+            Parameters =
             {
                 { "connections", new Logic.Inputs.WorkflowParameterArgs
                 {
-                    Value = 
+                    Value = new Dictionary<string, object>
                     {
-                        { "documentdb", 
+                        { "documentdb", new Dictionary<string, object>
                         {
                             { "connectionId", connection.Id },
                             { "connectionName", "logicapp-cosmosdb-connection" },
@@ -195,21 +197,20 @@ class MyStack : Stack
             },
         });
 
-
-var callbackUrls = Output.Tuple(resourceGroup.Name, workflow.Name).Apply(values =>
-{
-    var resourceGroupName = values.Item1;
-    var workflowName = values.Item2;
-    return Logic.ListWorkflowTriggerCallbackUrl.InvokeAsync(new Logic.ListWorkflowTriggerCallbackUrlArgs
-    {
-        ResourceGroupName = resourceGroupName,
-        WorkflowName = workflowName,
-        TriggerName = "Receive_post",
-    });
-});
-this.Endpoint = callbackUrls.Apply(callbackUrls => callbackUrls.Value);
+        var callbackUrls = Output.Tuple(resourceGroup.Name, workflow.Name).Apply(values =>
+        {
+            var resourceGroupName = values.Item1;
+            var workflowName = values.Item2;
+            return Logic.ListWorkflowTriggerCallbackUrl.InvokeAsync(new Logic.ListWorkflowTriggerCallbackUrlArgs
+            {
+                ResourceGroupName = resourceGroupName,
+                WorkflowName = workflowName,
+                TriggerName = "Receive_post",
+            });
+        });
+        this.Endpoint = callbackUrls.Apply(callbackUrls => callbackUrls.Value);
     }
 
     [Output("endpoint")]
-public Output<string> Endpoint { get; set; }
+    public Output<string> Endpoint { get; set; }
 }
