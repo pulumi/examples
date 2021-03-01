@@ -1,31 +1,27 @@
-import pulumi_azure_nextgen.insights.latest as insights
-import pulumi_azure_nextgen.resources.latest as resource
-import pulumi_azure_nextgen.sql.latest as sql
-import pulumi_azure_nextgen.storage.latest as storage
-import pulumi_azure_nextgen.web.latest as web
+import pulumi_azure_native.insights as insights
+import pulumi_azure_native.resources as resource
+import pulumi_azure_native.sql as sql
+import pulumi_azure_native.storage as storage
+import pulumi_azure_native.web as web
 from pulumi import Config, Output, asset, export
-from pulumi_azure_nextgen.storage.latest import (BlobContainer, PublicAccess,
-                                                 StorageAccount)
+from pulumi_azure_native.storage import (BlobContainer, PublicAccess,
+                                         StorageAccount)
 
 username = "pulumi"
 
 config = Config()
 pwd = config.require("sqlPassword")
 
-resource_group = resource.ResourceGroup("appservicerg",
-                                        resource_group_name="appservicerg",
-                                        location="westus2")
+resource_group = resource.ResourceGroup("appservicerg")
 
 storage_account = storage.StorageAccount(
     "appservicesa",
-    account_name="appservicesa",
     resource_group_name=resource_group.name,
-    kind="StorageV2",
+    kind=storage.Kind.STORAGE_V2,
     sku=storage.SkuArgs(name=storage.SkuName.STANDARD_LRS))
 
 app_service_plan = web.AppServicePlan(
     "appservice-asp",
-    name="appservice-asp",
     resource_group_name=resource_group.name,
     kind="App",
     sku=web.SkuDescriptionArgs(
@@ -35,18 +31,16 @@ app_service_plan = web.AppServicePlan(
 
 storage_container = BlobContainer(
     "appservice-c",
-    container_name="appservice-c",
     account_name=storage_account.name,
     public_access=PublicAccess.NONE,
     resource_group_name=resource_group.name)
 
 blob = storage.Blob(
     "appservice-b",
-    blob_name="appservice-b",
     resource_group_name=resource_group.name,
     account_name=storage_account.name,
     container_name=storage_container.name,
-    type="Block",
+    type=storage.BlobType.BLOCK,
     source=asset.FileArchive("wwwroot"))
 
 
@@ -67,6 +61,7 @@ def get_sas(args):
     )
     return f"https://{args[0]}.blob.core.windows.net/{args[1]}/{args[2]}?{blob_sas.service_sas_token}"
 
+
 signed_blob_url = Output.all(
     storage_account.name,
     storage_container.name,
@@ -76,45 +71,42 @@ signed_blob_url = Output.all(
 
 app_insights = insights.Component(
     "appservice-ai",
-    resource_name_="appservice-ai",
+    application_type=insights.ApplicationType.WEB,
     kind="web",
-    resource_group_name=resource_group.name,
-    location=resource_group.location,
-    application_type=insights.ApplicationType.WEB)
+    resource_group_name=resource_group.name)
 
 sql_server = sql.Server(
     "appservice-sql",
-    server_name="appservice-sql",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
     administrator_login=username,
     administrator_login_password=pwd,
     version="12.0")
 
 database = sql.Database(
     "appservice-db",
-    database_name="appservice-db",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
     server_name=sql_server.name,
-    requested_service_objective_name=sql.ServiceObjectiveName.S0)
+    sku=sql.SkuArgs(
+        name="S0",
+    ))
 
 connection_string = Output.all(sql_server.name, database.name, username, pwd) \
-    .apply(lambda args: f"Server=tcp:{args[0]}.database.windows.net;initial catalog={args[1]};user ID={args[2]};password={args[3]};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;")
+    .apply(lambda
+               args: f"Server=tcp:{args[0]}.database.windows.net;initial catalog={args[1]};user ID={args[2]};password={args[3]};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;")
 
 app = web.WebApp(
     "appservice-as",
-    name="appserviceas123",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
     server_farm_id=app_service_plan.id,
     site_config=web.SiteConfigArgs(
-        app_settings=[web.NameValuePairArgs(name="APPINSIGHTS_INSTRUMENTATIONKEY", value=app_insights.instrumentation_key),
-             web.NameValuePairArgs(name="APPLICATIONINSIGHTS_CONNECTION_STRING", value=app_insights.instrumentation_key.apply(
-                 lambda key: "InstrumentationKey=" + key
-             )),
-             web.NameValuePairArgs(name="ApplicationInsightsAgent_EXTENSION_VERSION", value="~2"),
-             web.NameValuePairArgs(name="WEBSITE_RUN_FROM_PACKAGE", value=signed_blob_url)],
+        app_settings=[
+            web.NameValuePairArgs(name="APPINSIGHTS_INSTRUMENTATIONKEY", value=app_insights.instrumentation_key),
+            web.NameValuePairArgs(name="APPLICATIONINSIGHTS_CONNECTION_STRING",
+                                  value=app_insights.instrumentation_key.apply(
+                                      lambda key: "InstrumentationKey=" + key
+                                  )),
+            web.NameValuePairArgs(name="ApplicationInsightsAgent_EXTENSION_VERSION", value="~2"),
+            web.NameValuePairArgs(name="WEBSITE_RUN_FROM_PACKAGE", value=signed_blob_url)],
         connection_strings=[web.ConnStringInfoArgs(
             name="db",
             type="SQLAzure",

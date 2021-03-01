@@ -22,10 +22,20 @@ In addition to the Storage itself, a CDN is configured to serve files from the B
     $ az login
     ```
 
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+   This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip3 install -r requirements.txt
+    ```
+
 1.  Set the Azure region location to use:
 
     ```
-    $ pulumi config set azure-nextgen:location westus
+    $ pulumi config set azure-native:location westus
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:

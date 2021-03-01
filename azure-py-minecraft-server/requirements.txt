@@ -1,3 +1,4 @@
 pulumi>=2.0.0,<3.0.0
-pulumi-azure-nextgen>=0.6.1
+pulumi-azure-native>=0.7.0
+paramiko>=2.7.1
 typing_extensions>=3.7.4

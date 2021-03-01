@@ -17,6 +17,16 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
     ```bash
     $ pulumi stack init dev
     ```
+   
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+   This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip3 install -r requirements.txt
+    ```
 
 1. Next, generate an OpenSSH keypair for use with your server.
 
@@ -39,17 +49,15 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
     $ pulumi config set privateKeyPassphrase --secret [yourPassphraseHere]
     ```
 
-    Notice that we've used `--secret` for both `privateKey` and `privateKeyPassphrase`. This ensures their are
+    Notice that we've used `--secret` for both `privateKey` and `privateKeyPassphrase`. This ensures they are
     stored in encrypted form in the Pulumi secrets system.
 
 1. Set the required configuration for this example. This example requires you to supply a username, password, location, and the public and private keys to the virtual machine that we are going to create. Check the Azure virtual machine [password requirements](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/faq#what-are-the-password-requirements-when-creating-a-vm) before creating a password.
 
     ```bash
-    $ pulumi config set admin_password <admin password>
+    $ pulumi config set admin_password --secret <admin password>
     $ pulumi config set admin_username <admin username>
-    $ pulumi config set location westus # any valid Azure region will do
-    $ cat rsa.pub | pulumi config set publicKey --
-    $ cat rsa | pulumi config set privateKey --secret --
+    $ pulumi config set azure-native:location westus # any valid Azure region will do
     ```
 
     Note that `--secret` ensures your password is encrypted safely.
@@ -65,11 +73,11 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
 
         Type                                              Name                    Plan
     +   pulumi:pulumi:Stack                               azure-py-webserver-dev  create
-    +   ├─ azure-nextgen:resources/latest:ResourceGroup   server-rg               create
-    +   ├─ azure-nextgen:network/latest:PublicIPAddress   server-ip               create
-    +   ├─ azure-nextgen:network/latest:VirtualNetwork    server-network          create
-    +   ├─ azure-nextgen:network/latest:NetworkInterface  server-nic              create
-    +   ├─ azure-nextgen:compute/latest:VirtualMachine    server-vm               create
+    +   ├─ azure-native:resources:ResourceGroup           server-rg               create
+    +   ├─ azure-native:network:PublicIPAddress           server-ip               create
+    +   ├─ azure-native:network:VirtualNetwork            server-network          create
+    +   ├─ azure-native:network:NetworkInterface          server-nic              create
+    +   ├─ azure-native:compute:VirtualMachine            server-vm               create
     +   ├─ pulumi-python:dynamic:Resource                 config                  create
     +   └─ pulumi-python:dynamic:Resource                 install                 create
 
@@ -83,11 +91,11 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
 
         Type                                              Name                    Status      Info
     +   pulumi:pulumi:Stack                               azure-py-webserver-dev  created     1 message
-    +   ├─ azure-nextgen:resources/latest:ResourceGroup   server-rg               created
-    +   ├─ azure-nextgen:network/latest:VirtualNetwork    server-network          created
-    +   ├─ azure-nextgen:network/latest:PublicIPAddress   server-ip               created
-    +   ├─ azure-nextgen:network/latest:NetworkInterface  server-nic              created
-    +   ├─ azure-nextgen:compute/latest:VirtualMachine    server-vm               created
+    +   ├─ azure-native:resources:ResourceGroup           server-rg               created
+    +   ├─ azure-native:network:VirtualNetwork            server-network          created
+    +   ├─ azure-native:network:PublicIPAddress           server-ip               created
+    +   ├─ azure-native:network:NetworkInterface          server-nic              created
+    +   ├─ azure-native:compute:VirtualMachine            server-vm               created
     +   ├─ pulumi-python:dynamic:Resource                 config                  created
     +   └─ pulumi-python:dynamic:Resource                 install                 created
 
@@ -125,11 +133,11 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
     -   pulumi:pulumi:Stack                               azure-py-webserver-dev  delete
     -   ├─ pulumi-python:dynamic:Resource                 install                 delete
     -   ├─ pulumi-python:dynamic:Resource                 config                  delete
-    -   ├─ azure-nextgen:compute/latest:VirtualMachine    server-vm               delete
-    -   ├─ azure-nextgen:network/latest:NetworkInterface  server-nic              delete
-    -   ├─ azure-nextgen:network/latest:PublicIPAddress   server-ip               delete
-    -   ├─ azure-nextgen:network/latest:VirtualNetwork    server-network          delete
-    -   └─ azure-nextgen:resources/latest:ResourceGroup   server-rg               delete
+    -   ├─ azure-native:compute:VirtualMachine            server-vm               delete
+    -   ├─ azure-native:network:NetworkInterface          server-nic              delete
+    -   ├─ azure-native:network:PublicIPAddress           server-ip               delete
+    -   ├─ azure-native:network:VirtualNetwork            server-network          delete
+    -   └─ azure-native:resources:ResourceGroup           server-rg               delete
 
     Outputs:
     - Minecraft Server IP Address: "40.112.182.143"
@@ -146,11 +154,11 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
     -   pulumi:pulumi:Stack                               azure-py-webserver-dev  deleted
     -   ├─ pulumi-python:dynamic:Resource                 install                 deleted
     -   ├─ pulumi-python:dynamic:Resource                 config                  deleted
-    -   ├─ azure-nextgen:compute/latest:VirtualMachine    server-vm               deleted
-    -   ├─ azure-nextgen:network/latest:NetworkInterface  server-nic              deleted
-    -   ├─ azure-nextgen:network/latest:PublicIPAddress   server-ip               deleted
-    -   ├─ azure-nextgen:network/latest:VirtualNetwork    server-network          deleted
-    -   └─ azure-nextgen:resources/latest:ResourceGroup   server-rg               deleted
+    -   ├─ azure-native:compute:VirtualMachine            server-vm               deleted
+    -   ├─ azure-native:network:NetworkInterface          server-nic              deleted
+    -   ├─ azure-native:network:PublicIPAddress           server-ip               deleted
+    -   ├─ azure-native:network:VirtualNetwork            server-network          deleted
+    -   └─ azure-native:resources:ResourceGroup           server-rg               deleted
 
     Outputs:
     - Minecraft Server IP Address: "40.112.182.143"

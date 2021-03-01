@@ -1,4 +1,4 @@
-name: azure-nextgen-py-appservice
+name: azure-py-appservice
 runtime: python
 description: Creates Azure App Service with SQL Database and Application Insights in Python
 template:

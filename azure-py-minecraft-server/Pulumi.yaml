@@ -1,4 +1,4 @@
-name: azure-py-webserver
+name: azure-py-minecraft
 runtime:
   name: python
   options:

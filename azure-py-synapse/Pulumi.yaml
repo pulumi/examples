@@ -1,4 +1,4 @@
-name: azure-nextgen-py-synapse
+name: azure-py-synapse
 runtime:
   name: python
   options:

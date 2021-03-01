@@ -1,20 +1,19 @@
 # Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
 import pulumi
-import pulumi_azure_nextgen.authorization.latest as authorization
-import pulumi_azure_nextgen.documentdb.latest as documentdb
-import pulumi_azure_nextgen.logic.latest as logic
-import pulumi_azure_nextgen.resources.latest as resources
-import pulumi_azure_nextgen.storage.latest as storage
-import pulumi_azure_nextgen.web.latest as web
+import pulumi_azure_native.authorization as authorization
+import pulumi_azure_native.documentdb as documentdb
+import pulumi_azure_native.logic as logic
+import pulumi_azure_native.resources as resources
+import pulumi_azure_native.storage as storage
+import pulumi_azure_native.web as web
 
 # Create an Azure Resource Group
-resource_group = resources.ResourceGroup("resourceGroup", resource_group_name="logicappdemo-rg")
+resource_group = resources.ResourceGroup("resourceGroup")
 
 # Create an Azure resource (Storage Account)
 storage_account = storage.StorageAccount(
-    "storageAccount",
-    account_name="logicappdemosa21",
+    "logicappdemosa",
     resource_group_name=resource_group.name,
     sku=storage.SkuArgs(
         name=storage.SkuName.STANDARD_LRS,
@@ -23,8 +22,7 @@ storage_account = storage.StorageAccount(
 
 # Cosmos DB Account
 cosmosdb_account = documentdb.DatabaseAccount(
-    "cosmosdbAccount",
-    account_name="logicappdemo-cdb",
+    "logicappdemo-cdb",
     resource_group_name=resource_group.name,
     database_account_offer_type=documentdb.DatabaseAccountOfferType.STANDARD,
     locations=[documentdb.LocationArgs(
@@ -37,8 +35,7 @@ cosmosdb_account = documentdb.DatabaseAccount(
 
 # Cosmos DB Database
 db = documentdb.SqlResourceSqlDatabase(
-    "db",
-    database_name="sqldb",
+    "sqldb",
     resource_group_name=resource_group.name,
     account_name=cosmosdb_account.name,
     resource=documentdb.SqlDatabaseResourceArgs(
@@ -47,13 +44,16 @@ db = documentdb.SqlResourceSqlDatabase(
 
 # Cosmos DB SQL Container
 db_container = documentdb.SqlResourceSqlContainer(
-    "dbContainer",
-    container_name="container",
+    "container",
     resource_group_name=resource_group.name,
     account_name=cosmosdb_account.name,
     database_name=db.name,
     resource=documentdb.SqlContainerResourceArgs(
         id="container",
+        partition_key=documentdb.ContainerPartitionKeyArgs(
+            paths=["/myPartitionKey"],
+            kind="Hash",
+        )
     ))
 
 account_keys = pulumi.Output.all(cosmosdb_account.name, resource_group.name).apply(
@@ -67,7 +67,6 @@ api_id = pulumi.Output.all(client_config.subscription_id, resource_group.locatio
 # API Connection to be used in a Logic App
 connection = web.Connection(
     "connection",
-    connection_name="cosmosdbConnection",
     resource_group_name=resource_group.name,
     properties=web.ApiConnectionDefinitionPropertiesArgs(
         display_name="cosmosdb_connection",
@@ -83,7 +82,6 @@ connection = web.Connection(
 # Logic App with an HTTP trigger and Cosmos DB action
 workflow = logic.Workflow(
     "workflow",
-    workflow_name="httpToCosmos",
     resource_group_name=resource_group.name,
     definition={
         "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",

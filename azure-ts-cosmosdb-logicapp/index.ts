@@ -51,7 +51,7 @@ const dbContainer = new documentdb.SqlResourceSqlContainer("container", {
         id: "container",
         partitionKey: {
             paths: ["/myPartitionKey"],
-            kind: "Hash"
+            kind: "Hash",
         },
     },
 });

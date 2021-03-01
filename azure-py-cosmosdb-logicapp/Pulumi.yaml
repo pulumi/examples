@@ -1,4 +1,4 @@
-name: azure-nextgen-cosmosdb-logicapp
+name: azure-cosmosdb-logicapp
 runtime:
   name: python
   options:

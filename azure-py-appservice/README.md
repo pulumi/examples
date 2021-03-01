@@ -34,7 +34,7 @@ with App Service.
 1. Specify the Azure location to use:
 
     ```bash
-    $ pulumi config set azure:location WestUS
+    $ pulumi config set azure-native:location WestUS
     ```
 
 1. Define SQL Server password (make it complex enough to satisfy Azure policy):

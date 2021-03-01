@@ -1,4 +1,4 @@
-name: azureng-py-appservice-docker
+name: azure-py-appservice-docker
 runtime:
   name: python
   options:
