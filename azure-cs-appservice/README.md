@@ -33,7 +33,7 @@ To deploy your infrastructure, follow the below steps.
 1.  Configure the location to deploy the resources to:
 
     ```
-    $ pulumi config set azure:location centralus
+    $ pulumi config set azure-native:location centralus
     ```
 
 1. Define SQL Server password (make it complex enough to satisfy Azure policy):
@@ -64,7 +64,7 @@ To deploy your infrastructure, follow the below steps.
     $ curl "$(pulumi stack output Endpoint)"
     <html>
         <body>
-            <h1>Greetings from Azure App Service!</h1>
+            <h1>Greetings from Azure App Service (courtesy of Pulumi)!</h1>
         </body>
     </html>
     ```

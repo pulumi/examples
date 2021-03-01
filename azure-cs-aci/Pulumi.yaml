@@ -1,0 +1,3 @@
+name: azure-cs-aci
+runtime: dotnet
+description: Creates Azure Container Instance with a public IP

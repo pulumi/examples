@@ -1,0 +1,11 @@
+{
+    "name": "azure-cosmosdb-logicapp",
+    "devDependencies": {
+        "@types/node": "latest"
+    },
+    "dependencies": {
+        "@azure/cosmos": "^2.1.7",
+        "@pulumi/azure": "^3.0.0",
+        "@pulumi/pulumi": "^2.0.0"
+    }
+}

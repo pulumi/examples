@@ -1,0 +1,6 @@
+name: azure-py-aci
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Creates Azure Container Instance with a public IP

@@ -1,3 +1,0 @@
-name: azure-nextgen-cs-synapse
-runtime: dotnet
-description: Creates Azure Synapse workspace with SQL and Spark pools

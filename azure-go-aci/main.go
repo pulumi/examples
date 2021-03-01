@@ -1,79 +1,61 @@
+// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 package main
 
 import (
-	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/containerservice"
-	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/core"
-	"github.com/pulumi/pulumi-docker/sdk/v2/go/docker"
+	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/containerinstance"
+	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		// Create a resource group.
-		resourceGroup, err := core.NewResourceGroup(ctx, "aci-rg", nil)
+		resourceGroup, err := resources.NewResourceGroup(ctx, "aci-rg")
 		if err != nil {
 			return err
 		}
 
-		// Create a registry.
-		registryArgs := containerservice.RegistryArgs{
+		imageName := "mcr.microsoft.com/azuredocs/aci-helloworld"
+		containerGroup, err := containerinstance.NewContainerGroup(ctx, "helloworld", &containerinstance.ContainerGroupArgs{
 			ResourceGroupName: resourceGroup.Name,
-			AdminEnabled:      pulumi.Bool(true),
-			Sku:               pulumi.String("Premium"),
-		}
-		registry, err := containerservice.NewRegistry(ctx, "registry", &registryArgs)
-		if err != nil {
-			return err
-		}
-
-		// Create the docker image.
-		imageArgs := docker.ImageArgs{
-			ImageName: pulumi.Sprintf("%s/mynodeapp:v1.0.0", registry.LoginServer),
-			Build: &docker.DockerBuildArgs{
-				Context: pulumi.String("./app"),
+			OsType: pulumi.String("Linux"),
+			Containers: &containerinstance.ContainerArray{
+				&containerinstance.ContainerArgs{
+					Name:  pulumi.String("acilinuxpublicipcontainergroup"),
+					Image: pulumi.String(imageName),
+					Ports: &containerinstance.ContainerPortArray{
+						&containerinstance.ContainerPortArgs{Port: pulumi.Int(80)},
+					},
+					Resources: &containerinstance.ResourceRequirementsArgs{
+						Requests: &containerinstance.ResourceRequestsArgs{
+							Cpu: pulumi.Float64(1.0),
+							MemoryInGB: pulumi.Float64(1.5),
+						},
+					},
+				},
 			},
-			Registry: &docker.ImageRegistryArgs{
-				Server:   registry.LoginServer,
-				Username: registry.AdminUsername,
-				Password: registry.AdminPassword,
+			IpAddress: &containerinstance.IpAddressArgs{
+				Ports: &containerinstance.PortArray{
+					&containerinstance.PortArgs{
+						Port: pulumi.Int(80),
+						Protocol: pulumi.String("Tcp"),
+					},
+				},
+				Type: pulumi.String("Public"),
 			},
-		}
-		image, err := docker.NewImage(ctx, "node-app", &imageArgs)
+			RestartPolicy: pulumi.String("always"),
+		})
 		if err != nil {
 			return err
 		}
 
-		// Create a group.
-		credentialArgs := containerservice.GroupImageRegistryCredentialArgs{
-			Server:   registry.LoginServer,
-			Username: registry.AdminUsername,
-			Password: registry.AdminPassword,
-		}
-		portArgs := containerservice.GroupContainerPortArgs{
-			Port:     pulumi.Int(80),
-			Protocol: pulumi.String("TCP"),
-		}
-		containerArgs := containerservice.GroupContainerArgs{
-			Cpu:    pulumi.Float64(0.5),
-			Image:  image.ImageName,
-			Memory: pulumi.Float64(1.5),
-			Name:   pulumi.String("hello-world"),
-			Ports:  containerservice.GroupContainerPortArray{portArgs},
-		}
-		groupArgs := containerservice.GroupArgs{
-			ResourceGroupName:        resourceGroup.Name,
-			ImageRegistryCredentials: containerservice.GroupImageRegistryCredentialArray{credentialArgs},
-			OsType:                   pulumi.String("Linux"),
-			Containers:               containerservice.GroupContainerArray{containerArgs},
-			IpAddressType:            pulumi.String("public"),
-			DnsNameLabel:             pulumi.String("acigo"),
-		}
-		group, err := containerservice.NewGroup(ctx, "aci", &groupArgs)
-		if err != nil {
-			return err
-		}
+		ctx.Export("containerIPv4Address", containerGroup.IpAddress.ApplyT(func(ip *containerinstance.IpAddressResponse) (string, error) {
+			if ip == nil || ip.Ip == nil {
+				return "", nil
+			}
+			return *ip.Ip, nil
+		}).(pulumi.StringOutput))
 
-		ctx.Export("endpoint", group.Fqdn)
 		return nil
 	})
 }

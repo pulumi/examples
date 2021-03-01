@@ -1,3 +1,0 @@
-name: azure-nextgen-cs-aks
-runtime: dotnet
-description: An Azure NextGen C# Pulumi program to provision an AKS cluster

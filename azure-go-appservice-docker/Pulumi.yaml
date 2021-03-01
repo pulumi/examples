@@ -1,0 +1,3 @@
+name: azure-go-appservice-docker
+runtime: go
+description: Creates Azure App Service and Deploys Docker images to it

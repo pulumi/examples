@@ -1,3 +1,0 @@
-name: azure-nextgen-cosmosdb-logicapp
-runtime: dotnet
-description: An example of creating a CosmosDB container through a Azure's Cosmos SDK and deploying a Logic App and an API Connection

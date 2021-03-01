@@ -1,3 +1,0 @@
-name: azure-nextgen-ts-aks
-runtime: nodejs
-description: A minimal Azure AKS TypeScript Pulumi program

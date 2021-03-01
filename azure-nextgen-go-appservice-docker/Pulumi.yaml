@@ -1,8 +1,0 @@
-name: azureng-go-appservice-docker
-runtime: go
-description: Creates Azure App Service and Deploys Docker images to
-template:
-  config:
-    location:
-      description: Azure region to deploy resources to
-      default: WestUS

@@ -1,0 +1,3 @@
+name: azure-ts-aci
+runtime: nodejs
+description: Creates Azure Container Instance with a public IP
