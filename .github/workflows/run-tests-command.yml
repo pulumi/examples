@@ -239,13 +239,14 @@ jobs:
       fail-fast: false
       matrix:
         clouds:
-        - DigitalOcean
-        - Aws
-        - Azure
-        - Gcp
-        - Packet
-        - EquinixMetal
-        - Cloud
+#        - DigitalOcean
+#        - Aws
+#        - AzureClassic
+        - AzureNextgen
+#        - Gcp
+#        - Packet
+#        - EquinixMetal
+#        - Cloud
         dotnet-version:
         - 3.1.301
         go-version:
