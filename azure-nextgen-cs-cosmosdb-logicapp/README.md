@@ -6,9 +6,8 @@ With the native Azure provider we can directly use the Azure resource manager AP
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en/download/)
-- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
-- [Connect Pulumi with your Azure account](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) (if your `az` CLI is configured, no further changes are required)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Install .NET Core 3.1+](https://dotnet.microsoft.com/download)
 
 ## Running the App
 
