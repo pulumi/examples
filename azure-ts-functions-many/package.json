@@ -1,5 +1,5 @@
 {
-    "name": "azure-ts-functions-raw",
+    "name": "azure-ts-functions-many",
     "version": "1.0.0",
     "devDependencies": {
         "@types/node": "^8.0.0"

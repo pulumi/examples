@@ -35,20 +35,19 @@ $ git pull origin master
     - [F#](#f)
 - [Azure](#azure)
     - [TypeScript](#typescript-1)
-    - [JavaScript](#javascript-1)
     - [Python](#python-1)
     - [Go](#go-1)
     - [C#](#c-1)
     - [F#](#f-1)
 - [GCP](#gcp)
     - [TypeScript](#typescript-2)
-    - [JavaScript](#javascript-2)
+    - [JavaScript](#javascript-1)
     - [Python](#python-2)
     - [Go](#go-2)
     - [C#](#c-2)
 - [Kubernetes](#kubernetes)
     - [TypeScript](#typescript-3)
-    - [JavaScript](#javascript-3)
+    - [JavaScript](#javascript-2)
     - [Python](#python-3)
     - [Go](#go-3)
     - [C#](#c-3)
@@ -154,82 +153,56 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
-[AKS - Helm](azure-ts-aks-helm) | Create an Azure Kubernetes Service (AKS) Cluster and deploy a Helm Chart into it.
-[AKS - KEDA](azure-ts-aks-keda) | Create an Azure Kubernetes Service (AKS) Cluster and deploy an Azure Function App with Kubernetes-based Event Driven Autoscaling (KEDA) into it.
-[AKS - Mean](azure-ts-aks-mean) | Stand up an Azure Kubernetes Service (AKS) Cluster and a MongoDB-flavored instance of CosmosDB.
-[AKS - Multicluster](azure-ts-aks-multicluster) | Create multiple Azure Kubernetes Service (AKS) Clusters in different regions and with different node counts.
-[API Management](azure-ts-api-management) | Deploy an instance of Azure API Management.
-[App Service - DevOps](azure-ts-appservice-devops) | Deploy a Todo App using App Service with SQL Database and integrated with DevOps.
-[App Service - Docker](azure-ts-appservice-docker) | Build a web application hosted in App Service from Docker images.
-[App Service - Spring Boot](azure-ts-appservice-Springboot) | Deploy a Spring Boot app to an App Service instance using Jenkins.
-[App Service](azure-ts-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
-[ARM Template](azure-ts-arm-template) | Deploy an existing Azure Resource Manager (ARM) template.
-[CosmosApp Component](azure-ts-cosmosapp-component) | Use a reusable component to create globally-distributed applications with Azure Cosmos DB.
-[CosmosDB LogicApp](azure-ts-cosmosdb-logicapp) | Use Azure Resource Manager (ARM) templates to create an API Connection and a Logic App.
-[Dynamic Resource](azure-ts-dynamicresource) | Add a custom domain to a CDN endpoint.
-[Functions - Raw](azure-ts-functions-raw) | Deploy functions in all supported languages to Azure Functions.
-[Functions](azure-ts-functions) | Deploy a typescript function to Azure Functions.
-[HDInsight Spark](azure-ts-hdinsight-spark) | Deploy a Spark cluster on Azure HDInsight.
-[MSI KeyVault RBAC](azure-ts-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
+[Azure Container Instance](azure-ts-aci) | Run Azure Container Instances on Linux.
+[Azure Kubernetes Service](azure-ts-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
+[Azure App Service](azure-ts-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+[Azure App Service with Docker](azure-ts-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[App Service in Virtual Network](azure-ts-webapp-privateendpoint-vnet-injection) | Deploy two App Services - Front web app with VNet injection and Back web app with a Private Endpoint.
+[Azure Cosmos DB and LogicApp](azure-ts-cosmosdb-logicapp) | Define Cosmos DB, API connections, and link them to a logic app.
+[Azure Functions](azure-ts-functions) | Deploy a Node.js serverless function to Azure Functions.
+[Azure Functions - Many](azure-ts-functions-many) | Deploy several kinds of Azure Functions created from raw deployment packages.
 [Static Website](azure-ts-static-website) | Configure static website hosting in Azure Storage.
-[Stream Analytics](azure-ts-stream-analytics) | Deploy an Azure Stream Analytics job to transform data in an Event Hub.
-[URL Shortener](azure-ts-serverless-url-shortener-global) | Create a globally-distributed serverless URL shortener using Azure Functions and Cosmos DB.
-[VM Scaleset](azure-ts-vm-scaleset) | Provision a Scale Set of Linux web servers with nginx deployed, auto-scaling based on CPU load, a Load Balancer in front of them, and a public IP address.
-[Web Server Component](azure-ts-webserver-component) | Provision a configurable number of Linux web servers in an Azure Virtual Machine using a reusable component.
+[Azure Synapse](azure-ts-synapse) | Starting point for enterprise analytics solutions based on Azure Synapse.
 [Web Server](azure-ts-webserver) | Provision a Linux web server in an Azure Virtual Machine.
-
-### JavaScript
-
-Example   | Description |
---------- | --------- |
-[Web Server](azure-js-webserver) | Build the Pulumi web server sample in Azure.
 
 ### Python
 
 Example   | Description |
 --------- | --------- |
-[AKS - Multicluster](azure-py-aks-multicluster) | Create multiple AKS clusters in different regions and with different node counts.
-[AKS](azure-py-aks) | Deploy an AKS cluster, virtual network and Azure Container Registry and grant AKS permissions to access and manage those.
-[App Service - Docker](azure-py-appservice-docker) | Build a web application hosted in App Service from Docker images.
-[App Service](azure-py-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
-[ARM Template](azure-py-arm-template) | Deploy an existing Azure Resource Manager (ARM) template.
-[Functions - Raw](azure-py-functions-raw) | Deploy a function to Azure Functions created from raw deployment packages in C#.
-[HDInsight Spark](azure-py-hdinsight-spark) | Deploy a Spark cluster on Azure HDInsight.
-[MSI Key Vault RBAC](azure-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
-[Virtual Data Center](azure-py-virtual-data-center) | Deploy peered hub-and-spoke networks in paired regions complete with gateways, firewalls and custom routing to redirect traffic through the firewalls.
-[VM Scale Set](azure-vm-scaleset) | Provision a Scale Set of Linux web servers with nginx deployed, auto-scaling based on CPU load, a Load Balancer in front of them, and a public IP address.
-[Web Server Component](azure-py-webserver-component) | Deploy a Virtual Machine and start an HTTP server on it using a reusable component.
-[Web Server](azure-py-webserver) | Deploy a Virtual Machine and start an HTTP server on it.
+[Azure Container Instance](azure-py-aci) | Run Azure Container Instances on Linux.
+[Azure Kubernetes Service](azure-py-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
+[Azure App Service](azure-py-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+[Azure App Service with Docker](azure-py-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[Azure Cosmos DB and LogicApp](azure-py-cosmosdb-logicapp) | Define Cosmos DB, API connections, and link them to a logic app.
+[Minecraft Server](azure-py-minecraft-server) | Deploy an Azure Virtual Machine and provision a Minecraft server.
+[Static Website](azure-py-static-website) | Configure static website hosting in Azure Storage.
+[Azure Synapse](azure-py-synapse) | Starting point for enterprise analytics solutions based on Azure Synapse.
+[Virtual Data Center](azure-py-virtual-data-center) | Deploy Azure Virtual Data Center (VDC) hub-and-spoke network stacks in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall guarding a DMZ, and Azure Bastion.
+[Web Server](azure-py-webserver) | Provision a Linux web server in an Azure Virtual Machine.
 
 ### Go
 
 Example   | Description |
 --------- | --------- |
-[App Service](azure-go-appservice) | Build a web application hosted in Azure App Service.
-[AKS - Multicluster](azure-go-aks-multicluster) | Create multiple Azure Kubernetes Service (AKS) Clusters in different regions and with different node counts.
-[Web Server Component](azure-go-webserver-component) | Provision a configurable number of Linux web servers in an Azure Virtual Machine using a reusable component.
+[Azure Container Instance](azure-go-aci) | Run Azure Container Instances on Linux.
+[Azure Kubernetes Service](azure-go-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
+[Azure App Service with Docker](azure-go-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[Static Website](azure-go-static-website) | Configure static website hosting in Azure Storage.
 
 ### C#
 
 Example   | Description |
 --------- | --------- |
-[AKS](azure-cs-aks) | Stand up an Azure Kubernetes Service (AKS) cluster.
-[AKS and Private Container Registry](azure-cs-aks-private-container-registry) | Stand up an Azure Kubernetes Service (AKS) cluster, a private Azure Container Registry, and deploys an image to the cluster.
-[App Service](azure-cs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
-[Bot Service](azure-cs-botservice) | Build an Azure Bot Service hosted in Azure App Service.
-[Cosmos App Component](azure-cs-cosmosapp-component) | Use a reusable component to create globally-distributed applications with Azure Cosmos DB.
-[Functions - .NET on Consumption](azure-cs-functions-consumption) | Deploy a .NET Azure Function running on a Windows Consumption Plan.
-[Functions - Python on Linux App Service](azure-cs-functions-linux-app) | Deploy a Python Azure Function running on a Linux App Service Premium Plan.
-[MSI Key Vault RBAC](azure-cs-msi-keyvault-rbac) | Use a managed identity with Azure App Service to access Azure KeyVault, Azure Storage, and Azure SQL Database without passwords or secrets.
-[Static Website](azure-cs-static-website) | Deploy a Static Website to Azure Storage.
-[Web Server](azure-cs-webserver) | Deploy a Virtual Machine and start an HTTP server on it.
-
-### F#
-
-Example   | Description |
---------- | --------- |
-[AKS](azure-fs-aks) | Stand up an Azure Kubernetes Service (AKS) cluster.
-[App Service](azure-fs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+Cluster.
+[Azure Container Instance](azure-cs-aci) | Run Azure Container Instances on Linux.
+[Azure Kubernetes Service](azure-cs-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
+[AKS web app with .NET 5](azure-cs-net5-aks-webapp) | Create an Azure Kubernetes Service (AKS) cluster and deploy a web app to it using .NET 5 and C# 9.
+[Azure App Service](azure-cs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+[Azure App Service with Docker](azure-cs-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[Azure Cosmos DB and LogicApp](azure-cs-cosmosdb-logicapp) | Define Cosmos DB, API connections, and link them to a logic app.
+[Azure Functions](azure-cs-functions) | Deploy a Node.js serverless function to Azure Functions.
+[Static Website](azure-cs-static-website) | Configure static website hosting in Azure Storage.
+[Azure Synapse](azure-cs-synapse) | Starting point for enterprise analytics solutions based on Azure Synapse.
 
 ## GCP
 

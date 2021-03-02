@@ -1,4 +1,4 @@
-name: azure-ts-functions-raw
+name: azure-ts-functions-many
 runtime: nodejs
 description: Azure Functions created from raw deployment packages in all supported languages
 template:
