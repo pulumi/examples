@@ -30,15 +30,15 @@ With the native Azure provider we can directly use the Azure resource manager AP
     ```sh
     $ pulumi up
 
-         Type                                                        Name                         Status      
-     +   pulumi:pulumi:Stack                                         azure-cosmosdb-logicapp-dev  created     
-     +   ├─ azure-nextgen:resources/latest:ResourceGroup             logicappdemo-rg              created     
-     +   ├─ azure-nextgen:storage/latest:StorageAccount              logicappdemosa               created     
-     +   ├─ azure-nextgen:documentdb/latest:DatabaseAccount          logicappdemo-cdb             created     
-     +   ├─ azure-nextgen:documentdb/latest:SqlResourceSqlDatabase   db                           created     
-     +   ├─ azure-nextgen:web/latest:Connection                      cosmosdbConnection           created     
-     +   ├─ azure-nextgen:documentdb/latest:SqlResourceSqlContainer  container                    created     
-     +   └─ azure-nextgen:logic/latest:Workflow                      workflow                     created     
+         Type                                                Name                         Status      
+     +   pulumi:pulumi:Stack                                 azure-cosmosdb-logicapp-dev  created     
+     +   ├─ azure-native:resources:ResourceGroup             logicappdemo-rg              created     
+     +   ├─ azure-native:storage:StorageAccount              logicappdemosa               created     
+     +   ├─ azure-native:documentdb:DatabaseAccount          logicappdemo-cdb             created     
+     +   ├─ azure-native:documentdb:SqlResourceSqlDatabase   db                           created     
+     +   ├─ azure-native:web:Connection                      cosmosdbConnection           created     
+     +   ├─ azure-native:documentdb:SqlResourceSqlContainer  container                    created     
+     +   └─ azure-native:logic:Workflow                      workflow                     created     
  
     Resources:
         + 8 created

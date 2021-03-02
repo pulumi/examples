@@ -8,14 +8,12 @@ import (
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/web"
 	"github.com/pulumi/pulumi-docker/sdk/v2/go/docker"
-	"github.com/pulumi/pulumi-random/sdk/v2/go/random"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		resourceGroup, err := resources.NewResourceGroup(ctx, "appservice-docker-rg")
+		resourceGroup, err := resources.NewResourceGroup(ctx, "appservice-docker-rg", nil)
 		if err != nil {
 			return err
 		}
@@ -28,15 +26,6 @@ func main() {
 				Name: pulumi.String("B1"),
 				Tier: pulumi.String("Basic"),
 			},
-		})
-		if err != nil {
-			return err
-		}
-
-		suffix, err := random.NewRandomString(ctx, "suffix", &random.RandomStringArgs{
-			Length:  pulumi.Int(6),
-			Special: pulumi.Bool(false),
-			Upper:   pulumi.Bool(false),
 		})
 		if err != nil {
 			return err

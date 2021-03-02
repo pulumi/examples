@@ -16,7 +16,7 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Create an Azure Resource Group
-		resourceGroup, err := resources.NewResourceGroup(ctx, "azure-go-aks")
+		resourceGroup, err := resources.NewResourceGroup(ctx, "azure-go-aks", nil)
 		if err != nil {
 			return err
 		}

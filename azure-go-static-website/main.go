@@ -6,17 +6,15 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pulumi/pulumi-azure-nextgen/sdk/go/azure/cdn"
-	"github.com/pulumi/pulumi-azure-nextgen/sdk/go/azure/resources"
-	"github.com/pulumi/pulumi-azure-nextgen/sdk/go/azure/storage"
-	"github.com/pulumi/pulumi-random/sdk/v3/go/random"
+	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/cdn"
+	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
+	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/storage"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		resourceGroup, err := resources.NewResourceGroup(ctx, "website-rg")
+		resourceGroup, err := resources.NewResourceGroup(ctx, "website-rg", nil)
 		if err != nil {
 			return err
 		}
@@ -33,6 +31,7 @@ func main() {
 
 		storageAccount, err := storage.NewStorageAccount(ctx, "sa", &storage.StorageAccountArgs{
 			ResourceGroupName: resourceGroup.Name,
+			Kind:              storage.KindStorageV2,
 			Sku: &storage.SkuArgs{
 				Name: storage.SkuName_Standard_LRS,
 			},
@@ -49,19 +48,14 @@ func main() {
 
 		queryStringCachingBehaviorNotSet := cdn.QueryStringCachingBehaviorNotSet
 		endpoint, err := cdn.NewEndpoint(ctx, "endpoint", &cdn.EndpointArgs{
-			ContentTypesToCompress: pulumi.StringArray{},
-			IsCompressionEnabled:   pulumi.Bool(false),
-			IsHttpAllowed:          pulumi.Bool(false),
-			IsHttpsAllowed:         pulumi.Bool(true),
-			OriginHostHeader:       endpointOrigin,
+			IsHttpAllowed:    pulumi.Bool(false),
+			IsHttpsAllowed:   pulumi.Bool(true),
+			OriginHostHeader: endpointOrigin,
 			Origins: cdn.DeepCreatedOriginArray{
 				&cdn.DeepCreatedOriginArgs{
 					HostName:  endpointOrigin,
 					HttpsPort: pulumi.Int(443),
-					Name: pulumi.All(randomSuffix.Result, cdnEndpointName).ApplyString(
-						func(args []interface{}) string {
-							return fmt.Sprintf("%v%v%v", args[1], "-origin-", args[0])
-						}),
+					Name:      pulumi.String("origin-storage-account"),
 				},
 			},
 			ProfileName:                profile.Name,

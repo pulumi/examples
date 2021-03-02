@@ -5,12 +5,11 @@ import (
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/containerinstance"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		resourceGroup, err := resources.NewResourceGroup(ctx, "aci-rg")
+		resourceGroup, err := resources.NewResourceGroup(ctx, "aci-rg", nil)
 		if err != nil {
 			return err
 		}
