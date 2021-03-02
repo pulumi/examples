@@ -5,8 +5,8 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/azure": "^3.0.0",
-        "@pulumi/pulumi": "^2.0.0",
-        "@pulumi/docker": "^2.0.0"
+        "@pulumi/azure-native": "^0.7.1",
+        "@pulumi/docker": "^2.0.0",
+        "@pulumi/pulumi": "^2.0.0"
     }
 }

@@ -1,0 +1,3 @@
+name: azure-cs-functions
+description: Creates Azure Functions on a Linux App Service Plan
+runtime: dotnet

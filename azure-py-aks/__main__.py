@@ -1,96 +1,82 @@
+# Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
+
+import base64
+
 import pulumi
-from pulumi import ResourceOptions
-from pulumi_kubernetes import Provider
-from pulumi_kubernetes.apps.v1 import Deployment, DeploymentSpecArgs
-from pulumi_kubernetes.core.v1 import (
-    ContainerArgs,
-    PodSpecArgs,
-    PodTemplateSpecArgs,
-    Service,
-    ServicePortArgs,
-    ServiceSpecArgs,
-)
-from pulumi_kubernetes.meta.v1 import LabelSelectorArgs, ObjectMetaArgs
-from pulumi_azure.core import ResourceGroup
-from pulumi_azure.containerservice import (
-    KubernetesCluster,
-    KubernetesClusterDefaultNodePoolArgs,
-    KubernetesClusterLinuxProfileArgs,
-    KubernetesClusterLinuxProfileSshKeyArgs,
-    KubernetesClusterServicePrincipalArgs,
-)
-from pulumi_azuread import Application, ServicePrincipal, ServicePrincipalPassword
+from pulumi_azure_native import resources, containerservice
+import pulumi_azuread as azuread
+import pulumi_random as random
+import pulumi_tls as tls
 
-# read and set config values
-config = pulumi.Config("azure-py-aks")
+config = pulumi.Config()
 
-PASSWORD = config.require_secret("password")
-SSHKEY = config.require("sshkey")
+# Create new resource group
+resource_group = resources.ResourceGroup("azure-native-py-aks")
 
-# create a Resource Group and Network for all resources
-resource_group = ResourceGroup("aks-rg")
+# Create an AD service principal
+ad_app = azuread.Application("aks", None)
+ad_sp = azuread.ServicePrincipal("aksSp", application_id=ad_app.application_id)
 
-# create Azure AD Application for AKS
-app = Application("aks-app")
+# Generate random password
+password = random.RandomPassword("password", length=20, special=True)
 
-# create service principal for the application so AKS can act on behalf of the application
-sp = ServicePrincipal(
-    "aks-app-sp",
-    application_id=app.application_id,
-)
+# Create the Service Principal Password
+ad_sp_password = azuread.ServicePrincipalPassword("aksSpPassword",
+                                                  service_principal_id=ad_sp.id,
+                                                  value=password.result,
+                                                  end_date="2099-01-01T00:00:00Z")
 
-# create service principal password
-sppwd = ServicePrincipalPassword(
-    "aks-app-sp-pwd",
-    service_principal_id=sp.id,
-    end_date="2099-01-01T00:00:00Z",
-    value=PASSWORD,
-)
+# Generate an SSH key
+ssh_key = tls.PrivateKey("ssh-key", algorithm="RSA", rsa_bits=4096)
 
-aks = KubernetesCluster(
-    "aksCluster",
+# Create cluster
+managed_cluster_name = config.get("managedClusterName")
+if managed_cluster_name is None:
+    managed_cluster_name = "azure-native-aks"
+
+managed_cluster = containerservice.ManagedCluster(
+    managed_cluster_name,
     resource_group_name=resource_group.name,
-    kubernetes_version="1.18.6",
-    dns_prefix="dns",
-    linux_profile=KubernetesClusterLinuxProfileArgs(
-        admin_username="aksuser",
-        ssh_key=KubernetesClusterLinuxProfileSshKeyArgs(
-            key_data=SSHKEY
-        )
-    ),
-    service_principal=KubernetesClusterServicePrincipalArgs(
-        client_id=app.application_id,
-        client_secret=sppwd.value
-    ),
-    default_node_pool=KubernetesClusterDefaultNodePoolArgs(
-        name="type1",
-        node_count=2,
-        vm_size="Standard_B2ms",
-    ),
-)
+    addon_profiles={
+        "KubeDashboard": {
+            "enabled": True,
+        },
+    },
+    agent_pool_profiles=[{
+        "count": 3,
+        "max_pods": 110,
+        "mode": "System",
+        "name": "agentpool",
+        "node_labels": {},
+        "os_disk_size_gb": 30,
+        "os_type": "Linux",
+        "type": "VirtualMachineScaleSets",
+        "vm_size": "Standard_DS2_v2",
+    }],
+    enable_rbac=True,
+    kubernetes_version="1.18.14",
+    linux_profile={
+        "admin_username": "testuser",
+        "ssh": {
+            "public_keys": [{
+                "key_data": ssh_key.public_key_openssh,
+            }],
+        },
+    },
+    node_resource_group=f"MC_azure-native-go_{managed_cluster_name}_westus",
+    service_principal_profile={
+        "client_id": ad_app.application_id,
+        "secret": ad_sp_password.value
+    })
 
-k8s_provider = Provider(
-    "k8s", kubeconfig=aks.kube_config_raw,
-)
+creds = pulumi.Output.all(resource_group.name, managed_cluster.name).apply(
+    lambda args:
+    containerservice.list_managed_cluster_user_credentials(
+        resource_group_name=args[0],
+        resource_name=args[1]))
 
-labels = {"app": "nginx"}
-nginx = Deployment(
-    "k8s-nginx",
-    spec=DeploymentSpecArgs(
-        selector=LabelSelectorArgs(match_labels=labels),
-        replicas=1,
-        template=PodTemplateSpecArgs(
-            metadata=ObjectMetaArgs(labels=labels),
-            spec=PodSpecArgs(containers=[ContainerArgs(name="nginx", image="nginx")]),
-        ),
-    ),
-    opts=ResourceOptions(parent=k8s_provider, provider=k8s_provider),
-)
-
-ingress = Service(
-    "k8s-nginx",
-    spec=ServiceSpecArgs(type="LoadBalancer", selector=labels, ports=[ServicePortArgs(port=80)]),
-    opts=ResourceOptions(parent=k8s_provider, provider=k8s_provider),
-)
-
-pulumi.export("kubeconfig", aks.kube_config_raw)
+# Export kubeconfig
+encoded = creds.kubeconfigs[0].value
+kubeconfig = encoded.apply(
+    lambda enc: base64.b64decode(enc).decode())
+pulumi.export("kubeconfig", kubeconfig)

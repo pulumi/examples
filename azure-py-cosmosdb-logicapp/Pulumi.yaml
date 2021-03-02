@@ -1,0 +1,6 @@
+name: azure-cosmosdb-logicapp
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: An example of creating a CosmosDB container through a Azure's Cosmos SDK and deploying a Logic App and an API Connection

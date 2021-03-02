@@ -32,9 +32,3 @@ template:
     suffix:
       description: A short string appended to each name to allow multiple stacks (optional)
       default: ae
-    azure:environment:
-      description: Azure environment to deploy to (`public`, `usgovernment`, `german`, `china`)
-      default: public
-    azure:location:
-      description: Azure region to deploy to (e.g. `australiaeast` or `australiasoutheast`)
-      default: australiaeast

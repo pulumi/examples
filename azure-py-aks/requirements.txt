@@ -1,4 +1,5 @@
 pulumi>=2.0.0,<3.0.0
-pulumi-azure>=3.0.0,<4.0.0
-pulumi-azuread>=2.4.0
-pulumi-kubernetes>=2.0.0,<3.0.0
+pulumi-azuread>=2.4.0,<3.0.0
+pulumi-azure-native>=0.7.1
+pulumi-random>=2.2.0
+pulumi-tls>=2.2.0

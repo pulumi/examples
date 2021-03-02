@@ -1,6 +1,0 @@
-name: azure-nextgen-py-synapse
-runtime:
-  name: python
-  options:
-    virtualenv: venv
-description: Creates Azure Synapse workspace with SQL and Spark pools

@@ -1,11 +1,3 @@
 name: azure-cs-aks
-description: Creates an Azure Kubernetes Service (AKS) cluster
 runtime: dotnet
-template:
-  config:
-    azure:location:
-      description: The Azure location to use
-      default: westus
-    kubernetesVersion:
-      description: The Kubernetes version to deploy
-      default: 1.16.9
+description: A C# Pulumi program to provision an Azure Kubernetes Service (AKS) cluster

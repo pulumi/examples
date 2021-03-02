@@ -1,10 +1,10 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
 # Static Website Using Azure Blob Storage and CDN
+Based on https://github.com/zemien/static-website-ARM-template
 
-This example configures [Static website hosting in Azure Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website). One complication is the fact that the Static Website feature of Storage Accounts is not part of Azure Resource Manager, and is not configurable directly via Pulumi Azure provider.
 
-As a workaround, a custom [dynamic provider](https://www.pulumi.com/docs/intro/concepts/resources/#dynamicproviders) and a dynamic resource are created. The provider delegates the setup to Azure CLI commands, while still providing Pulumi experience and lifecycle management.
+This example configures [Static website hosting in Azure Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
 
 In addition to the Storage itself, a CDN is configured to serve files from the Blob container origin. This may be useful if you need to serve files via HTTPS from a custom domain (not shown in the example).
 
@@ -28,6 +28,12 @@ In addition to the Storage itself, a CDN is configured to serve files from the B
     $ npm install
     ```
 
+1.  Set the Azure region location to use:
+
+    ```
+    $ pulumi config set azure-native:location westus
+    ```
+
 1.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
@@ -38,7 +44,7 @@ In addition to the Storage itself, a CDN is configured to serve files from the B
     Performing changes:
     ...
     Resources:
-        + 8 created
+        + 9 created
     Duration: 2m52s
     ```
 
@@ -50,7 +56,7 @@ In addition to the Storage itself, a CDN is configured to serve files from the B
     $ curl "$(pulumi stack output staticEndpoint)"
     <html>
         <body>
-            <h1>This file is served from Blob Storage</h1>
+            <h1>This file is served from Blob Storage (courtesy of Pulumi!)</h1>
         </body>
     </html>
     ```

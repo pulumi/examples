@@ -14,7 +14,7 @@ The example shows two scenarios:
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init azure-appservice-docker
+    $ pulumi stack init dev
     ```
 
 1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
@@ -32,7 +32,7 @@ The example shows two scenarios:
 1. Set the Azure region location to use:
     
     ```
-    $ pulumi config set azure:location westus2
+    $ pulumi config set azure-native:location westus2
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
@@ -45,22 +45,22 @@ The example shows two scenarios:
     Performing changes:
     ...
     Resources:
-        + 7 created
+        + 8 created
 
-    Duration: 4m56s
+    Duration: 56s
     ```
 
 1.  Check the deployed endpoints:
 
     ```
-    $ pulumi stack output helloEndpoint
-    http://hello-app91dfea21.azurewebsites.net/hello
-    $ curl "$(pulumi stack output helloEndpoint)"
+    $ pulumi stack output HelloEndpoint
+    http://hello-app-91dfea.azurewebsites.net/hello
+    $ curl "$(pulumi stack output HelloEndpoint)"
     Hello, world!
 
-    $ pulumi stack output getStartedEndpoint
-    http://get-started15da1348.azurewebsites.net
-    $ curl "$(pulumi stack output getStartedEndpoint)"
+    $ pulumi stack output GetStartedEndpoint
+    http://get-started-15da13.azurewebsites.net
+    $ curl "$(pulumi stack output GetStartedEndpoint)"
     <html>
     <body>
     <h1>Your custom docker image is running in Azure App Service!</h1>

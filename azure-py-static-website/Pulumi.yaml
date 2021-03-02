@@ -1,0 +1,6 @@
+name: azure-py-static-website
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: An example of a static website hosted on Azure Blob Storage + Azure CDN.

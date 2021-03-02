@@ -1,0 +1,3 @@
+name: azure-ts-webapp-privateendpoint-vnet-injection
+runtime: nodejs
+description: Deploy two App Services - Front web app with VNet injection and Back web app with a Private Endpoint.

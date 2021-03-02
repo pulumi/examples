@@ -1,48 +1,44 @@
-import pulumi
-from pulumi import Output
-from pulumi_azure import core, compute, network
+# Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
-config = pulumi.Config()
+import base64
+from pulumi import Config, Output, export
+import pulumi_azure_native.compute as compute
+import pulumi_azure_native.network as network
+import pulumi_azure_native.resources as resources
+
+config = Config()
 username = config.require("username")
-password = config.require_secret("password")
+password = config.require("password")
 
-resource_group = core.ResourceGroup("server", location="West US")
+resource_group = resources.ResourceGroup("server")
 
 net = network.VirtualNetwork(
     "server-network",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
-    address_spaces=["10.0.0.0/16"],
-    subnets=[network.VirtualNetworkSubnetArgs(
+    address_space=network.AddressSpaceArgs(
+        address_prefixes=["10.0.0.0/16"],
+    ),
+    subnets=[network.SubnetArgs(
         name="default",
         address_prefix="10.0.1.0/24",
     )])
 
-subnet = network.Subnet(
-    "server-subnet",
-    resource_group_name=resource_group.name,
-    virtual_network_name=net.name,
-    address_prefixes=["10.0.2.0/24"],
-    enforce_private_link_endpoint_network_policies=False)
-
-public_ip = network.PublicIp(
+public_ip = network.PublicIPAddress(
     "server-ip",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
-    allocation_method="Dynamic")
+    public_ip_allocation_method=network.IPAllocationMethod.DYNAMIC)
 
 network_iface = network.NetworkInterface(
     "server-nic",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
-    ip_configurations=[network.NetworkInterfaceIpConfigurationArgs(
+    ip_configurations=[network.NetworkInterfaceIPConfigurationArgs(
         name="webserveripcfg",
-        subnet_id=subnet.id,
-        private_ip_address_allocation="Dynamic",
-        public_ip_address_id=public_ip.id,
+        subnet=network.SubnetArgs(id=net.subnets[0].id),
+        private_ip_allocation_method=network.IPAllocationMethod.DYNAMIC,
+        public_ip_address=network.PublicIPAddressArgs(id=public_ip.id),
     )])
 
-userdata = """#!/bin/bash
+init_script = """#!/bin/bash
 
 echo "Hello, World!" > index.html
 nohup python -m SimpleHTTPServer 80 &"""
@@ -50,33 +46,39 @@ nohup python -m SimpleHTTPServer 80 &"""
 vm = compute.VirtualMachine(
     "server-vm",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
-    network_interface_ids=[network_iface.id],
-    vm_size="Standard_A0",
-    delete_data_disks_on_termination=True,
-    delete_os_disk_on_termination=True,
-    os_profile=compute.VirtualMachineOsProfileArgs(
+    network_profile=compute.NetworkProfileArgs(
+        network_interfaces=[
+            compute.NetworkInterfaceReferenceArgs(id=network_iface.id),
+        ],
+    ),
+    hardware_profile=compute.HardwareProfileArgs(
+        vm_size=compute.VirtualMachineSizeTypes.STANDARD_A0,
+    ),
+    os_profile=compute.OSProfileArgs(
         computer_name="hostname",
         admin_username=username,
         admin_password=password,
-        custom_data=userdata,
+        custom_data=base64.b64encode(init_script.encode("ascii")).decode("ascii"),
+        linux_configuration=compute.LinuxConfigurationArgs(
+            disable_password_authentication=False,
+        ),
     ),
-    os_profile_linux_config=compute.VirtualMachineOsProfileLinuxConfigArgs(
-        disable_password_authentication=False,
-    ),
-    storage_os_disk=compute.VirtualMachineStorageOsDiskArgs(
-        create_option="FromImage",
-        name="myosdisk1",
-    ),
-    storage_image_reference=compute.VirtualMachineStorageImageReferenceArgs(
-        publisher="canonical",
-        offer="UbuntuServer",
-        sku="16.04-LTS",
-        version="latest",
+    storage_profile=compute.StorageProfileArgs(
+        os_disk=compute.OSDiskArgs(
+            create_option=compute.DiskCreateOptionTypes.FROM_IMAGE,
+            name="myosdisk1",
+        ),
+        image_reference=compute.ImageReferenceArgs(
+            publisher="canonical",
+            offer="UbuntuServer",
+            sku="16.04-LTS",
+            version="latest",
+        ),
     ))
 
-combined_output = Output.all(vm.id, public_ip.name, public_ip.resource_group_name)
+combined_output = Output.all(vm.id, public_ip.name, resource_group.name)
 public_ip_addr = combined_output.apply(
-    lambda lst: network.get_public_ip(name=lst[1], resource_group_name=lst[2]))
-
-pulumi.export("public_ip", public_ip_addr.ip_address)
+    lambda lst: network.get_public_ip_address(
+        public_ip_address_name=lst[1], 
+        resource_group_name=lst[2]))
+export("public_ip", public_ip_addr.ip_address)

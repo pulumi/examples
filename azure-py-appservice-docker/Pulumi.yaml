@@ -3,12 +3,9 @@ runtime:
   name: python
   options:
     virtualenv: venv
-description: Creates Azure App Service running Docker containers on Linux in Python
+description: Creates Azure App Service and Deploys Docker images to
 template:
   config:
-    azure:environment:
-      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
-      default: public
-    azure:location:
-      description: The Azure location to use
+    location:
+      description: Azure region to deploy resources to
       default: WestUS

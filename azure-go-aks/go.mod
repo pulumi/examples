@@ -1,12 +1,11 @@
-module github.com/pulumi/examples/azure-go-aks
+module goaks
 
-go 1.13
+go 1.15
 
 require (
-	github.com/pulumi/pulumi-azure/sdk/v3 v3.0.0
-	github.com/pulumi/pulumi-azuread/sdk/v2 v2.0.1
-	github.com/pulumi/pulumi-kubernetes/sdk/v2 v2.0.0
-	github.com/pulumi/pulumi-random/sdk/v2 v2.0.0
-	github.com/pulumi/pulumi-tls/sdk/v2 v2.0.0
-	github.com/pulumi/pulumi/sdk/v2 v2.0.0
+	github.com/pulumi/pulumi-azure-native/sdk v0.7.1
+	github.com/pulumi/pulumi-azuread/sdk/v2 v2.4.0
+	github.com/pulumi/pulumi-random/sdk/v2 v2.2.0
+	github.com/pulumi/pulumi-tls/sdk/v2 v2.3.0
+	github.com/pulumi/pulumi/sdk/v2 v2.21.2
 )

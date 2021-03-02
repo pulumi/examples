@@ -1,53 +1,65 @@
-// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-import * as azure from "@pulumi/azure";
+import * as cdn from "@pulumi/azure-native/cdn";
+import * as resources from "@pulumi/azure-native/resources";
+import * as storage from "@pulumi/azure-native/storage";
 import * as pulumi from "@pulumi/pulumi";
 
-// Create an Azure Resource Group
-const resourceGroup = new azure.core.ResourceGroup("website-rg", {
-    location: azure.Locations.WestUS,
+const resourceGroup = new resources.ResourceGroup("resourceGroup");
+
+const profile = new cdn.Profile("profile", {
+    resourceGroupName: resourceGroup.name,
+    sku: {
+        name: cdn.SkuName.Standard_Microsoft,
+    },
 });
 
-// Create a Storage Account for our static website
-const storageAccount = new azure.storage.Account("websitesa", {
+const storageAccount = new storage.StorageAccount("storageaccount", {
+    enableHttpsTrafficOnly: true,
+    kind: storage.Kind.StorageV2,
     resourceGroupName: resourceGroup.name,
-    accountReplicationType: "LRS",
-    accountTier: "Standard",
-    accountKind: "StorageV2",
-    staticWebsite: {
-        indexDocument: "index.html",
+    sku: {
+        name: storage.SkuName.Standard_LRS,
     },
+});
+
+// Enable static website support
+const staticWebsite = new storage.StorageAccountStaticWebsite("staticWebsite", {
+    accountName: storageAccount.name,
+    resourceGroupName: resourceGroup.name,
+    indexDocument: "index.html",
+    error404Document: "404.html",
 });
 
 // Upload the files
 ["index.html", "404.html"].map(name =>
-    new azure.storage.Blob(name, {
-        name,
-        storageAccountName: storageAccount.name,
-        storageContainerName: "$web",
-        type: "Block",
+    new storage.Blob(name, {
+        resourceGroupName: resourceGroup.name,
+        accountName: storageAccount.name,
+        containerName: staticWebsite.containerName,
         source: new pulumi.asset.FileAsset(`./wwwroot/${name}`),
         contentType: "text/html",
     }),
 );
 
 // Web endpoint to the website
-export const staticEndpoint = storageAccount.primaryWebEndpoint;
+export const staticEndpoint = storageAccount.primaryEndpoints.web;
 
-// We can add a CDN in front of the website
-const cdn =  new azure.cdn.Profile("website-cdn", {
-    resourceGroupName: resourceGroup.name,
-    sku: "Standard_Microsoft",
-});
-
-const endpoint = new azure.cdn.Endpoint("website-cdn-ep", {
-    resourceGroupName: resourceGroup.name,
-    profileName: cdn.name,
-    originHostHeader: storageAccount.primaryWebHost,
+// Optionally, add a CDN.
+const endpointOrigin = storageAccount.primaryEndpoints.apply(ep => ep.web.replace("https://", "").replace("/", ""));
+const endpoint = new cdn.Endpoint("endpoint", {
+    endpointName: storageAccount.name.apply(sa => `cdn-endpnt-${sa}`),
+    isHttpAllowed: false,
+    isHttpsAllowed: true,
+    originHostHeader: endpointOrigin,
     origins: [{
-        name: "blobstorage",
-        hostName: storageAccount.primaryWebHost,
+        hostName: endpointOrigin,
+        httpsPort: 443,
+        name: "origin-storage-account",
     }],
+    profileName: profile.name,
+    queryStringCachingBehavior: cdn.QueryStringCachingBehavior.NotSet,
+    resourceGroupName: resourceGroup.name,
 });
 
 // CDN endpoint to the website.

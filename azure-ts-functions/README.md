@@ -1,15 +1,15 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Azure Functions
+# Deploying Azure Functions
 
-An example Pulumi program that deploys a TypeScript function to Azure Functions.
+Starting point for building serverless applications hosted in Azure Functions.
 
 ## Running the App
 
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init azure-fn
+    $ pulumi stack init dev
     ```
 
 1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
@@ -23,33 +23,33 @@ An example Pulumi program that deploys a TypeScript function to Azure Functions.
     ```
     $ npm install
     ```
-
-1.  Configure the location to deploy the example to:
-
+    
+1. Set the Azure region location to use:
+    
     ```
-    $ pulumi config set azure:location <location>
+    $ pulumi config set azure-native:location westus2
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...
 
     Performing changes:
     ...
-    info: 9 changes performed:
-        + 9 resources created
-    Update duration: 1m20.493392283s
+    Resources:
+        + 8 created
+
+    Duration: 1m18s
     ```
 
-1.  Check the deployed function endpoint:
+1.  Check the deployed endpoint:
 
     ```
     $ pulumi stack output endpoint
-    https://fn-app051a4f8b.azurewebsites.net/api/fn
+    https://appg-fsprfojnnlr.azurewebsites.net/api/HelloNode?name=Pulumi
     $ curl "$(pulumi stack output endpoint)"
-    Greetings from Azure Functions!
-    ...
+    Hello from Node.js, Pulumi
     ```

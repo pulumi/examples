@@ -14,7 +14,6 @@
         "strictNullChecks": true
     },
     "files": [
-        "index.ts",
-        "staticWebsite.ts"
+        "index.ts"
     ]
 }

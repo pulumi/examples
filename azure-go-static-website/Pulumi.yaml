@@ -1,0 +1,3 @@
+name: azure-go-static-website
+runtime: go
+description: An example of a static website hosted on Azure Blob Storage + Azure CDN.

@@ -1,0 +1,16 @@
+name: azure-py-minecraft
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Basic example of an Azure web server accessible over HTTP
+template:
+  config:
+    location:
+      description: The Azure location to deploy to
+      default: westus
+    username:
+      description: The username used to configure the Virtual Machine
+    password:
+      description: The password used to configure the Virtual Machine
+      secret: true

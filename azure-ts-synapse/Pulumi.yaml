@@ -1,0 +1,3 @@
+name: azure-ts-synapse
+runtime: nodejs
+description: Creates Azure Synapse workspace with SQL and Spark pools

@@ -1,0 +1,15 @@
+{
+  "scriptFile" : "../fabrikam-functions-1.0-SNAPSHOT.jar",
+  "entryPoint" : "com.fabrikam.functions.Function.run",
+  "bindings" : [ {
+    "type" : "httpTrigger",
+    "direction" : "in",
+    "name" : "req",
+    "methods" : [ "GET", "POST" ],
+    "authLevel" : "ANONYMOUS"
+  }, {
+    "type" : "http",
+    "direction" : "out",
+    "name" : "$return"
+  } ]
+}

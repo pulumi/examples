@@ -4,7 +4,10 @@
 
 Starting point for building a web application hosted in Azure App Service from Docker images.
 
-The example deploys an existing image from Docker Hub
+The example shows two scenarios:
+
+- Deploying an existing image from Docker Hub
+- Deploying a new custom registry in Azure Container Registry, building a custom Docker image, and running the image from the custom registry
 
 ## Running the App
 
@@ -19,11 +22,21 @@ The example deploys an existing image from Docker Hub
     ```bash
     $ az login
     ```
+   
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+   This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip3 install -r requirements.txt
+    ```
 
 1. Specify the Azure location to use:
 
     ```bash
-    $ pulumi config set azure:location WestUS
+    $ pulumi config set azure-native:location WestUS
     ```
 
 1. Run `pulumi up` to preview and deploy changes:
@@ -36,16 +49,26 @@ The example deploys an existing image from Docker Hub
     Performing changes:
     ...
     Resources:
-        + 4 created
+        + 8 created
 
-    Duration: 4m56s
+    Duration: 56s
     ```
 
 1. Check the deployed endpoints:
 
     ```bash
-    $ pulumi stack output hello_endpoint
+    $ pulumi stack output helloEndpoint
     http://hello-app91dfea21.azurewebsites.net/hello
-    $ curl "$(pulumi stack output hello_endpoint)"
+    $ curl "$(pulumi stack output helloEndpoint)"
     Hello, world!
+    ```
+    
+    $ pulumi stack output getStartedEndpoint
+    http://get-started-15da13.azurewebsites.net
+    $ curl "$(pulumi stack output getStartedEndpoint)"
+    <html>
+    <body>
+    <h1>Your custom docker image is running in Azure App Service!</h1>
+    </body>
+    </html>
     ```

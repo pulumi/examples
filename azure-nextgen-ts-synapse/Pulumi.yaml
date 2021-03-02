@@ -1,3 +1,0 @@
-name: azure-nextgen-ts-synapse
-runtime: nodejs
-description: Creates Azure Synapse workspace with SQL and Spark pools

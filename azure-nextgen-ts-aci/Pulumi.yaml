@@ -1,8 +1,0 @@
-name: azureng-ts-aci
-runtime: nodejs
-description: Creates Azure Container Instance with a public IP
-template:
-  config:
-    location:
-      description: Azure region to deploy resources to
-      default: WestUS

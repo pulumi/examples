@@ -1,9 +1,11 @@
 from ipaddress import ip_address, ip_network
 from pulumi import Config, get_stack, get_project, StackReference
 
+
 class Error(Exception):
     """Base class for exceptions in this module."""
     pass
+
 
 class ConfigError(Error):
     """Exception raised for errors in Pulumi Config.
@@ -12,18 +14,14 @@ class ConfigError(Error):
         keys -- Config keys with the error
         message -- explanation of the error
     """
+
     def __init__(self, keys: [str], message: str):
         self.keys = keys
         self.message = message
 
+
 # retrieve the stack configuration data
 config = Config()
-
-# retrieve the location
-location = config.get('location')
-if not location:
-    azcfg = Config('azure')
-    azloc = azcfg.require('location')
 
 # retrieve optional separator choice and suffix
 separator = config.get('separator') or '-'
@@ -48,17 +46,17 @@ azure_bastion = config.get_bool('azure_bastion')
 # Azure Firewall to route all Internet-bound traffic to designated next hop
 forced_tunnel = config.get('forced_tunnel')
 if forced_tunnel:
-    ft_ip = ip_address(forced_tunnel) # check IP address is valid
+    ft_ip = ip_address(forced_tunnel)  # check IP address is valid
 
 # another stack may be peered in the same project, even across organizations
 peer = config.get('peer')
 porg = config.get('org')
 proj = config.get('project')
-if porg and not proj: # assume the same project in other organization
+if porg and not proj:  # assume the same project in other organization
     proj = project
-if not porg: # assume the same organization
+if not porg:  # assume the same organization
     porg = ''
-if not proj: # assume the same project
+if not proj:  # assume the same project
     proj = ''
 if not peer:
     reference = None
@@ -85,9 +83,9 @@ if fwz_nw.overlaps(hub_nw):
     )
 
 # locate hub_address_space within supernet for contiguous spoke_address_space
-sup_diff = hub_nw.prefixlen - 8 # largest private IPv4 network is 10/8
+sup_diff = hub_nw.prefixlen - 8  # largest private IPv4 network is 10/8
 super_nw = hub_nw.supernet(prefixlen_diff=sup_diff)
-while not super_nw.is_private: # accommodate longer private network prefixes
+while not super_nw.is_private:  # accommodate longer private network prefixes
     sup_diff = sup_diff - 1
     super_nw = hub_nw.supernet(prefixlen_diff=sup_diff)
 if sup_diff <= 0:

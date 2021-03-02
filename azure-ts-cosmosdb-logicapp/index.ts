@@ -1,182 +1,151 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-import * as azure from "@pulumi/azure";
+import * as authorization from "@pulumi/azure-native/authorization";
+import * as documentdb from "@pulumi/azure-native/documentdb";
+import * as logic from "@pulumi/azure-native/logic";
+import * as resources from "@pulumi/azure-native/resources";
+import * as storage from "@pulumi/azure-native/storage";
+import * as web from "@pulumi/azure-native/web";
 import * as pulumi from "@pulumi/pulumi";
 
 // Create an Azure Resource Group
-const resourceGroup = new azure.core.ResourceGroup("logicappdemo-rg");
+const resourceGroup = new resources.ResourceGroup("logicappdemo-rg");
 
 // Create an Azure resource (Storage Account)
-const storageAccount = new azure.storage.Account("logicappdemosa", {
+const storageAccount = new storage.StorageAccount("logicappdemosa", {
     resourceGroupName: resourceGroup.name,
-    accountReplicationType: "LRS",
-    accountTier: "Standard",
-    accountKind: "StorageV2",
+    sku: {
+        name: storage.SkuName.Standard_LRS,
+    },
+    kind: storage.Kind.StorageV2,
 });
 
 // Cosmos DB Account
-const cosmosdbAccount = new azure.cosmosdb.Account("logicappdemo-cdb", {
+const cosmosdbAccount = new documentdb.DatabaseAccount("logicappdemo-cdb", {
     resourceGroupName: resourceGroup.name,
-    location: resourceGroup.location,
-    offerType: "Standard",
-    geoLocations: [{ location: resourceGroup.location, failoverPriority: 0 }],
+    databaseAccountOfferType: documentdb.DatabaseAccountOfferType.Standard,
+    locations: [{
+        locationName: resourceGroup.location,
+        failoverPriority: 0,
+    }],
     consistencyPolicy: {
-        consistencyLevel: "Session",
+        defaultConsistencyLevel: documentdb.DefaultConsistencyLevel.Session,
     },
 });
 
 // Cosmos DB Database
-const db = new azure.cosmosdb.SqlDatabase("db", {
+const db = new documentdb.SqlResourceSqlDatabase("sqldb", {
     resourceGroupName: resourceGroup.name,
     accountName: cosmosdbAccount.name,
+    resource: {
+        id: "sqldb",
+    },
 });
 
 // Cosmos DB SQL Container
-const dbContainer = new azure.cosmosdb.SqlContainer("container", {
+const dbContainer = new documentdb.SqlResourceSqlContainer("container", {
     resourceGroupName: resourceGroup.name,
     accountName: cosmosdbAccount.name,
     databaseName: db.name,
+    resource: {
+        id: "container",
+        partitionKey: {
+            paths: ["/myPartitionKey"],
+            kind: "Hash",
+        },
+    },
 });
 
-/*
- * API Connection to be used in a Logic App
- */
+const accountKeys = pulumi
+    .all([cosmosdbAccount.name, resourceGroup.name])
+    .apply(([cosmosdbAccountName, resourceGroupName]) => documentdb.listDatabaseAccountKeys({
+        accountName: cosmosdbAccountName,
+        resourceGroupName: resourceGroupName,
+    }));
 
-// Calculate the subscription path
-const subscriptionId = resourceGroup.id.apply(id => {
-    const splitId = id.split("/");
-    return `/${splitId[1]}/${splitId[2]}`;
+const clientConfig = pulumi.output(authorization.getClientConfig());
+
+const apiId = pulumi.interpolate`/subscriptions/${clientConfig.subscriptionId}/providers/Microsoft.Web/locations/${resourceGroup.location}/managedApis/documentdb`;
+
+// API Connection to be used in a Logic App
+const connection = new web.Connection("cosmosdbConnection", {
+    resourceGroupName: resourceGroup.name,
+    properties: {
+        displayName: "cosmosdb_connection",
+        api: {
+            id: apiId,
+        },
+        parameterValues: {
+            databaseAccount: cosmosdbAccount.name,
+            accessKey: accountKeys.primaryMasterKey,
+        },
+    },
 });
 
-// ARM Template with a connection
-const connectionTemplate = {
-    $schema: "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    contentVersion: "1.0.0.0",
-    resources: [{
-        type: "Microsoft.Web/connections",
-        apiVersion: "2016-06-01",
-        name: "cosmosdb-connection",
-        location: resourceGroup.location,
-        properties: {
-            displayName: "cosmosdb_connection",
-            api: {
-                id: pulumi.interpolate`${subscriptionId}/providers/Microsoft.Web/locations/${resourceGroup.location}/managedApis/documentdb`,
-            },
-            parameterValues: {
-                databaseAccount: db.accountName,
-                accessKey: cosmosdbAccount.primaryMasterKey,
+// Logic App with an HTTP trigger and Cosmos DB action
+const workflow = new logic.Workflow("httpToCosmos", {
+    resourceGroupName: resourceGroup.name,
+    definition: {
+        $schema: "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        contentVersion: "1.0.0.0",
+        parameters: {
+            $connections: {
+                defaultValue: {},
+                type: "Object",
             },
         },
-    }],
-};
-
-// Template deployment
-const cosmosdbConnection = new azure.core.TemplateDeployment("db-connection", {
-    resourceGroupName: resourceGroup.name,
-    templateBody: pulumi.output(connectionTemplate).apply(JSON.stringify),
-    deploymentMode: "Incremental",
-}, { dependsOn: [cosmosdbAccount, db, dbContainer] });
-
-/*
- * Logic App with an HTTP trigger and Cosmos DB action
- */
-
- // ARM Template with a Logic App listening to an HTTP endpoint
-const processUrlTemplate = {
-    $schema: "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    contentVersion: "1.0.0.0",
+        triggers: {
+            Receive_post: {
+                type: "Request",
+                kind: "Http",
+                inputs: {
+                    method: "POST",
+                    schema: {
+                        properties: {},
+                        type: "object",
+                    },
+                },
+            },
+        },
+        actions: {
+            write_body: {
+                type: "ApiConnection",
+                inputs: {
+                    body: {
+                        data: "@triggerBody()",
+                        id: "@utcNow()",
+                    },
+                    host: {
+                        connection: {
+                            name: `@parameters('$connections')['documentdb']['connectionId']`,
+                        },
+                    },
+                    method: "post",
+                    path: pulumi.interpolate`/dbs/${db.name}/colls/${dbContainer.name}/docs`,
+                },
+            },
+        },
+    },
     parameters: {
-        connections_cosmosdb_externalid: {
-            defaultValue: pulumi.interpolate`${resourceGroup.id}/providers/Microsoft.Web/connections/${connectionTemplate.resources[0].name}`,
-            type: "String",
-        },
-    },
-    outputs: {
-        endpoint: {
-            type: "String",
-            value: pulumi.interpolate`[listCallbackUrl(resourceId('${resourceGroup.name}','Microsoft.Logic/workflows/triggers', 'http-to-cosmos', 'Receive_post'), '2016-06-01').value]`,
-        },
-    },
-    variables: {},
-    resources: [
-        {
-            type: "Microsoft.Logic/workflows",
-            apiVersion: "2017-07-01",
-            name: "http-to-cosmos",
-            location: resourceGroup.location,
-            properties: {
-                state: "Enabled",
-                definition: {
-                    $schema: "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-                    contentVersion: "1.0.0.0",
-                    parameters: {
-                        $connections: {
-                            defaultValue: {},
-                            type: "Object",
-                        },
-                    },
-                    triggers: {
-                        Receive_post: {
-                            type: "Request",
-                            kind: "Http",
-                            inputs: {
-                                method: "POST",
-                                schema: {
-                                    properties: {},
-                                    type: "object",
-                                },
-                            },
-                        },
-                    },
-                    actions: {
-                    },
-                },
-                parameters: {
-                    $connections: {
-                        value: {
-                            documentdb: {
-                                connectionId: "[parameters('connections_cosmosdb_externalid')]",
-                                connectionName: "logicapp-cosmosdb-connection",
-                                id: pulumi.interpolate`${connectionTemplate.resources[0].properties.api.id}`,
-                            },
-                        },
-                    },
+        $connections: {
+            value: {
+                documentdb: {
+                    connectionId: connection.id,
+                    connectionName: "logicapp-cosmosdb-connection",
+                    id: apiId,
                 },
             },
         },
-    ],
-};
-
-// Template deployment
-const procesUrlWorkflow = new azure.core.TemplateDeployment("logic-app", {
-    resourceGroupName: resourceGroup.name,
-    templateBody: pulumi.output(processUrlTemplate).apply(JSON.stringify),
-    deploymentMode: "Incremental",
-}, { dependsOn: [cosmosdbConnection] });
-
-// Definition of an action to insert a document into the Cosmos DB collection
-const insertActionBody = {
-    type: "ApiConnection",
-    inputs: {
-        body: {
-            data: "@triggerBody()",
-            id: "@utcNow()",
-        },
-        host: {
-            connection: {
-                name: "@parameters('$connections')['documentdb']['connectionId']",
-            },
-        },
-        method: "post",
-        path: pulumi.interpolate`/dbs/${db.name}/colls/${dbContainer.name}/docs`,
     },
-};
+});
 
-const insertAction = new azure.logicapps.ActionCustom("Create_or_update_document", {
-    logicAppId: pulumi.interpolate`${resourceGroup.id}/providers/Microsoft.Logic/workflows/${processUrlTemplate.resources[0].name}`,
-    name: "Create_or_update_document",
-    body: pulumi.output(insertActionBody).apply(JSON.stringify),
-}, { dependsOn: [procesUrlWorkflow] });
+const callbackUrls = pulumi
+    .all([resourceGroup.name, workflow.name])
+    .apply(([resourceGroupName, workflowName]) => logic.listWorkflowTriggerCallbackUrl({
+        resourceGroupName: resourceGroupName,
+        workflowName: workflowName,
+        triggerName: "Receive_post",
+    }));
 
 // Export the HTTP endpoint
-export const endpoint = procesUrlWorkflow.outputs["endpoint"];
+export const endpoint = callbackUrls.value;

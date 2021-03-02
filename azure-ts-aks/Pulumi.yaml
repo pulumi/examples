@@ -1,0 +1,3 @@
+name: azure-ts-aks
+runtime: nodejs
+description: A minimal Azure AKS TypeScript Pulumi program

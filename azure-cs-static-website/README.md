@@ -1,11 +1,10 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Static Website Using Azure Blob Storage
+# Static Website Using Azure Blob Storage and CDN
 
-This example configures [Static website hosting in Azure Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website). One complication is the fact that the Static Website feature of Storage Accounts is not part of Azure Resource Manager, and is not configurable directly via Pulumi Azure provider.
+This example configures [Static website hosting in Azure Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
 
-As a workaround we use the Azure storage SDK to enable the feature directly in the C# code, while still providing the Pulumi experience and lifecycle management.
-
+In addition to the Storage itself, a CDN is configured to serve files from the Blob container origin. This may be useful if you need to serve files via HTTPS from a custom domain (not shown in the example).
 
 ## Running the App
 
@@ -15,19 +14,18 @@ As a workaround we use the Azure storage SDK to enable the feature directly in t
     $ pulumi stack init dev
     ```
 
-2.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```
     $ az login
     ```
-
-3.  Restore dotnet dependencies
-
+1. Set the Azure region location to use:
+    
     ```
-    $ dotnet restore
+    $ pulumi config set azure-native:location westus
     ```
 
-4.  Run `pulumi up` to preview and deploy changes:
+1.  Run `pulumi up` to preview and deploy changes:
 
     ``` 
     $ pulumi up
@@ -36,24 +34,20 @@ As a workaround we use the Azure storage SDK to enable the feature directly in t
 
     Performing changes:
     ...
-    Outputs:
-        StaticEndpoint: "https://mysitebc97f8a0.z6.web.core.windows.net/"
-
     Resources:
-        + 5 created
-
-    Duration: 30s
+        + 9 created
+    Duration: 2m52s
     ```
 
-5.  Check the deployed website endpoint:
+1.  Check the deployed website endpoint:
 
     ```
-    $ pulumi stack output StaticEndpoint
-    https://mysitebc97f8a0.z6.web.core.windows.net/
-    $ curl "$(pulumi stack output StaticEndpoint)"
+    $ pulumi stack output staticEndpoint
+    https://websitesbc90978a1.z20.web.core.windows.net/
+    $ curl "$(pulumi stack output staticEndpoint)"
     <html>
         <body>
-            <h1>This file is served from Blob Storage</h1>
+            <h1>This file is served from Blob Storage (courtesy of Pulumi!)</h1>
         </body>
     </html>
     ```

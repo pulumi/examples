@@ -3,4 +3,4 @@ runtime:
   name: python
   options:
     virtualenv: venv
-description: A minimal Azure Python Pulumi program
+description: Using the native Azure provider to create AKS cluster with python

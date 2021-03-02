@@ -12,8 +12,6 @@ This example provisions a Linux web server in an Azure Virtual Machine and gives
 
 ## Running the App
 
-After cloning this repo, from this working directory, run these commands:
-
 1.  Create a new stack:
 
     ```
@@ -25,9 +23,9 @@ After cloning this repo, from this working directory, run these commands:
     https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq#what-are-the-password-requirements-when-creating-a-vm).
 
     ```
-    $ pulumi config set azure:location westus    # any valid Azure region will do
+    $ pulumi config set azure-native:location westus    # any valid Azure region will do
     $ pulumi config set username webmaster
-    $ pulumi config set password <your-password> --secret
+    $ pulumi config set password --secret <your-password> 
     ```
 
     Note that `--secret` ensures your password is encrypted safely.

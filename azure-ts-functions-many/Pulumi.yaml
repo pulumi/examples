@@ -1,0 +1,7 @@
+name: azure-ts-functions-many
+runtime: nodejs
+description: Azure Functions created from raw deployment packages in all supported languages
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy resources to (e.g., `eastus` or `westeurope`)

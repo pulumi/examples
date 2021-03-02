@@ -1,8 +1,5 @@
-name: azure--pyappservice
-runtime:
-  name: python
-  options:
-    virtualenv: venv
+name: azure-py-appservice
+runtime: python
 description: Creates Azure App Service with SQL Database and Application Insights in Python
 template:
   config:
