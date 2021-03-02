@@ -15,45 +15,12 @@ const profile = new cdn.Profile("profile", {
 });
 
 const storageAccount = new storage.StorageAccount("storageaccount", {
-    accessTier: storage.AccessTier.Hot,
     enableHttpsTrafficOnly: true,
-    encryption: {
-        keySource: storage.KeySource.Microsoft_Storage,
-        services: {
-            blob: {
-                enabled: true,
-            },
-            file: {
-                enabled: true,
-            },
-        },
-    },
     kind: storage.Kind.StorageV2,
-    networkRuleSet: {
-        bypass: storage.Bypass.AzureServices,
-        defaultAction: storage.DefaultAction.Allow,
-    },
     resourceGroupName: resourceGroup.name,
     sku: {
         name: storage.SkuName.Standard_LRS,
     },
-});
-
-const endpointOrigin = storageAccount.primaryEndpoints.apply(ep => ep.web.replace("https://", "").replace("/", ""));
-
-const endpoint = new cdn.Endpoint("endpoint", {
-    endpointName: storageAccount.name.apply(sa => `cdn-endpnt-${sa}`),
-    isHttpAllowed: false,
-    isHttpsAllowed: true,
-    originHostHeader: endpointOrigin,
-    origins: [{
-        hostName: endpointOrigin,
-        httpsPort: 443,
-        name: "origin-storage-account",
-    }],
-    profileName: profile.name,
-    queryStringCachingBehavior: cdn.QueryStringCachingBehavior.NotSet,
-    resourceGroupName: resourceGroup.name,
 });
 
 // Enable static website support
@@ -77,6 +44,23 @@ const staticWebsite = new storage.StorageAccountStaticWebsite("staticWebsite", {
 
 // Web endpoint to the website
 export const staticEndpoint = storageAccount.primaryEndpoints.web;
+
+// Optionally, add a CDN.
+const endpointOrigin = storageAccount.primaryEndpoints.apply(ep => ep.web.replace("https://", "").replace("/", ""));
+const endpoint = new cdn.Endpoint("endpoint", {
+    endpointName: storageAccount.name.apply(sa => `cdn-endpnt-${sa}`),
+    isHttpAllowed: false,
+    isHttpsAllowed: true,
+    originHostHeader: endpointOrigin,
+    origins: [{
+        hostName: endpointOrigin,
+        httpsPort: 443,
+        name: "origin-storage-account",
+    }],
+    profileName: profile.name,
+    queryStringCachingBehavior: cdn.QueryStringCachingBehavior.NotSet,
+    resourceGroupName: resourceGroup.name,
+});
 
 // CDN endpoint to the website.
 // Allow it some time after the deployment to get ready.

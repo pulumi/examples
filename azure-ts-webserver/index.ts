@@ -17,7 +17,6 @@ const resourceGroupName = new resources.ResourceGroup("server-rg").name;
 // Create a network and subnet for all VMs.
 const virtualNetwork = new network.VirtualNetwork("server-network", {
     resourceGroupName,
-    virtualNetworkName: "server-network",
     addressSpace: { addressPrefixes: ["10.0.0.0/16"] },
     subnets: [{
         name: "default",

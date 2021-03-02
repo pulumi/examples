@@ -1,4 +1,4 @@
-// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
@@ -7,8 +7,6 @@ import * as authorization from "@pulumi/azure-native/authorization";
 import * as resources from "@pulumi/azure-native/resources";
 import * as storage from "@pulumi/azure-native/storage";
 import * as synapse from "@pulumi/azure-native/synapse";
-
-const config = new pulumi.Config();
 
 const resourceGroup = new resources.ResourceGroup("synapse-rg");
 
@@ -26,7 +24,6 @@ const storageAccount = new storage.StorageAccount("synapsesa", {
 const users = new storage.BlobContainer("users", {
     resourceGroupName: resourceGroup.name,
     accountName: storageAccount.name,
-    containerName: "users",
     publicAccess: "None",
 });
 
@@ -48,7 +45,6 @@ const workspace = new synapse.Workspace("my-workspace", {
 const firewallRule = new synapse.IpFirewallRule("allowAll", {
     resourceGroupName: resourceGroup.name,
     workspaceName: workspace.name,
-    ruleName: "allowAll",
     endIpAddress: "255.255.255.255",
     startIpAddress: "0.0.0.0",
 });
@@ -64,10 +60,12 @@ const storageAccess = new authorization.RoleAssignment("storageAccess", {
     roleDefinitionId: roleDefinitionId,
 });
 
+const clientConfig = pulumi.output(authorization.getClientConfig());
+
 const userAccess = new authorization.RoleAssignment("userAccess", {
   roleAssignmentName: new random.RandomUuid("userRoleName").result,
   scope: storageAccount.id,
-  principalId: config.require("userObjectId"),
+  principalId: clientConfig.objectId,
   principalType: authorization.PrincipalType.User,
   roleDefinitionId: roleDefinitionId,
 });

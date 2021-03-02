@@ -30,12 +30,6 @@ Starting point for enterprise analytics solutions based on Azure Synapse.
     $ pulumi config set azure-native:location westus2
     ```
 
-1. Set the user ID to grant access to (e.g., your current user):
-    
-    ```
-    $ pulumi config set userObjectId $(az ad signed-in-user show --query=objectId | tr -d '"')
-    ```
-
 1. Run `pulumi up` to preview and deploy changes:
 
     ```bash

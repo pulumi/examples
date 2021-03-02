@@ -454,8 +454,9 @@ func getAzureBase(t *testing.T) integration.ProgramTestOptions {
 	base := getBaseOptions(t)
 	azureBase := base.With(integration.ProgramTestOptions{
 		Config: map[string]string{
-			"azure:environment": azureEnviron,
-			"azure:location":    azureLocation,
+			"azure:environment":     azureEnviron,
+			"azure:location":        azureLocation,
+			"azure-native:location": azureLocation,
 		},
 	})
 	return azureBase

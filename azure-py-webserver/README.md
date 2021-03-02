@@ -18,20 +18,10 @@ This example deploys an Azure Virtual Machine and starts an HTTP server on it.
     $ pulumi stack init dev
     ```
 
-1. Create a Python virtualenv, activate it, and install dependencies:
-
-   This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
-
-    ```bash
-    $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
-    ```
-
 1. Set the required configuration for this example. This example requires you to supply a username and password to the virtual machine that we are going to create.
 
     ```
-    $ pulumi config set location azure-native:westus    # any valid Azure region will do
+    $ pulumi config set azure-native:location westus    # any valid Azure region will do
     $ pulumi config set username webmaster
     $ pulumi config set password --secret <your-password> 
     ```
