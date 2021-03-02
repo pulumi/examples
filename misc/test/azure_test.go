@@ -32,7 +32,7 @@ func TestAccAzureCsAppService(t *testing.T) {
 func TestAccAzureCsWebserver(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-cs-webserver"),
+			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-cs-webserver"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["IpAddress"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World")
@@ -46,7 +46,7 @@ func TestAccAzureCsWebserver(t *testing.T) {
 func TestAccAzureFsAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-fs-appservice"),
+			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-fs-appservice"),
 			Config: map[string]string{
 				"sqlPassword": "2@Password@2",
 			},
@@ -74,90 +74,13 @@ func TestAccAzureGoAci(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureGoAks(t *testing.T) {
-	t.Skip("The credentials in ServicePrincipalProfile were invalid")
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aks"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["url"], func(body string) bool {
-					return assert.Contains(t, body, "Hello Kubernetes bootcamp!")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureGoAksMulticluster(t *testing.T) {
-	skipIfShort(t)
-	t.Skip("Skipping Azure tests temporarily")
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aks-multicluster"),
-			Config: map[string]string{
-				"password":     "testTEST1234+_^$",
-				"sshPublicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureGoAppservice(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-go-appservice"),
-			Config: map[string]string{
-				"sqlPassword": "2@Password@2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service!")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
 func TestAccAzureGoWebserverComponent(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-go-webserver-component"),
+			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-go-webserver-component"),
 			Config: map[string]string{
 				"username": "webmaster",
 				"password": "Password1234!",
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureJsWebserver(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-js-webserver"),
-			Config: map[string]string{
-				"username": "testuser",
-				"password": "testTEST1234+-*/",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["publicIP"], nil)
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzurePyAks(t *testing.T) {
-	t.Skip("The credentials in ServicePrincipalProfile were invalid")
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-py-aks"),
-			Config: map[string]string{
-				"password": "testTEST1234+_^$",
-				"sshkey":   "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
 			},
 		})
 
@@ -198,21 +121,7 @@ func TestAccAzurePyAppServiceDocker(t *testing.T) {
 func TestAccAzurePyArmTemplate(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-py-arm-template"),
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzurePyHdInsightSpark(t *testing.T) {
-	t.Skip("Skipping HDInsights tests due to a stuck cluster in the account")
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-py-hdinsight-spark"),
-			Config: map[string]string{
-				"username": "testuser",
-				"password": "MyPassword123+-*/",
-			},
+			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-py-arm-template"),
 		})
 
 	integration.ProgramTest(t, &test)
@@ -221,7 +130,7 @@ func TestAccAzurePyHdInsightSpark(t *testing.T) {
 func TestAccAzurePyVmScaleSet(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-py-vm-scaleset"),
+			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-py-vm-scaleset"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["public_address"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "nginx")
@@ -282,7 +191,7 @@ func TestAccAzureTsAppServiceDocker(t *testing.T) {
 func TestAccAzureTsArmTemplate(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-arm-template"),
+			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-ts-arm-template"),
 		})
 
 	integration.ProgramTest(t, &test)
@@ -302,24 +211,10 @@ func TestAccAzureTsFunctions(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsHdInsightSpark(t *testing.T) {
-	t.Skip("Skipping HDInsights tests due to a stuck cluster in the account")
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-hdinsight-spark"),
-			Config: map[string]string{
-				"username": "testuser",
-				"password": "MyPassword123+-*/",
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
 func TestAccAzureTsStreamAnalytics(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-stream-analytics"),
+			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-ts-stream-analytics"),
 		})
 
 	integration.ProgramTest(t, &test)
@@ -328,7 +223,7 @@ func TestAccAzureTsStreamAnalytics(t *testing.T) {
 func TestAccAzureTsVmScaleset(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-vm-scaleset"),
+			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-ts-vm-scaleset"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["publicAddress"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "nginx")
@@ -351,77 +246,6 @@ func TestAccAzureTsWebserver(t *testing.T) {
 				assertHTTPResult(t, stack.Outputs["ipAddress"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World")
 				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsAksHelm(t *testing.T) {
-	skipIfShort(t)
-	t.Skip("Skipping Azure tests temporarily")
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-aks-helm"),
-			Config: map[string]string{
-				"password":     "testTEST1234+_^$",
-				"sshPublicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["serviceIP"], nil, func(body string) bool {
-					return assert.Contains(t, body, "It works!")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsAksKeda(t *testing.T) {
-	skipIfShort(t)
-	t.Skip("Skipping Azure tests temporarily")
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-aks-keda"),
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsAksMulticluster(t *testing.T) {
-	skipIfShort(t)
-	t.Skip("Skipping Azure tests temporarily")
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-aks-multicluster"),
-			Config: map[string]string{
-				"password":     "testTEST1234+_^$",
-				"sshPublicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeREOgHTUgPT00PTr7iQF9JwZQ4QF1VeaLk2nHKRvWYOCiky6hDtzhmLM0k0Ib9Y7cwFbhObR+8yZpCgfSX3Hc3w2I1n6lXFpMfzr+wdbpx97N4fc1EHGUr9qT3UM1COqN6e/BEosQcMVaXSCpjqL1jeNaRDAnAS2Y3q1MFeXAvj9rwq8EHTqqAc1hW9Lq4SjSiA98STil5dGw6DWRhNtf6zs4UBy8UipKsmuXtclR0gKnoEP83ahMJOpCIjuknPZhb+HsiNjFWf+Os9U6kaS5vGrbXC8nggrVE57ow88pLCBL+3mBk1vBg6bJuLBCp2WTqRzDMhSDQ3AcWqkucGqf dremy@remthinkpad",
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsCosmosDbLogicApp(t *testing.T) {
-	skipIfShort(t)
-	t.Skip("Skipping Azure tests temporarily")
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-cosmosdb-logicapp"),
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsWebserverComponent(t *testing.T) {
-	t.Skip("Skipping Azure tests temporarily")
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-webserver-component"),
-			Config: map[string]string{
-				"username": "webmaster",
-				"password": "MySuperS3cretPassw0rd",
 			},
 		})
 
