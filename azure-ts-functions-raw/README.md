@@ -46,7 +46,7 @@ Please remove the corresponding resources from the program in case you don't nee
 1.  Configure the location to deploy the resources to:
 
     ```
-    $ pulumi config set azure-nextgen:location <location>
+    $ pulumi config set azure-native:location <location>
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:

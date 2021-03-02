@@ -1,24 +1,17 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-import * as network from "@pulumi/azure-nextgen/network/latest";
-import * as resources from "@pulumi/azure-nextgen/resources/latest";
-import * as web from "@pulumi/azure-nextgen/web/latest";
+import * as network from "@pulumi/azure-native/network";
+import * as resources from "@pulumi/azure-native/resources";
+import * as web from "@pulumi/azure-native/web";
 import * as pulumi from "@pulumi/pulumi";
-import * as random from "@pulumi/random";
 
 const config = new pulumi.Config();
 
 // setup a resource group
-const resourceGroupName = config.get("resourceGroupName") || "webapp-pvtendpoint-vnet-injection";
-const location = config.get("location") || "westus2";
-const resourceGroup = new resources.ResourceGroup("resourceGroup", {
-    resourceGroupName: resourceGroupName,
-    location: location,
-});
+const resourceGroup = new resources.ResourceGroup("resourcegroup");
 
-const serverfarm = new web.AppServicePlan("serverfarm", {
+const serverfarm = new web.AppServicePlan("appServerFarm", {
     kind: "app",
-    name: "appServerFarm",
     resourceGroupName: resourceGroup.name,
     sku: {
         capacity: 1,
@@ -29,17 +22,9 @@ const serverfarm = new web.AppServicePlan("serverfarm", {
     },
 });
 
-// To get a random suffix
-const rand = new random.RandomString("random", {
-    length: 5,
-    special: false,
-});
-
 // Setup backend app
-const backendName = pulumi.interpolate`backend${rand.result}`;
 const backendApp = new web.WebApp("backendApp", {
     kind: "app",
-    name: backendName,
     resourceGroupName: resourceGroup.name,
     serverFarmId: serverfarm.id,
 });
@@ -47,10 +32,8 @@ const backendApp = new web.WebApp("backendApp", {
 export const backendURL = backendApp.defaultHostName;
 
 // Setup frontend app
-const frontendName = pulumi.interpolate`frontend${rand.result}`;
 const frontendApp = new web.WebApp("frontendApp", {
     kind: "app",
-    name: frontendName,
     resourceGroupName: resourceGroup.name,
     serverFarmId: serverfarm.id,
 });
@@ -78,17 +61,15 @@ const privateDnsZone = new network.PrivateZone("privateDnsZone", {
 
 // Setup a private subnet for backend
 const backendCIDR = config.get("backendCIDR") || "10.200.1.0/24";
-const backendSubnet = new network.Subnet("backendSubnet", {
+const backendSubnet = new network.Subnet("subnetForBackend", {
     addressPrefix: backendCIDR,
-    privateEndpointNetworkPolicies: "Disabled",
+    privateEndpointNetworkPolicies: network.VirtualNetworkPrivateEndpointNetworkPolicies.Disabled,
     resourceGroupName: resourceGroup.name,
-    subnetName: "subnetForBackend",
     virtualNetworkName: virtualNetwork.name,
 });
 
 // Private endpoint in the private subnet for backend
 const privateEndpoint = new network.PrivateEndpoint("privateEndpointForBackend", {
-    privateEndpointName: "privateEndpointForBackend",
     privateLinkServiceConnections: [{
         groupIds: ["sites"],
         name: "privateEndpointLink1",
@@ -121,7 +102,6 @@ const virtualNetworkLink = new network.VirtualNetworkLink("virtualNetworkLink", 
     virtualNetwork: {
         id: virtualNetwork.id,
     },
-    virtualNetworkLinkName: pulumi.interpolate`${privateDnsZone.name}-link`,
 });
 
 // Now setup frontend subnet
@@ -132,9 +112,8 @@ const frontendSubnet = new network.Subnet("frontendSubnet", {
         name: "delegation",
         serviceName: "Microsoft.Web/serverfarms",
     }],
-    privateEndpointNetworkPolicies: "Enabled",
+    privateEndpointNetworkPolicies: network.VirtualNetworkPrivateEndpointNetworkPolicies.Enabled,
     resourceGroupName: resourceGroup.name,
-    subnetName: "frontendSubnet",
     virtualNetworkName: virtualNetwork.name,
 });
 

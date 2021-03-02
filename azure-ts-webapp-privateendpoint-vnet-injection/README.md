@@ -2,7 +2,7 @@
 
 # Deploy two App Services - Front web app with VNet injection and Back web app with a Private Endpoint
 
-**Note** This is a port of https://github.com/Azure/azure-quickstart-templates/tree/master/101-webapp-privateendpoint-vnet-injection to Pulumi's Azure-Nextgen SDK.
+**Note** This is a port of https://github.com/Azure/azure-quickstart-templates/tree/master/101-webapp-privateendpoint-vnet-injection to Pulumi's native Azure SDK.
 
 
 This deploys a secure front end - back end web app. The front end web app is plugged in a subnet with the feature regional VNet integration enabled. Settings are set to consume a DNS private zone. The backend web app is only exposed through a private endpoint.
@@ -17,8 +17,6 @@ It will create a VNet, two subnets, one where your Private Endpoint will exist, 
 
 
 ### Optional config params
-1. `resourceGroupName` - name for the resource group (defaults to `webapp-pvtendpoint-vnet-injection`)
-1. `location` - location to create all resources (defaults to `westus2`)
 1. `virtualNetworkCIDR` - CIDR range for the vnet (defaults to `10.200.0.0/16`)
 1. `backendCIDR` - subnet CIDR range for the backend (defaults to `10.200.1.0/24`)
 1. `frontendCIDR` - subnet CIDR range for the frontend (defaults to `10.200.2.0/24`)
@@ -31,6 +29,12 @@ After cloning this repo, from this working directory, run these commands:
 
     ```bash
     $ pulumi stack init dev
+    ```
+   
+1. Set the Azure region location to use:
+
+    ```
+    $ pulumi config set azure-native:location westus2
     ```
 
 1. Next, install the dependencies:

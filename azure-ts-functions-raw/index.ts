@@ -1,18 +1,14 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-import * as resources from "@pulumi/azure-nextgen/resources/latest";
-import * as storage from "@pulumi/azure-nextgen/storage/latest";
-import * as web from "@pulumi/azure-nextgen/web/latest";
+import * as resources from "@pulumi/azure-native/resources";
+import * as storage from "@pulumi/azure-native/storage";
+import * as web from "@pulumi/azure-native/web";
 import * as pulumi from "@pulumi/pulumi";
 
 // Create a resource group for Windows App Service Plan
-const resourceGroup = new resources.ResourceGroup("windowsrg", {
-    resourceGroupName: "windowsrg",
-    location: "westus",
-});
+const resourceGroup = new resources.ResourceGroup("windowsrg");
 
 const storageAccount = new storage.StorageAccount("functionsa", {
-    accountName: "functionsa2021",
     resourceGroupName: resourceGroup.name,
     kind: storage.Kind.StorageV2,
     sku: {
@@ -21,7 +17,6 @@ const storageAccount = new storage.StorageAccount("functionsa", {
 });
 
 const plan = new web.AppServicePlan("windows-plan", {
-    name: "functions-windows-plan",
     resourceGroupName: resourceGroup.name,
     sku: {
         name: "Y1",
@@ -30,25 +25,21 @@ const plan = new web.AppServicePlan("windows-plan", {
 });
 
 const container = new storage.BlobContainer("container", {
-    containerName: "blob-container",
     accountName: storageAccount.name,
     resourceGroupName: resourceGroup.name,
     publicAccess: storage.PublicAccess.None,
 });
 
 const dotnetBlob = new storage.Blob("dotnetBlob", {
-    blobName: "dotnetBlob",
     resourceGroupName: resourceGroup.name,
     accountName: storageAccount.name,
     containerName: container.name,
-    type: storage.BlobType.Block,
     source: new pulumi.asset.FileArchive("./dotnet/bin/Debug/netcoreapp3.1/publish"),
 });
 
 const dotnetBlobSignedURL = signedBlobReadUrl(dotnetBlob, container, storageAccount, resourceGroup);
 
-const dotnetApp = new web.WebApp("http-dotnet", {
-    name: "httpdotnet",
+const dotnetApp = new web.WebApp("httpdotnet", {
     resourceGroupName: resourceGroup.name,
     serverFarmId: plan.id,
     kind: "FunctionApp",
@@ -63,18 +54,15 @@ const dotnetApp = new web.WebApp("http-dotnet", {
 });
 
 const nodeBlob = new storage.Blob("nodeBlob", {
-    blobName: "nodeBlob",
     resourceGroupName: resourceGroup.name,
     accountName: storageAccount.name,
     containerName: container.name,
-    type: storage.BlobType.Block,
     source: new pulumi.asset.FileArchive("./javascript"),
 });
 
 const nodeBlobSignedURL = signedBlobReadUrl(nodeBlob, container, storageAccount, resourceGroup);
 
-const nodeApp = new web.WebApp("http-node", {
-    name: "httpnode",
+const nodeApp = new web.WebApp("httpnode", {
     resourceGroupName: resourceGroup.name,
     serverFarmId: plan.id,
     kind: "FunctionApp",
@@ -90,18 +78,15 @@ const nodeApp = new web.WebApp("http-node", {
 });
 
 const powershellBlob = new storage.Blob("powershellBlob", {
-    blobName: "powershellBlob",
     resourceGroupName: resourceGroup.name,
     accountName: storageAccount.name,
     containerName: container.name,
-    type: storage.BlobType.Block,
     source: new pulumi.asset.FileArchive("./powershell"),
 });
 
 const powershellBlobSignedURL = signedBlobReadUrl(powershellBlob, container, storageAccount, resourceGroup);
 
-const powershellApp = new web.WebApp("http-powershell", {
-    name: "httppowershell",
+const powershellApp = new web.WebApp("httppowershell", {
     resourceGroupName: resourceGroup.name,
     serverFarmId: plan.id,
     kind: "FunctionApp",
@@ -116,18 +101,15 @@ const powershellApp = new web.WebApp("http-powershell", {
 });
 
 const javaBlob = new storage.Blob("javaBlob", {
-    blobName: "javaBlob",
     resourceGroupName: resourceGroup.name,
     accountName: storageAccount.name,
     containerName: container.name,
-    type: storage.BlobType.Block,
     source: new pulumi.asset.FileArchive("./java/target/azure-functions/fabrikam-functions"),
 });
 
 const javaBlobSignedURL = signedBlobReadUrl(javaBlob, container, storageAccount, resourceGroup);
 
-const javaApp = new web.WebApp("http-java", {
-    name: "httpjava",
+const javaApp = new web.WebApp("httpjava", {
     resourceGroupName: resourceGroup.name,
     serverFarmId: plan.id,
     kind: "FunctionApp",
@@ -142,11 +124,10 @@ const javaApp = new web.WebApp("http-java", {
 });
 
 // Create a dedicated resource group for Linux App Service Plan - require for Python
-const linuxResourceGroup = new resources.ResourceGroup("linuxrg", { resourceGroupName: "linuxrg" });
+const linuxResourceGroup = new resources.ResourceGroup("linuxrg");
 
 // Python Function App won't run on Windows Consumption Plan, so we create a Linux Consumption Plan instead
 const linuxPlan = new web.AppServicePlan("linux-asp", {
-    name: "linux-asp",
     resourceGroupName: linuxResourceGroup.name,
     kind: "Linux",
     sku: {
@@ -157,18 +138,15 @@ const linuxPlan = new web.AppServicePlan("linux-asp", {
 });
 
 const pythonBlob = new storage.Blob("pythonBlob", {
-    blobName: "pythonBlob",
     resourceGroupName: resourceGroup.name,
     accountName: storageAccount.name,
     containerName: container.name,
-    type: storage.BlobType.Block,
     source: new pulumi.asset.FileArchive("./python"),
 });
 
 const pythonBlobSignedURL = signedBlobReadUrl(pythonBlob, container, storageAccount, resourceGroup);
 
-const pythonApp = new web.WebApp("http-python", {
-    name: "httppython",
+const pythonApp = new web.WebApp("httppython", {
     resourceGroupName: resourceGroup.name,
     serverFarmId: linuxPlan.id,
     kind: "FunctionApp",
@@ -183,8 +161,7 @@ const pythonApp = new web.WebApp("http-python", {
 });
 
 // Azure Functions on Premium Plan
-const premiumPlan = new web.AppServicePlan("premium-asp", {
-    name: "premiumasp",
+const premiumPlan = new web.AppServicePlan("premiumasp", {
     resourceGroupName: resourceGroup.name,
     kind: "elastic",
     sku: {
@@ -195,18 +172,15 @@ const premiumPlan = new web.AppServicePlan("premium-asp", {
 });
 
 const premiumBlob = new storage.Blob("premiumBlob", {
-    blobName: "premiumBlob",
     resourceGroupName: resourceGroup.name,
     accountName: storageAccount.name,
     containerName: container.name,
-    type: storage.BlobType.Block,
     source: new pulumi.asset.FileArchive("./dotnet/bin/Debug/netcoreapp3.1/publish"),
 });
 
 const premiumBlobSignedURL = signedBlobReadUrl(premiumBlob, container, storageAccount, resourceGroup);
 
-const premiumApp = new web.WebApp("http-premium", {
-    name: "httppremium",
+const premiumApp = new web.WebApp("httppremium", {
     resourceGroupName: resourceGroup.name,
     serverFarmId: premiumPlan.id,
     kind: "FunctionApp",
