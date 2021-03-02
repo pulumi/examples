@@ -21,7 +21,7 @@ func TestAccAzureCsAppService(t *testing.T) {
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertAppServiceResult(t, stack.Outputs["Endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service!")
+					return assert.Contains(t, body, "Greetings from Azure App Service")
 				})
 			},
 		})
@@ -52,7 +52,7 @@ func TestAccAzureFsAppService(t *testing.T) {
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service!")
+					return assert.Contains(t, body, "Greetings from Azure App Service")
 				})
 			},
 		})
@@ -96,7 +96,7 @@ func TestAccAzurePyAppService(t *testing.T) {
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service!")
+					return assert.Contains(t, body, "Greetings from Azure App Service")
 				})
 			},
 		})
@@ -109,7 +109,7 @@ func TestAccAzurePyAppServiceDocker(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-appservice-docker"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["hello_endpoint"], func(body string) bool {
+				assertAppServiceResult(t, stack.Outputs["helloEndpoint"], func(body string) bool {
 					return assert.Contains(t, body, "Hello, world!")
 				})
 			},
@@ -166,7 +166,7 @@ func TestAccAzureTsAppService(t *testing.T) {
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service!")
+					return assert.Contains(t, body, "Greetings from Azure App Service")
 				})
 			},
 		})
@@ -203,7 +203,7 @@ func TestAccAzureTsFunctions(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-functions"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure Functions!")
+					return assert.Contains(t, body, "Hello from Node.js, Pulumi")
 				})
 			},
 		})
