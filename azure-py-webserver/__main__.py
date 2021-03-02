@@ -2,24 +2,19 @@
 
 import base64
 from pulumi import Config, Output, export
-from pulumi_azure_nextgen.compute import latest as compute
-from pulumi_azure_nextgen.network import latest as network
-from pulumi_azure_nextgen.resources import latest as resources
+import pulumi_azure_native.compute as compute
+import pulumi_azure_native.network as network
+import pulumi_azure_native.resources as resources
 
 config = Config()
-location = config.get("location") or "westus"
 username = config.require("username")
 password = config.require("password")
 
-resource_group = resources.ResourceGroup("server", 
-    resource_group_name="server",
-    location=location)
+resource_group = resources.ResourceGroup("server")
 
 net = network.VirtualNetwork(
     "server-network",
     resource_group_name=resource_group.name,
-    location=location,
-    virtual_network_name="server-network",
     address_space=network.AddressSpaceArgs(
         address_prefixes=["10.0.0.0/16"],
     ),
@@ -31,19 +26,15 @@ net = network.VirtualNetwork(
 public_ip = network.PublicIPAddress(
     "server-ip",
     resource_group_name=resource_group.name,
-    location=location,
-    public_ip_address_name="server-ip",
-    public_ip_allocation_method="Dynamic")
+    public_ip_allocation_method=network.IPAllocationMethod.DYNAMIC)
 
 network_iface = network.NetworkInterface(
     "server-nic",
     resource_group_name=resource_group.name,
-    location=resource_group.location,
-    network_interface_name="server-nic",
     ip_configurations=[network.NetworkInterfaceIPConfigurationArgs(
         name="webserveripcfg",
         subnet=network.SubnetArgs(id=net.subnets[0].id),
-        private_ip_allocation_method="Dynamic",
+        private_ip_allocation_method=network.IPAllocationMethod.DYNAMIC,
         public_ip_address=network.PublicIPAddressArgs(id=public_ip.id),
     )])
 
@@ -55,15 +46,13 @@ nohup python -m SimpleHTTPServer 80 &"""
 vm = compute.VirtualMachine(
     "server-vm",
     resource_group_name=resource_group.name,
-    location=location,
-    vm_name="server-vm",
     network_profile=compute.NetworkProfileArgs(
         network_interfaces=[
             compute.NetworkInterfaceReferenceArgs(id=network_iface.id),
         ],
     ),
     hardware_profile=compute.HardwareProfileArgs(
-        vm_size="Standard_A0",
+        vm_size=compute.VirtualMachineSizeTypes.STANDARD_A0,
     ),
     os_profile=compute.OSProfileArgs(
         computer_name="hostname",
@@ -76,7 +65,7 @@ vm = compute.VirtualMachine(
     ),
     storage_profile=compute.StorageProfileArgs(
         os_disk=compute.OSDiskArgs(
-            create_option="FromImage",
+            create_option=compute.DiskCreateOptionTypes.FROM_IMAGE,
             name="myosdisk1",
         ),
         image_reference=compute.ImageReferenceArgs(
