@@ -1,38 +1,21 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-import * as cdn from "@pulumi/azure-nextgen/cdn/latest";
-import * as resources from "@pulumi/azure-nextgen/resources/latest";
-import * as storage from "@pulumi/azure-nextgen/storage/latest";
+import * as cdn from "@pulumi/azure-native/cdn";
+import * as resources from "@pulumi/azure-native/resources";
+import * as storage from "@pulumi/azure-native/storage";
 import * as pulumi from "@pulumi/pulumi";
-import * as random from "@pulumi/random";
 
-// TODO: Remove after autonaming support is added.
-const randomSuffix = new random.RandomString("random", {
-    length: 10,
-    special: false,
-    upper: false,
-});
-
-const config = new pulumi.Config();
-const storageAccountName = config.get("storageAccountName") || pulumi.interpolate `site${randomSuffix.result}`;
-const cdnEndpointName = config.get("cdnEndpointName") || pulumi.interpolate `cdn-endpnt-${storageAccountName}`;
-const cdnProfileName = config.get("cdnProfileName") || pulumi.interpolate `cdn-profile-${storageAccountName}`;
-
-const resourceGroup = new resources.ResourceGroup("resourceGroup", {
-    resourceGroupName: pulumi.interpolate `rg${randomSuffix.result}`,
-});
+const resourceGroup = new resources.ResourceGroup("resourceGroup");
 
 const profile = new cdn.Profile("profile", {
-    profileName: cdnProfileName,
     resourceGroupName: resourceGroup.name,
     sku: {
         name: cdn.SkuName.Standard_Microsoft,
     },
 });
 
-const storageAccount = new storage.StorageAccount("storageAccount", {
+const storageAccount = new storage.StorageAccount("storageaccount", {
     accessTier: storage.AccessTier.Hot,
-    accountName: storageAccountName,
     enableHttpsTrafficOnly: true,
     encryption: {
         keySource: storage.KeySource.Microsoft_Storage,
@@ -58,17 +41,15 @@ const storageAccount = new storage.StorageAccount("storageAccount", {
 
 const endpointOrigin = storageAccount.primaryEndpoints.apply(ep => ep.web.replace("https://", "").replace("/", ""));
 
-const endpoint = new cdn.Endpoint("CDNEndpoint", {
-    contentTypesToCompress: [],
-    endpointName: cdnEndpointName,
-    isCompressionEnabled: false,
+const endpoint = new cdn.Endpoint("endpoint", {
+    endpointName: storageAccount.name.apply(sa => `cdn-endpnt-${sa}`),
     isHttpAllowed: false,
     isHttpsAllowed: true,
     originHostHeader: endpointOrigin,
     origins: [{
         hostName: endpointOrigin,
         httpsPort: 443,
-        name: pulumi.interpolate `${cdnEndpointName}-origin-${randomSuffix.result}`,
+        name: "origin-storage-account",
     }],
     profileName: profile.name,
     queryStringCachingBehavior: cdn.QueryStringCachingBehavior.NotSet,
@@ -86,11 +67,9 @@ const staticWebsite = new storage.StorageAccountStaticWebsite("staticWebsite", {
 // Upload the files
 ["index.html", "404.html"].map(name =>
     new storage.Blob(name, {
-        blobName: name,
         resourceGroupName: resourceGroup.name,
         accountName: storageAccount.name,
         containerName: staticWebsite.containerName,
-        type: storage.BlobType.Block,
         source: new pulumi.asset.FileAsset(`./wwwroot/${name}`),
         contentType: "text/html",
     }),

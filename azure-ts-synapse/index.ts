@@ -3,29 +3,23 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 
-import * as authorization from "@pulumi/azure-nextgen/authorization/v20200401preview";
-import * as resources from "@pulumi/azure-nextgen/resources/latest";
-import * as storage from "@pulumi/azure-nextgen/storage/latest";
-import * as synapse from "@pulumi/azure-nextgen/synapse/v20190601preview";
+import * as authorization from "@pulumi/azure-native/authorization";
+import * as resources from "@pulumi/azure-native/resources";
+import * as storage from "@pulumi/azure-native/storage";
+import * as synapse from "@pulumi/azure-native/synapse";
 
 const config = new pulumi.Config();
-const location = config.get("location") || "WestUS2";
 
-const resourceGroup = new resources.ResourceGroup("resourceGroup", {
-    resourceGroupName: "synapse-rg",
-    location: location,
-});
+const resourceGroup = new resources.ResourceGroup("synapse-rg");
 
-const storageAccount = new storage.StorageAccount("storageAccount", {
+const storageAccount = new storage.StorageAccount("synapsesa", {
     resourceGroupName: resourceGroup.name,
-    location: resourceGroup.location,
-    accountName: "synapsesa",
-    accessTier: "Hot",
+    accessTier: storage.AccessTier.Hot,
     enableHttpsTrafficOnly: true,
     isHnsEnabled: true,
-    kind: "StorageV2",
+    kind: storage.Kind.StorageV2,
     sku: {
-        name: "Standard_RAGRS",
+        name: storage.SkuName.Standard_RAGRS,
     },
 });
 
@@ -38,16 +32,14 @@ const users = new storage.BlobContainer("users", {
 
 const dataLakeStorageAccountUrl = pulumi.interpolate`https://${storageAccount.name}.dfs.core.windows.net`;
 
-const workspace = new synapse.Workspace("workspace", {
+const workspace = new synapse.Workspace("my-workspace", {
     resourceGroupName: resourceGroup.name,
-    location: resourceGroup.location,
-    workspaceName: "my-workspace",
     defaultDataLakeStorage: {
         accountUrl: dataLakeStorageAccountUrl,
         filesystem: "users",
     },
     identity: {
-        type: "SystemAssigned",
+        type: synapse.ResourceIdentityType.SystemAssigned,
     },
     sqlAdministratorLogin: "sqladminuser",
     sqlAdministratorLoginPassword: new random.RandomPassword("workspacePwd", {length: 12 }).result,
@@ -68,23 +60,21 @@ const storageAccess = new authorization.RoleAssignment("storageAccess", {
     roleAssignmentName: new random.RandomUuid("roleName").result,
     scope: storageAccount.id,
     principalId: workspace.identity.apply(i => i?.principalId).apply(id => id || "<preview>"),
-    principalType: "ServicePrincipal",
+    principalType: authorization.PrincipalType.ServicePrincipal,
     roleDefinitionId: roleDefinitionId,
 });
 
 const userAccess = new authorization.RoleAssignment("userAccess", {
   roleAssignmentName: new random.RandomUuid("userRoleName").result,
   scope: storageAccount.id,
-  principalId: config.Get("userObjectId"),
-  principalType: "User",
+  principalId: config.require("userObjectId"),
+  principalType: authorization.PrincipalType.User,
   roleDefinitionId: roleDefinitionId,
 });
 
-const sqlPool = new synapse.SqlPool("sqlPool", {
+const sqlPool = new synapse.SqlPool("SQLPOOL1", {
     resourceGroupName: resourceGroup.name,
-    location: resourceGroup.location,
     workspaceName: workspace.name,
-    sqlPoolName: "SQLPOOL1",
     collation: "SQL_Latin1_General_CP1_CI_AS",
     createMode: "Default",
     sku: {
@@ -92,11 +82,9 @@ const sqlPool = new synapse.SqlPool("sqlPool", {
     },
 });
 
-const sparkPool = new synapse.BigDataPool("sparkPool", {
+const sparkPool = new synapse.BigDataPool("Spark1", {
     resourceGroupName: resourceGroup.name,
-    location: resourceGroup.location,
     workspaceName: workspace.name,
-    bigDataPoolName: "Spark1",
     autoPause: {
         delayInMinutes: 15,
         enabled: true,
@@ -107,7 +95,7 @@ const sparkPool = new synapse.BigDataPool("sparkPool", {
         minNodeCount: 3,
     },
     nodeCount: 3,
-    nodeSize: "Small",
-    nodeSizeFamily: "MemoryOptimized",
+    nodeSize: synapse.NodeSize.Small,
+    nodeSizeFamily: synapse.NodeSizeFamily.MemoryOptimized,
     sparkVersion: "2.4",
 });

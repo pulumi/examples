@@ -27,7 +27,7 @@ Starting point for enterprise analytics solutions based on Azure Synapse.
 1. Set the Azure region location to use:
     
     ```
-    $ pulumi config set location westus2
+    $ pulumi config set azure-native:location westus2
     ```
 
 1. Set the user ID to grant access to (e.g., your current user):

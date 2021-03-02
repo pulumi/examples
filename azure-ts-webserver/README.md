@@ -23,9 +23,9 @@ This example provisions a Linux web server in an Azure Virtual Machine and gives
     https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq#what-are-the-password-requirements-when-creating-a-vm).
 
     ```
-    $ pulumi config set location westus    # any valid Azure region will do
+    $ pulumi config set azure-native:location westus    # any valid Azure region will do
     $ pulumi config set username webmaster
-    $ pulumi config set password <your-password> --secret
+    $ pulumi config set password --secret <your-password> 
     ```
 
     Note that `--secret` ensures your password is encrypted safely.

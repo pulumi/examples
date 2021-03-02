@@ -2,26 +2,21 @@
 
 import * as pulumi from "@pulumi/pulumi";
 
-import * as compute from "@pulumi/azure-nextgen/compute/latest";
-import * as network from "@pulumi/azure-nextgen/network/latest";
-import * as resources from "@pulumi/azure-nextgen/resources/latest";
+import * as compute from "@pulumi/azure-native/compute";
+import * as network from "@pulumi/azure-native/network";
+import * as resources from "@pulumi/azure-native/resources";
 
 // Get the desired username and password for our VM.
 const config = new pulumi.Config();
-const location = config.get("location") || "westus";
 const username = config.require("username");
 const password = config.requireSecret("password");
 
 // All resources will share a resource group.
-const resourceGroupName = new resources.ResourceGroup("server-rg", {
-    resourceGroupName: "server-rg",
-    location,
-}).name;
+const resourceGroupName = new resources.ResourceGroup("server-rg").name;
 
 // Create a network and subnet for all VMs.
 const virtualNetwork = new network.VirtualNetwork("server-network", {
     resourceGroupName,
-    location,
     virtualNetworkName: "server-network",
     addressSpace: { addressPrefixes: ["10.0.0.0/16"] },
     subnets: [{
@@ -33,19 +28,15 @@ const virtualNetwork = new network.VirtualNetwork("server-network", {
 // Now allocate a public IP and assign it to our NIC.
 const publicIp = new network.PublicIPAddress("server-ip", {
     resourceGroupName,
-    location,
-    publicIpAddressName: "server-ip",
-    publicIPAllocationMethod: "Dynamic",
+    publicIPAllocationMethod: network.IPAllocationMethod.Dynamic,
 });
 
 const networkInterface = new network.NetworkInterface("server-nic", {
     resourceGroupName,
-    location,
-    networkInterfaceName: "server-nic",
     ipConfigurations: [{
         name: "webserveripcfg",
         subnet: { id: virtualNetwork.subnets[0].id },
-        privateIPAllocationMethod: "Dynamic",
+        privateIPAllocationMethod: network.IPAllocationMethod.Dynamic,
         publicIPAddress: { id: publicIp.id },
     }],
 });
@@ -57,13 +48,11 @@ nohup python -m SimpleHTTPServer 80 &`;
 // Now create the VM, using the resource group and NIC allocated above.
 const vm = new compute.VirtualMachine("server-vm", {
     resourceGroupName,
-    location,
-    vmName: "server-vm",
     networkProfile: {
         networkInterfaces: [{ id: networkInterface.id }],
     },
     hardwareProfile: {
-        vmSize: "Standard_A0",
+        vmSize: compute.VirtualMachineSizeTypes.Standard_A0,
     },
     osProfile: {
         computerName: "hostname",
@@ -76,7 +65,7 @@ const vm = new compute.VirtualMachine("server-vm", {
     },
     storageProfile: {
         osDisk: {
-            createOption: "FromImage",
+            createOption: compute.DiskCreateOption.FromImage,
             name: "myosdisk1",
         },
         imageReference: {
