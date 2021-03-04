@@ -79,6 +79,10 @@ class FunctionsStack : Stack
                 AppSettings = new[]
                 {
                     new NameValuePairArgs{
+                        Name = "AzureWebJobsStorage",
+                        Value = GetConnectionString(resourceGroup.Name, storageAccount.Name),
+                    },
+                    new NameValuePairArgs{
                         Name = "runtime",
                         Value = "python",
                     },
@@ -128,4 +132,28 @@ class FunctionsStack : Stack
             return Output.Format($"https://{accountName}.blob.core.windows.net/{containerName}/{blobName}?{blobSAS.Result.ServiceSasToken}");
         });
     }
+
+    private static Output<string> GetConnectionString(Input<string> resourceGroupName, Input<string> accountName)
+    {
+        // Retrieve the primary storage account key.
+        var storageAccountKeys = Output.All<string>(resourceGroupName, accountName).Apply(t =>
+        {
+            var resourceGroupName = t[0];
+            var accountName = t[1];
+            return ListStorageAccountKeys.InvokeAsync(
+                new ListStorageAccountKeysArgs
+                {
+                    ResourceGroupName = resourceGroupName,
+                    AccountName = accountName
+                });
+        });
+        return storageAccountKeys.Apply(keys =>
+        {
+            var primaryStorageKey = keys.Keys[0].Value;
+
+            // Build the connection string to the storage account.
+            return Output.Format($"DefaultEndpointsProtocol=https;AccountName={accountName};AccountKey={primaryStorageKey}");
+        });
+    }
+
 }
