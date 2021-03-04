@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws"
 	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/ec2"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
@@ -25,8 +24,8 @@ func main() {
 
 		// Get the ID for the latest Amazon Linux AMI.
 		mostRecent := true
-		ami, err := aws.GetAmi(ctx, &aws.GetAmiArgs{
-			Filters: []aws.GetAmiFilter{
+		ami, err := ec2.LookupAmi(ctx, &ec2.LookupAmiArgs{
+			Filters: []ec2.GetAmiFilter{
 				{
 					Name:   "name",
 					Values: []string{"amzn-ami-hvm-*-x86_64-ebs"},

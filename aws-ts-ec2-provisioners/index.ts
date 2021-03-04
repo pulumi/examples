@@ -34,7 +34,7 @@ const secgrp = new aws.ec2.SecurityGroup("secgrp", {
 });
 
 // Get the AMI
-const amiId = aws.getAmi({
+const amiId = aws.ec2.getAmi({
     owners: ["amazon"],
     mostRecent: true,
     filters: [{

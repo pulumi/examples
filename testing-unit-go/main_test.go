@@ -24,7 +24,7 @@ func (mocks) NewResource(token, name string, inputs resource.PropertyMap, provid
 
 func (mocks) Call(token string, args resource.PropertyMap, provider string) (resource.PropertyMap, error) {
 	outputs := map[string]interface{}{}
-	if token == "aws:index/getAmi:getAmi" {
+	if token == "aws:ec2/getAmi:getAmi" {
 		outputs["architecture"] = "x86_64"
 		outputs["id"] = "ami-0eb1f3cdeeb8eed2a"
 	}

@@ -15,7 +15,7 @@ const webSg = new aws.ec2.SecurityGroup("webServerSecurityGroup", {
     ],
 });
 
-const amiId = aws.getAmi({
+const amiId = aws.ec2.getAmi({
     filters: [
         {
             name: "name",

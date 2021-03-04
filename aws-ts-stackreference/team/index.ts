@@ -21,7 +21,7 @@ const combinedTags = {
     "Managed By": "Pulumi",
 };
 
-const amiId = aws.getAmi({
+const amiId = aws.ec2.getAmi({
     owners: ["099720109477"], // Ubuntu
     mostRecent: true,
     filters: [

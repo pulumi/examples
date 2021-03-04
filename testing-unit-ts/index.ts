@@ -10,7 +10,7 @@ export const group = new aws.ec2.SecurityGroup("web-secgrp", {
     ],
 });
 
-const amiId = aws.getAmi({
+const amiId = aws.ec2.getAmi({
     mostRecent: true,
     owners: ["099720109477"],
     filters: [{

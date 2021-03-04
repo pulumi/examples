@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws"
 	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/ec2"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 )
@@ -34,8 +33,8 @@ func createInfrastructure(ctx *pulumi.Context) (*infrastructure, error) {
 	}
 
 	mostRecent := true
-	ami, err := aws.GetAmi(ctx, &aws.GetAmiArgs{
-		Filters: []aws.GetAmiFilter{
+	ami, err := ec2.LookupAmi(ctx, &ec2.LookupAmiArgs{
+		Filters: []ec2.GetAmiFilter{
 			{
 				Name:   "name",
 				Values: []string{"ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"},
