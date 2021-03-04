@@ -53,11 +53,11 @@ pulumi.runtime.setMocks({
 });
 
 describe("Infrastructure", function() {
-    let infra: typeof import('./index');
+    let infra: typeof import("./index");
 
     before(async function() {
         // It's important to import the program _after_ the mocks are defined.
-        infra = await import('./index');
+        infra = await import("./index");
     });
 
     describe("#server", function() {
