@@ -31,10 +31,10 @@ secgrp = aws.ec2.SecurityGroup('secgrp',
 )
 
 # Get the AMI
-ami = aws.get_ami(
+ami = aws.ec2.get_ami(
     owners=['amazon'],
     most_recent=True,
-    filters=[aws.GetAmiFilterArgs(
+    filters=[aws.ec2.GetAmiFilterArgs(
         name='name',
         values=['amzn2-ami-hvm-2.0.????????-x86_64-gp2'],
     )],

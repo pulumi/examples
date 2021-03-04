@@ -41,7 +41,7 @@ pulumi.runtime.setMocks({
     },
     call: function(token: string, args: any, provider?: string) {
         switch (token) {
-            case "aws:index/getAmi:getAmi":
+            case "aws:ec2/getAmi:getAmi":
                 return {
                     "architecture": "x86_64",
                     "id": "ami-0eb1f3cdeeb8eed2a",

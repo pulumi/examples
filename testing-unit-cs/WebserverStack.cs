@@ -23,12 +23,12 @@ public class WebserverStack : Stack
             }
         });
         
-        var amiId = Output.Create(GetAmi.InvokeAsync(new GetAmiArgs
+        var amiId = Output.Create(Pulumi.Aws.Ec2.GetAmi.InvokeAsync(new Pulumi.Aws.Ec2.GetAmiArgs
         {
             MostRecent = true,
             Owners = {"099720109477"},
             Filters = {
-                new GetAmiFilterArgs
+                new Pulumi.Aws.Ec2.Inputs.GetAmiFilterArgs
                 {
                     Name = "name",
                     Values = {"ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"},

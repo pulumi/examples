@@ -6,7 +6,7 @@ const aws = require("@pulumi/aws");
 let size = "t2.micro";    // t2.micro is available in the AWS free tier
 
 // Get the id for the latest Amazon Linux AMI
-let ami = aws.getAmi({
+let ami = aws.ec2.getAmi({
     filters: [
         { name: "name", values: ["amzn-ami-hvm-*-x86_64-ebs"] },
     ],

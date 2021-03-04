@@ -9,11 +9,11 @@ group = ec2.SecurityGroup('web-secgrp', ingress=[
 
 user_data = '#!/bin/bash echo "Hello, World!" > index.html nohup python -m SimpleHTTPServer 80 &'
 
-ami_id = get_ami(
+ami_id = ec2.get_ami(
     most_recent=True,
     owners=["099720109477"],
     filters=[
-        GetAmiFilterArgs(
+        ec2.GetAmiFilterArgs(
             name="name",
             values=["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
         )]

@@ -4,7 +4,7 @@ const pulumi = require("@pulumi/pulumi");
 const aws = require("@pulumi/aws");
 
 // Get the id for the latest Amazon Linux AMI
-let ami = aws.getAmi({
+let ami = aws.ec2.getAmi({
     filters: [
         { name: "name", values: ["amzn-ami-hvm-*-x86_64-ebs"] },
     ],

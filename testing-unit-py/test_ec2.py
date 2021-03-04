@@ -12,7 +12,7 @@ class MyMocks(pulumi.runtime.Mocks):
             }
         return [name + '_id', outputs]
     def call(self, token, args, provider):
-        if token == "aws:index/getAmi:getAmi":
+        if token == "aws:ec2/getAmi:getAmi":
             return {
                 "architecture": "x86_64",
                 "id": "ami-0eb1f3cdeeb8eed2a",
