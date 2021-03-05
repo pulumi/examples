@@ -6,8 +6,8 @@ install:
 	yarn global add tslint typescript
 
 ensure:
-	cd misc/test && GO111MODULE=on go mod tidy
-	cd misc/test && GO111MODULE=on go mod download
+	cd misc/test && go mod tidy
+	cd misc/test && go mod download
 
 only_build:
 
