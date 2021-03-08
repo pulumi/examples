@@ -41,6 +41,58 @@ jobs:
         repository: ${{ github.event.client_payload.github.payload.repository.full_name
           }}
         token: ${{ secrets.GITHUB_TOKEN }}
+  dotnet-unit-testing:
+    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
+      == github.repository
+    name: Running ${{ matrix.source-dir }} test
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - name: Install DotNet ${{ matrix.dotnet-version }}
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{matrix.dotnet-version}}
+    - name: Install Latest Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v1.0.1
+    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - uses: actions/checkout@v2
+    - run: dotnet test
+      working-directory: ${{ matrix.source-dir }}
+    strategy:
+      fail-fast: false
+      matrix:
+        dotnet-version:
+        - 3.1.x
+        platform:
+        - ubuntu-latest
+        source-dir:
+        - testing-unit-cs
+        - testing-unit-cs-mocks
+        - testing-unit-fs-mocks
+  go-unit-testing:
+    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
+      == github.repository
+    name: Running ${{ matrix.source-dir }} test
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - name: Install Go ${{ matrix.go-version }}
+      uses: actions/setup-go@v1
+      with:
+        go-version: ${{matrix.go-version}}
+    - name: Install Latest Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v1.0.1
+    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - uses: actions/checkout@v2
+    - run: go test
+      working-directory: ${{ matrix.source-dir }}
+    strategy:
+      fail-fast: false
+      matrix:
+        go-version:
+        - 1.16.x
+        platform:
+        - ubuntu-latest
+        source-dir:
+        - testing-unit-go
   kubernetes:
     if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
       == github.repository
@@ -262,6 +314,39 @@ jobs:
         - ubuntu-latest
         python-version:
         - "3.7"
+  python-unit-testing:
+    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
+      == github.repository
+    name: Running ${{ matrix.source-dir }} test
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - name: Install Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{matrix.python-version}}
+    - name: Install Python Deps
+      run: |-
+        pip3 install virtualenv==20.0.23
+        pip3 install pipenv
+    - name: Install Latest Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v1.0.1
+    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - uses: actions/checkout@v2
+    - run: |-
+        python3 -m venv venv
+        source venv/bin/activate
+        pip3 install -r requirements.txt
+        python -m unittest
+      working-directory: ${{ matrix.source-dir }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+        - ubuntu-latest
+        python-version:
+        - 3.7.x
+        source-dir:
+        - testing-unit-py
   test-infra-destroy:
     if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
       == github.repository
@@ -431,6 +516,35 @@ jobs:
         - ubuntu-latest
         python-version:
         - "3.7"
+  ts-unit-testing:
+    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
+      == github.repository
+    name: Running ${{ matrix.source-dir }} test
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - name: Install Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{matrix.node-version}}
+    - name: Install Latest Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v1.0.1
+    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - uses: actions/checkout@v2
+    - run: |-
+        npm install
+        npm install --global mocha
+        npm install --global ts-node
+        mocha -r ts-node/register ec2tests.ts
+      working-directory: ${{ matrix.source-dir }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+        - 13.x
+        platform:
+        - ubuntu-latest
+        source-dir:
+        - testing-unit-ts
 name: Run Examples Tests From PR
 "on":
   pull_request:
