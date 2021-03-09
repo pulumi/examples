@@ -1,0 +1,8 @@
+name: aws-ts-webserver
+runtime: nodejs
+description: Basic example of an AWS web server accessible over HTTP
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
