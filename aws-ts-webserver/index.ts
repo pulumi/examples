@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 const size = "t2.micro";    // t2.micro is available in the AWS free tier
 
@@ -30,8 +32,8 @@ const server = new aws.ec2.Instance("web-server-www", {
     instanceType: size,
     vpcSecurityGroupIds: [ group.id ], // reference the group object above
     ami: ami,
-    userData: userData              // start a simple web server
+    userData: userData,              // start a simple web server
 });
 
-exports.publicIp = server.publicIp;
-exports.publicHostName = server.publicDns;
+export const publicIp = server.publicIp;
+export const publicHostName = server.publicDns;
