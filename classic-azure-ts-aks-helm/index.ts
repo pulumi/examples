@@ -8,12 +8,12 @@ const apache = new k8s.helm.v3.Chart(
     {
         repo: "bitnami",
         chart: "apache",
-        version: "1.0.0",
+        version: "8.3.2",
         fetchOpts: {
             repo: "https://charts.bitnami.com/bitnami",
         },
     },
-    { providers: { kubernetes: k8sProvider } },
+    { provider: k8sProvider },
 );
 
 export let cluster = k8sCluster.name;
