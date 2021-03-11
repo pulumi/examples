@@ -8,16 +8,16 @@ const apache = new k8s.helm.v3.Chart(
     {
         repo: "bitnami",
         chart: "apache",
-        version: "1.0.0",
+        version: "8.3.2",
         fetchOpts: {
             repo: "https://charts.bitnami.com/bitnami",
         },
     },
-    { providers: { kubernetes: k8sProvider } },
+    { provider: k8sProvider },
 );
 
 export let cluster = k8sCluster.name;
 export let kubeConfig = k8sCluster.kubeConfigRaw;
 export let serviceIP = apache
-    .getResourceProperty("v1/Service", "apache-apache", "status")
+    .getResourceProperty("v1/Service", "apache", "status")
     .apply(status => status.loadBalancer.ingress[0].ip);

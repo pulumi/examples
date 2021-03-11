@@ -15,17 +15,45 @@ We will be deploying to Azure, so you will need an Azure account. If you don't h
 
 This example deploys a Helm Chart from [Bitnami's Helm chart repository](https://github.com/bitnami/charts)
 
+In addition you will need the following CLI tools:
+
+```
+$ az --version # Azure CLI
+azure-cli                         2.11.1
+core                              2.11.1
+telemetry                          1.0.5
+...
+
+$ npm --version # Node.js Package Manager
+6.14.6
+
+$ tsc --version # TypeScript compiler
+Version 4.0.2
+```
+
 ## Running the Example
 
 After cloning this repo, `cd` into it and run these commands. A Kubernetes cluster and Apache web server will appear!
 
-1. Create a new stack, which is an isolated deployment target for this example:
+1. Login to your Azure account:
+
+    ```bash
+    $ az login
+    ```
+
+2. Download nodejs dependencies:
+
+    ```bash
+    $ npm install
+    ```
+
+3. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
     $ pulumi stack init
     ```
 
-2. Set the required configuration variables for this program:
+4. Set the required configuration variables for this program:
 
     ```bash
     $ pulumi config set azure:environment public
@@ -34,7 +62,7 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
     $ pulumi config set sshPublicKey < key.rsa.pub
     ```
 
-3. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including
+5. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including
    an Active Directory service principal, AKS cluster, and then deploys the Apache Helm Chart, all in a single gesture:
 
     > **Note**: Due to an [issue](https://github.com/terraform-providers/terraform-provider-azuread/issues/156) in Azure Terraform Provider, the
@@ -48,7 +76,7 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
     $ pulumi up
     ```
 
-4. After a couple minutes, your cluster and Apache server will be ready. Three output variables will be printed,
+6. After a couple minutes, your cluster and Apache server will be ready. Three output variables will be printed,
    reflecting your cluster name (`cluster`), Kubernetes config (`kubeConfig`) and server IP address (`serviceIP`).
 
    Using these output variables, you may `curl` your Apache server's `serviceIP`:
@@ -68,13 +96,20 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
    kubernetes      ClusterIP      10.0.0.1       <none>         443/TCP                      13h
    ```
 
-5. At this point, you have a running cluster. Feel free to modify your program, and run `pulumi up` to redeploy changes.
+7. At this point, you have a running cluster. Feel free to modify your program, and run `pulumi up` to redeploy changes.
    The Pulumi CLI automatically detects what has changed and makes the minimal edits necessary to accomplish these
    changes. This could be altering the existing chart, adding new Azure or Kubernetes resources, or anything, really.
 
-6. Once you are done, you can destroy all of the resources, and the stack:
+8. Once you are done, you can destroy all of the resources, and the stack:
 
     ```bash
     $ pulumi destroy
     $ pulumi stack rm
+    ```
+
+9. If you make changes to the example `ts` code outside of an IDE, run
+   the TypeScript compiler to check your changes:
+
+    ```bash
+    $ tsc --build tsconfig.json
     ```
