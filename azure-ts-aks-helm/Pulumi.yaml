@@ -1,0 +1,4 @@
+name: azure-ts-aks-helm
+runtime: nodejs
+description: Azure Native TypeScript Pulumi example featuring Helm chart deployment
+  to AKS
