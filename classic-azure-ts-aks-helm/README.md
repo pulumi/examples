@@ -38,7 +38,7 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
 1. Download nodejs dependencies:
 
     ```bash
-    npm install
+    $ npm install
     ```
 
 2. Create a new stack, which is an isolated deployment target for this example:
