@@ -30,16 +30,16 @@ done.
 1.  Get the code:
 
     ```bash
-	$ git clone git@github.com:pulumi/examples.git
-	$ cd examples/azure-ts-aks-helm
-	```
+    $ git clone git@github.com:pulumi/examples.git
+    $ cd examples/azure-ts-aks-helm
+    ```
 
 2.  Restore dependencies:
 
     ```bash
-	$ npm install
-	# OR
-	$ yarn install
+    $ npm install
+    # OR
+    $ yarn install
     ```
 
 3.  Create a new stack, which is an isolated deployment target for this example:
