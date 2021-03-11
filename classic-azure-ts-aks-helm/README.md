@@ -38,8 +38,8 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
 1. Login to your Azure account:
 
     ```bash
-	$ az login
-	```
+    $ az login
+    ```
 
 2. Download nodejs dependencies:
 
