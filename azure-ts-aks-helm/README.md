@@ -108,4 +108,5 @@ done.
     ```bash
     $ pulumi destroy
     $ pulumi stack rm
+    $ rm kubeconfig.yaml
     ```
