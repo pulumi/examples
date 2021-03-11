@@ -18,7 +18,7 @@ func main() {
 		if err != nil {
 			return err
 		}
-		
+
 		engineVersions, err := container.GetEngineVersions(ctx, &container.GetEngineVersionsArgs{})
 		if err != nil {
 			return err
