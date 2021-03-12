@@ -12,6 +12,7 @@ import (
 
 func checkExamples(
 	t *testing.T,
+	mainTestFile string,
 	folderNameFragment string,
 	overrides []test,
 	baselineOptions func(t *testing.T) integration.ProgramTestOptions) {
@@ -22,25 +23,36 @@ func checkExamples(
 		byName[example.name] = example
 	}
 
-	for _, testName := range discoverTests(t, folderNameFragment) {
+	exampleFolders := discoverTests(t, folderNameFragment)
+
+	for _, testName := range exampleFolders {
 		test, gotTest := byName[testName]
 
 		if !gotTest {
-			test = defTest(testName)
-		}
+			t.Run(test.name, func(t *testing.T) {
+				t.Errorf("Must edit %s to configure CI to either explicitly skip %s example or run it",
+					mainTestFile, test.name)
+			})
+		} else {
 
-		t.Run(test.name, func(t *testing.T) {
-			opts := baselineOptions(t).
-				With(test.opts).
-				With(dirOption(t, test.name))
-			integration.ProgramTest(t, &opts)
-		})
+			t.Run(test.name, func(t *testing.T) {
+				if test.skipped {
+					t.SkipNow()
+				} else {
+					opts := baselineOptions(t).
+						With(test.opts).
+						With(dirOption(t, test.name))
+					integration.ProgramTest(t, &opts)
+				}
+			})
+		}
 	}
 }
 
 type test struct {
-	name string
-	opts integration.ProgramTestOptions
+	name    string
+	opts    integration.ProgramTestOptions
+	skipped bool
 }
 
 func (x test) conf(name string, value string) test {
@@ -63,6 +75,11 @@ func (x test) checkAppService(endpointOutputName string, expectedBodyText string
 			return assert.Contains(t, body, expectedBodyText)
 		})
 	}
+	return x
+}
+
+func (x test) skip() test {
+	x.skipped = true
 	return x
 }
 
@@ -91,10 +108,6 @@ func discoverTests(t *testing.T, folderNameFragment string) []string {
 		if f.IsDir() && strings.Contains(name, folderNameFragment) {
 			found = append(found, name)
 		}
-	}
-
-	if len(found) == 0 {
-		t.Errorf("Did not discover any *%s* tests. Something wrong with relative paths?", folderNameFragment)
 	}
 
 	return found
