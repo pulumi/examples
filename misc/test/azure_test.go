@@ -12,244 +12,149 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAccAzureCsAppService(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-cs-appservice"),
-			Config: map[string]string{
-				"sqlPassword": "2@Password@2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["Endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service")
-				})
-			},
-		})
+// All examples `ls | grep azure` will be tested for basic sanity.
+// Only configure an entry below for an example if it needs custom
+// config values or checks.
+var tests []test = []test{
+	defTest("azure-cs-appservice").
+		conf("sqlPassword", "2@Password@2").
+		checkAppService("Endpoint", "Greetings from Azure App Service"),
 
-	integration.ProgramTest(t, &test)
+	defTest("classic-azure-cs-webserver").
+		checkHttp("IpAddress", "Hello, World"),
+
+	defTest("classic-azure-fs-appservice").
+		conf("sqlPassword", "2@Password@2").
+		checkAppService("endpoint", "Greetings from Azure App Service"),
+
+	defTest("azure-go-aci").
+		checkAppService("endpoint", "Hello, containers!"),
+
+	defTest("classic-azure-go-webserver-component").
+		conf("username", "webmaster").
+		conf("password", "Password1234!"),
+
+	defTest("azure-py-appservice").
+		conf("sqlPassword", "2@Password@2").
+		checkAppService("endpoint", "Greetings from Azure App Service"),
+
+	defTest("azure-py-appservice-docker").
+		checkAppService("helloEndpoint", "Hello, world!"),
+
+	defTest("classic-azure-py-vm-scaleset").
+		checkHttp("public_address", "nginx"),
+
+	defTest("azure-py-webserver").
+		conf("username", "testuser").
+		conf("password", "testTEST1234+-*/").
+		checkHttp("public_ip", "Hello, World!"),
+
+	defTest("azure-ts-appservice").
+		conf("sqlPassword", "2@Password@2").
+		checkAppService("endpoint", "Greetings from Azure App Service"),
+
+	defTest("azure-ts-appservice-docker").
+		checkAppService("getStartedEndpoint", "Azure App Service"),
+
+	defTest("azure-ts-functions").
+		checkHttp("endpoint", "Hello from Node.js, Pulumi"),
+
+	defTest("classic-azure-ts-vm-scaleset").
+		checkHttp("publicAddress", "nginx"),
+
+	defTest("azure-ts-webserver").
+		conf("username", "webmaster").
+		conf("password", "MySuperS3cretPassw0rd").
+		checkHttp("ipAddress", "Hello, World"),
 }
 
-func TestAccAzureCsWebserver(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-cs-webserver"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["IpAddress"].(string), nil, func(body string) bool {
-					return assert.Contains(t, body, "Hello, World")
-				})
-			},
-		})
+// table-drivent test
 
-	integration.ProgramTest(t, &test)
+func TestAccAll(t *testing.T) {
+	byName := make(map[string]test)
+
+	// run everything from tests var
+	for _, example := range tests {
+		byName[example.name] = example
+		example.run(t)
+	}
+
+	// run auto-discovered tests, exlcuding ones in the tests var
+	for _, example := range discoverAzureTests(t) {
+		_, alreadySeen := byName[example.name]
+		if !alreadySeen {
+			example.run(t)
+		}
+	}
 }
 
-func TestAccAzureFsAppService(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-fs-appservice"),
-			Config: map[string]string{
-				"sqlPassword": "2@Password@2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service")
-				})
-			},
-		})
+// support functions
 
-	integration.ProgramTest(t, &test)
+type test struct {
+	name string
+	opts integration.ProgramTestOptions
 }
 
-func TestAccAzureGoAci(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aci"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Hello, containers!")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
+func (x test) conf(name string, value string) test {
+	t.opts.ProgramTestOptions[name] = value
+	return x
 }
 
-func TestAccAzureGoWebserverComponent(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-go-webserver-component"),
-			Config: map[string]string{
-				"username": "webmaster",
-				"password": "Password1234!",
-			},
+func (x test) checkHttp(endpointOutputName string, expectedBodyText string) test {
+	x.opts.ExtraRuntimeValidation = func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		assertHTTPResult(t, stack.Outputs[endpointOutputName].(string), nil, func(body string) bool {
+			return assert.Contains(t, body, expectedBodyText)
 		})
-
-	integration.ProgramTest(t, &test)
+	}
+	return x
 }
 
-func TestAccAzurePyAppService(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-py-appservice"),
-			Config: map[string]string{
-				"sqlPassword": "2@Password@2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service")
-				})
-			},
+func (x test) checkAppService(endpointOutputName string, expectedBodyText string) test {
+	x.ops.ExtraRuntimeValidation = func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+		assertAppServiceResult(t, stack.Outputs["getStartedEndpoint"], func(body string) bool {
+			return assert.Contains(t, body, "Azure App Service")
 		})
-
-	integration.ProgramTest(t, &test)
+	}
+	return x
 }
 
-func TestAccAzurePyAppServiceDocker(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-py-appservice-docker"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["helloEndpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Hello, world!")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
+func (x test) run(t *testing.T) {
+	t.Run(x.name, func(t *tesing.T) {
+		test := getAzureBase(t).With(x.opts)
+		integration.ProgramTest(t, &test)
+	})
 }
 
-func TestAccAzurePyArmTemplate(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-py-arm-template"),
-		})
-
-	integration.ProgramTest(t, &test)
+func defTest(testName stinrg) test {
+	return test{
+		name: testName,
+		opts: &integration.ProgramTestOptions{
+			Dir:    path.Join(getCwd(t), "..", "..", testName),
+			Config: map[string]string{},
+		},
+	}
 }
 
-func TestAccAzurePyVmScaleSet(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-py-vm-scaleset"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["public_address"].(string), nil, func(body string) bool {
-					return assert.Contains(t, body, "nginx")
-				})
-			},
-		})
+func discoverAzureTests(t *testing.T) []test {
+	var found []test
 
-	integration.ProgramTest(t, &test)
-}
+	files, err := os.ReadDir("../../..")
+	if err != nil {
+		t.Error(err)
+	}
 
-func TestAccAzurePyWebserver(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-py-webserver"),
-			Config: map[string]string{
-				"username": "testuser",
-				"password": "testTEST1234+-*/",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["public_ip"], nil)
-			},
-		})
+	for _, f := range files {
+		name := f.Name()
+		if f.IsDir() && strings.Contains(name, "azure") {
+			found = append(found, defTest(name))
+		}
+	}
 
-	integration.ProgramTest(t, &test)
-}
+	if len(found) == 0 {
+		t.Errorf("Did not discover any azure tests. Something wrong with relative paths?")
+	}
 
-func TestAccAzureTsAppService(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-appservice"),
-			Config: map[string]string{
-				"sqlPassword": "2@Password@2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsAppServiceDocker(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-appservice-docker"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["getStartedEndpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Azure App Service")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsArmTemplate(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-ts-arm-template"),
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsFunctions(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-functions"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
-					return assert.Contains(t, body, "Hello from Node.js, Pulumi")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsStreamAnalytics(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-ts-stream-analytics"),
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsVmScaleset(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-ts-vm-scaleset"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["publicAddress"].(string), nil, func(body string) bool {
-					return assert.Contains(t, body, "nginx")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsWebserver(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-webserver"),
-			Config: map[string]string{
-				"username": "webmaster",
-				"password": "MySuperS3cretPassw0rd",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["ipAddress"].(string), nil, func(body string) bool {
-					return assert.Contains(t, body, "Hello, World")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
+	return found
 }
 
 func getAzureEnvironment() string {
