@@ -67,7 +67,9 @@ func (x test) checkAppService(endpointOutputName string, expectedBodyText string
 }
 
 func defTest(testName string) test {
-	return test{name: testName, opts: integration.ProgramTestOptions{}}
+	return test{name: testName, opts: integration.ProgramTestOptions{
+		Config: make(map[string]string),
+	}}
 }
 
 func dirOption(t *testing.T, testName string) integration.ProgramTestOptions {
