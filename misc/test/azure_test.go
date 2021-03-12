@@ -4,8 +4,10 @@ package test
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path"
+	"strings"
 	"testing"
 
 	"github.com/pulumi/pulumi/pkg/v2/testing/integration"
@@ -96,7 +98,7 @@ type test struct {
 }
 
 func (x test) conf(name string, value string) test {
-	t.opts.ProgramTestOptions[name] = value
+	x.opts.ProgramTestOptions[name] = value
 	return x
 }
 
@@ -110,7 +112,7 @@ func (x test) checkHttp(endpointOutputName string, expectedBodyText string) test
 }
 
 func (x test) checkAppService(endpointOutputName string, expectedBodyText string) test {
-	x.ops.ExtraRuntimeValidation = func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+	x.opts.ExtraRuntimeValidation = func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 		assertAppServiceResult(t, stack.Outputs["getStartedEndpoint"], func(body string) bool {
 			return assert.Contains(t, body, "Azure App Service")
 		})
@@ -119,17 +121,22 @@ func (x test) checkAppService(endpointOutputName string, expectedBodyText string
 }
 
 func (x test) run(t *testing.T) {
-	t.Run(x.name, func(t *tesing.T) {
+	t.Run(x.name, func(t *testing.T) {
 		test := getAzureBase(t).With(x.opts)
 		integration.ProgramTest(t, &test)
 	})
 }
 
-func defTest(testName stinrg) test {
+func defTest(testName string) test {
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return test{
 		name: testName,
-		opts: &integration.ProgramTestOptions{
-			Dir:    path.Join(getCwd(t), "..", "..", testName),
+		opts: integration.ProgramTestOptions{
+			Dir:    path.Join(cwd, "..", "..", testName),
 			Config: map[string]string{},
 		},
 	}
