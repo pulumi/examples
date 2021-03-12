@@ -98,7 +98,7 @@ type test struct {
 }
 
 func (x test) conf(name string, value string) test {
-	x.opts.ProgramTestOptions[name] = value
+	x.opts.Config[name] = value
 	return x
 }
 
