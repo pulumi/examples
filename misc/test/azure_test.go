@@ -4,19 +4,15 @@ package test
 
 import (
 	"fmt"
-	"log"
 	"os"
-	"path"
-	"strings"
 	"testing"
 
 	"github.com/pulumi/pulumi/pkg/v2/testing/integration"
-	"github.com/stretchr/testify/assert"
 )
 
-// All examples `ls | grep azure` will be tested for basic sanity.
 // Only configure an entry below for an example if it needs custom
-// config values or checks.
+// config values or checks. Examples without entries in this table
+// will be checked for basic sanity (such as, does `pulumi up` work).
 var tests []test = []test{
 	defTest("azure-cs-appservice").
 		conf("sqlPassword", "2@Password@2").
@@ -70,98 +66,31 @@ var tests []test = []test{
 		checkHttp("ipAddress", "Hello, World"),
 }
 
-// table-drivent test
+// Table-drivent test entry points.
+//
+// Note TestAccAzure$LANG pattern is used by GitHub Actions to run
+// specific checks. For example we may be called with:
+//
+//     go test .. --run-TestAccAzurePy
 
-func TestAccAll(t *testing.T) {
-	byName := make(map[string]test)
-
-	// run everything from tests var
-	for _, example := range tests {
-		byName[example.name] = example
-		example.run(t)
-	}
-
-	// run auto-discovered tests, exlcuding ones in the tests var
-	for _, example := range discoverAzureTests(t) {
-		_, alreadySeen := byName[example.name]
-		if !alreadySeen {
-			example.run(t)
-		}
-	}
+func TestAccAzureJs(t *testing.T) {
+	checkExamples(t, "azure-js", tests, getAzureBase)
 }
 
-// support functions
-
-type test struct {
-	name string
-	opts integration.ProgramTestOptions
+func TestAccAzureTs(t *testing.T) {
+	checkExamples(t, "azure-ts", tests, getAzureBase)
 }
 
-func (x test) conf(name string, value string) test {
-	x.opts.Config[name] = value
-	return x
+func TestAccAzureCs(t *testing.T) {
+	checkExamples(t, "azure-cs", tests, getAzureBase)
 }
 
-func (x test) checkHttp(endpointOutputName string, expectedBodyText string) test {
-	x.opts.ExtraRuntimeValidation = func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		assertHTTPResult(t, stack.Outputs[endpointOutputName].(string), nil, func(body string) bool {
-			return assert.Contains(t, body, expectedBodyText)
-		})
-	}
-	return x
+func TestAccAzureFs(t *testing.T) {
+	checkExamples(t, "azure-fs", tests, getAzureBase)
 }
 
-func (x test) checkAppService(endpointOutputName string, expectedBodyText string) test {
-	x.opts.ExtraRuntimeValidation = func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-		assertAppServiceResult(t, stack.Outputs["getStartedEndpoint"], func(body string) bool {
-			return assert.Contains(t, body, "Azure App Service")
-		})
-	}
-	return x
-}
-
-func (x test) run(t *testing.T) {
-	t.Run(x.name, func(t *testing.T) {
-		test := getAzureBase(t).With(x.opts)
-		integration.ProgramTest(t, &test)
-	})
-}
-
-func defTest(testName string) test {
-	cwd, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return test{
-		name: testName,
-		opts: integration.ProgramTestOptions{
-			Dir:    path.Join(cwd, "..", "..", testName),
-			Config: map[string]string{},
-		},
-	}
-}
-
-func discoverAzureTests(t *testing.T) []test {
-	var found []test
-
-	files, err := os.ReadDir("../../..")
-	if err != nil {
-		t.Error(err)
-	}
-
-	for _, f := range files {
-		name := f.Name()
-		if f.IsDir() && strings.Contains(name, "azure") {
-			found = append(found, defTest(name))
-		}
-	}
-
-	if len(found) == 0 {
-		t.Errorf("Did not discover any azure tests. Something wrong with relative paths?")
-	}
-
-	return found
+func TestAccAzurePy(t *testing.T) {
+	checkExamples(t, "azure-py", tests, getAzureBase)
 }
 
 func getAzureEnvironment() string {
