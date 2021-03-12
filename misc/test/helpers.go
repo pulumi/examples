@@ -79,7 +79,7 @@ func dirOption(t *testing.T, testName string) integration.ProgramTestOptions {
 func discoverTests(t *testing.T, folderNameFragment string) []string {
 	var found []string
 
-	files, err := os.ReadDir("../../..")
+	files, err := os.ReadDir("../..")
 	if err != nil {
 		t.Error(err)
 	}
