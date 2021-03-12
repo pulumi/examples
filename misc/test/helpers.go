@@ -92,7 +92,7 @@ func discoverTests(t *testing.T, folderNameFragment string) []string {
 	}
 
 	if len(found) == 0 {
-		t.Errorf("Did not discover any azure tests. Something wrong with relative paths?")
+		t.Errorf("Did not discover any *%s* tests. Something wrong with relative paths?", folderNameFragment)
 	}
 
 	return found
