@@ -45,8 +45,6 @@ func getBaseOptions(t *testing.T) integration.ProgramTestOptions {
 	return base
 }
 
-
-
 func assertHTTPResult(t *testing.T, output interface{}, headers map[string]string, check func(string) bool) bool {
 	return assertHTTPResultWithRetry(t, output, headers, 5*time.Minute, check)
 }

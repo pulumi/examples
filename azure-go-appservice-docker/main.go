@@ -39,7 +39,7 @@ func main() {
 		imageInDockerHub := "microsoft/azure-appservices-go-quickstart"
 		helloApp, err := web.NewWebApp(ctx, "helloApp", &web.WebAppArgs{
 			ResourceGroupName: resourceGroup.Name,
-			ServerFarmId: plan.ID(),
+			ServerFarmId:      plan.ID(),
 			SiteConfig: &web.SiteConfigArgs{
 				AppSettings: web.NameValuePairArray{
 					&web.NameValuePairArgs{
@@ -76,12 +76,12 @@ func main() {
 		}
 
 		credentials := pulumi.All(resourceGroup.Name, registry.Name).ApplyT(
-			func (args []interface{}) (*containerregistry.ListRegistryCredentialsResult, error) {
+			func(args []interface{}) (*containerregistry.ListRegistryCredentialsResult, error) {
 				resourceGroupName := args[0].(string)
 				registryName := args[1].(string)
 				return containerregistry.ListRegistryCredentials(ctx, &containerregistry.ListRegistryCredentialsArgs{
 					ResourceGroupName: resourceGroupName,
-					RegistryName: registryName,
+					RegistryName:      registryName,
 				})
 			},
 		)
@@ -99,9 +99,9 @@ func main() {
 			ImageName: registry.LoginServer.ApplyT(func(result string) (string, error) {
 				return fmt.Sprintf("%s/%s:v1.0.0", result, customImage), nil
 			}).(pulumi.StringOutput),
-			Build: &docker.DockerBuildArgs { Context: pulumi.String(fmt.Sprintf("./%s", customImage)) },
+			Build: &docker.DockerBuildArgs{Context: pulumi.String(fmt.Sprintf("./%s", customImage))},
 			Registry: &docker.ImageRegistryArgs{
-				Server: registry.LoginServer,
+				Server:   registry.LoginServer,
 				Username: adminUsername,
 				Password: adminPassword,
 			},
@@ -112,7 +112,7 @@ func main() {
 
 		getStartedApp, err := web.NewWebApp(ctx, "getStartedApp", &web.WebAppArgs{
 			ResourceGroupName: resourceGroup.Name,
-			ServerFarmId: plan.ID(),
+			ServerFarmId:      plan.ID(),
 			SiteConfig: &web.SiteConfigArgs{
 				AppSettings: web.NameValuePairArray{
 					&web.NameValuePairArgs{
@@ -138,7 +138,7 @@ func main() {
 						Value: pulumi.String("80"),
 					},
 				},
-				AlwaysOn:       pulumi.Bool(true),
+				AlwaysOn: pulumi.Bool(true),
 				LinuxFxVersion: myImage.ImageName.ApplyT(func(result string) (string, error) {
 					return fmt.Sprintf("DOCKER|%s", result), nil
 				}).(pulumi.StringOutput),

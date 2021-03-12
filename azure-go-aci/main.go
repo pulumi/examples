@@ -17,7 +17,7 @@ func main() {
 		imageName := "mcr.microsoft.com/azuredocs/aci-helloworld"
 		containerGroup, err := containerinstance.NewContainerGroup(ctx, "helloworld", &containerinstance.ContainerGroupArgs{
 			ResourceGroupName: resourceGroup.Name,
-			OsType: pulumi.String("Linux"),
+			OsType:            pulumi.String("Linux"),
 			Containers: &containerinstance.ContainerArray{
 				&containerinstance.ContainerArgs{
 					Name:  pulumi.String("acilinuxpublicipcontainergroup"),
@@ -27,7 +27,7 @@ func main() {
 					},
 					Resources: &containerinstance.ResourceRequirementsArgs{
 						Requests: &containerinstance.ResourceRequestsArgs{
-							Cpu: pulumi.Float64(1.0),
+							Cpu:        pulumi.Float64(1.0),
 							MemoryInGB: pulumi.Float64(1.5),
 						},
 					},
@@ -36,7 +36,7 @@ func main() {
 			IpAddress: &containerinstance.IpAddressArgs{
 				Ports: &containerinstance.PortArray{
 					&containerinstance.PortArgs{
-						Port: pulumi.Int(80),
+						Port:     pulumi.Int(80),
 						Protocol: pulumi.String("Tcp"),
 					},
 				},
