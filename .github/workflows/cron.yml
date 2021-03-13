@@ -255,6 +255,8 @@ jobs:
       run: echo 'running combination of dev pulumi cli + stable providers'
     - if: matrix.examples-test-matrix == 'default'
       run: echo 'running combination of dev pulumi cli + dev providers'
+    - if: matrix.examples-test-matrix == 'version=feature-3.0'
+      run: echo 'running combination of feature-3.0 cli + providers'
     - if: matrix.examples-test-matrix == 'no-latest-cli'
       name: Install Latest Stable Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v1.0.1
@@ -262,7 +264,7 @@ jobs:
         configuration
       run: ./ci-scripts/ci/run-at-head --${{ matrix.examples-test-matrix }}
     - if: matrix.examples-test-matrix == 'no-latest-packages' || matrix.examples-test-matrix
-        == 'default'
+        == 'default' || matrix.examples-test-matrix == 'version=feature-3.0'
       run: echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
@@ -287,6 +289,7 @@ jobs:
         - no-latest-cli
         - no-latest-packages
         - default
+        - version=feature-3.0
         go-version:
         - 1.16.x
         languages:
