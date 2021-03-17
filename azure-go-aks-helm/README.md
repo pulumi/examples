@@ -34,7 +34,7 @@ done.
     $ cd examples/azure-go-aks-helm
     ```
 
-2.  Restore dependencies:
+2.  Restore dependencies and build:
 
     ```bash
     $ go build
