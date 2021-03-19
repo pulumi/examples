@@ -1,0 +1,89 @@
+// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using Pulumi.AzureAD;
+using Pulumi.AzureNative.ContainerService;
+using Pulumi.AzureNative.ContainerService.Inputs;
+using Pulumi.AzureNative.Resources;
+
+class MyCluster {
+    public Pulumi.Output<string> ClusterName { get; set; }
+    public Pulumi.Output<string> Kubeconfig { get; set; }
+
+    public Pulumi.Kubernetes.Provider Provider { get; set; }
+
+    public MyCluster(MyConfig cfg) {
+        var resourceGroup = new ResourceGroup("rg");
+
+        var adApp = new Pulumi.AzureAD.Application("app");
+
+        var adSp = new ServicePrincipal("service-principal", new ServicePrincipalArgs() {
+            ApplicationId = adApp.ApplicationId
+        });
+
+        var adSpPassword = new ServicePrincipalPassword("sp-password", new ServicePrincipalPasswordArgs() {
+            ServicePrincipalId = adSp.Id,
+            Value = cfg.Password,
+            EndDate = "2099-01-01T00:00:00Z"
+        });
+
+        var k8sCluster = new ManagedCluster("cluster", new ManagedClusterArgs() {
+            ResourceGroupName = resourceGroup.Name,
+            AddonProfiles = new Dictionary<string,ManagedClusterAddonProfileArgs>{
+                ["KubeDashboard"] = new ManagedClusterAddonProfileArgs() { Enabled = true }
+	        },
+ 	        AgentPoolProfiles = new ManagedClusterAgentPoolProfileArgs[]{
+                 new ManagedClusterAgentPoolProfileArgs() {
+                     Count = cfg.NodeCount,
+                     VmSize = cfg.NodeSize,
+                     MaxPods = 110,
+                     Mode = "System",
+                     Name = "agentpool",
+                     OsDiskSizeGB = 30,
+                     OsType = "Linux",
+                     Type = "VirtualMachineScaleSets"
+                 }
+            },
+            DnsPrefix = resourceGroup.Name,
+            EnableRBAC = true,
+            KubernetesVersion = cfg.K8SVersion,
+            LinuxProfile = new ContainerServiceLinuxProfileArgs() {
+                AdminUsername = cfg.AdminUserName,
+                Ssh = new ContainerServiceSshConfigurationArgs() {
+                    PublicKeys = new ContainerServiceSshPublicKeyArgs() {
+                        KeyData = cfg.SshPublicKey
+                    }
+                }
+            },
+            NodeResourceGroup = "node-resource-group",
+            ServicePrincipalProfile = new ManagedClusterServicePrincipalProfileArgs() {
+                ClientId = adApp.ApplicationId,
+                Secret = adSpPassword.Value
+            }
+        });
+
+        ClusterName = k8sCluster.Name;
+
+        Kubeconfig = Pulumi.Output.Tuple(k8sCluster.Name, resourceGroup.Name)
+            .Apply(pair => {
+                var k8sClusterName = pair.Item1;
+                var resourceGroupName = pair.Item2;
+
+                return ListManagedClusterUserCredentials.InvokeAsync(new ListManagedClusterUserCredentialsArgs(){
+                    ResourceGroupName = resourceGroupName,
+                    ResourceName = k8sClusterName
+                });
+            })
+            .Apply(x => x.Kubeconfigs[0].Value)
+            .Apply(Convert.FromBase64String)
+            .Apply(Encoding.UTF8.GetString);
+
+        Provider = new Pulumi.Kubernetes.Provider("k8s-provider", new Pulumi.Kubernetes.ProviderArgs() {
+            KubeConfig = Kubeconfig
+        });
+    }
+
+}
