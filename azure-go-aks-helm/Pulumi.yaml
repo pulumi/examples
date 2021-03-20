@@ -1,3 +1,3 @@
-name: azure-ts-aks-helm
+name: azure-go-aks-helm
 runtime: go
 description: Azure Native Go Pulumi example featuring Helm chart deployment to AKS
