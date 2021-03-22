@@ -1,0 +1,6 @@
+name: azure-py-aks-helm
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Azure Native Python Pulumi example featuring Helm chart deployment to AKS
