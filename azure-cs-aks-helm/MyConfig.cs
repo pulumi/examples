@@ -1,5 +1,6 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
+using Pulumi;
 using Pulumi.Random;
 using Pulumi.Tls;
 
@@ -15,49 +16,49 @@ class MyConfig
     public string NodeSize { get; set; }
     public PrivateKey GeneratedKeyPair { get; set; }
     public string AdminUserName { get; set; }
-    public Pulumi.Output<string> Password { get; set; }
-    public Pulumi.Output<string> SshPublicKey { get; set; }
+    public Output<string> Password { get; set; }
+    public Output<string> SshPublicKey { get; set; }
 
     public MyConfig()
     {
-        var cfg = new Pulumi.Config();
+        var cfg = new Config();
 
-        K8SVersion = cfg.Get("k8sVersion") ?? "1.18.14";
-        NodeCount = cfg.GetInt32("nodeCount") ?? 2;
-        NodeSize = cfg.Get("nodeSize") ?? "Standard_D2_v2";
+        this.K8SVersion = cfg.Get("k8sVersion") ?? "1.18.14";
+        this.NodeCount = cfg.GetInt32("nodeCount") ?? 2;
+        this.NodeSize = cfg.Get("nodeSize") ?? "Standard_D2_v2";
 
-        GeneratedKeyPair = new PrivateKey("ssh-key", new PrivateKeyArgs()
+        this.GeneratedKeyPair = new PrivateKey("ssh-key", new PrivateKeyArgs
         {
             Algorithm = "RSA",
             RsaBits = 4096
         });
 
-        AdminUserName = cfg.Get("adminUserName") ?? "testuser";
+        this.AdminUserName = cfg.Get("adminUserName") ?? "testuser";
 
         var pw = cfg.Get("password");
         if (pw == null)
         {
-            Password = GenerateRandomPassword();
+            this.Password = this.GenerateRandomPassword();
         }
         else
         {
-            Password = Pulumi.Output.Create(pw);
+            this.Password = Output.Create(pw);
         }
 
         var sshPubKey = cfg.Get("sshPublicKey");
         if (sshPubKey == null)
         {
-            SshPublicKey = GeneratedKeyPair.PublicKeyOpenssh;
+            this.SshPublicKey = this.GeneratedKeyPair.PublicKeyOpenssh;
         }
         else
         {
-            SshPublicKey = Pulumi.Output.Create(sshPubKey);
+            this.SshPublicKey = Output.Create(sshPubKey);
         }
     }
 
-    private Pulumi.Output<string> GenerateRandomPassword()
+    private Output<string> GenerateRandomPassword()
     {
-        var pw = new RandomPassword("pw", new RandomPasswordArgs()
+        var pw = new RandomPassword("pw", new RandomPasswordArgs
         {
             Length = 20,
             Special = true

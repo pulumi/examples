@@ -4,45 +4,47 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using Pulumi;
 using Pulumi.AzureAD;
 using Pulumi.AzureNative.ContainerService;
 using Pulumi.AzureNative.ContainerService.Inputs;
 using Pulumi.AzureNative.Resources;
+using K8S = Pulumi.Kubernetes;
 
 class MyCluster
 {
-    public Pulumi.Output<string> ClusterName { get; set; }
-    public Pulumi.Output<string> Kubeconfig { get; set; }
+    public Output<string> ClusterName { get; set; }
+    public Output<string> Kubeconfig { get; set; }
 
-    public Pulumi.Kubernetes.Provider Provider { get; set; }
+    public K8S.Provider Provider { get; set; }
 
     public MyCluster(MyConfig cfg)
     {
         var resourceGroup = new ResourceGroup("rg");
 
-        var adApp = new Pulumi.AzureAD.Application("app");
+        var adApp = new Application("app");
 
-        var adSp = new ServicePrincipal("service-principal", new ServicePrincipalArgs()
+        var adSp = new ServicePrincipal("service-principal", new ServicePrincipalArgs
         {
             ApplicationId = adApp.ApplicationId
         });
 
-        var adSpPassword = new ServicePrincipalPassword("sp-password", new ServicePrincipalPasswordArgs()
+        var adSpPassword = new ServicePrincipalPassword("sp-password", new ServicePrincipalPasswordArgs
         {
             ServicePrincipalId = adSp.Id,
             Value = cfg.Password,
             EndDate = "2099-01-01T00:00:00Z"
         });
 
-        var k8sCluster = new ManagedCluster("cluster", new ManagedClusterArgs()
+        var k8sCluster = new ManagedCluster("cluster", new ManagedClusterArgs
         {
             ResourceGroupName = resourceGroup.Name,
             AddonProfiles = new Dictionary<string, ManagedClusterAddonProfileArgs>
             {
-                ["KubeDashboard"] = new ManagedClusterAddonProfileArgs() { Enabled = true }
+                ["KubeDashboard"] = new ManagedClusterAddonProfileArgs { Enabled = true }
             },
             AgentPoolProfiles = new ManagedClusterAgentPoolProfileArgs[]{
-                 new ManagedClusterAgentPoolProfileArgs() {
+                 new ManagedClusterAgentPoolProfileArgs {
                      Count = cfg.NodeCount,
                      VmSize = cfg.NodeSize,
                      MaxPods = 110,
@@ -56,34 +58,34 @@ class MyCluster
             DnsPrefix = resourceGroup.Name,
             EnableRBAC = true,
             KubernetesVersion = cfg.K8SVersion,
-            LinuxProfile = new ContainerServiceLinuxProfileArgs()
+            LinuxProfile = new ContainerServiceLinuxProfileArgs
             {
                 AdminUsername = cfg.AdminUserName,
-                Ssh = new ContainerServiceSshConfigurationArgs()
+                Ssh = new ContainerServiceSshConfigurationArgs
                 {
-                    PublicKeys = new ContainerServiceSshPublicKeyArgs()
+                    PublicKeys = new ContainerServiceSshPublicKeyArgs
                     {
                         KeyData = cfg.SshPublicKey
                     }
                 }
             },
             NodeResourceGroup = "node-resource-group",
-            ServicePrincipalProfile = new ManagedClusterServicePrincipalProfileArgs()
+            ServicePrincipalProfile = new ManagedClusterServicePrincipalProfileArgs
             {
                 ClientId = adApp.ApplicationId,
                 Secret = adSpPassword.Value
             }
         });
 
-        ClusterName = k8sCluster.Name;
+        this.ClusterName = k8sCluster.Name;
 
-        Kubeconfig = Pulumi.Output.Tuple(k8sCluster.Name, resourceGroup.Name)
+        this.Kubeconfig = Output.Tuple(k8sCluster.Name, resourceGroup.Name)
             .Apply(pair =>
             {
                 var k8sClusterName = pair.Item1;
                 var resourceGroupName = pair.Item2;
 
-                return ListManagedClusterUserCredentials.InvokeAsync(new ListManagedClusterUserCredentialsArgs()
+                return ListManagedClusterUserCredentials.InvokeAsync(new ListManagedClusterUserCredentialsArgs
                 {
                     ResourceGroupName = resourceGroupName,
                     ResourceName = k8sClusterName
@@ -93,10 +95,9 @@ class MyCluster
             .Apply(Convert.FromBase64String)
             .Apply(Encoding.UTF8.GetString);
 
-        Provider = new Pulumi.Kubernetes.Provider("k8s-provider", new Pulumi.Kubernetes.ProviderArgs()
+        this.Provider = new K8S.Provider("k8s-provider", new K8S.ProviderArgs
         {
             KubeConfig = Kubeconfig
         });
     }
-
 }

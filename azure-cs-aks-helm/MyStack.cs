@@ -7,7 +7,6 @@ using Pulumi.Kubernetes.Helm.V3;
 
 class MyStack : Stack
 {
-
     [Output]
     public Output<string> ApacheServiceIP { get; set; }
 
@@ -22,21 +21,21 @@ class MyStack : Stack
         var myConfig = new MyConfig();
         var myCluster = new MyCluster(myConfig);
 
-        var chart = new Chart("apache-chart", new ChartArgs() {
+        var chart = new Chart("apache-chart", new ChartArgs {
 			Chart = "apache",
 			Version = "8.3.2",
-			FetchOptions = new ChartFetchArgs() {
+			FetchOptions = new ChartFetchArgs {
 				Repo = "https://charts.bitnami.com/bitnami"
 			}
-        }, new ComponentResourceOptions() {
+        }, new ComponentResourceOptions {
             Provider = myCluster.Provider
         });
 
-        ApacheServiceIP = chart.GetResource<Service>("apache-chart").Apply(svc => {
+        this.ApacheServiceIP = chart.GetResource<Service>("apache-chart").Apply(svc => {
             return svc.Status.Apply(s => s.LoadBalancer.Ingress[0].Ip);
         });
 
-        ClusterName = myCluster.ClusterName;
-        Kubeconfig = myCluster.Kubeconfig;
+        this.ClusterName = myCluster.ClusterName;
+        this.Kubeconfig = myCluster.Kubeconfig;
     }
 }
