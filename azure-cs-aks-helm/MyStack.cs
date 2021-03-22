@@ -21,19 +21,21 @@ class MyStack : Stack
         var myConfig = new MyConfig();
         var myCluster = new MyCluster(myConfig);
 
-        var chart = new Chart("apache-chart", new ChartArgs {
-			Chart = "apache",
-			Version = "8.3.2",
-			FetchOptions = new ChartFetchArgs {
-				Repo = "https://charts.bitnami.com/bitnami"
-			}
-        }, new ComponentResourceOptions {
+        var chart = new Chart("apache-chart", new ChartArgs
+        {
+            Chart = "apache",
+            Version = "8.3.2",
+            FetchOptions = new ChartFetchArgs
+            {
+                Repo = "https://charts.bitnami.com/bitnami"
+            }
+        }, new ComponentResourceOptions
+        {
             Provider = myCluster.Provider
         });
 
-        this.ApacheServiceIP = chart.GetResource<Service>("apache-chart").Apply(svc => {
-            return svc.Status.Apply(s => s.LoadBalancer.Ingress[0].Ip);
-        });
+        this.ApacheServiceIP = chart.GetResource<Service>("apache-chart")
+            .Apply(svc => svc.Status.Apply(s => s.LoadBalancer.Ingress[0].Ip));
 
         this.ClusterName = myCluster.ClusterName;
         this.Kubeconfig = myCluster.Kubeconfig;
