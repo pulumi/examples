@@ -1,0 +1,3 @@
+name: azure-cs-aks-helm
+runtime: dotnet
+description: Azure Native C# Pulumi example featuring Helm chart deployment to AKS

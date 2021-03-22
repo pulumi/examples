@@ -1,4 +1,4 @@
-module go-ex
+module azure-go-aks-helm
 
 go 1.15
 

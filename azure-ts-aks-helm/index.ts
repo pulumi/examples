@@ -11,7 +11,6 @@ export let kubeconfig = cluster.kubeconfig;
 const apache = new k8s.helm.v3.Chart(
     "apache-chart",
     {
-        repo: "bitnami",
         chart: "apache",
         version: "8.3.2",
         fetchOpts: {
