@@ -8,7 +8,8 @@ using Pulumi.Tls;
 /// to the cluster are not set with `pulumi config`, we generate a
 /// random password and key pair.
 /// </summary>
-class MyConfig {
+class MyConfig
+{
     public string K8SVersion { get; set; }
     public int NodeCount { get; set; }
     public string NodeSize { get; set; }
@@ -25,7 +26,8 @@ class MyConfig {
         NodeCount = cfg.GetInt32("nodeCount") ?? 2;
         NodeSize = cfg.Get("nodeSize") ?? "Standard_D2_v2";
 
-        GeneratedKeyPair = new PrivateKey("ssh-key", new PrivateKeyArgs() {
+        GeneratedKeyPair = new PrivateKey("ssh-key", new PrivateKeyArgs()
+        {
             Algorithm = "RSA",
             RsaBits = 4096
         });
@@ -33,22 +35,30 @@ class MyConfig {
         AdminUserName = cfg.Get("adminUserName") ?? "testuser";
 
         var pw = cfg.Get("password");
-        if (pw == null) {
+        if (pw == null)
+        {
             Password = GenerateRandomPassword();
-        } else {
+        }
+        else
+        {
             Password = Pulumi.Output.Create(pw);
         }
 
-	var sshPubKey = cfg.Get("sshPublicKey");
-	if (sshPubKey == null) {
-	    SshPublicKey = GeneratedKeyPair.PublicKeyOpenssh;
-	} else {
-	    SshPublicKey = Pulumi.Output.Create(sshPubKey);
-	}
+        var sshPubKey = cfg.Get("sshPublicKey");
+        if (sshPubKey == null)
+        {
+            SshPublicKey = GeneratedKeyPair.PublicKeyOpenssh;
+        }
+        else
+        {
+            SshPublicKey = Pulumi.Output.Create(sshPubKey);
+        }
     }
 
-    private Pulumi.Output<string> GenerateRandomPassword() {
-        var pw = new RandomPassword("pw", new RandomPasswordArgs() {
+    private Pulumi.Output<string> GenerateRandomPassword()
+    {
+        var pw = new RandomPassword("pw", new RandomPasswordArgs()
+        {
             Length = 20,
             Special = true
         });
