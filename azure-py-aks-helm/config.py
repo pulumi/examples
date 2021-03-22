@@ -1,3 +1,5 @@
+# Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
+
 """Configures the example. If password and public key for connecting
 to the cluster are not set with `pulumi config`, we generate a random
 password and key pair.

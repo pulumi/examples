@@ -1,3 +1,5 @@
+# Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
+
 """Provisions Apache via a Helm chart onto an AKS cluster created in
 `cluster.py`.
 
