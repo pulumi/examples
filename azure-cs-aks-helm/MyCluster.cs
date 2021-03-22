@@ -43,7 +43,7 @@ class MyCluster
             {
                 ["KubeDashboard"] = new ManagedClusterAddonProfileArgs { Enabled = true }
             },
-            AgentPoolProfiles = new ManagedClusterAgentPoolProfileArgs[]{
+            AgentPoolProfiles = {
                  new ManagedClusterAgentPoolProfileArgs {
                      Count = cfg.NodeCount,
                      VmSize = cfg.NodeSize,
