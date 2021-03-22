@@ -34,25 +34,19 @@ done.
     $ cd examples/azure-py-aks-helm
     ```
 
-2.  Restore dependencies:
-
-    ```bash
-	# TODO
-    ```
-
-3.  Create a new stack, which is an isolated deployment target for this example:
+2.  Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
     $ pulumi stack init
     ```
 
-4.  Set the required configuration variables for this program:
+3.  Set the required configuration variables for this program:
 
     ```bash
     $ pulumi config set azure-native:location westus2
     ```
 
-5.  Deploy everything with the `pulumi up` command. This provisions
+4.  Deploy everything with the `pulumi up` command. This provisions
     all the Azure resources necessary, including an Active Directory
     service principal, AKS cluster, and then deploys the Apache Helm
     Chart, all in a single gesture (takes 5-10 min):
@@ -61,7 +55,11 @@ done.
     $ pulumi up
     ```
 
-6.  Now your cluster and Apache server are ready. Several output
+	Note: this command will create a virtual environment and restore
+    dependencies automatically as described in [Pulumi
+    docs)(https://www.pulumi.com/docs/intro/languages/python/#virtual-environments).
+
+5.  Now your cluster and Apache server are ready. Several output
     variables will be printed, including your cluster name
     (`cluster_name`), Kubernetes config (`kubeconfig`) and server IP
     address (`apache_service_ip`).
@@ -85,14 +83,14 @@ done.
     kubernetes     ClusterIP      10.0.0.1       <none>           443/TCP                      8m
     ```
 
-7.  At this point, you have a running cluster. Feel free to modify
+6.  At this point, you have a running cluster. Feel free to modify
     your program, and run `pulumi up` to redeploy changes. The Pulumi
     CLI automatically detects what has changed and makes the minimal
     edits necessary to accomplish these changes. This could be
     altering the existing chart, adding new Azure or Kubernetes
     resources, or anything, really.
 
-8.  Once you are done, you can destroy all of the resources, and the
+7.  Once you are done, you can destroy all of the resources, and the
     stack:
 
     ```bash

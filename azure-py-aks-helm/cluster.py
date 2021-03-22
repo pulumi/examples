@@ -76,4 +76,4 @@ kubeconfig = creds.kubeconfigs[0].value.apply(
     lambda enc: base64.b64decode(enc).decode())
 
 
-k8s_provider = k8s.Provider('k9s-provider', kubeconfig=kubeconfig)
+k8s_provider = k8s.Provider('k8s-provider', kubeconfig=kubeconfig)
