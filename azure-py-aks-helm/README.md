@@ -57,7 +57,7 @@ done.
 
 	Note: this command will create a virtual environment and restore
     dependencies automatically as described in [Pulumi
-    docs)(https://www.pulumi.com/docs/intro/languages/python/#virtual-environments).
+    docs](https://www.pulumi.com/docs/intro/languages/python/#virtual-environments).
 
 5.  Now your cluster and Apache server are ready. Several output
     variables will be printed, including your cluster name
