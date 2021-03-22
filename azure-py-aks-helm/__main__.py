@@ -1,17 +1,16 @@
-"""An Azure RM Python Pulumi program"""
+"""Provisions Apache via a Helm chart onto an AKS cluster created in
+`cluster.py`.
+
+"""
 
 import pulumi
 from pulumi.resource import ResourceOptions
-from pulumi_azure_native import storage
-from pulumi_azure_native import resources
 from pulumi_kubernetes.helm.v3 import Chart, ChartOpts
 
-import config
 import cluster
 
 
-apache = Chart(
-    'apache-chart',
+apache = Chart('apache-chart',
     ChartOpts(
         chart='apache',
         version='8.3.2',
@@ -19,9 +18,8 @@ apache = Chart(
     ResourceOptions(provider=cluster.k8s_provider))
 
 
-apache_service_ip = apache \
-    .get_resource('v1/Service', 'apache-chart') \
-    .apply(lambda res: res.status.load_balancer.ingress[0].ip)
+apache_service_ip = apache.get_resource('v1/Service', 'apache-chart').apply(
+    lambda res: res.status.load_balancer.ingress[0].ip)
 
 
 pulumi.export('cluster_name', cluster.k8s_cluster.name)

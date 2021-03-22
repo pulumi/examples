@@ -1,3 +1,9 @@
+"""Configures the example. If password and public key for connecting
+to the cluster are not set with `pulumi config`, we generate a random
+password and key pair.
+
+"""
+
 from pulumi import Config
 from pulumi_random import RandomPassword
 from pulumi_tls import PrivateKey
@@ -9,11 +15,12 @@ config = Config()
 k8s_version = config.get('k8sVersion') or '1.18.14'
 
 
-password = config.get('password') or \
-    RandomPassword('pw', length=20, special=True)
+password = config.get('password') or RandomPassword('pw',
+    length=20, special=True)
 
 
-generated_key_pair = PrivateKey('ssh-key', algorithm='RSA', rsa_bits=4096)
+generated_key_pair = PrivateKey('ssh-key',
+    algorithm='RSA', rsa_bits=4096)
 
 
 admin_username = config.get('adminUserName') or 'testuser'

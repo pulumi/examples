@@ -3,4 +3,4 @@ runtime:
   name: python
   options:
     virtualenv: venv
-description: TODO
+description: Azure Native Python Pulumi example featuring Helm chart deployment to AKS
