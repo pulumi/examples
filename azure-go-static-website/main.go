@@ -40,11 +40,11 @@ func main() {
 			return err
 		}
 
-		endpointOrigin := storageAccount.PrimaryEndpoints.Web().ApplyString(func(endpoint string) string {
+		endpointOrigin := storageAccount.PrimaryEndpoints.Web().ApplyT(func(endpoint string) string {
 			endpoint = strings.ReplaceAll(endpoint, "https://", "")
 			endpoint = strings.ReplaceAll(endpoint, "/", "")
 			return endpoint
-		})
+		}).(pulumi.StringOutput)
 
 		queryStringCachingBehaviorNotSet := cdn.QueryStringCachingBehaviorNotSet
 		endpoint, err := cdn.NewEndpoint(ctx, "endpoint", &cdn.EndpointArgs{
@@ -104,7 +104,7 @@ func main() {
 
 		// CDN endpoint to the website.
 		// Allow it some time after the deployment to get ready.
-		ctx.Export("cdnEndpoint", endpoint.HostName.ApplyString(func(hostName string) string {
+		ctx.Export("cdnEndpoint", endpoint.HostName.ApplyT(func(hostName string) string {
 			return fmt.Sprintf("%v%v", "https://", hostName)
 		}))
 

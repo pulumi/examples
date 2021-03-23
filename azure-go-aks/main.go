@@ -96,7 +96,7 @@ func main() {
 			return err
 		}
 
-		ctx.Export("kubeconfig", pulumi.All(cluster.Name, resourceGroup.Name, resourceGroup.ID()).ApplyString(func(args interface{}) (string, error) {
+		ctx.Export("kubeconfig", pulumi.All(cluster.Name, resourceGroup.Name, resourceGroup.ID()).ApplyT(func(args interface{}) (string, error) {
 			clusterName := args.([]interface{})[0].(string)
 			resourceGroupName := args.([]interface{})[1].(string)
 			creds, err := containerservice.ListManagedClusterUserCredentials(ctx, &containerservice.ListManagedClusterUserCredentialsArgs{
