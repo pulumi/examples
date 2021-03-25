@@ -2,13 +2,13 @@
 
 # AWS API Gateway V2 HTTP API Quickstart
 
-Set up a simple HTTP API using AWS API Gateway V2. The API executes a simple lambda function found 
-in `/app/index.js`.
+Set up a simple HTTP API using AWS API Gateway V2. The API executes a simple Lambda with function 
+found in `/app/index.js`.
 
 ## Prerequisites
 1.  Install [Pulumi](https://www.pulumi.com/docs/get-started/install/).
 2.  Configure [Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/).
-3.  Install [Python 3.6](https://www.python.org/downloads/) or higher.
+3.  Install [Python](https://www.pulumi.com/docs/intro/languages/python).
 
 ## Deploying and running the program
 
@@ -26,8 +26,6 @@ with `***`.
     ```
     $ pulumi config set aws:region us-east-2
     ```
-
-1.  Restore NPM modules via `npm install` or `yarn install`.
 
 1.  Run `pulumi up` to preview and deploy changes:
 
@@ -54,6 +52,8 @@ with `***`.
 
     Duration: 22s
     ```
+    Note: this command will create a virtual environment and restore dependencies automatically as
+    described in [Pulumi docs](https://www.pulumi.com/docs/intro/languages/python/#virtual-environments).
 
 1.  View the endpoint URL and curl a few routes:
 
@@ -68,6 +68,11 @@ with `***`.
     ```
 
 1.  To view the runtime logs of the Lambda function, use the `pulumi logs` command. To get a log stream, use `pulumi logs --follow`.
+
+1.  At this point, you have a running HTTP API. Feel free to modify your program, and run `pulumi up`
+to redeploy changes. The Pulumi CLI automatically detects what has changed and makes the minimal 
+edits necessary to accomplish these changes. This could be altering the function used by the Lambda,
+or anything else you'd like!
 
 ## Clean up
 
