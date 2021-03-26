@@ -1,0 +1,6 @@
+name: aws-py-apigatewayv2-http-api-quickstart
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Quickstart example of using AWS API Gateway v2 HTTP API
