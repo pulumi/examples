@@ -2,7 +2,7 @@
 
 # AWS API Gateway V2 HTTP API Quickstart
 
-Set up a simple HTTP API using AWS API Gateway V2. The API executes a simple Lambda with function 
+Set up a simple HTTP API using AWS API Gateway V2. The API executes a simple Lambda function 
 found in `/app/index.js`.
 
 ## Prerequisites
