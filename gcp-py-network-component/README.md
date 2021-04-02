@@ -29,6 +29,14 @@ can be composed into a higher-level, reusable abstraction.
     $ pulumi config set gcp:region us-central1
     ```
 
+1. Configure one or more subnetwork CIDRs for the program to use  
+   Note: This example is using structured configuration as per [Structured Configuration](https://www.pulumi.com/docs/intro/concepts/config/#structured-configuration)
+
+    ```bash
+    $ pulumi config set --path 'subnet_cidr_blocks[0]' 172.1.0.0/16
+    $ pulumi config set --path 'subnet_cidr_blocks[1]' 172.2.0.0/16
+    ```
+
 1. Run `pulumi up` to preview and deploy the changes:
 
     ```bash
