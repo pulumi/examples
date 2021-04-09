@@ -7,7 +7,7 @@ import json
 import boto3
 import requests
 import iam
-
+import base64
 # import slack_sdk as slack
 
 # // A simple slack bot that, when requested, will monitor for @mentions of your name and post them to
@@ -117,13 +117,15 @@ def lambda_handler(event):
         if not verification_token:
             raise Exception("mentionbot:verificationToken was not provided")
 
+        print(event.body)
+
         if not event.isBase64Encodeded or not event.body:
             print('Unexpected content received')
             print(event)
-
         else:
             # TODO: Parse buffer
             # const parsed = JSON.parse(Buffer.from(event.body, "base64").toString());
+            parsed = event.body
             if parsed.type == "url_verification":
                 # url_verification is the simple message slack sends to our endpoint to
                 # just make sure we're setup properly.  All we have to do is get the
@@ -201,7 +203,7 @@ def on_event_callback(request):
 # # [] Tested
 # message_topic.on_event('processTopicMessage', )
 
-def processMatch(match):
+def process_match(match):
     print(match)
 
 # [] written
@@ -221,7 +223,7 @@ def on_message_event_callback(request):
     # There might be multiple @mentions to the same person in the same message.
     # So make into a set to make things unique.
     for match in list(set(matches)):
-        processMatch(match)
+        process_match(match)
 
 # sendChannelMessage
 # [ ] first draft
@@ -237,6 +239,10 @@ def get_permalink(channel, timestamp):
 
 def on_app_mention_event_callback(request):
     event = request.event
+    if "unsubscribe" in event.lower():
+        unsubscribe_from_mentions(event)
+    else:
+        subscribe_to_mentions(event)
 
 # async function onAppMentionEventCallback(request: EventCallbackRequest) {
 #     // Got an app_mention to @mentionbot.
@@ -262,20 +268,16 @@ def unsubscribe_from_mentions(event):
     send_channel_messsage(event.channel, text)
 
 def subscribe_to_mentions(event):
+    print(channel)
     dynamodb = boto3.client('dynamodb')
-    client.put
-
-# async function subscribeToMentions(event: Event) {
-#     const client = new aws.sdk.DynamoDB.DocumentClient();
-
-#     // User is subscribing.  Add them from subscription table.
-#     await client.put({
-#         TableName: subscriptionsTable.name.get(),
-#         Item: { id: event.user, channel: event.channel },
-#     }).promise();
-
-#     const text = `Hi <@${event.user}>.  You've been subscribed to @ mentions. Send me an message containing 'unsubscribe' to stop receiving these notifications.`;
-#     await sendChannelMessage(event.channel, text);
-# }
+    client.put(
+        TableName = subscriptions_table.name,
+        Item = {
+            "id": event.user,
+            "channel": event.channel
+        }
+    })
+    text = "Hi <@"+event.user+">. You've been subscribed to @ mentions. Send me a message containing 'unsubscribe' to stop receiving those notifications."
+    send_channel_messsage(event.channel, text)
 
 # export const url = endpoint.url;
