@@ -59,6 +59,7 @@ $ git pull origin master
 - [Linode](#linode)
 - [Packet](#packet)
 - [Testing](#testing)
+- [Automation API](https://github.com/pulumi/automation-api-examples)
 
 ## AWS
 
@@ -380,3 +381,7 @@ Example   | Description |
 [Unit Tests in C#](testing-unit-cs)              | Mock-based unit tests in C#.
 [Testing with Policies](testing-pac-ts)          | Tests based on Policy-as-Code in TypeScript.
 [Integration Testing in Go](testing-integration) | Deploy-check-destroy tests in Go.
+
+## Automation API
+
+[Automation API Examples](https://github.com/pulumi/automation-api-examples)
