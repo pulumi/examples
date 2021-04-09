@@ -1,5 +1,3 @@
-import pulumi
-import pulumi_aws as aws
 
 # re -> regular expression package
 import re
@@ -9,6 +7,10 @@ import requests
 import iam
 import base64
 # import slack_sdk as slack
+
+import pulumi
+import pulumi_aws as aws
+
 
 # // A simple slack bot that, when requested, will monitor for @mentions of your name and post them to
 # // the channel you contacted the bot from.
@@ -34,20 +36,20 @@ subscriptions_table = aws.dynamodb.Table('subscriptions',
 # Slack has strict requirements on how fast you must be when responding to their messages. In order
 # to ensure we don't respond too slowly, all we do is enqueue messages to this topic, and then
 # return immediately.
-message_bus = aws.cloudwatch.EventBus('messages')
-message_bus = 
+# message_bus = aws.cloudwatch.EventBus('messages')
+# message_bus = 
 
 ##################
 ## Lambda Function
 ##################
 
 # Create a Lambda function, using code from the `./app` folder.
-lambda_func = aws.lambda_.Function("mylambda",
+lambda_func = aws.lambda_.Function("mention-processing-lambda",
     role=iam.lambda_role.arn,
     runtime="python3.7",
-    handler="webhook_lambda.handler",
+    handler="__main__.webhook_handler",
     code=pulumi.AssetArchive({
-        '.': pulumi.FileArchive('./')
+        '.': pulumi.FileArchive('.')
     })
 )
 
@@ -106,11 +108,11 @@ invoke_permission = aws.lambda_.Permission("api-lambda-permission",
 
 ###################################################
 #
-# Lambda function to handle stripe webhooks
+# Lambda function to handle slack webhooks
 #
 ###################################################
 
-def lambda_handler(event):
+def webhook_handler(event):
     try:
         if not slack_token:
             raise Exception("mentionbot:slackToken was not provided")
@@ -161,47 +163,21 @@ def lambda_handler(event):
         # Always return success so that Slack doesn't just immediately resend this message to us.
         return { "statusCode": 200, "body": "" }
 
-# async function onEventCallback(request: EventCallbackRequest) {
-
 # [x] First Draft Completed
 # [ ] Tested
 def on_event_callback(request):
-  if not hasattr(request, 'event'):
-    # No event in request, not processing any further.
-    return
-  event = request.event
-  client = boto3.client('sns')
+    if not hasattr(request, 'event'):
+        # No event in request, not processing any further.
+        return
 
-  client.publish(
-    TopicArn = message_topic.arn
-  )
+    event = request.event
 
-# // Hook up a lambda that will then process the topic when possible.
-# print(inspect.getmembers(message_topic), sep="\n")
-
-# .onEvent("processTopicMessage", async ev => {
-#     for (const record of ev.Records) {
-#         try {
-#             const request = <EventCallbackRequest>JSON.parse(record.Sns.Message);
-
-#             switch (request.event.type) {
-#                 case "message":
-#                     return await onMessageEventCallback(request);
-#                 case "app_mention":
-#                     return await onAppMentionEventCallback(request);
-#                 default:
-#                     console.log("Unknown event type: " + request.event.type);
-#             }
-#         }
-#         catch (err) {
-#             console.log("Error: " + (err.stack || err.message));
-#         }
-#     }
-# });
-
-# # [] written
-# # [] Tested
-# message_topic.on_event('processTopicMessage', )
+    if "message" == event.event_type:
+        on_message_event_callback(event)
+    elif "app_mention" == event.event_type:
+        on_app_mention_event_callback(event)
+    else:
+        print("Unknown event type: " + event.event_type)
 
 def process_match(match):
     print(match)
@@ -228,7 +204,7 @@ def on_message_event_callback(request):
 # sendChannelMessage
 # [ ] first draft
 # [ ] tested
-def send_channel_messsage(channel, text):
+def send_channel_message(channel, text):
     message = { "token": slack_token, "channel": channel, "text": text}
     r = requests.get('https://slack.com/api/chat.postMessage?' + json.dumps(message))
 
@@ -265,19 +241,20 @@ def unsubscribe_from_mentions(event):
         }
     )
     text = "Hi <@" + event.user + ">. You've been unsubscribed from @ mentions. Mention me again to resubscribe."
-    send_channel_messsage(event.channel, text)
+    send_channel_message(event.channel, text)
 
 def subscribe_to_mentions(event):
+    channel = event.channel
     print(channel)
-    dynamodb = boto3.client('dynamodb')
-    client.put(
+    dynamodb_client = boto3.client('dynamodb')
+    dynamodb_client.put(
         TableName = subscriptions_table.name,
         Item = {
             "id": event.user,
             "channel": event.channel
         }
-    })
+    )
     text = "Hi <@"+event.user+">. You've been subscribed to @ mentions. Send me a message containing 'unsubscribe' to stop receiving those notifications."
-    send_channel_messsage(event.channel, text)
+    send_channel_message(event.channel, text)
 
 # export const url = endpoint.url;
