@@ -1,0 +1,6 @@
+name: aws-py-slackbot
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: A slack chatbot app

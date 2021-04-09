@@ -86,7 +86,7 @@ http_endpoint = aws.apigatewayv2.Api("http-api-pulumi-example",
     protocol_type="HTTP"
 )
 
-# Note to self: example provided her ew as incorrect: https://www.pulumi.com/docs/reference/pkg/aws/apigatewayv2/integration/
+# Note to self: example provided here  was incorrect: https://www.pulumi.com/docs/reference/pkg/aws/apigatewayv2/integration/
 http_lambda_backend = aws.apigatewayv2.Integration("example",
     api_id= http_endpoint.id,
     integration_type="AWS_PROXY",
