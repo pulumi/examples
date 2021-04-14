@@ -2,10 +2,10 @@
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-
 import * as fs from "fs";
 import * as mime from "mime";
 import * as path from "path";
+
 
 // Load the Pulumi program configuration. These act as the "parameters" to the Pulumi program,
 // so that different Pulumi Stacks can be brought up using the same code.
@@ -19,10 +19,10 @@ const config = {
     targetDomain: stackConfig.require("targetDomain"),
     // (Optional) ACM certificate ARN for the target domain; must be in the us-east-1 region. If omitted, an ACM certificate will be created.
     certificateArn: stackConfig.get("certificateArn"),
-    // If true create an A record for the www subdomain of targetDomain pointing to the generated cloudfront distribution. 
+    // If true create an A record for the www subdomain of targetDomain pointing to the generated cloudfront distribution.
     // If a certificate was generated it will support this subdomain.
-    // default: true 
-    includeWWW: stackConfig.getBoolean("includeWWW") || true 
+    // default: true
+    includeWWW: stackConfig.getBoolean("includeWWW") || true,
 };
 
 // contentBucket is the S3 bucket that the website's contents will be stored in.
@@ -98,11 +98,11 @@ if (config.certificateArn === undefined) {
     });
 
     // if config.includeWWW include required subjectAlternativeNames to support the www subdomain
-    let certificateConfig:aws.acm.CertificateArgs = {
+    const certificateConfig: aws.acm.CertificateArgs = {
         domainName: config.targetDomain,
-        validationMethod: "DNS", 
-        subjectAlternativeNames: config.includeWWW ? [`www.${config.targetDomain}`]: []
-    }
+        validationMethod: "DNS",
+        subjectAlternativeNames: config.includeWWW ? [`www.${config.targetDomain}`] : [],
+    };
 
     const certificate = new aws.acm.Certificate("certificate", certificateConfig, { provider: eastRegion });
 
@@ -122,7 +122,7 @@ if (config.certificateArn === undefined) {
     });
 
     // if config.includeWWW ensure we validate the www subdomain as well
-    var subdomainCertificateValidationDomain; 
+    let subdomainCertificateValidationDomain;
     if (config.includeWWW) {
         subdomainCertificateValidationDomain = new aws.route53.Record(`${config.targetDomain}-validation2`, {
             name: certificate.domainValidationOptions[1].resourceRecordName,
@@ -134,8 +134,8 @@ if (config.certificateArn === undefined) {
     }
 
     // if config.includeWWW include the validation record for the www subdomain
-    const validationRecordFqdns = subdomainCertificateValidationDomain === undefined ? 
-        [certificateValidationDomain.fqdn] : [certificateValidationDomain.fqdn, subdomainCertificateValidationDomain.fqdn]
+    const validationRecordFqdns = subdomainCertificateValidationDomain === undefined ?
+        [certificateValidationDomain.fqdn] : [certificateValidationDomain.fqdn, subdomainCertificateValidationDomain.fqdn];
 
     /**
      * This is a _special_ resource that waits for ACM to complete validation via the DNS record
@@ -155,7 +155,7 @@ if (config.certificateArn === undefined) {
 }
 
 // if config.includeWWW include an alias for the www subdomain
-const distributionAliases = config.includeWWW ? [config.targetDomain, `www.${config.targetDomain}`]:[config.targetDomain]
+const distributionAliases = config.includeWWW ? [config.targetDomain, `www.${config.targetDomain}`] : [config.targetDomain];
 
 // distributionArgs configures the CloudFront distribution. Relevant documentation:
 // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html
@@ -279,11 +279,11 @@ function createWWWAliasRecord(targetDomain: string, distribution: aws.cloudfront
     const domainParts = getDomainAndSubdomain(targetDomain);
     const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
 
-    return new aws.route53.Record( 
-        `${targetDomain}-www-alias`, 
+    return new aws.route53.Record(
+        `${targetDomain}-www-alias`,
         {
-            name: `www.${targetDomain}`, 
-            zoneId: hostedZoneId, 
+            name: `www.${targetDomain}`,
+            zoneId: hostedZoneId,
             type: "A",
             aliases: [
                 {
@@ -292,18 +292,18 @@ function createWWWAliasRecord(targetDomain: string, distribution: aws.cloudfront
                     evaluateTargetHealth: true,
                 },
             ],
-        }
-    )
+        },
+    );
 }
 
 const aRecord = createAliasRecord(config.targetDomain, cdn);
-if (config.includeWWW){
+if (config.includeWWW) {
     const cnameRecord = createWWWAliasRecord(config.targetDomain, cdn);
 }
 
 // Export properties from this stack. This prints them at the end of `pulumi up` and
 // makes them easier to access from the pulumi.com.
-export const contentBucketUri = pulumi.interpolate `s3://${contentBucket.bucket}`;
+export const contentBucketUri = pulumi.interpolate`s3://${contentBucket.bucket}`;
 export const contentBucketWebsiteEndpoint = contentBucket.websiteEndpoint;
 export const cloudFrontDomain = cdn.domainName;
 export const targetDomainEndpoint = `https://${config.targetDomain}/`;
