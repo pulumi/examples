@@ -1,0 +1,13 @@
+{
+    "name": "gcp-ts-functions",
+    "version": "1.0.0",
+    "devDependencies": {
+        "@types/node": "^8.0.0",
+        "@types/express": "^4.16.0"
+    },
+    "dependencies": {
+        "@pulumi/gcp-native": "^0.0.2a",
+        "@pulumi/pulumi": "^3.0.0a",
+        "@pulumi/random": "^4.0.0a"
+    }
+}
