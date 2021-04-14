@@ -12,3 +12,6 @@ template:
       description: Relative path to the website's contents (e.g. the `./www` folder)
     static-website:certificateArn:
       description: (Optional) ACM certificate ARN for the target domain; must be in the us-east-1 region. If omitted, a certificate will be created.
+    static-website:includeWWW:
+      description: If true create an A record for the www subdomain of targetDomain pointing to the generated cloudfront distribution. If a certificate was generated it will support this subdomain.
+      default: true 

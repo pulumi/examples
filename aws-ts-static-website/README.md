@@ -19,7 +19,7 @@ Install prerequisites with:
 npm install
 ```
 
-Configure the Pulumi program. There are several configuration settings that need to be
+Configure the Pulumi program using ```pulumi config set KEY VALUE```. There are several configuration settings that need to be
 set:
 
 - `certificateArn` - ACM certificate to serve content from. ACM certificate creation needs to be
@@ -29,6 +29,7 @@ set:
   the parent domain (example.com) is a Route53 Hosted Zone in the AWS account you are running the
   Pulumi program in.
 - `pathToWebsiteContents` - Directory of the website's contents. e.g. the `./www` folder.
+- `includeWWW` - If true this will create an additional alias record for the www subdomain to your cloudfront distribution.
 
 ## How it works
 
@@ -54,9 +55,11 @@ const contentFile = new aws.s3.BucketObject(
 
 The Pulumi program then creates an `aws.cloudfront.Distribution` resource, which will serve
 the contents of the S3 bucket. The CloudFront distribution can be configured to handle
-things like custom error pages, cache TTLs, and so on.
+things like custom error pages, cache TTLs, and so on. If includeWWW is set to true both the
+cloudfront distribution and any generated certificate will contain an alias for accessing the site
+from the www subdomain.
 
-Finally, an `aws.route53.Record` is created to associate the domain name (www.example.com)
+Finally, an `aws.route53.Record(s)` is created to associate the domain name (example.com)
 with the CloudFront distribution (which would be something like d3naiyyld9222b.cloudfront.net).
 
 ```typescript
@@ -120,3 +123,18 @@ using the AWS CLI.
 ```bash
 aws s3 sync ./www/ s3://example-bucket/
 ```
+
+##  Access Denied while creating S3 bucket
+
+This error can occur when a bucket with the same name as targetDomain already exists. Remove all items from the pre-existing bucket
+and delete the bucket to continue.
+
+## Fail to delete S3 bucket while running pulumi destroy, this bucket is not empty.
+
+The contents of the S3 bucket are not automatically deleted. You can manually delete these contents in the AWS Console or with 
+the AWS CLI.
+
+## pulumi up fails when the targetDomain includes a www subdomain and includeWWW is set to true
+
+This will fail because the program will attempt to create an alias record and certificate for both the targetDomain
+and `www.${targetDomain}` when includeWWW is set to true.
