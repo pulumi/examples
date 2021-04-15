@@ -1,4 +1,4 @@
-name: go-lambda
+name: go-lambda-gateway
 runtime: go
 description: Basic example of an AWS lambda With API Gateway
 template:
