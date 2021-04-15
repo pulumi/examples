@@ -80,7 +80,7 @@ ecs_instance_role_policy_attach = aws.iam.RolePolicyAttachment(
 ecs_instance_profile = aws.iam.InstanceProfile("ecs-iam-instance-profile", role=ecs_instance_role.name)
 
 # Find an "ECS optimized" AMI to use for the EC2 container instances.
-ecs_instance_ami = aws.get_ami(
+ecs_instance_ami = aws.ec2.get_ami(
     most_recent="true",
     owners=["amazon"],
     filters=[

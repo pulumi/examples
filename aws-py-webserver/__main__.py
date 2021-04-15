@@ -5,7 +5,7 @@ import pulumi_aws as aws
 
 size = 't2.micro'
 
-ami = aws.get_ami(most_recent=True,
+ami = aws.ec2.get_ami(most_recent=True,
                   owners=["137112412989"],
                   filters=[aws.GetAmiFilterArgs(name="name", values=["amzn-ami-hvm-*"])])
 
