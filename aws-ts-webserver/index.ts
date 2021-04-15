@@ -10,7 +10,7 @@ const ami = aws.ec2.getAmi({
     ],
     owners: ["137112412989"], // Amazon
     mostRecent: true,
-}, { async: true }).then(result => result.id);
+}).then(result => result.id);
 
 // create a new security group for port 80
 const group = new aws.ec2.SecurityGroup("web-secgrp", {

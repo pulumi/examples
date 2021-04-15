@@ -45,7 +45,7 @@ After cloning this repo, from this working directory, run these commands:
     publicIp        53.40.227.82
     ```
 
-5. Thanks to the security group making port 80 accessible to the 0.0.0.0/0 CIDR block, we can curl it:
+5. Thanks to the security group making port 80 accessible to the 0.0.0.0/0 CIDR block (all addresses), we can curl it:
 
     ```bash
     $ curl $(pulumi stack output publicIp)
