@@ -1,4 +1,4 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
@@ -97,14 +97,16 @@ if (config.certificateArn === undefined) {
         region: "us-east-1", // Per AWS, ACM certificate must be in the us-east-1 region.
     });
 
-    // if config.includeWWW include required subjectAlternativeNames to support the www subdomain
-    const certificateConfig: aws.acm.CertificateArgs = {
+    // If config.includeWWW include required subjectAlternativeNames to support the www subdomain
+    const certificate = new aws.acm.Certificate("certificate", {
         domainName: config.targetDomain,
         validationMethod: "DNS",
-        subjectAlternativeNames: config.includeWWW ? [`www.${config.targetDomain}`] : [],
-    };
-
-    const certificate = new aws.acm.Certificate("certificate", certificateConfig, { provider: eastRegion });
+        subjectAlternativeNames: config.includeWWW ? [`www.${config.targetDomain}`]: [],
+        },
+        {
+            provider: eastRegion,
+        },
+    );
 
     const domainParts = getDomainAndSubdomain(config.targetDomain);
     const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
