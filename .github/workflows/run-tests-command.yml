@@ -252,7 +252,6 @@ jobs:
     - name: Install + Configure Helm
       run: |-
         curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-        helm init -c
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -386,7 +385,6 @@ jobs:
     - name: Install + Configure Helm
       run: |-
         curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-        helm init -c
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -470,7 +468,6 @@ jobs:
     - name: Install + Configure Helm
       run: |-
         curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-        helm init -c
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
