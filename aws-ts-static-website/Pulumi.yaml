@@ -1,4 +1,4 @@
-name: static-website
+name: aws-ts-static-website
 description: Static website example
 runtime: nodejs
 template:
