@@ -19,7 +19,10 @@ class MyStack : Stack
         var resourceGroup = new ResourceGroup("azure-cs-aks");
 
         // Create an AD service principal
-        var adApp = new Application("aks");
+        var adApp = new Application("aks", new ApplicationArgs
+        {
+            DisplayName = "aks"
+        });
         var adSp = new ServicePrincipal("aksSp", new ServicePrincipalArgs
         {
             ApplicationId = adApp.ApplicationId

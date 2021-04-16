@@ -19,7 +19,7 @@ class AksCluster : ComponentResource
 {
     public AksCluster(string name, AksClusterArgs? args = default) : base("example:my:AksCluster", name)
     {
-        var adApp = new Application("aks", null, new() { Parent = this });
+        var adApp = new Application("aks", new ApplicationArgs{ DisplayName = "aks" }, new() { Parent = this });
         var adSp = new ServicePrincipal("aksSp", new()
         {
             ApplicationId = adApp.ApplicationId,
