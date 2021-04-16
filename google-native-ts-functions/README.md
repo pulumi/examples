@@ -2,13 +2,13 @@
 
 # Google Cloud Functions
 
-An example of deploying an HTTP Google Cloud Function endpoint using GCP Native provider and TypeScript.
+An example of deploying an HTTP Google Cloud Function endpoint using Google Cloud Native provider and TypeScript.
 
 ## Prerequisites
 
 0. [Ensure you have the latest Node.js and NPM](https://nodejs.org/en/download/)
 2. [Install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
-3. [Configure Pulumi to access your GCP account](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
+3. [Configure Pulumi to access your Google Cloud account](https://www.pulumi.com/docs/intro/cloud-providers/google/setup/)
 
 ## Running the App
 
@@ -21,14 +21,14 @@ An example of deploying an HTTP Google Cloud Function endpoint using GCP Native 
 2.  Create a new stack:
 
     ```
-    $ pulumi stack init gcp-fn
+    $ pulumi stack init google-fn
     ```
 
-3.  Configure your GCP project and region:
+3.  Configure your Google Cloud project and region:
 
     ```
-    $ pulumi config set gcp-native:project <projectname> 
-    $ pulumi config set gcp-native:region <region>
+    $ pulumi config set google-native:project <projectname> 
+    $ pulumi config set google-native:region <region>
     ```
 
 4.  Run `pulumi up` to preview and deploy changes:
@@ -50,11 +50,11 @@ An example of deploying an HTTP Google Cloud Function endpoint using GCP Native 
     ```
     $ pulumi stack output url
     https://us-central1-pulumi-development.cloudfunctions.net/greeting-function-7f95447
-    $ curl "$(pulumi stack output url)"
+    $ curl "$(pulumi stack output functionUrl)"
     Greetings from Google Cloud Functions!
     ```
 
-6. Clean up your GCP and Pulumi resources:
+6. Clean up your Google Cloud and Pulumi resources:
 
     ```
     $ pulumi destroy
