@@ -1,11 +1,11 @@
-name: gcp-rails
+name: google-rails
 runtime: nodejs
 description: A containerized Ruby on Rails app using managed Kubernetes and PostgreSQL
 template:
   config:
-    gcp:project:
+    google-native:project:
       description: The Google Cloud project to deploy into
-    gcp:zone:
+    google-native:zone:
       description: The Google Cloud zone
       default: us-west1-a
     clusterPassword:

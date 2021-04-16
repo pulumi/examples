@@ -1,12 +1,13 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-import * as gcp from "@pulumi/gcp-native";
+import * as gcloud from "@pulumi/google-native";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-import { clusterNodeCount, clusterNodeMachineType, clusterPassword, clusterUsername, masterVersion, project, region, zone } from "./config";
+import { clusterPassword, clusterUsername, project, region, zone } from "./config";
+import { db, testDb } from "./db";
 
 const clusterName = "gke-native";
-const cluster = new gcp.container.v1.Cluster("cluster", {
+const cluster = new gcloud.container.v1.Cluster("cluster", {
     projectsId: project,
     locationsId: region,
     clustersId: clusterName,
@@ -27,33 +28,36 @@ const cluster = new gcp.container.v1.Cluster("cluster", {
             "https://www.googleapis.com/auth/compute",
         ],
     },
-});
+}, {dependsOn: [db, testDb]});
 
-const nodepoolName = "nodepool";
-const nodePool = new gcp.container.v1.ClusterNodePool(`primary-node-pool`, {
-    clustersId: clusterName,
-    initialNodeCount: clusterNodeCount,
-    locationsId: cluster.location,
-    nodePoolsId: nodepoolName,
-    name: nodepoolName,
-    projectsId: project,
-    config: {
-        preemptible: true,
-        machineType: clusterNodeMachineType,
-        oauthScopes: [
-            "https://www.googleapis.com/auth/compute",
-            "https://www.googleapis.com/auth/devstorage.read_only",
-            "https://www.googleapis.com/auth/logging.write",
-            "https://www.googleapis.com/auth/monitoring",
-        ],
-    },
-    version: masterVersion,
-    management: {
-        autoRepair: true,
-    },
-}, {
-    dependsOn: [cluster],
-});
+// Uncomment the following to create a custom nodepool instead of
+//  relying on default nodepool.
+
+// const nodepoolName = "nodepool";
+// const nodePool = new gcp.container.v1.ClusterNodePool(`node-pool`, {
+//     clustersId: clusterName,
+//     initialNodeCount: clusterNodeCount,
+//     locationsId: cluster.location,
+//     nodePoolsId: nodepoolName,
+//     name: nodepoolName,
+//     projectsId: project,
+//     config: {
+//         preemptible: true,
+//         machineType: clusterNodeMachineType,
+//         oauthScopes: [
+//             "https://www.googleapis.com/auth/compute",
+//             "https://www.googleapis.com/auth/devstorage.read_only",
+//             "https://www.googleapis.com/auth/logging.write",
+//             "https://www.googleapis.com/auth/monitoring",
+//         ],
+//     },
+//     version: masterVersion,
+//     management: {
+//         autoRepair: true,
+//     },
+// }, {
+//     dependsOn: [cluster],
+// });
 
 // Manufacture a GKE-style Kubeconfig. Note that this is slightly "different" because of the way GKE requires
 // gcloud to be in the picture for cluster authentication (rather than using the client cert/key directly).
@@ -92,5 +96,5 @@ users:
 export const provider = new k8s.Provider("gke-k8s", {
     kubeconfig: kubeConfig,
 }, {
-    dependsOn: [nodePool],
+    dependsOn: [cluster],
 });

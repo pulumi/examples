@@ -1,12 +1,12 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/gcp-ts-k8s-ruby-on-rails-postgresql/infra)
 
-# Containerized Ruby on Rails App Delivery on GCP-Native
+# Containerized Ruby on Rails App Delivery using the Google Native Pulumi Provider
 
 This example is a full end to end example of delivering a containerized Ruby on Rails application. It
 
 -   Provisions a [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) cluster
 -   Provisions a fully managed Google Cloud SQL PostgreSQL database
--   Builds a containerized Ruby on Rails container image, and publishes it to Docker Hub
+-   Builds a containerized Ruby on Rails container image, and publishes it to the Google Container Registry
 -   Deploys that container image as a Kubernetes Service inside of the provisioned GKE cluster
 
 All of these happen behind a single `pulumi up` command, and are expressed in just a handful of TypeScript.
@@ -15,12 +15,12 @@ All of these happen behind a single `pulumi up` command, and are expressed in ju
 
 Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
 Ensure you have [downloaded and installed Docker](https://docs.docker.com/install/)
-We will be deploying to Google Cloud Platform (GCP), so you will need an account. If you don't have an account,
+We will be deploying to Google Cloud, so you will need an account. If you don't have an account,
 [sign up for free here](https://cloud.google.com/free/). In either case,
-[follow the instructions here](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/) to connect Pulumi to your GCP account.
+[follow the instructions here](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/) to connect Pulumi to your Google Cloud account.
 
-This example assumes that you have GCP's `gcloud` CLI on your path. This is installed as part of the
-[GCP SDK](https://cloud.google.com/sdk/).
+This example assumes that you have Google Cloud's `gcloud` CLI on your path. This is installed as part of the
+[Google Cloud SDK](https://cloud.google.com/sdk/).
 
 ## Running the Example
 
@@ -30,15 +30,15 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
 1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init gcp-rails-dev
+    $ pulumi stack init dev
     ```
 
 2. Set the required configuration variables for this program:
 
     ```bash
-    $ pulumi config set gcp:project [your-gcp-project-here]
-    $ pulumi config set gcp:region us-west1 # any valid region
-    $ pulumi config set gcp:zone us-west1-a # any valid GCP zone under above region
+    $ pulumi config set google-native:project [your-gcp-project-here]
+    $ pulumi config set google-native:region us-west1 # any valid region
+    $ pulumi config set google-native:zone us-west1-a # any valid Google Cloud zone under above region
     $ pulumi config set clusterPassword --secret [your-new-cluster-password-here] # must be at least 16 characters
     $ pulumi config set dbUsername [your-new-db-username-here]
     $ pulumi config set dbPassword --secret [your-new-db-password-here]
@@ -48,9 +48,8 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
 
     Config variables that use the `--secret` flag are [encrypted and not stored as plaintext](https://www.pulumi.com/docs/intro/concepts/config/#secrets).
 
-    By default, your cluster will have 3 nodes of type `n1-standard-1`. This is configurable, however; for instance
-    if we'd like to choose 5 nodes of type `n1-standard-2` instead, we can run these commands:
-
+    By default, your cluster will use the default nodepool. `index.ts` includes a reference incantation to enable an additional nodepool 
+    which can be configured as follows:
     ```bash
     $ pulumi config set clusterNodeCount 5
     $ pulumi config set clusterNodeMachineType n1-standard-2
@@ -68,19 +67,19 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
     This will show you a preview, ask for confirmation, and then chug away at provisioning your cluster:
 
     ```
-    Updating stack 'gcp-rails-dev'
+    Updating stack 'google-rails-dev'
     Performing changes:
 
-     Type                                        Name                     Plan       Info
- +   pulumi:pulumi:Stack                         gcp-rails-gcp-rails-dev  create
- +   ├─ docker:image:Image                       rails-app                create
- +   ├─ gcp-native:container/v1:Cluster          cluster                  create     
- +   ├─ gcp-native:sqladmin/v1beta4:Instance     web-db                   create     
- +   ├─ gcp-native:container/v1:ClusterNodePool  primary-node-pool        create     
- +   ├─ pulumi:providers:kubernetes              gke-k8s                  create     
- +   ├─ gcp:sql:User                             web-db-user              create     
- +   ├─ kubernetes:apps/v1:Deployment            rails-deployment         create     
- +   └─ kubernetes:core/v1:Service               rails-service            create     
+     Type                                           Name                        Plan       Info
+ +   pulumi:pulumi:Stack                            google-rails-dev            create
+ +   ├─ docker:image:Image                          rails-app                   create
+ +   ├─ google-native:container/v1:Cluster          cluster                     create     
+ +   ├─ google-native:sqladmin/v1beta4:Instance     web-db                      create     
+ +   ├─ google-native:container/v1:ClusterNodePool  primary-node-pool           create     
+ +   ├─ pulumi:providers:kubernetes                 gke-k8s                     create     
+ +   ├─ gcp:sql:User                                web-db-user                 create     
+ +   ├─ kubernetes:apps/v1:Deployment               rails-deployment            create     
+ +   └─ kubernetes:core/v1:Service                  rails-service               create     
     Diagnostics:
       docker:image:Image (rails-app):
         Building container image: context=../app
@@ -104,13 +103,13 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
 
     After this completes, numerous outputs will show up. `appAddress` is the URL that your Rails app will be available
     at, `appName` is the resulting Kubernetes Deployment, `dbAddress` is your PostgreSQL hostname in case you want to
-    connect to it with `psql`, and `kueConfig` is the full Kubernetes configuration that you can use with `kubectl`.
+    connect to it with `psql`, and `kubeConfig` is the full Kubernetes configuration that you can use with `kubectl`.
 
 4. Open a browser to visit the site, `open $(pulumi stack output appAddress)/todo_lists`. Make some todo lists!
 
 5. At this point, you have a running cluster. Feel free to modify your program, and run `pulumi up` to redeploy changes.
    The Pulumi CLI automatically detects what has changed and makes the minimal edits necessary to accomplish these
-   changes. This could be altering the app code, adding new GCP or Kubernetes resources, or anything, really.
+   changes. This could be altering the app code, adding new Google Cloud or Kubernetes resources, or anything, really.
 
 6. Once you are done, you can destroy all of the resources, and the stack:
 

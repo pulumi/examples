@@ -1,13 +1,14 @@
 {
-    "name": "gcp-rails",
+    "name": "google-rails",
     "devDependencies": {
         "@types/node": "^8.0.0"
     },
     "dependencies": {
         "@pulumi/docker": "^2.0.0",
         "@pulumi/gcp": "^4.21.0",
-        "@pulumi/gcp-native": "latest",
+        "@pulumi/google-native": "^0.0.1a",
         "@pulumi/kubernetes": "^2.0.0",
-        "@pulumi/pulumi": "^3.0.0b"
+        "@pulumi/pulumi": "^3.0.0b",
+        "@pulumi/random": "^3.2.0"
     }
 }
