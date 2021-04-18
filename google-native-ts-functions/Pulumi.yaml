@@ -1,0 +1,9 @@
+name: google-cloud-ts-functions
+runtime: nodejs
+description: Google Cloud Functions example
+template:
+  config:
+    google-native:project:
+      description: The Google Cloud project to deploy into
+    google-native:region:
+      description: The Google Cloud region
