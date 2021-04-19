@@ -14,7 +14,7 @@ config = pulumi.Config()
 resource_group = resources.ResourceGroup("azure-native-py-aks")
 
 # Create an AD service principal
-ad_app = azuread.Application("aks", None)
+ad_app = azuread.Application("aks", display_name="aks")
 ad_sp = azuread.ServicePrincipal("aksSp", application_id=ad_app.application_id)
 
 # Generate random password
