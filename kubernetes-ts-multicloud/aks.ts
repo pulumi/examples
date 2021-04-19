@@ -43,7 +43,7 @@ export class AksCluster extends pulumi.ComponentResource {
         }, {parent: this}).publicKeyOpenssh;
 
         // Create the AD service principal for the K8s cluster.
-        const adApp = new azuread.Application("aks", undefined, {parent: this});
+        const adApp = new azuread.Application("aks", {displayName: `${name}-ad`}, {parent: this});
         const adSp = new azuread.ServicePrincipal("aksSp", {
             applicationId: adApp.applicationId,
         }, {parent: this});
@@ -79,14 +79,13 @@ export class AksCluster extends pulumi.ComponentResource {
         // Now allocate an AKS cluster.
         this.cluster = new azure.containerservice.KubernetesCluster("aksCluster", {
             resourceGroupName: resourceGroup.name,
-            agentPoolProfiles: [{
+            defaultNodePool: {
                 name: "aksagentpool",
-                count: 2,
+                nodeCount: 2,
                 vmSize: "Standard_B2s",
-                osType: "Linux",
                 osDiskSizeGb: 30,
                 vnetSubnetId: subnet.id,
-            }],
+            },
             dnsPrefix: name,
             linuxProfile: {
                 adminUsername: "aksuser",
