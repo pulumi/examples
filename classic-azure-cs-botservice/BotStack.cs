@@ -77,7 +77,8 @@ class BotStack : Stack
         {
             Oauth2AllowImplicitFlow = false,
             AvailableToOtherTenants = true,
-            PublicClient = true
+            PublicClient = true,
+            DisplayName = "msapp"
         });
 
         var pwd = new RandomPassword("password", new RandomPasswordArgs
