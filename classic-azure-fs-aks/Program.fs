@@ -29,7 +29,9 @@ module Helpers =
                 RsaBits = input 4096
             ))
 
-    let createApplication name = Application(name)
+    let createApplication name = 
+        Application(name,
+            ApplicationArgs(DisplayName = input "aks"))
 
     let createServicePrincipal name (app: Application) =
         ServicePrincipal(name,
