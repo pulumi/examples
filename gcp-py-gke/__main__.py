@@ -67,7 +67,7 @@ users:
         expiry-key: '{{.credential.token_expiry}}'
         token-key: '{{.credential.access_token}}'
       name: gcp
-""".format(info[2]['clusterCaCertificate'], info[1], '{0}_{1}_{2}'.format(project, zone, info[0])))
+""".format(info[2]['cluster_ca_certificate'], info[1], '{0}_{1}_{2}'.format(project, zone, info[0])))
 
 # Make a Kubernetes provider instance that uses our cluster from above.
 k8s_provider = Provider('gke_k8s', kubeconfig=k8s_config)
