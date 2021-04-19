@@ -15,10 +15,10 @@
 package main
 
 import (
-	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/apps/v1"
-	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/core/v1"
-	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes/meta/v1"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
+	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/apps/v1"
+	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/core/v1"
+	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/meta/v1"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 type ServiceDeployment struct {
@@ -56,7 +56,7 @@ func NewServiceDeployment(
 		var result []corev1.ContainerPort
 		for _, port := range ports {
 			result = append(result, corev1.ContainerPort{
-				ContainerPort: &port,
+				ContainerPort: port,
 			})
 		}
 		return result
@@ -107,7 +107,7 @@ func NewServiceDeployment(
 		var result []corev1.ServicePort
 		for _, port := range ports {
 			result = append(result, corev1.ServicePort{
-				Port:       &port,
+				Port:       port,
 				TargetPort: port,
 			})
 		}
