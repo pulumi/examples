@@ -1,0 +1,3 @@
+name: google-native-ts-gke-autopilot-helloworld
+runtime: nodejs
+description: A minimal Google Cloud Typescript Pulumi program to create an GKE cluster with autopilot enabled
