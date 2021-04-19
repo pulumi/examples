@@ -32,7 +32,7 @@ app = Deployment(
             metadata=ObjectMetaArgs(labels=app_labels),
             spec=PodSpecArgs(containers=[ContainerArgs(name='nginx', image='nginx')]),
         ),
-    ), __opts__=ResourceOptions(provider=k8s_provider))
+    ), opts=ResourceOptions(provider=k8s_provider))
 
 ingress = Service(
     'do-app-svc',
@@ -40,7 +40,7 @@ ingress = Service(
         type='LoadBalancer',
         selector=app_labels,
         ports=[ServicePortArgs(port=80)],
-    ), __opts__=ResourceOptions(provider=k8s_provider, custom_timeouts=CustomTimeouts(create="15m", delete="15m")))
+    ), opts=ResourceOptions(provider=k8s_provider, custom_timeouts=CustomTimeouts(create="15m", delete="15m")))
 
 ingress_ip = ingress.status.apply(lambda s: s.load_balancer.ingress[0].ip)
 
