@@ -229,10 +229,14 @@ github.com/pulumi/pulumi-aws/sdk/v3 v3.1.0 h1:huTCq1WTR4f45JA1yJHqRVtS7v7aoKCYs4
 github.com/pulumi/pulumi-aws/sdk/v3 v3.1.0/go.mod h1:Tiu0MSxPkufZDbNTXNMb8cKiIRWLt+7spM3DPuzLcBc=
 github.com/pulumi/pulumi-aws/sdk/v4 v4.0.0-beta.2 h1:JRgJZklxoa4FgP77EHpLykXC6c/WXpq/4qJQqy9AJrc=
 github.com/pulumi/pulumi-aws/sdk/v4 v4.0.0-beta.2/go.mod h1:Y8Y6tuCKKYQWSuWVnvGQ6hjnzXsEY6yPUiIZMqjCsgQ=
+github.com/pulumi/pulumi-aws/sdk/v4 v4.0.0 h1:hotld6lXp7a1LiPsAgcp3BrGgvj3O/IB5QzdPukyC34=
+github.com/pulumi/pulumi-aws/sdk/v4 v4.0.0/go.mod h1:TCdXM+R0dW0CFco+lb3Q7qRYWmYxDbJ7EPWYzRVHWMw=
 github.com/pulumi/pulumi-random/sdk/v2 v2.1.3 h1:Onu+IWeOlc+A1bJkqtZOWiA+gBGhMcaOVSgDx+6pBtM=
 github.com/pulumi/pulumi-random/sdk/v2 v2.1.3/go.mod h1:PPzzdlKYXLuBjcl6T4FvvQgKBntKa9gMbZtgslBlVHc=
 github.com/pulumi/pulumi-random/sdk/v4 v4.0.0-beta.2 h1:ZIy7E7Dm0VB2oUQVF3v/PLZ1+nieS2z5/JpV5YI4lxA=
 github.com/pulumi/pulumi-random/sdk/v4 v4.0.0-beta.2/go.mod h1:zwWMVqeh5mz8vCIo6B0vK5BTYMJusaRO+08rWtkwAdw=
+github.com/pulumi/pulumi-random/sdk/v4 v4.0.0 h1:O1khaUAtKi4uRwaLX/M11C0sZ55mUb+AYeynjqhCxf0=
+github.com/pulumi/pulumi-random/sdk/v4 v4.0.0/go.mod h1:Z0oFSiqdTS5wChe6qZkzViWRgcSHNGWfL5dw3cHcwh0=
 github.com/pulumi/pulumi/sdk/v2 v2.0.0 h1:3VMXbEo3bqeaU+YDt8ufVBLD0WhLYE3tG3t/nIZ3Iac=
 github.com/pulumi/pulumi/sdk/v2 v2.0.0/go.mod h1:W7k1UDYerc5o97mHnlHHp5iQZKEby+oQrQefWt+2RF4=
 github.com/pulumi/pulumi/sdk/v2 v2.2.1/go.mod h1:QNbWpL4gvf3X0lUFT7TXA2Jo1ff/Ti2l97AyFGYwvW4=
@@ -240,6 +244,8 @@ github.com/pulumi/pulumi/sdk/v2 v2.5.0 h1:jZ0zf1XEMoelKQrqbrvqzGp5yhUzjLEhw4ho7e
 github.com/pulumi/pulumi/sdk/v2 v2.5.0/go.mod h1:llk6tmXss8kJrt3vEXAkwiwgZOuINEFmKIfMveVIwO8=
 github.com/pulumi/pulumi/sdk/v3 v3.0.0-beta.2 h1:uw3nUFEtygkBTSVjL+kvE12pS8imafKcALPewEFVv1c=
 github.com/pulumi/pulumi/sdk/v3 v3.0.0-beta.2/go.mod h1:GBHyQ7awNQSRmiKp/p8kIKrGrMOZeA/k2czoM/GOqds=
+github.com/pulumi/pulumi/sdk/v3 v3.0.0 h1:zkragE05t1Rco/ymfqMU4UXdEmKMmOH0SXhUKQxujxQ=
+github.com/pulumi/pulumi/sdk/v3 v3.0.0/go.mod h1:GBHyQ7awNQSRmiKp/p8kIKrGrMOZeA/k2czoM/GOqds=
 github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af h1:gu+uRPtBe88sKxUCEXRoeCvVG90TJmwhiqRpvdhQFng=
 github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af/go.mod h1:XWv6SoW27p1b0cqNHllgS5HIMJraePCO15w5zCzIWYg=
 github.com/russross/blackfriday/v2 v2.0.1 h1:lPqVAte+HuHNfhJ/0LC98ESWRz8afy9tM/0RK8m9o+Q=
