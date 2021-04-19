@@ -1,6 +1,6 @@
 {
     "name": "gcp-ts-slackbot",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "dependencies": {
         "@google-cloud/firestore": "^4.9.9",
         "@google-cloud/pubsub": "^2.11.0",
