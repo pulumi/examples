@@ -2,17 +2,16 @@
     "name": "azure-ts-cosmosapp-component",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "^10.3.3",
         "@types/mocha": "^5.2.7",
+        "@types/node": "^10.3.3",
         "mocha": "^7.0.0",
         "ts-node": "^8.6.2"
-
     },
     "dependencies": {
         "@azure/cosmos": "latest",
-        "@pulumi/azure": "^3.0.0",
-        "@pulumi/docker": "^2.0.0",
-        "@pulumi/pulumi": "^2.0.0",
-        "@pulumi/random": "^2.0.0"
+        "@pulumi/azure": "^4.0.0",
+        "@pulumi/docker": "^3.0.0",
+        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/random": "^4.0.0"
     }
 }

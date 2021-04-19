@@ -1,4 +1,4 @@
-from pulumi_azure import core, storage, sql, appservice, keyvault, role
+from pulumi_azure import core, storage, sql, appservice, keyvault, authorization
 from pulumi import export, Output, asset
 import pulumi_random as random
 
@@ -160,7 +160,7 @@ sql_admin = sql.ActiveDirectoryAdministrator(
     server_name=sql_server.name)
 
 
-blob_permission = role.Assignment(
+blob_permission = authorization.Assignment(
     "readblob",
     principal_id=principal_id,
     role_definition_name="Storage Blob Data Reader",

@@ -7,7 +7,9 @@ import * as pulumi from "@pulumi/pulumi";
 import * as config from "./config";
 
 // Create the AD service principal for the K8s cluster.
-const adApp = new azuread.Application("aks");
+const adApp = new azuread.Application("aks", {
+    displayName: "aks"
+});
 const adSp = new azuread.ServicePrincipal("aksSp", { applicationId: adApp.applicationId });
 const adSpPassword = new azuread.ServicePrincipalPassword("aksSpPassword", {
     servicePrincipalId: adSp.id,

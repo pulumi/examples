@@ -12,7 +12,9 @@ ssh_public_key = config.require("sshPublicKey")
 
 resource_group=core.ResourceGroup("aksresourcegroup")
 
-ad_app = ad.Application("aks")
+ad_app = ad.Application(
+    "aks",
+    display_name="aks")
 
 ad_sp = ad.ServicePrincipal(
     "aksSp",
