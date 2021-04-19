@@ -3,7 +3,7 @@
 import * as gcloud from "@pulumi/google-native";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-import { clusterPassword, clusterUsername, project, region, zone } from "./config";
+import { clusterPassword, clusterUsername, project, region} from "./config";
 import { db, testDb } from "./db";
 
 const clusterName = "gke-native";
@@ -62,9 +62,9 @@ const cluster = new gcloud.container.v1.Cluster("cluster", {
 // Manufacture a GKE-style Kubeconfig. Note that this is slightly "different" because of the way GKE requires
 // gcloud to be in the picture for cluster authentication (rather than using the client cert/key directly).
 export const kubeConfig = pulumi.
-    all([ cluster.name, cluster.endpoint, cluster.masterAuth ]).
-    apply(([ name, endpoint, auth ]) => {
-        const context = `${project}_${zone}_${name}`;
+    all([ cluster.name, cluster.endpoint, cluster.location, cluster.masterAuth ]).
+    apply(([ name, endpoint, location, auth ]) => {
+        const context = `${project}_${location}_${name}`;
         return `apiVersion: v1
 clusters:
 - cluster:

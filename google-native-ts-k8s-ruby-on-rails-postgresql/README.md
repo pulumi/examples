@@ -13,14 +13,16 @@ All of these happen behind a single `pulumi up` command, and are expressed in ju
 
 ## Prerequisites
 
-Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
-Ensure you have [downloaded and installed Docker](https://docs.docker.com/install/)
-We will be deploying to Google Cloud, so you will need an account. If you don't have an account,
-[sign up for free here](https://cloud.google.com/free/). In either case,
-[follow the instructions here](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/) to connect Pulumi to your Google Cloud account.
+Before trying to deploy this example, please make sure you have performed all of the following tasks:
+-  [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
+-  [downloaded and installed Docker](https://docs.docker.com/install/)
+-  [signed up for Google Cloud](https://cloud.google.com/free/)
+-  [followed the instructions here](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/) to connect Pulumi to your Google Cloud account.
 
 This example assumes that you have Google Cloud's `gcloud` CLI on your path. This is installed as part of the
 [Google Cloud SDK](https://cloud.google.com/sdk/).
+
+As part of this example, we will setup and deploy a Kubernetes cluster on GKE. You may also want to install [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) if you would like to directly interact with the underlying Kubernetes cluster.
 
 ## Running the Example
 
@@ -38,12 +40,21 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
     ```bash
     $ pulumi config set google-native:project [your-gcp-project-here]
     $ pulumi config set google-native:region us-west1 # any valid region
-    $ pulumi config set google-native:zone us-west1-a # any valid Google Cloud zone under above region
+    ```
+
+    Since we will use Google's Container Registry for hosting the Docker image, we need to configure your machine's Docker to be able to authenticate with GCR:
+
+    ```bash
+    $ gcloud auth configure-docker # Configure docker to be able to push to your Google project's container registry
+    ```
+
+    The following configuration variables have defaults or are automatically generated when not specified but can be explicitly specified as follows:
+
+    ```bash
     $ pulumi config set clusterPassword --secret [your-new-cluster-password-here] # must be at least 16 characters
     $ pulumi config set dbUsername [your-new-db-username-here]
     $ pulumi config set dbPassword --secret [your-new-db-password-here]
     $ pulumi config set masterVersion # any valid master version, or latest
-    $ gcloud auth configure-docker # Configure docker to be able to push to your Google project's container registry
     ```
 
     Config variables that use the `--secret` flag are [encrypted and not stored as plaintext](https://www.pulumi.com/docs/intro/concepts/config/#secrets).
@@ -55,7 +66,7 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
     $ pulumi config set clusterNodeMachineType n1-standard-2
     ```
 
-    This shows how stacks can be configurable in useful ways. You can even change these after provisioning.
+    You can even change these after provisioning.
 
 3. Deploy everything with the `pulumi up` command. This provisions all the GCP resources necessary, including
    your GKE cluster and database, as well as building and publishing your container image, all in a single gesture:

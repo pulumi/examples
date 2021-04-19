@@ -1,21 +1,3 @@
 name: google-rails
 runtime: nodejs
 description: A containerized Ruby on Rails app using managed Kubernetes and PostgreSQL
-template:
-  config:
-    google-native:project:
-      description: The Google Cloud project to deploy into
-    google-native:zone:
-      description: The Google Cloud zone
-      default: us-west1-a
-    clusterPassword:
-      description: Your new cluster password
-      secret: true
-    dbPassword:
-      description: Your new DB password
-      secret: true
-    dockerUsername:
-      description: Your Docker Hub username
-    dockerPassword:
-      description: Your Docker Hub password
-      secret: true
