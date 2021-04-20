@@ -1,0 +1,3 @@
+name: google-rails
+runtime: nodejs
+description: A containerized Ruby on Rails app using managed Kubernetes and PostgreSQL

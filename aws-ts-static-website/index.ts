@@ -2,10 +2,10 @@
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-
 import * as fs from "fs";
 import * as mime from "mime";
 import * as path from "path";
+
 
 // Load the Pulumi program configuration. These act as the "parameters" to the Pulumi program,
 // so that different Pulumi Stacks can be brought up using the same code.
@@ -101,7 +101,7 @@ if (config.certificateArn === undefined) {
     const certificateConfig: aws.acm.CertificateArgs = {
         domainName: config.targetDomain,
         validationMethod: "DNS",
-        subjectAlternativeNames: config.includeWWW ? [`www.${config.targetDomain}`]: [],
+        subjectAlternativeNames: config.includeWWW ? [`www.${config.targetDomain}`] : [],
     };
 
     const certificate = new aws.acm.Certificate("certificate", certificateConfig, { provider: eastRegion });
@@ -303,7 +303,7 @@ if (config.includeWWW) {
 
 // Export properties from this stack. This prints them at the end of `pulumi up` and
 // makes them easier to access from the pulumi.com.
-export const contentBucketUri = pulumi.interpolate `s3://${contentBucket.bucket}`;
+export const contentBucketUri = pulumi.interpolate`s3://${contentBucket.bucket}`;
 export const contentBucketWebsiteEndpoint = contentBucket.websiteEndpoint;
 export const cloudFrontDomain = cdn.domainName;
 export const targetDomainEndpoint = `https://${config.targetDomain}/`;
