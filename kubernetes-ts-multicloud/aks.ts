@@ -57,7 +57,7 @@ export class AksCluster extends pulumi.ComponentResource {
 
         // Grant the resource group the "Network Contributor" role so that it can link the static IP to a
         // Service LoadBalancer.
-        const rgNetworkRole = new azure.role.Assignment("spRole", {
+        const rgNetworkRole = new azure.authorization.Assignment("spRole", {
             principalId: adSp.id,
             scope: resourceGroup.id,
             roleDefinitionName: "Network Contributor",
@@ -73,7 +73,7 @@ export class AksCluster extends pulumi.ComponentResource {
         const subnet = new azure.network.Subnet("multicloud", {
             resourceGroupName: resourceGroup.name,
             virtualNetworkName: vnet.name,
-            addressPrefix: "10.2.1.0/24",
+            addressPrefixes: ["10.2.1.0/24"],
         }, {parent: this});
 
         // Now allocate an AKS cluster.
