@@ -7,10 +7,10 @@ import (
 
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/containerservice"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
-	"github.com/pulumi/pulumi-azuread/sdk/v2/go/azuread"
-	"github.com/pulumi/pulumi-random/sdk/v2/go/random"
-	"github.com/pulumi/pulumi-tls/sdk/v2/go/tls"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
+	"github.com/pulumi/pulumi-azuread/sdk/v4/go/azuread"
+	"github.com/pulumi/pulumi-random/sdk/v4/go/random"
+	"github.com/pulumi/pulumi-tls/sdk/v4/go/tls"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
@@ -22,7 +22,9 @@ func main() {
 		}
 
 		// Create an AD service principal.
-		adApp, err := azuread.NewApplication(ctx, "aks", nil)
+		adApp, err := azuread.NewApplication(ctx, "aks", &azuread.ApplicationArgs{
+			DisplayName: pulumi.String("aks"),
+		})
 		if err != nil {
 			return err
 		}

@@ -26,12 +26,12 @@ export class EksCluster extends pulumi.ComponentResource {
         super("examples:kubernetes-ts-multicloud:EksCluster", name, {}, opts);
 
         // Create a VPC for our cluster.
-        const vpc = new awsx.ec2.Vpc("vpc");
+        const vpc = new awsx.ec2.Vpc("vpc", {});
 
         // Create the EKS cluster itself, including a "gp2"-backed StorageClass and a deployment of the Kubernetes dashboard.
         this.cluster = new eks.Cluster("cluster", {
             vpcId: vpc.id,
-            subnetIds: vpc.getSubnetIds("public"),
+            subnetIds: vpc.publicSubnetIds,
             instanceType: "t2.medium",
             desiredCapacity: 2,
             minSize: 1,

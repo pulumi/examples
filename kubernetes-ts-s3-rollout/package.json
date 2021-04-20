@@ -1,14 +1,13 @@
 {
     "name": "exposed-deployment",
     "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@types/node": "^12.0.0"
     },
     "dependencies": {
-        "@pulumi/aws": "^3.0.0",
-        "@pulumi/kubernetes": "^2.0.0",
-        "@pulumi/pulumi": "^2.0.0",
+        "@pulumi/aws": "^4.0.0",
+        "@pulumi/kubernetes": "^3.0.0",
+        "@pulumi/pulumi": "^3.0.0",
         "@types/mime": "^2.0.0",
-        "crypto": "^1.0.1",
-        "mime": "^2.3.1"
+        "mime": "^2.5.2"
     }
 }

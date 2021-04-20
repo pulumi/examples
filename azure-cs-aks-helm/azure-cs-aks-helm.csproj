@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pulumi.AzureNative" Version="0.*" />
-    <PackageReference Include="Pulumi.AzureAd" Version="2.*" />
-    <PackageReference Include="Pulumi.Kubernetes" Version="2.*" />
-    <PackageReference Include="Pulumi.Random" Version="3.*" />
-    <PackageReference Include="Pulumi.Tls" Version="3.*" />
+    <PackageReference Include="Pulumi.AzureNative" Version="1.*" />
+    <PackageReference Include="Pulumi.AzureAd" Version="4.*" />
+    <PackageReference Include="Pulumi.Kubernetes" Version="3.*" />
+    <PackageReference Include="Pulumi.Random" Version="4.*" />
+    <PackageReference Include="Pulumi.Tls" Version="4.*" />
   </ItemGroup>
 
 </Project>

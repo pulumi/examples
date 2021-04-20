@@ -22,7 +22,10 @@ class MyCluster
     {
         var resourceGroup = new ResourceGroup("rg");
 
-        var adApp = new Application("app");
+        var adApp = new Application("app", new ApplicationArgs
+        {
+            DisplayName = "app"
+        });
 
         var adSp = new ServicePrincipal("service-principal", new ServicePrincipalArgs
         {

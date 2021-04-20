@@ -11,7 +11,9 @@ import * as resources from "@pulumi/azure-native/resources";
 const resourceGroup = new resources.ResourceGroup("azure-go-aks");
 
 // Create an AD service principal
-const adApp = new azuread.Application("aks");
+const adApp = new azuread.Application("aks", {
+    displayName: "aks",
+});
 const adSp = new azuread.ServicePrincipal("aksSp", {
     applicationId: adApp.applicationId,
 });

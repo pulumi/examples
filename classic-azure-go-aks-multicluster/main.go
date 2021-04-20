@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/containerservice"
-	"github.com/pulumi/pulumi-azure/sdk/v3/go/azure/core"
-	"github.com/pulumi/pulumi-azuread/sdk/v2/go/azuread"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
+	"github.com/pulumi/pulumi-azure/sdk/v4/go/azure/containerservice"
+	"github.com/pulumi/pulumi-azure/sdk/v4/go/azure/core"
+	"github.com/pulumi/pulumi-azuread/sdk/v4/go/azuread"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
 type aksClusterConfig struct {
@@ -35,7 +35,11 @@ func main() {
 		}
 
 		// Create the AD service principal for the K8s cluster.
-		adApp, err := azuread.NewApplication(ctx, "aks", nil)
+
+		addAppArgs := azuread.ApplicationArgs{
+			DisplayName: pulumi.String("aks"),
+		}
+		adApp, err := azuread.NewApplication(ctx, "aks", &addAppArgs)
 		if err != nil {
 			return err
 		}

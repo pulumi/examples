@@ -1,6 +1,6 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-import * as containerservice from "@pulumi/azure-native/containerservice";
+import * as containerservice from "@pulumi/azure-native/containerservice/v20190201";
 import * as azuread from "@pulumi/azuread";
 import * as pulumi from "@pulumi/pulumi";
 import * as config from "./config";
@@ -53,7 +53,6 @@ const k8sClusters = aksClusterConfig.map((perClusterConfig, index) => {
         location: perClusterConfig.location,
         agentPoolProfiles: [{
             name: "aksagentpool",
-            mode: containerservice.AgentPoolMode.System,
             count: perClusterConfig.nodeCount,
             vmSize: perClusterConfig.nodeSize,
         }],

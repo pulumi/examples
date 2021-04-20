@@ -35,7 +35,7 @@ export class AksCluster extends pulumi.ComponentResource {
         }).publicKeyOpenssh;
 
         // Create the AD service principal for the K8s cluster.
-        const adApp = new azuread.Application("aks", undefined, { parent: this });
+        const adApp = new azuread.Application("aks", {displayName: "aks"}, { parent: this });
         const adSp = new azuread.ServicePrincipal("aksSp", { applicationId: adApp.applicationId }, { parent: this });
         const adSpPassword = new azuread.ServicePrincipalPassword("aksSpPassword", {
             servicePrincipalId: adSp.id,

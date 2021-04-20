@@ -2,8 +2,8 @@
     "name": "aws-ts-lambda-efs",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "^3.25.1",
-        "@pulumi/awsx": "^0.24.0",
-        "@pulumi/pulumi": "^2.0.0"
+        "@pulumi/aws": "^4.0.0",
+        "@pulumi/awsx": "^0.30.0",
+        "@pulumi/pulumi": "^3.0.0"
     }
 }

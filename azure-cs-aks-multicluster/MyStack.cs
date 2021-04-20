@@ -1,13 +1,15 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Pulumi;
 using Pulumi.AzureAD;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.ContainerService;
+using Pulumi.AzureNative.ContainerService.V20190201;
 using Pulumi.AzureNative.ContainerService.Inputs;
+using ManagedCluster = Pulumi.AzureNative.ContainerService.ManagedCluster;
+using ManagedClusterArgs = Pulumi.AzureNative.ContainerService.ManagedClusterArgs;
 
 class MyStack : Stack
 {
@@ -91,7 +93,7 @@ class MyStack : Stack
                         Mode = AgentPoolMode.System,
                         Name = "agentpool",
                         Count = perClusterConfig.NodeCount,
-                        VmSize = perClusterConfig.NodeSize,
+                        VmSize = perClusterConfig.NodeSize.ToString(),
                     }
                 },
                 DnsPrefix = $"{Pulumi.Deployment.Instance.StackName}-kube",

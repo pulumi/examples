@@ -7,9 +7,9 @@ import (
 
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/containerservice"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
-	"github.com/pulumi/pulumi-azuread/sdk/v3/go/azuread"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
+	"github.com/pulumi/pulumi-azuread/sdk/v4/go/azuread"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
 type aksClusterConfig struct {
@@ -103,13 +103,13 @@ func main() {
 				Location: pulumi.String(perClusterConfig.location),
 				AgentPoolProfiles: containerservice.ManagedClusterAgentPoolProfileArray{
 					&containerservice.ManagedClusterAgentPoolProfileArgs{
-						Name:         pulumi.String("aksagentpool"),
-						Mode:         pulumi.String("System"),
-						Count:        pulumi.Int(perClusterConfig.nodeCount),
-						VmSize:		  pulumi.String(perClusterConfig.nodeSize),
+						Name:   pulumi.String("aksagentpool"),
+						Mode:   pulumi.String("System"),
+						Count:  pulumi.Int(perClusterConfig.nodeCount),
+						VmSize: pulumi.String(perClusterConfig.nodeSize),
 					},
 				},
-				DnsPrefix: pulumi.String(fmt.Sprintf("%s-kube", ctx.Stack())),
+				DnsPrefix:         pulumi.String(fmt.Sprintf("%s-kube", ctx.Stack())),
 				KubernetesVersion: pulumi.String("1.18.14"),
 			})
 			if err != nil {

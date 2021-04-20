@@ -4,27 +4,27 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/pulumi/pulumi-aws/sdk/v3/go/aws/ec2"
-	"github.com/pulumi/pulumi/sdk/v2/go/common/resource"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
+	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/ec2"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/stretchr/testify/assert"
 )
 
 type mocks int
 
 // Create the mock.
-func (mocks) NewResource(token, name string, inputs resource.PropertyMap, provider, id string) (string, resource.PropertyMap, error) {
-	outputs := inputs.Mappable()
-	if token == "aws:ec2/instance:Instance" {
+func (mocks) NewResource(args pulumi.MockResourceArgs) (string, resource.PropertyMap, error) {
+	outputs := args.Inputs.Mappable()
+	if args.TypeToken == "aws:ec2/instance:Instance" {
 		outputs["publicIp"] = "203.0.113.12"
 		outputs["publicDns"] = "ec2-203-0-113-12.compute-1.amazonaws.com"
 	}
-	return name + "_id", resource.NewPropertyMapFromMap(outputs), nil
+	return args.Name + "_id", resource.NewPropertyMapFromMap(outputs), nil
 }
 
-func (mocks) Call(token string, args resource.PropertyMap, provider string) (resource.PropertyMap, error) {
+func (mocks) Call(args pulumi.MockCallArgs) (resource.PropertyMap, error) {
 	outputs := map[string]interface{}{}
-	if token == "aws:ec2/getAmi:getAmi" {
+	if args.Token == "aws:ec2/getAmi:getAmi" {
 		outputs["architecture"] = "x86_64"
 		outputs["id"] = "ami-0eb1f3cdeeb8eed2a"
 	}
