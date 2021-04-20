@@ -11,7 +11,7 @@ import * as config from "./config";
 const resourceGroup = new resources.ResourceGroup("rg");
 
 const adApp = new azuread.Application("app", {
-    displayName: "app"
+    displayName: "app",
 });
 
 const adSp = new azuread.ServicePrincipal("service-principal", {

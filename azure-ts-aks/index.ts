@@ -12,7 +12,7 @@ const resourceGroup = new resources.ResourceGroup("azure-go-aks");
 
 // Create an AD service principal
 const adApp = new azuread.Application("aks", {
-    displayName: "aks"
+    displayName: "aks",
 });
 const adSp = new azuread.ServicePrincipal("aksSp", {
     applicationId: adApp.applicationId,

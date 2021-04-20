@@ -7,7 +7,7 @@ import * as util from "./util";
 const prometheus = new k8s.helm.v2.Chart("p8s", {
     repo: "prometheus-community",
     chart: "prometheus",
-    version: "13.8.0"
+    version: "13.8.0",
 });
 
 const containerName = "example-app";
