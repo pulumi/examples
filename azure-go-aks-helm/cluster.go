@@ -9,9 +9,9 @@ import (
 
 	cs "github.com/pulumi/pulumi-azure-native/sdk/go/azure/containerservice"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
-	"github.com/pulumi/pulumi-azuread/sdk/v3/go/azuread"
-	"github.com/pulumi/pulumi-kubernetes/sdk/v2/go/kubernetes"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
+	"github.com/pulumi/pulumi-azuread/sdk/v4/go/azuread"
+	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 type ClusterInfo struct {
@@ -27,7 +27,7 @@ func buildCluster(ctx *pulumi.Context, cfg Config) (*ClusterInfo, error) {
 
 	adApp, err := azuread.NewApplication(ctx, "app",
 		&azuread.ApplicationArgs{
-			Name: pulumi.String("app"),
+			DisplayName: pulumi.String("app"),
 		})
 	if err != nil {
 		return nil, err
@@ -99,7 +99,7 @@ func buildCluster(ctx *pulumi.Context, cfg Config) (*ClusterInfo, error) {
 
 func getKubeconfig(ctx *pulumi.Context, cluster *ClusterInfo) pulumi.StringOutput {
 	return pulumi.All(cluster.ManagedCluster.Name, cluster.ResourceGroup.Name).
-		ApplyString(func(names []interface{}) (string, error) {
+		ApplyT(func(names []interface{}) (string, error) {
 			k8sClusterName := names[0].(string)
 			resourceGroupName := names[1].(string)
 			out, err := cs.ListManagedClusterUserCredentials(ctx,
@@ -116,7 +116,7 @@ func getKubeconfig(ctx *pulumi.Context, cluster *ClusterInfo) pulumi.StringOutpu
 				return "", err
 			}
 			return string(decoded), nil
-		})
+		}).(pulumi.StringOutput)
 }
 
 func buildProvider(
