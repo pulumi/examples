@@ -9,14 +9,14 @@ namespace UnitTesting
 {
     class Mocks : IMocks
     {
-        public Task<(string id, object state)> NewResourceAsync(string type, string name, ImmutableDictionary<string, object> inputs, string? provider, string? id)
+        public Task<(string? id, object state)> NewResourceAsync(MockResourceArgs args)
         {
             var outputs = ImmutableDictionary.CreateBuilder<string, object>();
             
             // Forward all input parameters as resource outputs, so that we could test them.
-            outputs.AddRange(inputs);
+            outputs.AddRange(args.Inputs);
             
-            if (type == "aws:ec2/instance:Instance")
+            if (args.Type == "aws:ec2/instance:Instance")
             {
                 outputs.Add("publicIp", "203.0.113.12");
                 outputs.Add("publicDns", "ec2-203-0-113-12.compute-1.amazonaws.com");
@@ -24,15 +24,15 @@ namespace UnitTesting
 
             // Default the resource ID to `{name}_id`.
             // We could also format it as `/subscription/abc/resourceGroups/xyz/...` if that was important for tests.
-            id ??= $"{name}_id";
-            return Task.FromResult((id, (object)outputs));
+            args.Id ??= $"{args.Name}_id";
+            return Task.FromResult((args.Id, (object)outputs));
         }
 
-        public Task<object> CallAsync(string token, ImmutableDictionary<string, object> inputs, string? provider)
+        public Task<object> CallAsync(MockCallArgs args)
         {
             var outputs = ImmutableDictionary.CreateBuilder<string, object>();
 
-            if (token == "aws:index/getAmi:getAmi")
+            if (args.Token == "aws:index/getAmi:getAmi")
             {
                 outputs.Add("architecture", "x86_64");
                 outputs.Add("id", "ami-0eb1f3cdeeb8eed2a");
