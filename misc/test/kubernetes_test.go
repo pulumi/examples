@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	homedir "github.com/mitchellh/go-homedir"
-	"github.com/pulumi/pulumi/pkg/v2/testing/integration"
+	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 	"github.com/stretchr/testify/assert"
 )
 
