@@ -1,26 +1,27 @@
 // Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import * as pulumi from "@pulumi/pulumi";
+import { MockCallArgs } from "@pulumi/pulumi/runtime";
 import "mocha";
 
 pulumi.runtime.setMocks({
-    newResource: function(type: string, name: string, inputs: any): {id: string, state: any} {
-        switch (type) {
+    newResource: function(args: pulumi.runtime.MockResourceArgs): {id: string, state: any} {
+        switch (args.type) {
             case "aws:ec2/securityGroup:SecurityGroup":
                 return {
                     id: "sg-12345678",
                     state: {
-                        ...inputs,
+                        ...args.inputs,
 
                         arn: "arn:aws:ec2:us-west-2:123456789012:security-group/sg-12345678",
-                        name: inputs.name || name + "-sg",
+                        name: args.inputs.name || name + "-sg",
                     },
                 };
             case "aws:ec2/instance:Instance":
                 return {
                     id: "i-1234567890abcdef0",
                     state: {
-                        ...inputs,
+                        ...args.inputs,
 
                         arn: "arn:aws:ec2:us-west-2:123456789012:instance/i-1234567890abcdef0",
                         instanceState: "running",
@@ -32,15 +33,15 @@ pulumi.runtime.setMocks({
                 };
             default:
                 return {
-                    id: inputs.name + "_id",
+                    id: args.inputs.name + "_id",
                     state: {
-                        ...inputs,
+                        ...args.inputs,
                     },
                 };
         }
     },
-    call: function(token: string, args: any, provider?: string) {
-        switch (token) {
+    call: function(args: MockCallArgs) {
+        switch (args.token) {
             case "aws:ec2/getAmi:getAmi":
                 return {
                     "architecture": "x86_64",
