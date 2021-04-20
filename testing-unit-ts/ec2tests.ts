@@ -1,7 +1,6 @@
 // Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import * as pulumi from "@pulumi/pulumi";
-import { MockCallArgs } from "@pulumi/pulumi/runtime";
 import "mocha";
 
 pulumi.runtime.setMocks({
@@ -14,7 +13,7 @@ pulumi.runtime.setMocks({
                         ...args.inputs,
 
                         arn: "arn:aws:ec2:us-west-2:123456789012:security-group/sg-12345678",
-                        name: args.inputs.name || name + "-sg",
+                        name: args.inputs.name || args.name + "-sg",
                     },
                 };
             case "aws:ec2/instance:Instance":
@@ -40,7 +39,7 @@ pulumi.runtime.setMocks({
                 };
         }
     },
-    call: function(args: MockCallArgs) {
+    call: function(args: pulumi.runtime.MockCallArgs) {
         switch (args.token) {
             case "aws:ec2/getAmi:getAmi":
                 return {
