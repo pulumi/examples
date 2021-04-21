@@ -252,6 +252,15 @@ func TestAccAzureTsWebserver(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAzureTsCallAzureSdk(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-call-azure-sdk"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func getAzureEnvironment() string {
 	azureEnviron := os.Getenv("ARM_ENVIRONMENT")
 	if azureEnviron == "" {

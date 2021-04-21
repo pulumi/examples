@@ -1,0 +1,3 @@
+name: azure-ts-call-azure-sdk
+runtime: nodejs
+description: An example of integrating an Azure SDK call to a Pulumi program.
