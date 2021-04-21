@@ -11,10 +11,12 @@ const region = config.require("region");
 const clusterName = "gke-autopilot";
 const cluster = new container.Cluster("cluster", {
     name: clusterName,
-    projectsId: project,
-    clustersId: clusterName,
     parent: `projects/${project}/locations/${region}`,
     autopilot: { enabled: true },
+    // The following are redundant and should be removed in the future.
+    projectId: project,
+    clusterId: clusterName,
+    zone: "",
 });
 
 export const kubeconfig = kconfig.generate(project, cluster);
