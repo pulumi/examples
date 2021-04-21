@@ -7,10 +7,10 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-random/sdk/v3/go/random"
-	"github.com/pulumi/pulumi-tls/sdk/v2/go/tls"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
+	"github.com/pulumi/pulumi-random/sdk/v4/go/random"
+	"github.com/pulumi/pulumi-tls/sdk/v4/go/tls"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
 type Config struct {

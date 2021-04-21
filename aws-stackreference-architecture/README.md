@@ -104,7 +104,7 @@ between the system:
 
 ## Application
 
-1.  Change to the database project
+1.  Change to the application project
     ```bash
     cd application
     ```

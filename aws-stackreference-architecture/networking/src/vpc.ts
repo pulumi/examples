@@ -1,5 +1,5 @@
 import * as aws from "@pulumi/aws";
-import { ComponentResource, ComponentResourceOptions, Input, output, Output } from "@pulumi/pulumi";
+import { ComponentResource, ComponentResourceOptions, Input, Output } from "@pulumi/pulumi";
 
 export interface VpcArgs {
     description: string;
@@ -193,7 +193,7 @@ export class Vpc extends ComponentResource {
         if (args.enableFlowLogs) {
             this.flowLogsRole = new aws.iam.Role(`${name}-flow-logs-role`, {
                 description: `${args.description} Flow Logs`,
-                assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(aws.iam.VpcFlowLogsPrincipal),
+                assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(aws.iam.Principals.VpcFlowLogsPrincipal),
             }, { parent: this.vpc });
 
             this.flowLogsGroup = new aws.cloudwatch.LogGroup(`${name}-vpc-flow-logs`, {
