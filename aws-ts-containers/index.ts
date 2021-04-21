@@ -11,7 +11,7 @@ const listener = new awsx.elasticloadbalancingv2.NetworkListener("nginx", { port
 // Define the service to run.  We pass in the listener to hook up the network load balancer
 // to the containers the service will launch.
 const service = new awsx.ecs.FargateService("nginx", {
-    desiredCount: 2,
+    desiredCount: 3,
     taskDefinitionArgs: {
         containers: {
             nginx: {

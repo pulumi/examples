@@ -1,6 +1,7 @@
 # Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import pulumi_aws as aws
+import json
 from pulumi import Config, ResourceOptions, export
 
 
@@ -10,7 +11,7 @@ def assume_role_policy_for_principal(principal):
     which can be used to control which principals may assume an IAM Role, by 
     granting the `sts:AssumeRole` action to those principals.
     """
-    return {
+    return json.dumps({
         'Version': '2012-10-17',
         'Statement': [
             {
@@ -20,7 +21,7 @@ def assume_role_policy_for_principal(principal):
                 'Action': 'sts:AssumeRole'
             }
         ]
-    }
+    })
 
 
 config = Config()
@@ -48,7 +49,7 @@ allow_s3_management_role = aws.iam.Role('allow-s3-management',
 
 policy = aws.iam.RolePolicy('allow-s3-management-policy', 
     role=allow_s3_management_role,
-    policy={
+    policy=json.dumps({
         'Version': '2012-10-17',
         'Statement': [{
             'Sid': 'AllowS3Management',
@@ -56,7 +57,7 @@ policy = aws.iam.RolePolicy('allow-s3-management-policy',
             'Resource': '*',
             'Action': 's3:*',
         }],
-    },
+    }),
     opts=ResourceOptions(parent=allow_s3_management_role)
 )
 

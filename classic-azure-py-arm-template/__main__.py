@@ -76,4 +76,4 @@ arm_deployment = azure.core.TemplateDeployment('test-dep',
 )
 
 # Finally, export the allocated storage account name.
-export('storageAccountName', arm_deployment.outputs['storage_account_name'])
+export('storageAccountName', arm_deployment.outputs['storageAccountName'])
