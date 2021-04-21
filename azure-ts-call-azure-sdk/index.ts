@@ -45,10 +45,11 @@ const registry = new containerregistry.Registry("registry", {
     adminUserEnabled: true,
 });
 
-const currentUserId = pulumi.output(authorization.getClientConfig()).objectId;
+const currentServicePrincipalId = pulumi.output(authorization.getClientConfig()).objectId;
 
 const grantPull = new authorization.RoleAssignment("access-from-cluster", {
-    principalId: currentUserId,
+    principalId: currentServicePrincipalId,
+    principalType: authorization.PrincipalType.ServicePrincipal, // adjust the type if you are running as a user
     roleDefinitionId: getRoleIdByName("AcrPull"),
     scope: registry.id,
 });
