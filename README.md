@@ -202,6 +202,7 @@ Cluster.
 [AKS web app with .NET 5](azure-cs-net5-aks-webapp) | Create an Azure Kubernetes Service (AKS) cluster and deploy a web app to it using .NET 5 and C# 9.
 [Azure App Service](azure-cs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
 [Azure App Service with Docker](azure-cs-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[Azure API integration](azure-cs-call-azure-api) | Call additional Azure API endpoints from a Pulumi program.
 [Azure Cosmos DB and LogicApp](azure-cs-cosmosdb-logicapp) | Define Cosmos DB, API connections, and link them to a logic app.
 [Azure Functions](azure-cs-functions) | Deploy a Node.js serverless function to Azure Functions.
 [Static Website](azure-cs-static-website) | Configure static website hosting in Azure Storage.

@@ -1,0 +1,3 @@
+name: azure-cs-call-azure-api
+runtime: dotnet
+description: An example of integrating an Azure SDK call to a Pulumi program.
