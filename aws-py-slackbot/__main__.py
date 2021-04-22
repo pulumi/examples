@@ -7,10 +7,8 @@ import requests
 import iam
 import base64
 # import slack_sdk as slack
-
 import pulumi
 import pulumi_aws as aws
-
 
 # // A simple slack bot that, when requested, will monitor for @mentions of your name and post them to
 # // the channel you contacted the bot from.
@@ -42,15 +40,41 @@ subscriptions_table = aws.dynamodb.Table('subscriptions',
 ##################
 ## Lambda Function
 ##################
+# Attach dynamo access to the generic role created in iam.py
+lambda_role_policy = aws.iam.RolePolicy('mentionbotDynamoAccessPolicy',
+    role=iam.lambda_role.id,
+    policy="""{
+        "Version": "2012-10-17",
+        "Statement": [{
+            "Action": [
+                "dynamodb:GetItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem"
+            ],
+            "Effect": "Allow",
+            "Sid": "dynamoAccess",
+            "Resource": "*"
+        }]
+    }"""
+)
 
 # Create a Lambda function, using code from the `./app` folder.
 lambda_func = aws.lambda_.Function("mention-processing-lambda",
     role=iam.lambda_role.arn,
     runtime="python3.7",
-    handler="__main__.webhook_handler",
+    handler="mention_processing_lambda.webhook_handler",
     code=pulumi.AssetArchive({
         '.': pulumi.FileArchive('.')
-    })
+    }),
+    environment={
+        "variables": {
+            'SLACK_TOKEN': slack_token,
+            'SLACK_VERIFICATION_CODE': verification_token,
+            # TODO: is this "apply" necessary?
+            'SUBSCRIPTIONS_TABLE_NAME': subscriptions_table.name.apply(lambda name: name),
+        }
+    }
 )
 
 #############################################
@@ -105,156 +129,5 @@ invoke_permission = aws.lambda_.Permission("api-lambda-permission",
     principal="apigateway.amazonaws.com",
     source_arn=deployment.execution_arn.apply(lambda arn: arn + "*/*"),
 )
-
-###################################################
-#
-# Lambda function to handle slack webhooks
-#
-###################################################
-
-def webhook_handler(event):
-    try:
-        if not slack_token:
-            raise Exception("mentionbot:slackToken was not provided")
-        if not verification_token:
-            raise Exception("mentionbot:verificationToken was not provided")
-
-        print(event.body)
-
-        if not event.isBase64Encodeded or not event.body:
-            print('Unexpected content received')
-            print(event)
-        else:
-            # TODO: Parse buffer
-            # const parsed = JSON.parse(Buffer.from(event.body, "base64").toString());
-            parsed = event.body
-            if parsed.type == "url_verification":
-                # url_verification is the simple message slack sends to our endpoint to
-                # just make sure we're setup properly.  All we have to do is get the
-                # challenge data they send us and return it untouched.
-                verification_request = parsed
-                challenge = verification_request.challenge
-                
-                return {
-                    "statusCode": 200,
-                    "body": json.dumps({"challenge": challenge})
-                }
-
-            elif parsed.type == 'event_callback':
-                event_request = parsed
-
-                if event_request.token != verification_token:
-                    print("Error: Invalid verification token")
-                    
-                    return { 
-                        "statusCode": 401,
-                        "body": "Invalid verification token"
-                    }
-
-                else:
-                    on_event_callback(event_request)
-            else:
-                print("Unknown event type: " + parsed.type)
-    except Exception as err:
-        print(err)
-        # Fall through. Even in the event of an error, we want to return '200' so that slack
-        # doesn't just repeat the message, causing the same error.
-
-        # Always return success so that Slack doesn't just immediately resend this message to us.
-        return { "statusCode": 200, "body": "" }
-
-# [x] First Draft Completed
-# [ ] Tested
-def on_event_callback(request):
-    if not hasattr(request, 'event'):
-        # No event in request, not processing any further.
-        return
-
-    event = request.event
-
-    if "message" == event.event_type:
-        on_message_event_callback(event)
-    elif "app_mention" == event.event_type:
-        on_app_mention_event_callback(event)
-    else:
-        print("Unknown event type: " + event.event_type)
-
-def process_match(match):
-    print(match)
-
-# [] written
-# [] Tested
-def on_message_event_callback(request):
-    event = request.event
-    if not event.text:
-        # No text for the message, so nothing to do.
-        return
-
-    matches = re.findall(r"/<@[A-Z0-9]+>/gi", event.text)
-
-    if not matches:
-        # No @mentions in the message, so nothing to do.
-        return
-
-    # There might be multiple @mentions to the same person in the same message.
-    # So make into a set to make things unique.
-    for match in list(set(matches)):
-        process_match(match)
-
-# sendChannelMessage
-# [ ] first draft
-# [ ] tested
-def send_channel_message(channel, text):
-    message = { "token": slack_token, "channel": channel, "text": text}
-    r = requests.get('https://slack.com/api/chat.postMessage?' + json.dumps(message))
-
-def get_permalink(channel, timestamp):
-    message = { "token": slack_token, "channel": channel, "message_ts": timestamp }
-    r = requests.get('https://slack.com/api/chat.getPermalink?' + json.dumps(message))
-    return r.json().permalink
-
-def on_app_mention_event_callback(request):
-    event = request.event
-    if "unsubscribe" in event.lower():
-        unsubscribe_from_mentions(event)
-    else:
-        subscribe_to_mentions(event)
-
-# async function onAppMentionEventCallback(request: EventCallbackRequest) {
-#     // Got an app_mention to @mentionbot.
-#     const event = request.event;
-#     const promise = event.text.toLowerCase().indexOf("unsubscribe") >= 0
-#         ? unsubscribeFromMentions(event)
-#         : subscribeToMentions(event);
-
-#     return await promise;
-# }
-
-def unsubscribe_from_mentions(event):
-    client = boto3.client('dynamodb')
-    client.delete_item(
-        TableName = subscriptions_table.name,
-        Key = {
-            "id": {
-                "S": event.user
-            }
-        }
-    )
-    text = "Hi <@" + event.user + ">. You've been unsubscribed from @ mentions. Mention me again to resubscribe."
-    send_channel_message(event.channel, text)
-
-def subscribe_to_mentions(event):
-    channel = event.channel
-    print(channel)
-    dynamodb_client = boto3.client('dynamodb')
-    dynamodb_client.put(
-        TableName = subscriptions_table.name,
-        Item = {
-            "id": event.user,
-            "channel": event.channel
-        }
-    )
-    text = "Hi <@"+event.user+">. You've been subscribed to @ mentions. Send me a message containing 'unsubscribe' to stop receiving those notifications."
-    send_channel_message(event.channel, text)
 
 # export const url = endpoint.url;
