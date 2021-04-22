@@ -200,6 +200,7 @@ Cluster.
 [Azure Container Instance](azure-cs-aci) | Run Azure Container Instances on Linux.
 [Azure Kubernetes Service](azure-cs-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [AKS web app with .NET 5](azure-cs-net5-aks-webapp) | Create an Azure Kubernetes Service (AKS) cluster and deploy a web app to it using .NET 5 and C# 9.
+[AKS + Cosmos DB](azure-cs-aks-cosmos-helm) | A Helm chart deployed to AKS that stores TODOs in an Azure Cosmos DB MongoDB API.
 [Azure App Service](azure-cs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
 [Azure App Service with Docker](azure-cs-appservice-docker) | Build a web application hosted in App Service from Docker images.
 [Azure Cosmos DB and LogicApp](azure-cs-cosmosdb-logicapp) | Define Cosmos DB, API connections, and link them to a logic app.
