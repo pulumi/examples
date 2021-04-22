@@ -1,0 +1,13 @@
+{
+    "name": "azure-ts-call-azure-sdk",
+    "version": "1.0.0",
+    "devDependencies": {
+        "@types/node": "^8.0.0"
+    },
+    "dependencies": {
+        "@azure/arm-authorization": "^8.3.3",
+        "@azure/ms-rest-js": "^2.4.0",
+        "@pulumi/azure-native": "^1.0.0",
+        "@pulumi/pulumi": "^3.0.0"
+    }
+}

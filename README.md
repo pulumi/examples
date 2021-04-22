@@ -163,6 +163,7 @@ Example   | Description |
 [Azure Cosmos DB and LogicApp](azure-ts-cosmosdb-logicapp) | Define Cosmos DB, API connections, and link them to a logic app.
 [Azure Functions](azure-ts-functions) | Deploy a Node.js serverless function to Azure Functions.
 [Azure Functions - Many](azure-ts-functions-many) | Deploy several kinds of Azure Functions created from raw deployment packages.
+[Azure SDK integration](azure-ts-call-azure-sdk) | Call Azure SDK functions from a Pulumi program.
 [Static Website](azure-ts-static-website) | Configure static website hosting in Azure Storage.
 [Azure Synapse](azure-ts-synapse) | Starting point for enterprise analytics solutions based on Azure Synapse.
 [Web Server](azure-ts-webserver) | Provision a Linux web server in an Azure Virtual Machine.
