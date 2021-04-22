@@ -1,0 +1,3 @@
+name: azure-cs-aks-cosmos-helm
+runtime: dotnet
+description: A Helm chart deployed to AKS that stores TODOs in an Azure Cosmos DB MongoDB API
