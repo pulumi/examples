@@ -7,7 +7,7 @@ by the Pulumi Service. It then echos the event to Slack.
 
 ## Prerequisites
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-    - [Create an Organization](https://www.pulumi.com/docs/intro/console/accounts-and-organizations/organizations/)
+    - [Create an Organization](https://www.pulumi.com/docs/intro/console/organizations/)
 2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 
 ## Steps
