@@ -5,9 +5,9 @@ template:
   config:
     aws:region:
       description: The AWS region to deploy into
-      default: us-east-1
+      default: us-east-2
     go-lambda:accountid:
       description: The AWS account ID to use
     go-lambda:gateway-region:
       description: The AWS region to deploy the AWS API Gateway to
-      default: us-east-1
+      default: us-east-2
