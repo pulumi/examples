@@ -88,6 +88,7 @@ func main() {
 					},
 				},
 			},
+			DnsPrefix: resourceGroup.Name,
 			ServicePrincipalProfile: &containerservice.ManagedClusterServicePrincipalProfileArgs{
 				ClientId: adApp.ApplicationId,
 				Secret:   adSpPassword.Value,
