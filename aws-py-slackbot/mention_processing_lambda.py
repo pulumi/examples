@@ -3,8 +3,6 @@ import json
 import os
 import re
 import boto3
-# from slack_sdk import WebClient
-# from slack_sdk.errors import SlackApiError
 
 ###################################################
 #
@@ -15,8 +13,11 @@ slack_token = os.environ['SLACK_TOKEN']
 verification_token = os.environ['SLACK_VERIFICATION_CODE']
 subscriptions_table_name = os.environ['SUBSCRIPTIONS_TABLE_NAME']
 
-# slackClient = WebClient(token=slack_token)
-
+########
+# Route slack requests
+#  - Initial verification of slack_token
+#  - Event callback with token verification
+########
 def webhook_handler(event, context):
     try:
         if not slack_token:
@@ -52,6 +53,11 @@ def webhook_handler(event, context):
 
             else:
                 on_event_callback(request)
+                            
+                return {
+                    "statusCode": 200,
+                    "body": json.dumps({"challenge": challenge})
+                }
         else:
             print("Unknown event type: " + request.type)
     except Exception as err:
@@ -64,8 +70,9 @@ def webhook_handler(event, context):
         # Always return success so that Slack doesn't just immediately resend this message to us.
         return { "statusCode": 200, "body": err }
 
-# [x] First Draft Completed
-# [ ] Tested
+#####
+# Process a slack event
+#####
 def on_event_callback(request):
     print('request event')
     print(request['event'])
@@ -80,26 +87,31 @@ def on_event_callback(request):
     else:
         print("Unknown event type: " + event['type'])
 
+####
+# Notify the user that they have been mentioned
+####
 def process_match(event, match):
-    # Remove the <@ and > tags to grab the username / id
-    id = match[len("<@"):len(match)-len(">")]
+    print("getting " + match + " from subscriptions table.")
     client = boto3.client('dynamodb')
     resp = client.get_item(
         TableName = subscriptions_table_name,
         Key = {
             "id": {
-                "S": id
+                "S": match
             }
         }
     )
 
-    print('Get  match response')
+    print('Get match response')
     print(resp)
 
     if not resp:
         return
     
-    perma_link = get_permalink(channel=resp["Item"]["channel"], timestamp=event['event_ts'])
+    # print('Printing item')
+    # print(resp["Item"])
+
+    perma_link = get_permalink(channel=event["channel"], timestamp=event['event_ts'])
     
     print('perma_link')
     print(perma_link)
@@ -107,8 +119,9 @@ def process_match(event, match):
     message = 'New mention at ' + perma_link
     send_channel_message(resp["Item"]["channel"], message)
 
-# [] written
-# [] Tested
+######
+# Check whether the user is mentioned. If they are mentioned, process the mention
+######
 def on_message_event_callback(event):
     if not event['text']:
         print("No text in message.")
@@ -128,22 +141,19 @@ def on_message_event_callback(event):
     # There might be multiple @mentions to the same person in the same message.
     # So make into a set to make things unique.
     for match in list(set(matches)):
-        print("Process match")
+        print("Process match " + match)
         process_match(
             event=event, 
             match=match)
-
-# sendChannelMessage
-# [ ] first draft
-# [ ] tested
+####
+# Post a message to the slack channel
+####
 def send_channel_message(channel, text):
     message = { "channel": channel, "text": text}
 
     print("Sending channel message")
     print(message)
 
-    # response = slackClient.chat_postMessage(channel=channel, text=text)
-    # r = requests.get('https://slack.com/api/chat.sendMessage?' + json.dumps(message))
     r = requests.post(
         'https://slack.com/api/chat.postMessage?',
         data=json.dumps(message),
@@ -157,11 +167,27 @@ def send_channel_message(channel, text):
     print('Send message response')
     print(resp)
 
+######
+# Get permanent link to the message
+######
 def get_permalink(channel, timestamp):
-    message = { "token": slack_token, "channel": channel, "message_ts": timestamp }
-    # TODO: Requires url encoding and can't accept posts
-    r = requests.get('https://slack.com/api/chat.getPermalink?' + json.dumps(message))
-    return r.json().permalink
+    print("Getting permalink")
+
+    url = 'https://slack.com/api/chat.getPermalink?channel=' + channel + '&message_ts=' + timestamp
+
+    print(url)
+
+    r = requests.get(
+        'https://slack.com/api/chat.getPermalink?channel=' + channel + '&message_ts=' + timestamp,
+        headers={
+            "Authorization": "Bearer " + slack_token
+        }
+    )
+
+    print("After get permalink ")
+    print('request ', r)
+    print('permalink response', r.json())
+    return r.json()['permalink']
 
 def on_app_mention_event_callback(event):
     if "unsubscribe" in event["text"].lower():
@@ -171,16 +197,9 @@ def on_app_mention_event_callback(event):
         print("Subscribing user")
         subscribe_to_mentions(event)
 
-# async function onAppMentionEventCallback(request: EventCallbackRequest) {
-#     // Got an app_mention to @mentionbot.
-#     const event = request.event;
-#     const promise = event.text.toLowerCase().indexOf("unsubscribe") >= 0
-#         ? unsubscribeFromMentions(event)
-#         : subscribeToMentions(event);
-
-#     return await promise;
-# }
-
+####
+# Unsubscribe user by deleting record from dynamo table
+####
 def unsubscribe_from_mentions(event):
     client = boto3.client('dynamodb')
     client.delete_item(
@@ -194,6 +213,9 @@ def unsubscribe_from_mentions(event):
     text = "Hi <@" + event['user'] + ">. You've been unsubscribed from @ mentions. Mention me again to resubscribe."
     send_channel_message(event['channel'], text)
 
+####
+# Subscribe user by adding record to dynamo table
+####
 def subscribe_to_mentions(event):
     channel = event['channel']
     print(channel)

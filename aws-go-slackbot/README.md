@@ -30,7 +30,13 @@ $ pulumi stack init mentionbot
 $ pulumi config set aws:region us-east-2
 ```
 
-### Step 3: Preview and deploy your app
+### Step 3: Build the handler
+
+```bash
+make build
+```
+		
+### Step 4: Preview and deploy your app
 
 Run `pulumi up` to preview and deploy your AWS resources.
 

@@ -6,14 +6,9 @@ import boto3
 import requests
 import iam
 import base64
-# import slack_sdk as slack
 import pulumi
 import pulumi_aws as aws
 
-# // A simple slack bot that, when requested, will monitor for @mentions of your name and post them to
-# // the channel you contacted the bot from.
-
-# TODO: Should this mentionbot be stored in pulumi backend?
 config = pulumi.Config("mentionbot")
 slack_token = config.get("slackToken")
 verification_token = config.get("verificationToken")
