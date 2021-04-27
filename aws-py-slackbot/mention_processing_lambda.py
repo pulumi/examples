@@ -52,6 +52,11 @@ def webhook_handler(event, context):
 
             else:
                 on_event_callback(request)
+                            
+                return {
+                    "statusCode": 200,
+                    "body": json.dumps({"challenge": challenge})
+                }
         else:
             print("Unknown event type: " + request.type)
     except Exception as err:
@@ -81,25 +86,27 @@ def on_event_callback(request):
         print("Unknown event type: " + event['type'])
 
 def process_match(event, match):
-    # Remove the <@ and > tags to grab the username / id
-    id = match[len("<@"):len(match)-len(">")]
+    print("getting " + match + " from subscriptions table.")
     client = boto3.client('dynamodb')
     resp = client.get_item(
         TableName = subscriptions_table_name,
         Key = {
             "id": {
-                "S": id
+                "S": match
             }
         }
     )
 
-    print('Get  match response')
+    print('Get match response')
     print(resp)
 
     if not resp:
         return
     
-    perma_link = get_permalink(channel=resp["Item"]["channel"], timestamp=event['event_ts'])
+    # print('Printing item')
+    # print(resp["Item"])
+
+    perma_link = get_permalink(channel=event["channel"], timestamp=event['event_ts'])
     
     print('perma_link')
     print(perma_link)
@@ -128,7 +135,7 @@ def on_message_event_callback(event):
     # There might be multiple @mentions to the same person in the same message.
     # So make into a set to make things unique.
     for match in list(set(matches)):
-        print("Process match")
+        print("Process match " + match)
         process_match(
             event=event, 
             match=match)
@@ -158,10 +165,23 @@ def send_channel_message(channel, text):
     print(resp)
 
 def get_permalink(channel, timestamp):
-    message = { "token": slack_token, "channel": channel, "message_ts": timestamp }
-    # TODO: Requires url encoding and can't accept posts
-    r = requests.get('https://slack.com/api/chat.getPermalink?' + json.dumps(message))
-    return r.json().permalink
+    print("Getting permalink")
+
+    url = 'https://slack.com/api/chat.getPermalink?channel=' + channel + '&message_ts=' + timestamp
+
+    print(url)
+
+    r = requests.get(
+        'https://slack.com/api/chat.getPermalink?channel=' + channel + '&message_ts=' + timestamp,
+        headers={
+            "Authorization": "Bearer " + slack_token
+        }
+    )
+
+    print("After get permalink ")
+    print('request ', r)
+    print('permalink response', r.json())
+    return r.json()['permalink']
 
 def on_app_mention_event_callback(event):
     if "unsubscribe" in event["text"].lower():
