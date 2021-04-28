@@ -203,6 +203,7 @@ Cluster.
 [AKS + Cosmos DB](azure-cs-aks-cosmos-helm) | A Helm chart deployed to AKS that stores TODOs in an Azure Cosmos DB MongoDB API.
 [Azure App Service](azure-cs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
 [Azure App Service with Docker](azure-cs-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[Azure API integration](azure-cs-call-azure-api) | Call additional Azure API endpoints from a Pulumi program.
 [Azure Cosmos DB and LogicApp](azure-cs-cosmosdb-logicapp) | Define Cosmos DB, API connections, and link them to a logic app.
 [Azure Functions](azure-cs-functions) | Deploy a Node.js serverless function to Azure Functions.
 [Static Website](azure-cs-static-website) | Configure static website hosting in Azure Storage.
