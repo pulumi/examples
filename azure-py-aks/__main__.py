@@ -37,11 +37,6 @@ if managed_cluster_name is None:
 managed_cluster = containerservice.ManagedCluster(
     managed_cluster_name,
     resource_group_name=resource_group.name,
-    addon_profiles={
-        "KubeDashboard": {
-            "enabled": True,
-        },
-    },
     agent_pool_profiles=[{
         "count": 3,
         "max_pods": 110,
@@ -63,6 +58,7 @@ managed_cluster = containerservice.ManagedCluster(
             }],
         },
     },
+    dns_prefix=resource_group.name,
     node_resource_group=f"MC_azure-native-go_{managed_cluster_name}_westus",
     service_principal_profile={
         "client_id": ad_app.application_id,
