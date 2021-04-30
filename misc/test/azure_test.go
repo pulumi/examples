@@ -87,6 +87,15 @@ func TestAccAzureGoWebserverComponent(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAzureGoCallAzureSdk(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-go-call-azure-sdk"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAzurePyAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
