@@ -1,6 +1,6 @@
 name: networking-layer
 runtime: nodejs
-description: Networking layer for the aws-stackreference-architecture
+description: Networking layer for the aws-ts-stackreference-architecture
 template:
   config:
     aws:region:
