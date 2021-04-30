@@ -41,6 +41,7 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi stack output
     Current stack outputs (2):
     OUTPUT          VALUE
+    publicHostName  ec2-53-40-227-82.compute-1.amazonaws.com
     publicIp        53.40.227.82
     ```
 
