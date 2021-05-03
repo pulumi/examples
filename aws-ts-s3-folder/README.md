@@ -75,6 +75,6 @@ with `***`.
     ***.s3-website-us-west-2.amazonaws.com
     ```
 
-    ![Hello S3 example](images/part2-website.png)
+    ![Hello S3 example](https://user-images.githubusercontent.com/274700/116912066-9384e300-abfc-11eb-8130-dbcff512a9de.png)
 
 1.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
