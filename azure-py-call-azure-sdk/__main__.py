@@ -46,7 +46,7 @@ roledef = get_role_id_by_name('AcrPull')
 
 authorization.RoleAssignment("access-from-cluster",
                              principal_id=current_principal,
-                             # adjust this if running as service principal
-                             principal_type=authorization.PrincipalType.USER,
+                             # adjust this if running as user
+                             principal_type=authorization.PrincipalType.SERVICE_PRINCIPAL,
                              role_definition_id=roledef,
                              scope=container_registry.id)
