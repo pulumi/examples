@@ -1,0 +1,6 @@
+name: azure-py-call-azure-sdk
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: An example of integrating an Azure SDK call to a Pulumi program.

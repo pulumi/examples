@@ -177,6 +177,7 @@ Example   | Description |
 [Azure Kubernetes Service](azure-py-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [Azure App Service](azure-py-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
 [Azure App Service with Docker](azure-py-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[Azure SDK integration](azure-py-call-azure-sdk) | Call Azure SDK functions from a Pulumi program in Python.
 [Azure Cosmos DB and LogicApp](azure-py-cosmosdb-logicapp) | Define Cosmos DB, API connections, and link them to a logic app.
 [Minecraft Server](azure-py-minecraft-server) | Deploy an Azure Virtual Machine and provision a Minecraft server.
 [Static Website](azure-py-static-website) | Configure static website hosting in Azure Storage.
@@ -192,6 +193,7 @@ Example   | Description |
 [Azure Kubernetes Service](azure-go-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [Azure App Service with Docker](azure-go-appservice-docker) | Build a web application hosted in App Service from Docker images.
 [Static Website](azure-go-static-website) | Configure static website hosting in Azure Storage.
+[Azure SDK integration](azure-go-call-azure-sdk) | Call Azure SDK functions from a Pulumi programin Go.
 
 ### C#
 

@@ -166,6 +166,15 @@ func TestAccAzurePyWebserver(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAzurePyCallAzureSdk(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-py-call-azure-sdk"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAzureTsAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
