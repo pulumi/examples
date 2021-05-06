@@ -3,8 +3,6 @@ import json
 import os
 import re
 import boto3
-# from slack_sdk import WebClient
-# from slack_sdk.errors import SlackApiError
 
 ###################################################
 #
@@ -15,8 +13,11 @@ slack_token = os.environ['SLACK_TOKEN']
 verification_token = os.environ['SLACK_VERIFICATION_CODE']
 subscriptions_table_name = os.environ['SUBSCRIPTIONS_TABLE_NAME']
 
-# slackClient = WebClient(token=slack_token)
-
+########
+# Route slack requests
+#  - Initial verification of slack_token
+#  - Event callback with token verification
+########
 def webhook_handler(event, context):
     try:
         if not slack_token:
@@ -69,8 +70,9 @@ def webhook_handler(event, context):
         # Always return success so that Slack doesn't just immediately resend this message to us.
         return { "statusCode": 200, "body": err }
 
-# [x] First Draft Completed
-# [ ] Tested
+#####
+# Process a slack event
+#####
 def on_event_callback(request):
     print('request event')
     print(request['event'])
@@ -85,6 +87,9 @@ def on_event_callback(request):
     else:
         print("Unknown event type: " + event['type'])
 
+####
+# Notify the user that they have been mentioned
+####
 def process_match(event, match):
     print("getting " + match + " from subscriptions table.")
     client = boto3.client('dynamodb')
@@ -114,8 +119,9 @@ def process_match(event, match):
     message = 'New mention at ' + perma_link
     send_channel_message(resp["Item"]["channel"], message)
 
-# [] written
-# [] Tested
+######
+# Check whether the user is mentioned. If they are mentioned, process the mention
+######
 def on_message_event_callback(event):
     if not event['text']:
         print("No text in message.")
@@ -139,18 +145,15 @@ def on_message_event_callback(event):
         process_match(
             event=event, 
             match=match)
-
-# sendChannelMessage
-# [ ] first draft
-# [ ] tested
+####
+# Post a message to the slack channel
+####
 def send_channel_message(channel, text):
     message = { "channel": channel, "text": text}
 
     print("Sending channel message")
     print(message)
 
-    # response = slackClient.chat_postMessage(channel=channel, text=text)
-    # r = requests.get('https://slack.com/api/chat.sendMessage?' + json.dumps(message))
     r = requests.post(
         'https://slack.com/api/chat.postMessage?',
         data=json.dumps(message),
@@ -164,6 +167,9 @@ def send_channel_message(channel, text):
     print('Send message response')
     print(resp)
 
+######
+# Get permanent link to the message
+######
 def get_permalink(channel, timestamp):
     print("Getting permalink")
 
@@ -191,16 +197,9 @@ def on_app_mention_event_callback(event):
         print("Subscribing user")
         subscribe_to_mentions(event)
 
-# async function onAppMentionEventCallback(request: EventCallbackRequest) {
-#     // Got an app_mention to @mentionbot.
-#     const event = request.event;
-#     const promise = event.text.toLowerCase().indexOf("unsubscribe") >= 0
-#         ? unsubscribeFromMentions(event)
-#         : subscribeToMentions(event);
-
-#     return await promise;
-# }
-
+####
+# Unsubscribe user by deleting record from dynamo table
+####
 def unsubscribe_from_mentions(event):
     client = boto3.client('dynamodb')
     client.delete_item(
@@ -214,6 +213,9 @@ def unsubscribe_from_mentions(event):
     text = "Hi <@" + event['user'] + ">. You've been unsubscribed from @ mentions. Mention me again to resubscribe."
     send_channel_message(event['channel'], text)
 
+####
+# Subscribe user by adding record to dynamo table
+####
 def subscribe_to_mentions(event):
     channel = event['channel']
     print(channel)
