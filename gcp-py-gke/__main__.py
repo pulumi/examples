@@ -1,6 +1,6 @@
 from pulumi import Config, export, get_project, get_stack, Output, ResourceOptions
 from pulumi_gcp.config import project, zone
-from pulumi_gcp.container import Cluster, ClusterMasterAuthArgs, ClusterNodeConfigArgs
+from pulumi_gcp.container import Cluster, ClusterNodeConfigArgs
 from pulumi_kubernetes import Provider
 from pulumi_kubernetes.apps.v1 import Deployment, DeploymentSpecArgs
 from pulumi_kubernetes.core.v1 import ContainerArgs, PodSpecArgs, PodTemplateSpecArgs, Service, ServicePortArgs, ServiceSpecArgs
@@ -27,7 +27,6 @@ k8s_cluster = Cluster('gke-cluster',
     initial_node_count=NODE_COUNT,
     node_version=MASTER_VERSION,
     min_master_version=MASTER_VERSION,
-    master_auth=ClusterMasterAuthArgs(username=USERNAME, password=PASSWORD),
     node_config=ClusterNodeConfigArgs(
         machine_type=NODE_MACHINE_TYPE,
         oauth_scopes=[

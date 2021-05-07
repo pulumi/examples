@@ -43,7 +43,6 @@ export class GkeCluster extends pulumi.ComponentResource {
             removeDefaultNodePool: true,
 
             minMasterVersion: engineVersion,
-            masterAuth: {username: "example-user", password: password},
         }, {parent: this});
 
         const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
