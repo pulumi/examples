@@ -91,7 +91,6 @@ After cloning this repo, run these commands from the working directory:
 	
 	Outputs:
 		invocation URL: "https://<gateway-id>.execute-api.us-west-2.amazonaws.com/prod/{message}"
-		lambda        : "arn:aws:lambda:us-west-2:ACCOUNTID:function:basicLambda-75711af"
 
 	Resources:
 		+ 10 created

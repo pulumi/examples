@@ -108,7 +108,7 @@ func main() {
 			RestApi:  gateway.ID(),
 			PathPart: pulumi.String("{proxy+}"),
 			ParentId: gateway.RootResourceId,
-		}, pulumi.DependsOn([]pulumi.Resource{gateway}))
+		})
 		if err != nil {
 			return err
 		}
@@ -119,7 +119,7 @@ func main() {
 			Authorization: pulumi.String("NONE"),
 			RestApi:       gateway.ID(),
 			ResourceId:    apiresource.ID(),
-		}, pulumi.DependsOn([]pulumi.Resource{gateway, apiresource}))
+		})
 		if err != nil {
 			return err
 		}
@@ -133,7 +133,7 @@ func main() {
 			RestApi:               gateway.ID(),
 			Type:                  pulumi.String("AWS_PROXY"),
 			Uri:                   function.InvokeArn,
-		}, pulumi.DependsOn([]pulumi.Resource{gateway, apiresource, function}))
+		})
 		if err != nil {
 			return err
 		}
@@ -145,7 +145,7 @@ func main() {
 			Function:  function.Name,
 			Principal: pulumi.String("apigateway.amazonaws.com"),
 			SourceArn: pulumi.Sprintf("arn:aws:execute-api:%s:%s:%s/*/*/*", region.Name, account.AccountId, gateway.ID()),
-		}, pulumi.DependsOn([]pulumi.Resource{gateway, apiresource, function}))
+		}, pulumi.DependsOn([]pulumi.Resource{apiresource}))
 		if err != nil {
 			return err
 		}
@@ -156,7 +156,7 @@ func main() {
 			RestApi:          gateway.ID(),
 			StageDescription: pulumi.String("Production"),
 			StageName:        pulumi.String("prod"),
-		}, pulumi.DependsOn([]pulumi.Resource{gateway, apiresource, function, permission}))
+		}, pulumi.DependsOn([]pulumi.Resource{apiresource, function, permission}))
 		if err != nil {
 			return err
 		}

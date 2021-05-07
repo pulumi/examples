@@ -3,7 +3,6 @@
 import re
 import json
 import boto3
-import requests
 import iam
 import base64
 import pulumi
@@ -124,5 +123,3 @@ invoke_permission = aws.lambda_.Permission("api-lambda-permission",
     principal="apigateway.amazonaws.com",
     source_arn=deployment.execution_arn.apply(lambda arn: arn + "*/*"),
 )
-
-# export const url = endpoint.url;
