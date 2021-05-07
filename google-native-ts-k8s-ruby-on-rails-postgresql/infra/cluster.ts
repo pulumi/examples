@@ -14,7 +14,6 @@ const cluster = new gcloud.container.v1.Cluster("cluster", {
     parent: `projects/${project}/locations/${region}`,
     initialClusterVersion: "1.18.16-gke.2100",
     initialNodeCount: 1,
-    masterAuth: { username: clusterUsername, password: clusterPassword },
     name: clusterName,
     network: `projects/${project}/global/networks/default`,
     nodeConfig: {
