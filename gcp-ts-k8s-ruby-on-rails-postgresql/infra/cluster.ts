@@ -14,7 +14,6 @@ export const cluster = new gcp.container.Cluster("gke-cluster", {
     removeDefaultNodePool: true,
 
     minMasterVersion: masterVersion,
-    masterAuth: { username: clusterUsername, password: clusterPassword },
 });
 
 const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
