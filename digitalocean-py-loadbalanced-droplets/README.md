@@ -9,7 +9,7 @@ Starting point for building a Pulumi sample architecture on DigitalOcean.
 1.  Create a new stack:
 
     ```bash
-    $ pulumi stack init digitalocean-ts-loadbalanced-droplets
+    $ pulumi stack init digitalocean-py-loadbalanced-droplets
     ```
 
 1. Configure the project:
@@ -22,13 +22,13 @@ Starting point for building a Pulumi sample architecture on DigitalOcean.
 
     ```bash
     $ pulumi up
-    Previewing update (digitalocean-ts-loadbalanced-droplets):
+    Previewing update (digitalocean-py-loadbalanced-droplets):
     ...
 
-Updating (digitalocean-ts-loadbalanced-droplets):
+Updating (digitalocean-py-loadbalanced-droplets):
 
      Type                              Name                                                                         Status
- +   pulumi:pulumi:Stack                 digitalocean-ts-loadbalanced-droplets-digitalocean-ts-loadbalanced-droplets  created
+ +   pulumi:pulumi:Stack                 digitalocean-py-loadbalanced-droplets-digitalocean-py-loadbalanced-droplets  created
  +   ├─ digitalocean:index:Tag           demo-app                                                                     created
  +   ├─ digitalocean:index:Tag           web-2                                                                        created
  +   ├─ digitalocean:index:Tag           web-0                                                                        created
@@ -59,3 +59,4 @@ Duration: 3m2s
     $ pulumi destroy
     $ pulumi stack rm
     ```
+
