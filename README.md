@@ -51,6 +51,7 @@ $ git pull origin master
     - [Python](#python-3)
     - [Go](#go-3)
     - [C#](#c-3)
+- [Openstack](#openstack)
 - [Cloud](#cloud)
 - [DigitalOcean](#digitalocean)
 - [Multicloud](#multicloud)
@@ -291,6 +292,12 @@ Example   | Description |
 Example   | Description |
 --------- | --------- |
 [Guestbook](kubernetes-go-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+
+## Openstack
+
+### Python
+
+[Web Server](openstack-py-webserver) | Deploy an Openstack instance and open port 8000.
 
 ## Cloud
 
