@@ -56,7 +56,7 @@
         instance_ip  192.168.0.243
     ```
 
-5.  Verify that the EC2 instance exists, by either using the AWS Console or running `openstack server list`.
+5.  Verify that the Openstack instance exists, by either using the Horizon dashboard or running `openstack server list`.
     ```bash
     $ openstack server list
     +--------------------------------------+-------------+--------+-------------------------------------+--------------------------+----------+
