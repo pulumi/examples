@@ -7,6 +7,11 @@ It uses the Pulumi Libvirt provider (https://www.pulumi.com/docs/reference/pkg/l
 
 ## Running the App
 
+1. The libvirt provider uses the libvirt module. Therefore, libvirt needs to be installed on the machine from which you are running pulumi.
+   - Mac: `brew install libvirt`
+   - Windows: See: https://libvirt.org/windows.html
+   - Others: https://libvirt.org/downloads.html
+   
 1. Create a new stack:
 
    ```
