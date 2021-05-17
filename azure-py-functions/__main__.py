@@ -66,7 +66,7 @@ app = web.WebApp("functionapp",
             web.NameValuePairArgs(name = "FUNCTIONS_WORKER_RUNTIME", value ="python"),
             web.NameValuePairArgs(name = "FUNCTIONS_EXTENSION_VERSION", value="~3"),
             web.NameValuePairArgs(name = "AzureWebJobsStorage", value=storageConnectionString),
-            web.NameValuePairArgs(name=  "WEBSITE_RUN_FROM_PACKAGE", value="https://github.com/tusharshahrs/demo/raw/main/content/lab/pulumi/azure-native/python/app/HelloWithPython.zip"),
+            web.NameValuePairArgs(name=  "WEBSITE_RUN_FROM_PACKAGE", value="https://github.com/pulumi/examples/raw/master/azure-py-functions/app/HelloWithPython.zip"),
         ],
     )
 )
