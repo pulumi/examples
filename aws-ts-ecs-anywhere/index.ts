@@ -5,12 +5,14 @@ import * as awsx from "@pulumi/awsx";
 import * as digitalocean from "@pulumi/digitalocean";
 import * as pulumi from "@pulumi/pulumi";
 
+// Get config
 const awsConfig = new pulumi.Config("aws");
 const awsRegion = awsConfig.get("region");
 
 const projectConfig = new pulumi.Config();
 const numberNodes = projectConfig.getNumber("numberNodes") || 2;
 
+// Set IAM roles
 const ssmRole = new aws.iam.Role("ssmRole", {
   assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(
     aws.iam.Principals.SsmPrincipal,
@@ -78,17 +80,20 @@ const taskRolePolicy = new aws.iam.RolePolicy("taskRolePolicy", {
   },
 });
 
+// Set up SSM
 const ssmActivation = new aws.ssm.Activation("ecsanywhere-ssmactivation", {
   iamRole: ssmRole.name,
   registrationLimit: numberNodes,
 });
 
+// Create cluster and export cluster name
 const cluster = new aws.ecs.Cluster("cluster");
 
 export const clusterName = cluster.name;
 
 const logGroup = new aws.cloudwatch.LogGroup("logGroup");
 
+// UserData for Droplets
 const userData = pulumi
   .all([ssmActivation.activationCode, ssmActivation.id, cluster.name])
   .apply(
@@ -120,6 +125,7 @@ for (let i = 1; i <= numberNodes; i++) {
   });
 }
 
+// Set up load balancer
 const lb = new digitalocean.LoadBalancer("lb", {
   region: digitalocean.Regions.NYC1,
   forwardingRules: [
@@ -138,10 +144,12 @@ const lb = new digitalocean.LoadBalancer("lb", {
   dropletTag: loadBalancerTag.name,
 });
 
+// Create ECR repository and build and push docker image
 const repo = new awsx.ecr.Repository("app");
 
 const image = repo.buildAndPushImage("./app");
 
+// Set up task definition
 const taskDefinition = pulumi
   .all([image, logGroup.name, logGroup.namePrefix])
   .apply(
@@ -177,6 +185,7 @@ const taskDefinition = pulumi
       }),
   );
 
+// Deploy containers to droplets
 const service = new aws.ecs.Service("service", {
   launchType: "EXTERNAL",
   taskDefinition: taskDefinition.arn,
