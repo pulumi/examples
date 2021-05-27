@@ -1,7 +1,9 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import * as digitalocean from "@pulumi/digitalocean";
+import * as pulumi from "@pulumi/pulumi";
 
 const awsConfig = new pulumi.Config("aws");
 const awsRegion = awsConfig.get("region");
@@ -11,38 +13,38 @@ const numberNodes = projectConfig.getNumber("numberNodes") || 2;
 
 const ssmRole = new aws.iam.Role("ssmRole", {
   assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(
-    aws.iam.Principals.SsmPrincipal
+    aws.iam.Principals.SsmPrincipal,
   ),
 });
 
-new aws.iam.RolePolicyAttachment("rpa-ssmrole-ssminstancecore", {
+const ssmCoreRoleAttachment = new aws.iam.RolePolicyAttachment("rpa-ssmrole-ssminstancecore", {
   policyArn: aws.iam.ManagedPolicy.AmazonSSMManagedInstanceCore,
   role: ssmRole,
 });
 
-new aws.iam.RolePolicyAttachment("rpa-ssmrole-ec2containerservice", {
+const ssmRoleEc2ContainerAttachment = new aws.iam.RolePolicyAttachment("rpa-ssmrole-ec2containerservice", {
   policyArn: aws.iam.ManagedPolicy.AmazonEC2ContainerServiceforEC2Role,
   role: ssmRole,
 });
 
 const executionRole = new aws.iam.Role("taskExecutionRole", {
   assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(
-    aws.iam.Principals.EcsTasksPrincipal
+    aws.iam.Principals.EcsTasksPrincipal,
   ),
 });
 
-new aws.iam.RolePolicyAttachment("rpa-ecsanywhere-ecstaskexecution", {
+const ecsTaskExecutionRoleAttachment = new aws.iam.RolePolicyAttachment("rpa-ecsanywhere-ecstaskexecution", {
   role: executionRole,
   policyArn: aws.iam.ManagedPolicy.AmazonECSTaskExecutionRolePolicy,
 });
 
 const taskRole = new aws.iam.Role("taskRole", {
   assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(
-    aws.iam.Principals.EcsTasksPrincipal
+    aws.iam.Principals.EcsTasksPrincipal,
   ),
 });
 
-new aws.iam.RolePolicy("taskRolePolicy", {
+const taskRolePolicy = new aws.iam.RolePolicy("taskRolePolicy", {
   role: taskRole.id,
   policy: {
     Version: "2012-10-17",
@@ -91,7 +93,7 @@ const userData = pulumi
   .all([ssmActivation.activationCode, ssmActivation.id, cluster.name])
   .apply(
     ([activationCode, activationId, clusterName]) => `#!/bin/bash
-# Download the ecs-anywhere install Script 
+# Download the ecs-anywhere install Script
 curl -o "ecs-anywhere-install.sh" "https://amazon-ecs-agent-packages-preview.s3.us-east-1.amazonaws.com/ecs-anywhere-install.sh" && sudo chmod +x ecs-anywhere-install.sh
 
 # (Optional) Check integrity of the shell script
@@ -103,13 +105,13 @@ sudo ./ecs-anywhere-install.sh \
     --activation-id ${activationId} \
     --activation-code ${activationCode} \
     --region ${awsRegion}
-`
+`,
   );
 
 const loadBalancerTag = new digitalocean.Tag("lb");
 
 for (let i = 1; i <= numberNodes; i++) {
-  new digitalocean.Droplet(`droplet-${i}`, {
+  const droplet = new digitalocean.Droplet(`droplet-${i}`, {
     region: digitalocean.Regions.NYC1,
     size: "s-1vcpu-2gb",
     image: "ubuntu-20-04-x64",
@@ -172,7 +174,7 @@ const taskDefinition = pulumi
             },
           },
         ]),
-      })
+      }),
   );
 
 const service = new aws.ecs.Service("service", {
