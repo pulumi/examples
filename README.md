@@ -176,6 +176,7 @@ Example   | Description |
 --------- | --------- |
 [Azure Container Instance](azure-py-aci) | Run Azure Container Instances on Linux.
 [Azure Kubernetes Service](azure-py-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
+[Azure AKS with Container Registry](azure-py-aks-acr-keda) | Create a AKS Cluster with an Azure Container Registry and deploy Keda with Helm.
 [Azure App Service](azure-py-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
 [Azure App Service with Docker](azure-py-appservice-docker) | Build a web application hosted in App Service from Docker images.
 [Azure SDK integration](azure-py-call-azure-sdk) | Call Azure SDK functions from a Pulumi program in Python.
