@@ -12,7 +12,7 @@ RUN ./aws/install
 # Install ffmpeg
 RUN curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ffmpeg.tar.xz -s
 RUN tar -xf ffmpeg.tar.xz
-RUN mv ffmpeg-4.3.1-amd64-static/ffmpeg /usr/bin
+RUN mv ffmpeg-*-amd64-static/ffmpeg /usr/bin
 
 # Create function directory
 RUN mkdir -p ${FUNCTION_DIR}
