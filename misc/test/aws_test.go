@@ -588,6 +588,15 @@ func TestAccAwsTsThumbnailer(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsTsLambdaThumbnailer(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-lambda-thumbnailer"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsTsTwitterAthena(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
