@@ -132,7 +132,7 @@ jobs:
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
       run: |-
-        curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -251,7 +251,7 @@ jobs:
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
       run: |-
-        curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -384,7 +384,7 @@ jobs:
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
       run: |-
-        curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -467,7 +467,7 @@ jobs:
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
       run: |-
-        curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
