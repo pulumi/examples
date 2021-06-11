@@ -60,11 +60,17 @@ jobs:
       - run: echo "Currently Pulumi $(pulumi version) is installed"
       - name: Install Testing Dependencies
         run: make ensure
+      - name: Create a Folder for Collecting Traces
+        run: mkdir traces
       - name: Add Test Trace Details
         run: |
-          echo "PULUMI_VERSION=$(pulumi version)" >> $GITHUB_ENV
-      - name: Running Performance Matrix
+          echo "PULUMI_VERSION=$(pulumi version)"                  >> $GITHUB_ENV
+          echo "PULUMI_TRACING_TAG_PULUMI_VERSION=$PULUMI_VERSION" >> $GITHUB_ENV
+          echo "PULUMI_TRACING_DIR=traces"                       >> $GITHUB_ENV
+      - name: Run Performance Matrix
         run: make performance_test_set
+      - name: Upload Traces to s3://cli-performance-metrics
+        run: aws s3 sync traces/ "s3://cli-performance-metrics/traces/$(date -u +'%Y-%m-%d/%H:%M')/"
     strategy:
       fail-fast: false
       matrix:
