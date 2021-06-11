@@ -21,8 +21,8 @@ env:
   PULUMI_TEST_OWNER: moolumi
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 jobs:
-  providers:
-    name: providers
+  performance_metrics_cron:
+    name: performance_metrics_cron
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Install DotNet ${{ matrix.dotnet-version }}
@@ -60,7 +60,7 @@ jobs:
       - run: echo "Currently Pulumi $(pulumi version) is installed"
       - name: Install Testing Dependencies
         run: make ensure
-      - name: Add Test Trace DEtails
+      - name: Add Test Trace Details
         run: |
           echo "PULUMI_VERSION=$(pulumi version)" >> $GITHUB_ENV
       - name: Running Performance Matrix
