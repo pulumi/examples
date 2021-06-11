@@ -2,6 +2,15 @@
 
 package test
 
+import (
+	"path"
+	"testing"
+	"time"
+
+	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
+	"github.com/stretchr/testify/assert"
+)
+
 func TestAccAwsGoS3Folder(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{

@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/url"
-	"os"
 	"path"
 	"strings"
 	"testing"
@@ -64,8 +63,6 @@ func TestAccAwsGoFargate(t *testing.T) {
 
 	integration.ProgramTest(t, &test)
 }
-
-
 
 func TestAccAwsGoS3FolderComponent(t *testing.T) {
 	test := getAWSBase(t).
@@ -553,25 +550,4 @@ func TestAccAwsTsLambdaEfs(t *testing.T) {
 		})
 
 	integration.ProgramTest(t, &test)
-}
-
-func getAWSBase(t *testing.T) integration.ProgramTestOptions {
-	awsRegion := getAwsRegion()
-	base := getBaseOptions(t)
-	awsBase := base.With(integration.ProgramTestOptions{
-		Config: map[string]string{
-			"aws:region": awsRegion,
-		},
-	})
-	return awsBase
-}
-
-func getAwsRegion() string {
-	awsRegion := os.Getenv("AWS_REGION")
-	if awsRegion == "" {
-		awsRegion = "us-west-1"
-		fmt.Println("Defaulting AWS_REGION to 'us-west-1'.  You can override using the AWS_REGION environment variable")
-	}
-
-	return awsRegion
 }
