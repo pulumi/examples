@@ -60,24 +60,18 @@ jobs:
       - run: echo "Currently Pulumi $(pulumi version) is installed"
       - name: Install Testing Dependencies
         run: make ensure
-      - name: Running ${{ matrix.clouds }}${{ matrix.languages }} Tests
-        run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages
-          }}
+      - name: Add Test Trace DEtails
+        run: |
+          echo "PULUMI_VERSION=$(pulumi version)" >> $GITHUB_ENV
+      - name: Running Performance Matrix
+        run: make performance_test_set
     strategy:
       fail-fast: false
       matrix:
-        clouds:
-          - Aws
         dotnet-version:
           - 3.1.301
         go-version:
           - 1.16.x
-        languages:
-          - Cs
-          - Js
-          - Ts
-          - Py
-          - Fs
         node-version:
           - 13.x
         platform:
