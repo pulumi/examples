@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/aws/aws-sdk-go v1.38.35
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/pulumi/pulumi-trace-tool v0.0.0-20210611225312-ca1114c56a53
 	github.com/pulumi/pulumi/pkg/v3 v3.0.0
 	github.com/pulumi/pulumi/sdk/v3 v3.3.1
 	github.com/stretchr/testify v1.6.1

@@ -4,12 +4,15 @@ package test
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
+	"github.com/pulumi/pulumi-trace-tool/traces"
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 	"github.com/stretchr/testify/assert"
 )
@@ -18,6 +21,87 @@ type bench struct {
 	name  string
 	cloud string
 	lang  string
+}
+
+func TestAccAwsGoS3Folder(t *testing.T) {
+	benchmark := bench{"aws-go-s3-folder", "aws", "go"}
+	opts := integration.ProgramTestOptions{
+		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
+		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+			maxWait := 10 * time.Minute
+			endpoint := stack.Outputs["websiteUrl"].(string)
+			assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+				return assert.Contains(t, body, "Hello, world!")
+			})
+		},
+	}
+	test := getBase(t, benchmark, opts)
+	integration.ProgramTest(t, &test)
+	computeMetricsInTest(t)
+}
+
+func TestAccAwsCsS3Folder(t *testing.T) {
+	benchmark := bench{"aws-cs-s3-folder", "aws", "cs"}
+	opts := integration.ProgramTestOptions{
+		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
+		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+			maxWait := 10 * time.Minute
+			endpoint := stack.Outputs["Endpoint"].(string)
+			assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+				return assert.Contains(t, body, "Hello, world!")
+			})
+		},
+	}
+	test := getBase(t, benchmark, opts)
+	integration.ProgramTest(t, &test)
+	computeMetricsInTest(t)
+}
+
+func TestAccAwsFsS3Folder(t *testing.T) {
+	benchmark := bench{"aws-fs-s3-folder", "aws", "fs"}
+	opts := integration.ProgramTestOptions{
+		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
+		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+			maxWait := 10 * time.Minute
+			endpoint := stack.Outputs["endpoint"].(string)
+			assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+				return assert.Contains(t, body, "Hello, world!")
+			})
+		},
+	}
+	test := getBase(t, benchmark, opts)
+	integration.ProgramTest(t, &test)
+	computeMetricsInTest(t)
+}
+
+func TestAccAwsJsS3Folder(t *testing.T) {
+	benchmark := bench{"aws-js-s3-folder", "aws", "js"}
+	opts := integration.ProgramTestOptions{
+		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
+		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+			assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
+				return assert.Contains(t, body, "Hello, Pulumi!")
+			})
+		},
+	}
+	test := getBase(t, benchmark, opts)
+	integration.ProgramTest(t, &test)
+	computeMetricsInTest(t)
+}
+
+func TestAccAwsPyS3Folder(t *testing.T) {
+	benchmark := bench{"aws-py-s3-folder", "aws", "py"}
+	opts := integration.ProgramTestOptions{
+		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
+		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+			assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
+				return assert.Contains(t, body, "Hello, Pulumi!")
+			})
+		},
+	}
+	test := getBase(t, benchmark, opts)
+	integration.ProgramTest(t, &test)
+	computeMetricsInTest(t)
 }
 
 func getBase(t *testing.T, benchmark bench, opts integration.ProgramTestOptions) integration.ProgramTestOptions {
@@ -40,78 +124,55 @@ func getBase(t *testing.T, benchmark bench, opts integration.ProgramTestOptions)
 	return getAWSBase(t).With(opts)
 }
 
-func TestAccAwsGoS3Folder(t *testing.T) {
-	benchmark := bench{"aws-go-s3-folder", "aws", "go"}
-	opts := integration.ProgramTestOptions{
-		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
-		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			maxWait := 10 * time.Minute
-			endpoint := stack.Outputs["websiteUrl"].(string)
-			assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
-				return assert.Contains(t, body, "Hello, world!")
-			})
-		},
+func computeMetricsInTest(t *testing.T) {
+	err := computeMetrics()
+	if err != nil {
+		t.Fatal(err)
 	}
-	test := getBase(t, benchmark, opts)
-	integration.ProgramTest(t, &test)
 }
 
-func TestAccAwsCsS3Folder(t *testing.T) {
-	benchmark := bench{"aws-cs-s3-folder", "aws", "cs"}
-	opts := integration.ProgramTestOptions{
-		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
-		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			maxWait := 10 * time.Minute
-			endpoint := stack.Outputs["Endpoint"].(string)
-			assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
-				return assert.Contains(t, body, "Hello, world!")
-			})
-		},
+func computeMetrics() error {
+	dir := os.Getenv("PULUMI_TRACING_DIR")
+	if dir == "" {
+		return nil
 	}
-	test := getBase(t, benchmark, opts)
-	integration.ProgramTest(t, &test)
-}
 
-func TestAccAwsFsS3Folder(t *testing.T) {
-	benchmark := bench{"aws-fs-s3-folder", "aws", "fs"}
-	opts := integration.ProgramTestOptions{
-		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
-		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			maxWait := 10 * time.Minute
-			endpoint := stack.Outputs["endpoint"].(string)
-			assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
-				return assert.Contains(t, body, "Hello, world!")
-			})
-		},
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
 	}
-	test := getBase(t, benchmark, opts)
-	integration.ProgramTest(t, &test)
-}
 
-func TestAccAwsJsS3Folder(t *testing.T) {
-	benchmark := bench{"aws-js-s3-folder", "aws", "js"}
-	opts := integration.ProgramTestOptions{
-		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
-		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
-				return assert.Contains(t, body, "Hello, Pulumi!")
-			})
-		},
-	}
-	test := getBase(t, benchmark, opts)
-	integration.ProgramTest(t, &test)
-}
+	defer os.Chdir(cwd)
 
-func TestAccAwsPyS3Folder(t *testing.T) {
-	benchmark := bench{"aws-py-s3-folder", "aws", "py"}
-	opts := integration.ProgramTestOptions{
-		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
-		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
-				return assert.Contains(t, body, "Hello, Pulumi!")
-			})
-		},
+	err = os.Chdir(dir)
+	if err != nil {
+		return err
 	}
-	test := getBase(t, benchmark, opts)
-	integration.ProgramTest(t, &test)
+
+	files, err := ioutil.ReadDir(".")
+	if err != nil {
+		return err
+	}
+
+	var traceFiles []string
+	for _, f := range files {
+		if strings.HasSuffix(f.Name(), ".trace") {
+			traceFiles = append(traceFiles, f.Name())
+		}
+	}
+
+	if err := traces.ToCsv(traceFiles, "traces.csv", "filename"); err != nil {
+		return err
+	}
+
+	f, err := os.Create("metrics.csv")
+	if err != nil {
+		return err
+	}
+
+	if err := traces.Metrics("traces.csv", "filename", f); err != nil {
+		return err
+	}
+
+	return nil
 }
