@@ -72,7 +72,9 @@ jobs:
         run: make performance_test_set
       - name: Upload Traces to s3://cli-performance-metrics
         run: |-
-          aws s3 sync "$PWD/traces/" "s3://cli-performance-metrics/traces/$(date -u +'%Y-%m-%d/%H:%M')/" && echo Uploaded
+            gzip -9 "$PWD/traces/metrics.csv"
+            RAND=$(python -c 'import uuid; print(uuid.uuid4())')
+            aws s3 cp "$PWD/traces/metrics.csv.gz" "s3://cli-performance-metrics/traces/$(date -u +'%Y-%m-%d')/performance_metrics_$RAND.csv.gz"
     strategy:
       fail-fast: false
       matrix:
