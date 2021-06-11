@@ -139,3 +139,26 @@ func assertHTTPHelloWorld(t *testing.T, output interface{}, headers map[string]s
 		return assert.Equal(t, "Hello, World!\n", s)
 	})
 }
+
+// Below: aws-specifics shared so that -tags Performance and -tags Aws compilation works.
+
+func getAWSBase(t *testing.T) integration.ProgramTestOptions {
+	awsRegion := getAwsRegion()
+	base := getBaseOptions(t)
+	awsBase := base.With(integration.ProgramTestOptions{
+		Config: map[string]string{
+			"aws:region": awsRegion,
+		},
+	})
+	return awsBase
+}
+
+func getAwsRegion() string {
+	awsRegion := os.Getenv("AWS_REGION")
+	if awsRegion == "" {
+		awsRegion = "us-west-1"
+		fmt.Println("Defaulting AWS_REGION to 'us-west-1'.  You can override using the AWS_REGION environment variable")
+	}
+
+	return awsRegion
+}
