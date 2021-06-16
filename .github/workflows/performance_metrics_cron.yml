@@ -34,8 +34,6 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: ${{matrix.go-version}}
-      - name: "Temporarily hack go.mod to get pre-release pulumi deps"
-        run: ./misc/test/temp_hack_go_mod.sh
       - name: Install DotNet ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v1
         with:
@@ -62,6 +60,8 @@ jobs:
           role-session-name: examples@githubActions
           role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
       - uses: actions/checkout@v2
+      - name: "Temporarily hack go.mod to get pre-release pulumi deps"
+        run: ./misc/test/temp_hack_go_mod.sh
       # - name: Install Latest Stable Pulumi CLI
       #   uses: pulumi/setup-pulumi@v2
       - name: Install Pulumi CLI with tracing additions (temp until Latest Stable has it)
