@@ -25,6 +25,12 @@ jobs:
     name: performance_metrics_cron
     runs-on: ${{ matrix.platform }}
     steps:
+      - name: Install Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v1
+        with:
+          go-version: ${{matrix.go-version}}
+      - name: Temporary: hack misc/test/go.mod to get pre-release pulumi deps
+        run: ./misc/test/temp_hack_go_mod.sh
       - name: Install DotNet ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v1
         with:
@@ -37,10 +43,6 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{matrix.python-version}}
-      - name: Install Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v1
-        with:
-          go-version: ${{matrix.go-version}}
       - name: Install Python Deps
         run: |-
           pip3 install virtualenv==20.0.23
