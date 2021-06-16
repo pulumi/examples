@@ -19,13 +19,14 @@ import (
 )
 
 type bench struct {
-	name  string
-	cloud string
-	lang  string
+	name     string
+	provider string
+	runtime  string
+	language string
 }
 
 func TestAccAwsGoS3Folder(t *testing.T) {
-	benchmark := bench{"aws-go-s3-folder", "aws", "go"}
+	benchmark := bench{"aws-go-s3-folder", "aws", "go", "go"}
 	opts := integration.ProgramTestOptions{
 		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -41,7 +42,7 @@ func TestAccAwsGoS3Folder(t *testing.T) {
 }
 
 func TestAccAwsCsS3Folder(t *testing.T) {
-	benchmark := bench{"aws-cs-s3-folder", "aws", "cs"}
+	benchmark := bench{"aws-cs-s3-folder", "aws", "dotnet", "csharp"}
 	opts := integration.ProgramTestOptions{
 		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -57,7 +58,7 @@ func TestAccAwsCsS3Folder(t *testing.T) {
 }
 
 func TestAccAwsFsS3Folder(t *testing.T) {
-	benchmark := bench{"aws-fs-s3-folder", "aws", "fs"}
+	benchmark := bench{"aws-fs-s3-folder", "aws", "dotnet", "fsharp"}
 	opts := integration.ProgramTestOptions{
 		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -73,7 +74,7 @@ func TestAccAwsFsS3Folder(t *testing.T) {
 }
 
 func TestAccAwsJsS3Folder(t *testing.T) {
-	benchmark := bench{"aws-js-s3-folder", "aws", "js"}
+	benchmark := bench{"aws-js-s3-folder", "aws", "nodejs", "js"}
 	opts := integration.ProgramTestOptions{
 		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -87,7 +88,7 @@ func TestAccAwsJsS3Folder(t *testing.T) {
 }
 
 func TestAccAwsPyS3Folder(t *testing.T) {
-	benchmark := bench{"aws-py-s3-folder", "aws", "py"}
+	benchmark := bench{"aws-py-s3-folder", "aws", "python", "python"}
 	opts := integration.ProgramTestOptions{
 		Dir: path.Join(getCwd(t), "..", "..", benchmark.name),
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -128,8 +129,9 @@ func tracingOpts(t *testing.T, benchmark bench) integration.ProgramTestOptions {
 			Env: []string{
 				"PULUMI_TRACING_TAG_REPO=pulumi/examples",
 				fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_NAME=%s", benchmark.name),
-				fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_CLOUD=%s", benchmark.cloud),
-				fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_LANGUAGE=%s", benchmark.lang),
+				fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_PROVIDER=%s", benchmark.provider),
+				fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_RUNTIME=%s", benchmark.runtime),
+				fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_LANGUAGE=%s", benchmark.language),
 				"PULUMI_TRACING_MEMSTATS_POLL_INTERVAL=100ms",
 			},
 			Tracing: fmt.Sprintf("file:%s",
