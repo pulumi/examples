@@ -76,9 +76,9 @@ jobs:
           mkdir "$PWD/traces"
       - name: Add Test Trace Details
         run: |
-          echo "PULUMI_VERSION=$(pulumi version)"                  >> $GITHUB_ENV
-          echo "PULUMI_TRACING_TAG_PULUMI_VERSION=$PULUMI_VERSION" >> $GITHUB_ENV
-          echo "PULUMI_TRACING_DIR=$PWD/traces"                    >> $GITHUB_ENV
+          echo "PULUMI_VERSION=$(pulumi version)"                    >> $GITHUB_ENV
+          echo "PULUMI_TRACING_TAG_PULUMI_VERSION=$(pulumi version)" >> $GITHUB_ENV
+          echo "PULUMI_TRACING_DIR=$PWD/traces"                      >> $GITHUB_ENV
       - name: Run Performance Matrix
         run: make performance_test_set
       - name: Upload Traces to s3://cli-performance-metrics
