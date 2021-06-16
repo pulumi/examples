@@ -57,8 +57,11 @@ jobs:
           role-session-name: examples@githubActions
           role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
       - uses: actions/checkout@v2
-      - name: Install Latest Stable Pulumi CLI
-        uses: pulumi/setup-pulumi@v2
+      # - name: Install Latest Stable Pulumi CLI
+      #   uses: pulumi/setup-pulumi@v2
+      - name: Install Pulumi CLI with tracing additions (temp until Latest Stable has it)
+        run: |-
+          curl -sSL https://get.pulumi.com | bash -s -- --version 3.5.0-alpha.1623852893
       - run: echo "Currently Pulumi $(pulumi version) is installed"
       - name: Install Testing Dependencies
         run: make ensure
