@@ -1,3 +1,8 @@
+name: Run Performance Metrics Cron Job
+"on":
+  workflow_dispatch: {}
+  schedule:
+    - cron: 0 9 * * *
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -29,7 +34,7 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: ${{matrix.go-version}}
-      - name: Temporary: hack misc/test/go.mod to get pre-release pulumi deps
+      - name: "Temporarily hack go.mod to get pre-release pulumi deps"
         run: ./misc/test/temp_hack_go_mod.sh
       - name: Install DotNet ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v1
@@ -93,8 +98,3 @@ jobs:
           - ubuntu-latest
         python-version:
           - "3.7"
-name: Run Performance Metrics Cron Job
-"on":
-  workflow_dispatch: {}
-  schedule:
-    - cron: 0 9 * * *
