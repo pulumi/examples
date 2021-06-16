@@ -5,6 +5,7 @@ package test
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -35,9 +36,8 @@ func TestAccAwsGoS3Folder(t *testing.T) {
 			})
 		},
 	}
-	test := getBase(t, benchmark, opts)
+	test := getAWSBase(t).With(opts).With(tracingOpts(t, benchmark))
 	integration.ProgramTest(t, &test)
-	computeMetricsInTest(t)
 }
 
 func TestAccAwsCsS3Folder(t *testing.T) {
@@ -52,9 +52,8 @@ func TestAccAwsCsS3Folder(t *testing.T) {
 			})
 		},
 	}
-	test := getBase(t, benchmark, opts)
+	test := getAWSBase(t).With(opts).With(tracingOpts(t, benchmark))
 	integration.ProgramTest(t, &test)
-	computeMetricsInTest(t)
 }
 
 func TestAccAwsFsS3Folder(t *testing.T) {
@@ -69,9 +68,8 @@ func TestAccAwsFsS3Folder(t *testing.T) {
 			})
 		},
 	}
-	test := getBase(t, benchmark, opts)
+	test := getAWSBase(t).With(opts).With(tracingOpts(t, benchmark))
 	integration.ProgramTest(t, &test)
-	computeMetricsInTest(t)
 }
 
 func TestAccAwsJsS3Folder(t *testing.T) {
@@ -84,9 +82,8 @@ func TestAccAwsJsS3Folder(t *testing.T) {
 			})
 		},
 	}
-	test := getBase(t, benchmark, opts)
+	test := getAWSBase(t).With(opts).With(tracingOpts(t, benchmark))
 	integration.ProgramTest(t, &test)
-	computeMetricsInTest(t)
 }
 
 func TestAccAwsPyS3Folder(t *testing.T) {
@@ -99,44 +96,51 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 			})
 		},
 	}
-	test := getBase(t, benchmark, opts)
+	test := getAWSBase(t).With(opts).With(tracingOpts(t, benchmark))
 	integration.ProgramTest(t, &test)
-	computeMetricsInTest(t)
 }
 
-func getBase(t *testing.T, benchmark bench, opts integration.ProgramTestOptions) integration.ProgramTestOptions {
-	dir := os.Getenv("PULUMI_TRACING_DIR")
+func TestMain(m *testing.M) {
+	code := m.Run()
+
+	dir := tracingDir()
+	if dir != "" {
+		// After all tests run with tracing, compute metrics
+		// on the entire set.
+		err := computeMetrics(dir)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	os.Exit(code)
+}
+
+func tracingDir() string {
+	return os.Getenv("PULUMI_TRACING_DIR")
+}
+
+func tracingOpts(t *testing.T, benchmark bench) integration.ProgramTestOptions {
+	dir := tracingDir()
 
 	if dir != "" {
-
-		opts.Env = []string{
-			"PULUMI_TRACING_TAG_REPO=pulumi/examples",
-			fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_NAME=%s", benchmark.name),
-			fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_CLOUD=%s", benchmark.cloud),
-			fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_LANGUAGE=%s", benchmark.lang),
-			"PULUMI_TRACING_MEMSTATS_POLL_INTERVAL=100ms",
+		return integration.ProgramTestOptions{
+			Env: []string{
+				"PULUMI_TRACING_TAG_REPO=pulumi/examples",
+				fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_NAME=%s", benchmark.name),
+				fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_CLOUD=%s", benchmark.cloud),
+				fmt.Sprintf("PULUMI_TRACING_TAG_BENCHMARK_LANGUAGE=%s", benchmark.lang),
+				"PULUMI_TRACING_MEMSTATS_POLL_INTERVAL=100ms",
+			},
+			Tracing: fmt.Sprintf("file:%s",
+				filepath.Join(dir, fmt.Sprintf("%s-{command}.trace", benchmark.name))),
 		}
-
-		opts.Tracing = fmt.Sprintf("file:%s",
-			filepath.Join(dir, fmt.Sprintf("%s-{command}.trace", benchmark.name)))
 	}
 
-	return getAWSBase(t).With(opts)
+	return integration.ProgramTestOptions{}
 }
 
-func computeMetricsInTest(t *testing.T) {
-	err := computeMetrics()
-	if err != nil {
-		t.Fatal(err)
-	}
-}
-
-func computeMetrics() error {
-	dir := os.Getenv("PULUMI_TRACING_DIR")
-	if dir == "" {
-		return nil
-	}
-
+func computeMetrics(dir string) error {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return err
