@@ -70,5 +70,10 @@ class MyStack : Stack
         {
             DependsOn = redisContainer
         });
+
+        this.Url = Output.Create("http://localhost:8080/Cache");
     }
+
+    [Output]
+    public Output<string> Url {get;set;}
 }

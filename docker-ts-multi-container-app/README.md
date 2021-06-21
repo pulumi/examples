@@ -13,7 +13,7 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
 1.  Create a new stack:
 
     ```
-    $ pulumi stack init containers-dev
+    $ pulumi stack init dev
     ```
 
 1.  Restore NPM modules via `npm install` or `yarn install`.

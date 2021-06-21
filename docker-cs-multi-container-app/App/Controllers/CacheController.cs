@@ -26,7 +26,19 @@ namespace App.Controllers
         public async Task<IActionResult> Get()
         {
             IDatabase db = _cache.GetDatabase();
-            string value = db.StringGet(RedisKey);
+            var redisValue = await db.StringGetAsync(RedisKey);
+            if (!redisValue.HasValue)
+            {
+                await db.StringSetAsync(RedisKey, JsonSerializer.Serialize(new Hits 
+                {
+                    Number = 1
+                }));
+                return Ok("I have been viewed 1 times");      
+            }
+            var hit = JsonSerializer.Deserialize<Hits>(redisValue);
+            var value = $"I have been viewed {hit.Number} times";
+            hit.Number++;
+            await db.StringSetAsync(RedisKey, JsonSerializer.Serialize(hit));
             return Ok(value);
         }
     }
