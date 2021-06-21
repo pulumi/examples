@@ -30,7 +30,7 @@ To deploy your infrastructure, follow the steps below.
     ```
     Updating (dev)
 
-    View Live: https://app.pulumi.com/acmecorp/docker-cs-multi-container-app/dev/updates/37
+    View Live: https://app.pulumi.com/acmecorp/docker-cs-multi-container-app/dev/updates/1
 
         Type                         Name                               Status
     +   pulumi:pulumi:Stack          docker-cs-multi-container-app-dev  created
