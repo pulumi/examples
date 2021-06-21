@@ -3,4 +3,4 @@ runtime:
   name: python
   options:
     virtualenv: venv
-description: Example app using multiple docker containers
+description: Example python app using multiple docker containers
