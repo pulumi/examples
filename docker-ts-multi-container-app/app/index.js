@@ -5,7 +5,7 @@ const app = express();
 const redisPort = process.env.REDIS_PORT
 const redisHost = process.env.REDIS_HOST;
 const redisClient = redis.createClient(redisPort, redisHost);
-const redisKey = "numHits";
+const redisKey = "hits";
 
 app.get("/", (req, res) => {
     redisClient.get(redisKey, async (err, redisData) => {
