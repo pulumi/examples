@@ -292,6 +292,7 @@ Example   | Description |
 Example   | Description |
 --------- | --------- |
 [Guestbook](kubernetes-go-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+[App Rollout via ConfigMap](kubernetes-go-configmap-rollout) | Enable a change in a ConfigMap to trigger a rollout of an nginx Deployment.
 
 ## Openstack
 
