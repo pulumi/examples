@@ -14,7 +14,6 @@ env:
   GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
   GOOGLE_REGION: us-central1
   GOOGLE_ZONE: us-central1-a
-  PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
   PROVIDER_TESTS_TAG: ${{ github.event.client_payload.ref }}
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_API: https://api.pulumi-staging.io

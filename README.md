@@ -58,7 +58,6 @@ $ git pull origin master
 - [F5](#f5)
 - [Twilio](#twilio)
 - [Linode](#linode)
-- [Packet](#packet)
 - [Testing](#testing)
 - [Automation API](https://github.com/pulumi/automation-api-examples)
 
@@ -371,18 +370,6 @@ Example   | Description |
 Example   | Description |
 --------- | --------- |
 [Web Server](linode-js-webserver) | Build a web server on Linode.
-
-## Packet
-
-### TypeScript
-Example   | Description |
---------- | --------- |
-[Web Server](packet-ts-webserver) | Build a web server on Packet.net.
-
-### Python
-Example   | Description |
---------- | --------- |
-[Web Server](packet-py-webserver) | Build a web server on Packet.net.
 
 ## Testing
 
