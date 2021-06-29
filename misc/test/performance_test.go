@@ -19,6 +19,7 @@ func bench(name, provider, runtime, lang string) traces.Benchmark {
 	b.Provider = provider
 	b.Runtime = runtime
 	b.Language = lang
+	b.Repository = "pulumi/examples"
 	return b
 }
 
