@@ -1,7 +1,7 @@
 // Copyright 2016-2020, Pulumi Corporation
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Threading.Tasks;
 using Pulumi;
 using Pulumi.Testing;
@@ -21,7 +21,7 @@ namespace UnitTesting
             if (!args.Inputs.ContainsKey("name"))
                 outputs.Add("name", args.Name);
             
-            if (args.Type == "azure:storage/blob:Blob")
+            if (args.Type == "azure-native:storage:Blob")
             {
                 // Assets can't directly go through the engine.
                 // We don't need them in the test, so blank out the property for now.
@@ -29,11 +29,14 @@ namespace UnitTesting
             }
             
             // For a Storage Account...
-            if (args.Type == "azure:storage/account:Account")
+            if (args.Type == "azure-native:storage:StorageAccount")
             {
                 // ... set its web endpoint property.
                 // Normally this would be calculated by Azure, so we have to mock it. 
-                outputs.Add("primaryWebEndpoint", $"https://{args.Name}.web.core.windows.net");
+                outputs.Add("primaryEndpoints", new Dictionary<string, string> 
+                { 
+                    { "web", $"https://{args.Name}.web.core.windows.net" },
+                }.ToImmutableDictionary());
             }
 
             // Default the resource ID to `{name}_id`.
