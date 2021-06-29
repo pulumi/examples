@@ -9,28 +9,10 @@ import (
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 )
 
-func TestAccPacketPyWebserver(t *testing.T) {
-	test := getBaseOptions(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "packet-py-webserver"),
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
 func TestAccEquinixMetalPyWebserver(t *testing.T) {
 	test := getBaseOptions(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "equinix-metal-py-webserver"),
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccPacketTsWebserver(t *testing.T) {
-	test := getBaseOptions(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "packet-ts-webserver"),
 		})
 
 	integration.ProgramTest(t, &test)

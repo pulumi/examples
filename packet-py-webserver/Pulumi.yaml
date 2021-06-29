@@ -1,6 +1,0 @@
-name: packet-py-webserver
-description: A simple server on Packet.
-runtime:
-  name: python
-  options:
-    virtualenv: venv

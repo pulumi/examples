@@ -62,12 +62,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: "Temporarily hack go.mod to get pre-release pulumi deps"
         run: ./misc/test/temp_hack_go_mod.sh
-      # - name: Install Latest Stable Pulumi CLI
-      #   uses: pulumi/setup-pulumi@v2
-      - name: Install Pulumi CLI with tracing additions (temp until Latest Stable has it)
-        run: |-
-          curl -sSL https://get.pulumi.com | bash -s -- --version 3.5.0-alpha.1623852893
-          echo "/home/runner/.pulumi/bin" >> $GITHUB_PATH
+      - name: Install Latest Stable Pulumi CLI
+        uses: pulumi/setup-pulumi@v2
       - run: echo "Currently Pulumi $(pulumi version) is installed"
       - name: Install Testing Dependencies
         run: make ensure
