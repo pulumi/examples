@@ -1,4 +1,0 @@
-name: webserver-packet
-description: A simple server on Packet.
-runtime: nodejs
-

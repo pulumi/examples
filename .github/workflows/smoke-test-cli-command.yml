@@ -238,7 +238,6 @@ jobs:
         - Aws
         - Azure
         - Gcp
-        - Packet
         - EquinixMetal
         - Cloud
         dotnet-version:
