@@ -58,7 +58,6 @@ $ git pull origin master
 - [F5](#f5)
 - [Twilio](#twilio)
 - [Linode](#linode)
-- [Packet](#packet)
 - [Testing](#testing)
 - [Automation API](https://github.com/pulumi/automation-api-examples)
 
@@ -293,6 +292,8 @@ Example   | Description |
 --------- | --------- |
 [Guestbook](kubernetes-go-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
 [App Rollout via ConfigMap](kubernetes-go-configmap-rollout) | Enable a change in a ConfigMap to trigger a rollout of an nginx Deployment.
+[Wordpress Helm Chart](kubernetes-go-helm-wordpress) | Use the Helm API to deploy v9.6.0 of the Wordpress Helm Chart to a Kubernetes cluster.
+[Expose Deployment](kubernetes-go-exposed-deployment) | Deploy nginx to a Kubernetes cluster, and publicly expose it using a Kubernetes Service.
 
 ## Openstack
 
@@ -372,18 +373,6 @@ Example   | Description |
 Example   | Description |
 --------- | --------- |
 [Web Server](linode-js-webserver) | Build a web server on Linode.
-
-## Packet
-
-### TypeScript
-Example   | Description |
---------- | --------- |
-[Web Server](packet-ts-webserver) | Build a web server on Packet.net.
-
-### Python
-Example   | Description |
---------- | --------- |
-[Web Server](packet-py-webserver) | Build a web server on Packet.net.
 
 ## Testing
 
