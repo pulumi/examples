@@ -100,21 +100,45 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+type manyResourcesConfig struct {
+	suffix       string
+	resources    int
+	payloadBytes int
+}
+
 func TestGoManyResources(t *testing.T) {
-	check := func(t *testing.T, resourceCount int) {
-		folder := "go-many-resources"
-		benchmark := bench(fmt.Sprintf("%s-%d-ALPHA-V1", folder, resourceCount), "", "go", "go")
+	folder := "go-many-resources"
+
+	configurations := []manyResourcesConfig{
+		{suffix: "-64-ALPHA-V1", resources: 64, payloadBytes: 1024},
+		{suffix: "-128-ALPHA-V1", resources: 128, payloadBytes: 1024},
+		{suffix: "-256-ALPHA-V1", resources: 256, payloadBytes: 1024},
+
+		{suffix: "-64-ALPHA-V2", resources: 64, payloadBytes: 8},
+		{suffix: "-128-ALPHA-V2", resources: 128, payloadBytes: 8},
+		{suffix: "-256-ALPHA-V2", resources: 256, payloadBytes: 8},
+		{suffix: "-512-ALPHA-V2", resources: 512, payloadBytes: 8},
+		{suffix: "-1024-ALPHA-V2", resources: 1024, payloadBytes: 8},
+		{suffix: "-2028-ALPHA-V2", resources: 2048, payloadBytes: 8},
+		{suffix: "-4096-ALPHA-V2", resources: 4096, payloadBytes: 8},
+	}
+
+	check := func(t *testing.T, cfg manyResourcesConfig) {
+		benchmark := bench(fmt.Sprintf("%s%s", folder, cfg.suffix), "", "go", "go")
 		opts := integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", folder),
-			Env: []string{fmt.Sprintf("RESOURCE_COUNT=%d", resourceCount)},
+			Env: []string{
+				fmt.Sprintf("RESOURCE_COUNT=%d", cfg.resources),
+				fmt.Sprintf("RESOURCE_PAYLOAD_BYTES=%d", cfg.payloadBytes),
+			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assert.Equal(t, len(stack.Outputs), resourceCount)
+				assert.Equal(t, len(stack.Outputs), cfg.resources)
 				output1, gotOutput1 := stack.Outputs["output-1"]
 				assert.True(t, gotOutput1)
 				output1str, isStr := output1.(string)
 				assert.True(t, isStr)
 				if gotOutput1 && isStr {
-					assert.Equal(t, 1024, len(output1str))
+					assert.Equal(t, cfg.payloadBytes, len(output1str))
 				}
 			},
 		}
@@ -122,9 +146,9 @@ func TestGoManyResources(t *testing.T) {
 		integration.ProgramTest(t, &test)
 	}
 
-	for _, resourceCount := range []int{64, 128, 256} {
-		t.Run(fmt.Sprintf("with-%d-resources", resourceCount), func(t *testing.T) {
-			check(t, resourceCount)
+	for _, configuration := range configurations {
+		t.Run(fmt.Sprintf("%s%s", folder, configuration.suffix), func(t *testing.T) {
+			check(t, configuration)
 		})
 	}
 }
