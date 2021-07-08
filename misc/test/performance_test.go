@@ -108,7 +108,13 @@ func TestGoManyResources(t *testing.T) {
 			opts := integration.ProgramTestOptions{
 				Dir: path.Join(getCwd(t), "..", "..", folder),
 				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assert.Equal(t, "ok", stack.Outputs["result"].(string))
+					output1, gotOutput1 := stack.Outputs["output-1"]
+					assert.True(t, gotOutput1)
+					output1str, isStr := output1.(string)
+					assert.True(t, isStr)
+					if gotOutput1 && isStr {
+						assert.Equal(t, 1024, len(output1str))
+					}
 				},
 			}
 			test := getBaseOptions(t).With(opts).With(benchmark.ProgramTestOptions())
