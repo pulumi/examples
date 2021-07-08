@@ -101,26 +101,30 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 }
 
 func TestGoManyResources(t *testing.T) {
+	check := func(t *testing.T, resourceCount int) {
+		folder := "go-many-resources"
+		benchmark := bench(fmt.Sprintf("%s-%d-ALPHA-V1", folder, resourceCount), "", "go", "go")
+		opts := integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", folder),
+			Env: []string{fmt.Sprintf("RESOURCE_COUNT=%d", resourceCount)},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assert.Equal(t, len(stack.Outputs), resourceCount)
+				output1, gotOutput1 := stack.Outputs["output-1"]
+				assert.True(t, gotOutput1)
+				output1str, isStr := output1.(string)
+				assert.True(t, isStr)
+				if gotOutput1 && isStr {
+					assert.Equal(t, 1024, len(output1str))
+				}
+			},
+		}
+		test := getBaseOptions(t).With(opts).With(benchmark.ProgramTestOptions())
+		integration.ProgramTest(t, &test)
+	}
+
 	for _, resourceCount := range []int{64, 128, 256} {
 		t.Run(fmt.Sprintf("with-%d-resources", resourceCount), func(t *testing.T) {
-			folder := "go-many-resources"
-			benchmark := bench(fmt.Sprintf("%s-%d-ALPHA-V1", folder, resourceCount), "", "go", "go")
-			opts := integration.ProgramTestOptions{
-				Dir: path.Join(getCwd(t), "..", "..", folder),
-				Env: []string{fmt.Sprintf("RESOURCE_COUNT=%d", resourceCount)},
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assert.Equal(t, len(stack.Outputs), resourceCount)
-					output1, gotOutput1 := stack.Outputs["output-1"]
-					assert.True(t, gotOutput1)
-					output1str, isStr := output1.(string)
-					assert.True(t, isStr)
-					if gotOutput1 && isStr {
-						assert.Equal(t, 1024, len(output1str))
-					}
-				},
-			}
-			test := getBaseOptions(t).With(opts).With(benchmark.ProgramTestOptions())
-			integration.ProgramTest(t, &test)
+			check(t, resourceCount)
 		})
 	}
 }
