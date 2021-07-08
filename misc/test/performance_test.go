@@ -107,7 +107,7 @@ func TestGoManyResources(t *testing.T) {
 			benchmark := bench(fmt.Sprintf("%s-%d-ALPHA-V1", folder, resourceCount), "", "go", "go")
 			opts := integration.ProgramTestOptions{
 				Dir: path.Join(getCwd(t), "..", "..", folder),
-				Env: map[string]string{"RESOURCE_COUNT": fmt.Sprintf("%d", resourceCount)},
+				Env: []string{fmt.Sprintf("RESOURCE_COUNT=%d", resourceCount)},
 				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 					assert.Equal(t, stack.Outputs, resourceCount)
 					output1, gotOutput1 := stack.Outputs["output-1"]
