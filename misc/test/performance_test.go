@@ -109,7 +109,7 @@ func TestGoManyResources(t *testing.T) {
 				Dir: path.Join(getCwd(t), "..", "..", folder),
 				Env: []string{fmt.Sprintf("RESOURCE_COUNT=%d", resourceCount)},
 				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assert.Equal(t, stack.Outputs, resourceCount)
+					assert.Equal(t, len(stack.Outputs), resourceCount)
 					output1, gotOutput1 := stack.Outputs["output-1"]
 					assert.True(t, gotOutput1)
 					output1str, isStr := output1.(string)
