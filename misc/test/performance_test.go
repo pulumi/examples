@@ -3,6 +3,7 @@
 package test
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path"
@@ -97,6 +98,23 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 	}
 	test := getAWSBase(t).With(opts).With(benchmark.ProgramTestOptions())
 	integration.ProgramTest(t, &test)
+}
+
+func TestGoManyResources(t *testing.T) {
+	for _, resourceCount := range []int{64, 256} {
+		t.Run(fmt.Sprintf("with-%d-resources", resourceCount), func(t *testing.T) {
+			folder := "go-many-resources"
+			benchmark := bench(fmt.Sprintf("%s-%d-ALPHA", folder, resourceCount), "", "go", "go")
+			opts := integration.ProgramTestOptions{
+				Dir: path.Join(getCwd(t), "..", "..", folder),
+				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+					assert.Equal(t, "ok", stack.Outputs["result"].(string))
+				},
+			}
+			test := getBaseOptions(t).With(opts).With(benchmark.ProgramTestOptions())
+			integration.ProgramTest(t, &test)
+		})
+	}
 }
 
 func TestMain(m *testing.M) {
