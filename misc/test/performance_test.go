@@ -101,13 +101,15 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 }
 
 func TestGoManyResources(t *testing.T) {
-	for _, resourceCount := range []int{64, 256} {
+	for _, resourceCount := range []int{64, 128, 256} {
 		t.Run(fmt.Sprintf("with-%d-resources", resourceCount), func(t *testing.T) {
 			folder := "go-many-resources"
-			benchmark := bench(fmt.Sprintf("%s-%d-ALPHA", folder, resourceCount), "", "go", "go")
+			benchmark := bench(fmt.Sprintf("%s-%d-ALPHA-V1", folder, resourceCount), "", "go", "go")
 			opts := integration.ProgramTestOptions{
 				Dir: path.Join(getCwd(t), "..", "..", folder),
+				Env: map[string]string{"RESOURCE_COUNT": fmt.Sprintf("%d", resourceCount)},
 				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+					assert.Equal(t, stack.Outputs, resourceCount)
 					output1, gotOutput1 := stack.Outputs["output-1"]
 					assert.True(t, gotOutput1)
 					output1str, isStr := output1.(string)
