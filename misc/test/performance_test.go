@@ -114,25 +114,25 @@ func TestGoManyResources(t *testing.T) {
 		confs := []manyResourcesConfig{
 			{
 				folder:       "go-many-resources",
-				bench:        bench(fmt.Sprintf("go-many-resources-%d-ALPHA-V5", resources), "", "go", "go"),
+				bench:        bench(fmt.Sprintf("go-many-resources-%d", resources), "", "go", "go"),
 				resources:    resources,
 				payloadBytes: 8,
 			},
 			{
 				folder:       "cs-many-resources",
-				bench:        bench(fmt.Sprintf("cs-many-resources-%d-ALPHA-V5", resources), "", "dotnet", "csharp"),
+				bench:        bench(fmt.Sprintf("cs-many-resources-%d", resources), "", "dotnet", "csharp"),
 				resources:    resources,
 				payloadBytes: 8,
 			},
 			{
 				folder:       "ts-many-resources",
-				bench:        bench(fmt.Sprintf("ts-many-resources-%d-ALPHA-V5", resources), "", "nodejs", "typescript"),
+				bench:        bench(fmt.Sprintf("ts-many-resources-%d", resources), "", "nodejs", "typescript"),
 				resources:    resources,
 				payloadBytes: 8,
 			},
 			{
 				folder:       "py-many-resources",
-				bench:        bench(fmt.Sprintf("py-many-resources-%d-ALPHA-V5", resources), "", "python", "python"),
+				bench:        bench(fmt.Sprintf("py-many-resources-%d", resources), "", "python", "python"),
 				resources:    resources,
 				payloadBytes: 8,
 			},
