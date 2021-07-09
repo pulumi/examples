@@ -148,8 +148,8 @@ func TestGoManyResources(t *testing.T) {
 				fmt.Sprintf("RESOURCE_PAYLOAD_BYTES=%d", cfg.payloadBytes),
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assert.Equal(t, stack.Outputs["ResourceCount"], cfg.resources)
-				assert.Equal(t, stack.Outputs["ResourcePayloadBytes"], cfg.payloadBytes)
+				assert.Equal(t, float64(cfg.resources), stack.Outputs["ResourceCount"])
+				assert.Equal(t, float64(cfg.payloadBytes), stack.Outputs["ResourcePayloadBytes"])
 			},
 		}
 		test := getBaseOptions(t).With(opts).With(cfg.bench.ProgramTestOptions())
