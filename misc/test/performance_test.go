@@ -101,54 +101,79 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 }
 
 type manyResourcesConfig struct {
-	suffix       string
+	folder       string
+	bench        traces.Benchmark
 	resources    int
 	payloadBytes int
 }
 
 func TestGoManyResources(t *testing.T) {
-	folder := "go-many-resources"
+	var configurations []manyResourcesConfig
 
-	configurations := []manyResourcesConfig{
-		{suffix: "-64-ALPHA-V1", resources: 64, payloadBytes: 1024},
-		{suffix: "-128-ALPHA-V1", resources: 128, payloadBytes: 1024},
-		{suffix: "-256-ALPHA-V1", resources: 256, payloadBytes: 1024},
-
-		{suffix: "-64-ALPHA-V2", resources: 64, payloadBytes: 8},
-		{suffix: "-128-ALPHA-V2", resources: 128, payloadBytes: 8},
-		{suffix: "-256-ALPHA-V2", resources: 256, payloadBytes: 8},
-		{suffix: "-512-ALPHA-V2", resources: 512, payloadBytes: 8},
-		// {suffix: "-1024-ALPHA-V2", resources: 1024, payloadBytes: 8},
-		// {suffix: "-2028-ALPHA-V2", resources: 2048, payloadBytes: 8},
-		// {suffix: "-4096-ALPHA-V2", resources: 4096, payloadBytes: 8},
+	for _, resources := range []int{64, 128} { // TODO 256
+		confs := []manyResourcesConfig{
+			{
+				folder:       "go-many-resources",
+				bench:        bench(fmt.Sprintf("go-many-resources-%d-ALPHA-V3", resources), "", "go", "go"),
+				resources:    resources,
+				payloadBytes: 8,
+			},
+			{
+				folder:       "cs-many-resources",
+				bench:        bench(fmt.Sprintf("cs-many-resources-%d-ALPHA-V3", resources), "", "dotnet", "csharp"),
+				resources:    resources,
+				payloadBytes: 8,
+			},
+			{
+				folder:       "ts-many-resources",
+				bench:        bench(fmt.Sprintf("ts-many-resources-%d-ALPHA-V3", resources), "", "nodejs", "typescript"),
+				resources:    resources,
+				payloadBytes: 8,
+			},
+			{
+				folder:       "py-many-resources",
+				bench:        bench(fmt.Sprintf("py-many-resources-%d-ALPHA-V3", resources), "", "python", "python"),
+				resources:    resources,
+				payloadBytes: 8,
+			},
+		}
+		configurations = append(configurations, confs...)
 	}
 
 	check := func(t *testing.T, cfg manyResourcesConfig) {
-		benchmark := bench(fmt.Sprintf("%s%s", folder, cfg.suffix), "", "go", "go")
 		opts := integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", folder),
+			Dir: path.Join(getCwd(t), "..", "..", cfg.folder),
 			Env: []string{
 				fmt.Sprintf("RESOURCE_COUNT=%d", cfg.resources),
 				fmt.Sprintf("RESOURCE_PAYLOAD_BYTES=%d", cfg.payloadBytes),
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assert.Equal(t, len(stack.Outputs), cfg.resources)
-				output1, gotOutput1 := stack.Outputs["output-1"]
-				assert.True(t, gotOutput1)
-				output1str, isStr := output1.(string)
-				assert.True(t, isStr)
-				if gotOutput1 && isStr {
+				checkMap := func(outputs map[string]interface{}) {
+					assert.Equal(t, len(outputs), cfg.resources)
+					output1, gotOutput1 := outputs["output-1"]
+					assert.True(t, gotOutput1)
+					output1str, isStr := output1.(string)
+					assert.True(t, isStr)
 					assert.Equal(t, cfg.payloadBytes, len(output1str))
+				}
+
+				outputs, gotOutputs := stack.Outputs["Outputs"]
+				if gotOutputs {
+					outputMap, isOutputMap := outputs.(map[string]interface{})
+					assert.True(t, isOutputMap)
+					checkMap(outputMap)
+				} else {
+					checkMap(stack.Outputs)
 				}
 			},
 		}
-		test := getBaseOptions(t).With(opts).With(benchmark.ProgramTestOptions())
+		test := getBaseOptions(t).With(opts).With(cfg.bench.ProgramTestOptions())
 		integration.ProgramTest(t, &test)
 	}
 
-	for _, configuration := range configurations {
-		t.Run(fmt.Sprintf("%s%s", folder, configuration.suffix), func(t *testing.T) {
-			check(t, configuration)
+	for _, cfg := range configurations {
+		t.Run(cfg.bench.Name, func(t *testing.T) {
+			check(t, cfg)
 		})
 	}
 }
