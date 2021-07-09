@@ -1,0 +1,6 @@
+name: py-many-resources
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: A benchmark to test performance of stacks with many resources
