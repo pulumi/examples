@@ -117,7 +117,7 @@ func TestGoManyResources(t *testing.T) {
 		{suffix: "-64-ALPHA-V2", resources: 64, payloadBytes: 8},
 		{suffix: "-128-ALPHA-V2", resources: 128, payloadBytes: 8},
 		{suffix: "-256-ALPHA-V2", resources: 256, payloadBytes: 8},
-		// {suffix: "-512-ALPHA-V2", resources: 512, payloadBytes: 8},
+		{suffix: "-512-ALPHA-V2", resources: 512, payloadBytes: 8},
 		// {suffix: "-1024-ALPHA-V2", resources: 1024, payloadBytes: 8},
 		// {suffix: "-2028-ALPHA-V2", resources: 2048, payloadBytes: 8},
 		// {suffix: "-4096-ALPHA-V2", resources: 4096, payloadBytes: 8},
