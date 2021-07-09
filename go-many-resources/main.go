@@ -24,8 +24,14 @@ func main() {
 				return err
 			}
 
-			ctx.Export(fmt.Sprintf("output-%d", i), dummy.Deadweight)
+			if i == 0 {
+				ctx.Export("ResourcePayloadBytes", dummy.Deadweight.ApplyT(func(x string) int {
+					return len(x)
+				}))
+			}
 		}
+
+		ctx.Export("ResourceCount", pulumi.Int(resourceCount))
 		return nil
 	})
 }

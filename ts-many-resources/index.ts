@@ -9,14 +9,17 @@ function pad8(num: number): string {
     return ('00000000' + num).slice(-8);
 }
 
-export = async () => {
-    const out: { [name: string]: pulumi.Output<string> } = {};
+function newDummy(i: number): Dummy {
+    const deadweight = pad8(i).repeat(resourcePayloadBytes/8);
+    return new Dummy(`dummy-${i}`, deadweight);
+}
 
-    for (var i = 0;  i < resourceCount; i++) {
-        const deadweight = pad8(i).repeat(resourcePayloadBytes/8);
-        const dummy = new Dummy(`dummy-${i}`, deadweight);
-        out[`output-${i}`] = dummy.deadweight;
-    }
+export const ResourceCount = resourceCount;
 
-    return out;
+const dummy0 = newDummy(0);
+
+export const ResourcePayloadBytes = dummy0.deadweight.apply(x => x.length);
+
+for (var i = 1;  i < resourceCount; i++) {
+    newDummy(i)
 }

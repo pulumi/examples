@@ -110,29 +110,29 @@ type manyResourcesConfig struct {
 func TestGoManyResources(t *testing.T) {
 	var configurations []manyResourcesConfig
 
-	for _, resources := range []int{64, 128} { // TODO 256
+	for _, resources := range []int{64, 128, 256} {
 		confs := []manyResourcesConfig{
 			{
 				folder:       "go-many-resources",
-				bench:        bench(fmt.Sprintf("go-many-resources-%d-ALPHA-V3", resources), "", "go", "go"),
+				bench:        bench(fmt.Sprintf("go-many-resources-%d-ALPHA-V4", resources), "", "go", "go"),
 				resources:    resources,
 				payloadBytes: 8,
 			},
 			{
 				folder:       "cs-many-resources",
-				bench:        bench(fmt.Sprintf("cs-many-resources-%d-ALPHA-V3", resources), "", "dotnet", "csharp"),
+				bench:        bench(fmt.Sprintf("cs-many-resources-%d-ALPHA-V4", resources), "", "dotnet", "csharp"),
 				resources:    resources,
 				payloadBytes: 8,
 			},
 			{
 				folder:       "ts-many-resources",
-				bench:        bench(fmt.Sprintf("ts-many-resources-%d-ALPHA-V3", resources), "", "nodejs", "typescript"),
+				bench:        bench(fmt.Sprintf("ts-many-resources-%d-ALPHA-V4", resources), "", "nodejs", "typescript"),
 				resources:    resources,
 				payloadBytes: 8,
 			},
 			{
 				folder:       "py-many-resources",
-				bench:        bench(fmt.Sprintf("py-many-resources-%d-ALPHA-V3", resources), "", "python", "python"),
+				bench:        bench(fmt.Sprintf("py-many-resources-%d-ALPHA-V4", resources), "", "python", "python"),
 				resources:    resources,
 				payloadBytes: 8,
 			},
@@ -148,23 +148,8 @@ func TestGoManyResources(t *testing.T) {
 				fmt.Sprintf("RESOURCE_PAYLOAD_BYTES=%d", cfg.payloadBytes),
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				checkMap := func(outputs map[string]interface{}) {
-					assert.Equal(t, len(outputs), cfg.resources)
-					output1, gotOutput1 := outputs["output-1"]
-					assert.True(t, gotOutput1)
-					output1str, isStr := output1.(string)
-					assert.True(t, isStr)
-					assert.Equal(t, cfg.payloadBytes, len(output1str))
-				}
-
-				outputs, gotOutputs := stack.Outputs["Outputs"]
-				if gotOutputs {
-					outputMap, isOutputMap := outputs.(map[string]interface{})
-					assert.True(t, isOutputMap)
-					checkMap(outputMap)
-				} else {
-					checkMap(stack.Outputs)
-				}
+				assert.Equal(t, stack.Outputs["ResourceCount"], cfg.resources)
+				assert.Equal(t, stack.Outputs["ResourcePayloadBytes"], cfg.payloadBytes)
 			},
 		}
 		test := getBaseOptions(t).With(opts).With(cfg.bench.ProgramTestOptions())
