@@ -9,13 +9,14 @@ An example of writing mock-based unit tests with both infrastructure definition 
    ```bash
    $ python3 -m venv venv
    $ source venv/bin/activate
-   $ pip3 install -r requirements.txt
+   $ python -m pip install --upgrade pip
+   $ python -m pip install -r requirements.txt
    ```
 
 2.  Run the tests:
 
     ```
-    $ python -m unittest
+    $ python -m pytest # or simply `pytest`
 
     ------------------------------------------------------------
     Ran 2 tests in 0.004s
