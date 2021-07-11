@@ -1,0 +1,11 @@
+{
+    "name": "google-native-ts-gke-autopilot-helloworld",
+    "devDependencies": {
+        "@types/node": "^10.0.0"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/kubernetes": "^3.0.0",
+        "@pulumi/google-native": "^0.1.0"
+    }
+}
