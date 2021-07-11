@@ -1,6 +1,6 @@
 name: application-layer
 runtime: nodejs
-description: Application layer for the aws-stackreference-architecture
+description: Application layer for the aws-ts-stackreference-architecture
 template:
   config:
     aws:region:
