@@ -107,7 +107,7 @@ type manyResourcesConfig struct {
 	payloadBytes int
 }
 
-func TestGoManyResources(t *testing.T) {
+func TestManyResources(t *testing.T) {
 	var configurations []manyResourcesConfig
 
 	for _, resources := range []int{64, 128, 256} {
@@ -143,9 +143,9 @@ func TestGoManyResources(t *testing.T) {
 	check := func(t *testing.T, cfg manyResourcesConfig) {
 		opts := integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "benchmarks", cfg.folder),
-			Env: []string{
-				fmt.Sprintf("RESOURCE_COUNT=%d", cfg.resources),
-				fmt.Sprintf("RESOURCE_PAYLOAD_BYTES=%d", cfg.payloadBytes),
+			Config: map[string]string{
+				"resource_count":         fmt.Sprintf("%d", cfg.resources),
+				"resource_payload_bytes": fmt.Sprintf("%d", cfg.payloadBytes),
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assert.Equal(t, float64(cfg.resources), stack.Outputs["ResourceCount"])

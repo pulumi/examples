@@ -15,8 +15,9 @@ class MyStack : Stack
 
     public MyStack()
     {
-        int resourceCount = GetEnv("RESOURCE_COUNT", 64);
-        int resourcePayloadBytes = GetEnv("RESOURCE_PAYLOAD_BYTES", 1024);
+        var config = new Config();
+        int resourceCount = config.RequireInt32("resource_count");
+        int resourcePayloadBytes = config.RequireInt32("resource_payload_bytes");
 
         Output<int> resourcePayloadBytesOutput = Output.Create(resourcePayloadBytes);
 

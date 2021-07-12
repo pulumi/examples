@@ -3,8 +3,10 @@ import pulumi
 
 from dummy import Dummy
 
-resource_count = int(os.environ.get('RESOURCE_COUNT', 64))
-resource_payload_bytes = int(os.environ.get('RESOURCE_PAYLOAD_BYTES', 1024))
+config = pulumi.Config();
+
+resource_count = config.require_int('resource_count')
+resource_payload_bytes = config.require_int('resource_payload_bytes')
 
 for i in range(0, resource_count):
     deadweight = '{:08}'.format(i) * int(resource_payload_bytes / 8)

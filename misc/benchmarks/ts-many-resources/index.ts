@@ -2,8 +2,10 @@ import * as pulumi from "@pulumi/pulumi";
 
 import { Dummy } from "./dummy";
 
-const resourceCount: number = Number(process.env.RESOURCE_COUNT || 64);
-const resourcePayloadBytes: number = Number(process.env.RESOURCE_PAYLOAD_BYTES || 1024);
+const config = new pulumi.Config();
+
+const resourceCount: number = config.requireNumber("resource_count");
+const resourcePayloadBytes: number = config.requireNumber("resource_payload_bytes");
 
 function pad8(num: number): string {
     return ('00000000' + num).slice(-8);
