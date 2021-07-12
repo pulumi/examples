@@ -142,7 +142,7 @@ func TestGoManyResources(t *testing.T) {
 
 	check := func(t *testing.T, cfg manyResourcesConfig) {
 		opts := integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", cfg.folder),
+			Dir: path.Join(getCwd(t), "..", "benchmarks", cfg.folder),
 			Env: []string{
 				fmt.Sprintf("RESOURCE_COUNT=%d", cfg.resources),
 				fmt.Sprintf("RESOURCE_PAYLOAD_BYTES=%d", cfg.payloadBytes),
