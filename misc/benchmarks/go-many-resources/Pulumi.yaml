@@ -1,0 +1,3 @@
+name: go-many-resources
+runtime: go
+description: A benchmark to test performance of stacks with many resources
