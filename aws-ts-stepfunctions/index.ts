@@ -51,14 +51,6 @@ const helloFunction = new aws.lambda.CallbackFunction(
   }
 });
 
-// const helloFunction = new aws.serverless.Function(
-//     "helloFunction",
-//     { role: lambdaRole },
-//     (event, context, callback) => {
-//         callback(null, "Hello");
-//     },
-// );
-
 const worldFunction = new aws.lambda.CallbackFunction(
   "worldFunction", {
     role: lambdaRole,
@@ -66,15 +58,7 @@ const worldFunction = new aws.lambda.CallbackFunction(
       callback(null, `${event} World!`)
     }
   }
-)
-
-// const worldFunction = new aws.serverless.Function(
-//   "worldFunction",
-//   { role: lambdaRole },
-//   (event, context, callback) => {
-//     callback(null, `${event} World!`);
-//   },
-// );
+);
 
 const stateMachine = new aws.sfn.StateMachine("stateMachine", {
   roleArn: sfnRole.arn,
