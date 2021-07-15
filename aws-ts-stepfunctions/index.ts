@@ -48,17 +48,16 @@ const helloFunction = new aws.lambda.CallbackFunction(
   role: lambdaRole,
   callback: (event, context, callback) => {
     callback(null, "Hello");
-  }
+  },
 });
 
 const worldFunction = new aws.lambda.CallbackFunction(
   "worldFunction", {
-    role: lambdaRole,
-    callback: (event, context, callback) => {
-      callback(null, `${event} World!`)
-    }
-  }
-);
+  role: lambdaRole,
+  callback: (event, context, callback) => {
+    callback(null, `${event} World!`);
+  },
+});
 
 const stateMachine = new aws.sfn.StateMachine("stateMachine", {
   roleArn: sfnRole.arn,
