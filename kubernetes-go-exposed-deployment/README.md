@@ -22,7 +22,7 @@ Pulumi and Kubernetes.
 Now, install dependencies:
 
 ```sh
-go get ./...
+go mod download
 ```
 
 Create a new stack:
