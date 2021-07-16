@@ -18,7 +18,7 @@ get setup with Pulumi and Kubernetes.
 Install dependencies:
 
 ```sh
-go get ./...
+go mod download
 ```
 
 Create a new stack:
@@ -34,7 +34,7 @@ a `Service` of type `LoadBalancer`. Since minikube does not support
 all you need to do is to tell it whether you're deploying to minikube:
 
 ```sh
-pulumi config set kubernetes-go-configmap-rollout:isMinikube <value>
+pulumi config set isMinikube <value>
 ```
 
 Perform the deployment:
