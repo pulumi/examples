@@ -2,7 +2,7 @@
 
 # ECS Anywhere
 
-This example from our [ECS Anywhere launchblog post](httsp://pulumi.com/blog/ecs-anywhere-launch/) shows how to deploy an ECS cluster along with a dockerized app to Digital Ocean.
+This example from our [ECS Anywhere launchblog post](https://pulumi.com/blog/ecs-anywhere-launch/) shows how to deploy an ECS cluster along with a dockerized app to Digital Ocean.
 
 To do this, we use Pulumi infrastructure as code to provision an
 [Elastic Container Service (ECS)](https://aws.amazon.com/ecs/) cluster, build our `Dockerfile` and deploy the
