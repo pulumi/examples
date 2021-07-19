@@ -56,19 +56,19 @@ class SchemaProvider(ResourceProvider):
     
     # The function that determines if an existing resource whose inputs were 
     # modified needs to be updated or entirely replaced
-    def diff(self, id, oldInputs, newInputs):
+    def diff(self, id, old_inputs, new_inputs):
         # server_address, database_name, and creation_script are critical inputs
         # that require the resource to be entirely replaced if they are modified.
         # Changes in other inputs mean the resource can be safely updated without 
         # recreating it
         replaces = []
-        if (oldInputs["server_address"] != newInputs["server_address"]): replaces.append("server_address")
-        if (oldInputs["database_name"] != newInputs["database_name"]): replaces.append("database_name")
-        if (oldInputs["creation_script"] != newInputs["creation_script"]): replaces.append("creation_script") 
+        if (old_inputs["server_address"] != new_inputs["server_address"]): replaces.append("server_address")
+        if (old_inputs["database_name"] != new_inputs["database_name"]): replaces.append("database_name")
+        if (old_inputs["creation_script"] != new_inputs["creation_script"]): replaces.append("creation_script") 
         
         return DiffResult(
             # If the old and new inputs don't match, the resource needs to be updated/replaced
-            changes=oldInputs != newInputs,
+            changes=old_inputs != new_inputs,
             # If the replaces[] list is empty, nothing important was changed, and we do not have to 
             # replace the resource
             replaces=replaces,
@@ -79,9 +79,9 @@ class SchemaProvider(ResourceProvider):
 
     # The function that updates an existing resource without deleting and
     # recreating it from scratch
-    def update(self, id, oldInputs, newInputs):
+    def update(self, id, old_inputs, new_inputs):
         # The old existing inputs are discarded and the new inputs are used
-        return UpdateResult(outs={**newInputs})
+        return UpdateResult(outs={**new_inputs})
 
 # The main Schema resource that we instantiate in our infrastructure code
 class Schema(Resource):
