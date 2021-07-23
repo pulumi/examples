@@ -39,7 +39,7 @@ python -m unittest test_s3_it.py
  - Validate any output values you defined in advance.
  - In the end, don't forget to destroy the stack. 
 ```
-from pulumi.x import automation as auto
+from pulumi import automation as auto
 
 class TestS3(unittest.TestCase):  
   
