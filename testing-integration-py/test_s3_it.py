@@ -2,7 +2,7 @@ import os
 import unittest
 
 import boto3
-from pulumi.x import automation as auto
+from pulumi import automation as auto
 
 from resource_s3 import BUCKET_NAME, OUTPUT_KEY_BUCKET_NAME, OUTPUT_KEY_REGION
 
