@@ -18,7 +18,7 @@ DESIRED_DEPS = {
     'pulumi-packet': 'pulumi-packet>=3.2.2,<4.0.0',
     'pulumi-policy': 'pulumi-policy>=1.3.0,<2.0.0',
     'pulumi-random': 'pulumi-random>=4.2.0,<5.0.0',
-    'pulumi-tls': 'pulumi-tls>=4.2.0,<5.0.0',
+    'pulumi-tls': 'pulumi-tls>=4.0.0,<5.0.0',
 }
 
 
