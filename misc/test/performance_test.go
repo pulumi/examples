@@ -86,6 +86,20 @@ func TestAccAwsJsS3Folder(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsTsS3Folder(t *testing.T) {
+	benchmark := bench("aws-ts-s3-folder", "aws", "nodejs", "ts")
+	opts := integration.ProgramTestOptions{
+		Dir: path.Join(getCwd(t), "..", "..", benchmark.Name),
+		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+			assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
+				return assert.Contains(t, body, "Hello, Pulumi!")
+			})
+		},
+	}
+	test := getAWSBase(t).With(opts).With(benchmark.ProgramTestOptions())
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsPyS3Folder(t *testing.T) {
 	benchmark := bench("aws-py-s3-folder", "aws", "python", "python")
 	opts := integration.ProgramTestOptions{
