@@ -87,6 +87,15 @@ func TestAccAzureGoWebserverComponent(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAzureGoCallAzureSdk(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-go-call-azure-sdk"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAzurePyAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
@@ -152,6 +161,15 @@ func TestAccAzurePyWebserver(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertHTTPHelloWorld(t, stack.Outputs["public_ip"], nil)
 			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAzurePyCallAzureSdk(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-py-call-azure-sdk"),
 		})
 
 	integration.ProgramTest(t, &test)

@@ -1,0 +1,3 @@
+name: aws-ts-apigateway-lambda-serverless
+runtime: nodejs
+description: Creates a serverless application using API Gateway backed by lambda functions

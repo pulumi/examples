@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/url"
-	"os"
 	"path"
 	"strings"
 	"testing"
@@ -65,22 +64,6 @@ func TestAccAwsGoFargate(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAwsGoS3Folder(t *testing.T) {
-	test := getAWSBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "aws-go-s3-folder"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				maxWait := 10 * time.Minute
-				endpoint := stack.Outputs["websiteUrl"].(string)
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
-					return assert.Contains(t, body, "Hello, world!")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
 func TestAccAwsGoS3FolderComponent(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
@@ -126,38 +109,6 @@ func TestAccAwsCsAssumeRole(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAwsCsS3Folder(t *testing.T) {
-	test := getAWSBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "aws-cs-s3-folder"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				maxWait := 10 * time.Minute
-				endpoint := stack.Outputs["Endpoint"].(string)
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
-					return assert.Contains(t, body, "Hello, world!")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAwsFsS3Folder(t *testing.T) {
-	test := getAWSBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "aws-fs-s3-folder"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				maxWait := 10 * time.Minute
-				endpoint := stack.Outputs["endpoint"].(string)
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
-					return assert.Contains(t, body, "Hello, world!")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
 func TestAccAwsJsContainers(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
@@ -166,20 +117,6 @@ func TestAccAwsJsContainers(t *testing.T) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["frontendURL"].(string)
 				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
-					return assert.Contains(t, body, "Hello, Pulumi!")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAwsJsS3Folder(t *testing.T) {
-	test := getAWSBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "aws-js-s3-folder"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -301,20 +238,6 @@ func TestAccAwsGoResources(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-go-resources"),
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAwsPyS3Folder(t *testing.T) {
-	test := getAWSBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "aws-py-s3-folder"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
-					return assert.Contains(t, body, "Hello, Pulumi!")
-				})
-			},
 		})
 
 	integration.ProgramTest(t, &test)
@@ -588,6 +511,15 @@ func TestAccAwsTsThumbnailer(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsTsLambdaThumbnailer(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-lambda-thumbnailer"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsTsTwitterAthena(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
@@ -618,25 +550,4 @@ func TestAccAwsTsLambdaEfs(t *testing.T) {
 		})
 
 	integration.ProgramTest(t, &test)
-}
-
-func getAWSBase(t *testing.T) integration.ProgramTestOptions {
-	awsRegion := getAwsRegion()
-	base := getBaseOptions(t)
-	awsBase := base.With(integration.ProgramTestOptions{
-		Config: map[string]string{
-			"aws:region": awsRegion,
-		},
-	})
-	return awsBase
-}
-
-func getAwsRegion() string {
-	awsRegion := os.Getenv("AWS_REGION")
-	if awsRegion == "" {
-		awsRegion = "us-west-1"
-		fmt.Println("Defaulting AWS_REGION to 'us-west-1'.  You can override using the AWS_REGION environment variable")
-	}
-
-	return awsRegion
 }

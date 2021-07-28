@@ -51,13 +51,13 @@ $ git pull origin master
     - [Python](#python-3)
     - [Go](#go-3)
     - [C#](#c-3)
+- [Openstack](#openstack)
 - [Cloud](#cloud)
 - [DigitalOcean](#digitalocean)
 - [Multicloud](#multicloud)
 - [F5](#f5)
 - [Twilio](#twilio)
 - [Linode](#linode)
-- [Packet](#packet)
 - [Testing](#testing)
 - [Automation API](https://github.com/pulumi/automation-api-examples)
 
@@ -95,6 +95,7 @@ Example   | Description |
 [Twitter](aws-ts-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
 [URL Shortener](aws-ts-url-shortener-cache-http) | Create a serverless URL shortener that uses high-level components.
 [Voting App](aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
+[Web Server](aws-ts-webserver) | Deploy an EC2 Virtual machine using TypeScript to run a Python web server.
 [Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
 
 ### JavaScript
@@ -176,6 +177,7 @@ Example   | Description |
 [Azure Kubernetes Service](azure-py-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [Azure App Service](azure-py-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
 [Azure App Service with Docker](azure-py-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[Azure SDK integration](azure-py-call-azure-sdk) | Call Azure SDK functions from a Pulumi program in Python.
 [Azure Cosmos DB and LogicApp](azure-py-cosmosdb-logicapp) | Define Cosmos DB, API connections, and link them to a logic app.
 [Minecraft Server](azure-py-minecraft-server) | Deploy an Azure Virtual Machine and provision a Minecraft server.
 [Static Website](azure-py-static-website) | Configure static website hosting in Azure Storage.
@@ -191,6 +193,7 @@ Example   | Description |
 [Azure Kubernetes Service](azure-go-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [Azure App Service with Docker](azure-go-appservice-docker) | Build a web application hosted in App Service from Docker images.
 [Static Website](azure-go-static-website) | Configure static website hosting in Azure Storage.
+[Azure SDK integration](azure-go-call-azure-sdk) | Call Azure SDK functions from a Pulumi programin Go.
 
 ### C#
 
@@ -203,6 +206,7 @@ Cluster.
 [AKS + Cosmos DB](azure-cs-aks-cosmos-helm) | A Helm chart deployed to AKS that stores TODOs in an Azure Cosmos DB MongoDB API.
 [Azure App Service](azure-cs-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
 [Azure App Service with Docker](azure-cs-appservice-docker) | Build a web application hosted in App Service from Docker images.
+[Azure API integration](azure-cs-call-azure-api) | Call additional Azure API endpoints from a Pulumi program.
 [Azure Cosmos DB and LogicApp](azure-cs-cosmosdb-logicapp) | Define Cosmos DB, API connections, and link them to a logic app.
 [Azure Functions](azure-cs-functions) | Deploy a Node.js serverless function to Azure Functions.
 [Static Website](azure-cs-static-website) | Configure static website hosting in Azure Storage.
@@ -287,6 +291,15 @@ Example   | Description |
 Example   | Description |
 --------- | --------- |
 [Guestbook](kubernetes-go-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+[App Rollout via ConfigMap](kubernetes-go-configmap-rollout) | Enable a change in a ConfigMap to trigger a rollout of an nginx Deployment.
+[Wordpress Helm Chart](kubernetes-go-helm-wordpress) | Use the Helm API to deploy v9.6.0 of the Wordpress Helm Chart to a Kubernetes cluster.
+[Expose Deployment](kubernetes-go-exposed-deployment) | Deploy nginx to a Kubernetes cluster, and publicly expose it using a Kubernetes Service.
+
+## Openstack
+
+### Python
+
+[Web Server](openstack-py-webserver) | Deploy an Openstack instance and open port 8000.
 
 ## Cloud
 
@@ -360,18 +373,6 @@ Example   | Description |
 Example   | Description |
 --------- | --------- |
 [Web Server](linode-js-webserver) | Build a web server on Linode.
-
-## Packet
-
-### TypeScript
-Example   | Description |
---------- | --------- |
-[Web Server](packet-ts-webserver) | Build a web server on Packet.net.
-
-### Python
-Example   | Description |
---------- | --------- |
-[Web Server](packet-py-webserver) | Build a web server on Packet.net.
 
 ## Testing
 

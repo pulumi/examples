@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using Pulumi;
-using Pulumi.Azure.Core;
 using Pulumi.Testing;
-using Storage = Pulumi.Azure.Storage;
+using Pulumi.AzureNative.Resources;
+using Pulumi.AzureNative.Storage;
 
 namespace UnitTesting
 {
@@ -16,11 +16,11 @@ namespace UnitTesting
 	/// Unit testing examples.
 	/// </summary>
 	[TestFixture]
-	public class WebserverStackTests
+	public class WebsiteStackTests
 	{
-		private static Task<ImmutableArray<Resource>> TestAsync()
+		private static Task<ImmutableArray<Pulumi.Resource>> TestAsync()
 		{
-			return Deployment.TestAsync<WebsiteStack>(new Mocks(), new TestOptions {IsPreview = false});
+			return Pulumi.Deployment.TestAsync<WebsiteStack>(new Mocks(), new TestOptions {IsPreview = false});
 		}
 		
 		[Test]
@@ -44,21 +44,19 @@ namespace UnitTesting
 		}
 		
 		[Test]
-		public async Task StorageAccountBelongsToResourceGroup()
+		public async Task StorageAccountExists()
 		{
 			var resources = await TestAsync();
-			var storageAccount = resources.OfType<Storage.Account>().SingleOrDefault();
+			var storageAccounts = resources.OfType<StorageAccount>();
+			var storageAccount = storageAccounts.SingleOrDefault();
 			storageAccount.Should().NotBeNull("Storage account not found");
-			
-			var resourceGroupName = await storageAccount.ResourceGroupName.GetValueAsync();
-			resourceGroupName.Should().Be("www-prod-rg");
 		}
 		
 		[Test]
 		public async Task UploadsTwoFiles()
 		{
 			var resources = await TestAsync();
-			var files = resources.OfType<Storage.Blob>().ToList();
+			var files = resources.OfType<Blob>().ToList();
 			files.Count.Should().Be(2, "Should have uploaded files from `wwwroot`");
 		}
 		

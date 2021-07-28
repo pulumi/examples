@@ -42,11 +42,6 @@ const config = new pulumi.Config();
 const managedClusterName = config.get("managedClusterName") || "azure-aks";
 const cluster = new containerservice.ManagedCluster(managedClusterName, {
     resourceGroupName: resourceGroup.name,
-    addonProfiles: {
-        KubeDashboard: {
-            enabled: true,
-        },
-    },
     agentPoolProfiles: [{
         count: 3,
         maxPods: 110,

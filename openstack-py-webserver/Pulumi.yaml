@@ -1,0 +1,6 @@
+name: pulum
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: A minimal OpenStack Python Pulumi program

@@ -1,0 +1,6 @@
+name: libvirt-py-vm
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Uses libvirt to deploy a KVM VM on an Azure-hosted KVM server.

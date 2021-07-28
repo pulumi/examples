@@ -4,7 +4,7 @@ import * as digitalocean from "@pulumi/digitalocean";
 import * as pulumi from "@pulumi/pulumi";
 
 const dropletCount = 3;
-const region = digitalocean.Regions.NYC3;
+const region = digitalocean.Region.NYC3;
 
 const dropletTypeTag = new digitalocean.Tag(`demo-app-${pulumi.getStack()}`);
 const userData =
@@ -18,7 +18,7 @@ for (let i = 0; i < dropletCount; i++) {
         image: "ubuntu-18-04-x64",
         region: region,
         privateNetworking: true,
-        size: digitalocean.DropletSlugs.Droplet512mb,
+        size: digitalocean.DropletSlug.Droplet512mb,
         tags: [nameTag.id, dropletTypeTag.id],
         userData: userData,
     }));
@@ -28,13 +28,13 @@ const lb = new digitalocean.LoadBalancer("public", {
     dropletTag: dropletTypeTag.name,
     forwardingRules: [{
         entryPort: 80,
-        entryProtocol: digitalocean.Protocols.HTTP,
+        entryProtocol: digitalocean.Protocol.HTTP,
         targetPort: 80,
-        targetProtocol: digitalocean.Protocols.HTTP,
+        targetProtocol: digitalocean.Protocol.HTTP,
     }],
     healthcheck: {
         port: 80,
-        protocol: digitalocean.Protocols.TCP,
+        protocol: digitalocean.Protocol.TCP,
     },
     region: region,
 });

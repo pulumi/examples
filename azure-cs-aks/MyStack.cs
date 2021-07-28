@@ -53,10 +53,6 @@ class MyStack : Stack
         var cluster = new ManagedCluster("my-aks", new ManagedClusterArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            AddonProfiles = 
-            {
-                { "KubeDashboard", new ManagedClusterAddonProfileArgs { Enabled = true } }
-            },
             AgentPoolProfiles = 
             {
                 new ManagedClusterAgentPoolProfileArgs

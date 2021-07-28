@@ -1,0 +1,3 @@
+name: docker-ts-multi-container-app
+runtime: nodejs
+description: Example typescript app using multiple docker containers

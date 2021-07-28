@@ -14,8 +14,8 @@ env:
   GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
   GOOGLE_REGION: us-central1
   GOOGLE_ZONE: us-central1-a
-  PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
   PR_COMMIT_SHA: ${{ github.event.client_payload.pull_request.head.sha }}
+  PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_API: https://api.pulumi-staging.io
   PULUMI_TEST_OWNER: moolumi
@@ -132,7 +132,7 @@ jobs:
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
       run: |-
-        curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -251,7 +251,7 @@ jobs:
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
       run: |-
-        curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -293,7 +293,6 @@ jobs:
         - Aws
         - Azure
         - Gcp
-        - Packet
         - EquinixMetal
         - Cloud
         dotnet-version:
@@ -384,7 +383,7 @@ jobs:
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
       run: |-
-        curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -467,7 +466,7 @@ jobs:
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
       run: |-
-        curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master

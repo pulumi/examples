@@ -22,7 +22,7 @@ const config = {
     // If true create an A record for the www subdomain of targetDomain pointing to the generated cloudfront distribution.
     // If a certificate was generated it will support this subdomain.
     // default: true
-    includeWWW: stackConfig.getBoolean("includeWWW") || true,
+    includeWWW: stackConfig.getBoolean("includeWWW") ?? true,
 };
 
 // contentBucket is the S3 bucket that the website's contents will be stored in.

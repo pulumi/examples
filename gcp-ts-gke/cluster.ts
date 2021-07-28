@@ -14,7 +14,6 @@ export const k8sCluster = new gcp.container.Cluster("gke-cluster", {
     removeDefaultNodePool: true,
 
     minMasterVersion: masterVersion,
-    masterAuth: { username, password },
 });
 
 const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
