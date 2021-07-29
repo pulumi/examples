@@ -334,6 +334,14 @@ func TestAccAwsTsContainers(t *testing.T) {
 }
 
 func TestAccAwsTsEc2Provisioners(t *testing.T) {
+	checkAccAwsEc2Provisioners("aws-ts-ec2-provisioners")
+}
+
+func TestAccAwsdPyEc2Provisioners(t *testing.T) {
+	checkAccAwsEc2Provisioners("aws-py-ec2-provisioners")
+}
+
+func checkAccAwsEc2Provisioners(t *testing.T, dir string) {
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(getAwsRegion())},
 	)
@@ -355,7 +363,7 @@ func TestAccAwsTsEc2Provisioners(t *testing.T) {
 	}()
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-ec2-provisioners"),
+			Dir: path.Join(getCwd(t), "..", "..", dir),
 			Config: map[string]string{
 				"keyName": aws.StringValue(key.KeyName),
 			},
@@ -367,7 +375,6 @@ func TestAccAwsTsEc2Provisioners(t *testing.T) {
 				assert.Equal(t, "[test]\nx = 42\n", catConfigStdout)
 			},
 		})
-
 	integration.ProgramTest(t, &test)
 }
 
