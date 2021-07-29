@@ -334,11 +334,11 @@ func TestAccAwsTsContainers(t *testing.T) {
 }
 
 func TestAccAwsTsEc2Provisioners(t *testing.T) {
-	checkAccAwsEc2Provisioners("aws-ts-ec2-provisioners")
+	checkAccAwsEc2Provisioners(t, "aws-ts-ec2-provisioners")
 }
 
 func TestAccAwsdPyEc2Provisioners(t *testing.T) {
-	checkAccAwsEc2Provisioners("aws-py-ec2-provisioners")
+	checkAccAwsEc2Provisioners(t, "aws-py-ec2-provisioners")
 }
 
 func checkAccAwsEc2Provisioners(t *testing.T, dir string) {
