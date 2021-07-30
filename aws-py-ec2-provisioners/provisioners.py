@@ -166,7 +166,7 @@ class RemoteExecProvider(ProvisionerProvider):
 # RemoteExec runs remote one or more commands over an SSH connection. It returns the resulting
 # stdout and stderr from the commands in the results property.
 class RemoteExec(dynamic.Resource):
-    results: pulumi.Output[list]
+    results: pulumi.Output[List[Any]]
 
     def __init__(self, name: str, conn: ConnectionArgs, commands: list, opts: Optional[pulumi.ResourceOptions] = None):
         self.conn = conn
