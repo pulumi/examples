@@ -8,7 +8,7 @@ import pulumi
 from pulumi import dynamic
 import sys
 import time
-from typing import Any, Optional
+from typing import Any, Optional, List
 from typing_extensions import TypedDict
 from uuid import uuid4
 import hashlib
@@ -65,6 +65,9 @@ def connect(conn: ConnectionArgs) -> paramiko.SSHClient:
 class ProvisionerProvider(dynamic.ResourceProvider):
     __metaclass__ = abc.ABCMeta
 
+    def ignore_properties(self) -> List[str]:
+        return []
+
     @abc.abstractmethod
     def on_create(self, inputs: Any) -> Any:
         return
@@ -78,15 +81,18 @@ class ProvisionerProvider(dynamic.ResourceProvider):
         diffs = []
         for key in olds:
             if key not in news:
-                diffs.append(key)
+                if key not in self.ignore_properties():
+                    diffs.append(key)
             else:
                 olds_value = json.dumps(olds[key], sort_keys=True, indent=2)
                 news_value = json.dumps(news[key], sort_keys=True, indent=2)
                 if olds_value != news_value:
-                    diffs.append(key)
+                    if key not in self.ignore_properties():
+                        diffs.append(key)
         for key in news:
             if key not in olds:
-                diffs.append(key)
+                if key not in self.ignore_properties():
+                    diffs.append(key)
 
         return dynamic.DiffResult(changes=len(diffs) > 0, replaces=diffs, delete_before_replace=True)
 
@@ -138,6 +144,9 @@ class RunCommandResult(TypedDict):
 
 # RemoteExecProvider implements the resource lifecycle for the RemoteExec resource type below.
 class RemoteExecProvider(ProvisionerProvider):
+    def ignore_properties(self) -> List[str]:
+        return ['results']
+
     def on_create(self, inputs: Any) -> Any:
         ssh = connect(inputs['conn'])
         try:
