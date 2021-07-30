@@ -354,6 +354,9 @@ func checkAccAwsEc2Provisioners(t *testing.T, dir string) {
 		KeyName: aws.String(keyName),
 	})
 	assert.NoError(t, err)
+	if err != nil {
+		return
+	}
 	defer func() {
 		t.Logf("Deleting keypair %s.\n", keyName)
 		_, err := svc.DeleteKeyPair(&ec2.DeleteKeyPairInput{
