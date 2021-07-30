@@ -337,7 +337,7 @@ func TestAccAwsTsEc2Provisioners(t *testing.T) {
 	checkAccAwsEc2Provisioners(t, "aws-ts-ec2-provisioners")
 }
 
-func TestAccAwsdPyEc2Provisioners(t *testing.T) {
+func TestAccAwsPyEc2Provisioners(t *testing.T) {
 	checkAccAwsEc2Provisioners(t, "aws-py-ec2-provisioners")
 }
 
