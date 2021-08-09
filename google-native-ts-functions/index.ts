@@ -2,42 +2,17 @@
 
 import * as gcloud from "@pulumi/google-native";
 import * as pulumi from "@pulumi/pulumi";
-import * as random from "@pulumi/random";
 
-const config = new pulumi.Config("google-native");
-const project = config.require("project");
-const region = config.require("region");
+const bucket = new gcloud.storage.v1.Bucket("bucket");
 
-const randomString = new random.RandomString("name", {
-    upper: false,
-    number: false,
-    special: false,
-    length: 8,
-});
-
-const bucketName = pulumi.interpolate`bucket-${randomString.result}`;
-const bucket = new gcloud.storage.v1.Bucket("bucket", {
-    project: project,
-    bucket: bucketName,
-    name: bucketName,
-});
-
-const archiveName = "zip";
-const bucketObject = new gcloud.storage.v1.BucketObject(archiveName, {
-    object: archiveName,
-    name: archiveName,
+const bucketObject = new gcloud.storage.v1.BucketObject("zip", {
     bucket: bucket.name,
     source: new pulumi.asset.AssetArchive({
         ".": new pulumi.asset.FileArchive("./pythonfunc"),
     }),
 });
 
-const functionName = pulumi.interpolate`func-${randomString.result}`;
 const func = new gcloud.cloudfunctions.v1.Function("function-py", {
-    projectsId: project,
-    locationsId: region,
-    functionsId: functionName,
-    name: pulumi.interpolate`projects/${project}/locations/${region}/functions/${functionName}`,
     sourceArchiveUrl: pulumi.interpolate`gs://${bucket.name}/${bucketObject.name}`,
     httpsTrigger: {},
     entryPoint: "handler",
@@ -48,9 +23,7 @@ const func = new gcloud.cloudfunctions.v1.Function("function-py", {
 });
 
 const invoker = new gcloud.cloudfunctions.v1.FunctionIamPolicy("function-py-iam", {
-    projectsId: project,
-    locationsId: region,
-    functionsId: functionName, // func.name returns the long `projects/foo/locations/bat/functions/buzz` name which doesn't suit here
+    functionId: func.name.apply(name => name.split("/")[name.split("/").length-1]),
     bindings: [
         {
             members: ["allUsers"],

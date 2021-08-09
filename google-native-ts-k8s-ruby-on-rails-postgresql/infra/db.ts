@@ -6,20 +6,10 @@ import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 import { dbPassword, dbUsername, project } from "./config";
 
-const randomSuffix = new random.RandomString("name", {
-    upper: false,
-    number: false,
-    special: false,
-    length: 8,
-});
-
 // Provision a database for our Rails app.
-const instanceName = pulumi.interpolate `pgdb-${randomSuffix.result}`;
 export const instance = new gcloud.sqladmin.v1beta4.Instance("web-db", {
     databaseVersion: "POSTGRES_9_6",
     project: project,
-    name: instanceName,
-    instance:  instanceName,
     settings: {
         tier: "db-f1-micro",
         ipConfiguration: {
@@ -31,7 +21,6 @@ export const instance = new gcloud.sqladmin.v1beta4.Instance("web-db", {
 const dbName = "app_development";
 export const db = new gcloud.sqladmin.v1beta4.Database("db", {
     name: dbName,
-    database: dbName,
     instance: instance.name,
     project: project,
 });
@@ -39,7 +28,6 @@ export const db = new gcloud.sqladmin.v1beta4.Database("db", {
 const testDbName = "app_test";
 export const testDb = new gcloud.sqladmin.v1beta4.Database("testdb", {
     name: testDbName,
-    database: testDbName,
     instance: instance.name,
     project: project,
 }, {dependsOn: [db]}); // only create one db at a time.
