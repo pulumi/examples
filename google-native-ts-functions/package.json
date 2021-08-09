@@ -6,8 +6,7 @@
         "@types/express": "^4.16.0"
     },
     "dependencies": {
-        "@pulumi/google-native": "^0.0.1a",
-        "@pulumi/pulumi": "^3.0.0a",
-        "@pulumi/random": "^4.0.0a"
+        "@pulumi/google-native": "^0.7.0",
+        "@pulumi/pulumi": "^3.0.0"
     }
 }

@@ -6,17 +6,12 @@ import * as pulumi from "@pulumi/pulumi";
 import { clusterPassword, clusterUsername, project, region} from "./config";
 import { db, testDb } from "./db";
 
-const clusterName = "gke-native";
 const cluster = new gcloud.container.v1.Cluster("cluster", {
-    projectsId: project,
-    locationsId: region,
-    clustersId: clusterName,
     parent: `projects/${project}/locations/${region}`,
     initialClusterVersion: "1.18.16-gke.2100",
-    initialNodeCount: 1,
-    name: clusterName,
     network: `projects/${project}/global/networks/default`,
-    nodeConfig: {
+    nodePools: [{
+      config: {
         oauthScopes: [
             "https://www.googleapis.com/auth/devstorage.read_only",
             "https://www.googleapis.com/auth/logging.write",
@@ -26,7 +21,13 @@ const cluster = new gcloud.container.v1.Cluster("cluster", {
             "https://www.googleapis.com/auth/trace.append",
             "https://www.googleapis.com/auth/compute",
         ],
-    },
+      },
+      initialNodeCount: 1,
+      management: {
+          autoRepair: false,
+      },
+      name: "initial",
+  }],
 }, {dependsOn: [db, testDb]});
 
 // Uncomment the following to create a custom nodepool instead of
