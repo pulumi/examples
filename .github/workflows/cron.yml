@@ -505,8 +505,6 @@ jobs:
     - uses: actions/checkout@v2
     - run: |-
         npm install
-        npm install --global mocha
-        npm install --global ts-node
         mocha -r ts-node/register ec2tests.ts
       working-directory: ${{ matrix.source-dir }}
     strategy:
