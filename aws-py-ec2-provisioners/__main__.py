@@ -3,6 +3,7 @@
 import pulumi
 import pulumi_aws as aws
 import provisioners
+import base64
 
 # Get the config ready to go.
 config = pulumi.Config()
@@ -12,12 +13,22 @@ config = pulumi.Config()
 key_name = config.get('keyName')
 public_key = config.get('publicKey')
 
+
 # The privateKey associated with the selected key must be provided (either directly or base64 encoded),
 # along with an optional passphrase if needed.
 def decode_key(key):
+
+    try:
+        key = base64.b64decode(key.encode('ascii')).decode('ascii')
+    except:
+        pass
+
     if key.startswith('-----BEGIN RSA PRIVATE KEY-----'):
         return key
+
     return key.encode('ascii')
+
+
 private_key = config.require_secret('privateKey').apply(decode_key)
 private_key_passphrase = config.get_secret('privateKeyPassphrase')
 

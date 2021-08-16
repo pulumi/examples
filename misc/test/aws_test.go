@@ -334,6 +334,14 @@ func TestAccAwsTsContainers(t *testing.T) {
 }
 
 func TestAccAwsTsEc2Provisioners(t *testing.T) {
+	checkAccAwsEc2Provisioners(t, "aws-ts-ec2-provisioners")
+}
+
+func TestAccAwsPyEc2Provisioners(t *testing.T) {
+	checkAccAwsEc2Provisioners(t, "aws-py-ec2-provisioners")
+}
+
+func checkAccAwsEc2Provisioners(t *testing.T, dir string) {
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(getAwsRegion())},
 	)
@@ -346,6 +354,9 @@ func TestAccAwsTsEc2Provisioners(t *testing.T) {
 		KeyName: aws.String(keyName),
 	})
 	assert.NoError(t, err)
+	if err != nil {
+		return
+	}
 	defer func() {
 		t.Logf("Deleting keypair %s.\n", keyName)
 		_, err := svc.DeleteKeyPair(&ec2.DeleteKeyPairInput{
@@ -355,7 +366,7 @@ func TestAccAwsTsEc2Provisioners(t *testing.T) {
 	}()
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-ec2-provisioners"),
+			Dir: path.Join(getCwd(t), "..", "..", dir),
 			Config: map[string]string{
 				"keyName": aws.StringValue(key.KeyName),
 			},
@@ -367,7 +378,6 @@ func TestAccAwsTsEc2Provisioners(t *testing.T) {
 				assert.Equal(t, "[test]\nx = 42\n", catConfigStdout)
 			},
 		})
-
 	integration.ProgramTest(t, &test)
 }
 
