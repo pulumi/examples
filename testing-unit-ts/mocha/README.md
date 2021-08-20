@@ -4,8 +4,7 @@ An example of writing mock-based unit tests with both infrastructure definition 
 
 ## Prerequisites
 
-1. [Ensure you have the latest Node.js and NPM](https://nodejs.org/en/download/).
-2. [Install the Mocha test framework](https://mochajs.org/#installation).
+[Ensure you have the latest Node.js and NPM](https://nodejs.org/en/download/).
 
 ## Running the tests
 
@@ -15,10 +14,10 @@ An example of writing mock-based unit tests with both infrastructure definition 
     $ npm install
     ```
 
-2.  Run the tests:
+2.  Run the tests, with `mocha` installed locally in `node_modules/`:
 
     ``` 
-    $ mocha -r ts-node/register ec2tests.ts
+    $ npx mocha -r ts-node/register ec2tests.ts
 
     Infrastructure
       #server
