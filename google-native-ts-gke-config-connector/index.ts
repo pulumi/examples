@@ -1,9 +1,9 @@
 // Copyright 2016-2021, Pulumi Corporation.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as google from "@pulumi/google-native";
-import * as random from "@pulumi/random";
 import * as k8s from "@pulumi/kubernetes";
+import * as pulumi from "@pulumi/pulumi";
+import * as random from "@pulumi/random";
 
 const config = new pulumi.Config("google-native");
 const project = config.require("project");
@@ -17,7 +17,7 @@ const nodeConfig: google.types.input.container.v1.NodeConfigArgs = {
         "https://www.googleapis.com/auth/compute",
         "https://www.googleapis.com/auth/devstorage.read_only",
         "https://www.googleapis.com/auth/logging.write",
-        "https://www.googleapis.com/auth/monitoring"
+        "https://www.googleapis.com/auth/monitoring",
     ],
     preemptible: true,
 };
@@ -35,12 +35,12 @@ const cluster = new google.container.v1.Cluster("cluster", {
     }],
     addonsConfig: {
         configConnectorConfig: {
-            enabled: true
-        }
+            enabled: true,
+        },
     },
     loggingService: "logging.googleapis.com/kubernetes", // stackdriver
     workloadIdentityConfig: {
-        workloadPool: `${project}.svc.id.goog`
+        workloadPool: `${project}.svc.id.goog`,
     },
 });
 
@@ -73,7 +73,7 @@ users:
         token-key: '{.credential.access_token}'
       name: gcp
 `;
-});
+    });
 
 // Create a Provider to use the new kubeconfig.
 const k8sProvider = new k8s.Provider("k8s", {kubeconfig});
@@ -83,7 +83,7 @@ const saSuffix = new random.RandomPet("saSuffix", {length: 1}).id;
 
 // Create a ServiceAccount for the config connector.
 const serviceAccount = new google.iam.v1.ServiceAccount("gkeConfigConnector", {
-    accountId: pulumi.interpolate `gke-config-connector-${saSuffix}`
+    accountId: pulumi.interpolate`gke-config-connector-${saSuffix}`,
 });
 
 // Add new IAM bindings for the config connector.
@@ -91,15 +91,15 @@ const serviceAccount = new google.iam.v1.ServiceAccount("gkeConfigConnector", {
 google.cloudresourcemanager.v1.getProjectIamPolicy({
     resource: project,
 }).then(x => {
-    new google.cloudresourcemanager.v1.ProjectIamPolicy("iam", {
+    return new google.cloudresourcemanager.v1.ProjectIamPolicy("iam", {
         bindings: [
             ...x.bindings,
             {
-                members: [pulumi.interpolate `serviceAccount:${serviceAccount.email}`],
+                members: [pulumi.interpolate`serviceAccount:${serviceAccount.email}`],
                 role: "roles/owner",
             },
             {
-                members: [pulumi.interpolate `serviceAccount:${project}.svc.id.goog[cnrm-system/cnrm-controller-manager]`],
+                members: [pulumi.interpolate`serviceAccount:${project}.svc.id.goog[cnrm-system/cnrm-controller-manager]`],
                 role: "roles/iam.workloadIdentityUser",
             },
         ],
@@ -111,9 +111,9 @@ google.cloudresourcemanager.v1.getProjectIamPolicy({
 const ccNamespace = new k8s.core.v1.Namespace("config-connector", {
     metadata: {
         annotations: {
-            "cnrm.cloud.google.com/project-id": project
-        }
-    }
+            "cnrm.cloud.google.com/project-id": project,
+        },
+    },
 });
 
 // TODO: This would be easier with https://github.com/pulumi/pulumi-kubernetes/issues/264.
@@ -128,7 +128,7 @@ const ccNamespace = new k8s.core.v1.Namespace("config-connector", {
 //     kind: "ConfigConnector",
 //     metadata: {
 //         // The name is restricted to ensure that there is only one ConfigConnector resource installed in your cluster
-//         name: "configconnector.core.cnrm.cloud.google.com"
+//         name: "configconnector.core.cnrm.cloud.google.com",
 //     },
 // }, {provider: k8sProvider, import: "configconnector.core.cnrm.cloud.google.com"});
 
@@ -139,7 +139,7 @@ const ccNamespace = new k8s.core.v1.Namespace("config-connector", {
 //     kind: "ConfigConnector",
 //     metadata: {
 //         // The name is restricted to ensure that there is only one ConfigConnector resource installed in your cluster
-//         name: "configconnector.core.cnrm.cloud.google.com"
+//         name: "configconnector.core.cnrm.cloud.google.com",
 //     },
 //     spec: {
 //         mode: "cluster",
