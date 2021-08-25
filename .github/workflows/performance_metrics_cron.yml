@@ -2,7 +2,7 @@ name: Run Performance Metrics Cron Job
 "on":
   workflow_dispatch: {}
   schedule:
-    - cron: 0 9 * * *
+    - cron: 0 */6 * * *
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
