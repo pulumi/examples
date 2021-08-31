@@ -29,7 +29,6 @@ const config = {
 const contentBucket = new aws.s3.Bucket("contentBucket",
     {
         bucket: config.targetDomain,
-        acl: "public-read",
         // Configure S3 to serve bucket contents as a website. This way S3 will automatically convert
         // requests for "foo/" to "foo/index.html".
         website: {
@@ -154,6 +153,11 @@ if (config.certificateArn === undefined) {
     certificateArn = certificateValidation.certificateArn;
 }
 
+// Generate Origin Access Identity to access the private s3 bucket.
+const originAccessIdentity = new aws.cloudfront.OriginAccessIdentity("originAccessIdentity", {
+  comment: "this is needed to setup s3 polices and make s3 not public."
+});
+
 // if config.includeWWW include an alias for the www subdomain
 const distributionAliases = config.includeWWW ? [config.targetDomain, `www.${config.targetDomain}`] : [config.targetDomain];
 
@@ -171,14 +175,9 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
         {
             originId: contentBucket.arn,
             domainName: contentBucket.websiteEndpoint,
-            customOriginConfig: {
-                // Amazon S3 doesn't support HTTPS connections when using an S3 bucket configured as a website endpoint.
-                // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesOriginProtocolPolicy
-                originProtocolPolicy: "http-only",
-                httpPort: 80,
-                httpsPort: 443,
-                originSslProtocols: ["TLSv1.2"],
-            },
+            s3OriginConfig: {
+                originAccessIdentity: originAccessIdentity.cloudfrontAccessIdentityPath
+            }, 
         },
     ],
 
@@ -295,6 +294,23 @@ function createWWWAliasRecord(targetDomain: string, distribution: aws.cloudfront
         },
     );
 }
+
+const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
+  bucket: contentBucket.id, // refer to the bucket created earlier
+  policy: JSON.stringify({
+      Version: "2012-10-17",
+      Statement: [
+        {
+          Effect: "Allow",
+          Principal: originAccessIdentity.iamArn, // Only allow Cloudfront read access.
+          Action: ["s3:GetObject"],
+          Resource: [
+            contentBucket.arn.apply((bucketArn: string) =>`${bucketArn}/*`), // Give Cloudfront access to the entire bucket.
+          ],
+        },
+      ],
+    })
+});
 
 const aRecord = createAliasRecord(config.targetDomain, cdn);
 if (config.includeWWW) {
