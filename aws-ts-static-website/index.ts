@@ -296,21 +296,21 @@ function createWWWAliasRecord(targetDomain: string, distribution: aws.cloudfront
 }
 
 const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
-  bucket: contentBucket.id, // refer to the bucket created earlier
-  policy: JSON.stringify({
-      Version: "2012-10-17",
-      Statement: [
-        {
-          Effect: "Allow",
-          Principal: originAccessIdentity.iamArn, // Only allow Cloudfront read access.
-          Action: ["s3:GetObject"],
-          Resource: [
-            contentBucket.arn.apply((bucketArn: string) =>`${bucketArn}/*`), // Give Cloudfront access to the entire bucket.
-          ],
-        },
-      ],
-    })
-});
+    bucket: contentBucket.id, // refer to the bucket created earlier
+    policy: contentBucket.arn.apply(bucketArn => JSON.stringify({
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Principal: originAccessIdentity.iamArn, // Only allow Cloudfront read access.
+            Action: ["s3:GetObject"],
+            Resource: [
+              `${bucketArn}/*`, // Give Cloudfront access to the entire bucket.
+            ],
+          },
+        ],
+      }))
+  });
 
 const aRecord = createAliasRecord(config.targetDomain, cdn);
 if (config.includeWWW) {
