@@ -18,6 +18,9 @@ export class BucketPair extends pulumi.ComponentResource {
         }, { parent: this });
 
         // Register output properties for this component
-        this.registerOutputs();
+        this.registerOutputs({
+            contentBucket: this.contentBucket,
+            logsBucket: this.logsBucket
+        });
     }
 }
