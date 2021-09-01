@@ -296,21 +296,21 @@ function createWWWAliasRecord(targetDomain: string, distribution: aws.cloudfront
 }
 
 const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
-    bucket: contentBucket.id, // refer to the bucket created earlier
-    policy: contentBucket.arn.apply(bucketArn => JSON.stringify({
+    bucket: siteBucket.id, // refer to the bucket created earlier
+    policy: pulumi.all([originAccessIdentity.iamArn, contentBucket.arn]).apply(([oaiArn, bucketArn]) =>JSON.stringify({
         Version: "2012-10-17",
         Statement: [
-          {
+            {
             Effect: "Allow",
-            Principal: originAccessIdentity.iamArn, // Only allow Cloudfront read access.
+            Principal: {
+                AWS: oaiArn
+            }, // Only allow Cloudfront read access.
             Action: ["s3:GetObject"],
-            Resource: [
-              `${bucketArn}/*`, // Give Cloudfront access to the entire bucket.
-            ],
-          },
+            Resource: [`${bucketArn}/*`], // Give Cloudfront access to the entire bucket.
+            },
         ],
-      }))
-  });
+    }))
+});
 
 const aRecord = createAliasRecord(config.targetDomain, cdn);
 if (config.includeWWW) {
