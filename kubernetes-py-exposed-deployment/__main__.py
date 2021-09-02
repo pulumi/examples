@@ -10,16 +10,6 @@ is_minikube = config.require("is_minikube")
 """nginx container, replicated 1 time."""
 app_name = "nginx"
 app_labels = { "app": app_name }
-# nginx = k8s.apps.v1.Deployment(appName, {
-#     spec: {
-#         selector: { matchLabels: appLabels },
-#         replicas: 1,
-#         template: {
-#             metadata: { labels: appLabels },
-#             spec: { containers: [{ name: appName, image: "nginx:1.15-alpine" }] },
-#         },
-#     },
-# })
 
 nginx = k8s.apps.v1.Deployment(
             app_name,
@@ -42,15 +32,6 @@ nginx = k8s.apps.v1.Deployment(
 
 
 """Allocate an IP to the nginx Deployment."""
-# frontend = k8s.core.v1.Service(app_name, {
-#     metadata: { labels: nginx.spec.template.metadata.labels },
-#     spec: {
-#         type: "ClusterIP" if is_minikube == "true" else "LoadBalancer",
-#         ports: [{ port: 80, targetPort: 80, protocol: "TCP" }],
-#         selector: appLabels,
-#     },
-# })
-
 frontend = k8s.core.v1.Service(
             app_name,
             metadata=k8s.meta.v1.ObjectMetaArgs(
