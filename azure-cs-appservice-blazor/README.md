@@ -15,25 +15,43 @@ To deploy your infrastructure, follow the below steps.
 
 ### Steps
 
-1.  Create a new stack:
+1. Navigate to the BlazorApp.BlazorServer folder
+
+    ```
+    $ cd .\azure-cs-appservice-blazor\BlazorApp.BlazorServer\
+    ```
+
+2. Publish the Blazor application with `dotnet publish`
+
+    ```
+    $ dotnet publish
+    ```
+
+3. Navigate to the BlazorApp.Infrastructure folder
+
+    ```
+    $ cd ..\BlazorApp.Infrastructure
+    ```
+
+4. Create a new stack:
 
     ```
     $ pulumi stack init dev
     ```
 
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+5. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```
     $ az login
     ```
 
-1.  Configure the location to deploy the resources to:
+6. Configure the location to deploy the resources to:
 
     ```
     $ pulumi config set azure-native:location uksouth
     ```
 
-4. Run `pulumi up` to preview and deploy changes:
+7. Run `pulumi up` to preview and deploy changes:
 
     ```
     $ pulumi up
@@ -42,27 +60,31 @@ To deploy your infrastructure, follow the below steps.
     
     Performing changes:
     ...
-    info: TO DO changes performed:
-        + TO DO resources created
-    Update duration: 1m14.59910109s
+    info: 7 changes performed:
+        + 7 resources created
+    Update duration: 53s
     ```
 
-1.  Check the deployed website endpoint:
+8. Check the deployed website endpoint (full output removed for brevity, you could also take the `AppServiceUrl` output and access it in a browser):
 
     ```
-    $ pulumi stack output Endpoint
-    https://azpulumi-as0ef47193.azurewebsites.net
-    $ curl "$(pulumi stack output Endpoint)"
-    <html>
-        <body>
-            <h1>Greetings from Azure App Service (courtesy of Pulumi)!</h1>
-        </body>
-    </html>
+    $ pulumi stack output AppServiceUrl
+    https://blazorserverappservice664d5c9b.azurewebsites.net
+    $ curl "$(pulumi stack output AppServiceUrl)"
+    StatusCode        : 200
+    StatusDescription : OK
+    Content           :
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="utf-8" />
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                            <title>BlazorApp.BlazorServer</title>
     ```
 
-6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
+9. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
-7. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+10. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
     ```bash
     $ pulumi destroy --yes
