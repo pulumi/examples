@@ -199,7 +199,6 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
-Cluster.
 [Azure Container Instance](azure-cs-aci) | Run Azure Container Instances on Linux.
 [Azure Kubernetes Service](azure-cs-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [AKS web app with .NET 5](azure-cs-net5-aks-webapp) | Create an Azure Kubernetes Service (AKS) cluster and deploy a web app to it using .NET 5 and C# 9.
@@ -211,6 +210,7 @@ Cluster.
 [Azure Functions](azure-cs-functions) | Deploy a Node.js serverless function to Azure Functions.
 [Static Website](azure-cs-static-website) | Configure static website hosting in Azure Storage.
 [Azure Synapse](azure-cs-synapse) | Starting point for enterprise analytics solutions based on Azure Synapse.
+[Azure App Service with .net 6 Blazor App](azure-cs-appservice-blazor) | Build a .net 6 Blazor Server application and provision to an Azure App Service using C#. 
 
 ## GCP
 
