@@ -55,6 +55,8 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v1.0.1
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ env.PR_COMMIT_SHA }}
     - run: dotnet test
       working-directory: ${{ matrix.source-dir }}
     strategy:
@@ -82,6 +84,8 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v1.0.1
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ env.PR_COMMIT_SHA }}
     - run: go test
       working-directory: ${{ matrix.source-dir }}
     strategy:
@@ -153,6 +157,8 @@ jobs:
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ env.PR_COMMIT_SHA }}
     - name: Checkout Scripts Repo
       uses: actions/checkout@v2
       with:
@@ -189,6 +195,8 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ env.PR_COMMIT_SHA }}
     - name: Install Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -272,6 +280,8 @@ jobs:
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ env.PR_COMMIT_SHA }}
     - name: Checkout Scripts Repo
       uses: actions/checkout@v2
       with:
@@ -329,6 +339,8 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v1.0.1
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ env.PR_COMMIT_SHA }}
     - run: |-
         python3 -m venv venv
         source venv/bin/activate
@@ -525,9 +537,11 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v1.0.1
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ env.PR_COMMIT_SHA }}
     - run: |-
         npm install
-        $(npm bin)/mocha -r ts-node/register ec2tests.ts
+        npx mocha -r ts-node/register ec2tests.ts
       working-directory: ${{ matrix.source-dir }}
     strategy:
       fail-fast: false
@@ -537,7 +551,7 @@ jobs:
         platform:
         - ubuntu-latest
         source-dir:
-        - testing-unit-ts
+        - testing-unit-ts/mocha
 name: Run Examples Tests From PR
 "on":
   pull_request:
