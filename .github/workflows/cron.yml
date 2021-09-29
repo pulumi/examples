@@ -20,7 +20,6 @@ env:
   PULUMI_ENABLE_RESOURCE_REFERENCES: "1"
   PULUMI_TEST_OWNER: moolumi
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  TEST_PARALLELISM: 40
 jobs:
   dotnet-unit-testing:
     name: Running ${{ matrix.source-dir }} test
@@ -262,14 +261,12 @@ jobs:
       run: ./ci-scripts/ci/run-at-head --${{ matrix.examples-test-matrix }}
     - if: matrix.examples-test-matrix == 'default' || matrix.examples-test-matrix == 'no-latest-packages'
       run: echo "/home/runner/.pulumi/bin" >> $GITHUB_PATH
-    - if: matrix.clouds == 'Aws' && matrix.languages == 'Py'
-      run: echo 20 >> $TEST_PARALLELISM
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
       run: make ensure
     - name: Running ${{ matrix.clouds }}${{ matrix.languages }} Tests
       run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages
-        }} Parallelism=${{ env.TEST_PARALLELISM }}
+        }} Parallelism=${{ matrix.parallelism }}
     strategy:
       fail-fast: false
       matrix:
@@ -300,6 +297,16 @@ jobs:
         - ubuntu-latest
         python-version:
         - "3.7"
+        parallelism:
+        - 40
+        exclude:
+          - clouds: Aws
+            languages: Py
+            parallelism: 40
+        include:
+          - clouds: Aws
+            languages: Py
+            parallelism: 20
   providers-output-values:
     name: providers-output-values
     env:
@@ -383,7 +390,7 @@ jobs:
       run: make ensure
     - name: Running ${{ matrix.clouds }}${{ matrix.languages }} Tests
       run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages
-        }}
+        }} Parallelism=${{ matrix.parallelism }}
     strategy:
       fail-fast: false
       matrix:
@@ -414,6 +421,16 @@ jobs:
         - ubuntu-latest
         python-version:
         - "3.7"
+        parallelism:
+        - 40
+        exclude:
+          - clouds: Aws
+            languages: Py
+            parallelism: 40
+        include:
+          - clouds: Aws
+            languages: Py
+            parallelism: 20
   python-unit-testing:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
