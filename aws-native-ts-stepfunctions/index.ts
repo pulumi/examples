@@ -26,7 +26,7 @@ const lambdaRolePolicy = new aws.iam.RolePolicy("lambdaRolePolicy", {
     },
 });
 
-const helloFunction = new awsnative.lambda.Function('helloFunction',
+const helloFunction = new awsnative.lambda.Function("helloFunction",
     {
         role: lambdaRole.arn,
         runtime: "nodejs14.x",
@@ -39,7 +39,7 @@ const helloFunction = new awsnative.lambda.Function('helloFunction',
         },
     }, {dependsOn: lambdaRolePolicy});
 
-const worldFunction = new awsnative.lambda.Function('worldFunction',
+const worldFunction = new awsnative.lambda.Function("worldFunction",
     {
         role: lambdaRole.arn,
         runtime: "nodejs14.x",
@@ -74,7 +74,7 @@ const sfnRolePolicy = new aws.iam.RolePolicy("sfnRolePolicy", {
 
 const stateMachine = new awsnative.stepfunctions.StateMachine("stateMachine", {
     roleArn: sfnRole.arn,
-    stateMachineType: 'EXPRESS',
+    stateMachineType: "EXPRESS",
     definitionString: pulumi.all([helloFunction.arn, worldFunction.arn])
         .apply(([helloArn, worldArn]) => {
             return JSON.stringify({
