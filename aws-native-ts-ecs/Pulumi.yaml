@@ -1,0 +1,3 @@
+name: aws-native-ts-ecs
+runtime: nodejs
+description: A TypeScript Pulumi program with AWS Native provider that provisions an ECS Cluster

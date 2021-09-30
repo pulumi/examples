@@ -1,0 +1,11 @@
+{
+    "name": "aws-native-ts-ecs",
+    "devDependencies": {
+        "@types/node": "^8.0.0"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^4.0.0",
+        "@pulumi/aws-native": "^0.1.0",
+        "@pulumi/pulumi": "^3.0.0"
+    }
+}

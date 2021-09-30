@@ -5,7 +5,7 @@
 A static website that uses [S3's website support](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html).
 For a detailed walkthrough of this example, see the tutorial [Static Website on AWS S3](https://www.pulumi.com/docs/tutorials/aws/s3-website/).
 
-Note: Some of the resources are not yet supported by the Native AWS provider, so we are using both the Native
+Note: Some resources are not yet supported by the Native AWS provider, so we are using both the Native
 and Classic provider in this example. The resources will be updated to use native resources as they are
 available in AWS's Cloud Control API.
 
