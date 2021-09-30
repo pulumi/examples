@@ -1,7 +1,7 @@
 // Copyright 2016-2021, Pulumi Corporation.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 const defaultVpc = pulumi.output(aws.ec2.getVpc({default: true}));
 const defaultVpcSubnets = defaultVpc.id.apply(id => aws.ec2.getSubnetIds({vpcId: id}));
@@ -42,7 +42,7 @@ const role = new aws.iam.Role("task-exec-role", {
             Sid: "",
             Effect: "Allow",
             Principal: {
-                Service: "ecs-tasks.amazonaws.com"
+                Service: "ecs-tasks.amazonaws.com",
             },
             Action: "sts:AssumeRole",
         }],

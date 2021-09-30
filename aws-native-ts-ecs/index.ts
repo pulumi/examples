@@ -1,13 +1,13 @@
 // Copyright 2016-2021, Pulumi Corporation.
 
-import * as aws_native from "@pulumi/aws-native";
+import * as awsnative from "@pulumi/aws-native";
 import * as old from "./unsupported";
 
-const cluster = new aws_native.ecs.Cluster("cluster", {
+const cluster = new awsnative.ecs.Cluster("cluster", {
     clusterName: "cloud-api-cluster",
 });
 
-const wl = new aws_native.elasticloadbalancingv2.Listener("web", {
+const wl = new awsnative.elasticloadbalancingv2.Listener("web", {
     loadBalancerArn: old.albArn,
     port: 80,
     protocol: "HTTP",
@@ -17,7 +17,7 @@ const wl = new aws_native.elasticloadbalancingv2.Listener("web", {
     }],
 });
 
-const taskDefinition = new aws_native.ecs.TaskDefinition("app-task", {
+const taskDefinition = new awsnative.ecs.TaskDefinition("app-task", {
     family: "fargate-task-definition",
     cpu: "256",
     memory: "512",
@@ -35,7 +35,7 @@ const taskDefinition = new aws_native.ecs.TaskDefinition("app-task", {
     }],
 });
 
-const service = new aws_native.ecs.Service("app-svc", {
+const service = new awsnative.ecs.Service("app-svc", {
     serviceName: "app-svc-cloud-api",
     cluster: cluster.arn,
     desiredCount: 1,

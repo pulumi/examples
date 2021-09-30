@@ -3,7 +3,7 @@
 import * as aws from "@pulumi/aws";
 import * as awsnative from "@pulumi/aws-native";
 import * as pulumi from "@pulumi/pulumi";
-import * as fs from 'fs';
+import * as fs from "fs";
 import * as mime from "mime";
 
 // Create a bucket and expose a website index document
