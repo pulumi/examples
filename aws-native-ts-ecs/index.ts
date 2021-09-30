@@ -1,3 +1,5 @@
+// Copyright 2016-2021, Pulumi Corporation.
+
 import * as aws_native from "@pulumi/aws-native";
 import * as old from "./unsupported";
 
@@ -22,13 +24,13 @@ const taskDefinition = new aws_native.ecs.TaskDefinition("app-task", {
     networkMode: "awsvpc",
     requiresCompatibilities: ["FARGATE"],
     executionRoleArn: old.roleArn,
-    containerDefinitions:[{
+    containerDefinitions: [{
         name: "my-app",
         image: "nginx",
         portMappings: [{
             containerPort: 80,
             hostPort: 80,
-            protocol: "tcp"
+            protocol: "tcp",
         }],
     }],
 });
@@ -51,6 +53,6 @@ const service = new aws_native.ecs.Service("app-svc", {
         containerName: "my-app",
         containerPort: 80,
     }],
-}, { dependsOn: [wl] });
+}, {dependsOn: [wl]});
 
 export const url = old.albDnsName;
