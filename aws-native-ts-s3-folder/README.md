@@ -22,7 +22,13 @@ with `***`.
 
 1.  Set the AWS region:
 
+    Either using an environment variable
+    ```bash
+    $ export AWS_REGION=us-west-2
     ```
+    
+    Or with the stack config
+    ```bash
     $ pulumi config set aws:region us-west-2
     $ pulumi config set aws-native:region us-west-2
     ```
