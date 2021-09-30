@@ -1,19 +1,19 @@
 // Copyright 2016-2021, Pulumi Corporation.
 
 import * as awsnative from "@pulumi/aws-native";
-import * as old from "./unsupported";
+import * as classic from "./classic";
 
 const cluster = new awsnative.ecs.Cluster("cluster", {
     clusterName: "cloud-api-cluster",
 });
 
 const wl = new awsnative.elasticloadbalancingv2.Listener("web", {
-    loadBalancerArn: old.albArn,
+    loadBalancerArn: classic.albArn,
     port: 80,
     protocol: "HTTP",
     defaultActions: [{
         type: "forward",
-        targetGroupArn: old.atgArn,
+        targetGroupArn: classic.atgArn,
     }],
 });
 
@@ -23,7 +23,7 @@ const taskDefinition = new awsnative.ecs.TaskDefinition("app-task", {
     memory: "512",
     networkMode: "awsvpc",
     requiresCompatibilities: ["FARGATE"],
-    executionRoleArn: old.roleArn,
+    executionRoleArn: classic.roleArn,
     containerDefinitions: [{
         name: "my-app",
         image: "nginx",
@@ -44,15 +44,15 @@ const service = new awsnative.ecs.Service("app-svc", {
     networkConfiguration: {
         awsvpcConfiguration: {
             assignPublicIp: "ENABLED",
-            subnets: old.subnetIds,
-            securityGroups: [old.securityGroupId],
+            subnets: classic.subnetIds,
+            securityGroups: [classic.securityGroupId],
         },
     },
     loadBalancers: [{
-        targetGroupArn: old.atgArn,
+        targetGroupArn: classic.atgArn,
         containerName: "my-app",
         containerPort: 80,
     }],
 }, {dependsOn: [wl]});
 
-export const url = old.albDnsName;
+export const url = classic.albDnsName;

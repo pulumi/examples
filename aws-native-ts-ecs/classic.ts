@@ -3,6 +3,10 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
+// Note: Some resources are not yet supported by the Native AWS provider, so we are using both the Native
+// and Classic provider in this example. The resources will be updated to use native resources as they are
+// available in AWS's Cloud Control API.
+
 const defaultVpc = pulumi.output(aws.ec2.getVpc({default: true}));
 const defaultVpcSubnets = defaultVpc.id.apply(id => aws.ec2.getSubnetIds({vpcId: id}));
 
