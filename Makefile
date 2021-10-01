@@ -21,11 +21,9 @@ specific_test_set:
 	echo "running $(TestSet) Acceptance Tests"
 	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel 40 --tags=all --run=TestAcc$(TestSet)
 
-Parallelism ?= 40
-
 specific_tag_set:
 	echo "running $(TagSet)$(TestSet) Acceptance Tests"
-	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel $(Parallelism) --tags=$(TagSet) --run=TestAcc$(TagSet)$(TestSet)
+	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel 40 --tags=$(TagSet) --run=TestAcc$(TagSet)$(TestSet)
 
 performance_test_set:
 	cd misc/test && go test . --timeout 4h -count=1 -short -parallel 40 --tags=Performance

@@ -266,7 +266,7 @@ jobs:
       run: make ensure
     - name: Running ${{ matrix.clouds }}${{ matrix.languages }} Tests
       run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages
-        }} Parallelism=${{ matrix.parallelism }}
+        }}
     strategy:
       fail-fast: false
       matrix:
@@ -297,16 +297,6 @@ jobs:
         - ubuntu-latest
         python-version:
         - "3.7"
-        parallelism:
-        - 40
-        exclude:
-          - clouds: Aws
-            languages: Py
-            parallelism: 40
-        include:
-          - clouds: Aws
-            languages: Py
-            parallelism: 20
   providers-output-values:
     name: providers-output-values
     env:
@@ -390,7 +380,7 @@ jobs:
       run: make ensure
     - name: Running ${{ matrix.clouds }}${{ matrix.languages }} Tests
       run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages
-        }} Parallelism=${{ matrix.parallelism }}
+        }}
     strategy:
       fail-fast: false
       matrix:
@@ -421,16 +411,6 @@ jobs:
         - ubuntu-latest
         python-version:
         - "3.7"
-        parallelism:
-        - 40
-        exclude:
-          - clouds: Aws
-            languages: Py
-            parallelism: 40
-        include:
-          - clouds: Aws
-            languages: Py
-            parallelism: 20
   python-unit-testing:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
