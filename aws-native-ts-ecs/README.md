@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Create an ECS cluster on AWS
+# Create an ECS cluster on AWS with the AWS Native Provider
 
 Create an ECS cluster, and deploy a task and service.
 
