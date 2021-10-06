@@ -84,17 +84,11 @@ class MyCluster
 
         this.ClusterName = k8sCluster.Name;
 
-        this.Kubeconfig = Output.Tuple(k8sCluster.Name, resourceGroup.Name)
-            .Apply(pair =>
+        this.Kubeconfig = ListManagedClusterUserCredentials.Invoke(
+            new ListManagedClusterUserCredentialsInvokeArgs
             {
-                var k8sClusterName = pair.Item1;
-                var resourceGroupName = pair.Item2;
-
-                return ListManagedClusterUserCredentials.InvokeAsync(new ListManagedClusterUserCredentialsArgs
-                {
-                    ResourceGroupName = resourceGroupName,
-                    ResourceName = k8sClusterName
-                });
+                ResourceGroupName = resourceGroup.Name,
+                ResourceName = k8sCluster.Name
             })
             .Apply(x => x.Kubeconfigs[0].Value)
             .Apply(Convert.FromBase64String)
