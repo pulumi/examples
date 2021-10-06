@@ -67,28 +67,18 @@ class MyStack : Stack
             {
                 Id = "container",
                 PartitionKey = new DocumentDB.Inputs.ContainerPartitionKeyArgs { Paths = {"/myPartitionKey" }, Kind = "Hash"},
-            },            
+            },
         });
 
-        var accountKeys = Output.Tuple(cosmosdbAccount.Name, resourceGroup.Name).Apply(values =>
+        var accountKeys = DocumentDB.ListDatabaseAccountKeys.Invoke(new DocumentDB.ListDatabaseAccountKeysInvokeArgs
         {
-            var cosmosdbAccountName = values.Item1;
-            var resourceGroupName = values.Item2;
-            return DocumentDB.ListDatabaseAccountKeys.InvokeAsync(new DocumentDB.ListDatabaseAccountKeysArgs
-            {
-                AccountName = cosmosdbAccountName,
-                ResourceGroupName = resourceGroupName,
-            });
+            AccountName = cosmosdbAccount.Name,
+            ResourceGroupName = resourceGroup.Name
         });
 
-        var clientConfig = Output.Create(Authorization.GetClientConfig.InvokeAsync());
-
-        var apiId = Output.Tuple(clientConfig, resourceGroup.Location).Apply(values =>
-        {
-            var clientConfig = values.Item1;
-            var location = values.Item2;
-            return $"/subscriptions/{clientConfig.SubscriptionId}/providers/Microsoft.Web/locations/{location}/managedApis/documentdb";
-        });
+        var apiId = Output.Create(Authorization.GetClientConfig.InvokeAsync())
+            .Apply(clientConfig => Output.Format(
+                       $"/subscriptions/{clientConfig.SubscriptionId}/providers/Microsoft.Web/locations/{resourceGroup.Location}/managedApis/documentdb"));
 
         // API Connection to be used in a Logic App
         var connection = new Web.Connection("cosmosdbConnection", new Web.ConnectionArgs
@@ -189,17 +179,13 @@ class MyStack : Stack
             },
         });
 
-        var callbackUrls = Output.Tuple(resourceGroup.Name, workflow.Name).Apply(values =>
+        var callbackUrls = Logic.ListWorkflowTriggerCallbackUrl.Invoke(new Logic.ListWorkflowTriggerCallbackUrlInvokeArgs
         {
-            var resourceGroupName = values.Item1;
-            var workflowName = values.Item2;
-            return Logic.ListWorkflowTriggerCallbackUrl.InvokeAsync(new Logic.ListWorkflowTriggerCallbackUrlArgs
-            {
-                ResourceGroupName = resourceGroupName,
-                WorkflowName = workflowName,
-                TriggerName = "Receive_post",
-            });
+            ResourceGroupName = resourceGroup.Name,
+            WorkflowName = workflow.Name,
+            TriggerName = "Receive_post",
         });
+
         this.Endpoint = callbackUrls.Apply(callbackUrls => callbackUrls.Value);
     }
 
