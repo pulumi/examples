@@ -1,21 +1,19 @@
 // Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 using Pulumi;
-using Pulumi.Aws;
 using Pulumi.Aws.Ec2;
 using Pulumi.Aws.Ec2.Inputs;
-using Pulumi.Aws.Inputs;
 
 class WebServerStack : Stack
 {
     public WebServerStack()
     {
-        var ami = Output.Create(Pulumi.Aws.Ec2.GetAmi.InvokeAsync(new Pulumi.Aws.Ec2.GetAmiArgs
+        var ami = GetAmi.Invoke(new GetAmiInvokeArgs
         {
             MostRecent = true,
             Owners = {"137112412989"},
-            Filters = {new Pulumi.Aws.Ec2.Inputs.GetAmiFilterArgs {Name = "name", Values = {"amzn-ami-hvm-*"}}}
-        }));
+            Filters = {new GetAmiFilterInputArgs {Name = "name", Values = "amzn-ami-hvm-*"}}
+        });
 
         var group = new SecurityGroup("web-secgrp", new SecurityGroupArgs
         {
