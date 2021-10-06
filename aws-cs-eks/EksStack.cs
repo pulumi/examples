@@ -54,10 +54,11 @@ class EksStack : Stack
     public EksStack()
     {
         // Read back the default VPC and public subnets, which we will use.
-        var vpc = Output.Create(Ec2.GetVpc.InvokeAsync(new Ec2.GetVpcArgs {Default = true}));
-        var vpcId = vpc.Apply(vpc => vpc.Id);
-        var subnet = vpcId.Apply(id => Ec2.GetSubnetIds.InvokeAsync(new Ec2.GetSubnetIdsArgs {VpcId = id}));
-        var subnetIds = subnet.Apply(s => s.Ids);
+        var vpcId = Ec2.GetVpc.Invoke(new Ec2.GetVpcInvokeArgs { Default = true })
+            .Apply(vpc => vpc.Id);
+
+        var subnetIds = Ec2.GetSubnetIds.Invoke(new Ec2.GetSubnetIdsInvokeArgs { VpcId = vpcId })
+            .Apply(s => s.Ids);
 
         // Create an IAM role that can be used by our service's task.
         var eksRole = new Iam.Role("eks-iam-eksRole", new Iam.RoleArgs
@@ -180,7 +181,7 @@ class EksStack : Stack
         });
 
         this.Kubeconfig = GenerateKubeconfig(cluster.Endpoint,
-            cluster.CertificateAuthority.Apply(x => x.Data),
+            cluster.CertificateAuthority.Apply(x => x.Data ?? ""),
             cluster.Name);
 
         var k8sProvider = new K8s.Provider("k8s-provider", new K8s.ProviderArgs
@@ -274,4 +275,3 @@ class EksStack : Stack
     [Output] public Output<string> Kubeconfig { get; set; }
     [Output] public Output<string> Url { get; set; }
 }
-
