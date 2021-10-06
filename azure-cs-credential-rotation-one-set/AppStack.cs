@@ -84,11 +84,11 @@ internal class AppStack : Stack
             },
         });
 
-        var storageKey = Output.Tuple(resourceGroup.Name, storageAccount.Name).Apply(v =>
+        var storageKey = ListStorageAccountKeys.Invoke(new ListStorageAccountKeysInvokeArgs
         {
-            var task = ListStorageAccountKeys.InvokeAsync(new ListStorageAccountKeysArgs { AccountName = v.Item2, ResourceGroupName = v.Item1 });
-            return Output.Create(task).Apply(t => t.Keys[0].Value);
-        });
+            AccountName = storageAccount.Name,
+            ResourceGroupName = resourceGroup.Name
+        }).Apply(t => t.Keys[0].Value);
 
         var functionApp = new WebApp("functionApp", new WebAppArgs
         {
