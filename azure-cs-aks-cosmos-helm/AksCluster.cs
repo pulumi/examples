@@ -30,7 +30,7 @@ public class AksCluster : ComponentResource
         {
             ApplicationId = adApp.ApplicationId
         }, new CustomResourceOptions { Parent = this });
-        
+
         var pw = new RandomPassword("pw", new RandomPasswordArgs
         {
             Length = 20,
@@ -43,7 +43,7 @@ public class AksCluster : ComponentResource
             Value = pw.Result,
             EndDate = "2099-01-01T00:00:00Z"
         }, new CustomResourceOptions { Parent = this });
-        
+
         var keyPair = new PrivateKey("ssh-key", new PrivateKeyArgs
         {
             Algorithm = "RSA",
@@ -95,17 +95,11 @@ public class AksCluster : ComponentResource
 
         this.ClusterName = k8sCluster.Name;
 
-        this.KubeConfig = Output.Tuple(k8sCluster.Name, args.ResourceGroupName.ToOutput())
-            .Apply(pair =>
+        this.KubeConfig = ListManagedClusterUserCredentials.Invoke(
+            new ListManagedClusterUserCredentialsInvokeArgs
             {
-                var k8sClusterName = pair.Item1;
-                var resourceGroupName = pair.Item2;
-
-                return ListManagedClusterUserCredentials.InvokeAsync(new ListManagedClusterUserCredentialsArgs
-                {
-                    ResourceGroupName = resourceGroupName,
-                    ResourceName = k8sClusterName
-                });
+                ResourceGroupName = args.ResourceGroupName,
+                ResourceName = k8sCluster.Name
             })
             .Apply(x => x.Kubeconfigs[0].Value)
             .Apply(Convert.FromBase64String)
