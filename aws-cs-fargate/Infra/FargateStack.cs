@@ -16,10 +16,11 @@ class FargateStack : Stack
     public FargateStack()
     {
         // Read back the default VPC and public subnets, which we will use.
-        var vpc = Output.Create(Ec2.GetVpc.InvokeAsync(new Ec2.GetVpcArgs {Default = true}));
-        var vpcId = vpc.Apply(vpc => vpc.Id);
-        var subnet = vpcId.Apply(id => Ec2.GetSubnetIds.InvokeAsync(new Ec2.GetSubnetIdsArgs {VpcId = id}));
-        var subnetIds = subnet.Apply(s => s.Ids);
+        var vpcId = Ec2.GetVpc.Invoke(new Ec2.GetVpcInvokeArgs {Default = true})
+            .Apply(vpc => vpc.Id);
+
+        var subnetIds = Ec2.GetSubnetIds.Invoke(new Ec2.GetSubnetIdsInvokeArgs {VpcId = vpcId})
+            .Apply(s => s.Ids);
 
         // Create a SecurityGroup that permits HTTP ingress and unrestricted egress.
         var webSg = new Ec2.SecurityGroup("web-sg", new Ec2.SecurityGroupArgs
