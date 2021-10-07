@@ -66,12 +66,12 @@ class Server(ComponentResource):
 
         # Install KVM
         sudo apt update
-        sudo apt-get -y install qemu-kvm libvirt-bin 
+        sudo apt-get -y install qemu-kvm libvirt-bin
         # hack to account for this bug: https://bugs.launchpad.net/ubuntu/+source/libvirt/+bug/1677398
         # Work around: https://bugs.launchpad.net/ubuntu/+source/libvirt/+bug/1677398/comments/42
         sudo sed -i '$ a security_driver = "none"' /etc/libvirt/qemu.conf
         sudo systemctl restart libvirt-bin
-        
+
         """
 
         vm = compute.VirtualMachine(
@@ -111,17 +111,15 @@ class Server(ComponentResource):
             ),
             opts=ResourceOptions(parent=self))
 
-        # There's some delay between when Azure says the VM is ready and 
+        # There's some delay between when Azure says the VM is ready and
         # when the KVM/qemu service can start accepting connections.
         # So, wait a bit to allow the KVM server to become fully ready.
         # But only do the wait if the VM has been provisioned (i.e. not during a preview).
         vm.provisioning_state.apply(lambda state: time.sleep(90))
 
-        combined_output = Output.all(public_ip.name, resource_group.name, vm.id)
-        public_ip_addr = combined_output.apply(
-            lambda lst: network.get_public_ip_address(
-                public_ip_address_name=lst[0], 
-                resource_group_name=lst[1]))
+        public_ip_addr = vm.id.apply(lambda _: network.get_public_ip_address_output(
+                public_ip_address_name=public_ip.name,
+                resource_group_name=resource_group.name))
 
         # Create/update the private key file for the SSH remote connection URI.
         def write_key_file(priv_key, key_file):
@@ -137,12 +135,12 @@ class Server(ComponentResource):
         # Build the connection URI that is returned for use by the libvirt provider.
         # See https://libvirt.org/uri.html#URI_remote for details on the remote URI options
         self.libvirt_remote_uri = Output.concat("qemu+ssh://",username,"@",public_ip_addr.ip_address,"/system?keyfile=./",key_file,"&socket=/var/run/libvirt/libvirt-sock&no_verify=1")
-        
-        # Return where the VM pool should be created.
-        # In this case, the "vm pool" is simply placed under the KVM host user's home folder 
-        self.vm_pool_dir = f"/home/{username}/vms"  
 
-        # Other values for convenience to output useful information 
+        # Return where the VM pool should be created.
+        # In this case, the "vm pool" is simply placed under the KVM host user's home folder
+        self.vm_pool_dir = f"/home/{username}/vms"
+
+        # Other values for convenience to output useful information
         self.ip = public_ip_addr.ip_address
         self.username = username
         self.ssh_priv_key_file = key_file
