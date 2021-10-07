@@ -58,9 +58,8 @@ registry = containerregistry.Registry(
     ),
     admin_user_enabled=True)
 
-credentials = pulumi.Output.all(resource_group.name, registry.name).apply(
-    lambda args: containerregistry.list_registry_credentials(resource_group_name=args[0],
-                                                             registry_name=args[1]))
+credentials = containerregistry.list_registry_credentials_output(resource_group_name=resource_group.name,
+                                                                 registry_name=registry.name)
 admin_username = credentials.username
 admin_password = credentials.passwords[0]["value"]
 
