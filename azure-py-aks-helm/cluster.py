@@ -65,12 +65,9 @@ k8s_cluster = containerservice.ManagedCluster('cluster',
     })
 
 
-creds = pulumi.Output.all(resource_group.name, k8s_cluster.name).apply(
-    lambda args:
-    containerservice.list_managed_cluster_user_credentials(
-        resource_group_name=args[0],
-        resource_name=args[1]))
-
+creds = containerservice.list_managed_cluster_user_credentials_output(
+    resource_group_name=resource_group.name,
+    resource_name=k8s_cluster.name)
 
 kubeconfig = creds.kubeconfigs[0].value.apply(
     lambda enc: base64.b64decode(enc).decode())
