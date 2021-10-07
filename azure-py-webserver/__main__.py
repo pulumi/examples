@@ -76,9 +76,8 @@ vm = compute.VirtualMachine(
         ),
     ))
 
-combined_output = Output.all(vm.id, public_ip.name, resource_group.name)
-public_ip_addr = combined_output.apply(
-    lambda lst: network.get_public_ip_address(
-        public_ip_address_name=lst[1], 
-        resource_group_name=lst[2]))
+public_ip_addr = vm.id.apply(lambda _: network.get_public_ip_address_output(
+    public_ip_address_name=public_ip.name,
+    resource_group_name=resource_group.name))
+
 export("public_ip", public_ip_addr.ip_address)
