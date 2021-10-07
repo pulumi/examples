@@ -1,10 +1,10 @@
 // Copyright 2016-2020, Pulumi Corporation
 
 using Pulumi;
-using Pulumi.Aws;
+//using Pulumi.Aws;
 using Pulumi.Aws.Ec2;
 using Pulumi.Aws.Ec2.Inputs;
-using Pulumi.Aws.Inputs;
+// using Pulumi.Aws.Inputs;
 
 /// <summary>
 /// A simple stack to be tested.
@@ -22,20 +22,22 @@ public class WebserverStack : Stack
                 new SecurityGroupIngressArgs { Protocol = "tcp", FromPort = 80, ToPort = 80, CidrBlocks = { "0.0.0.0/0" } }
             }
         });
-        
-        var amiId = Output.Create(Pulumi.Aws.Ec2.GetAmi.InvokeAsync(new Pulumi.Aws.Ec2.GetAmiArgs
-        {
-            MostRecent = true,
-            Owners = {"099720109477"},
-            Filters = {
-                new Pulumi.Aws.Ec2.Inputs.GetAmiFilterArgs
-                {
-                    Name = "name",
-                    Values = {"ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"},
-                }
-            }
-        })).Apply(ami => ami.Id);
-        
+
+        var amiId = GetAmi
+            .Invoke(new GetAmiInvokeArgs
+            {
+                MostRecent = true,
+                    Owners = "099720109477",
+                    Filters = {
+                        new GetAmiFilterInputArgs
+                        {
+                            Name = "name",
+                            Values = "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*",
+                        }
+                    }
+            })
+            .Apply(ami => ami.Id);
+
         // var userData = "#!/bin/bash echo \"Hello, World!\" > index.html nohup python -m SimpleHTTPServer 80 &";
 
         var server = new Instance("web-server-www", new InstanceArgs
