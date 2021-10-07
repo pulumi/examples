@@ -54,12 +54,11 @@ class WebApplication : ComponentResource
             AdminUserEnabled = true
         }, new() { Parent = this });
 
-        var credentials = Output.Tuple(ResourceGroup.Name, registry.Name).Apply(values =>
-            ListRegistryCredentials.InvokeAsync(new ListRegistryCredentialsArgs
-            {
-                ResourceGroupName = values.Item1,
-                RegistryName = values.Item2
-            }));
+        var credentials = ListRegistryCredentials.Invoke(new ListRegistryCredentialsInvokeArgs
+        {
+            ResourceGroupName = ResourceGroup.Name,
+            RegistryName = registry.Name
+        });
         var adminUsername = credentials.Apply(c => c.Username ?? "");
         var adminPassword = credentials.Apply(c => Output.CreateSecret(c.Passwords.First().Value ?? ""));
 
@@ -109,12 +108,11 @@ class WebApplication : ComponentResource
 
         if (registry != null)
         {
-            var credentials = Output.Tuple(ResourceGroup.Name, registry.Name).Apply(values =>
-                ListRegistryCredentials.InvokeAsync(new ListRegistryCredentialsArgs
-                {
-                    ResourceGroupName = values.Item1,
-                    RegistryName = values.Item2
-                }));
+            var credentials = ListRegistryCredentials.Invoke(new ListRegistryCredentialsInvokeArgs
+            {
+                ResourceGroupName = ResourceGroup.Name,
+                RegistryName = registry.Name
+            });
             var adminUsername = credentials.Apply(c => c.Username ?? "");
             var adminPassword = credentials.Apply(c => Output.CreateSecret(c.Passwords.First().Value ?? ""));
 

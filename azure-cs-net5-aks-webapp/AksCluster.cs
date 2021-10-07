@@ -95,8 +95,7 @@ class AksCluster : ComponentResource
         }, new() { Parent = this });
 
         // Export the KubeConfig and SP
-        this.KubeConfig = Output.Tuple(ResourceGroup.Name, cluster.Name).Apply(names =>
-            GetKubeConfig(names.Item1, names.Item2));
+        this.KubeConfig = GetKubeConfig(ResourceGroup.Name, cluster.Name);
         this.PrincipalId = cluster.IdentityProfile.Apply(p => p!["kubeletidentity"].ObjectId!);
     }
 
@@ -105,15 +104,14 @@ class AksCluster : ComponentResource
     [Output]
     public Output<string> PrincipalId { get; set; }
 
-    private static async Task<string> GetKubeConfig(string resourceGroupName, string clusterName)
-    {
-        var credentials = await ListManagedClusterUserCredentials.InvokeAsync(new ListManagedClusterUserCredentialsArgs
+    private static Output<string> GetKubeConfig(Output<string> resourceGroupName, Output<string> clusterName)
+        => ListManagedClusterUserCredentials.Invoke(new ListManagedClusterUserCredentialsInvokeArgs
         {
             ResourceGroupName = resourceGroupName,
             ResourceName = clusterName
+        }).Apply(credentials => {
+            var encoded = credentials.Kubeconfigs[0].Value;
+            var data = Convert.FromBase64String(encoded);
+            return Encoding.UTF8.GetString(data);
         });
-        var encoded = credentials.Kubeconfigs[0].Value;
-        var data = Convert.FromBase64String(encoded);
-        return Encoding.UTF8.GetString(data);
-    }
 }
