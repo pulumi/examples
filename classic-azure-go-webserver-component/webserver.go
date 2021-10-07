@@ -110,17 +110,10 @@ func NewWebserver(ctx *pulumi.Context, name string, args *WebserverArgs, opts ..
 func (ws *Webserver) GetIPAddress(ctx *pulumi.Context) pulumi.StringOutput {
 	// The public IP address is not allocated until the VM is running, so wait for that resource to create, and then
 	// lookup the IP address again to report its public IP.
-	ready := pulumi.All(ws.VM.ID(), ws.PublicIP.Name, ws.PublicIP.ResourceGroupName)
-	return ready.ApplyT(func(args []interface{}) (string, error) {
-		name := args[1].(string)
-		resourceGroupName := args[2].(string)
-		ip, err := network.GetPublicIP(ctx, &network.GetPublicIPArgs{
-			Name:              name,
-			ResourceGroupName: resourceGroupName,
-		})
-		if err != nil {
-			return "", err
-		}
-		return ip.IpAddress, nil
+	return ws.VM.ID().ApplyT(func(id pulumi.ID) pulumi.StringOutput {
+		return network.GetPublicIPOutput(ctx, network.GetPublicIPOutputArgs{
+			Name:              ws.PublicIP.Name,
+			ResourceGroupName: ws.PublicIP.ResourceGroupName,
+		}).IpAddress()
 	}).(pulumi.StringOutput)
 }
