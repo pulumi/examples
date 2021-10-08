@@ -41,7 +41,7 @@ const certificate = new aws.acm.Certificate("certificate", {
 const domainParts = getDomainAndSubdomain(cmsStackConfig.targetDomain);
 
 // Get the zone of the given domain
-const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
+const hostedZoneId = aws.route53.getZoneOutput({ name: domainParts.parentDomain }, { async: true }).zoneId;
 
 // The temporation record for the validation domain has 10 to be live
 const tenMinutes = 60 * 10;
@@ -104,7 +104,7 @@ const alb = new awsx.elasticloadbalancingv2.ApplicationLoadBalancer(
     "net-lb", { external: true, securityGroups: cluster.securityGroups });
 
 // alb need a listener to listen to 443 the standard port for the HTTPS traffic, certificate is using the certificate we created above
-const web = alb.createListener("web", { 
+const web = alb.createListener("web", {
     port: 443,
     external: true,
     protocol: "HTTPS",
@@ -117,9 +117,9 @@ if (inputTargetGroupPort === undefined) {
     inputTargetGroupPort = 80;
 }
 
-// when Listener Rule is satisfied then traffic is route to this target group. 
+// when Listener Rule is satisfied then traffic is route to this target group.
 const tg = alb.createTargetGroup("oauth-tg", {
-    port: inputTargetGroupPort, 
+    port: inputTargetGroupPort,
     loadBalancer: alb
 });
 
@@ -130,8 +130,7 @@ new awsx.lb.ListenerRule("oauth-listener-rule", web, {
         targetGroupArn: tg.targetGroup.arn,
     }],
     conditions: [{
-        field: "path-pattern",
-        values: "/*", //wildcard says every request would be send
+        pathPattern: {values: ["/*"]} //wildcard says every request would be send
     }],
 });
 
@@ -156,12 +155,12 @@ const appService = new awsx.ecs.FargateService("app-svc", {
             memory: 128 /*MB*/,
             portMappings: [ tg ],
             environment: [
-                { 
+                {
                     name: "HOST",
                     // The target domain which would concatenate with callbacks in main.go
                     value: pulumi.interpolate `https://${cmsStackConfig.targetDomain}`
                 },
-                { 
+                {
                     name: "SESSION_SECRET",
                     value: sessionSecretRandomString.result
                 },
@@ -194,7 +193,7 @@ const appService = new awsx.ecs.FargateService("app-svc", {
 function createAliasRecord(
     targetDomain: string, lb: awsx.elasticloadbalancingv2.ApplicationLoadBalancer): aws.route53.Record {
     const domainParts = getDomainAndSubdomain(targetDomain);
-    const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
+    const hostedZoneId = aws.route53.getZoneOutput({ name: domainParts.parentDomain }, { async: true }).zoneId;
     return new aws.route53.Record(
         targetDomain,
         {
