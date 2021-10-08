@@ -5,7 +5,7 @@ import * as pulumi from "@pulumi/pulumi";
 
 export function createIamRole(name: string, table: aws.dynamodb.Table) {
     const role = new aws.iam.Role(`${name}-role`, {
-        assumeRolePolicy: aws.iam.getPolicyDocument({
+        assumeRolePolicy: aws.iam.getPolicyDocumentOutput({
                 statements: [{
                     actions: ["sts:AssumeRole"],
                     principals: [{
@@ -14,17 +14,17 @@ export function createIamRole(name: string, table: aws.dynamodb.Table) {
                     }],
                     effect: "Allow",
                 }],
-            }, { async: true }).then(doc => doc.json),
+            }, { async: true }).json,
     });
 
     const policy = new aws.iam.Policy(`${name}-policy`, {
-        policy: table.arn.apply(arn => aws.iam.getPolicyDocument({
+        policy: aws.iam.getPolicyDocumentOutput({
             statements: [{
                 actions: ["dynamodb:PutItem", "dynamodb:GetItem"],
-                resources: [arn],
+                resources: [table.arn],
                 effect: "Allow",
             }],
-        }, { async: true }).then(doc => doc.json)),
+        }, { async: true }).json,
     });
 
     const attachment = new aws.iam.RolePolicyAttachment(`${name}-rpa`, {
