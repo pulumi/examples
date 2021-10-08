@@ -53,11 +53,9 @@ export const k8sCluster = new containerservice.ManagedCluster("cluster", {
     },
 });
 
-const creds = pulumi.all([k8sCluster.name, resourceGroup.name]).apply(([clusterName, rgName]) => {
-    return containerservice.listManagedClusterUserCredentials({
-        resourceGroupName: rgName,
-        resourceName: clusterName,
-    });
+const creds = containerservice.listManagedClusterUserCredentialsOutput({
+    resourceGroupName: resourceGroup.name,
+    resourceName: k8sCluster.name,
 });
 
 export const kubeconfig =
