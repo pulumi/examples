@@ -193,24 +193,26 @@ const premiumApp = new web.WebApp("httppremium", {
     },
 });
 
-function signedBlobReadUrl(blob: storage.Blob, container: storage.BlobContainer, account: storage.StorageAccount, resourceGroup: resources.ResourceGroup): pulumi.Output<string> {
-    const blobSAS = pulumi.all<string>([blob.name, container.name, account.name, resourceGroup.name]).apply(args =>
-        storage.listStorageAccountServiceSAS({
-            accountName: args[2],
-            protocols: storage.HttpProtocol.Https,
-            sharedAccessExpiryTime: "2030-01-01",
-            sharedAccessStartTime: "2021-01-01",
-            resourceGroupName: args[3],
-            resource: storage.SignedResource.C,
-            permissions: storage.Permissions.R,
-            canonicalizedResource: "/blob/" + args[2] + "/" + args[1],
-            contentType: "application/json",
-            cacheControl: "max-age=5",
-            contentDisposition: "inline",
-            contentEncoding: "deflate",
-        }));
-
-    return pulumi.interpolate`https://${account.name}.blob.core.windows.net/${container.name}/${blob.name}?${blobSAS.serviceSasToken}`;
+function signedBlobReadUrl(blob: storage.Blob,
+                           container: storage.BlobContainer,
+                           account: storage.StorageAccount,
+                           resourceGroup: resources.ResourceGroup): pulumi.Output<string> {
+    const blobSAS = storage.listStorageAccountServiceSASOutput({
+        accountName: account.name,
+        protocols: storage.HttpProtocol.Https,
+        sharedAccessExpiryTime: "2030-01-01",
+        sharedAccessStartTime: "2021-01-01",
+        resourceGroupName: resourceGroup.name,
+        resource: storage.SignedResource.C,
+        permissions: storage.Permissions.R,
+        canonicalizedResource: pulumi.interpolate`/blob/${account.name}/${container.name}`,
+        contentType: "application/json",
+        cacheControl: "max-age=5",
+        contentDisposition: "inline",
+        contentEncoding: "deflate",
+    });
+    const token = blobSAS.serviceSasToken;
+    return pulumi.interpolate`https://${account.name}.blob.core.windows.net/${container.name}/${blob.name}?${token}`;
 }
 
 
