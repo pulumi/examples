@@ -24,7 +24,7 @@ const network = new azure.network.VirtualNetwork("server-network", {
 });
 
 // Now, allocate a few websever VMs -- by default, just 2, but this is configurable.
-export const ipAddresses = [];
+export const ipAddresses: pulumi.Output<string>[] = [];
 for (let i = 0; i < count; i++) {
     const server = new WebServer(`ws-${i}`, {
         username,
