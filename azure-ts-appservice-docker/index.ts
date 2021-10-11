@@ -54,11 +54,11 @@ const registry = new containerregistry.Registry("registry", {
     adminUserEnabled: true,
 });
 
-const credentials = pulumi.all([resourceGroup.name, registry.name]).apply(
-    ([resourceGroupName, registryName]) => containerregistry.listRegistryCredentials({
-        resourceGroupName: resourceGroupName,
-        registryName: registryName,
-}));
+const credentials = containerregistry.listRegistryCredentialsOutput({
+    resourceGroupName: resourceGroup.name,
+    registryName: registry.name
+});
+
 const adminUsername = credentials.apply(credentials => credentials.username!);
 const adminPassword = credentials.apply(credentials => credentials.passwords![0].value!);
 
