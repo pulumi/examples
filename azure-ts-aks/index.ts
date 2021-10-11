@@ -71,11 +71,9 @@ const cluster = new containerservice.ManagedCluster(managedClusterName, {
     },
 });
 
-const creds = pulumi.all([cluster.name, resourceGroup.name]).apply(([clusterName, rgName]) => {
-    return containerservice.listManagedClusterUserCredentials({
-        resourceGroupName: rgName,
-        resourceName: clusterName,
-    });
+const creds = containerservice.listManagedClusterUserCredentialsOutput({
+    resourceGroupName: resourceGroup.name,
+    resourceName: cluster.name,
 });
 
 const encoded = creds.kubeconfigs[0].value;
