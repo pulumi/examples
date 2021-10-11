@@ -56,12 +56,10 @@ const dbContainer = new documentdb.SqlResourceSqlContainer("container", {
     },
 });
 
-const accountKeys = pulumi
-    .all([cosmosdbAccount.name, resourceGroup.name])
-    .apply(([cosmosdbAccountName, resourceGroupName]) => documentdb.listDatabaseAccountKeys({
-        accountName: cosmosdbAccountName,
-        resourceGroupName: resourceGroupName,
-    }));
+const accountKeys = documentdb.listDatabaseAccountKeysOutput({
+    accountName: cosmosdbAccount.name,
+    resourceGroupName: resourceGroup.name,
+});
 
 const clientConfig = pulumi.output(authorization.getClientConfig());
 
@@ -139,13 +137,11 @@ const workflow = new logic.Workflow("httpToCosmos", {
     },
 });
 
-const callbackUrls = pulumi
-    .all([resourceGroup.name, workflow.name])
-    .apply(([resourceGroupName, workflowName]) => logic.listWorkflowTriggerCallbackUrl({
-        resourceGroupName: resourceGroupName,
-        workflowName: workflowName,
-        triggerName: "Receive_post",
-    }));
+const callbackUrls = logic.listWorkflowTriggerCallbackUrlOutput({
+    resourceGroupName: resourceGroup.name,
+    workflowName: workflow.name,
+    triggerName: "Receive_post",
+});
 
 // Export the HTTP endpoint
 export const endpoint = callbackUrls.value;
