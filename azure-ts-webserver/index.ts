@@ -78,11 +78,9 @@ const vm = new compute.VirtualMachine("server-vm", {
 
 // The public IP address is not allocated until the VM is running, so wait for that
 // resource to create, and then lookup the IP address again to report its public IP.
-const done = pulumi.all({ _: vm.id, name: publicIp.name, resourceGroupName: resourceGroupName });
-
-export const ipAddress = done.apply(async (d) => {
-    return network.getPublicIPAddress({
-        resourceGroupName: d.resourceGroupName,
-        publicIpAddressName: d.name,
-    }).then(ip => ip.ipAddress);
-});
+export const ipAddress = vm.id
+    .apply(_ => network.getPublicIPAddressOutput({
+        resourceGroupName: resourceGroupName,
+        publicIpAddressName: publicIp.name
+    }))
+    .apply(ip => ip.ipAddress);
