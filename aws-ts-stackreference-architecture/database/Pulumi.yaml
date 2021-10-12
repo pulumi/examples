@@ -1,6 +1,6 @@
 name: database-layer
 runtime: nodejs
-description: Database layer for the aws-stackreference-architecture
+description: Database layer for the aws-ts-stackreference-architecture
 template:
   config:
     aws:region:
