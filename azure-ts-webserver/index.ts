@@ -81,6 +81,6 @@ const vm = new compute.VirtualMachine("server-vm", {
 export const ipAddress = vm.id
     .apply(_ => network.getPublicIPAddressOutput({
         resourceGroupName: resourceGroupName,
-        publicIpAddressName: publicIp.name
+        publicIpAddressName: publicIp.name,
     }))
     .apply(ip => ip.ipAddress);

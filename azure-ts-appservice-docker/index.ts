@@ -56,7 +56,7 @@ const registry = new containerregistry.Registry("registry", {
 
 const credentials = containerregistry.listRegistryCredentialsOutput({
     resourceGroupName: resourceGroup.name,
-    registryName: registry.name
+    registryName: registry.name,
 });
 
 const adminUsername = credentials.apply(credentials => credentials.username!);
