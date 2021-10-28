@@ -301,6 +301,7 @@ jobs:
         - 1.16.x
         languages:
         - Cs
+        - Go
         - Js
         - Ts
         - Py
