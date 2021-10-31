@@ -20,8 +20,6 @@ const adSp = new azuread.ServicePrincipal("service-principal", {
 
 const adSpPassword = new azuread.ServicePrincipalPassword("sp-password", {
     servicePrincipalId: adSp.id,
-    value: config.password,
-    endDate: "2099-01-01T00:00:00Z",
 });
 
 export const k8sCluster = new containerservice.ManagedCluster("cluster", {
