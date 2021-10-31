@@ -6,7 +6,7 @@ import * as tls from "@pulumi/tls";
 
 const config = new pulumi.Config();
 
-export const k8sVersion = config.get("k8sVersion") || "1.18.14";
+export const k8sVersion = config.get("k8sVersion") || "1.19.11";
 
 export const password = config.get("password") || new random.RandomPassword("pw", {
     length: 20,
