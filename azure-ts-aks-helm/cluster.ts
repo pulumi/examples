@@ -26,11 +26,6 @@ const adSpPassword = new azuread.ServicePrincipalPassword("sp-password", {
 
 export const k8sCluster = new containerservice.ManagedCluster("cluster", {
     resourceGroupName: resourceGroup.name,
-    addonProfiles: {
-        KubeDashboard: {
-            enabled: true,
-        },
-    },
     agentPoolProfiles: [{
         count: config.nodeCount,
         maxPods: 110,
@@ -69,7 +64,7 @@ const creds = pulumi.all([k8sCluster.name, resourceGroup.name]).apply(([clusterN
 
 export const kubeconfig =
     creds.kubeconfigs[0].value
-    .apply(enc => Buffer.from(enc, "base64").toString());
+        .apply(enc => Buffer.from(enc, "base64").toString());
 
 export const k8sProvider = new k8s.Provider("k8s-provider", {
     kubeconfig: kubeconfig,
