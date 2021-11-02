@@ -1,0 +1,3 @@
+name: azure-ts-containerapps
+runtime: nodejs
+description: Creates an Azure Container App and deploys a custom Docker image to it
