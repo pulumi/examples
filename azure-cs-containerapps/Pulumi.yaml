@@ -1,0 +1,4 @@
+name: azure-cs-containerapps
+runtime: dotnet
+description: Creates an Azure Container App and deploys a custom Docker image to it
+
