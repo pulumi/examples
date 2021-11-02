@@ -35,7 +35,6 @@ class MyStack : Stack
         var kubeEnv = new KubeEnvironment("env", new KubeEnvironmentArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            Location = "centraluseuap",
             Type = "Managed",
             AppLogsConfiguration = new AppLogsConfigurationArgs
             {
@@ -80,7 +79,6 @@ class MyStack : Stack
         var containerApp = new ContainerApp("app", new ContainerAppArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            Location = "centraluseuap",
             KubeEnvironmentId = kubeEnv.Id,
             Configuration = new ConfigurationArgs
             {
