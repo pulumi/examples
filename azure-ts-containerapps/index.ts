@@ -1,7 +1,7 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as docker from "@pulumi/docker";
+import * as pulumi from "@pulumi/pulumi";
 
 import * as containerregistry from "@pulumi/azure-native/containerregistry";
 import * as operationalinsights from "@pulumi/azure-native/operationalinsights";
