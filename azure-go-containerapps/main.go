@@ -46,10 +46,8 @@ func main() {
 		).(pulumi.StringOutput)
 
 		kubeEnvironment, err := web.NewKubeEnvironment(ctx, "kubeEnvironment", &web.KubeEnvironmentArgs{
-			ResourceGroupName:           resourceGroup.Name,
-			Name:                        pulumi.String("kubeEnvironment"),
-			InternalLoadBalancerEnabled: pulumi.Bool(false),
-			Type:                        pulumi.String("Managed"),
+			ResourceGroupName: resourceGroup.Name,
+			Type:              pulumi.String("Managed"),
 			AppLogsConfiguration: web.AppLogsConfigurationArgs{
 				Destination: pulumi.String("log-analytics"),
 				LogAnalyticsConfiguration: web.LogAnalyticsConfigurationArgs{
