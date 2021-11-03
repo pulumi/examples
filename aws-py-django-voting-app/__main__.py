@@ -228,9 +228,8 @@ def get_registry_info(creds):
         username=username,
         password=password)
 
-app_registry = app_ecr_repo.registry_id \
-                           .apply(aws.ecr.get_credentials_output) \
-                           .apply(get_registry_info)
+app_registry = aws.ecr.get_credentials_output(app_ecr_repo.registry_id) \
+                      .apply(get_registry_info)
 
 django_image = docker.Image("django-dockerimage",
     image_name=app_ecr_repo.repository_url,
