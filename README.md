@@ -156,6 +156,7 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
+[Azure Container Apps](azure-ts-containerapps) | Run a Docker image on Azure Container Apps.
 [Azure Container Instance](azure-ts-aci) | Run Azure Container Instances on Linux.
 [Azure Kubernetes Service](azure-ts-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [Azure App Service](azure-ts-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
@@ -173,6 +174,7 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
+[Azure Container Apps](azure-py-containerapps) | Run a Docker image on Azure Container Apps.
 [Azure Container Instance](azure-py-aci) | Run Azure Container Instances on Linux.
 [Azure Kubernetes Service](azure-py-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [Azure App Service](azure-py-appservice) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
@@ -189,6 +191,7 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
+[Azure Container Apps](azure-go-containerapps) | Run a Docker image on Azure Container Apps.
 [Azure Container Instance](azure-go-aci) | Run Azure Container Instances on Linux.
 [Azure Kubernetes Service](azure-go-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [Azure App Service with Docker](azure-go-appservice-docker) | Build a web application hosted in App Service from Docker images.
@@ -200,6 +203,7 @@ Example   | Description |
 Example   | Description |
 --------- | --------- |
 Cluster.
+[Azure Container Apps](azure-cs-containerapps) | Run a Docker image on Azure Container Apps.
 [Azure Container Instance](azure-cs-aci) | Run Azure Container Instances on Linux.
 [Azure Kubernetes Service](azure-cs-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [AKS web app with .NET 5](azure-cs-net5-aks-webapp) | Create an Azure Kubernetes Service (AKS) cluster and deploy a web app to it using .NET 5 and C# 9.

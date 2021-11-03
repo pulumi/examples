@@ -1,0 +1,12 @@
+{
+    "name": "node-helloworld",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "dependencies": {
+        "express": "^4.14.0",
+        "morgan": "^1.8.2"
+    },
+    "devDependencies": {},
+    "author": ""
+}
