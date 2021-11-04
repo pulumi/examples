@@ -41,7 +41,7 @@ const certificate = new aws.acm.Certificate("certificate", {
 const domainParts = getDomainAndSubdomain(cmsStackConfig.targetDomain);
 
 // Get the zone of the given domain
-const hostedZoneId = aws.route53.getZoneOutput({ name: domainParts.parentDomain }, { async: true }).zoneId;
+const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
 
 // The temporation record for the validation domain has 10 to be live
 const tenMinutes = 60 * 10;
@@ -193,7 +193,7 @@ const appService = new awsx.ecs.FargateService("app-svc", {
 function createAliasRecord(
     targetDomain: string, lb: awsx.elasticloadbalancingv2.ApplicationLoadBalancer): aws.route53.Record {
     const domainParts = getDomainAndSubdomain(targetDomain);
-    const hostedZoneId = aws.route53.getZoneOutput({ name: domainParts.parentDomain }, { async: true }).zoneId;
+    const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
     return new aws.route53.Record(
         targetDomain,
         {
