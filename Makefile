@@ -6,6 +6,7 @@ install:
 	yarn global add tslint typescript
 
 ensure:
+	# tidy
 	cd misc/test && go mod tidy
 	cd misc/test && go mod download
 
