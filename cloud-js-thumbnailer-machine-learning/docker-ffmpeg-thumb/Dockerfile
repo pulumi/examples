@@ -1,10 +1,14 @@
 FROM jrottenberg/ffmpeg
 
-RUN apt-get update && \
-    apt-get install python-dev python-pip -y && \
-    apt-get clean
+RUN apt-get update --yes && \
+    apt-get install curl unzip --yes && \
+    apt-get clean --yes
 
-RUN pip install awscli
+# Install AWS v2 cli
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf aws
 
 WORKDIR /tmp/workdir
 
