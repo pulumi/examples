@@ -177,7 +177,7 @@ jobs:
         go-version:
         - 1.16.x
         node-version:
-        - 13.x
+        - 14.x
         platform:
         - ubuntu-latest
         python-version:
@@ -306,7 +306,7 @@ jobs:
         - Py
         - Fs
         node-version:
-        - 13.x
+        - 14.x
         platform:
         - ubuntu-latest
         python-version:
@@ -423,7 +423,7 @@ jobs:
         go-version:
         - 1.16.x
         node-version:
-        - 13.x
+        - 14.x
         platform:
         - ubuntu-latest
         python-version:
@@ -506,7 +506,7 @@ jobs:
         go-version:
         - 1.16.x
         node-version:
-        - 13.x
+        - 14.x
         platform:
         - ubuntu-latest
         python-version:
@@ -533,7 +533,7 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
-        - 13.x
+        - 14.x
         platform:
         - ubuntu-latest
         source-dir:
