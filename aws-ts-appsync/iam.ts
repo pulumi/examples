@@ -27,7 +27,7 @@ export function createIamRole(name: string, table: aws.dynamodb.Table) {
         }).json,
     });
 
-    new aws.iam.RolePolicyAttachment(`${name}-rpa`, {
+    const attachment = new aws.iam.RolePolicyAttachment(`${name}-rpa`, {
         role: role,
         policyArn: policy.arn,
     });
