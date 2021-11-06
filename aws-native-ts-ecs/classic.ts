@@ -7,8 +7,8 @@ import * as pulumi from "@pulumi/pulumi";
 // and Classic provider in this example. The resources will be updated to use native resources as they are
 // available in AWS's Cloud Control API.
 
-const defaultVpc = pulumi.output(aws.ec2.getVpc({default: true}));
-const defaultVpcSubnets = defaultVpc.id.apply(id => aws.ec2.getSubnetIds({vpcId: id}));
+const defaultVpc = aws.ec2.getVpcOutput({default: true});
+const defaultVpcSubnets = aws.ec2.getSubnetIdsOutput({vpcId: defaultVpc.id});
 
 const group = new aws.ec2.SecurityGroup("web-secgrp", {
     vpcId: defaultVpc.id,

@@ -1,6 +1,7 @@
 # Pulumi Examples
 
-This repository contains examples of using Pulumi to build and deploy cloud applications and infrastructure.
+This repository contains examples of using Pulumi to build and deploy
+cloud applications and infrastructure.
 
 Each example has a two-part prefix, `<cloud>-<language>`, to indicate which `<cloud>` and `<language>` it pertains to.
 For example, `<cloud>` could be `aws` for [Amazon Web Services](https://github.com/pulumi/pulumi-aws), `azure` for [Microsoft
@@ -9,7 +10,8 @@ Platform](https://github.com/pulumi/pulumi-gcp), `kubernetes` for
 [Kubernetes](https://github.com/pulumi/pulumi-kubernetes), or `cloud` for
 [Pulumi's cross-cloud programming framework](https://github.com/pulumi/pulumi-cloud).
 
-See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on getting started with Pulumi.
+See the [Pulumi documentation](https://www.pulumi.com/docs/) for more
+details on getting started with Pulumi.
 
 ## Checking Out a Single Example
 
