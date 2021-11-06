@@ -43,31 +43,25 @@ blob = storage.Blob(
     type=storage.BlobType.BLOCK,
     source=asset.FileArchive("wwwroot"))
 
+blob_sas = storage.list_storage_account_service_sas_output(
+    account_name=storage_account.name,
+    protocols=storage.HttpProtocol.HTTPS,
+    shared_access_start_time="2021-01-01",
+    shared_access_expiry_time="2030-01-01",
+    resource=storage.SignedResource.C,
+    resource_group_name=resource_group.name,
+    permissions=storage.Permissions.R,
+    canonicalized_resource=Output.concat("/blob/", storage_account.name, "/", storage_container.name),
+    content_type="application/json",
+    cache_control="max-age=5",
+    content_disposition="inline",
+    content_encoding="deflate")
 
-def get_sas(args):
-    blob_sas = storage.list_storage_account_service_sas(
-        account_name=storage_account.name,
-        protocols=storage.HttpProtocol.HTTPS,
-        shared_access_start_time="2021-01-01",
-        shared_access_expiry_time="2030-01-01",
-        resource=storage.SignedResource.C,
-        resource_group_name=args[3],
-        permissions=storage.Permissions.R,
-        canonicalized_resource="/blob/" + args[0] + "/" + args[1],
-        content_type="application/json",
-        cache_control="max-age=5",
-        content_disposition="inline",
-        content_encoding="deflate",
-    )
-    return f"https://{args[0]}.blob.core.windows.net/{args[1]}/{args[2]}?{blob_sas.service_sas_token}"
-
-
-signed_blob_url = Output.all(
-    storage_account.name,
-    storage_container.name,
-    blob.name,
-    resource_group.name,
-).apply(get_sas)
+signed_blob_url = Output.concat(
+    "https://", storage_account.name, ".blob.core.windows.net/",
+    storage_container.name, "/",
+    blob.name, "?",
+    blob_sas.service_sas_token)
 
 app_insights = insights.Component(
     "appservice-ai",
@@ -90,9 +84,12 @@ database = sql.Database(
         name="S0",
     ))
 
-connection_string = Output.all(sql_server.name, database.name, username, pwd) \
-    .apply(lambda
-               args: f"Server=tcp:{args[0]}.database.windows.net;initial catalog={args[1]};user ID={args[2]};password={args[3]};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;")
+connection_string = Output.concat(
+    "Server=tcp:", sql_server.name, ".database.windows.net;initial ",
+    "catalog=", database.name,
+    ";user ID=", username,
+    ";password=", pwd,
+    ";Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;")
 
 app = web.WebApp(
     "appservice-as",

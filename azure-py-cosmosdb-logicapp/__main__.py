@@ -56,13 +56,16 @@ db_container = documentdb.SqlResourceSqlContainer(
         )
     ))
 
-account_keys = pulumi.Output.all(cosmosdb_account.name, resource_group.name).apply(
-    lambda arg: documentdb.list_database_account_keys(account_name=arg[0], resource_group_name=arg[1]))
+account_keys = documentdb.list_database_account_keys_output(
+    account_name=cosmosdb_account.name,
+    resource_group_name=resource_group.name)
 
 client_config = pulumi.Output.from_input(authorization.get_client_config())
 
-api_id = pulumi.Output.all(client_config.subscription_id, resource_group.location).apply(
-    lambda arg: f"/subscriptions/{arg[0]}/providers/Microsoft.Web/locations/{arg[1]}/managedApis/documentdb")
+api_id = pulumi.Output.concat(
+    "/subscriptions/", client_config.subscription_id,
+    "/providers/Microsoft.Web/locations/", resource_group.location,
+    "/managedApis/documentdb")
 
 # API Connection to be used in a Logic App
 connection = web.Connection(
@@ -137,11 +140,12 @@ workflow = logic.Workflow(
         ),
     })
 
-callback_urls = pulumi.Output.all(resource_group.name, workflow.name).apply(
-    lambda arg: logic.list_workflow_trigger_callback_url(
-        resource_group_name=arg[0],
-        workflow_name=arg[1],
-        trigger_name="Receive_post"))
+
+callback_urls = logic.list_workflow_trigger_callback_url_output(
+    resource_group_name=resource_group.name,
+    workflow_name=workflow.name,
+    trigger_name="Receive_post")
+
 
 # Export the HTTP endpoint
 pulumi.export("endpoint", callback_urls.value)

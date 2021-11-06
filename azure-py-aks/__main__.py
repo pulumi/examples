@@ -65,11 +65,9 @@ managed_cluster = containerservice.ManagedCluster(
         "secret": ad_sp_password.value
     })
 
-creds = pulumi.Output.all(resource_group.name, managed_cluster.name).apply(
-    lambda args:
-    containerservice.list_managed_cluster_user_credentials(
-        resource_group_name=args[0],
-        resource_name=args[1]))
+creds = containerservice.list_managed_cluster_user_credentials_output(
+    resource_group_name=resource_group.name,
+    resource_name=managed_cluster.name)
 
 # Export kubeconfig
 encoded = creds.kubeconfigs[0].value

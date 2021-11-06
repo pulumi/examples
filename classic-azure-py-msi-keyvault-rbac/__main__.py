@@ -91,29 +91,24 @@ vault = keyvault.KeyVault(
     )]
 )
 
-def get_sas(args):
-    blob_sas = storage.get_account_blob_container_sas(
-        connection_string=args[1],
-        start="2020-01-01",
-        expiry="2030-01-01",
-        container_name=args[2],
-        permissions=storage.GetAccountBlobContainerSASPermissionsArgs(
-            read=True,
-            write=False,
-            delete=False,
-            list=False,
-            add=False,
-            create=False,
-        )
-    )
-    return f"https://{args[0]}.blob.core.windows.net/{args[2]}/{args[3]}{blob_sas.sas}"
+blob_sas = storage.get_account_blob_container_sas_output(
+    connection_string=storage_account.primary_connection_string,
+    start="2020-01-01",
+    expiry="2030-01-01",
+    container_name=container_storage_account.name,
+    permissions=storage.GetAccountBlobContainerSASPermissionsArgs(
+        read=True,
+        write=False,
+        delete=False,
+        list=False,
+        add=False,
+        create=False))
 
-signed_blob_url = Output.all(
-    storage_account.name,
-    storage_account.primary_connection_string,
-    storage_account.name,
-    blob.name
-).apply(get_sas)
+signed_blob_url = Output.concat(
+    "https://", storage_account.name, ".blob.core.windows.net/",
+    storage_account.name, "/",
+    blob.name,
+    blob_sas.sas)
 
 secret = keyvault.Secret(
     "deployment-zip",
@@ -172,5 +167,3 @@ ips = app.outbound_ip_addresses.apply(createFirewallRules)
 export("endpoint", app.default_site_hostname.apply(
     lambda endpoint: "https://" + endpoint
 ))
-
-

@@ -167,7 +167,7 @@ mysql_database = mysql.Database("mysql-database",
     name="votes",
     opts=pulumi.ResourceOptions(provider=mysql_provider))
 
-# Creating a user which will be used to manage MySQL tables 
+# Creating a user which will be used to manage MySQL tables
 mysql_user = mysql.User("mysql-standard-user",
     user=sql_user_name,
     host="%", # "%" indicates that the connection is allowed to come from anywhere
@@ -214,15 +214,22 @@ django_listener = aws.lb.Listener("django-listener",
 
 # Creating a Docker image from "./frontend/Dockerfile", which we will use
 # to upload our app
-def get_registry_info(rid):
-    creds = aws.ecr.get_credentials(registry_id=rid)
+
+def get_registry_info(creds):
     decoded = base64.b64decode(creds.authorization_token).decode()
     parts = decoded.split(':')
     if len(parts) != 2:
         raise Exception("Invalid credentials")
-    return docker.ImageRegistry(creds.proxy_endpoint, parts[0], parts[1])
 
-app_registry = app_ecr_repo.registry_id.apply(get_registry_info)
+    username = parts[0]
+    password = parts[1]
+    return docker.ImageRegistry(
+        server=creds.proxy_endpoint,
+        username=username,
+        password=password)
+
+app_registry = aws.ecr.get_credentials_output(app_ecr_repo.registry_id) \
+                      .apply(get_registry_info)
 
 django_image = docker.Image("django-dockerimage",
     image_name=app_ecr_repo.repository_url,
@@ -237,8 +244,8 @@ django_log_group = aws.cloudwatch.LogGroup("django-log-group",
     name="django-log-group"
 )
 
-# Creating a task definition for the first Django instance. This task definition 
-# will migrate the database, create a site admin account, and will automatcially 
+# Creating a task definition for the first Django instance. This task definition
+# will migrate the database, create a site admin account, and will automatcially
 # exit when it is finished.
 django_database_task_definition = aws.ecs.TaskDefinition("django-database-task-definition",
     family="django_database_task_definition-family",
@@ -253,9 +260,9 @@ django_database_task_definition = aws.ecs.TaskDefinition("django-database-task-d
             django_secret_key,
             mysql_database.name,
             sql_admin_name,
-            sql_admin_password, 
+            sql_admin_password,
             django_admin_name,
-            django_admin_password, 
+            django_admin_password,
             mysql_rds_server.address,
             mysql_rds_server.port).apply(lambda args: json.dumps([{
         "name": "django-container",
@@ -282,7 +289,7 @@ django_database_task_definition = aws.ecs.TaskDefinition("django-database-task-d
             "options": {
                 "awslogs-group": "django-log-group",
                 "awslogs-region": "us-west-2",
-                "awslogs-stream-prefix": "djangoApp-database",           
+                "awslogs-stream-prefix": "djangoApp-database",
             },
         },
         "command": ["/mysite/setupDatabase.sh"]
@@ -323,7 +330,7 @@ django_site_task_definition = aws.ecs.TaskDefinition("django-site-task-definitio
             django_secret_key,
             mysql_database.name,
             sql_user_name,
-            sql_user_password, 
+            sql_user_password,
             mysql_rds_server.address,
             mysql_rds_server.port).apply(lambda args: json.dumps([{
         "name": "django-container",
@@ -348,7 +355,7 @@ django_site_task_definition = aws.ecs.TaskDefinition("django-site-task-definitio
             "options": {
                 "awslogs-group": "django-log-group",
                 "awslogs-region": "us-west-2",
-                "awslogs-stream-prefix": "djangoApp-site",           
+                "awslogs-stream-prefix": "djangoApp-site",
             },
         },
     }])))
