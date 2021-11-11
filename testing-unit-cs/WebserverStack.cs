@@ -27,14 +27,14 @@ public class WebserverStack : Stack
             .Invoke(new GetAmiInvokeArgs
             {
                 MostRecent = true,
-                    Owners = "099720109477",
-                    Filters = {
-                        new GetAmiFilterInputArgs
-                        {
-                            Name = "name",
-                            Values = "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*",
-                        }
+                Owners = "099720109477",
+                Filters = {
+                    new GetAmiFilterInputArgs
+                    {
+                        Name = "name",
+                        Values = "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*",
                     }
+                }
             })
             .Apply(ami => ami.Id);
 
