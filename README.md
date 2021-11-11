@@ -13,7 +13,6 @@ Platform](https://github.com/pulumi/pulumi-gcp), `kubernetes` for
 See the [Pulumi documentation](https://www.pulumi.com/docs/) for more
 details on getting started with Pulumi.
 
-
 ## Checking Out a Single Example
 
 You can checkout only the examples you want by using a [sparse checkout](https://git-scm.com/docs/git-sparse-checkout). The following example shows how checkout only the example you want.
