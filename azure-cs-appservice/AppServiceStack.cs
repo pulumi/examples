@@ -53,7 +53,7 @@ class AppServiceStack : Stack
         });
 
         var codeBlobUrl = SignedBlobReadUrl(blob, container, storageAccount, resourceGroup);
-        
+
         var appInsights = new Component("appInsights", new ComponentArgs
         {
             ApplicationType = "web",
@@ -127,28 +127,23 @@ class AppServiceStack : Stack
 
     private static Output<string> SignedBlobReadUrl(Blob blob, BlobContainer container, StorageAccount account, ResourceGroup resourceGroup)
     {
-        return Output.Tuple<string, string, string, string>(
-            blob.Name, container.Name, account.Name, resourceGroup.Name).Apply(t =>
+        var serviceSasToken = ListStorageAccountServiceSAS.Invoke(new ListStorageAccountServiceSASInvokeArgs
         {
-            (string blobName, string containerName, string accountName, string resourceGroupName) = t;
+            AccountName = account.Name,
+            Protocols = HttpProtocol.Https,
+            SharedAccessStartTime = "2021-01-01",
+            SharedAccessExpiryTime = "2030-01-01",
+            Resource = SignedResource.C,
+            ResourceGroupName = resourceGroup.Name,
+            Permissions = Permissions.R,
+            CanonicalizedResource = Output.Format($"/blob/{account.Name}/{container.Name}"),
+            ContentType = "application/json",
+            CacheControl = "max-age=5",
+            ContentDisposition = "inline",
+            ContentEncoding = "deflate",
+        }).Apply(blobSAS => blobSAS.ServiceSasToken);
 
-            var blobSAS = ListStorageAccountServiceSAS.InvokeAsync(new ListStorageAccountServiceSASArgs
-            {
-                AccountName = accountName,
-                Protocols = HttpProtocol.Https,
-                SharedAccessStartTime = "2021-01-01",
-                SharedAccessExpiryTime = "2030-01-01",
-                Resource = SignedResource.C,
-                ResourceGroupName = resourceGroupName,
-                Permissions = Permissions.R,
-                CanonicalizedResource = "/blob/" + accountName + "/" + containerName,
-                ContentType = "application/json",
-                CacheControl = "max-age=5",
-                ContentDisposition = "inline",
-                ContentEncoding = "deflate",
-            });
-            return Output.Format($"https://{accountName}.blob.core.windows.net/{containerName}/{blobName}?{blobSAS.Result.ServiceSasToken}");
-        });
+        return Output.Format($"https://{account.Name}.blob.core.windows.net/{container.Name}/{blob.Name}?{serviceSasToken}");
     }
 
     [Output] public Output<string> Endpoint { get; set; }

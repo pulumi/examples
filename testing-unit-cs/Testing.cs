@@ -12,10 +12,10 @@ namespace UnitTesting
         public Task<(string? id, object state)> NewResourceAsync(MockResourceArgs args)
         {
             var outputs = ImmutableDictionary.CreateBuilder<string, object>();
-            
+
             // Forward all input parameters as resource outputs, so that we could test them.
             outputs.AddRange(args.Inputs);
-            
+
             if (args.Type == "aws:ec2/instance:Instance")
             {
                 outputs.Add("publicIp", "203.0.113.12");
@@ -25,7 +25,7 @@ namespace UnitTesting
             // Default the resource ID to `{name}_id`.
             // We could also format it as `/subscription/abc/resourceGroups/xyz/...` if that was important for tests.
             args.Id ??= $"{args.Name}_id";
-            return Task.FromResult((args.Id, (object)outputs));
+            return Task.FromResult<(string? id, object state)>((args.Id, (object)outputs));
         }
 
         public Task<object> CallAsync(MockCallArgs args)

@@ -33,15 +33,15 @@ class MyStack : Stack
         // Image: https://hub.docker.com/r/microsoft/azure-appservices-go-quickstart/
         //
         var imageInDockerHub = "microsoft/azure-appservices-go-quickstart";
-        
+
         var helloApp = new WebApp("hello-app", new WebAppArgs
         {
             ResourceGroupName = resourceGroup.Name,
             ServerFarmId = plan.Id,
             SiteConfig = new SiteConfigArgs
             {
-                AppSettings = new[] 
-                { 
+                AppSettings = new[]
+                {
                     new NameValuePairArgs
                     {
                         Name = "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
@@ -55,7 +55,7 @@ class MyStack : Stack
         });
 
         this.HelloEndpoint = Output.Format($"https://{helloApp.DefaultHostName}/hello");
-        
+
         //
         // Scenario 2: deploying a custom image from Azure Container Registry.
         //
@@ -68,12 +68,11 @@ class MyStack : Stack
             AdminUserEnabled = true
         });
 
-        var credentials = Output.Tuple(resourceGroup.Name, registry.Name).Apply(values =>
-            ListRegistryCredentials.InvokeAsync(new ListRegistryCredentialsArgs
+        var credentials = ListRegistryCredentials.Invoke(new ListRegistryCredentialsInvokeArgs
             {
-                ResourceGroupName = values.Item1,
-                RegistryName = values.Item2
-            }));
+                ResourceGroupName = resourceGroup.Name,
+                RegistryName = registry.Name
+            });
         var adminUsername = credentials.Apply(c => c.Username ?? "");
         var adminPassword = credentials.Apply(c => Output.CreateSecret(c.Passwords.First().Value ?? ""));
 
@@ -88,15 +87,15 @@ class MyStack : Stack
                 Password = adminPassword
             },
         });
-        
+
         var getStartedApp = new WebApp("get-started", new WebAppArgs
         {
             ResourceGroupName = resourceGroup.Name,
             ServerFarmId = plan.Id,
             SiteConfig = new SiteConfigArgs
             {
-                AppSettings = new[] 
-                { 
+                AppSettings = new[]
+                {
                     new NameValuePairArgs
                     {
                         Name = "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
@@ -128,7 +127,7 @@ class MyStack : Stack
             },
             HttpsOnly = true
         });
-        
+
         this.GetStartedEndpoint = Output.Format($"https://{getStartedApp.DefaultHostName}");
     }
 

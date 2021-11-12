@@ -10,15 +10,15 @@ using Pulumi.AzureNative.DocumentDB.Inputs;
 public class CosmosDBMongoDB : ComponentResource
 {
     public Output<string> AccountName { get; set; }
-    
+
     public Output<string> DatabaseName { get; set; }
-    
+
     public CosmosDBMongoDB(string name, CosmosDBMongoDBArgs args)
         : base("example:component:CosmosDBMongoDB", name)
     {
         var config = new Config("azure-native");
         var location = config.Require("location");
-        
+
         var databaseAccount = new DatabaseAccount("cosmos-mongodb", new DatabaseAccountArgs
         {
             ResourceGroupName = args.ResourceGroupName,
@@ -49,22 +49,19 @@ public class CosmosDBMongoDB : ComponentResource
         }, new CustomResourceOptions { Parent = this });
         this.DatabaseName = database.Name;
     }
-    
+
     public static Output<ImmutableDictionary<string, string>> KubernetesSecretData(Output<string> resourceGroupName, Output<string> accountName, Output<string> databaseName)
     {
-        return Output.Tuple(resourceGroupName, accountName, databaseName).Apply(async values =>
+        var connString = ListDatabaseAccountConnectionStrings.Invoke(
+            new ListDatabaseAccountConnectionStringsInvokeArgs
             {
-                var conn = await ListDatabaseAccountConnectionStrings.InvokeAsync(
-                    new ListDatabaseAccountConnectionStringsArgs
-                    {
-                        ResourceGroupName = values.Item1,
-                        AccountName = values.Item2
-                    });
-                return parseConnString(conn.ConnectionStrings[0].ConnectionString, values.Item3);
-            }
-        );
+                ResourceGroupName = resourceGroupName,
+                AccountName = accountName
+            }).Apply(conn => conn.ConnectionStrings[0].ConnectionString);
+
+        return connString.Apply(connString => databaseName.Apply(databaseName => parseConnString(connString, databaseName)));
     }
-    
+
     private static ImmutableDictionary<string, string> parseConnString(string conn, string database)
     {
         // Per the official docs[1], the format of this connection string is:
@@ -113,7 +110,7 @@ public class CosmosDBMongoDB : ComponentResource
             {"password", toBase64(Uri.EscapeDataString(password))},
             {"database", toBase64(database)},
         }.ToImmutableDictionary();
-        
+
         static string toBase64(string plainText)
         {
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);

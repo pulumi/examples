@@ -27,14 +27,14 @@ class MyStack : Stack
         {
             ApplicationId = adApp.ApplicationId
         });
-        
+
         // Generate random password
         var password = new RandomPassword("password", new RandomPasswordArgs
         {
             Length = 20,
             Special = true
         });
-        
+
         // Create the Service Principal Password
         var adSpPassword = new ServicePrincipalPassword("aksSpPassword", new ServicePrincipalPasswordArgs
         {
@@ -42,18 +42,18 @@ class MyStack : Stack
             Value = password.Result,
             EndDate = "2099-01-01T00:00:00Z"
         });
-        
+
         // Generate an SSH key
         var sshKey = new PrivateKey("ssh-key", new PrivateKeyArgs
         {
             Algorithm = "RSA",
             RsaBits = 4096
         });
-        
+
         var cluster = new ManagedCluster("my-aks", new ManagedClusterArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            AgentPoolProfiles = 
+            AgentPoolProfiles =
             {
                 new ManagedClusterAgentPoolProfileArgs
                 {
@@ -75,7 +75,7 @@ class MyStack : Stack
                 AdminUsername = "testuser",
                 Ssh = new ContainerServiceSshConfigurationArgs
                 {
-                    PublicKeys = 
+                    PublicKeys =
                     {
                         new ContainerServiceSshPublicKeyArgs
                         {
@@ -93,22 +93,20 @@ class MyStack : Stack
         });
 
         // Export the KubeConfig
-        this.KubeConfig = Output.Tuple(resourceGroup.Name, cluster.Name).Apply(names =>
-            GetKubeConfig(names.Item1, names.Item2));
+        this.KubeConfig = GetKubeConfig(resourceGroup.Name, cluster.Name);
     }
 
     [Output]
     public Output<string> KubeConfig { get; set; }
 
-    private static async Task<string> GetKubeConfig(string resourceGroupName, string clusterName)
-    {
-        var credentials = await ListManagedClusterUserCredentials.InvokeAsync(new ListManagedClusterUserCredentialsArgs
+    private static Output<string> GetKubeConfig(Output<string> resourceGroupName, Output<string> clusterName)
+        => ListManagedClusterUserCredentials.Invoke(new ListManagedClusterUserCredentialsInvokeArgs
         {
             ResourceGroupName = resourceGroupName,
             ResourceName = clusterName
+        }).Apply(credentials => {
+            var encoded = credentials.Kubeconfigs[0].Value;
+            var data = Convert.FromBase64String(encoded);
+            return Encoding.UTF8.GetString(data);
         });
-        var encoded = credentials.Kubeconfigs[0].Value;
-        var data = Convert.FromBase64String(encoded);
-        return Encoding.UTF8.GetString(data);
-    }
 }

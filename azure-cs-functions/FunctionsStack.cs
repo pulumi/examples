@@ -109,44 +109,34 @@ class FunctionsStack : Stack
 
     private static Output<string> SignedBlobReadUrl(Blob blob, BlobContainer container, StorageAccount account, ResourceGroup resourceGroup)
     {
-        return Output.Tuple<string, string, string, string>(
-            blob.Name, container.Name, account.Name, resourceGroup.Name).Apply(t =>
+        var serviceSasToken = ListStorageAccountServiceSAS.Invoke(new ListStorageAccountServiceSASInvokeArgs
         {
-            (string blobName, string containerName, string accountName, string resourceGroupName) = t;
+            AccountName = account.Name,
+            Protocols = HttpProtocol.Https,
+            SharedAccessStartTime = "2021-01-01",
+            SharedAccessExpiryTime = "2030-01-01",
+            Resource = SignedResource.C,
+            ResourceGroupName = resourceGroup.Name,
+            Permissions = Permissions.R,
+            CanonicalizedResource = Output.Format($"/blob/{account.Name}/{container.Name}"),
+            ContentType = "application/json",
+            CacheControl = "max-age=5",
+            ContentDisposition = "inline",
+            ContentEncoding = "deflate",
+        }).Apply(blobSAS => blobSAS.ServiceSasToken);
 
-            var blobSAS = ListStorageAccountServiceSAS.InvokeAsync(new ListStorageAccountServiceSASArgs
-            {
-                AccountName = accountName,
-                Protocols = HttpProtocol.Https,
-                SharedAccessStartTime = "2021-01-01",
-                SharedAccessExpiryTime = "2030-01-01",
-                Resource = SignedResource.C,
-                ResourceGroupName = resourceGroupName,
-                Permissions = Permissions.R,
-                CanonicalizedResource = "/blob/" + accountName + "/" + containerName,
-                ContentType = "application/json",
-                CacheControl = "max-age=5",
-                ContentDisposition = "inline",
-                ContentEncoding = "deflate",
-            });
-            return Output.Format($"https://{accountName}.blob.core.windows.net/{containerName}/{blobName}?{blobSAS.Result.ServiceSasToken}");
-        });
+        return Output.Format($"https://{account.Name}.blob.core.windows.net/{container.Name}/{blob.Name}?{serviceSasToken}");
     }
 
     private static Output<string> GetConnectionString(Input<string> resourceGroupName, Input<string> accountName)
     {
         // Retrieve the primary storage account key.
-        var storageAccountKeys = Output.All<string>(resourceGroupName, accountName).Apply(t =>
+        var storageAccountKeys = ListStorageAccountKeys.Invoke(new ListStorageAccountKeysInvokeArgs
         {
-            var resourceGroupName = t[0];
-            var accountName = t[1];
-            return ListStorageAccountKeys.InvokeAsync(
-                new ListStorageAccountKeysArgs
-                {
-                    ResourceGroupName = resourceGroupName,
-                    AccountName = accountName
-                });
+            ResourceGroupName = resourceGroupName,
+            AccountName = accountName
         });
+
         return storageAccountKeys.Apply(keys =>
         {
             var primaryStorageKey = keys.Keys[0].Value;
