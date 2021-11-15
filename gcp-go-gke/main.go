@@ -3,10 +3,10 @@ package main
 import (
 	"github.com/pulumi/pulumi-gcp/sdk/v5/go/gcp/container"
 	"github.com/pulumi/pulumi-gcp/sdk/v5/go/gcp/projects"
+	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes"
 	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/apps/v1"
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/core/v1"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/meta/v1"
-	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/providers"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -46,7 +46,7 @@ func main() {
 
 		ctx.Export("kubeconfig", generateKubeconfig(cluster.Endpoint, cluster.Name, cluster.MasterAuth))
 
-		k8sProvider, err := providers.NewProvider(ctx, "k8sprovider", &providers.ProviderArgs{
+		k8sProvider, err := kubernetes.NewProvider(ctx, "k8sprovider", &kubernetes.ProviderArgs{
 			Kubeconfig: generateKubeconfig(cluster.Endpoint, cluster.Name, cluster.MasterAuth),
 		}, pulumi.DependsOn([]pulumi.Resource{cluster}))
 		if err != nil {
