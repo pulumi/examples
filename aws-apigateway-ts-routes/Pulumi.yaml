@@ -1,0 +1,8 @@
+name: aws-apigateway-ts-routes
+runtime: nodejs
+description: Demonstration of API Gateway routes
+template:
+    config:
+      aws:region:
+        description: The AWS region to deploy into
+        default: us-east-2
