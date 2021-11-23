@@ -8,21 +8,21 @@ const userPool = new aws.cognito.UserPool('user-pool');
 
 const api = new apigateway.RestAPI("api", {
     routes: [
-        // Serve an entire directory of static content.
+        // Serve an entire directory of static content
         {
-            path: "/static",
+            path: "static",
             localPath: "www",
         },
         // Invoke our Lambda to handle a single route
         {
-            path: "/hello", // Tip: To handle all sub-paths use `/{proxy+}` as the path
+            path: "lambda", // Tip: To handle all sub-paths use `/{proxy+}` as the path
             method: "GET",
             // Policies will be created automatically to allow API Gateway to invoke the Lambda
             eventHandler: helloHandler,
         },
         // Proxy requests to another service
         {
-            path: "/proxy",
+            path: "proxy",
             target: {
                 type: "http_proxy",
                 uri: "https://www.google.com",
@@ -30,7 +30,7 @@ const api = new apigateway.RestAPI("api", {
         },
         // Authorize requests using Cognito
         {
-            path: "/cognito-authorized",
+            path: "cognito-authorized",
             method: "GET",
             eventHandler: helloHandler,
             // Use Cognito as authorizer to validate the token from the Authorization header
@@ -42,7 +42,7 @@ const api = new apigateway.RestAPI("api", {
         },
         // Authorize requests using a Lambda function
         {
-            path: "/lambda-authorized",
+            path: "lambda-authorized",
             method: "GET",
             eventHandler: helloHandler,
             // Use Lambda authorizer to validate the token from the Authorization header

@@ -14,7 +14,7 @@ When you're finished, you'll be familiar with how to configure routes in API Gat
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
-3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
 ## Deploy the App
 
@@ -22,16 +22,11 @@ When you're finished, you'll be familiar with how to configure routes in API Gat
 
 For Pulumi examples, we typically start by creating a directory and changing into it. Then, we create a new Pulumi project from a template. For example, `azure-javascript`.
 
-1. Install prerequisites:
+1. Install packages:
 
     ```bash
-    npm install
-    ```
-
-    or
-
-    ```bash
-    yarn install
+    python3 -m venv venv
+    venv/bin/pip install -r requirements.txt
     ```
 
 2. Create a new Pulumi stack:
@@ -60,7 +55,7 @@ Use the example CURL commands to test the API responses.
 $ curl -w '\n' "$(pulumi stack output url)static"
 <h1>Hello Pulumi!</h1>
 
-$ curl -w '\n' "$(pulumi stack output url)lambda"
+$ curl -w '\n' "$(pulumi stack output url)hello"
 Hello, API Gateway!
 
 $ python3 -m webbrowser "$(pulumi stack output url)proxy"
