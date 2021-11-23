@@ -27,7 +27,7 @@ func main() {
 			return err
 		}
 
-		logPolicy, _ := iam.NewRolePolicy(ctx, "lambda-log-policy", &iam.RolePolicyArgs{
+		logPolicy, err := iam.NewRolePolicy(ctx, "lambda-log-policy", &iam.RolePolicyArgs{
 			Role: role.Name,
 			Policy: pulumi.String(`{
                 "Version": "2012-10-17",
@@ -42,8 +42,11 @@ func main() {
                 }]
             }`),
 		})
+		if err != nil {
+			return err
+		}
 
-		authLambda, err := lambda.NewFunction(ctx, "auth", &lambda.FunctionArgs{
+		authLambda, err := lambda.NewFunction(ctx, "auth-lambda", &lambda.FunctionArgs{
 			Runtime: lambda.RuntimePython3d8,
 			Code: pulumi.NewAssetArchive(map[string]interface{}{
 				".": pulumi.NewFileArchive("./authorizer"),
@@ -61,7 +64,8 @@ func main() {
 				".": pulumi.NewFileArchive("./handler"),
 			}),
 			Handler: pulumi.String("handler.handler"),
-		})
+			Role:    role.Arn, // Insists on role being created explicitly
+		}, pulumi.DependsOn([]pulumi.Resource{logPolicy}))
 		if err != nil {
 			return err
 		}
@@ -89,12 +93,10 @@ func main() {
 				},
 				{ // Proxy requests to another service
 					Path: "proxy",
-					Target: apigateway.TargetPtr(
-						&apigateway.TargetArgs{
-							Type: apigateway.IntegrationTypeHttp,
-							Uri:  pulumi.String("https://www.google.com"),
-						},
-					),
+					Target: apigateway.TargetArgs{
+						Type: apigateway.IntegrationType_Http_proxy,
+						Uri:  pulumi.String("https://www.google.com"),
+					},
 				},
 				{ // Authorize requests using Cognito
 					Path:         "cognito-authorized",
