@@ -1,3 +1,5 @@
+// Copyright 2016-2021, Pulumi Corporation.
+
 import * as aws from "@pulumi/aws";
 import * as apigateway from "@pulumi/aws-apigateway";
 import { APIGatewayAuthorizerEvent, APIGatewayAuthorizerResult } from "aws-lambda";
@@ -16,9 +18,9 @@ export const authLambda = new aws.lambda.CallbackFunction<APIGatewayAuthorizerEv
                 Statement: [{
                     Action: "execute-api:Invoke",
                     Effect: effect,
-                    Resource: event.methodArn
-                }]
-            }
+                    Resource: event.methodArn,
+                }],
+            },
         };
-    }
+    },
 });

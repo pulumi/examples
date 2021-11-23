@@ -90,19 +90,19 @@ Testing a valid Cognito token is a little more involved.
 2. Create a user
 
     ```bash
-    aws cognito-idp sign-up --region $(pulumi config get aws:region) --client-id $(pulumi stack output user_pool_client_id) --username "test@domain.example" --password "$PASSWORD"
+    aws cognito-idp sign-up --region $(pulumi config get aws:region) --client-id $(pulumi stack output userPoolClientId) --username "test@domain.example" --password "$PASSWORD"
     ```
 
 3. Confirm the user's account
 
     ```bash
-    aws cognito-idp admin-confirm-sign-up --region $(pulumi config get aws:region) --user-pool-id $(pulumi stack output user_pool_id) --username "test@domain.example"
+    aws cognito-idp admin-confirm-sign-up --region $(pulumi config get aws:region) --user-pool-id $(pulumi stack output userPoolId) --username "test@domain.example"
     ```
 
 4. Authenticate to create a new session:
 
     ```bash
-    TOKEN=$(aws cognito-idp admin-initiate-auth --region $(pulumi config get aws:region) --user-pool-id $(pulumi stack output user_pool_id) --client-id $(pulumi stack output user_pool_client_id) --auth-flow ADMIN_NO_SRP_AUTH --auth-parameters "{\"USERNAME\":\"test@domain.example\",\"PASSWORD\":\"$PASSWORD\"}")
+    TOKEN=$(aws cognito-idp admin-initiate-auth --region $(pulumi config get aws:region) --user-pool-id $(pulumi stack output userPoolId) --client-id $(pulumi stack output userPoolClientId) --auth-flow ADMIN_NO_SRP_AUTH --auth-parameters "{\"USERNAME\":\"test@domain.example\",\"PASSWORD\":\"$PASSWORD\"}")
     ```
 
 5. Perform authenticated request

@@ -1,7 +1,9 @@
+// Copyright 2016-2021, Pulumi Corporation.
+
 import * as aws from "@pulumi/aws";
 import * as apigateway from "@pulumi/aws-apigateway";
 import { helloHandler } from "./helloHandler";
-import { authLambda } from "./lambdaAuthorizer"
+import { authLambda } from "./lambdaAuthorizer";
 
 // Create a Cognito User Pool of authorized users
 const userPool = new aws.cognito.UserPool("user-pool");
@@ -41,8 +43,8 @@ const api = new apigateway.RestAPI("api", {
             authorizers: [{
                 parameterName: "Authorization",
                 identitySource: ["method.request.header.Authorization"],
-                providerARNs: [userPool.arn]
-            }]
+                providerARNs: [userPool.arn],
+            }],
         },
         // Authorize requests using a Lambda function
         {
@@ -62,5 +64,5 @@ const api = new apigateway.RestAPI("api", {
 });
 
 export const url = api.url;
-export const user_pool_id = userPool.id;
-export const user_pool_client_id = userPoolClient.id;
+export const userPoolId = userPool.id;
+export const userPoolClientId = userPoolClient.id;
