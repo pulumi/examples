@@ -75,6 +75,14 @@ func main() {
 			return err
 		}
 
+		userPoolClient, err := cognito.NewUserPoolClient(ctx, "user-pool-client", &cognito.UserPoolClientArgs{
+			UserPoolId:        userPool.ID(),
+			ExplicitAuthFlows: pulumi.ToStringArray([]string{"ADMIN_NO_SRP_AUTH"}),
+		})
+		if err != nil {
+			return err
+		}
+
 		// Define an endpoint that invokes a lambda to handle requests
 		www := "www"
 		custom := "custom"
@@ -131,6 +139,8 @@ func main() {
 		}
 
 		ctx.Export("url", restAPI.Url)
+		ctx.Export("user-pool-id", userPool.ID())
+		ctx.Export("user-pool-client-id", userPoolClient.ID())
 		return nil
 	})
 }

@@ -60,8 +60,7 @@ Hello, API Gateway!
 $ python3 -m webbrowser "$(pulumi stack output url)proxy"
 # Opens a page looking like Google in your browser
 
-$ curl -w '\n' -H "Authorization: HEADER.PAYLOAD.SIGNATURE" "$(pulumi s
-tack output url)cognito-authorized"
+$ curl -w '\n' -H "Authorization: HEADER.PAYLOAD.SIGNATURE" "$(pulumi stack output url)cognito-authorized"
 {"message":"Unauthorized"}
 
 $ curl -w '\n' -H "Authorization: goodToken" "$(pulumi stack output url)lambda-authorized"
@@ -73,6 +72,39 @@ $ curl -w '\n' -H "Authorization: badToken" "$(pulumi stack output url)lambda-au
 $ curl -w '\n' "$(pulumi stack output url)lambda-authorized" # No token
 {"message":"Unauthorized"}
 ```
+
+Testing a valid Cognito token is a little more involved.
+
+1. Create a random password
+
+    ```bash
+    PASSWORD=$(curl https://www.passwordrandom.com/query?command=password&scheme=Llnn%23rrrrrrrrrr)
+    ```
+
+2. Create a user
+
+    ```bash
+    aws cognito-idp sign-up --region $(pulumi config get aws:region) --client-id $(pulumi stack output user-pool-client-id) --username "test@domain.example" --password "$PASSWORD"
+    ```
+
+3. Confirm the user's account
+
+    ```bash
+    aws cognito-idp admin-confirm-sign-up --region $(pulumi config get aws:region) --user-pool-id $(pulumi stack output user-pool-id) --username "test@domain.example"
+    ```
+
+4. Authenticate to create a new session:
+
+    ```bash
+    TOKEN=$(aws cognito-idp admin-initiate-auth --region $(pulumi config get aws:region) --user-pool-id $(pulumi stack output user-pool-id) --client-id $(pulumi stack output user-pool-client-id) --auth-flow ADMIN_NO_SRP_AUTH --auth-parameters "{\"USERNAME\":\"test@domain.example\",\"PASSWORD\":\"$PASSWORD\"}")
+    ```
+
+5. Perform authenticated request
+
+    ```bash
+    $ curl -w '\n' -H "Authorization: $(echo $TOKEN | jq '.AuthenticationResult.IdToken' -r)" "$(pulumi stack output url)cognito-authorized"
+    Hello, API Gateway!
+    ```
 
 Fetch and review the logs from the Lambda executions:
 
