@@ -19,6 +19,7 @@ api = apigateway.RestAPI('api', routes=[
     # Authorize requests using Cognito
     apigateway.RouteArgs(
         path="cognito-authorized",
+        method="GET",
         event_handler=lambdas_.hello_handler,
         # Define an authorizer which uses Cognito to validate the token from the Authorization header
         authorizers=[apigateway.AuthorizerArgs(

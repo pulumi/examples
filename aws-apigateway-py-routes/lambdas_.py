@@ -45,7 +45,7 @@ auth_lambda = aws.lambda_.Function("auth-lambda",
 
 # Create a Lambda function to respond to HTTP requests
 hello_handler = aws.lambda_.Function("hello-handler",
-                                    role=lambda_role,
+                                    role=lambda_role.arn,
                                     runtime=aws.lambda_.Runtime.PYTHON3D8,
                                     code=pulumi.AssetArchive({
                                         ".": pulumi.FileArchive("./handler"),
