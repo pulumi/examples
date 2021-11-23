@@ -15,7 +15,7 @@ const api = new apigateway.RestAPI("api", {
         },
         // Invoke our Lambda to handle a single route
         {
-            path: "/hello",
+            path: "/hello", // Tip: To handle all sub-paths use `/{proxy+}` as the path
             method: "GET",
             // Policies will be created automatically to allow API Gateway to invoke the Lambda
             eventHandler: helloHandler,
@@ -52,7 +52,7 @@ const api = new apigateway.RestAPI("api", {
                 type: "request",
                 identitySource: ["method.request.header.Authorization"],
                 handler: authLambda,
-            }]
+            }],
         },
     ],
 });

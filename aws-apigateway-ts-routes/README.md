@@ -40,7 +40,13 @@ For Pulumi examples, we typically start by creating a directory and changing int
     pulumi stack init
     ```
 
-3. Deploy the Pulumi stack:
+3. Configure the AWS region to deploy into:
+
+    ```bash
+    pulumi config set aws:region us-east-2
+    ```
+
+4. Deploy the Pulumi stack:
 
     ```bash
     pulumi up
@@ -51,22 +57,33 @@ For Pulumi examples, we typically start by creating a directory and changing int
 Use the example CURL commands to test the API responses.
 
 ```bash
-$ curl -w '\n' $(pulumi stack output url)
-> {"message":"Unauthorized"}
-$ curl -w '\n' -H "Authorization: goodToken" $(pulumi stack output url)
-> <h1>Hello Pulumi!</h1>
-$ curl -w '\n' -H "Authorization: badToken" $(pulumi stack output url)
-> {"message": "404 Not found" }
+$ curl -w '\n' "$(pulumi stack output url)static"
+<h1>Hello Pulumi!</h1>
+
+$ curl -w '\n' "$(pulumi stack output url)hello"
+Hello, API Gateway!
+
+$ python3 -m webbrowser "$(pulumi stack output url)proxy"
+# Opens a page looking like Google in your browser
+
+$ curl -w '\n' -H "Authorization: HEADER.PAYLOAD.SIGNATURE" "$(pulumi s
+tack output url)cognito-authorized"
+{"message":"Unauthorized"}
+
+$ curl -w '\n' -H "Authorization: goodToken" "$(pulumi stack output url)lambda-authorized"
+Hello, API Gateway!
+
+$ curl -w '\n' -H "Authorization: badToken" "$(pulumi stack output url)lambda-authorized"
+{"message": "404 Not found" }
+
+$ curl -w '\n' "$(pulumi stack output url)lambda-authorized" # No token
+{"message":"Unauthorized"}
 ```
 
-
-### Step 3: Tidy up
-
-Once you're finished experimenting, you can destroy your stack and remove it:
+Fetch and review the logs from the Lambda executions:
 
 ```bash
-pulumi destroy --yes
-pulumi stack rm --yes
+pulumi logs
 ```
 
 ## Clean Up
@@ -74,21 +91,10 @@ pulumi stack rm --yes
 Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
 
 ```bash
-pulumi destroy --yes
-pulumi stack rm --yes
+pulumi destroy
+pulumi stack rm
 ```
 
 ## Summary
 
-In this tutorial, you [configured/set up/built/deployed] [something]. Now you can....
-
-<!-- Give a quick recap of what the readers have learned and optionally provide places for further exploration. -->
-
-## Next Steps
-
-<!-- Optionally include an unordered list of relevant Pulumi tutorials. -->
-
-<!-- Example:
-- [Create a load-balanced, hosted NGINX container service](https://www.pulumi.com/docs/tutorials/aws/ecs-fargate/)
-- [Create an EC2-based WebServer and associated infrastructure](https://www.pulumi.com/docs/tutorials/aws/ec2-webserver/)
--->
+In this tutorial, you deployed an API with different route configurations. Now you can use these patterns to build real APIs which connect to other services.
