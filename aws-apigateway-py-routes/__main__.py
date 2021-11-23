@@ -5,6 +5,8 @@ import lambdas_
 
 # Create a Cognito User Pool of authorized users
 user_pool = aws.cognito.UserPool("user-pool")
+user_pool_client = aws.cognito.UserPoolClient(
+    "user-pool-client", user_pool_id=user_pool.id, explicit_auth_flows=["ADMIN_NO_SRP_AUTH"])
 
 # Define an endpoint that invokes a lambda to handle requests
 api = apigateway.RestAPI('api', routes=[
@@ -41,3 +43,5 @@ api = apigateway.RestAPI('api', routes=[
 ])
 
 pulumi.export('url', api.url)
+pulumi.export('user-pool-id', user_pool.id)
+pulumi.export('user-pool-client-id', user_pool_client.id)

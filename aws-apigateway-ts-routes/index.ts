@@ -4,7 +4,11 @@ import { helloHandler } from "./helloHandler";
 import { authLambda } from "./lambdaAuthorizer"
 
 // Create a Cognito User Pool of authorized users
-const userPool = new aws.cognito.UserPool('user-pool');
+const userPool = new aws.cognito.UserPool("user-pool");
+const userPoolClient = new aws.cognito.UserPoolClient("user-pool-client", {
+    userPoolId: userPool.id,
+    explicitAuthFlows: ["ADMIN_NO_SRP_AUTH"],
+});
 
 const api = new apigateway.RestAPI("api", {
     routes: [
@@ -58,3 +62,5 @@ const api = new apigateway.RestAPI("api", {
 });
 
 export const url = api.url;
+export const user_pool_id = userPool.id;
+export const user_pool_client_id = userPoolClient.id;
