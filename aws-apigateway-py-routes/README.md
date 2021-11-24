@@ -79,7 +79,7 @@ Testing a valid Cognito token is a little more involved.
 1. Create a random password
 
     ```bash
-    PASSWORD=$(curl https://www.passwordrandom.com/query?command=password&scheme=Llnn%23rrrrrrrrrr)
+    PASSWORD=$(curl -s https://www.passwordrandom.com/query?command=password&scheme=Llnn%23rrrrrrrrrr)
     ```
 
 2. Create a user
