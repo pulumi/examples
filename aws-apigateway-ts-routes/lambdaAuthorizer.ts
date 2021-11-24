@@ -1,7 +1,6 @@
 // Copyright 2016-2021, Pulumi Corporation.
 
 import * as aws from "@pulumi/aws";
-import * as apigateway from "@pulumi/aws-apigateway";
 import { APIGatewayAuthorizerEvent, APIGatewayAuthorizerResult } from "aws-lambda";
 
 export const authLambda = new aws.lambda.CallbackFunction<APIGatewayAuthorizerEvent, APIGatewayAuthorizerResult>("auth", {
