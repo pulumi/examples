@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Pulumi" Version="3.*" />
     <PackageReference Include="Pulumi.DigitalOcean" Version="4.*" />
     <PackageReference Include="Pulumi.Kubernetes" Version="3.*" />
   </ItemGroup>
