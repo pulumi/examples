@@ -1,3 +1,4 @@
+# Copyright 2016-2021, Pulumi Corporation.
 import pulumi
 import pulumi_aws as aws
 import pulumi_aws_apigateway as apigateway

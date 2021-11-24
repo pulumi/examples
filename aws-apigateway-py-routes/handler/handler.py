@@ -1,3 +1,4 @@
+# Copyright 2016-2021, Pulumi Corporation.
 def handler(event, context):
     print(event)
     return {
