@@ -49,10 +49,10 @@ func main() {
 		authLambda, err := lambda.NewFunction(ctx, "auth-lambda", &lambda.FunctionArgs{
 			Runtime: lambda.RuntimePython3d8,
 			Code: pulumi.NewAssetArchive(map[string]interface{}{
-				".": pulumi.NewFileArchive("./authorizer"),
+				".": pulumi.NewFileArchive("./bin/authorizer.zip"),
 			}),
-			Handler: pulumi.String("handler.handler"),
-			Role:    role.Arn, // Insists on role being created explicitly
+			Handler: pulumi.String("handler"),
+			Role:    role.Arn,
 		}, pulumi.DependsOn([]pulumi.Resource{logPolicy}))
 		if err != nil {
 			return err
@@ -61,10 +61,10 @@ func main() {
 		helloHandler, err := lambda.NewFunction(ctx, "hello-handler", &lambda.FunctionArgs{
 			Runtime: lambda.RuntimePython3d8,
 			Code: pulumi.NewAssetArchive(map[string]interface{}{
-				".": pulumi.NewFileArchive("./handler"),
+				".": pulumi.NewFileArchive("./bin/handler.zip"),
 			}),
-			Handler: pulumi.String("handler.handler"),
-			Role:    role.Arn, // Insists on role being created explicitly
+			Handler: pulumi.String("handler"),
+			Role:    role.Arn,
 		}, pulumi.DependsOn([]pulumi.Resource{logPolicy}))
 		if err != nil {
 			return err

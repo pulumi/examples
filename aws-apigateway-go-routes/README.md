@@ -28,19 +28,25 @@ For Pulumi examples, we typically start by creating a directory and changing int
     go install
     ```
 
-2. Create a new Pulumi stack:
+2. Make Lambda handlers:
+
+    ```bash
+    make
+    ```
+
+3. Create a new Pulumi stack:
 
     ```bash
     pulumi stack init
     ```
 
-3. Configure the AWS region to deploy into:
+4. Configure the AWS region to deploy into:
 
     ```bash
     pulumi config set aws:region us-east-2
     ```
 
-4. Deploy the Pulumi stack:
+5. Deploy the Pulumi stack:
 
     ```bash
     pulumi up
