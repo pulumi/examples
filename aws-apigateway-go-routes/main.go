@@ -82,6 +82,34 @@ func main() {
 			return err
 		}
 
+		// // Create an API key to manage usage
+		// apiKey, err := awsapigateway.NewApiKey(ctx, "api-key", &awsapigateway.ApiKeyArgs{})
+		// if err != nil {
+		// 	return err
+		// }
+		// // Define usage plan for an API stage
+		// usagePlan, err := awsapigateway.NewUsagePlan(ctx, "usage-plan", &awsapigateway.UsagePlanArgs{
+		// 	ApiStages: awsapigateway.UsagePlanApiStageArray{
+		// 		awsapigateway.UsagePlanApiStageArgs{
+		// 			ApiId: restAPI.Api.ID(), // API and Stage aren't currently typed in Go.
+		// 			Stage: restAPI.Stage.StateName,
+		// 		},
+		// 	},
+		// })
+		// if err != nil {
+		// 	return err
+		// }
+		// usagePlanKey, err := awsapigateway.NewUsagePlanKey(ctx, "usage-plan-key", &awsapigateway.UsagePlanKeyArgs{
+		// 	KeyId:       apiKey.ID(),
+		// 	KeyType:     pulumi.String("API_KEY"),
+		// 	UsagePlanId: usagePlan.ID(),
+		// })
+		// if err != nil {
+		// 	return err
+		// }
+		// ctx.Export("usage-plan-id", usagePlanKey.UsagePlanId)
+		// ctx.Export("api-key-value", apiKey.Value)
+
 		ctx.Export("url", restAPI.Url)
 		ctx.Export("user-pool-id", userPool.ID())
 		ctx.Export("user-pool-client-id", userPoolClient.ID())

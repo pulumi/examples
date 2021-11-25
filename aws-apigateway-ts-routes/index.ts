@@ -40,11 +40,13 @@ const api = new apigateway.RestAPI("api", {
             method: "GET",
             eventHandler: helloHandler,
             // Use Cognito as authorizer to validate the token from the Authorization header
-            authorizers: [{
-                parameterName: "Authorization",
-                identitySource: ["method.request.header.Authorization"],
-                providerARNs: [userPool.arn],
-            }],
+            authorizers: [
+                {
+                    parameterName: "Authorization",
+                    identitySource: ["method.request.header.Authorization"],
+                    providerARNs: [userPool.arn],
+                },
+            ],
         },
         // Authorize requests using a Lambda function
         {
@@ -52,17 +54,46 @@ const api = new apigateway.RestAPI("api", {
             method: "GET",
             eventHandler: helloHandler,
             // Use Lambda authorizer to validate the token from the Authorization header
-            authorizers: [{
-                authType: "custom",
-                parameterName: "Authorization",
-                type: "request",
-                identitySource: ["method.request.header.Authorization"],
-                handler: authLambda,
-            }],
+            authorizers: [
+                {
+                    authType: "custom",
+                    parameterName: "Authorization",
+                    type: "request",
+                    identitySource: ["method.request.header.Authorization"],
+                    handler: authLambda,
+                },
+            ],
         },
+        // Track and limit requests with API Keys
+        {
+            path: "key-authorized",
+            method: "GET",
+            eventHandler: helloHandler,
+            apiKeyRequired: true,
+        }
     ],
+});
+
+// Create an API key to manage usage
+const apiKey = new aws.apigateway.ApiKey("api-key");
+// Define usage plan for an API stage
+const usagePlan = new aws.apigateway.UsagePlan("usage-plan", {
+    apiStages: [{
+        apiId: api.api.id,
+        stage: api.stage.stageName,
+        // throttles: [{ path: "/path/GET", rateLimit: 1 }]
+    }],
+    // quotaSettings: {...},
+    // throttleSettings: {...},
+});
+// Associate the key to the plan
+new aws.apigateway.UsagePlanKey("usage-plan-key", {
+    keyId: apiKey.id,
+    keyType: "API_KEY",
+    usagePlanId: usagePlan.id,
 });
 
 export const url = api.url;
 export const userPoolId = userPool.id;
 export const userPoolClientId = userPoolClient.id;
+export const apiKeyValue = apiKey.value;

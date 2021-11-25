@@ -41,8 +41,25 @@ api = apigateway.RestAPI('api', routes=[
                                  "method.request.header.Authorization"],
                              handler=lambdas.auth_lambda
                          )]),
+    apigateway.RouteArgs(path="lambda-authorized", method="GET",
+                         event_handler=lambdas.hello_handler,
+                         api_key_required=True)
 ])
+
+# Create an API key to manage usage
+api_key = aws.apigateway.ApiKey("api-key")
+# Define usage plan for an API stage
+usage_plan = aws.apigateway.UsagePlan("usage-plan",
+                                      api_stages=[aws.apigateway.UsagePlanApiStageArgs(
+                                          api_id=api.api.id,
+                                          stage=api.stage.stage_name)])
+# Associate the key to the plan
+aws.apigateway.UsagePlanKey('usage-plan-key',
+                            key_id=api_key.id,
+                            key_type="API_KEY",
+                            usage_plan_id=usage_plan.id)
 
 pulumi.export('url', api.url)
 pulumi.export('user-pool-id', user_pool.id)
 pulumi.export('user-pool-client-id', user_pool_client.id)
+pulumi.export('api-key-value', api_key.value)
