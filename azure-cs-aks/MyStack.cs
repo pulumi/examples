@@ -96,7 +96,7 @@ class MyStack : Stack
         this.KubeConfig = GetKubeConfig(resourceGroup.Name, cluster.Name);
     }
 
-    [Output]
+    [Output("kubeconfig")]
     public Output<string> KubeConfig { get; set; }
 
     private static Output<string> GetKubeConfig(Output<string> resourceGroupName, Output<string> clusterName)
