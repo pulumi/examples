@@ -10,8 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pulumi.Azure" Version="4.*" />
+    <PackageReference Include="Pulumi" Version="3.*" />
     <PackageReference Include="Pulumi.FSharp" Version="3.*" />
+    <PackageReference Include="Pulumi.Azure" Version="4.*" />
   </ItemGroup>
 
 </Project>
