@@ -16,9 +16,8 @@
     },
     "files": [
         "index.ts",
-        "ec2tests.ts",
+        "ec2.tests.ts",
         "bucket_pair.ts",
-        "bucket_pair_test.ts",
+        "bucket_pair.tests.ts"
     ]
 }
-

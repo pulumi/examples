@@ -14,10 +14,10 @@ An example of writing mock-based unit tests with both infrastructure definition 
     $ npm install
     ```
 
-2.  Run the tests, with `mocha` installed locally in `node_modules/`:
+2.  Run the ec2 tests, with `mocha` installed locally in `node_modules/`:
 
-    ``` 
-    $ npx mocha -r ts-node/register ec2tests.ts
+    ```
+    $ npx mocha -r ts-node/register ec2.tests.ts
 
     Infrastructure
       #server
@@ -29,9 +29,29 @@ An example of writing mock-based unit tests with both infrastructure definition 
     3 passing (420ms)
     ```
 
+3.  Run all tests, with an npm script:
+
+    ```
+    $ npm run test
+    > mocha -r ts-node/register '**/*.tests.ts'
+
+    BucketPair
+      constructor
+        ✔ must pass bucket names (123ms)
+
+    Infrastructure
+      #server
+        ✔ must have a name tag
+        ✔ must not use userData (use an AMI instead)
+      #group
+        ✔ must not open port 22 (SSH) to the Internet
+
+    4 passing (1s)
+    ```
+
 ## Further steps
 
 Learn more about testing Pulumi programs:
 
-- [Testing Guide](https://www.pulumi.com/docs/guides/testing/)
-- [Unit Testing Guide](https://www.pulumi.com/docs/guides/testing/unit/)
+-   [Testing Guide](https://www.pulumi.com/docs/guides/testing/)
+-   [Unit Testing Guide](https://www.pulumi.com/docs/guides/testing/unit/)
