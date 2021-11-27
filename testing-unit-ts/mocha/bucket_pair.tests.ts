@@ -3,26 +3,7 @@
 import * as pulumi from "@pulumi/pulumi";
 import "mocha";
 import * as assert from 'assert';
-
-pulumi.runtime.setMocks({
-    newResource: function(args: pulumi.runtime.MockResourceArgs): {id: string, state: any} {
-        switch (args.type) {
-            default:
-                return {
-                    id: args.inputs.name + "_id",
-                    state: {
-                        ...args.inputs,
-                    },
-                };
-        }
-    },
-    call: function(args: pulumi.runtime.MockCallArgs) {
-        switch (args.token) {
-            default:
-                return args;
-        }
-    },
-});
+import "./mocks";
 
 describe("BucketPair", function() {
     let module: typeof import("./bucket_pair");

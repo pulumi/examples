@@ -18,6 +18,7 @@
         "index.ts",
         "ec2.tests.ts",
         "bucket_pair.ts",
-        "bucket_pair.tests.ts"
+        "bucket_pair.tests.ts",
+        "mocks.ts"
     ]
 }
