@@ -1,9 +1,9 @@
 // Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
+import { strict as assert } from "assert";
 import "mocha";
-import * as assert from 'assert';
 import "./mocks";
+import { unwrap } from "./unwrap";
 
 describe("BucketPair", function() {
     let module: typeof import("./bucket_pair");
@@ -14,14 +14,11 @@ describe("BucketPair", function() {
     });
 
     describe("constructor", function() {
-        it("must pass bucket names", function(done) {
-            const bucketPair = new module.BucketPair('my_content_bucket', 'my_logs_bucket', {});
-            const outputs = [bucketPair.contentBucket.bucket, bucketPair.logsBucket.bucket];
-            pulumi.all(outputs).apply(([contentBucketName, logsBucketName]) => {
-                assert.strictEqual(contentBucketName, 'my_content_bucket');
-                assert.strictEqual(logsBucketName, 'my_logs_bucket');
-                done();
-            });
+        it("must pass bucket names", async function() {
+            const bucketPair = new module.BucketPair("my_content_bucket", "my_logs_bucket", {});
+            const [contentBucketName, logsBucketName] = await unwrap([bucketPair.contentBucket.bucket, bucketPair.logsBucket.bucket]);
+            assert.strictEqual(contentBucketName, "my_content_bucket");
+            assert.strictEqual(logsBucketName, "my_logs_bucket");
         });
     });
 });
