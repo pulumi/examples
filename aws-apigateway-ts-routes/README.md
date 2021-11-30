@@ -82,6 +82,12 @@ $ curl -w '\n' -H "Authorization: badToken" "$(pulumi stack output url)lambda-au
 
 $ curl -w '\n' "$(pulumi stack output url)lambda-authorized" # No token
 {"message":"Unauthorized"}
+
+$ curl -w '\n' "$(pulumi stack output swaggerUrl)"
+{
+  "uuid": ...
+}
+
 ```
 
 Testing a valid Cognito token is a little more involved.

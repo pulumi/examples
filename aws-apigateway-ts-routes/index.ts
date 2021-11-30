@@ -87,6 +87,30 @@ const api = new apigateway.RestAPI("api", {
     ],
 });
 
+// Define whole API using swagger (OpenAPI)
+const swaggerAPI = new apigateway.RestAPI("swagger-api", {
+    swaggerString: JSON.stringify({
+        swagger: "2.0",
+        info: {
+            title: "example",
+            version: "1.0",
+        },
+        paths: {
+            "/": {
+                get: {
+                    "x-amazon-apigateway-integration": {
+                        httpMethod: "GET",
+                        passthroughBehavior: "when_no_match",
+                        type: "http_proxy",
+                        uri: "https://httpbin.org/uuid",
+                    },
+                },
+            },
+        },
+        "x-amazon-apigateway-binary-media-types": ["*/*"],
+    })
+});
+
 // // Create an API key to manage usage
 // const apiKey = new aws.apigateway.ApiKey("api-key");
 // // Define usage plan for an API stage
@@ -109,4 +133,5 @@ const api = new apigateway.RestAPI("api", {
 export const url = api.url;
 export const userPoolId = userPool.id;
 export const userPoolClientId = userPoolClient.id;
+export const swaggerUrl = swaggerAPI.url;
 // export const apiKeyValue = apiKey.value;

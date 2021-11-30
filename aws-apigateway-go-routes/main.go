@@ -101,6 +101,33 @@ func main() {
 			return err
 		}
 
+		// Define whole API using swagger (OpenAPI)
+		swaggerAPI, err := apigateway.NewRestAPI(ctx, "swagger-api", &apigateway.RestAPIArgs{
+			SwaggerString: pulumi.String(`{
+				"swagger": "2.0",
+				"info": {
+					"title": "example",
+					"version": "1.0"
+				},
+				"paths": {
+					"/": {
+						"get": {
+							"x-amazon-apigateway-integration": {
+								"httpMethod": "GET",
+								"passthroughBehavior": "when_no_match",
+								"type": "http_proxy",
+								"uri": "https://httpbin.org/uuid"
+							}
+						}
+					}
+				},
+				"x-amazon-apigateway-binary-media-types": ["*/*"]
+			}`),
+		})
+		if err != nil {
+			return err
+		}
+
 		// // Create an API key to manage usage
 		// apiKey, err := awsapigateway.NewApiKey(ctx, "api-key", &awsapigateway.ApiKeyArgs{})
 		// if err != nil {
@@ -132,6 +159,7 @@ func main() {
 		ctx.Export("url", restAPI.Url)
 		ctx.Export("user-pool-id", userPool.ID())
 		ctx.Export("user-pool-client-id", userPoolClient.ID())
+		ctx.Export("swagger-url", swaggerAPI.Url)
 		return nil
 	})
 }

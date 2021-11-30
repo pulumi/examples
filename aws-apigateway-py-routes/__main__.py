@@ -1,4 +1,5 @@
 # Copyright 2016-2021, Pulumi Corporation.
+import json
 import pulumi
 import pulumi_aws as aws
 import pulumi_aws_apigateway as apigateway
@@ -55,6 +56,31 @@ api = apigateway.RestAPI('api', routes=[
                          api_key_required=True)
 ])
 
+
+# Define whole API using swagger (OpenAPI)
+swagger_api = apigateway.RestAPI("swagger-api",
+                                 swagger_string=json.dumps({
+                                     "swagger": "2.0",
+                                     "info": {
+                                         "title": "example",
+                                         "version": "1.0",
+                                     },
+                                     "paths": {
+                                         "/": {
+                                             "get": {
+                                                 "x-amazon-apigateway-integration": {
+                                                     "httpMethod": "GET",
+                                                     "passthroughBehavior": "when_no_match",
+                                                     "type": "http_proxy",
+                                                     "uri": "https://httpbin.org/uuid",
+                                                 },
+                                             },
+                                         },
+                                     },
+                                     "x-amazon-apigateway-binary-media-types": ["*/*"],
+                                 })
+                                 )
+
 # # Create an API key to manage usage
 # api_key = aws.apigateway.ApiKey("api-key")
 # # Define usage plan for an API stage
@@ -68,7 +94,8 @@ api = apigateway.RestAPI('api', routes=[
 #                             key_type="API_KEY",
 #                             usage_plan_id=usage_plan.id)
 
-pulumi.export('url', api.url)
-pulumi.export('user-pool-id', user_pool.id)
-pulumi.export('user-pool-client-id', user_pool_client.id)
-# pulumi.export('api-key-value', api_key.value)
+pulumi.export("url", api.url)
+pulumi.export("user-pool-id", user_pool.id)
+pulumi.export("user-pool-client-id", user_pool_client.id)
+pulumi.export("swagger-url", swagger_api.url)
+# pulumi.export("api-key-value", api_key.value)
