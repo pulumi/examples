@@ -1,5 +1,5 @@
 // Copyright 2016-2021, Pulumi Corporation.
-
+import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as apigateway from "@pulumi/aws-apigateway";
 import { helloHandler } from "./helloHandler";
@@ -32,6 +32,19 @@ const api = new apigateway.RestAPI("api", {
             target: {
                 type: "http_proxy",
                 uri: "https://www.google.com",
+            },
+        },
+        // Use Swagger to invoke a lambda
+        {
+            path: "swagger",
+            method: "GET",
+            data: {
+                "x-amazon-apigateway-integration": {
+                    httpMethod: "POST",
+                    passthroughBehavior: "when_no_match",
+                    type: "aws_proxy",
+                    uri: pulumi.interpolate`arn:aws:apigateway:${aws.config.region}:lambda:path/2015-03-31/functions/${helloHandler.arn}/invocations`,
+                },
             },
         },
         // Authorize requests using Cognito
@@ -74,26 +87,34 @@ const api = new apigateway.RestAPI("api", {
     ],
 });
 
-// Create an API key to manage usage
-const apiKey = new aws.apigateway.ApiKey("api-key");
-// Define usage plan for an API stage
-const usagePlan = new aws.apigateway.UsagePlan("usage-plan", {
-    apiStages: [{
-        apiId: api.api.id,
-        stage: api.stage.stageName,
-        // throttles: [{ path: "/path/GET", rateLimit: 1 }]
-    }],
-    // quotaSettings: {...},
-    // throttleSettings: {...},
-});
-// Associate the key to the plan
-new aws.apigateway.UsagePlanKey("usage-plan-key", {
-    keyId: apiKey.id,
-    keyType: "API_KEY",
-    usagePlanId: usagePlan.id,
-});
+// Manually create permissions for swagger route
+// new aws.lambda.Permission('swagger-permission', {
+//     action: "lambda:invokeFunction",
+//     principal: "apigateway.amazonaws.com",
+//     function: helloHandler.name,
+//     sourceArn: pulumi.interpolate`${api.api.executionArn}/*/GET/swagger`,
+// })
+
+// // Create an API key to manage usage
+// const apiKey = new aws.apigateway.ApiKey("api-key");
+// // Define usage plan for an API stage
+// const usagePlan = new aws.apigateway.UsagePlan("usage-plan", {
+//     apiStages: [{
+//         apiId: api.api.id,
+//         stage: api.stage.stageName,
+//         // throttles: [{ path: "/path/GET", rateLimit: 1 }]
+//     }],
+//     // quotaSettings: {...},
+//     // throttleSettings: {...},
+// });
+// // Associate the key to the plan
+// new aws.apigateway.UsagePlanKey("usage-plan-key", {
+//     keyId: apiKey.id,
+//     keyType: "API_KEY",
+//     usagePlanId: usagePlan.id,
+// });
 
 export const url = api.url;
 export const userPoolId = userPool.id;
 export const userPoolClientId = userPoolClient.id;
-export const apiKeyValue = apiKey.value;
+// export const apiKeyValue = apiKey.value;

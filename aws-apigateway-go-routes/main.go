@@ -32,6 +32,7 @@ func main() {
 		custom := "custom"
 		request := "request"
 		getMethod := apigateway.MethodGET
+		region, _ := ctx.GetConfig("aws:region")
 		restAPI, err := apigateway.NewRestAPI(ctx, "api", &apigateway.RestAPIArgs{
 			Routes: []apigateway.RouteArgs{
 				{ // Serve an entire directory of static content
@@ -48,6 +49,18 @@ func main() {
 					Target: apigateway.TargetArgs{
 						Type: apigateway.IntegrationType_Http_proxy,
 						Uri:  pulumi.String("https://www.google.com"),
+					},
+				},
+				{ // Use Swagger to invoke a lambda
+					Path:   "swagger",
+					Method: &getMethod,
+					Data: map[string]interface{}{
+						"x-amazon-apigateway-integration": map[string]interface{}{
+							"httpMethod":          "POST",
+							"passthroughBehavior": "when_no_match",
+							"type":                "aws_proxy",
+							"uri":                 pulumi.Sprintf("arn:aws:apigateway:%s:lambda:path/2015-03-31/functions/%s/invocations", region, helloHandler.Arn),
+						},
 					},
 				},
 				{ // Authorize requests using Cognito
@@ -81,6 +94,17 @@ func main() {
 		if err != nil {
 			return err
 		}
+
+		// // Manually create permissions for swagger route
+		// _, err := lambda.NewPermission(ctx, "swagger-permission", &lambda.PermissionArgs{
+		// 	Action:    pulumi.String("lambda:invokeFunction"),
+		// 	Principal: pulumi.String("apigateway.amazonaws.com"),
+		// 	Function:  helloHandler.Name,
+		// 	SourceArn: pulumi.Sprintf("%s/*/GET/swagger", restAPI.Api.ExecutionArn),
+		// })
+		// if err != nil {
+		// 	return err
+		// }
 
 		// // Create an API key to manage usage
 		// apiKey, err := awsapigateway.NewApiKey(ctx, "api-key", &awsapigateway.ApiKeyArgs{})

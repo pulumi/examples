@@ -19,6 +19,17 @@ api = apigateway.RestAPI('api', routes=[
     # Proxy requests to another service
     apigateway.RouteArgs(path="proxy", target=apigateway.TargetArgs(
         uri="https://www.google.com", type="http_proxy")),
+    # Use Swagger to invoke a lambda
+    apigateway.RouteArgs(path="swagger", method="GET", data={
+        "x-amazon-apigateway-integration": {
+                    "httpMethod": "POST",
+                    "passthroughBehavior": "when_no_match",
+                    "type": "aws_proxy",
+                    "uri": lambdas.hello_handler.arn.apply(lambda arn:
+                            f'arn:aws:apigateway:{aws.config.region}:lambda:path/2015-03-31/functions/{arn}/invocations'
+                    ),
+                },
+    }),
     # Authorize requests using Cognito
     apigateway.RouteArgs(
         path="cognito-authorized",
@@ -46,20 +57,25 @@ api = apigateway.RestAPI('api', routes=[
                          api_key_required=True)
 ])
 
-# Create an API key to manage usage
-api_key = aws.apigateway.ApiKey("api-key")
-# Define usage plan for an API stage
-usage_plan = aws.apigateway.UsagePlan("usage-plan",
-                                      api_stages=[aws.apigateway.UsagePlanApiStageArgs(
-                                          api_id=api.api.id,
-                                          stage=api.stage.stage_name)])
-# Associate the key to the plan
-aws.apigateway.UsagePlanKey('usage-plan-key',
-                            key_id=api_key.id,
-                            key_type="API_KEY",
-                            usage_plan_id=usage_plan.id)
+# # Manually create permissions for swagger route
+# aws.lambda_.Permission("swagger-permission", action="lambda:invokeFunction",
+#                        principal="apigateway.amazonaws.com", function=lambdas.hello_handler.name,
+#                        source_arn=api.api.execution_arn.apply(lambda arn: f'{arn}/*/GET/swagger'))
+
+# # Create an API key to manage usage
+# api_key = aws.apigateway.ApiKey("api-key")
+# # Define usage plan for an API stage
+# usage_plan = aws.apigateway.UsagePlan("usage-plan",
+#                                       api_stages=[aws.apigateway.UsagePlanApiStageArgs(
+#                                           api_id=api.api.id,
+#                                           stage=api.stage.stage_name)])
+# # Associate the key to the plan
+# aws.apigateway.UsagePlanKey('usage-plan-key',
+#                             key_id=api_key.id,
+#                             key_type="API_KEY",
+#                             usage_plan_id=usage_plan.id)
 
 pulumi.export('url', api.url)
 pulumi.export('user-pool-id', user_pool.id)
 pulumi.export('user-pool-client-id', user_pool_client.id)
-pulumi.export('api-key-value', api_key.value)
+# pulumi.export('api-key-value', api_key.value)
