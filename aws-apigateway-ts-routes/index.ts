@@ -40,10 +40,10 @@ const api = new apigateway.RestAPI("api", {
             method: "GET",
             data: {
                 "x-amazon-apigateway-integration": {
-                    httpMethod: "POST",
+                    httpMethod: "GET",
                     passthroughBehavior: "when_no_match",
-                    type: "aws_proxy",
-                    uri: pulumi.interpolate`arn:aws:apigateway:${aws.config.region}:lambda:path/2015-03-31/functions/${helloHandler.arn}/invocations`,
+                    type: "http_proxy",
+                    uri: "https://httpbin.org/uuid",
                 },
             },
         },
@@ -86,14 +86,6 @@ const api = new apigateway.RestAPI("api", {
         }
     ],
 });
-
-// Manually create permissions for swagger route
-// new aws.lambda.Permission('swagger-permission', {
-//     action: "lambda:invokeFunction",
-//     principal: "apigateway.amazonaws.com",
-//     function: helloHandler.name,
-//     sourceArn: pulumi.interpolate`${api.api.executionArn}/*/GET/swagger`,
-// })
 
 // // Create an API key to manage usage
 // const apiKey = new aws.apigateway.ApiKey("api-key");

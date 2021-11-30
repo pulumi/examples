@@ -22,12 +22,10 @@ api = apigateway.RestAPI('api', routes=[
     # Use Swagger to invoke a lambda
     apigateway.RouteArgs(path="swagger", method="GET", data={
         "x-amazon-apigateway-integration": {
-            "httpMethod": "POST",
+            "httpMethod": "GET",
             "passthroughBehavior": "when_no_match",
-            "type": "aws_proxy",
-                    "uri": lambdas.hello_handler.arn.apply(lambda arn:
-                                                           f'arn:aws:apigateway:{aws.config.region}:lambda:path/2015-03-31/functions/{arn}/invocations'
-                                                           ),
+            "type": "http_proxy",
+            "uri": "https://httpbin.org/uuid",
         },
     }),
     # Authorize requests using Cognito
@@ -56,11 +54,6 @@ api = apigateway.RestAPI('api', routes=[
                          event_handler=lambdas.hello_handler,
                          api_key_required=True)
 ])
-
-# # Manually create permissions for swagger route
-# aws.lambda_.Permission("swagger-permission", action="lambda:invokeFunction",
-#                        principal="apigateway.amazonaws.com", function=lambdas.hello_handler.name,
-#                        source_arn=api.api.execution_arn.apply(lambda arn: f'{arn}/*/GET/swagger'))
 
 # # Create an API key to manage usage
 # api_key = aws.apigateway.ApiKey("api-key")

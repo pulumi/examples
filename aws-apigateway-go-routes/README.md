@@ -66,6 +66,11 @@ Hello, API Gateway!
 $ python3 -m webbrowser "$(pulumi stack output url)proxy"
 # Opens a page looking like Google in your browser
 
+$ curl -w '\n' "$(pulumi stack output url)swagger"
+{
+  "uuid": ...
+}
+
 $ curl -w '\n' -H "Authorization: HEADER.PAYLOAD.SIGNATURE" "$(pulumi stack output url)cognito-authorized"
 {"message":"Unauthorized"}
 
