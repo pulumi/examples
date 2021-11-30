@@ -31,6 +31,7 @@ func main() {
 		www := "www"
 		custom := "custom"
 		request := "request"
+		apiKeyRequired := true
 		getMethod := apigateway.MethodGET
 		region, _ := ctx.GetConfig("aws:region")
 		restAPI, err := apigateway.NewRestAPI(ctx, "api", &apigateway.RestAPIArgs{
@@ -89,6 +90,12 @@ func main() {
 						},
 					},
 				},
+				{
+					Path:           "key-authorized",
+					Method:         &getMethod,
+					EventHandler:   helloHandler,
+					ApiKeyRequired: &apiKeyRequired,
+				},
 			},
 		})
 		if err != nil {
@@ -123,7 +130,8 @@ func main() {
 		// if err != nil {
 		// 	return err
 		// }
-		// usagePlanKey, err := awsapigateway.NewUsagePlanKey(ctx, "usage-plan-key", &awsapigateway.UsagePlanKeyArgs{
+		// // Associate the key to the plan
+		// _, err = awsapigateway.NewUsagePlanKey(ctx, "usage-plan-key", &awsapigateway.UsagePlanKeyArgs{
 		// 	KeyId:       apiKey.ID(),
 		// 	KeyType:     pulumi.String("API_KEY"),
 		// 	UsagePlanId: usagePlan.ID(),
@@ -131,7 +139,6 @@ func main() {
 		// if err != nil {
 		// 	return err
 		// }
-		// ctx.Export("usage-plan-id", usagePlanKey.UsagePlanId)
 		// ctx.Export("api-key-value", apiKey.Value)
 
 		ctx.Export("url", restAPI.Url)
