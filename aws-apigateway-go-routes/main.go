@@ -51,7 +51,7 @@ func main() {
 						Uri:  pulumi.String("https://www.google.com"),
 					},
 				},
-				{ // Use Swagger to invoke a lambda
+				{ // Use Swagger to define an HTTP proxy route
 					Path:   "swagger",
 					Method: &getMethod,
 					Data: map[string]interface{}{

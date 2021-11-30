@@ -34,7 +34,7 @@ const api = new apigateway.RestAPI("api", {
                 uri: "https://www.google.com",
             },
         },
-        // Use Swagger to invoke a lambda
+        // Use Swagger to define an HTTP proxy route
         {
             path: "swagger",
             method: "GET",

@@ -19,7 +19,7 @@ api = apigateway.RestAPI('api', routes=[
     # Proxy requests to another service
     apigateway.RouteArgs(path="proxy", target=apigateway.TargetArgs(
         uri="https://www.google.com", type="http_proxy")),
-    # Use Swagger to invoke a lambda
+    # Use Swagger to define an HTTP proxy route
     apigateway.RouteArgs(path="swagger", method="GET", data={
         "x-amazon-apigateway-integration": {
             "httpMethod": "GET",
