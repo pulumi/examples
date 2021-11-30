@@ -1,7 +1,7 @@
 {
     "name": "video-thumbnailer",
     "version": "0.1.0",
-    "main": "index.js",
+    "main": "index.ts",
     "dependencies": {
         "@pulumi/aws": "^4.0.0",
         "@pulumi/awsx": "^0.30.0",
