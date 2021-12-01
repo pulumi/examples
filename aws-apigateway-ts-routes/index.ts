@@ -111,27 +111,27 @@ const swaggerAPI = new apigateway.RestAPI("swagger-api", {
     })
 });
 
-// // Create an API key to manage usage
-// const apiKey = new aws.apigateway.ApiKey("api-key");
-// // Define usage plan for an API stage
-// const usagePlan = new aws.apigateway.UsagePlan("usage-plan", {
-//     apiStages: [{
-//         apiId: api.api.id,
-//         stage: api.stage.stageName,
-//         // throttles: [{ path: "/path/GET", rateLimit: 1 }]
-//     }],
-//     // quotaSettings: {...},
-//     // throttleSettings: {...},
-// });
-// // Associate the key to the plan
-// new aws.apigateway.UsagePlanKey("usage-plan-key", {
-//     keyId: apiKey.id,
-//     keyType: "API_KEY",
-//     usagePlanId: usagePlan.id,
-// });
+// Create an API key to manage usage
+const apiKey = new aws.apigateway.ApiKey("api-key");
+// Define usage plan for an API stage
+const usagePlan = new aws.apigateway.UsagePlan("usage-plan", {
+    apiStages: [{
+        apiId: api.api.id,
+        stage: api.stage.stageName,
+        // throttles: [{ path: "/path/GET", rateLimit: 1 }]
+    }],
+    // quotaSettings: {...},
+    // throttleSettings: {...},
+});
+// Associate the key to the plan
+new aws.apigateway.UsagePlanKey("usage-plan-key", {
+    keyId: apiKey.id,
+    keyType: "API_KEY",
+    usagePlanId: usagePlan.id,
+});
 
 export const url = api.url;
 export const userPoolId = userPool.id;
 export const userPoolClientId = userPoolClient.id;
 export const swaggerUrl = swaggerAPI.url;
-// export const apiKeyValue = apiKey.value;
+export const apiKeyValue = apiKey.value;

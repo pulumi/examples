@@ -88,6 +88,8 @@ $ curl -w '\n' "$(pulumi stack output swaggerUrl)"
   "uuid": ...
 }
 
+$ curl -w '\n' -H "x-api-key: $(pulumi stack output apiKeyValue --show-secrets)" "$(pulumi stack output url)key-authorized"
+Hello, API Gateway!
 ```
 
 Testing a valid Cognito token is a little more involved.
