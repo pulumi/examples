@@ -4,6 +4,7 @@ import * as aws from "@pulumi/aws";
 import * as apigateway from "@pulumi/aws-apigateway";
 import { helloHandler } from "./helloHandler";
 import { authLambda } from "./lambdaAuthorizer";
+import { configureDns } from './customDns';
 
 // Create a Cognito User Pool of authorized users
 const userPool = new aws.cognito.UserPool("user-pool");
@@ -129,6 +130,27 @@ new aws.apigateway.UsagePlanKey("usage-plan-key", {
     keyType: "API_KEY",
     usagePlanId: usagePlan.id,
 });
+
+// Conditionally set up DNS (if it's been configured)
+const config = new pulumi.Config();
+const domain = config.get("domain");
+export let customUrl: pulumi.Output<string> | undefined;
+if (domain !== undefined) {
+    // Load DNS zone for the domain
+    const zone = aws.route53.getZoneOutput({ name: config.require("dns-zone") });
+    // Create SSL Certificate and DNS entries
+    const { apiDomainName } = configureDns(domain, zone.id)
+    // Serve our API on our custom domain
+    const basePathMapping = new aws.apigateway.BasePathMapping(
+        "api-domain-mapping",
+        {
+            restApi: api.api.id,
+            stageName: api.stage.stageName,
+            domainName: apiDomainName.domainName,
+        }
+    );
+    customUrl = pulumi.interpolate`https://${basePathMapping.domainName}/`
+}
 
 export const url = api.url;
 export const userPoolId = userPool.id;
