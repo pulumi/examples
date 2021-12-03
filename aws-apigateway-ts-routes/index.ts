@@ -1,10 +1,10 @@
 // Copyright 2016-2021, Pulumi Corporation.
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as apigateway from "@pulumi/aws-apigateway";
+import * as pulumi from "@pulumi/pulumi";
+import { configureDns } from "./dns";
 import { helloHandler } from "./helloHandler";
 import { authLambda } from "./lambdaAuthorizer";
-import { configureDns } from './dns';
 
 // Create a Cognito User Pool of authorized users
 const userPool = new aws.cognito.UserPool("user-pool");
@@ -84,7 +84,7 @@ const api = new apigateway.RestAPI("api", {
             method: "GET",
             eventHandler: helloHandler,
             apiKeyRequired: true,
-        }
+        },
     ],
 });
 
@@ -109,7 +109,7 @@ const swaggerAPI = new apigateway.RestAPI("swagger-api", {
             },
         },
         "x-amazon-apigateway-binary-media-types": ["*/*"],
-    })
+    }),
 });
 
 // Create an API key to manage usage
@@ -125,6 +125,7 @@ const usagePlan = new aws.apigateway.UsagePlan("usage-plan", {
     // throttleSettings: {...},
 });
 // Associate the key to the plan
+// tslint:disable-next-line:no-unused-expression
 new aws.apigateway.UsagePlanKey("usage-plan-key", {
     keyId: apiKey.id,
     keyType: "API_KEY",
@@ -139,7 +140,7 @@ if (domain !== undefined) {
     // Load DNS zone for the domain
     const zone = aws.route53.getZoneOutput({ name: config.require("dns-zone") });
     // Create SSL Certificate and DNS entries
-    const apiDomainName = configureDns(domain, zone.zoneId)
+    const apiDomainName = configureDns(domain, zone.zoneId);
     // Tell API Gateway what to serve on our custom domain
     const basePathMapping = new aws.apigateway.BasePathMapping(
         "api-domain-mapping",
@@ -147,9 +148,9 @@ if (domain !== undefined) {
             restApi: api.api.id,
             stageName: api.stage.stageName,
             domainName: apiDomainName.domainName,
-        }
+        },
     );
-    customUrl = pulumi.interpolate`https://${basePathMapping.domainName}/`
+    customUrl = pulumi.interpolate`https://${basePathMapping.domainName}/`;
 }
 
 export const url = api.url;
