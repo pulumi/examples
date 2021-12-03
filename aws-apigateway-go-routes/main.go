@@ -3,8 +3,11 @@ package main
 
 import (
 	apigateway "github.com/pulumi/pulumi-aws-apigateway/sdk/go/apigateway"
+	awsapigateway "github.com/pulumi/pulumi-aws/sdk/v4/go/aws/apigateway"
 	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/cognito"
+	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/route53"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
 func main() {
@@ -128,33 +131,69 @@ func main() {
 			return err
 		}
 
-		// // Create an API key to manage usage
-		// apiKey, err := awsapigateway.NewApiKey(ctx, "api-key", &awsapigateway.ApiKeyArgs{})
-		// if err != nil {
-		// 	return err
-		// }
-		// // Define usage plan for an API stage
-		// usagePlan, err := awsapigateway.NewUsagePlan(ctx, "usage-plan", &awsapigateway.UsagePlanArgs{
-		// 	ApiStages: awsapigateway.UsagePlanApiStageArray{
-		// 		awsapigateway.UsagePlanApiStageArgs{
-		// 			ApiId: restAPI.Api.ID(), // API and Stage aren't currently typed in Go.
-		// 			Stage: restAPI.Stage.StateName,
-		// 		},
-		// 	},
-		// })
-		// if err != nil {
-		// 	return err
-		// }
-		// // Associate the key to the plan
-		// _, err = awsapigateway.NewUsagePlanKey(ctx, "usage-plan-key", &awsapigateway.UsagePlanKeyArgs{
-		// 	KeyId:       apiKey.ID(),
-		// 	KeyType:     pulumi.String("API_KEY"),
-		// 	UsagePlanId: usagePlan.ID(),
-		// })
-		// if err != nil {
-		// 	return err
-		// }
-		// ctx.Export("api-key-value", apiKey.Value)
+		// Create an API key to manage usage
+		apiKey, err := awsapigateway.NewApiKey(ctx, "api-key", &awsapigateway.ApiKeyArgs{})
+		if err != nil {
+			return err
+		}
+		apiId := restAPI.Api.ApplyT(func(api *awsapigateway.RestApi) pulumi.StringOutput {
+			return api.ID().ToStringOutput()
+		}).ApplyT(func(id interface{}) string {
+			return id.(string)
+		}).(pulumi.StringOutput)
+		stageName := restAPI.Stage.ApplyT(func(stage *awsapigateway.Stage) pulumi.StringOutput {
+			return stage.StageName
+		}).ApplyT(func(stageName interface{}) string {
+			return stageName.(string)
+		}).(pulumi.StringOutput)
+		// Define usage plan for an API stage
+		usagePlan, err := awsapigateway.NewUsagePlan(ctx, "usage-plan", &awsapigateway.UsagePlanArgs{
+			ApiStages: awsapigateway.UsagePlanApiStageArray{
+				awsapigateway.UsagePlanApiStageArgs{
+					ApiId: apiId,
+					Stage: stageName,
+				},
+			},
+		})
+		if err != nil {
+			return err
+		}
+		// Associate the key to the plan
+		_, err = awsapigateway.NewUsagePlanKey(ctx, "usage-plan-key", &awsapigateway.UsagePlanKeyArgs{
+			KeyId:       apiKey.ID(),
+			KeyType:     pulumi.String("API_KEY"),
+			UsagePlanId: usagePlan.ID(),
+		})
+		if err != nil {
+			return err
+		}
+		ctx.Export("api-key-value", apiKey.Value)
+
+		// Set up DNS if a domain name has been configured
+		domain, hasDomain := ctx.GetConfig("domain")
+		if hasDomain {
+			// Load DNS zone for the domain
+			zone, err := route53.GetZone(ctx, config.Require(ctx, "dns-zone"), nil, nil)
+			if err != nil {
+				return err
+			}
+			// Create SSL Certificate and DNS entries
+			apiDomainName, err := configureDns(ctx, domain, zone.ZoneId)
+			if err != nil {
+				return err
+			}
+			// Tell API Gateway what to serve on our custom domain
+			basePathMapping, err := awsapigateway.NewBasePathMapping(ctx,
+				"api-domain-mapping",
+				&awsapigateway.BasePathMappingArgs{
+					RestApi:    apiId,
+					StageName:  stageName,
+					DomainName: apiDomainName.DomainName,
+				},
+			)
+			customUrl := pulumi.Sprintf("https://%s/", basePathMapping.DomainName)
+			ctx.Export("custom-url", customUrl)
+		}
 
 		ctx.Export("url", restAPI.Url)
 		ctx.Export("user-pool-id", userPool.ID())
