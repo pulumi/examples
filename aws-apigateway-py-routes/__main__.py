@@ -101,13 +101,14 @@ if domain != None:
     # Load DNS zone for the domain
     zone = aws.route53.get_zone_output(name=config.require("dns-zone"))
     # Create SSL Certificate and DNS entries
-    api_domain_name = configure_dns(domain=domain,zone_id=zone.id)
+    api_domain_name = configure_dns(domain=domain, zone_id=zone.id)
     # Tell API Gateway what to serve on our custom domain
     base_path_mapping = aws.apigateway.BasePathMapping("api-domain-mapping",
-        rest_api=api.api.id,
-        stage_name=api.stage.stage_name,
-        domain_name=api_domain_name.domain_name)
-    pulumi.export("custom-url", base_path_mapping.domain_name.apply(lambda domain: f'https://{domain}/'))
+                                                       rest_api=api.api.id,
+                                                       stage_name=api.stage.stage_name,
+                                                       domain_name=api_domain_name.domain_name)
+    pulumi.export(
+        "custom-url", base_path_mapping.domain_name.apply(lambda domain: f'https://{domain}/'))
 
 pulumi.export("url", api.url)
 pulumi.export("user-pool-id", user_pool.id)

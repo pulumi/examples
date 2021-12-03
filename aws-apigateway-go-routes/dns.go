@@ -53,7 +53,7 @@ func configureDns(ctx *pulumi.Context, domain string, zoneId pulumi.StringInput)
 		return nil, err
 	}
 	// Wait for the certificate validation to succeed
-	sslCertificateValidation, err := acm.NewCertificateValidation(ctx,
+	validatedSslCertificate, err := acm.NewCertificateValidation(ctx,
 		"ssl-cert-validation",
 		&acm.CertificateValidationArgs{
 			CertificateArn:        sslCertificate.Arn,
@@ -67,7 +67,7 @@ func configureDns(ctx *pulumi.Context, domain string, zoneId pulumi.StringInput)
 	// Configure API Gateway to be able to use domain name & certificate
 	apiDomainName, err := apigateway.NewDomainName(ctx, "api-domain-name",
 		&apigateway.DomainNameArgs{
-			CertificateArn: sslCertificateValidation.CertificateArn,
+			CertificateArn: validatedSslCertificate.CertificateArn,
 			DomainName:     pulumi.String(domain),
 		},
 	)

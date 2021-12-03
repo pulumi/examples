@@ -26,7 +26,7 @@ export function configureDns(domain: string, zoneId: pulumi.Input<string>) {
         }
     );
     // Wait for the certificate validation to succeed
-    const sslCertificateValidation = new aws.acm.CertificateValidation(
+    const validatedSslCertificate = new aws.acm.CertificateValidation(
         "ssl-cert-validation",
         {
             certificateArn: sslCertificate.arn,
@@ -36,12 +36,12 @@ export function configureDns(domain: string, zoneId: pulumi.Input<string>) {
     );
     // Configure API Gateway to be able to use domain name & certificate
     const apiDomainName = new aws.apigateway.DomainName("api-domain-name", {
-        certificateArn: sslCertificateValidation.certificateArn,
+        certificateArn: validatedSslCertificate.certificateArn,
         domainName: domain,
     });
 
     // Create DNS record
-    const dnsRecord = new aws.route53.Record("api-dns", {
+    new aws.route53.Record("api-dns", {
         zoneId: zoneId,
         type: "A",
         name: domain,
@@ -52,5 +52,5 @@ export function configureDns(domain: string, zoneId: pulumi.Input<string>) {
         }]
     });
 
-    return { apiDomainName, dnsRecord, sslCertificate, sslCertificateValidationDnsRecord };
+    return apiDomainName;
 }

@@ -82,6 +82,9 @@ $ curl -w '\n' "$(pulumi stack output swagger-url)"
 {
   "uuid": ...
 }
+
+$ curl -w '\n' -H "x-api-key: $(pulumi stack output apiKeyValue --show-secrets)" "$(pulumi stack output url)key-authorized"
+Hello, API Gateway!
 ```
 
 Testing a valid Cognito token is a little more involved.
@@ -121,6 +124,39 @@ Fetch and review the logs from the Lambda executions:
 
 ```bash
 pulumi logs
+```
+
+### Set Up Custom DNS
+
+Before you can set up a custom domain you must [register a domain name with Route 53](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar.html).
+
+Configure the stack with your custom DNS information:
+
+```bash
+pulumi config set domain subdomain.acmecorp.example
+pulumi config set dns-zone acmecorp.example
+```
+
+Deploy your stack:
+
+```bash
+$ pulumi up
+...
+     Type                               Name                            Plan       
+     pulumi:pulumi:Stack                aws-apigateway-ts-routes-dev               
+ +   ├─ pulumi:providers:aws            usEast1                         create     
+ +   ├─ aws:acm:Certificate             ssl-cert                        create     
+ +   ├─ aws:route53:Record              ssl-cert-validation-dns-record  create     
+ +   ├─ aws:acm:CertificateValidation   ssl-cert-validation             create     
+ +   ├─ aws:apigateway:DomainName       api-domain-name                 create     
+ +   ├─ aws:route53:Record              api-dns                         create     
+ +   └─ aws:apigateway:BasePathMapping  api-domain-mapping              create    
+```
+
+Test your API is now available on your custom domain:
+
+```bash
+curl -w '\n' "$(pulumi stack output customUrl)static"
 ```
 
 ## Clean Up

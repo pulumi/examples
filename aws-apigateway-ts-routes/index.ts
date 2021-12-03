@@ -139,7 +139,7 @@ if (domain !== undefined) {
     // Load DNS zone for the domain
     const zone = aws.route53.getZoneOutput({ name: config.require("dns-zone") });
     // Create SSL Certificate and DNS entries
-    const { apiDomainName } = configureDns(domain, zone.id)
+    const apiDomainName = configureDns(domain, zone.zoneId)
     // Tell API Gateway what to serve on our custom domain
     const basePathMapping = new aws.apigateway.BasePathMapping(
         "api-domain-mapping",
