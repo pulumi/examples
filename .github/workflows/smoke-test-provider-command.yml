@@ -137,6 +137,10 @@ jobs:
       with:
         pulumi-version: ${{ env.PULUMI_VERSION }}
     - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - name: Set up gotestfmt
+      uses: haveyoudebuggedit/gotestfmt-action@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install Go Dependencies
       run: make ensure
     - name: Setup Config
@@ -144,7 +148,9 @@ jobs:
         mkdir -p "$HOME/.kube/"
         pulumi stack -s "${{ env.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
     - name: Run Kubernetes Smoke Tests
-      run: make specific_tag_set TagSet=Kubernetes
+      run: |
+        set -euo pipefail
+        cd misc/test && go test . --timeout 4h -v -json -count=1 -short -parallel 40 --tags=Kubernetes --run=TestAccKubernetes 2>&1 | tee /tmp/gotest.log | gotestfmt
     strategy:
       fail-fast: false
       matrix:
@@ -225,11 +231,16 @@ jobs:
       with:
         pulumi-version: ${{ env.PULUMI_VERSION }}
     - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - name: Set up gotestfmt
+      uses: haveyoudebuggedit/gotestfmt-action@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install Testing Dependencies
       run: make ensure
     - name: Running ${{ env.PROVIDER_TESTS_TAG }}${{ matrix.languages }} Smoke Tests
-      run: make specific_tag_set TestSet=${{ matrix.languages }} TagSet=${{ env.PROVIDER_TESTS_TAG
-        }}
+      run: |
+        set -euo pipefail
+        cd misc/test && go test . --timeout 4h -v -json -count=1 -short -parallel 40 --tags=${{ env.PROVIDER_TESTS_TAG }} --run=TestAcc${{ matrix.languages }} 2>&1 | tee /tmp/gotest.log | gotestfmt
     strategy:
       fail-fast: false
       matrix:

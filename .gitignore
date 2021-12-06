@@ -19,6 +19,7 @@ key.rsa*
 obj/
 vendor
 Gopkg.lock
+**/.DS_Store
 
 **/ci-scripts
 
