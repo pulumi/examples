@@ -1,4 +1,4 @@
-module github.com/pulumi/examples/aws-go-s3-folder
+module github.com/pulumi/examples/aws-go-s3-folder-component
 
 go 1.13
 
