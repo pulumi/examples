@@ -1,4 +1,4 @@
-module github.com/pulumi/examples/kubernetes-go-guestbook
+module github.com/pulumi/examples/kubernetes-go-guestbook/simple
 
 go 1.14
 

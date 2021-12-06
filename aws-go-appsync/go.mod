@@ -1,4 +1,4 @@
-module github.com/pulumi/examples/aws-go-webserver
+module github.com/pulumi/examples/aws-go-appsync
 
 go 1.14
 
