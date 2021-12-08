@@ -170,10 +170,12 @@ func main() {
 		ctx.Export("api-key-value", apiKey.Value)
 
 		// Set up DNS if a domain name has been configured
-		domain, hasDomain := ctx.GetConfig("domain")
-		if hasDomain {
+		conf := config.New(ctx, "")
+		domain := conf.Get("domain")
+		if domain != "" {
 			// Load DNS zone for the domain
-			zone, err := route53.GetZone(ctx, config.Require(ctx, "dns-zone"), nil, nil)
+			dnsZone := conf.Require("dns-zone")
+			zone, err := route53.LookupZone(ctx, &route53.LookupZoneArgs{Name: &dnsZone})
 			if err != nil {
 				return err
 			}

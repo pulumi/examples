@@ -9,7 +9,7 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-func configureDns(ctx *pulumi.Context, domain string, zoneId pulumi.StringInput) (*apigateway.DomainName, error) {
+func configureDns(ctx *pulumi.Context, domain string, zoneId string) (*apigateway.DomainName, error) {
 	// SSL Cert must be created in us-east-1 unrelated to where the API is deployed.
 	awsUsEast1, err := aws.NewProvider(ctx, "aws-provider-us-east-1", &aws.ProviderArgs{Region: pulumi.String("us-east-1")})
 	if err != nil {
@@ -27,23 +27,23 @@ func configureDns(ctx *pulumi.Context, domain string, zoneId pulumi.StringInput)
 	if err != nil {
 		return nil, err
 	}
-	domainValidationOption := sslCertificate.DomainValidationOptions.ApplyT(func(options acm.CertificateDomainValidationOptionArray) interface{} {
+	domainValidationOption := sslCertificate.DomainValidationOptions.ApplyT(func(options []acm.CertificateDomainValidationOption) interface{} {
 		return options[0]
 	})
 	// Create DNS record to prove to ACM that we own the domain
 	sslCertificateValidationDnsRecord, err := route53.NewRecord(ctx,
 		"ssl-cert-validation-dns-record",
 		&route53.RecordArgs{
-			ZoneId: zoneId,
-			Name: domainValidationOption.ApplyT(func(option acm.CertificateDomainValidationOption) *string {
-				return option.ResourceRecordName
+			ZoneId: pulumi.String(zoneId),
+			Name: domainValidationOption.ApplyT(func(option interface{}) string {
+				return *option.(acm.CertificateDomainValidationOption).ResourceRecordName
 			}).(pulumi.StringOutput),
-			Type: domainValidationOption.ApplyT(func(option acm.CertificateDomainValidationOption) *string {
-				return option.ResourceRecordType
+			Type: domainValidationOption.ApplyT(func(option interface{}) string {
+				return *option.(acm.CertificateDomainValidationOption).ResourceRecordType
 			}).(pulumi.StringOutput),
 			Records: pulumi.StringArray{
-				domainValidationOption.ApplyT(func(option acm.CertificateDomainValidationOption) *string {
-					return option.ResourceRecordValue
+				domainValidationOption.ApplyT(func(option interface{}) string {
+					return *option.(acm.CertificateDomainValidationOption).ResourceRecordValue
 				}).(pulumi.StringOutput),
 			},
 			Ttl: pulumi.Int(10 * 60), // 10 minutes
@@ -77,7 +77,7 @@ func configureDns(ctx *pulumi.Context, domain string, zoneId pulumi.StringInput)
 	// Create DNS record
 	_, err = route53.NewRecord(ctx, "api-dns",
 		&route53.RecordArgs{
-			ZoneId: zoneId,
+			ZoneId: pulumi.String(zoneId),
 			Type:   pulumi.String("A"),
 			Name:   pulumi.String(domain),
 			Aliases: route53.RecordAliasArray{

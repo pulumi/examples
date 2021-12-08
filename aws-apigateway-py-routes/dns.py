@@ -25,7 +25,8 @@ def configure_dns(domain: str, zone_id: pulumi.Input):
     # Wait for the certificate validation to succeed
     validated_ssl_certificate = aws.acm.CertificateValidation("ssl-cert-validation",
                                                               certificate_arn=ssl_cert.arn,
-                                                              validation_record_fqdns=[ssl_cert_validation_dns_record.fqdn])
+                                                              validation_record_fqdns=[ssl_cert_validation_dns_record.fqdn],
+                                                              opts=ResourceOptions(provider=aws_us_east_1))
     # Configure API Gateway to be able to use domain name & certificate
     api_domain_name = aws.apigateway.DomainName("api-domain-name",
                                                 certificate_arn=validated_ssl_certificate.certificate_arn,
