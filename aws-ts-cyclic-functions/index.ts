@@ -56,57 +56,45 @@ const role = new aws.iam.Role("lambda-role", {
   ],
 });
 
-const initialPing = new awsnative.lambda.Function("ping", {
-  functionName: "ping-name",
+const functionArgs = {
   role: role.arn,
   runtime: "nodejs14.x",
   handler: "index.handler",
+  code: {
+      zipFile: `
+      exports.handler = function(event, context, callback){
+        callback(null, "TODO");
+      };`,
+    },
+};
+
+const initialPing = new awsnative.lambda.Function("ping", {
+  ...functionArgs,
+  functionName: "ping-name",
   environment: {
     variables: {
       OPPONENT_FN_NAME: "",
     },
   },
-  code: {
-      zipFile: `
-      exports.handler = function(event, context, callback){
-        callback(null, "TODO Ping");
-      };`,
-    },
 }, { ignoreChanges: ["environment"] } );
 
 const pong = new awsnative.lambda.Function("pong", {
-  role: role.arn,
-  runtime: "nodejs14.x",
-  handler: "index.handler",
+  ...functionArgs,
   environment: {
     variables: {
       OPPONENT_FN_NAME: initialPing.functionName,
     },
   },
-  code: {
-      zipFile: `
-      exports.handler = function(event, context, callback){
-        callback(null, "TODO Pong");
-      };`,
-    },
 });
 
 const ping = new awsnative.lambda.Function("ping", {
+  ...functionArgs,
   functionName: "ping-name",
-  role: role.arn,
-  runtime: "nodejs14.x",
-  handler: "index.handler",
   environment: {
     variables: {
       OPPONENT_FN_NAME: pong.functionName,
     },
   },
-  code: {
-      zipFile: `
-      exports.handler = function(event, context, callback){
-        callback(null, "TODO Ping");
-      };`,
-    },
 });
 
 // Export the name of the function
