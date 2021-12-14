@@ -1,25 +1,26 @@
 // Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
+import * as awsnative from "@pulumi/aws-native";
 
-const handlerFactory = () => {
-  const lambda = new aws.sdk.Lambda();
-  return (ev: unknown): void => {
-    const opponentFunction = process.env.OPPONENT_FN_NAME;
-    if (!opponentFunction) {
-      return console.log("No one to play against");
-    }
-    if (Math.random() > 0.5) {
-      lambda.invoke({
-        FunctionName: opponentFunction,
-        InvocationType: "Event",
-      });
-      console.log(`Returned to ${opponentFunction}`);
-    } else {
-      console.log(`Missed! ${opponentFunction} wins!`);
-    }
-  };
-};
+// const handlerFactory = () => {
+//   const lambda = new aws.sdk.Lambda();
+//   return (ev: unknown): void => {
+//     const opponentFunction = process.env.OPPONENT_FN_NAME;
+//     if (!opponentFunction) {
+//       return console.log("No one to play against");
+//     }
+//     if (Math.random() > 0.5) {
+//       lambda.invoke({
+//         FunctionName: opponentFunction,
+//         InvocationType: "Event",
+//       });
+//       console.log(`Returned to ${opponentFunction}`);
+//     } else {
+//       console.log(`Missed! ${opponentFunction} wins!`);
+//     }
+//   };
+// };
 
 const role = new aws.iam.Role("lambda-role", {
   assumeRolePolicy: {
@@ -55,42 +56,58 @@ const role = new aws.iam.Role("lambda-role", {
   ],
 });
 
-const initialPing = new aws.lambda.CallbackFunction(
-  "ping",
-  {
-    role: role,
-    name: "ping-name",
-    callbackFactory: handlerFactory,
-    environment: {
-      variables: {
-        OPPONENT_FN_NAME: "",
-      },
-    },
-  },
-  { ignoreChanges: ["environment"] }
-);
-
-const pong = new aws.lambda.CallbackFunction("pong", {
-  role: role,
-  callbackFactory: handlerFactory,
+const initialPing = new awsnative.lambda.Function("ping", {
+  functionName: "ping-name",
+  role: role.arn,
+  runtime: "nodejs14.x",
+  handler: "index.handler",
   environment: {
     variables: {
-      OPPONENT_FN_NAME: initialPing.name,
+      OPPONENT_FN_NAME: "",
     },
   },
-});
+  code: {
+      zipFile: `
+      exports.handler = function(event, context, callback){
+        callback(null, "TODO Ping");
+      };`,
+    },
+}, { ignoreChanges: ["environment"] } );
 
-const ping = new aws.lambda.CallbackFunction("ping", {
-  role: role,
-  name: "ping-name",
-  callbackFactory: handlerFactory,
+const pong = new awsnative.lambda.Function("pong", {
+  role: role.arn,
+  runtime: "nodejs14.x",
+  handler: "index.handler",
   environment: {
     variables: {
-      OPPONENT_FN_NAME: pong.name,
+      OPPONENT_FN_NAME: initialPing.functionName,
     },
   },
+  code: {
+      zipFile: `
+      exports.handler = function(event, context, callback){
+        callback(null, "TODO Pong");
+      };`,
+    },
 });
 
-// Export the name of the bucket
-export const pingName = ping.name;
-export const pongName = pong.name;
+const ping = new awsnative.lambda.Function("ping", {
+  functionName: "ping-name",
+  role: role.arn,
+  runtime: "nodejs14.x",
+  handler: "index.handler",
+  environment: {
+    variables: {
+      OPPONENT_FN_NAME: pong.functionName,
+    },
+  },
+  code: {
+      zipFile: `
+      exports.handler = function(event, context, callback){
+        callback(null, "TODO Ping");
+      };`,
+    },
+});
+
+// Export the name of the function
+export const pongName = pong.functionName;
