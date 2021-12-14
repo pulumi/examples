@@ -1,0 +1,10 @@
+{
+  "name": "aws-ts-cyclic-functions",
+  "devDependencies": {
+    "@types/node": "latest"
+  },
+  "dependencies": {
+    "@pulumi/aws": "^4.0.0",
+    "@pulumi/pulumi": "^3.0.0"
+  }
+}
