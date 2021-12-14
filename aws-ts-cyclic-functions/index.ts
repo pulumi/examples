@@ -21,9 +21,44 @@ const handlerFactory = () => {
   };
 };
 
+const role = new aws.iam.Role("lambda-role", {
+  assumeRolePolicy: {
+    Version: "2012-10-17",
+    Statement: [
+      {
+        Sid: "AllowAssumeRole",
+        Effect: "Allow",
+        Principal: {
+          Service: "lambda.amazonaws.com",
+        },
+        Action: "sts:AssumeRole",
+      },
+    ],
+  },
+  inlinePolicies: [
+    {
+      policy: JSON.stringify({
+        Statement: [
+          {
+            Action: [
+              "logs:CreateLogGroup",
+              "logs:CreateLogStream",
+              "logs:PutLogEvents",
+            ],
+            Effect: "Allow",
+            Resource: "arn:aws:logs:*:*:*",
+          },
+        ],
+        Version: "2012-10-17",
+      }),
+    },
+  ],
+});
+
 const initialPing = new aws.lambda.CallbackFunction(
   "ping",
   {
+    role: role,
     callbackFactory: handlerFactory,
     environment: {
       variables: {
@@ -35,6 +70,7 @@ const initialPing = new aws.lambda.CallbackFunction(
 );
 
 const pong = new aws.lambda.CallbackFunction("pong", {
+  role: role,
   callbackFactory: handlerFactory,
   environment: {
     variables: {
@@ -44,6 +80,7 @@ const pong = new aws.lambda.CallbackFunction("pong", {
 });
 
 const ping = new aws.lambda.CallbackFunction("ping", {
+  role: role,
   callbackFactory: handlerFactory,
   environment: {
     variables: {
