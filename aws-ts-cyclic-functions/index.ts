@@ -59,6 +59,7 @@ const initialPing = new aws.lambda.CallbackFunction(
   "ping",
   {
     role: role,
+    name: "ping-name",
     callbackFactory: handlerFactory,
     environment: {
       variables: {
@@ -81,6 +82,7 @@ const pong = new aws.lambda.CallbackFunction("pong", {
 
 const ping = new aws.lambda.CallbackFunction("ping", {
   role: role,
+  name: "ping-name",
   callbackFactory: handlerFactory,
   environment: {
     variables: {
