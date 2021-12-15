@@ -1,0 +1,8 @@
+name: aws-ts-scheduled-function-simple
+runtime: nodejs
+description: Basic example of cyclic resource dependencies
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
