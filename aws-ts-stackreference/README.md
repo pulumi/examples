@@ -64,7 +64,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#st
 1. Change directory to `department` and install dependencies.
 
     ```bash
-    $ cd ../company
+    $ cd ../department
     $ npm install
     ````
 
