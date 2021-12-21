@@ -1,4 +1,4 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-aks-cosmos-helm/README.md)
 
 # A Helm chart deployed to AKS that stores TODOs in an Azure Cosmos DB MongoDB API
 

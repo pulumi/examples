@@ -2,7 +2,7 @@
 
 [Miniflux](https://miniflux.app/) is an open-source RSS service written in Go and backed by PostgreSQL. This example demonstrates how to stand up a Miniflux service using AWS Fargate and RDS.
 
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-pulumi-miniflux/README.md)
 
 ## Prerequisites
 

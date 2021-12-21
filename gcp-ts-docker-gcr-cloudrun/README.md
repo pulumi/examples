@@ -1,4 +1,4 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-docker-gcr-cloudrun/README.md)
 
 # Docker Build and Push to GCR and Deploy to Google Cloud Run using separate projects
 

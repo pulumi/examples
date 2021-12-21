@@ -1,4 +1,4 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/libvirt-py-vm/README.md)
 
 # Using the Pulumi Libvirt Provider to Deploy a VM on a KVM Server
 

@@ -1,4 +1,4 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-net5-aks-webapp/README.md)
 
 # Deploy Containerized Web Applications using the native Azure Provider, .NET 5, and C# 9
 

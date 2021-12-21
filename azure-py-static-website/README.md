@@ -1,4 +1,4 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-static-website/README.md)
 
 # Static Website Using Azure Blob Storage and CDN
 Based on https://github.com/zemien/static-website-ARM-template
