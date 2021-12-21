@@ -1,4 +1,4 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-webapp-privateendpoint-vnet-injection/README.md)
 
 # Deploy two App Services - Front web app with VNet injection and Back web app with a Private Endpoint
 

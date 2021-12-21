@@ -1,4 +1,4 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-call-azure-sdk/README.md)
 
 # Demo of Integrating the native Azure Pulumi provider with the Microsoft Azure SDK
 
