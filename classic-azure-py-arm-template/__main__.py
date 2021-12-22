@@ -1,4 +1,4 @@
-# Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+# Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
 import json
 
@@ -66,14 +66,16 @@ template = {
 }
 
 # Create an ARM template deployment using the ordinary JSON ARM template as specified above. This could be read from disk, of course.
-arm_deployment = azure.core.TemplateDeployment('test-dep',
+arm_deployment = azure.core.ResourceGroupTemplateDeployment('test-dep',
     resource_group_name=resource_group.name,
-    template_body=json.dumps(template),
-    parameters={
-        'storageAccountType': 'Standard_GRS'
-    },
+    template_content=json.dumps(template),
+    parameters_content=json.dumps({
+        'storageAccountType': {
+            'value': 'Standard_GRS'
+        }
+    }),
     deployment_mode='Incremental',
 )
 
 # Finally, export the allocated storage account name.
-export('storageAccountName', arm_deployment.outputs['storageAccountName'])
+export('storageAccountName', arm_deployment.output_content.apply(lambda j: json.loads(j)['storageAccountName']['value']))

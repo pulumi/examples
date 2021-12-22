@@ -1,4 +1,4 @@
-// Copyright 2016-2018, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
@@ -7,9 +7,9 @@ import * as pulumi from "@pulumi/pulumi";
 const resourceGroup = new azure.core.ResourceGroup("test");
 
 // Create an ARM template deployment using an ordinary JSON ARM template. This could be read from disk, of course.
-const armDeployment = new azure.core.TemplateDeployment("test-dep", {
+const armDeployment = new azure.core.ResourceGroupTemplateDeployment("test-dep", {
     resourceGroupName: resourceGroup.name,
-    templateBody: JSON.stringify({
+    templateContent: JSON.stringify({
       "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
       "contentVersion": "1.0.0.0",
       "parameters": {
@@ -63,11 +63,13 @@ const armDeployment = new azure.core.TemplateDeployment("test-dep", {
         },
       },
     }),
-    parameters: {
-        "storageAccountType": "Standard_GRS",
+    parametersContent: {
+        "storageAccountType": {
+          "value": "Standard_GRS"
+        },
     },
     deploymentMode: "Incremental",
 });
 
 // Finally, export the allocated storage account name.
-export const storageAccountName = armDeployment.outputs["storageAccountName"];
+export const storageAccountName = armDeployment.outputContent.apply((content: string) => JSON.parse(content)["storageAccountName"]["value"]);
