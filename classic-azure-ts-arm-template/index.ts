@@ -65,7 +65,7 @@ const armDeployment = new azure.core.ResourceGroupTemplateDeployment("test-dep",
     }),
     parametersContent: {
         "storageAccountType": {
-          "value": "Standard_GRS"
+          "value": "Standard_GRS",
         },
     },
     deploymentMode: "Incremental",
