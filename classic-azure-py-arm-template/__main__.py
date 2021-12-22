@@ -13,9 +13,15 @@ resource_group = azure.core.ResourceGroup('test')
 template = {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "outputs": {
+        "storageAccountName": {
+            "type": "String",
+            "value": "[variables('storageAccountName')]",
+        },
+    },
     "parameters": {
         "storageAccountType": {
-            "type": "string",
+            "type": "String",
             "defaultValue": "Standard_LRS",
             "allowedValues": [
                 "Standard_LRS",
@@ -26,13 +32,6 @@ template = {
                 "description": "Storage Account type",
             },
         },
-    },
-    "variables": {
-        "location": "[resourceGroup().location]",
-        "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'storage')]",
-        "publicIPAddressName": "[concat('myPublicIp', uniquestring(resourceGroup().id))]",
-        "publicIPAddressType": "Dynamic",
-        "dnsLabelPrefix": f"{get_project()}-{get_stack()}",
     },
     "resources": [
         {
@@ -57,12 +56,13 @@ template = {
             },
         },
     ],
-    "outputs": {
-        "storageAccountName": {
-            "type": "string",
-            "value": "[variables('storageAccountName')]",
-        },
-    }
+    "variables": {
+        "location": "[resourceGroup().location]",
+        "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'storage')]",
+        "publicIPAddressName": "[concat('myPublicIp', uniquestring(resourceGroup().id))]",
+        "publicIPAddressType": "Dynamic",
+        "dnsLabelPrefix": f"{get_project()}-{get_stack()}",
+    },
 }
 
 # Create an ARM template deployment using the ordinary JSON ARM template as specified above. This could be read from disk, of course.

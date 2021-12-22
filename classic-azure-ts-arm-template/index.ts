@@ -12,9 +12,15 @@ const armDeployment = new azure.core.ResourceGroupTemplateDeployment("test-dep",
     templateContent: JSON.stringify({
       "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
       "contentVersion": "1.0.0.0",
+      "outputs": {
+        "storageAccountName": {
+          "type": "String",
+          "value": "[variables('storageAccountName')]",
+        },
+      },
       "parameters": {
         "storageAccountType": {
-          "type": "string",
+          "type": "String",
           "defaultValue": "Standard_LRS",
           "allowedValues": [
             "Standard_LRS",
@@ -25,13 +31,6 @@ const armDeployment = new azure.core.ResourceGroupTemplateDeployment("test-dep",
             "description": "Storage Account type",
           },
         },
-      },
-      "variables": {
-        "location": "[resourceGroup().location]",
-        "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'storage')]",
-        "publicIPAddressName": "[concat('myPublicIp', uniquestring(resourceGroup().id))]",
-        "publicIPAddressType": "Dynamic",
-        "dnsLabelPrefix": `${pulumi.getProject()}-${pulumi.getStack()}`,
       },
       "resources": [
         {
@@ -56,11 +55,12 @@ const armDeployment = new azure.core.ResourceGroupTemplateDeployment("test-dep",
           },
         },
       ],
-      "outputs": {
-        "storageAccountName": {
-          "type": "string",
-          "value": "[variables('storageAccountName')]",
-        },
+      "variables": {
+        "location": "[resourceGroup().location]",
+        "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'storage')]",
+        "publicIPAddressName": "[concat('myPublicIp', uniquestring(resourceGroup().id))]",
+        "publicIPAddressType": "Dynamic",
+        "dnsLabelPrefix": `${pulumi.getProject()}-${pulumi.getStack()}`,
       },
     }),
     parametersContent: JSON.stringify({
