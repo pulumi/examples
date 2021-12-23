@@ -13,13 +13,19 @@ from typing_extensions import TypedDict
 from uuid import uuid4
 import hashlib
 
-
 def sha256sum(filename):
     h  = hashlib.sha256()
     with open(filename, 'rb') as f:
         data = f.read()
         h.update(data)
     return h.hexdigest()
+
+# helper function to allow serialising pulumi.output.Unknown objects
+# in ProvisionerProvider.diff
+def pulumi_to_json(obj):
+    if isinstance(obj, pulumi.output.Unknown):
+        return {"__type":"unknown"}
+    return obj
 
 # ConnectionArgs tells a provisioner how to access a remote resource. It includes the hostname
 # and optional port (default is 22), username, password, and private key information.
@@ -84,8 +90,8 @@ class ProvisionerProvider(dynamic.ResourceProvider):
                 if key not in self.ignore_properties():
                     diffs.append(key)
             else:
-                olds_value = json.dumps(olds[key], sort_keys=True, indent=2)
-                news_value = json.dumps(news[key], sort_keys=True, indent=2)
+                olds_value = json.dumps(olds[key], sort_keys=True, indent=2, default=pulumi_to_json)
+                news_value = json.dumps(news[key], sort_keys=True, indent=2, default=pulumi_to_json)
                 if olds_value != news_value:
                     if key not in self.ignore_properties():
                         diffs.append(key)
