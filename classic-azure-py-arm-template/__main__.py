@@ -1,4 +1,4 @@
-# Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+# Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
 import json
 
@@ -13,9 +13,15 @@ resource_group = azure.core.ResourceGroup('test')
 template = {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "outputs": {
+        "storageAccountName": {
+            "type": "String",
+            "value": "[variables('storageAccountName')]",
+        },
+    },
     "parameters": {
         "storageAccountType": {
-            "type": "string",
+            "type": "String",
             "defaultValue": "Standard_LRS",
             "allowedValues": [
                 "Standard_LRS",
@@ -26,13 +32,6 @@ template = {
                 "description": "Storage Account type",
             },
         },
-    },
-    "variables": {
-        "location": "[resourceGroup().location]",
-        "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'storage')]",
-        "publicIPAddressName": "[concat('myPublicIp', uniquestring(resourceGroup().id))]",
-        "publicIPAddressType": "Dynamic",
-        "dnsLabelPrefix": f"{get_project()}-{get_stack()}",
     },
     "resources": [
         {
@@ -57,23 +56,26 @@ template = {
             },
         },
     ],
-    "outputs": {
-        "storageAccountName": {
-            "type": "string",
-            "value": "[variables('storageAccountName')]",
-        },
-    }
+    "variables": {
+        "location": "[resourceGroup().location]",
+        "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'storage')]",
+        "publicIPAddressName": "[concat('myPublicIp', uniquestring(resourceGroup().id))]",
+        "publicIPAddressType": "Dynamic",
+        "dnsLabelPrefix": f"{get_project()}-{get_stack()}",
+    },
 }
 
 # Create an ARM template deployment using the ordinary JSON ARM template as specified above. This could be read from disk, of course.
-arm_deployment = azure.core.TemplateDeployment('test-dep',
+arm_deployment = azure.core.ResourceGroupTemplateDeployment('test-dep',
     resource_group_name=resource_group.name,
-    template_body=json.dumps(template),
-    parameters={
-        'storageAccountType': 'Standard_GRS'
-    },
+    template_content=json.dumps(template),
+    parameters_content=json.dumps({
+        'storageAccountType': {
+            'value': 'Standard_GRS'
+        }
+    }),
     deployment_mode='Incremental',
 )
 
 # Finally, export the allocated storage account name.
-export('storageAccountName', arm_deployment.outputs['storageAccountName'])
+export('storageAccountName', arm_deployment.output_content.apply(lambda j: json.loads(j)['storageAccountName']['value']))

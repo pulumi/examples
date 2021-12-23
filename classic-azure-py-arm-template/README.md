@@ -42,10 +42,10 @@ here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect
     Updating stack 'azure-arm-dev'
     Performing changes:
 
-         Type                              Name                      Status
-     +   pulumi:pulumi:Stack               azure-arm--azure-arm-dev  created
-     +   ├─ azure:core:ResourceGroup       rg                        created
-     +   └─ azure:core:TemplateDeployment  arm-dep                   created
+         Type                                           Name                      Status
+     +   pulumi:pulumi:Stack                            azure-arm--azure-arm-dev  created
+     +   ├─ azure:core:ResourceGroup                    rg                        created
+     +   └─ azure:core:ResourceGroupTemplateDeployment  arm-dep                   created
 
     Outputs:
         storageAccountName: "abevrwebgje2wstorage"
