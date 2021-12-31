@@ -43,14 +43,7 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
     $ cat rsa | pulumi config set privateKey --secret --
     ```
 
-    If your key is protected by a passphrase, add that too:
-
-    ```bash
-    $ pulumi config set privateKeyPassphrase --secret [yourPassphraseHere]
-    ```
-
-    Notice that we've used `--secret` for both `privateKey` and `privateKeyPassphrase`. This ensures they are
-    stored in encrypted form in the Pulumi secrets system.
+    Notice that we've used `--secret` for `privateKey`. This ensures they are stored in encrypted form in the Pulumi secrets system.
 
 1. Set the required configuration for this example. This example requires you to supply a username, password, location, and the public and private keys to the virtual machine that we are going to create. Check the Azure virtual machine [password requirements](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/faq#what-are-the-password-requirements-when-creating-a-vm) before creating a password.
 

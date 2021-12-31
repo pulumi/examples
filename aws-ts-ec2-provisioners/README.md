@@ -1,10 +1,8 @@
 # AWS WebServer with Manual Provisioning
 
-This demonstrates using Pulumi dynamic providers to accomplish post-provisioning configuration steps.
+This demonstrates using the [`@pulumi/command`](https://www.pulumi.com/registry/packages/command/) package to accomplish post-provisioning configuration steps.
 
 Using these building blocks, one can accomplish much of the same as Terraform provisioners.
-
-https://github.com/pulumi/pulumi/issues/1691 tracks designing and developing a complete replacement for provisioners.
 
 ## Running the Example
 
@@ -32,14 +30,7 @@ $ cat rsa.pub | pulumi config set publicKey --
 $ cat rsa | pulumi config set privateKey --secret --
 ```
 
-If your key is protected by a passphrase, add that too:
-
-```
-$ pulumi config set privateKeyPassphrase --secret [yourPassphraseHere]
-```
-
-Notice that we've used `--secret` for both `privateKey` and `privateKeyPassphrase`. This ensures their are
-stored in encrypted form in the Pulumi secrets system.
+Notice that we've used `--secret` for `privateKey`. This ensures their are stored in encrypted form in the Pulumi secrets system.
 
 Also set your desired AWS region:
 

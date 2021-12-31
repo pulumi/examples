@@ -2,7 +2,7 @@
 
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
-import * as provisioners from "./provisioners";
+import * as command from "@pulumi/command";
 import { getFileHash } from "./util";
 
 // Get the config ready to go.
@@ -15,8 +15,7 @@ const password = config.requireSecret("password");
 // retrieve the ssh publicKey from config
 const publicKey = config.get("publicKey");
 
-// The privateKey associated with the selected key must be provided (either directly or base64 encoded), along with an optional
-// passphrase if needed.
+// The privateKey associated with the selected key must be provided (either directly or base64 encoded).
 const privateKey = config.requireSecret("privateKey").apply(key => {
     if (key.startsWith("-----BEGIN RSA PRIVATE KEY-----")) {
         return key;
@@ -24,8 +23,6 @@ const privateKey = config.requireSecret("privateKey").apply(key => {
         return Buffer.from(key, "base64").toString("ascii");
     }
 });
-const privateKeyPassphrase = config.getSecret("privateKeyPassphrase");
-
 
 // All resources will share a resource group.
 const resourceGroupName = new azure.core.ResourceGroup("server-rg").name;
@@ -134,30 +131,29 @@ export const ipAddress = done.apply(d => {
     }, { async: true }).then(ip => ip.ipAddress);
 });
 
-const conn: provisioners.ConnectionArgs = {
+const connection: command.types.input.remote.ConnectionArgs = {
     host: ipAddress,
-    username,
+    user: username,
     password,
     privateKey,
-    privateKeyPassphrase,
 };
 
 const changeToken = getFileHash("myapp.conf");
 // Copy a config file to our server.
-const cpConfig = new provisioners.CopyFile("config", {
-    changeToken,
-    conn,
-    src: "myapp.conf",
-    dest: `/home/${username}/myapp.conf`,
+const cpConfig = new command.remote.CopyFile("config", {
+    triggers: [changeToken],
+    connection,
+    localPath: "myapp.conf",
+    remotePath: `/home/${username}/myapp.conf`,
 }, { dependsOn: [vm, pubIp] });
 
 // Execute a basic command on our server.
-const catConfig = new provisioners.RemoteExec("cat-config", {
-    changeToken,
-    conn,
-    command: `cat /home/${username}/myapp.conf`,
+const catConfig = new command.remote.Command("cat-config", {
+    triggers: [changeToken],
+    connection,
+    create: `cat /home/${username}/myapp.conf`,
 }, { dependsOn: cpConfig });
 
 
 // export the command output
-export const catConfigStdout = catConfig.result.stdout;
+export const catConfigStdout = catConfig.stdout;
