@@ -1,8 +1,8 @@
 // Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
-import * as pulumi from "@pulumi/pulumi";
 import * as command from "@pulumi/command";
+import * as pulumi from "@pulumi/pulumi";
 import { getFileHash } from "./util";
 
 // Get the config ready to go.

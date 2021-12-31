@@ -1,8 +1,8 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import * as pulumi from "@pulumi/pulumi";
 import * as command from "@pulumi/command";
+import * as pulumi from "@pulumi/pulumi";
 import { getFileHash } from "./util";
 
 // Get the config ready to go.
@@ -45,7 +45,7 @@ const amiId = aws.ec2.getAmi({
 const size = "t2.micro";
 if (!keyName) {
     if (!publicKey) {
-        throw new Error("must provide one of `keyName` or `publicKey`")
+        throw new Error("must provide one of `keyName` or `publicKey`");
     }
     const key = new aws.ec2.KeyPair("key", { publicKey });
     keyName = key.keyName;
