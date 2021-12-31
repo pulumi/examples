@@ -1,11 +1,11 @@
 # Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
-import provisioners
 import pulumi
 from pulumi import Config, Output, export
 import pulumi_azure_native.compute as compute
 import pulumi_azure_native.network as network
 import pulumi_azure_native.resources as resources
+import pulumi_command as command
 
 # Get the config ready to go.
 config = Config()
@@ -25,7 +25,6 @@ def decode_key(key):
 
 
 private_key = config.require_secret('privateKey').apply(decode_key)
-private_key_passphrase = config.get_secret('privateKeyPassphrase')
 
 # Create a resource group to hold project resources.
 resource_group = resources.ResourceGroup("minecraft")
@@ -114,27 +113,26 @@ public_ip_addr = server.id.apply(lambda _:
         resource_group_name=resource_group.name))
 
 # Create connection object to server.
-conn = provisioners.ConnectionArgs(
+connection = command.remote.ConnectionArgs(
     host=public_ip_addr.ip_address,
-    username=admin_username,
+    user=admin_username,
     private_key=private_key,
-    private_key_passphrase=private_key_passphrase,
 )
 
 # Copy install script to server.
-cp_config = provisioners.CopyFile(
+cp_config = command.remote.CopyFile(
     'config',
-    conn=conn,
-    src='install.sh',
-    dest='install.sh',
+    connection=connection,
+    local_path='install.sh',
+    remote_path='install.sh',
     opts=pulumi.ResourceOptions(depends_on=[server]),
 )
 
 # Execute install script on server.
-install = provisioners.RemoteExec(
+install = command.remote.Command(
     'install',
-    conn=conn,
-    commands=['sudo chmod 755 install.sh && sudo ./install.sh'],
+    connection=connection,
+    create='sudo chmod 755 install.sh && sudo ./install.sh',
     opts=pulumi.ResourceOptions(depends_on=[cp_config]),
 )
 

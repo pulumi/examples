@@ -1,8 +1,8 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
+import * as command from "@pulumi/command";
 import * as pulumi from "@pulumi/pulumi";
-import * as provisioners from "./provisioners";
 import { getFileHash } from "./util";
 
 // Get the config ready to go.
@@ -10,11 +10,10 @@ const config = new pulumi.Config();
 
 // If keyName is provided, an existing KeyPair is used, else if publicKey is provided a new KeyPair
 // derived from the publicKey is created.
-let keyName: pulumi.Input<string> = config.get("keyName");
+let keyName: pulumi.Input<string> | undefined = config.get("keyName");
 const publicKey = config.get("publicKey");
 
-// The privateKey associated with the selected key must be provided (either directly or base64 encoded), along with an optional
-// passphrase if needed.
+// The privateKey associated with the selected key must be provided (either directly or base64 encoded).
 const privateKey = config.requireSecret("privateKey").apply(key => {
     if (key.startsWith("-----BEGIN RSA PRIVATE KEY-----")) {
         return key;
@@ -22,7 +21,6 @@ const privateKey = config.requireSecret("privateKey").apply(key => {
         return Buffer.from(key, "base64").toString("ascii");
     }
 });
-const privateKeyPassphrase = config.getSecret("privateKeyPassphrase");
 
 // Create a new security group that permits SSH and web access.
 const secgrp = new aws.ec2.SecurityGroup("secgrp", {
@@ -46,6 +44,9 @@ const amiId = aws.ec2.getAmi({
 // Create an EC2 server that we'll then provision stuff onto.
 const size = "t2.micro";
 if (!keyName) {
+    if (!publicKey) {
+        throw new Error("must provide one of `keyName` or `publicKey`");
+    }
     const key = new aws.ec2.KeyPair("key", { publicKey });
     keyName = key.keyName;
 }
@@ -53,31 +54,30 @@ const server = new aws.ec2.Instance("server", {
     instanceType: size,
     ami: amiId,
     keyName: keyName,
-    vpcSecurityGroupIds: [ secgrp.id ],
+    vpcSecurityGroupIds: [secgrp.id],
 });
-const conn: provisioners.ConnectionArgs = {
+const connection: command.types.input.remote.ConnectionArgs = {
     host: server.publicIp,
-    username: "ec2-user",
+    user: "ec2-user",
     privateKey,
-    privateKeyPassphrase,
 };
 
 const changeToken = getFileHash("myapp.conf");
 // Copy a config file to our server.
-const cpConfig = new provisioners.CopyFile("config", {
-    changeToken,
-    conn,
-    src: "myapp.conf",
-    dest: "myapp.conf",
+const cpConfig = new command.remote.CopyFile("config", {
+    triggers: [changeToken],
+    connection,
+    localPath: "myapp.conf",
+    remotePath: "myapp.conf",
 }, { dependsOn: server });
 
 // Execute a basic command on our server.
-const catConfig = new provisioners.RemoteExec("cat-config", {
-    changeToken,
-    conn,
-    command: "cat myapp.conf",
+const catConfig = new command.remote.Command("cat-config", {
+    triggers: [changeToken],
+    connection,
+    create: "cat myapp.conf",
 }, { dependsOn: cpConfig });
 
 export const publicIp = server.publicIp;
 export const publicHostName = server.publicDns;
-export const catConfigStdout = catConfig.result.stdout;
+export const catConfigStdout = catConfig.stdout;
