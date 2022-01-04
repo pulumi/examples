@@ -1,3 +1,4 @@
+//go:build Gcp || all
 // +build Gcp all
 
 package test
@@ -44,8 +45,6 @@ func TestAccGcpGoFunctionsRaw(t *testing.T) {
 }
 
 func TestAccGcpGoGke(t *testing.T) {
-	// TODO[pulumi/examples#1129]: Reenable test
-	t.Skip("Skip due to failure: `Error when reading or editing Project Service`")
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-gke"),
