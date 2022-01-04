@@ -155,7 +155,7 @@ if (config.certificateArn === undefined) {
 
 // Generate Origin Access Identity to access the private s3 bucket.
 const originAccessIdentity = new aws.cloudfront.OriginAccessIdentity("originAccessIdentity", {
-  comment: "this is needed to setup s3 polices and make s3 not public."
+  comment: "this is needed to setup s3 polices and make s3 not public.",
 });
 
 // if config.includeWWW include an alias for the www subdomain
@@ -176,8 +176,8 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
             originId: contentBucket.arn,
             domainName: contentBucket.websiteEndpoint,
             s3OriginConfig: {
-                originAccessIdentity: originAccessIdentity.cloudfrontAccessIdentityPath
-            }, 
+                originAccessIdentity: originAccessIdentity.cloudfrontAccessIdentityPath,
+            },
         },
     ],
 
@@ -303,13 +303,13 @@ const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
             {
             Effect: "Allow",
             Principal: {
-                AWS: oaiArn
+                AWS: oaiArn,
             }, // Only allow Cloudfront read access.
             Action: ["s3:GetObject"],
             Resource: [`${bucketArn}/*`], // Give Cloudfront access to the entire bucket.
             },
         ],
-    }))
+    })),
 });
 
 const aRecord = createAliasRecord(config.targetDomain, cdn);
