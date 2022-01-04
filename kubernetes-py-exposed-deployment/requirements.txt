@@ -1,0 +1,2 @@
+pulumi==3.11.0
+pulumi-kubernetes==3.6.3
