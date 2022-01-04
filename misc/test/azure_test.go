@@ -1,3 +1,4 @@
+//go:build Azure || all
 // +build Azure all
 
 package test
@@ -65,11 +66,11 @@ func TestAccAzureGoAci(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aci"),
 			// TODO[pulumi/examples#1120]: Fix issue with extra runtime validation
-			// ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			// 	assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-			// 		return assert.Contains(t, body, "Hello, containers!")
-			// 	})
-			// },
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResult(t, stack.Outputs["containerIPv4Address"], func(body string) bool {
+					return assert.Contains(t, body, "Welcome to Azure Container Instances!")
+				})
+			},
 		})
 
 	integration.ProgramTest(t, &test)
