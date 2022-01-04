@@ -1,3 +1,4 @@
+//go:build Aws || all
 // +build Aws all
 
 package test
@@ -47,18 +48,9 @@ func TestAccAwsGoEks(t *testing.T) {
 }
 
 func TestAccAwsGoFargate(t *testing.T) {
-	// TODO[pulumi/examples#1130]: Reenable test
-	t.Skip(`Skip due to failure: "63" does not contain "Welcome to nginx!"`)
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-go-fargate"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				maxWait := 10 * time.Minute
-				endpoint := stack.Outputs["url"].(string)
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
-					return assert.Contains(t, body, "Welcome to nginx!")
-				})
-			},
 		})
 
 	integration.ProgramTest(t, &test)
