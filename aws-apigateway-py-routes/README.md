@@ -83,7 +83,7 @@ $ curl -w '\n' "$(pulumi stack output swagger-url)"
   "uuid": ...
 }
 
-$ curl -w '\n' -H "x-api-key: $(pulumi stack output apiKeyValue --show-secrets)" "$(pulumi stack output url)key-authorized"
+$ curl -w '\n' -H "x-api-key: $(pulumi stack output api-key-value --show-secrets)" "$(pulumi stack output url)key-authorized"
 Hello, API Gateway!
 ```
 
