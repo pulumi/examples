@@ -14,7 +14,8 @@ func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 
 		containerService, err := projects.NewService(ctx, "project", &projects.ServiceArgs{
-			Service: pulumi.String("container.googleapis.com"),
+			Service:                  pulumi.String("container.googleapis.com"),
+			DisableDependentServices: pulumi.Bool(true),
 		})
 		if err != nil {
 			return err
