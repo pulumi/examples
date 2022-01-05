@@ -1,10 +1,7 @@
-# [App Description] using [Service or Tool]
-
-Set up two lambda-backed API Gateways: an API Gateway V1 (REST) and an API Gateway V2 (HTTP). AWS provides some information on the differences between these two API Gateway types, here: (Announcing HTTP APIs for Amazon API Gateway)[https://aws.amazon.com/blogs/compute/announcing-http-apis-for-amazon-api-gateway/] & (API Gateway V2 FAQs)[https://aws.amazon.com/api-gateway/faqs/]
-
 # Lambda-backed API Gateway
 
-This example provides API endpoints which are executed by lambda using TypeScript and AWS.
+This example provides API endpoints which are executed by AWS Lambda using Python. 
+The example sets up up two Lambda-backed API Gateways: an API Gateway V1 (REST) and an API Gateway V2 (HTTP). AWS provides some information on the differences between these two API Gateway types: [Announcing HTTP APIs for Amazon API Gateway](https://aws.amazon.com/blogs/compute/announcing-http-apis-for-amazon-api-gateway/) and [API Gateway V2 FAQs](https://aws.amazon.com/api-gateway/faqs/)
 
 This sample uses the following AWS products:
 
