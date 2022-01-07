@@ -45,6 +45,7 @@ func TestAccGcpGoFunctionsRaw(t *testing.T) {
 }
 
 func TestAccGcpGoGke(t *testing.T) {
+	t.Skip("temporarily skipping while we stop the test disable apis")
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-gke"),
