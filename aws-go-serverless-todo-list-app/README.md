@@ -1,8 +1,6 @@
 # AWS Golang Serverless To-Do list app
 
-This example creates a simple serverless To-Do list application. The application consists of API Gateway HTTP API, Lambda, DynamoDB and S3.  
-The frontend web application is delivered from S3 web hosting and the frontend web applicaion accesses To-Do management API hosted as Lambda-backend HTTP API.  
-The Lambda function handles the To-Do data stored on DynamoDB table.
+This example creates a simple serverless To-Do list application. The application consists of API Gateway HTTP API, Lambda, DynamoDB and S3. The frontend web application is delivered from S3 web hosting and the frontend web applicaion accesses To-Do management API hosted as Lambda-backed HTTP API. The Lambda function handles the To-Do data stored on DynamoDB table.
 
 ## Deploying the App
 
