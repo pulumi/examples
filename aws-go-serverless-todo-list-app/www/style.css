@@ -1,0 +1,71 @@
+html {
+    background-color: #D6DEF5;
+}
+
+h1 {
+    text-align: center;
+}
+
+#content {
+    background-color: #F8F9FD;
+    border-radius: 2em;
+    width: 50%;
+    margin: auto;
+    padding-bottom: 3em;
+}
+
+form {
+    padding-bottom: 10%;
+    width: 70%;
+    margin: auto;
+    justify-content: space-between;
+    display: flex;
+}
+
+#input-to-do {
+    text-align: right;
+}
+
+#new-to-do {
+    width: 80%;
+    height: 2.5em;
+    border-radius: 0.5em;
+    padding-left: 1em;
+    border: 0.5px solid #D6DEF5
+}
+
+#to-do-list > div {
+    width: 70%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    border-radius: 0.5em;
+    text-align: right;
+    background-color: white;
+    margin: auto;
+}
+
+#to-do-list > div > span {
+    text-align: left;
+    display: inline-block;
+    margin-top: auto;
+    margin-bottom: auto;
+    vertical-align: middle;
+    width: 80%;
+}
+
+.AddBtn {
+    background-color: yellowgreen;
+    border-color: yellowgreen;
+    border-style: solid;
+    border-radius: 0.5em;
+    height: 2.5em;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.DeleteBtn {
+    background-color: white;
+    border: none;
+    display: inline-block;
+    margin-right: 0.5em;
+}
