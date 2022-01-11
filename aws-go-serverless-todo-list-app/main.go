@@ -6,6 +6,7 @@ import (
 	"path"
 	"path/filepath"
 
+	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws"
 	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/apigatewayv2"
 	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/dynamodb"
 	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/iam"
@@ -16,6 +17,16 @@ import (
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
+		account, err := aws.GetCallerIdentity(ctx)
+		if err != nil {
+			return err
+		}
+
+		region, err := aws.GetRegion(ctx, &aws.GetRegionArgs{})
+		if err != nil {
+			return err
+		}
+
 		// Create a DynamoDB Table
 		table, err := dynamodb.NewTable(ctx, "dynamodb", &dynamodb.TableArgs{
 			Attributes: dynamodb.TableAttributeArray{
@@ -157,12 +168,25 @@ func main() {
 			return err
 		}
 
-		// Add a resource based policy to Lambda
-		if _, err = lambda.NewPermission(ctx, "invoke-lambda-permission", &lambda.PermissionArgs{
+		// Add a resource based policy for the path '/todo' to Lambda
+		_, err = lambda.NewPermission(ctx, "lambda-permission-todo", &lambda.PermissionArgs{
 			Action:    pulumi.String("lambda:InvokeFunction"),
 			Function:  function.Name,
 			Principal: pulumi.String("apigateway.amazonaws.com"),
-		}); err != nil {
+			SourceArn: pulumi.Sprintf("arn:aws:execute-api:%s:%s:%s/*/*/todo", region.Name, account.AccountId, apigateway.ID()),
+		}, pulumi.DependsOn([]pulumi.Resource{addToDoRoute, postToDoRoute}));
+		if err != nil {
+			return err
+		}
+
+		// Add a resource based policy for the path '/todo/{id}' to Lambda
+		_, err = lambda.NewPermission(ctx, "lambda-permission-todo-id", &lambda.PermissionArgs{
+			Action:    pulumi.String("lambda:InvokeFunction"),
+			Function:  function.Name,
+			Principal: pulumi.String("apigateway.amazonaws.com"),
+			SourceArn: pulumi.Sprintf("arn:aws:execute-api:%s:%s:%s/*/*/todo/*", region.Name, account.AccountId, apigateway.ID()),
+		}, pulumi.DependsOn([]pulumi.Resource{deleteToDoRoute}));
+		if err != nil {
 			return err
 		}
 

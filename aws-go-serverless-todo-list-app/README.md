@@ -60,56 +60,57 @@ After cloning this repo, run these commands from the working directory:
 	```bash
 	$ pulumi up                              
 	Previewing update (dev)
-     Type                             Name                                 Plan       
-    +   pulumi:pulumi:Stack              aws-go-serverless-todo-list-app-dev  create.    
-    +   ├─ aws:dynamodb:Table            dynamodb                             create     
-    +   ├─ aws:s3:Bucket                 s3-website-bucket                    create     
-    +   pulumi:pulumi:Stack              aws-go-serverless-todo-list-app-dev  create     
-    +   ├─ aws:iam:Policy                iam-pilicy                           create     
-    +   ├─ aws:iam:Role                  iam-role                             create     
-    +   ├─ aws:s3:BucketObject           index.html                           create     
-    +   ├─ aws:s3:BucketObject           style.css                            create     
-    +   ├─ aws:s3:BucketObject           index.js                             create     
-    +   ├─ aws:lambda:Function           lambda-function                      create     
-    +   ├─ aws:apigatewayv2:Integration  apigateway-lambda-integration        create     
-    +   ├─ aws:lambda:Permission         invoke-lambda-permission             create     
-    +   ├─ aws:apigatewayv2:Route        route-to-delete-todo                 create     
-    +   ├─ aws:apigatewayv2:Route        route-to-get-todo                    create     
-    +   ├─ aws:apigatewayv2:Route        route-to-post-todo                   create     
-    +   ├─ aws:apigatewayv2:Deployment   api-deployment                       create     
-    +   ├─ aws:apigatewayv2:Stage        api-stage                            create     
-    +   └─ aws:s3:BucketObject           config.js                            create     
+        Type                             Name                                 Plan
+    +   pulumi:pulumi:Stack              aws-go-serverless-todo-list-app-dev  create
+    +   ├─ aws:s3:Bucket                 s3-website-bucket                    create
+    +   ├─ aws:apigatewayv2:Api          apigateway                           create
+    +   ├─ aws:dynamodb:Table            dynamodb                             create
+    +   ├─ aws:iam:Policy                iam-pilicy                           create
+    +   ├─ aws:s3:BucketObject           index.html                           create
+    +   ├─ aws:s3:BucketObject           index.js                             create
+    +   ├─ aws:s3:BucketObject           style.css                            create
+    +   ├─ aws:iam:Role                  iam-role                             create
+    +   ├─ aws:lambda:Function           lambda-function                      create
+    +   ├─ aws:apigatewayv2:Integration  apigateway-lambda-integration        create
+    +   ├─ aws:apigatewayv2:Route        route-to-get-todo                    create
+    +   ├─ aws:apigatewayv2:Route        route-to-post-todo                   create
+    +   ├─ aws:apigatewayv2:Route        route-to-delete-todo                 create
+    +   ├─ aws:lambda:Permission         lambda-permission-todo               create
+    +   ├─ aws:lambda:Permission         lambda-permission-todo-id            create
+    +   ├─ aws:apigatewayv2:Deployment   api-deployment                       create
+    +   ├─ aws:apigatewayv2:Stage        api-stage                            create
+    +   └─ aws:s3:BucketObject           config.js                            create
  
     Resources:
-        + 18 to create
+        + 19 to create
 
     Do you want to perform this update? yes
-    Updating (dev)
-        Type                             Name                                 Status       
-    +   pulumi:pulumi:Stack              aws-go-serverless-todo-list-app-dev  creating..   
-    +   pulumi:pulumi:Stack              aws-go-serverless-todo-list-app-dev  creating...  
-    +   pulumi:pulumi:Stack              aws-go-serverless-todo-list-app-dev  creating.    
-    +   ├─ aws:s3:Bucket                 s3-website-bucket                    created     
-    +   ├─ aws:s3:BucketObject           style.css                            created     
-    +   ├─ aws:s3:BucketObject           index.js                             created     
-    +   ├─ aws:s3:BucketObject           index.html                           created     
-    +   ├─ aws:iam:Policy                iam-pilicy                           created     
-    +   ├─ aws:iam:Role                  iam-role                             created     
-    +   ├─ aws:lambda:Function           lambda-function                      created     
-    +   ├─ aws:apigatewayv2:Integration  apigateway-lambda-integration        created     
-    +   ├─ aws:lambda:Permission         invoke-lambda-permission             created     
-    +   ├─ aws:apigatewayv2:Route        route-to-post-todo                   created     
-    +   ├─ aws:apigatewayv2:Route        route-to-get-todo                    created     
-    +   ├─ aws:apigatewayv2:Route        route-to-delete-todo                 created     
-    +   ├─ aws:apigatewayv2:Deployment   api-deployment                       created     
-    +   ├─ aws:apigatewayv2:Stage        api-stage                            created     
-    +   └─ aws:s3:BucketObject           config.js                            created     
+        Type                             Name                                 Status
+    +   pulumi:pulumi:Stack              aws-go-serverless-todo-list-app-dev  created
+    +   ├─ aws:s3:Bucket                 s3-website-bucket                    created
+    +   ├─ aws:dynamodb:Table            dynamodb                             created
+    +   ├─ aws:apigatewayv2:Api          apigateway                           created
+    +   ├─ aws:s3:BucketObject           style.css                            created
+    +   ├─ aws:s3:BucketObject           index.js                             created
+    +   ├─ aws:s3:BucketObject           index.html                           created
+    +   ├─ aws:iam:Policy                iam-pilicy                           created
+    +   ├─ aws:iam:Role                  iam-role                             created
+    +   ├─ aws:lambda:Function           lambda-function                      created
+    +   ├─ aws:apigatewayv2:Integration  apigateway-lambda-integration        created
+    +   ├─ aws:apigatewayv2:Route        route-to-post-todo                   created
+    +   ├─ aws:apigatewayv2:Route        route-to-get-todo                    created
+    +   ├─ aws:apigatewayv2:Route        route-to-delete-todo                 created
+    +   ├─ aws:lambda:Permission         lambda-permission-todo               created
+    +   ├─ aws:lambda:Permission         lambda-permission-todo-id            created
+    +   ├─ aws:apigatewayv2:Deployment   api-deployment                       created
+    +   ├─ aws:apigatewayv2:Stage        api-stage                            created
+    +   └─ aws:s3:BucketObject           config.js                            created
     
     Outputs:
         Application URL: "http://s3-website-bucket-xxxxxx.s3-website-us-west-2.amazonaws.com"
 
     Resources:
-        + 18 created
+        + 19 created
 
     Duration: 37s
 	```
