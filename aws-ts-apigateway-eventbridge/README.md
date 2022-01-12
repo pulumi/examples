@@ -47,7 +47,7 @@ This example demonstrates an API Gateway V1 integration with EventBridge and Lam
     curl --data '{"some-invalid-property-name": "Chris"}' --header "Content-Type: application/json" "$(pulumi stack output url)/uploads"
 
     HTTP/2 400
-    {"message": "Invalid request body"
+    {"message": "Invalid request body"}
     ```
 
     With valid POST data:
