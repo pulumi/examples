@@ -30,7 +30,8 @@ This example creates an AWS API Gateway proxy integration with EventBridge and L
 
     ```bash
     python3 -m venv venv
-    venv/bin/pip install -r requirements.txt
+    source venv/bin/activate
+    pip install -r requirements.txt
 
     pulumi up
     ```

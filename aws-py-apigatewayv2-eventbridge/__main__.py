@@ -14,7 +14,7 @@ stage = aws.apigatewayv2.Stage("stage",
     api_id=api.id,
     name=pulumi.get_stack(),
     auto_deploy=True
-);
+)
 
 # Create an event bus.
 bus = aws.cloudwatch.EventBus("bus")
@@ -42,7 +42,7 @@ api_gateway_role = aws.iam.Role("api-gateway-role",
     managed_policy_arns=[
         "arn:aws:iam::aws:policy/AmazonEventBridgeFullAccess",
     ],
-);
+)
 
 # Create an API Gateway integration to forward requests to EventBridge.
 integration = aws.apigatewayv2.Integration("integration",
@@ -63,14 +63,14 @@ integration = aws.apigatewayv2.Integration("integration",
         "DetailType": "my-detail-type",
         "Detail": "$request.body",
     },
-);
+)
 
 # Finally, define the route.
 route = aws.apigatewayv2.Route("route",
     api_id=api.id,
     route_key="POST /uploads",
     target=integration.id.apply(lambda id: f"integrations/{id}"),
-);
+)
 
 # Define a role and policy allowing Lambda functions to log to CloudWatch.
 lambda_role = aws.iam.Role("lambda-role",
@@ -118,7 +118,7 @@ lambda_target = aws.cloudwatch.EventTarget("lambda-target",
     arn=lambda_function.arn,
     rule=rule.name,
     event_bus_name=bus.name,
-);
+)
 
 # Give EventBridge permission to invoke the function.
 lambda_permission = aws.lambda_.Permission("lambda-permission",
@@ -126,7 +126,8 @@ lambda_permission = aws.lambda_.Permission("lambda-permission",
     principal="events.amazonaws.com",
     function=lambda_function.arn,
     source_arn=rule.arn,
-);
+)
 
 # Export the API Gateway URL to give us something to POST to.
 pulumi.export("url", pulumi.Output.concat(api.api_endpoint, "/", stage.name))
+
