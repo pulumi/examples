@@ -1,0 +1,11 @@
+name: aws-py-apigatewayv2-eventbridge
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: An example that integrates API Gateway, EventBridge, and Lambda.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2
