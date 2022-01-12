@@ -1,6 +1,6 @@
 # API Gateway to EventBridge
 
-[![Deploy with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-apigateway-go-routes/README.md)
+[![Deploy with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/aws-ts-apigatewayv2-eventbridge)
 
 This example creates an API Gateway V2 proxy integration with EventBridge and Lambda. It defines a single API Gateway endpoint that publishes events to an EventBridge event bus, and an accompanying event rule that matches those events and invokes a Lambda function.
 
