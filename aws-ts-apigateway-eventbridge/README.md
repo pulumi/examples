@@ -1,10 +1,8 @@
 # API Gateway V1 to EventBridge
 
-[![Deploy with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/aws-ts-apigateway-eventbridge)
+[![Deploy with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/aws-ts-apigateway-eventbridge)
 
 This example demonstrates an API Gateway V1 integration with EventBridge and Lambda that also validates request bodies (using an API Gateway model) and returns a custom HTTP response.
-
-![Diagram showing an API Gateway-EventBridge integration](https://user-images.githubusercontent.com/274700/149042008-ce1bedd3-f795-409f-b8ab-57d1ff78c259.png)
 
 ## Prerequisites
 
