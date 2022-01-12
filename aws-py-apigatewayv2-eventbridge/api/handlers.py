@@ -1,3 +1,5 @@
+# Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
+
 import json
 
 def capture_order(event, context):
