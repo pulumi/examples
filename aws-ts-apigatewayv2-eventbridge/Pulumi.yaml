@@ -1,0 +1,8 @@
+name: aws-ts-apigatewayv2-eventbridge
+runtime: nodejs
+description: An example that integrates API Gateway, EventBridge, and Lambda.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2
