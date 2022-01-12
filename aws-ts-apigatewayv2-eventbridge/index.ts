@@ -1,7 +1,7 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 // Create an HTTP API.
 const api = new aws.apigatewayv2.Api("api", {
