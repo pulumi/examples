@@ -142,7 +142,7 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
     origins: [
         {
             originId: contentBucket.arn,
-            domainName: contentBucket.websiteEndpoint,
+            domainName: contentBucket.bucketRegionalDomainName,
             customOriginConfig: {
                 // Amazon S3 doesn't support HTTPS connections when using an S3 bucket configured as a website endpoint.
                 // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesOriginProtocolPolicy

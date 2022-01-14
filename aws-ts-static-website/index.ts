@@ -155,7 +155,7 @@ if (config.certificateArn === undefined) {
 
 // Generate Origin Access Identity to access the private s3 bucket.
 const originAccessIdentity = new aws.cloudfront.OriginAccessIdentity("originAccessIdentity", {
-  comment: "this is needed to setup s3 polices and make s3 not public.",
+    comment: "this is needed to setup s3 polices and make s3 not public.",
 });
 
 // if config.includeWWW include an alias for the www subdomain
@@ -174,7 +174,7 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
     origins: [
         {
             originId: contentBucket.arn,
-            domainName: contentBucket.websiteEndpoint,
+            domainName: contentBucket.bucketRegionalDomainName,
             s3OriginConfig: {
                 originAccessIdentity: originAccessIdentity.cloudfrontAccessIdentityPath,
             },
@@ -296,17 +296,17 @@ function createWWWAliasRecord(targetDomain: string, distribution: aws.cloudfront
 }
 
 const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
-    bucket: siteBucket.id, // refer to the bucket created earlier
-    policy: pulumi.all([originAccessIdentity.iamArn, contentBucket.arn]).apply(([oaiArn, bucketArn]) =>JSON.stringify({
+    bucket: contentBucket.id, // refer to the bucket created earlier
+    policy: pulumi.all([originAccessIdentity.iamArn, contentBucket.arn]).apply(([oaiArn, bucketArn]) => JSON.stringify({
         Version: "2012-10-17",
         Statement: [
             {
-            Effect: "Allow",
-            Principal: {
-                AWS: oaiArn,
-            }, // Only allow Cloudfront read access.
-            Action: ["s3:GetObject"],
-            Resource: [`${bucketArn}/*`], // Give Cloudfront access to the entire bucket.
+                Effect: "Allow",
+                Principal: {
+                    AWS: oaiArn,
+                }, // Only allow Cloudfront read access.
+                Action: ["s3:GetObject"],
+                Resource: [`${bucketArn}/*`], // Give Cloudfront access to the entire bucket.
             },
         ],
     })),
