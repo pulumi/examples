@@ -13,6 +13,27 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
+func getKubeconfig(ctx *pulumi.Context, cluster *containerservice.ManagedCluster, resourceGroup *resources.ResourceGroup) pulumi.Output {
+	kubeconfig := pulumi.All(cluster.Name, resourceGroup.Name, resourceGroup.ID()).ApplyT(func(args interface{}) (string, error) {
+		clusterName := args.([]interface{})[0].(string)
+		resourceGroupName := args.([]interface{})[1].(string)
+		creds, err := containerservice.ListManagedClusterUserCredentials(ctx, &containerservice.ListManagedClusterUserCredentialsArgs{
+			ResourceGroupName: resourceGroupName,
+			ResourceName:      clusterName,
+		})
+		if err != nil {
+			return "", err
+		}
+		encoded := creds.Kubeconfigs[0].Value
+		kubeconfig, err := base64.StdEncoding.DecodeString(encoded)
+		if err != nil {
+			return "", err
+		}
+		return string(kubeconfig), nil
+	})
+	return kubeconfig
+}
+
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Create an Azure Resource Group
@@ -93,29 +114,13 @@ func main() {
 				ClientId: adApp.ApplicationId,
 				Secret:   adSpPassword.Value,
 			},
-			KubernetesVersion: pulumi.String("1.18.14"),
+			KubernetesVersion: pulumi.String("1.22.2"),
 		})
 		if err != nil {
 			return err
 		}
 
-		ctx.Export("kubeconfig", pulumi.All(cluster.Name, resourceGroup.Name, resourceGroup.ID()).ApplyT(func(args interface{}) (string, error) {
-			clusterName := args.([]interface{})[0].(string)
-			resourceGroupName := args.([]interface{})[1].(string)
-			creds, err := containerservice.ListManagedClusterUserCredentials(ctx, &containerservice.ListManagedClusterUserCredentialsArgs{
-				ResourceGroupName: resourceGroupName,
-				ResourceName:      clusterName,
-			})
-			if err != nil {
-				return "", err
-			}
-			encoded := creds.Kubeconfigs[0].Value
-			kubeconfig, err := base64.StdEncoding.DecodeString(encoded)
-			if err != nil {
-				return "", err
-			}
-			return string(kubeconfig), nil
-		}))
+		ctx.Export("kubeconfig", getKubeconfig(ctx, cluster, resourceGroup))
 
 		return nil
 	})
