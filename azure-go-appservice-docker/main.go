@@ -34,9 +34,9 @@ func main() {
 		//
 		// Scenario 1: deploying an image from Docker Hub.
 		// The example uses a HelloWorld application written in Go.
-		// Image: https://hub.docker.com/r/microsoft/azure-appservices-go-quickstart/
+		// Image: https://hub.docker.com/_/nginx
 		//
-		imageInDockerHub := "mcr.microsoft.com/azuredocs/aci-helloworld"
+		imageInDockerHub := "nginx"
 		helloApp, err := web.NewWebApp(ctx, "helloApp", &web.WebAppArgs{
 			ResourceGroupName: resourceGroup.Name,
 			ServerFarmId:      plan.ID(),
