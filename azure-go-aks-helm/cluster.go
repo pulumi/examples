@@ -54,11 +54,6 @@ func buildCluster(ctx *pulumi.Context, cfg Config) (*ClusterInfo, error) {
 	k8sCluster, err := cs.NewManagedCluster(ctx, "cluster",
 		&cs.ManagedClusterArgs{
 			ResourceGroupName: resourceGroup.Name,
-			AddonProfiles: cs.ManagedClusterAddonProfileMap{
-				"KubeDashboard": cs.ManagedClusterAddonProfileArgs{
-					Enabled: pulumi.Bool(true),
-				},
-			},
 			AgentPoolProfiles: cs.ManagedClusterAgentPoolProfileArray{
 				cs.ManagedClusterAgentPoolProfileArgs{
 					Count:        pulumi.Int(cfg.NodeCount),
