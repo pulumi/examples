@@ -48,12 +48,7 @@ func main() {
 			return err
 		}
 
-		ctx.Export("containerIPv4Address", containerGroup.IpAddress.ApplyT(func(ip *containerinstance.IpAddressResponse) (string, error) {
-			if ip == nil || ip.Ip == nil {
-				return "", nil
-			}
-			return *ip.Ip, nil
-		}).(pulumi.StringOutput))
+		ctx.Export("containerIPv4Address", containerGroup.IpAddress.Ip())
 
 		return nil
 	})
