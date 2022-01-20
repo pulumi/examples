@@ -22,7 +22,7 @@ func main() {
 		profile, err := cdn.NewProfile(ctx, "profile", &cdn.ProfileArgs{
 			ResourceGroupName: resourceGroup.Name,
 			Sku: &cdn.SkuArgs{
-				Name: cdn.SkuName_Standard_Microsoft,
+				Name: pulumi.String(cdn.SkuName_Standard_Microsoft),
 			},
 		})
 		if err != nil {
@@ -31,9 +31,9 @@ func main() {
 
 		storageAccount, err := storage.NewStorageAccount(ctx, "sa", &storage.StorageAccountArgs{
 			ResourceGroupName: resourceGroup.Name,
-			Kind:              storage.KindStorageV2,
+			Kind:              pulumi.String(storage.KindStorageV2),
 			Sku: &storage.SkuArgs{
-				Name: storage.SkuName_Standard_LRS,
+				Name: pulumi.String(storage.SkuName_Standard_LRS),
 			},
 		})
 		if err != nil {
