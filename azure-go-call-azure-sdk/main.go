@@ -7,8 +7,8 @@ import (
 	"fmt"
 
 	armauth "github.com/Azure/azure-sdk-for-go/services/authorization/mgmt/2015-07-01/authorization"
-	"github.com/Azure/go-autorest/autorest/adal"
 	"github.com/Azure/go-autorest/autorest"
+	"github.com/Azure/go-autorest/autorest/adal"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/authorization"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/containerregistry"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
@@ -44,7 +44,7 @@ func main() {
 		}
 		_, err = authorization.NewRoleAssignment(ctx, "access-from-cluster", &authorization.RoleAssignmentArgs{
 			PrincipalId:      pulumi.String(currentPrincipal),
-			PrincipalType:    authorization.PrincipalTypeUser, // adjust the type if you are running as a service principal
+			PrincipalType:    pulumi.String(authorization.PrincipalTypeUser), // adjust the type if you are running as a service principal
 			RoleDefinitionId: pulumi.String(*roleDef),
 			Scope:            registry.ID(),
 		})
