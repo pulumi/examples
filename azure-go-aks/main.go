@@ -13,27 +13,6 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-func getKubeconfig(ctx *pulumi.Context, cluster *containerservice.ManagedCluster, resourceGroup *resources.ResourceGroup) pulumi.Output {
-	kubeconfig := pulumi.All(cluster.Name, resourceGroup.Name, resourceGroup.ID()).ApplyT(func(args interface{}) (string, error) {
-		clusterName := args.([]interface{})[0].(string)
-		resourceGroupName := args.([]interface{})[1].(string)
-		creds, err := containerservice.ListManagedClusterUserCredentials(ctx, &containerservice.ListManagedClusterUserCredentialsArgs{
-			ResourceGroupName: resourceGroupName,
-			ResourceName:      clusterName,
-		})
-		if err != nil {
-			return "", err
-		}
-		encoded := creds.Kubeconfigs[0].Value
-		kubeconfig, err := base64.StdEncoding.DecodeString(encoded)
-		if err != nil {
-			return "", err
-		}
-		return string(kubeconfig), nil
-	})
-	return kubeconfig
-}
-
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Create an Azure Resource Group
@@ -120,7 +99,22 @@ func main() {
 			return err
 		}
 
-		ctx.Export("kubeconfig", getKubeconfig(ctx, cluster, resourceGroup))
+		creds := containerservice.ListManagedClusterUserCredentialsOutput(ctx,
+			containerservice.ListManagedClusterUserCredentialsOutputArgs{
+				ResourceGroupName: resourceGroup.Name,
+				ResourceName:      cluster.Name,
+			})
+
+		kubeconfig := creds.Kubeconfigs().Index(pulumi.Int(0)).Value().
+			ApplyT(func(encoded string) string {
+				kubeconfig, err := base64.StdEncoding.DecodeString(encoded)
+				if err != nil {
+					return ""
+				}
+				return string(kubeconfig)
+			})
+
+		ctx.Export("kubeconfig", kubeconfig)
 
 		return nil
 	})
