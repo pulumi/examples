@@ -1,10 +1,13 @@
 import * as aws from "@pulumi/aws";
 
-const secretContainer = new aws.secretsmanager.Secret("secretContainer");
+// Create a secret
+const secret = new aws.secretsmanager.Secret("secretContainer");
 
-const secret = new aws.secretsmanager.SecretVersion("secret", {
-    secretId: secretContainer.id,
+// Store a new secret version
+const secretVersion = new aws.secretsmanager.SecretVersion("secret", {
+    secretId: secret.id,
     secretString: "mysecret",
 });
 
-export const secretContainerId = secretContainer.id;
+// Export secret ID (in this case the ARN)
+export const secretId = secret.id;
