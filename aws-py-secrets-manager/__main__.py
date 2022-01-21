@@ -4,7 +4,7 @@ import pulumi
 from pulumi_aws import secretsmanager
 
 # Create secret
-secret = secretsmanager.Secret("secret_container")
+secret = secretsmanager.Secret("secret")
 
 # Create secret version
 secret_version = secretsmanager.SecretVersion("secret_version",

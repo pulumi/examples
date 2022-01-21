@@ -1,10 +1,10 @@
 import * as aws from "@pulumi/aws";
 
 // Create a secret
-const secret = new aws.secretsmanager.Secret("secretContainer");
+const secret = new aws.secretsmanager.Secret("secret");
 
 // Store a new secret version
-const secretVersion = new aws.secretsmanager.SecretVersion("secret", {
+const secretVersion = new aws.secretsmanager.SecretVersion("secretVersion", {
     secretId: secret.id,
     secretString: "mysecret",
 });

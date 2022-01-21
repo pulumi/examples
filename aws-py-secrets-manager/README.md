@@ -26,23 +26,22 @@ A simple program that creates an AWS secret and a version under AWS Secrets Mana
     ...
 
     Updating (dev)
+
+    View Live: https://app.pulumi.com/acmecorp/aws-py-secrets-manager/dev/updates/1
+
+        Type                                 Name                        Status
+
+    - pulumi:pulumi:Stack aws-py-secrets-manager-dev created
+    - ├─ aws:secretsmanager:Secret secret_container created
+    - └─ aws:secretsmanager:SecretVersion secret_version created
+
+    Outputs:
+    secret_id: "arn:aws:secretsmanager:us-east-1:xxxxxxxx:secret:secret_container-d07f0c4-N3OSrw"
+
+    Resources: + 3 created
+
+    Duration: 6s
     ```
-
-View Live: https://app.pulumi.com/acmecorp/aws-py-secrets-manager/dev/updates/1
-
-     Type                                 Name                        Status
-
-- pulumi:pulumi:Stack aws-py-secrets-manager-dev created
-- ├─ aws:secretsmanager:Secret secret_container created
-- └─ aws:secretsmanager:SecretVersion secret_version created
-
-Outputs:
-secret_id: "arn:aws:secretsmanager:us-east-1:xxxxxxxx:secret:secret_container-d07f0c4-N3OSrw"
-
-Resources: + 3 created
-
-Duration: 6s
-```
 
 ## Clean up
 
