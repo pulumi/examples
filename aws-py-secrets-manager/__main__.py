@@ -1,4 +1,4 @@
-"""An AWS Python Pulumi program"""
+# Copyright 2016-2020, Pulumi Corporation.
 
 import pulumi
 from pulumi_aws import secretsmanager
