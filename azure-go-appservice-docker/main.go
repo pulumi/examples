@@ -33,7 +33,7 @@ func main() {
 
 		//
 		// Scenario 1: deploying an image from Docker Hub.
-		// The example uses a HelloWorld application written in Go.
+		// The example uses an nginx base image
 		// Image: https://hub.docker.com/_/nginx
 		//
 		imageInDockerHub := "nginx"
