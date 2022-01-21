@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/pulumi/pulumi-gcp/sdk/v5/go/gcp/container"
-	"github.com/pulumi/pulumi-gcp/sdk/v5/go/gcp/projects"
 	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes"
 	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/apps/v1"
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/core/v1"
@@ -12,14 +11,6 @@ import (
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-
-		containerService, err := projects.NewService(ctx, "project", &projects.ServiceArgs{
-			Service:                  pulumi.String("container.googleapis.com"),
-			DisableDependentServices: pulumi.Bool(true),
-		})
-		if err != nil {
-			return err
-		}
 
 		engineVersions, err := container.GetEngineVersions(ctx, &container.GetEngineVersionsArgs{})
 		if err != nil {
@@ -40,7 +31,7 @@ func main() {
 					pulumi.String("https://www.googleapis.com/auth/monitoring"),
 				},
 			},
-		}, pulumi.DependsOn([]pulumi.Resource{containerService}))
+		})
 		if err != nil {
 			return err
 		}
