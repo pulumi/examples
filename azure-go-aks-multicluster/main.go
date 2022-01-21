@@ -110,7 +110,7 @@ func main() {
 					},
 				},
 				DnsPrefix:         pulumi.String(fmt.Sprintf("%s-kube", ctx.Stack())),
-				KubernetesVersion: pulumi.String("1.18.14"),
+				KubernetesVersion: pulumi.String("1.22.2"),
 			})
 			if err != nil {
 				return err

@@ -93,29 +93,28 @@ func main() {
 				ClientId: adApp.ApplicationId,
 				Secret:   adSpPassword.Value,
 			},
-			KubernetesVersion: pulumi.String("1.18.14"),
+			KubernetesVersion: pulumi.String("1.22.2"),
 		})
 		if err != nil {
 			return err
 		}
 
-		ctx.Export("kubeconfig", pulumi.All(cluster.Name, resourceGroup.Name, resourceGroup.ID()).ApplyT(func(args interface{}) (string, error) {
-			clusterName := args.([]interface{})[0].(string)
-			resourceGroupName := args.([]interface{})[1].(string)
-			creds, err := containerservice.ListManagedClusterUserCredentials(ctx, &containerservice.ListManagedClusterUserCredentialsArgs{
-				ResourceGroupName: resourceGroupName,
-				ResourceName:      clusterName,
+		creds := containerservice.ListManagedClusterUserCredentialsOutput(ctx,
+			containerservice.ListManagedClusterUserCredentialsOutputArgs{
+				ResourceGroupName: resourceGroup.Name,
+				ResourceName:      cluster.Name,
 			})
-			if err != nil {
-				return "", err
-			}
-			encoded := creds.Kubeconfigs[0].Value
-			kubeconfig, err := base64.StdEncoding.DecodeString(encoded)
-			if err != nil {
-				return "", err
-			}
-			return string(kubeconfig), nil
-		}))
+
+		kubeconfig := creds.Kubeconfigs().Index(pulumi.Int(0)).Value().
+			ApplyT(func(encoded string) string {
+				kubeconfig, err := base64.StdEncoding.DecodeString(encoded)
+				if err != nil {
+					return ""
+				}
+				return string(kubeconfig)
+			})
+
+		ctx.Export("kubeconfig", kubeconfig)
 
 		return nil
 	})

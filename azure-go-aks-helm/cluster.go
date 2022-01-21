@@ -54,11 +54,6 @@ func buildCluster(ctx *pulumi.Context, cfg Config) (*ClusterInfo, error) {
 	k8sCluster, err := cs.NewManagedCluster(ctx, "cluster",
 		&cs.ManagedClusterArgs{
 			ResourceGroupName: resourceGroup.Name,
-			AddonProfiles: cs.ManagedClusterAddonProfileMap{
-				"KubeDashboard": cs.ManagedClusterAddonProfileArgs{
-					Enabled: pulumi.Bool(true),
-				},
-			},
 			AgentPoolProfiles: cs.ManagedClusterAgentPoolProfileArray{
 				cs.ManagedClusterAgentPoolProfileArgs{
 					Count:        pulumi.Int(cfg.NodeCount),
@@ -98,25 +93,21 @@ func buildCluster(ctx *pulumi.Context, cfg Config) (*ClusterInfo, error) {
 }
 
 func getKubeconfig(ctx *pulumi.Context, cluster *ClusterInfo) pulumi.StringOutput {
-	return pulumi.All(cluster.ManagedCluster.Name, cluster.ResourceGroup.Name).
-		ApplyT(func(names []interface{}) (string, error) {
-			k8sClusterName := names[0].(string)
-			resourceGroupName := names[1].(string)
-			out, err := cs.ListManagedClusterUserCredentials(ctx,
-				&cs.ListManagedClusterUserCredentialsArgs{
-					ResourceGroupName: resourceGroupName,
-					ResourceName:      k8sClusterName,
-				},
-			)
+	creds := cs.ListManagedClusterUserCredentialsOutput(ctx,
+		cs.ListManagedClusterUserCredentialsOutputArgs{
+			ResourceGroupName: cluster.ResourceGroup.Name,
+			ResourceName:      cluster.ManagedCluster.Name,
+		},
+	)
+	kubeconfig := creds.Kubeconfigs().Index(pulumi.Int(0)).Value().
+		ApplyT(func(arg string) string {
+			kubeconfig, err := base64.StdEncoding.DecodeString(arg)
 			if err != nil {
-				return "", err
+				return ""
 			}
-			decoded, err := base64.StdEncoding.DecodeString(out.Kubeconfigs[0].Value)
-			if err != nil {
-				return "", err
-			}
-			return string(decoded), nil
+			return string(kubeconfig)
 		}).(pulumi.StringOutput)
+	return kubeconfig
 }
 
 func buildProvider(

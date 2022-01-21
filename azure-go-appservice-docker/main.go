@@ -33,10 +33,10 @@ func main() {
 
 		//
 		// Scenario 1: deploying an image from Docker Hub.
-		// The example uses a HelloWorld application written in Go.
-		// Image: https://hub.docker.com/r/microsoft/azure-appservices-go-quickstart/
+		// The example uses an nginx base image
+		// Image: https://hub.docker.com/_/nginx
 		//
-		imageInDockerHub := "microsoft/azure-appservices-go-quickstart"
+		imageInDockerHub := "nginx"
 		helloApp, err := web.NewWebApp(ctx, "helloApp", &web.WebAppArgs{
 			ResourceGroupName: resourceGroup.Name,
 			ServerFarmId:      plan.ID(),
@@ -57,7 +57,7 @@ func main() {
 		}
 
 		ctx.Export("helloEndpoint", helloApp.DefaultHostName.ApplyT(func(defaultHostName string) (string, error) {
-			return fmt.Sprintf("%v%v%v", "https://", defaultHostName, "/hello"), nil
+			return fmt.Sprintf("%v%v", "https://", defaultHostName), nil
 		}).(pulumi.StringOutput))
 
 		//
@@ -75,25 +75,13 @@ func main() {
 			return err
 		}
 
-		credentials := pulumi.All(resourceGroup.Name, registry.Name).ApplyT(
-			func(args []interface{}) (*containerregistry.ListRegistryCredentialsResult, error) {
-				resourceGroupName := args[0].(string)
-				registryName := args[1].(string)
-				return containerregistry.ListRegistryCredentials(ctx, &containerregistry.ListRegistryCredentialsArgs{
-					ResourceGroupName: resourceGroupName,
-					RegistryName:      registryName,
-				})
-			},
-		)
+		credentials := containerregistry.ListRegistryCredentialsOutput(ctx, containerregistry.ListRegistryCredentialsOutputArgs{
+			RegistryName:      registry.Name,
+			ResourceGroupName: resourceGroup.Name,
+		})
 
-		adminUsername := credentials.ApplyT(func(result interface{}) (string, error) {
-			credentials := result.(*containerregistry.ListRegistryCredentialsResult)
-			return *credentials.Username, nil
-		}).(pulumi.StringOutput)
-		adminPassword := credentials.ApplyT(func(result interface{}) (string, error) {
-			credentials := result.(*containerregistry.ListRegistryCredentialsResult)
-			return *credentials.Passwords[0].Value, nil
-		}).(pulumi.StringOutput)
+		adminUsername := credentials.Username().Elem()
+		adminPassword := credentials.Passwords().Index(pulumi.Int(0)).Value().Elem()
 
 		myImage, err := docker.NewImage(ctx, customImage, &docker.ImageArgs{
 			ImageName: registry.LoginServer.ApplyT(func(result string) (string, error) {
