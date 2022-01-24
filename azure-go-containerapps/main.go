@@ -91,9 +91,9 @@ func main() {
 		}).(pulumi.StringOutput)
 
 		newImage, err := docker.NewImage(ctx, "node-app", &docker.ImageArgs{
-			ImageName: pulumi.Sprintf("https://%s/node-app:v1.0.0", registry.LoginServer),
+			ImageName: pulumi.Sprintf("%s/node-app:v1.0.0", registry.LoginServer),
 			Build: docker.DockerBuildArgs{
-				Context: pulumi.String("/node-app"),
+				Context: pulumi.String("./node-app"),
 			},
 			Registry: docker.ImageRegistryArgs{
 				Server:   registry.LoginServer,
