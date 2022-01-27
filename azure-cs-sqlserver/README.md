@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-sqlserver/README.md)
 
-# Static Website Using Azure Blob Storage and CDN
+# A SQLServer on Azure PaaS
 
 This example configures [An example of a SQLServer on Azure PaaS](https://docs.microsoft.com/en-us/azure/azure-sql/database/logical-servers).
 
