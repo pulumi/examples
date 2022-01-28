@@ -1,0 +1,4 @@
+name: ts-helm-release-wordpress
+description: A minimal installation of the latest version of the Wordpress Helm chart
+runtime: nodejs
+template:
