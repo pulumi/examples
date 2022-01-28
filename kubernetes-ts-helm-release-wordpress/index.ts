@@ -1,7 +1,7 @@
 // Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
+import * as pulumi from "@pulumi/pulumi";
 
 // Deploy the bitnami/wordpress chart.
 const wordpress = new k8s.helm.v3.Release("wpdev", {
