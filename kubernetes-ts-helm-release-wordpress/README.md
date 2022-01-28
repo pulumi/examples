@@ -45,7 +45,7 @@ Resources:
 Do you want to perform this update? yes
 Updating (dev)
 
-View Live: https://app.pulumi.com/vivek/ts-helm-release-wordpress/dev/updates/1
+View Live: https://app.pulumi.com/.../ts-helm-release-wordpress/dev/updates/1
 
      Type                              Name                           Status       
  +   pulumi:pulumi:Stack               ts-helm-release-wordpress-dev  created     

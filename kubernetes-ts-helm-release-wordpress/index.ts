@@ -10,7 +10,7 @@ const wordpress = new k8s.helm.v3.Release("wpdev", {
         repo: "https://charts.bitnami.com/bitnami",
     },
     version: "13.0.6",
-    // Remove these values if your cluster can 
+    // Force to use ClusterIP so no assumptions on support for LBs etc. is required.
     values: {
         service: {
             type: "ClusterIP",
