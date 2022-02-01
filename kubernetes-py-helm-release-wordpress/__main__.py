@@ -27,7 +27,7 @@ wordpress = Release(
 
 srv = Service.get("wpdev-wordpress", Output.concat(wordpress.status.namespace, "/", wordpress.status.name, "-wordpress"))
 # Export the Cluster IP for Wordpress.
-pulumi.export("frontendIP", srv.spec.cluster_ip)
+pulumi.export("frontendIp", srv.spec.cluster_ip)
 # Command to run to access the wordpress frontend on localhost:8080
 cmd = Output.concat("kubectl port-forward svc/", srv.metadata.name, " 8080:80")
 pulumi.export("portForwardCommand", cmd)
