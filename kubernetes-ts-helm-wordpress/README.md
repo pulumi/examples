@@ -1,11 +1,11 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-helm-wordpress/README.md)
 
-# Wordpress Helm Chart
+# WordPress Helm Chart
 
-Uses the Helm API of `@pulumi/kubernetes` to deploy `v9.6.0` of the Wordpress Helm Chart to a
+Uses the Helm API of `@pulumi/kubernetes` to deploy `v9.6.0` of the WordPress Helm Chart to a
 Kubernetes cluster. Pulumi will expand the Helm Chart and submit the expanded YAML to the cluster.
 
-![wordpress](images/deploy.gif "Wordpress Helm Chart deployment")
+![wordpress](images/deploy.gif "WordPress Helm Chart deployment")
 
 ## Running the App
 
@@ -76,7 +76,7 @@ Resources:
 Duration: 53s
 ```
 
-We can see here in the `---outputs:---` section that Wordpress was allocated a public IP, in this
+We can see here in the `---outputs:---` section that WordPress was allocated a public IP, in this
 case `35.193.210.254`. It is exported with a stack output variable, `frontendIp`. We can use `curl`
 and `grep` to retrieve the `<title>` of the site the proxy points at.
 
