@@ -13,8 +13,8 @@ vm = metal.Device(
     billing_cycle="hourly",
 	facilities=["ewr1"],
     hostname=random_host_name.id,
-    operating_system="coreos_stable",
-    plan="baremetal_0",
+    operating_system="ubuntu_20_04",
+    plan="baremetal_1",
     project_id=project.id,
     ip_addresses=[{
         "type": "public_ipv4",

@@ -11,8 +11,8 @@ const vm = new metal.Device("vm", {
     facilities: [metal.Facility.EWR1],
     billingCycle: metal.BillingCycle.Hourly,
     hostname: randomHostName.id,
-    operatingSystem: metal.OperatingSystem.CoreOSStable,
-    plan: metal.Plan.T1SmallX86,
+    operatingSystem: metal.OperatingSystem.Ubuntu2004,
+    plan: metal.Plan.C1SmallX86,
     projectId:  project.then(p => p.id),
     ipAddresses: [{
         type: "public_ipv4",
