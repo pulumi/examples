@@ -74,7 +74,7 @@ When you're done, you can remove these resources with `pulumi destroy`:
 pulumi destroy --skip-preview
 Destroying (dev)
 
-View Live: https://app.pulumi.com/vivek/kubernetes-py-helm-release-wordpress/dev/updates/4
+View Live: https://app.pulumi.com/.../kubernetes-py-helm-release-wordpress/dev/updates/4
 
      Type                              Name                                      Status      
  -   pulumi:pulumi:Stack               kubernetes-py-helm-release-wordpress-dev  deleted     
