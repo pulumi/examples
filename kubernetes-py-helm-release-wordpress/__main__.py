@@ -15,7 +15,7 @@ wordpress = Release(
         repository_opts=RepositoryOptsArgs(
             repo="https://charts.bitnami.com/bitnami",
         ),
-        # Force to use ClusterIP so no assumptions on support for LBs etc. is required.
+        # Use ClusterIP so no assumptions on support for load balancers, etc. is required.
         version="13.0.6",
         values={
             "service": {
