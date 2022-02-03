@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-helm-wordpress/README.md)
 
-# Wordpress Helm Chart
+# Wordpress Helm Chart Deployed Using Helm Release Resource
 
 Uses the Helm Release API of `@pulumi/kubernetes` to deploy `v13.0.6` of the Wordpress Helm Chart to a
 Kubernetes cluster. The Helm Release resource will install the Chart mimicing behavior of the Helm CLI.
