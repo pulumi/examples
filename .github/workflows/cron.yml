@@ -191,8 +191,8 @@ jobs:
         - ubuntu-latest
         yarn-version:
         - 1.13.0
-  providers-download-tests:
-    name: providers package downloads from github
+  providers-experimental-tests:
+    name: providers experimental
     env:
       PULUMI_EXPERIMENTAL: true
     runs-on: ${{ matrix.platform }}
@@ -285,6 +285,7 @@ jobs:
       matrix:
         clouds:
           - DigitalOcean
+          - Aws
         dotnet-version:
           - 3.1.301
         examples-test-matrix:
