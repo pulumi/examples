@@ -11,10 +11,10 @@ project = metal.get_project(
 vm = metal.Device(
     "vm",
     billing_cycle="hourly",
-	facilities=["ewr1"],
+    metro="da",
     hostname=random_host_name.id,
     operating_system="ubuntu_20_04",
-    plan="baremetal_1",
+    plan="c3.small.x86",
     project_id=project.id,
     ip_addresses=[{
         "type": "public_ipv4",
