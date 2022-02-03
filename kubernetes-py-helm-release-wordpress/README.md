@@ -1,11 +1,11 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-py-helm-release-wordpress/README.md)
 
-# Wordpress Helm Chart Deployed Using Helm Release Resource
+# WordPress Helm Chart Deployed Using Helm Release Resource
 
-Uses the Helm Release API of `@pulumi/kubernetes` to deploy `v13.0.6` of the Wordpress Helm Chart to a
-Kubernetes cluster. The Helm Release resource will install the Chart mimicing behavior of the Helm CLI.
+Uses the Helm Release API of `@pulumi/kubernetes` to deploy `v13.0.6` of the WordPress Helm Chart to a
+Kubernetes cluster. The Helm Release resource will install the Chart mimicking behavior of the Helm CLI.
 
-![wordpress](images/deploy.gif "Wordpress Helm Release deployment")
+![wordpress](images/deploy.gif "WordPress Helm Release deployment")
 
 ## Running the App
 
@@ -62,7 +62,7 @@ Resources:
 Duration: 1m29s
 ```
 
-We can see here in the `---outputs:---` section that Wordpress was allocated a Cluster IP, in this
+We can see here in the `---outputs:---` section that WordPress was allocated a Cluster IP, in this
 case `10.96.144.123`. It is exported with a stack output variable, `frontendIp`. Since this is a Cluster IP, you will need to port-forward to the service in order to hit the endpoint at `http://localhost:8080`
 by running the port-forward command specified in `portForwardCommand`.
 
