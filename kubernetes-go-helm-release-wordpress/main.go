@@ -10,7 +10,6 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Deploy the bitnami/wordpress chart.
-
 		wordpress, err := helm.NewRelease(ctx, "wpdev", &helm.ReleaseArgs{
 			Version: pulumi.String("13.0.6"),
 			Chart:   pulumi.String("wordpress"),
@@ -19,36 +18,27 @@ func main() {
 				Repo: pulumi.String("https://charts.bitnami.com/bitnami"),
 			},
 		})
-
-
-		svc, err := corev1.GetService(ctx, "svc", pulumi.ID(pulumi.Sprintf("%s/%s-wordpress", wordpress.Status.Namespace(), wordpress.Status.Name())), nil)
 		if err != nil {
 			return err
 		}
-		ctx.Export("frontendIp", svc.Spec.ClusterIP())
-		// result := pulumi.All(wordpress.Status.Namespace(), wordpress.Status.Name()).ApplyT(func(r interface{}) ([]*string, error) {
 
-		// 	arr := r.([]interface{})
-		// 	namespace := arr[0].(*string)
-		// 	name := arr[1].(*string)
-		// 	svc, err := corev1.GetService(ctx, "svc", pulumi.ID(fmt.Sprintf("%s/%s-wordpress", *namespace, *name)), nil)
-		// 	if err != nil {
-		// 		return nil, err
-		// 	}
+		// Await on the Status field of the wordpress release and use that to lookup the WordPress service.
+		result := pulumi.All(wordpress.Status.Namespace(), wordpress.Status.Name()).ApplyT(func(r interface{}) ([]interface{}, error) {
+			arr := r.([]interface{})
+			namespace := arr[0].(*string)
+			name := arr[1].(*string)
+			svc, err := corev1.GetService(ctx, "svc", pulumi.ID(fmt.Sprintf("%s/%s-wordpress", *namespace, *name)), nil)
+			if err != nil {
+				return nil, err
+			}
 
-		// 	pulumi.All(svc.Metadata.Name(), svc.Spec.ClusterIP()).
-		// 	out := []string{svc.Metadata.Name(), svc.Spec.ClusterIP()}
+			// Return the cluster IP and service name
+			return []interface{}{svc.Spec.ClusterIP().Elem(), svc.Metadata.Name().Elem()}, nil
+		})
 
-		// 	return out, nil
-		// })
-
-		// res := result.(pulumi.ArrayOutput)
-		// ctx.Export("result", res.Index(pulumi.Int(1)))
-
-		// if err != nil {
-		// 	return err
-		// }
-
+		arr := result.(pulumi.ArrayOutput)
+		ctx.Export("frontendIp", arr.Index(pulumi.Int(0)))
+		ctx.Export("portForwardCommand", pulumi.Sprintf("kubectl port-forward svc/%s 8080:80", arr.Index(pulumi.Int(1))))
 		return nil
 	})
 }
