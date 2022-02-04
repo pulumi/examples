@@ -286,6 +286,10 @@ jobs:
         clouds:
           - DigitalOcean
           - Aws
+          - Azure
+          - Gcp
+          - EquinixMetal
+          - Cloud
         dotnet-version:
           - 3.1.301
         examples-test-matrix:
