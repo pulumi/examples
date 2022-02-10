@@ -1,6 +1,6 @@
-.PHONY: ensure only_build only_test all
+.PHONY: ensure only_test all
 
-all: install ensure only_build lint only_test
+all: install ensure lint only_test
 
 install:
 	yarn global add tslint typescript
@@ -8,8 +8,6 @@ install:
 ensure:
 	cd misc/test && go mod tidy
 	cd misc/test && go mod download
-
-only_build:
 
 lint:
 	tslint -c tslint.json **/*.ts
@@ -36,9 +34,3 @@ destroy_test_infra:
 	echo "Tearing down test infra"
 	./misc/scripts/destroy-ci-cluster.sh $(StackName)
 
-# The travis_* targets are entrypoints for CI.
-.PHONY: travis_cron travis_push travis_pull_request travis_api
-travis_cron: all
-travis_push: all
-travis_pull_request: all
-travis_api: all
