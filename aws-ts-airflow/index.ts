@@ -30,7 +30,7 @@ const dbSubnets = new aws.rds.SubnetGroup("dbsubnets", {
 const db = new aws.rds.Instance("postgresdb", {
     engine: "postgres",
 
-    instanceClass: "db.t2.micro",
+    instanceClass: "db.t3.micro",
     allocatedStorage: 20,
 
     dbSubnetGroupName: dbSubnets.id,
