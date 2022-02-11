@@ -44,7 +44,7 @@ func main() {
 		}
 		_, err = authorization.NewRoleAssignment(ctx, "access-from-cluster", &authorization.RoleAssignmentArgs{
 			PrincipalId:      pulumi.String(currentPrincipal),
-			PrincipalType:    pulumi.String(authorization.PrincipalTypeUser), // adjust the type if you are running as a service principal
+			PrincipalType:    pulumi.String(authorization.PrincipalTypeServicePrincipal), // adjust the type if you are running as a user
 			RoleDefinitionId: pulumi.String(*roleDef),
 			Scope:            registry.ID(),
 		})
