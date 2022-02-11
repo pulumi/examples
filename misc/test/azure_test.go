@@ -65,7 +65,6 @@ func TestAccAzureGoAci(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aci"),
-			// TODO[pulumi/examples#1120]: Fix issue with extra runtime validation
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertAppServiceResult(t, stack.Outputs["containerIPv4Address"], func(body string) bool {
 					return assert.Contains(t, body, "Welcome to Azure Container Instances!")
@@ -90,8 +89,6 @@ func TestAccAzureGoWebserverComponent(t *testing.T) {
 }
 
 func TestAccAzureGoCallAzureSdk(t *testing.T) {
-	// TODO[pulumi/examples#1119]: Reenable failing test.
-	t.Skip("Skip due to failing test: https://github.com/pulumi/examples/issues/1119")
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-go-call-azure-sdk"),
