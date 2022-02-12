@@ -30,9 +30,14 @@ func main() {
 				return err
 			}
 			if !info.IsDir() {
-				if _, err := s3.NewBucketObject(ctx, name, &s3.BucketObjectArgs{
+				rel, err := filepath.Rel(siteDir, name)
+				if err != nil {
+					return err
+				}
+
+				if _, err := s3.NewBucketObject(ctx, rel, &s3.BucketObjectArgs{
 					Bucket:      siteBucket.ID(),                                     // reference to the s3.Bucket object
-					Source:      pulumi.NewFileAsset(filepath.Join(siteDir, name)),   // use FileAsset to point to a file
+					Source:      pulumi.NewFileAsset(name),                           // use FileAsset to point to a file
 					ContentType: pulumi.String(mime.TypeByExtension(path.Ext(name))), // set the MIME type of the file
 				}); err != nil {
 					return err
