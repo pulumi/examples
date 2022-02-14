@@ -1,0 +1,4 @@
+node_modules/
+kubeconfig.yml
+Pulumi.*.yaml
+!Pulumi.yaml
