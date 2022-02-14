@@ -260,7 +260,6 @@ func TestAccAwsPyWebserver(t *testing.T) {
 }
 
 func TestAccAwsTsAirflow(t *testing.T) {
-	t.Skip("Skip due to failures initializing 20(!) instances")
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-airflow"),
