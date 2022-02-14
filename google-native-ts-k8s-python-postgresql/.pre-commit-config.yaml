@@ -50,7 +50,7 @@ repos:
       - id: flake8
         name: Run flake8 on app source code
         language: system
-        entry: poetry run flake8
+        entry: poetry run flake8 --ignore E501
         types: [python]
         pass_filenames: true
       - id: mypy

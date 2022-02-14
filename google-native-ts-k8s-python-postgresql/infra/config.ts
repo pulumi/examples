@@ -1,22 +1,19 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
 import { Config } from "@pulumi/pulumi";
+import * as random from "@pulumi/random";
 
-const config = new Config("xpresso-gke-demo");
+const config = new Config();
 
-export const project = config.require("project");
+export const projectId = config.require("projectId");
 export const region = config.require("region");
 
-/// Artifact Registry config
-
-export const artifactRegistryDockerRepositoryId = `${project}-registry`;
-
-/// PostgreSQL config
-export const dbName = "app";
-
 /// App config
-export const appPort = 8000;
+export const appPort = parseInt(config.require("appPort"));
 
 /// Kubernetes config
-export const appServiceAccountName = "app-sa";
-export const namespace = "default";
+export const k8sNamespace = config.get("k8sNamespace") || "default";
+export const k8sServiceAccountName = new random.RandomPet(
+  "k8sServiceAccountName",
+  { length: 2 }
+).id;

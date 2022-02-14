@@ -8,18 +8,19 @@ import * as cluster from "./cluster";
 import * as config from "./config";
 import * as db from "./db";
 import * as iam from "./iam";
-import { dockerRegistry } from "./artifact-registry";
+import { dockerRegistry, dockerRegistryId } from "./artifact-registry";
 import { execSync } from "child_process";
 
+// Tag images as name:${projectVersion}-${gitHash}
+// This makes them human-readable and also deterministically linkable to code
 const gitHash = execSync("git rev-parse --short HEAD").toString().trim();
-
 const projectVersion = readFileSync("../VERSION.txt", "utf8").trim();
 
 // We build and push the image to the GCP project's Artifact Registry.
 // Make sure docker is configured to use docker registry by running
 // > gcloud auth configure-docker
 // before running pulumi up
-const appImageName = pulumi.interpolate`us-docker.pkg.dev/${config.project}/${config.artifactRegistryDockerRepositoryId}/app:${projectVersion}-${gitHash}`;
+const appImageName = pulumi.interpolate`us-docker.pkg.dev/${config.projectId}/${dockerRegistryId}/app:${projectVersion}-${gitHash}`;
 const appImage = new docker.Image(
   "app",
   {
@@ -36,13 +37,13 @@ const kubernetesServiceAccount = new k8s.core.v1.ServiceAccount(
   "app",
   {
     metadata: {
-      name: config.appServiceAccountName,
+      name: config.k8sServiceAccountName,
       annotations: {
         "iam.gke.io/gcp-service-account": iam.serviceAccount.email,
       },
     },
   },
-  { provider: cluster.provider }
+  { provider: cluster.provider, dependsOn: [cluster.provider] }
 );
 // Define the containers
 const appContainer = {
@@ -74,8 +75,8 @@ const appContainer = {
     },
   },
 };
-const dbInstance = pulumi.interpolate`${config.project}:${config.region}:${db.instance.name}`;
-export const SQLProxyContainer = {
+const dbInstance = pulumi.interpolate`${config.projectId}:${config.region}:${db.instance.name}`;
+const SQLProxyContainer = {
   name: "cloudsql-proxy",
   image: "gcr.io/cloudsql-docker/gce-proxy",
   command: [
@@ -108,7 +109,10 @@ const appDeployment = new k8s.apps.v1.Deployment(
       },
     },
   },
-  { provider: cluster.provider, dependsOn: [appImage] }
+  {
+    provider: cluster.provider,
+    dependsOn: [appImage, cluster.provider, kubernetesServiceAccount],
+  }
 );
 const appService = new k8s.core.v1.Service(
   "app-service",
@@ -120,40 +124,7 @@ const appService = new k8s.core.v1.Service(
       selector: appDeployment.spec.template.metadata.labels,
     },
   },
-  { provider: cluster.provider }
-);
-export const HPA = new k8s.autoscaling.v2beta2.HorizontalPodAutoscaler(
-  "hpa",
-  {
-    metadata: {
-      name: "hpa",
-    },
-    spec: {
-      scaleTargetRef: {
-        apiVersion: "apps/v1",
-        kind: "Deployment",
-        name: appDeployment.metadata.name,
-      },
-      // Choose at least 2 replicas for resiliency
-      minReplicas: 2,
-      // But a low max since this is a demo and we want to keep costs low
-      maxReplicas: 3,
-      metrics: [
-        {
-          type: "Resource",
-          resource: {
-            name: "cpu",
-            target: {
-              type: "Utilization",
-              // Arbitrary choice
-              averageUtilization: 35,
-            },
-          },
-        },
-      ],
-    },
-  },
-  { parent: cluster.provider }
+  { provider: cluster.provider, dependsOn: [cluster.provider] }
 );
 
 // Export the app deployment name so we can easily access it.
