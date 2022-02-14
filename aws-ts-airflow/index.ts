@@ -14,7 +14,7 @@ const cluster = new awsx.ecs.Cluster("airflow", { vpc });
 const autoScalingGroup = cluster.createAutoScalingGroup("airflow", {
     subnetIds: vpc.publicSubnetIds,
     templateParameters: {
-        minSize: 20,
+        minSize: 4,
     },
     launchConfigurationArgs: {
         instanceType: "t2.xlarge",
