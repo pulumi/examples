@@ -72,6 +72,8 @@ jobs:
   kubernetes:
     name: kubernetes
     needs: test-infra-setup
+    env:
+      PULUMI_EXPERIMENTAL: ${{ matrix.experimental }}
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Install DotNet ${{ matrix.dotnet-version }}
@@ -162,6 +164,9 @@ jobs:
         - ubuntu-latest
         python-version:
         - "3.7"
+        experimental:
+        - "true"
+        - "false"
   linting:
     name: lint
     runs-on: ${{ matrix.platform }}
