@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
+	"io/fs"
 	"mime"
 	"path"
 	"path/filepath"
@@ -36,17 +36,28 @@ func NewS3Folder(ctx *pulumi.Context, bucketName string, siteDir string, args *F
 	}
 
 	// For each file in the directory, create an S3 object stored in `siteBucket`
-	files, err := ioutil.ReadDir(siteDir)
+	err = filepath.Walk(siteDir, func(name string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() {
+			rel, err := filepath.Rel(siteDir, name)
+			if err != nil {
+				return err
+			}
+
+			if _, err := s3.NewBucketObject(ctx, rel, &s3.BucketObjectArgs{
+				Bucket:      siteBucket.ID(),                                     // reference to the s3.Bucket object
+				Source:      pulumi.NewFileAsset(name),                           // use FileAsset to point to a file
+				ContentType: pulumi.String(mime.TypeByExtension(path.Ext(name))), // set the MIME type of the file
+			}, pulumi.Parent(&resource)); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 	if err != nil {
-		return nil, err
-	}
-	for _, item := range files {
-		name := item.Name()
-		s3.NewBucketObject(ctx, name, &s3.BucketObjectArgs{
-			Bucket:      siteBucket.ID(),                                     // reference to the s3.Bucket object
-			Source:      pulumi.NewFileAsset(filepath.Join(siteDir, name)),   // use FileAsset to point to a file
-			ContentType: pulumi.String(mime.TypeByExtension(path.Ext(name))), // set the MIME type of the file
-		}, pulumi.Parent(&resource))
+		return err
 	}
 
 	// Set the access policy for the bucket so all objects are readable.
