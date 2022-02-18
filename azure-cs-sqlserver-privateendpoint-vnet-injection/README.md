@@ -1,10 +1,12 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-sqlserver/README.md)
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-sqlserver-privateendpoint-vnet-injection/README.md)
 
 # A SQLServer on Azure PaaS
 
-This example configures [An example of a SQLServer on Azure PaaS](https://docs.microsoft.com/en-us/azure/azure-sql/database/logical-servers).
+This example configures [An example of a SQLServer on Azure PaaS connected to a subnet using a private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview).
 
 In addition to the server itself, a database is configured
+The server is not exposed to the internet and to connect to it you have to use a ressource in the subnet.
+A private DNS Zone is configured to point the server record to the private IP (servername.database.windows.net)
 
 ## Running the App
 
@@ -20,14 +22,14 @@ In addition to the server itself, a database is configured
     $ az login
     ```
 1. Set the Azure region location to use:
-    
+
     ```
     $ pulumi config set azure-native:location westus
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...
@@ -35,8 +37,8 @@ In addition to the server itself, a database is configured
     Performing changes:
     ...
     Resources:
-        + 5 created
-    Duration: 3m16s
+        + 12 created
+    Duration: 5m16s
     ```
 
-1.  Check the deployed sql server and database
+1.  Check the deployed sql server and the private endpoint configuration.

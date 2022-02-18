@@ -25,7 +25,7 @@ class MyStack : Stack
                 ResourceGroupName = resourceGroup.Name,
                 ServerName = $"{Pulumi.Deployment.Instance.StackName}",
                 MinimalTlsVersion = "1.2",
-                PublicNetworkAccess = "Enabled"
+                PublicNetworkAccess = "Disabled"
             });
 
             this.ServerName = server.Name.Apply(servername => $"{servername}.database.windows.net");
@@ -46,9 +46,9 @@ class MyStack : Stack
                     }
             });
 
-        var vnet = new AzureNative.Network.VirtualNetwork("my-network", new AzureNative.Network.VirtualNetworkArgs
+        var vnet = new AzureNative.Network.VirtualNetwork("SQLServer-network", new AzureNative.Network.VirtualNetworkArgs
         {
-            VirtualNetworkName = "my-network",
+            VirtualNetworkName = "SQLServer-network",
             ResourceGroupName = resourceGroup.Name,
             AddressSpace = new AzureNative.Network.Inputs.AddressSpaceArgs
             {
@@ -56,9 +56,9 @@ class MyStack : Stack
             }
         });
 
-        var subnet = new AzureNative.Network.Subnet("my-subnet", new AzureNative.Network.SubnetArgs
+        var subnet = new AzureNative.Network.Subnet("SQLServer-subnet", new AzureNative.Network.SubnetArgs
         {
-            Name = "my-subnet",
+            Name = "SQLServer-subnet",
             ResourceGroupName = resourceGroup.Name,
             VirtualNetworkName = vnet.Name,
             AddressPrefix = "10.0.0.0/16",
@@ -95,7 +95,7 @@ class MyStack : Stack
             Location = "global",
         });
 
-        var privateRecordSet = new AzureNative.Network.PrivateRecordSet($"sqlserver-rivateRecordSet", new AzureNative.Network.PrivateRecordSetArgs
+        var privateRecordSet = new AzureNative.Network.PrivateRecordSet($"sqlserver-privateRecordSet", new AzureNative.Network.PrivateRecordSetArgs
         {
             ARecords =
             {
