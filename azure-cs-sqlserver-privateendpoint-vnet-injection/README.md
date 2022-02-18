@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-sqlserver-privateendpoint-vnet-injection/README.md)
 
-# A SQLServer on Azure PaaS
+# A SQLServer on Azure PaaS secured using a private endpoint
 
 This example configures [An example of a SQLServer on Azure PaaS connected to a subnet using a private endpoint](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview).
 
