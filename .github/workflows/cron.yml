@@ -71,6 +71,7 @@ jobs:
         - testing-unit-go
   kubernetes:
     name: kubernetes
+    concurrency: kubernetes-${{ github.sha }}-${{ github.run_number }}
     needs: test-infra-setup
     env:
       PULUMI_EXPERIMENTAL: ${{ matrix.experimental }}
