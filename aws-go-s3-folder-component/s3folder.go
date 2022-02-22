@@ -57,7 +57,7 @@ func NewS3Folder(ctx *pulumi.Context, bucketName string, siteDir string, args *F
 		return nil
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Set the access policy for the bucket so all objects are readable.
