@@ -30,6 +30,14 @@ $ pulumi stack init mentionbot
 $ pulumi config set aws:region us-east-2
 ```
 
+### Step 3: Create a Python virtualenv, activate it, and install dependencies
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+```
+
 ### Step 3: Preview and deploy your app
 
 Run `pulumi up` to preview and deploy your AWS resources.
@@ -46,7 +54,7 @@ To create a new Slackbot, first go to https://api.slack.com/apps and create an a
 <p align=center>
 <img src=https://user-images.githubusercontent.com/4564579/55648728-e7127180-5795-11e9-9ddf-849d789ea05b.png>
 </p>
-    
+
 Pick your desired name for the app, and the Workspace the app belongs to.  Here we choose `MentionBot`:
 
 <p align=center>
@@ -60,7 +68,7 @@ Once created, you will need to 'Add features and functionality' to your app. You
 </p>
 
 First, we'll enable 'Incoming Webhooks'.  This allows your Slack bot to post messages into Slack for you:
- 
+
 <p align=center>
 <img src=https://user-images.githubusercontent.com/4564579/55648806-22ad3b80-5796-11e9-8dfd-ba86b7ba9351.png>
 </p>
@@ -90,7 +98,7 @@ Underneath this, we'll set the following Scopes defining the permissions of the 
    <img src=https://user-images.githubusercontent.com/4564579/55647362-55edcb80-5792-11e9-8f60-ae5261fa9c9a.png>
 </p>
 
-Now, we're almost done.  The only thing left to do is supply your Pulumi App with the appropriate secrets/tokens.  We'll need the Bot OAuth token (shown above), and the 'Verification Token' (found under 'Basic Information'): 
+Now, we're almost done.  The only thing left to do is supply your Pulumi App with the appropriate secrets/tokens.  We'll need the Bot OAuth token (shown above), and the 'Verification Token' (found under 'Basic Information'):
 
 <p align=center>
    <img src=https://user-images.githubusercontent.com/4564579/55647507-af55fa80-5792-11e9-80bf-b07b894d996f.png>

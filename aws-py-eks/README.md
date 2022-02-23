@@ -28,6 +28,14 @@ To deploy your infrastructure, follow the below steps.
     $ pulumi config set aws:region us-east-2
     ```
 
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
 1.  Run `pulumi up` to preview and deploy changes:
 
     ```
@@ -76,7 +84,7 @@ To deploy your infrastructure, follow the below steps.
         Current stack outputs (1):
         OUTPUT                   VALUE
         cluster-name  eks-cluster-96b87e8
-    ```    
+    ```
 
 1.  Verify that the EKS cluster exists, by either using the AWS Console or running `aws eks list-clusters`.
 

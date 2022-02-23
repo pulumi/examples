@@ -1,6 +1,6 @@
 # StackReference Example
 
-This example creates a "team" EC2 Instance with tags set from _upstream_ "company" and "department" 
+This example creates a "team" EC2 Instance with tags set from _upstream_ "company" and "department"
 stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#stackreferences).
 
 ```sh
@@ -31,7 +31,15 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#st
     $ pulumi config set companyName 'ACME Widget Company'
     ```
 
-1. Deploy everything with the `pulumi up` command. 
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
+1. Deploy everything with the `pulumi up` command.
 
     ```bash
     $ pulumi up
@@ -78,7 +86,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#st
     $ pulumi config set departmentName 'E-Commerce'
     ```
 
-1. Deploy everything with the `pulumi up` command. 
+1. Deploy everything with the `pulumi up` command.
 
     ```bash
     $ pulumi up
@@ -128,7 +136,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#st
     $ pulumi config set aws:region us-west-2 # any valid AWS zone works
     ```
 
-1. Deploy everything with the `pulumi up` command. 
+1. Deploy everything with the `pulumi up` command.
 
     ```bash
     $ envchain aws pulumi up
@@ -171,7 +179,7 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#st
 
 ## Clean Up
 
-1. Once you are done, destroy all of the resources and the stack. Repeat this in each 
+1. Once you are done, destroy all of the resources and the stack. Repeat this in each
 of the `company`, `department`, and `team` directories from above that you ran `pulumi up` within.
 
     ```bash

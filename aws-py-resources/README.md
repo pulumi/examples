@@ -9,6 +9,11 @@ A Pulumi program that demonstrates creating various AWS resources in Python
 $ pulumi stack init dev
 $ pulumi config set aws:region us-east-2
 
+# Create a Python virtualenv, activate it, and install dependencies
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+
 # Preview and run the deployment
 $ pulumi up
 

@@ -24,7 +24,15 @@ already knows to use type `ClusterIP` instead; all you need to do is to tell it 
 deploying to minikube:
 
 ```sh
-pulumi config set isMinikube <value>
+$ pulumi config set isMinikube <value>
+```
+
+Create a Python virtualenv, activate it, and install dependencies:
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
 ```
 
 Perform the deployment:
@@ -33,36 +41,36 @@ Perform the deployment:
 $ pulumi up
 Previewing update (guestbook):
 
-     Type                                 Name                      Plan       
- +   pulumi:pulumi:Stack                  guestbook-easy-guestbook  create     
- +   ├─ k8sx:component:ServiceDeployment  frontend                  create     
- +   │  ├─ kubernetes:apps:Deployment     frontend                  create     
- +   │  └─ kubernetes:core:Service        frontend                  create     
- +   ├─ k8sx:component:ServiceDeployment  redis-replica             create     
- +   │  ├─ kubernetes:apps:Deployment     redis-replica             create     
- +   │  └─ kubernetes:core:Service        redis-replica             create     
- +   └─ k8sx:component:ServiceDeployment  redis-leader              create     
- +      ├─ kubernetes:apps:Deployment     redis-leader              create     
- +      └─ kubernetes:core:Service        redis-leader              create     
- 
+     Type                                 Name                      Plan
+ +   pulumi:pulumi:Stack                  guestbook-easy-guestbook  create
+ +   ├─ k8sx:component:ServiceDeployment  frontend                  create
+ +   │  ├─ kubernetes:apps:Deployment     frontend                  create
+ +   │  └─ kubernetes:core:Service        frontend                  create
+ +   ├─ k8sx:component:ServiceDeployment  redis-replica             create
+ +   │  ├─ kubernetes:apps:Deployment     redis-replica             create
+ +   │  └─ kubernetes:core:Service        redis-replica             create
+ +   └─ k8sx:component:ServiceDeployment  redis-leader              create
+ +      ├─ kubernetes:apps:Deployment     redis-leader              create
+ +      └─ kubernetes:core:Service        redis-leader              create
+
 Resources:
     + 10 to create
 
 Do you want to perform this update? yes
 Updating (guestbook):
 
-     Type                                 Name                      Status      
- +   pulumi:pulumi:Stack                  guestbook-easy-guestbook  created     
- +   ├─ k8sx:component:ServiceDeployment  redis-leader              created     
- +   │  ├─ kubernetes:apps:Deployment     redis-leader              created     
- +   │  └─ kubernetes:core:Service        redis-leader              created     
- +   ├─ k8sx:component:ServiceDeployment  frontend                  created     
- +   │  ├─ kubernetes:apps:Deployment     frontend                  created     
- +   │  └─ kubernetes:core:Service        frontend                  created     
- +   └─ k8sx:component:ServiceDeployment  redis-replica             created     
- +      ├─ kubernetes:apps:Deployment     redis-replica             created     
- +      └─ kubernetes:core:Service        redis-replica             created     
- 
+     Type                                 Name                      Status
+ +   pulumi:pulumi:Stack                  guestbook-easy-guestbook  created
+ +   ├─ k8sx:component:ServiceDeployment  redis-leader              created
+ +   │  ├─ kubernetes:apps:Deployment     redis-leader              created
+ +   │  └─ kubernetes:core:Service        redis-leader              created
+ +   ├─ k8sx:component:ServiceDeployment  frontend                  created
+ +   │  ├─ kubernetes:apps:Deployment     frontend                  created
+ +   │  └─ kubernetes:core:Service        frontend                  created
+ +   └─ k8sx:component:ServiceDeployment  redis-replica             created
+ +      ├─ kubernetes:apps:Deployment     redis-replica             created
+ +      └─ kubernetes:core:Service        redis-replica             created
+
 Outputs:
     frontend_ip: "10.105.48.30"
 
@@ -78,7 +86,7 @@ And finally - open the application in your browser to see the running applicatio
 macOS you can simply run:
 
 ```sh
-open $(pulumi stack output frontend_ip)
+$ open $(pulumi stack output frontend_ip)
 ```
 
 > _Note_: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure

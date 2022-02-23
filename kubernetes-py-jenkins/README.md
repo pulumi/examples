@@ -22,67 +22,75 @@ Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
 Create a new stack:
 
 ```bash
-    $ pulumi stack init dev
+$ pulumi stack init dev
 ```
 
 Create configuration keys for the root username and password for the Jenkins instance we are
 about to create:
 
 ```bash
-    $ pulumi config set username <your desired username>
-    $ pulumi config set password <your desired password> --secret
+$ pulumi config set username <your desired username>
+$ pulumi config set password <your desired password> --secret
 ```
 
 Configure Kubernetes to run without Minikube:
 
 ```bash
-    $ pulumi config set isMinikube false
+$ pulumi config set isMinikube false
+```
+
+Install Python dependencies:
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
 ```
 
 Preview the deployment of the application:
 
 ```bash
-    $ pulumi preview
-    Previewing update (dev):
-         Type                                         Name                       Plan       
-     +   pulumi:pulumi:Stack                          kubernetes-py-jenkins-dev  create     
-     +   └─ jenkins:jenkins:Instance                  dev                        create     
-     +      ├─ kubernetes:core:Service                dev-service                create     
-     +      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    create     
-     +      ├─ kubernetes:core:Secret                 dev-secret                 create     
-     +      └─ kubernetes:apps:Deployment             dev-deploy                 create     
+$ pulumi preview
+Previewing update (dev):
+        Type                                         Name                       Plan
+    +   pulumi:pulumi:Stack                          kubernetes-py-jenkins-dev  create
+    +   └─ jenkins:jenkins:Instance                  dev                        create
+    +      ├─ kubernetes:core:Service                dev-service                create
+    +      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    create
+    +      ├─ kubernetes:core:Secret                 dev-secret                 create
+    +      └─ kubernetes:apps:Deployment             dev-deploy                 create
 
-    Resources:
-        + 6 to create
+Resources:
+    + 6 to create
 ```
 
 Perform the deployment:
 
 ```bash
-    $ pulumi up --skip-preview
-    Updating (dev):
-         Type                                         Name                       Status      
-     +   pulumi:pulumi:Stack                          kubernetes-py-jenkins-dev  created     
-     +   └─ jenkins:jenkins:Instance                  dev                        created     
-     +      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    created     
-     +      ├─ kubernetes:core:Service                dev-service                created     
-     +      ├─ kubernetes:core:Secret                 dev-secret                 created     
-     +      └─ kubernetes:apps:Deployment             dev-deploy                 created     
+$ pulumi up --skip-preview
+Updating (dev):
+        Type                                         Name                       Status
+    +   pulumi:pulumi:Stack                          kubernetes-py-jenkins-dev  created
+    +   └─ jenkins:jenkins:Instance                  dev                        created
+    +      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    created
+    +      ├─ kubernetes:core:Service                dev-service                created
+    +      ├─ kubernetes:core:Secret                 dev-secret                 created
+    +      └─ kubernetes:apps:Deployment             dev-deploy                 created
 
-    Outputs:
-        external_ip: "35.239.72.50"
+Outputs:
+    external_ip: "35.239.72.50"
 
-    Resources:
-        + 6 created
+Resources:
+    + 6 created
 
-    Duration: 1m57s
+Duration: 1m57s
 ```
 
 The deployment is complete! Use `pulumi stack output external_ip` to see the IP of the Service that we just deployed:
 
 ```bash
-    $ pulumi stack output external_ip
-    35.239.72.50
+$ pulumi stack output external_ip
+35.239.72.50
 ```
 
 The Jenkins instance we just deployed is reachable through port 80 of the external IP address. You can now
@@ -98,19 +106,19 @@ When you're ready to be done with Jenkins, you can destroy the instance:
 ```bash
     $ pulumi destroy
         Destroying (dev):
-         Type                                         Name                       Status      
-     -   pulumi:pulumi:Stack                          kubernetes-py-jenkins-dev  deleted     
-     -   └─ jenkins:jenkins:Instance                  dev                        deleted     
-     -      ├─ kubernetes:core:Secret                 dev-secret                 deleted     
-     -      ├─ kubernetes:core:Service                dev-service                deleted     
-     -      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    deleted     
-     -      └─ kubernetes:apps:Deployment             dev-deploy                 deleted     
-     
+         Type                                         Name                       Status
+     -   pulumi:pulumi:Stack                          kubernetes-py-jenkins-dev  deleted
+     -   └─ jenkins:jenkins:Instance                  dev                        deleted
+     -      ├─ kubernetes:core:Secret                 dev-secret                 deleted
+     -      ├─ kubernetes:core:Service                dev-service                deleted
+     -      ├─ kubernetes:core:PersistentVolumeClaim  dev-pvc                    deleted
+     -      └─ kubernetes:apps:Deployment             dev-deploy                 deleted
+
     Outputs:
       - external_ip: "35.239.72.50"
-    
+
     Resources:
         - 6 deleted
-    
+
     Duration: 33s
 ```

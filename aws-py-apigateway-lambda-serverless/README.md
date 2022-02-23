@@ -1,6 +1,6 @@
 # Lambda-backed API Gateway
 
-This example provides API endpoints which are executed by AWS Lambda using Python. 
+This example provides API endpoints which are executed by AWS Lambda using Python.
 The example sets up up two Lambda-backed API Gateways: an API Gateway V1 (REST) and an API Gateway V2 (HTTP). AWS provides some information on the differences between these two API Gateway types: [Announcing HTTP APIs for Amazon API Gateway](https://aws.amazon.com/blogs/compute/announcing-http-apis-for-amazon-api-gateway/) and [API Gateway V2 FAQs](https://aws.amazon.com/api-gateway/faqs/)
 
 This sample uses the following AWS products:
@@ -11,18 +11,25 @@ This sample uses the following AWS products:
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2.  Create a new stack:
+
+1.  Create a new stack:
 
     ```bash
     $ pulumi stack init aws-py-apigateway-lambda-serverless
     ```
 
-3.  Set the AWS region:
+1.  Set the AWS region:
 
     ```bash
     $ pulumi config set aws:region us-east-2
     ```
+1. Create a Python virtualenv, activate it, and install dependencies:
 
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
 ## Deploy the App
 
 1.  Run `pulumi up` to preview and deploy changes:

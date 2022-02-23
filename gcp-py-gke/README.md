@@ -28,7 +28,7 @@ After cloning this repo, `cd` into it and run these commands. A GKE Kubernetes c
     $ pulumi stack init dev
     ```
 
-2. Set the required configuration variables for this program:
+1. Set the required configuration variables for this program:
 
     ```bash
     $ pulumi config set gcp:project [your-gcp-project-here]
@@ -47,7 +47,15 @@ After cloning this repo, `cd` into it and run these commands. A GKE Kubernetes c
 
    This shows how stacks can be configurable in useful ways. You can even change these after provisioning.
 
-3. Deploy everything with the `pulumi up` command. This provisions all the GCP resources necessary, including
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
+1. Deploy everything with the `pulumi up` command. This provisions all the GCP resources necessary, including
    your GKE cluster itself, and then deploys a Kubernetes Deployment running nginx, all in a single gesture:
 
     ```bash
@@ -77,7 +85,7 @@ After cloning this repo, `cd` into it and run these commands. A GKE Kubernetes c
 
    After about two minutes, your cluster will be ready, and its config will be printed.
 
-4. From here, you may take this config and use it either in your `~/.kube/config` file, or just by saving it
+1. From here, you may take this config and use it either in your `~/.kube/config` file, or just by saving it
    locally and plugging it into the `KUBECONFIG` envvar. All of your usual `gcloud` commands will work too, of course.
 
    For instance:
@@ -89,11 +97,11 @@ After cloning this repo, `cd` into it and run these commands. A GKE Kubernetes c
    canary-n7wfhtrp-fdbfd897b-lrm58   1/1       Running   0          58s
    ```
 
-5. At this point, you have a running cluster. Feel free to modify your program, and run `pulumi up` to redeploy changes.
+1. At this point, you have a running cluster. Feel free to modify your program, and run `pulumi up` to redeploy changes.
    The Pulumi CLI automatically detects what has changed and makes the minimal edits necessary to accomplish these
    changes. This could be altering the existing chart, adding new GCP or Kubernetes resources, or anything, really.
 
-6. Once you are done, you can destroy all of the resources, and the stack:
+1. Once you are done, you can destroy all of the resources, and the stack:
 
     ```bash
     $ pulumi destroy

@@ -19,9 +19,9 @@ Starting point for enterprise analytics solutions based on Azure Synapse.
     ```bash
     $ python3 -m venv venv
     $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
+    $ pip install -r requirements.txt
     ```
-   
+
 1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
@@ -29,13 +29,13 @@ Starting point for enterprise analytics solutions based on Azure Synapse.
     ```
 
 1. Set the Azure region location to use:
-    
+
     ```
     $ pulumi config set azure-native:location westus2
     ```
 
 1. Set the user ID to grant access to (e.g., your current user):
-    
+
     ```
     $ pulumi config set userObjectId $(az ad signed-in-user show --query=objectId | tr -d '"')
     ```

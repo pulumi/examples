@@ -22,6 +22,14 @@ with `***`.
     $ pulumi config set aws:region us-west-2
     ```
 
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
 1. Run `pulumi up` to preview and deploy changes.  After the preview is shown you will be
     prompted if you want to continue or not.
 
@@ -29,13 +37,13 @@ with `***`.
     $ pulumi up
     Previewing update (dev):
 
-        Type                    Name                  Plan       
-    +   pulumi:pulumi:Stack     aws-py-s3-folder-dev  create     
-    +   ├─ aws:s3:Bucket        s3-website-bucket     create     
-    +   ├─ aws:s3:BucketObject  index.html            create     
-    +   ├─ aws:s3:BucketObject  python.png            create     
-    +   ├─ aws:s3:BucketObject  favicon.png           create     
-    +   └─ aws:s3:BucketPolicy  bucket-policy         create     
+        Type                    Name                  Plan
+    +   pulumi:pulumi:Stack     aws-py-s3-folder-dev  create
+    +   ├─ aws:s3:Bucket        s3-website-bucket     create
+    +   ├─ aws:s3:BucketObject  index.html            create
+    +   ├─ aws:s3:BucketObject  python.png            create
+    +   ├─ aws:s3:BucketObject  favicon.png           create
+    +   └─ aws:s3:BucketPolicy  bucket-policy         create
 
     Resources:
         + 6 to create

@@ -32,6 +32,14 @@ Also set your desired AWS region:
 $ pulumi config set aws:region us-west-2
 ```
 
+Next, install Python dependencies:
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+```
+
 From there, you can run `pulumi up` and all resources will be provisioned and configured.
 
 [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws

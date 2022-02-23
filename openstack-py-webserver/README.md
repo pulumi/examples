@@ -17,9 +17,17 @@
     $ pulumi stack init
     ```
 
-2. Modify `__main__.py` to include your keypair and image
+1. Create a Python virtualenv, activate it, and install dependencies:
 
-3. Run `pulumi up` to preview and deploy changes:
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
+1. Modify `__main__.py` to include your keypair and image
+
+1. Run `pulumi up` to preview and deploy changes:
 
     ```bash
     $ pulumi up

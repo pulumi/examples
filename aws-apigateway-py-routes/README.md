@@ -26,7 +26,8 @@ For Pulumi examples, we typically start by creating a directory and changing int
 
     ```bash
     python3 -m venv venv
-    venv/bin/pip install -r requirements.txt
+    source venv/bin/activate
+    pip install -r requirements.txt
     ```
 
 2. Create a new Pulumi stack:
@@ -142,15 +143,15 @@ Deploy your stack:
 ```bash
 $ pulumi up
 ...
-     Type                               Name                            Plan       
-     pulumi:pulumi:Stack                aws-apigateway-ts-routes-dev               
- +   ├─ pulumi:providers:aws            usEast1                         create     
- +   ├─ aws:acm:Certificate             ssl-cert                        create     
- +   ├─ aws:route53:Record              ssl-cert-validation-dns-record  create     
- +   ├─ aws:acm:CertificateValidation   ssl-cert-validation             create     
- +   ├─ aws:apigateway:DomainName       api-domain-name                 create     
- +   ├─ aws:route53:Record              api-dns                         create     
- +   └─ aws:apigateway:BasePathMapping  api-domain-mapping              create    
+     Type                               Name                            Plan
+     pulumi:pulumi:Stack                aws-apigateway-ts-routes-dev
+ +   ├─ pulumi:providers:aws            usEast1                         create
+ +   ├─ aws:acm:Certificate             ssl-cert                        create
+ +   ├─ aws:route53:Record              ssl-cert-validation-dns-record  create
+ +   ├─ aws:acm:CertificateValidation   ssl-cert-validation             create
+ +   ├─ aws:apigateway:DomainName       api-domain-name                 create
+ +   ├─ aws:route53:Record              api-dns                         create
+ +   └─ aws:apigateway:BasePathMapping  api-domain-mapping              create
 ```
 
 Test your API is now available on your custom domain:

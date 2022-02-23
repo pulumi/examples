@@ -24,6 +24,14 @@ Starting point for building web application hosted in Azure Container Instances.
     $ pulumi config set azure-native:location westus2
     ```
 
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
 1. Run `pulumi up` to preview and deploy changes:
 
     ```bash

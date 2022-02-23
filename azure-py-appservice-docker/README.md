@@ -22,7 +22,7 @@ The example shows two scenarios:
     ```bash
     $ az login
     ```
-   
+
 1. Create a Python virtualenv, activate it, and install dependencies:
 
    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
@@ -30,7 +30,7 @@ The example shows two scenarios:
     ```bash
     $ python3 -m venv venv
     $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
+    $ pip install -r requirements.txt
     ```
 
 1. Specify the Azure location to use:
@@ -59,9 +59,10 @@ The example shows two scenarios:
     ```bash
     $ pulumi stack output helloEndpoint
     http://hello-app91dfea21.azurewebsites.net/hello
+
     $ curl "$(pulumi stack output helloEndpoint)"
     Hello, world!
-    
+
     $ pulumi stack output getStartedEndpoint
     http://get-started-15da13.azurewebsites.net
     $ curl "$(pulumi stack output getStartedEndpoint)"

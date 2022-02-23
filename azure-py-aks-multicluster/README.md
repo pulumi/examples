@@ -28,7 +28,7 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi stack init
     ```
 
-2. Set the required configuration variables for this program:
+1. Set the required configuration variables for this program:
 
     ```bash
     $ pulumi config set azure-native:environment public
@@ -37,14 +37,22 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi config set sshPublicKey < key.rsa.pub
     ```
 
-3. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
+1. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including
    an Active Directory service principal and AKS clusters:
 
     ```bash
     $ pulumi up
     ```
 
-4. After a couple minutes, your AKS clusters will be ready. The AKS cluster names will be printed as output variables
+1. After a couple minutes, your AKS clusters will be ready. The AKS cluster names will be printed as output variables
    once `pulumi up` completes.
 
     ```bash
@@ -59,11 +67,11 @@ After cloning this repo, `cd` into it and run these commands.
     ...
     ```
 
-5. At this point, you have multiple AKS clusters running in different regions. Feel free to modify your program, and
+1. At this point, you have multiple AKS clusters running in different regions. Feel free to modify your program, and
    run `pulumi up` to redeploy changes. The Pulumi CLI automatically detects what has changed and makes the minimal
    edits necessary to accomplish these changes.
 
-6. Once you are done, you can destroy all of the resources, and the stack:
+1. Once you are done, you can destroy all of the resources, and the stack:
 
     ```bash
     $ pulumi destroy

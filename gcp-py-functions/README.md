@@ -14,14 +14,22 @@ use Pulumi to provision the Google Cloud Platform functions.
 1. Create a new stack:
 
     ```bash
-    pulumi stack init gcp-py-functions
+    $ pulumi stack init gcp-py-functions
     ```
 
 1. Configure GCP project and region:
 
     ```bash
-    pulumi config set gcp:project <projectname>
-    pulumi config set gcp:region <region>
+    $ pulumi config set gcp:project <projectname>
+    $ pulumi config set gcp:region <region>
+    ```
+
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
     ```
 
 1. Run `pulumi up` to preview and deploy changes:
@@ -67,19 +75,19 @@ The application uses the [Google Maps API](https://developers.google.com/maps/do
 1. Update the stack's configuration, encrypting the API key value:
 
     ```bash
-    pulumi config set googleMapsApiKey <INSERT_API_KEY> --secret
+    $ pulumi config set googleMapsApiKey <INSERT_API_KEY> --secret
     ```
 
 1. Set the target destination to compute directions to:
 
      ```bash
-    pulumi config set destination <DESTINATION>
+    $ pulumi config set destination <DESTINATION>
     ```
 
 1. (Optional) Add a travel time offset, e.g. add 5 minutes to the estimate.
 
     ```bash
-    pulumi config set travelOffset <TRAVEL_OFFSET>
+    $ pulumi config set travelOffset <TRAVEL_OFFSET>
     ```
 
 1. Run `pulumi up` to re-deploy your cloud function with the new configuration.
@@ -94,15 +102,15 @@ To have the Cloud Function send a text message, you'll need to a Twilio key too:
 1. Add the Twilio configuration data to your Pulumi stack:
 
     ```bash
-    pulumi config set twillioAccessToken <TWILIO_ACCESS_TOKEN> --secret
-    pulumi config set twillioAccountSid <TWILIO_ACCOUNT_SID> --secret
-    pulumi config set fromPhoneNumber <FROM_PHONE_NUMBER>
+    $ pulumi config set twillioAccessToken <TWILIO_ACCESS_TOKEN> --secret
+    $ pulumi config set twillioAccountSid <TWILIO_ACCOUNT_SID> --secret
+    $ pulumi config set fromPhoneNumber <FROM_PHONE_NUMBER>
     ```
 
 1. Enter the phone number the Cloud Function will send messages to:
 
     ```bash
-    pulumi config set toPhoneNumber <TO_PHONE_NUMBER> --secret
+    $ pulumi config set toPhoneNumber <TO_PHONE_NUMBER> --secret
     ```
 
 1. Run `pulumi up` to re-deploy your cloud function with the new configuration.

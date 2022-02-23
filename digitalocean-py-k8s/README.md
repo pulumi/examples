@@ -41,6 +41,14 @@ After cloning this repo, from this working directory, run these commands:```
     $ pulumi config set domainName <YOUR_DOMAIN_NAME>
     ```
 
+1. Install Python dependencies:
+
+     ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
 1. Deploy your cluster, application, and optional DNS records by running `pulumi up`.
 
    This command shows a preview of the resources that will be created, and asks you whether to proceed with the deployment. Select "yes" to perform the deployment.

@@ -21,8 +21,17 @@ Example of starting a Cloud Run deployment with Cloud SQL instance
     $ pulumi config set --secret db-password SuuperSecret12345!
     ```
 
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
 1.  Preview and deploy changes:
-    ``` 
+
+    ```
     $ pulumi up
     ```
 

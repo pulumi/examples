@@ -34,19 +34,27 @@ done.
     $ cd examples/azure-py-aks-helm
     ```
 
-2.  Create a new stack, which is an isolated deployment target for this example:
+1.  Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
     $ pulumi stack init
     ```
 
-3.  Set the required configuration variables for this program:
+1.  Set the required configuration variables for this program:
 
     ```bash
     $ pulumi config set azure-native:location westus2
     ```
 
-4.  Deploy everything with the `pulumi up` command. This provisions
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
+1.  Deploy everything with the `pulumi up` command. This provisions
     all the Azure resources necessary, including an Active Directory
     service principal, AKS cluster, and then deploys the Apache Helm
     Chart, all in a single gesture (takes 5-10 min):
@@ -59,7 +67,7 @@ done.
     dependencies automatically as described in [Pulumi
     docs](https://www.pulumi.com/docs/intro/languages/python/#virtual-environments).
 
-5.  Now your cluster and Apache server are ready. Several output
+1.  Now your cluster and Apache server are ready. Several output
     variables will be printed, including your cluster name
     (`cluster_name`), Kubernetes config (`kubeconfig`) and server IP
     address (`apache_service_ip`).

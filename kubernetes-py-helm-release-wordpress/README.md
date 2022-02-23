@@ -17,7 +17,9 @@ Pulumi and Kubernetes.
 Now, install dependencies:
 
 ```sh
-yarn install
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 Create a new stack:
@@ -35,10 +37,10 @@ Previewing update (dev)
 
 View Live: https://app.pulumi.com/.../kubernetes-py-helm-release-wordpress/dev/previews/f0dff1c7-fea8-4ce8-9d36-ec1ef9fe1e4e
 
-     Type                              Name                                      Plan       
- +   pulumi:pulumi:Stack               kubernetes-py-helm-release-wordpress-dev  create     
- +   └─ kubernetes:helm.sh/v3:Release  wpdev                                     create     
- 
+     Type                              Name                                      Plan
+ +   pulumi:pulumi:Stack               kubernetes-py-helm-release-wordpress-dev  create
+ +   └─ kubernetes:helm.sh/v3:Release  wpdev                                     create
+
 Resources:
     + 2 to create
 
@@ -47,11 +49,11 @@ Updating (dev)
 
 View Live: https://app.pulumi.com/.../kubernetes-py-helm-release-wordpress/dev/updates/1
 
-     Type                              Name                                      Status      
- +   pulumi:pulumi:Stack               kubernetes-py-helm-release-wordpress-dev  created     
- +   ├─ kubernetes:helm.sh/v3:Release  wpdev                                     created     
-     └─ kubernetes:core/v1:Service     wpdev-wordpress                                       
- 
+     Type                              Name                                      Status
+ +   pulumi:pulumi:Stack               kubernetes-py-helm-release-wordpress-dev  created
+ +   ├─ kubernetes:helm.sh/v3:Release  wpdev                                     created
+     └─ kubernetes:core/v1:Service     wpdev-wordpress
+
 Outputs:
     frontendIp        : "10.96.144.123"
     portForwardCommand: "kubectl port-forward svc/wpdev-3zbpljcn-wordpress 8080:80"
@@ -76,10 +78,10 @@ Destroying (dev)
 
 View Live: https://app.pulumi.com/.../kubernetes-py-helm-release-wordpress/dev/updates/4
 
-     Type                              Name                                      Status      
- -   pulumi:pulumi:Stack               kubernetes-py-helm-release-wordpress-dev  deleted     
- -   └─ kubernetes:helm.sh/v3:Release  wpdev                                     deleted     
- 
+     Type                              Name                                      Status
+ -   pulumi:pulumi:Stack               kubernetes-py-helm-release-wordpress-dev  deleted
+ -   └─ kubernetes:helm.sh/v3:Release  wpdev                                     deleted
+
 Outputs:
   - frontendIp        : "10.96.144.123"
   - portForwardCommand: "kubectl port-forward svc/wpdev-3zbpljcn-wordpress 8080:80"
@@ -89,6 +91,6 @@ Resources:
 
 Duration: 14s
 
-The resources in the stack have been deleted, but the history and configuration associated with the stack are still maintained. 
+The resources in the stack have been deleted, but the history and configuration associated with the stack are still maintained.
 If you want to remove the stack completely, run 'pulumi stack rm dev'.
 ```

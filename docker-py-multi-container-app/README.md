@@ -16,16 +16,12 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
     $ pulumi stack init dev
     ```
 
-1.  Start your virtual environment:
+1. Create a Python virtualenv, activate it, and install dependencies:
 
-    ```
-    $ python -m venv venv && source venv/bin/activate
-    ```
-
-1. Restore your pypi packages:
-
-    ```
-    $ pip3 install -r requirements.txt
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
     ```
 
 1.  Preview and deploy the app via `pulumi up`. The preview will take a few minutes, as it builds a Docker container. A total of 19 resources are created.

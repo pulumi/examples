@@ -2,10 +2,10 @@
 
 # Web Server Using Azure Virtual Machine with ComponentResource
 
-This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/resources/#components) 
+This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/resources/#components)
 to create and deploy an Azure Virtual Machine and starts a HTTP server on it.
 
-The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources 
+The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources
 can be composed into a higher-level, reusable abstraction.
 
 ## Prerequisites
@@ -39,6 +39,14 @@ the virtual machine that we are going to create.
 
     ```bash
     $ pulumi config set --secret password Hunter2hunter2
+    ```
+
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
     ```
 
 1. Run `pulumi up` to preview and deploy the changes:
@@ -82,7 +90,7 @@ the virtual machine that we are going to create.
     Duration: 2m9s
     ```
 
-1. Get the IP address of the newly-created instance from the stack's outputs: 
+1. Get the IP address of the newly-created instance from the stack's outputs:
 
     ```bash
     $ pulumi stack output public_ip

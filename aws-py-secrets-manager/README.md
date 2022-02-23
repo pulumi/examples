@@ -18,6 +18,14 @@ A simple program that creates an AWS secret and a version under AWS Secrets Mana
     $ pulumi config set aws:region us-east-1
     ```
 
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
 1.  Run `pulumi up` to preview and deploy changes:
 
     ```

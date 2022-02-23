@@ -30,6 +30,14 @@ Next, to deploy the application and its infrastructure, follow these steps:
     $ pulumi config set aws:region us-east-1 # any valid AWS region will work
     ```
 
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
 1. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
    includes all of the required AWS resources (clusters, services, and the like). Don't worry if it's more than
    you expected -- this is one of the benefits of Pulumi, it configures everything so that so you don't need to!
@@ -97,7 +105,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
     </body>
     </html>
     ```
-   
+
 **Please Note**: It may take a few minutes for the app to start up. Until that point, you may receive a 503 error response code.
 
 1. Try making some changes, and rerunning `pulumi up`. For example, let's scale up to 3 instances:
@@ -123,7 +131,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
     Resources:
         ~ 1 updated
         9 unchanged
-  
+
     Duration: 14s
 
     Permalink: https://app.pulumi.com/acmecorp/aws-python-fargate/dev/updates/2

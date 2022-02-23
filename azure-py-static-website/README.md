@@ -29,7 +29,7 @@ In addition to the Storage itself, a CDN is configured to serve files from the B
     ```bash
     $ python3 -m venv venv
     $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
+    $ pip install -r requirements.txt
     ```
 
 1.  Set the Azure region location to use:
@@ -40,7 +40,7 @@ In addition to the Storage itself, a CDN is configured to serve files from the B
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...

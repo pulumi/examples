@@ -37,6 +37,14 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi config set sshPublicKey < key.rsa.pub
     ```
 
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
 1. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including
    an Active Directory service principal and AKS clusters:
 

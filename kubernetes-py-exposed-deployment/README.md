@@ -19,13 +19,7 @@ Setup](https://www.pulumi.com/docs/get-started/install/) and [Configuring Pulumi
 Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/) to get setup with
 Pulumi and Kubernetes.
 
-Now, install dependencies:
-
-```sh
-pip3 install -r requirements.txt
-```
-
-Create a new stack:
+Now, create a new stack:
 
 ```sh
 $ pulumi stack init
@@ -38,6 +32,14 @@ type `ClusterIP` instead; all you need to do is to tell it whether you're deploy
 
 ```sh
 pulumi config set is_minikube "true"
+```
+
+Now, install dependencies:
+
+```sh
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
 ```
 
 Perform the deployment:

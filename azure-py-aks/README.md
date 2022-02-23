@@ -30,6 +30,14 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi config set azure-native:location westus2
     ```
 
+1. Install Python dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
 1. Initiate pulumi to stand up the cluster
 
     ```bash

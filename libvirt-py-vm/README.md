@@ -2,7 +2,7 @@
 
 # Using the Pulumi Libvirt Provider to Deploy a VM on a KVM Server
 
-Deploys a KVM server in Azure and then deploys a small Linux VM on that KVM server.  
+Deploys a KVM server in Azure and then deploys a small Linux VM on that KVM server.
 It uses the Pulumi Libvirt provider (https://www.pulumi.com/docs/reference/pkg/libvirt/) and nested virtualization that is supported by certain Azure instance types to accomplish this.
 
 ## Running the App
@@ -11,7 +11,7 @@ It uses the Pulumi Libvirt provider (https://www.pulumi.com/docs/reference/pkg/l
    - Mac: `brew install libvirt`
    - Windows: See: https://libvirt.org/windows.html
    - Others: https://libvirt.org/downloads.html
-   
+
 1. Create a new stack:
 
    ```
@@ -28,11 +28,11 @@ It uses the Pulumi Libvirt provider (https://www.pulumi.com/docs/reference/pkg/l
 
    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
 
-   ```bash
-   $ python3 -m venv venv
-   $ source venv/bin/activate
-   $ pip3 install -r requirements.txt
-   ```
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
 
 1. Set the Azure region location to use:
 
@@ -54,8 +54,8 @@ It uses the Pulumi Libvirt provider (https://www.pulumi.com/docs/reference/pkg/l
    Duration: 3m36s
    ```
 
-1. Check the VM on the KVM host:  
-   The stack generates an output that provides a string you can execute to run `virsh` remotely on the KVM host.  
+1. Check the VM on the KVM host:
+   The stack generates an output that provides a string you can execute to run `virsh` remotely on the KVM host.
    It will look something like
    ```
    echo virsh list | ssh -i libvirt-ex-dev-kvm_server.priv kvmuser@1.2.3.4

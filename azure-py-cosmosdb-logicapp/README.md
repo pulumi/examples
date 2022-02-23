@@ -25,7 +25,7 @@ With the native Azure provider we can directly use the Azure resource manager AP
     ```bash
     $ python3 -m venv venv
     $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
+    $ pip install -r requirements.txt
     ```
 
 1. Set the required configuration variables for this program, and log into Azure:
@@ -40,16 +40,16 @@ With the native Azure provider we can directly use the Azure resource manager AP
     ```sh
     $ pulumi up
 
-         Type                                                        Name                         Status      
-     +   pulumi:pulumi:Stack                                         azure-cosmosdb-logicapp-dev  created     
-     +   ├─ azure-native:resources:ResourceGroup                     logicappdemo-rg              created     
-     +   ├─ azure-native:storage:StorageAccount                      logicappdemosa               created     
-     +   ├─ azure-native:documentdb:DatabaseAccount                  logicappdemo-cdb             created     
-     +   ├─ azure-native:documentdb:SqlResourceSqlDatabase           db                           created     
-     +   ├─ azure-native:web:Connection                              cosmosdbConnection           created     
-     +   ├─ azure-native:documentdb:SqlResourceSqlContainer          container                    created     
-     +   └─ azure-native:logic:Workflow                              workflow                     created     
- 
+         Type                                                        Name                         Status
+     +   pulumi:pulumi:Stack                                         azure-cosmosdb-logicapp-dev  created
+     +   ├─ azure-native:resources:ResourceGroup                     logicappdemo-rg              created
+     +   ├─ azure-native:storage:StorageAccount                      logicappdemosa               created
+     +   ├─ azure-native:documentdb:DatabaseAccount                  logicappdemo-cdb             created
+     +   ├─ azure-native:documentdb:SqlResourceSqlDatabase           db                           created
+     +   ├─ azure-native:web:Connection                              cosmosdbConnection           created
+     +   ├─ azure-native:documentdb:SqlResourceSqlContainer          container                    created
+     +   └─ azure-native:logic:Workflow                              workflow                     created
+
     Resources:
         + 8 created
 

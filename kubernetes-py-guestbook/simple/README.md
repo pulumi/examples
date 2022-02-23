@@ -22,7 +22,15 @@ already knows to use type `ClusterIP` instead; all you need to do is to tell it 
 deploying to minikube:
 
 ```sh
-pulumi config set isMinikube <value>
+$ pulumi config set isMinikube <value>
+```
+
+Create a Python virtualenv, activate it, and install dependencies:
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
 ```
 
 Perform the deployment:
@@ -50,7 +58,7 @@ And finally - open the application in your browser to see the running applicatio
 macOS you can simply run:
 
 ```sh
-open $(pulumi stack output frontend_ip)
+$ open $(pulumi stack output frontend_ip)
 ```
 
 > _Note_: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure

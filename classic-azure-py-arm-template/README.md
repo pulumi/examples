@@ -27,7 +27,7 @@ here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect
     Enter a stack name: azure-arm-dev
     ```
 
-2. Set the required configuration variables for this program, and log into Azure:
+1. Set the required configuration variables for this program, and log into Azure:
 
     ```bash
     $ pulumi config set azure:environment public
@@ -35,7 +35,15 @@ here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect
     $ az login
     ```
 
-3. Perform the deployment:
+1. Install Python dependencies:
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+1. Perform the deployment:
 
     ```sh
     $ pulumi up
@@ -58,7 +66,7 @@ here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect
 
     Notice here that the `storageAccountName` allocated by the ARM template deployment is exported.
 
-4. Tidy up and delete all resources allocated by your deployment:
+1. Tidy up and delete all resources allocated by your deployment:
 
     ```bash
     $ pulumi destroy -y --skip-preview

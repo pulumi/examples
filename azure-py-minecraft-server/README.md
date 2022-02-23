@@ -17,7 +17,7 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
     ```bash
     $ pulumi stack init dev
     ```
-   
+
 1. Create a Python virtualenv, activate it, and install dependencies:
 
    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
@@ -25,7 +25,7 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
     ```bash
     $ python3 -m venv venv
     $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
+    $ pip install -r requirements.txt
     ```
 
 1. Next, generate an OpenSSH keypair for use with your server.

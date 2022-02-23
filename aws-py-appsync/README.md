@@ -18,6 +18,14 @@ This example shows how to setup a basic GraphQL endpoint in AWS AppSync. The end
     $ pulumi config set aws:region us-east-2
     ```
 
+1. Install Python dependencies:
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
 1. Run `pulumi up` to preview and deploy changes:
 
     ```bash
@@ -39,7 +47,7 @@ This example shows how to setup a basic GraphQL endpoint in AWS AppSync. The end
     https://***.appsync-api.us-east-2.amazonaws.com/graphql
     $ pulumi stack output key
     ***sensitivekey***
-    $ curl -XPOST -H "Content-Type:application/graphql" -H "x-api-key:$(pulumi stack output key)" -d '{ "query": "mutation AddTenant { addTenant(id: \"123\", name: \"FirstCorp\") { id name } }" }' "$(pulumi stack output endpoint)" 
+    $ curl -XPOST -H "Content-Type:application/graphql" -H "x-api-key:$(pulumi stack output key)" -d '{ "query": "mutation AddTenant { addTenant(id: \"123\", name: \"FirstCorp\") { id name } }" }' "$(pulumi stack output endpoint)"
     {
         "data": {
             "addTenant": {

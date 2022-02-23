@@ -39,6 +39,14 @@ Note: some values in this example will be different from run to run.
    $ pulumi config set aws:region us-west-2
    ```
 
+1. Install Python dependencies:
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
 1. Run `pulumi up` to preview and deploy changes. After the preview is shown you will be
    prompted if you want to continue or not. Note: If you set the `db_password` in the configuration as described above, you will not see the `RandomPassword` resource below.
 

@@ -19,9 +19,17 @@ Starting point for building the Pulumi web server sample in Google Cloud.
     $ pulumi config set gcp:zone us-central1-a
     ```
 
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
+
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up -y
     Previewing update (dev):
         Type                     Name                  Plan       Info

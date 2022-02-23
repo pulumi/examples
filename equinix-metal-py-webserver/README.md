@@ -14,7 +14,13 @@ After cloning this repo, `cd` into it and run these commands.
     $ pulumi stack init
     ```
 
-1. Install all of the dependencies for the application:
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+    ```bash
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    ```
 
 1. Deploy everything with the `pulumi up` command. This provisions the webserver:
 
@@ -25,7 +31,6 @@ After cloning this repo, `cd` into it and run these commands.
 1. After a couple minutes, your webserver will be ready.
 
     ```bash
-    $ pulumi up
     ...
 
     Outputs:

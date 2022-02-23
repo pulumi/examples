@@ -12,31 +12,43 @@ User running the Pulumi programs.
 2. [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
 
-
 ### Part 1: Privileged Components
 
 The Pulumi program in `create-role` requires credentials with permissions to create an IAM User, an IAM Role, and assign
 an AWS Access Key to the user. The program creates a new, unprivileged user with no policies attached, and a role which
-specifies a trust policy allowing assumption by the unprivileged user. The role allows the `s3:*` actions on all 
+specifies a trust policy allowing assumption by the unprivileged user. The role allows the `s3:*` actions on all
 resources.
 
 You'll need to set the `create-role:unprivilegedUsername` configuration variable to the name of the unprivilged user, as
 well as the AWS region in which to operate.
 
-First, you need to create a new stack:
+First, you need to create a new stack and configure it:
 
 ```bash
 $ cd create-role
 $ pulumi stack init assume-role-create
 $ pulumi config set create-role:unprivilegedUsername somebody@pulumi.com
 $ pulumi config set aws:region us-east-1
+```
+
+Then, create a Python virtualenv, activate it, and install dependencies:
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+```
+
+The program can then be run with `pulumi up`:
+
+```bash
 $ pulumi up
 ```
 
-The program can then be run with `pulumi up`. The outputs of the program tell you the ARN of the Role, and the Access 
+The outputs of the program tell you the ARN of the Role, and the Access
 Key ID and Secret associated with the User:
 
-```
+```bash
 $ pulumi stack output --json
 {
   "accessKeyId": "AKIAYJ7EUPHL3DSDH4CX",
@@ -81,7 +93,7 @@ Unset the AWS_SESSION_TOKEN or any additional credential setting if you have set
 $ unset AWS_SESSION_TOKEN
 ```
 
-The program can then be run with `pulumi up`. You can verify that the role is indeed assumed by looking at the 
+The program can then be run with `pulumi up`. You can verify that the role is indeed assumed by looking at the
 CloudTrail logs of the bucket creation operation, or by commenting out the `assumeRole` configuration in the provider
 and ensuring creation is not successful.
 
