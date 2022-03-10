@@ -44,6 +44,19 @@ func TestAccAzureCsWebserver(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAzureCsSqlServer(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-cs-sqlserver"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResult(t, stack.Outputs["serverName"], func(body string) bool {
+					return assert.Contains(t, body, "database.windows.net")
+				})
+			},
+		})
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAzureFsAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
