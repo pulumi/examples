@@ -146,7 +146,7 @@ redis_targetgroup = aws.lb.TargetGroup(
     target_type="ip",
     stickiness=aws.lb.TargetGroupStickinessArgs(
         enabled=False,
-        type="lb_cookie",
+        type="source_ip",
     ),
     vpc_id=app_vpc.id,
 )
@@ -240,7 +240,7 @@ flask_targetgroup = aws.lb.TargetGroup(
     target_type="ip",
     stickiness=aws.lb.TargetGroupStickinessArgs(
         enabled=False,
-        type="lb_cookie",
+        type="source_ip",
     ),
     vpc_id=app_vpc.id,
 )
