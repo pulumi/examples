@@ -167,6 +167,38 @@ func TestAccAwsJsWebserverComponent(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsApiGatewayPyRoutes(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-apigateway-py-routes"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["url"].(string)
+				assertHTTPResultWithRetry(t, endpoint+"lambda", nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, API Gateway!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsApiGatewayTsRoutes(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-apigateway-ts-routes"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["url"].(string)
+				assertHTTPResultWithRetry(t, endpoint+"lambda", nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, API Gateway!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsPyAppSync(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
