@@ -111,7 +111,7 @@ jobs:
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
-      uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ env.GOOGLE_PROJECT }}
         service_account_email: ${{ secrets.GCP_SA_EMAIL }}
@@ -238,7 +238,7 @@ jobs:
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
           helm repo add bitnami https://charts.bitnami.com/bitnami
       - name: Configure GCP credentials
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           project_id: ${{ env.GOOGLE_PROJECT }}
           service_account_email: ${{ secrets.GCP_SA_EMAIL }}
@@ -354,7 +354,7 @@ jobs:
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
-      uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ env.GOOGLE_PROJECT }}
         service_account_email: ${{ secrets.GCP_SA_EMAIL }}
@@ -506,7 +506,7 @@ jobs:
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
-      uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ env.GOOGLE_PROJECT }}
         service_account_email: ${{ secrets.GCP_SA_EMAIL }}
@@ -587,7 +587,7 @@ jobs:
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Configure GCP credentials
-      uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ env.GOOGLE_PROJECT }}
         service_account_email: ${{ secrets.GCP_SA_EMAIL }}
