@@ -2,7 +2,7 @@
     "name": "aws-policies",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "^4.0.0",
+        "@pulumi/aws": "^5.0.0",
         "@pulumi/policy": "^1.2.0"
     },
     "devDependencies": {
