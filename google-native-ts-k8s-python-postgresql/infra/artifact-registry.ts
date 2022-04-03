@@ -13,5 +13,8 @@ export const dockerRegistry = new gcloud.artifactregistry.v1.Repository(
     location: "us",
     format: gcloud.artifactregistry.v1.RepositoryFormat.Docker,
     repositoryId: dockerRegistryId,
+  },
+  {
+    ignoreChanges: ["createTime", "updateTime"],
   }
 );

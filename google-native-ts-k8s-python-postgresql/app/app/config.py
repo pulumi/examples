@@ -1,5 +1,3 @@
-from typing import Literal
-
 from pydantic import BaseSettings, SecretStr
 
 
@@ -11,4 +9,3 @@ class Config(BaseSettings):
     db_host: str
     db_port: int
     db_database_name: str
-    log_level: Literal["DEBUG", "INFO"]

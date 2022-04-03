@@ -1,6 +1,7 @@
-from app.db import ConnectionHealth
 from pydantic import BaseModel
 from xpresso import Path
+
+from app.db import ConnectionHealth
 
 
 class DBHealth(BaseModel):

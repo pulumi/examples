@@ -1,22 +1,17 @@
 {
-    "compilerOptions": {
-        "outDir": "bin",
-        "target": "es2016",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "experimentalDecorators": true,
-        "pretty": true,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "forceConsistentCasingInFileNames": true,
-        "strictNullChecks": true
-    },
-    "files": [
-        "index.ts",
-        "config.ts",
-        "cluster.ts",
-        "db.ts"
-    ]
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "outDir": "bin",
+    "pretty": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "target": "es2016"
+  },
+  "files": ["index.ts", "config.ts", "cluster.ts", "db.ts"]
 }

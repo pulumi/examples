@@ -1,5 +1,3 @@
-// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
-
 import { readFileSync } from "fs";
 import * as docker from "@pulumi/docker";
 import * as k8s from "@pulumi/kubernetes";
@@ -14,19 +12,20 @@ import { execSync } from "child_process";
 // Tag images as name:${projectVersion}-${gitHash}
 // This makes them human-readable and also deterministically linkable to code
 const gitHash = execSync("git rev-parse --short HEAD").toString().trim();
-const projectVersion = readFileSync("../VERSION.txt", "utf8").trim();
+const projectVersion = readFileSync("../app/VERSION.txt", "utf8").trim();
 
 // We build and push the image to the GCP project's Artifact Registry.
 // Make sure docker is configured to use docker registry by running
 // > gcloud auth configure-docker
 // before running pulumi up
-const appImageName = pulumi.interpolate`us-docker.pkg.dev/${config.projectId}/${dockerRegistryId}/app:${projectVersion}-${gitHash}`;
 const appImage = new docker.Image(
   "app",
   {
-    imageName: appImageName,
+    imageName: pulumi.interpolate`us-docker.pkg.dev/${config.projectId}/${dockerRegistryId}/api:${projectVersion}-${gitHash}`,
     build: {
       context: "../app",
+      dockerfile: "../app/Dockerfile",
+      extraOptions: ["--platform", "amd64"], // for compatibility with running on ARM MacBooks
     },
   },
   { dependsOn: [dockerRegistry] }
@@ -45,53 +44,6 @@ const kubernetesServiceAccount = new k8s.core.v1.ServiceAccount(
   },
   { provider: cluster.provider, dependsOn: [cluster.provider] }
 );
-// Define the containers
-const appContainer = {
-  name: "app",
-  image: appImage.imageName,
-  imagePullPolicy: "IfNotPresent",
-  env: [
-    { name: "LOG_LEVEL", value: "INFO" },
-    { name: "APP_PORT", value: config.appPort.toString() },
-    { name: "APP_HOST", value: "0.0.0.0" },
-    { name: "DB_HOST", value: "localhost" },
-    { name: "DB_PORT", value: "5432" },
-    { name: "DB_USERNAME", value: db.user.name },
-    { name: "DB_DATABASE_NAME", value: db.db.name },
-  ],
-  ports: [{ containerPort: config.appPort }],
-  livenessProbe: {
-    initialDelaySeconds: 15,
-    periodSeconds: 10,
-    httpGet: {
-      path: "/health",
-      port: config.appPort,
-    },
-  },
-  resources: {
-    requests: {
-      cpu: "250m",
-      memory: "512Mi",
-    },
-  },
-};
-const dbInstance = pulumi.interpolate`${config.projectId}:${config.region}:${db.instance.name}`;
-const SQLProxyContainer = {
-  name: "cloudsql-proxy",
-  image: "gcr.io/cloudsql-docker/gce-proxy",
-  command: [
-    "/cloud_sql_proxy",
-    pulumi.interpolate`-instances=${dbInstance}=tcp:5432`,
-    "-enable_iam_login",
-  ],
-  imagePullPolicy: "IfNotPresent",
-  resources: {
-    requests: {
-      cpu: "250m",
-      memory: "512Mi",
-    },
-  },
-};
 // Deploy the app container as a Kubernetes load balanced service.
 const appLabels = { app: "app" };
 const appDeployment = new k8s.apps.v1.Deployment(
@@ -99,11 +51,43 @@ const appDeployment = new k8s.apps.v1.Deployment(
   {
     spec: {
       selector: { matchLabels: appLabels },
-      replicas: 1,
+      replicas: 2,
       template: {
-        metadata: { labels: appLabels },
+        metadata: {
+          labels: appLabels,
+        },
         spec: {
-          containers: [appContainer, SQLProxyContainer],
+          containers: [
+            {
+              name: "cloudsql-proxy",
+              image: "gcr.io/cloudsql-docker/gce-proxy:1.28.1",
+              command: [
+                "/cloud_sql_proxy",
+                pulumi.interpolate`-instances=${db.dbConnectionString}=tcp:5432`,
+                "-enable_iam_login",
+                "-structured_logs",
+              ],
+            },
+            {
+              name: "app",
+              image: appImage.imageName,
+              env: [
+                { name: "APP_PORT", value: config.appPort.toString() },
+                { name: "APP_HOST", value: "0.0.0.0" },
+                { name: "DB_HOST", value: "localhost" },
+                { name: "DB_PORT", value: "5432" },
+                { name: "DB_USERNAME", value: db.user.name },
+                { name: "DB_DATABASE_NAME", value: db.db.name },
+              ],
+              ports: [{ containerPort: config.appPort }],
+              livenessProbe: {
+                httpGet: {
+                  path: "/health",
+                  port: config.appPort,
+                },
+              },
+            },
+          ],
           serviceAccount: kubernetesServiceAccount.metadata.name,
         },
       },
@@ -111,10 +95,10 @@ const appDeployment = new k8s.apps.v1.Deployment(
   },
   {
     provider: cluster.provider,
-    dependsOn: [appImage, cluster.provider, kubernetesServiceAccount],
+    dependsOn: [appImage, kubernetesServiceAccount],
   }
 );
-const appService = new k8s.core.v1.Service(
+export const appService = new k8s.core.v1.Service(
   "app-service",
   {
     metadata: { labels: appDeployment.metadata.labels },
@@ -124,16 +108,5 @@ const appService = new k8s.core.v1.Service(
       selector: appDeployment.spec.template.metadata.labels,
     },
   },
-  { provider: cluster.provider, dependsOn: [cluster.provider] }
+  { provider: cluster.provider, dependsOn: [appDeployment] }
 );
-
-// Export the app deployment name so we can easily access it.
-export let appName = appDeployment.metadata.name;
-
-// Export the service's address.
-export let appAddress = appService.status.apply(
-  (s) => `http://${s.loadBalancer.ingress[0].ip}:${config.appPort}`
-);
-
-// Also export the Kubeconfig so that clients can easily access our cluster.
-export let kubeConfig = cluster.kubeConfig;

@@ -1,15 +1,17 @@
-# Containerized Python Xpresso app, deployed to GKE via Pulumi
+# Containerized Python app, deployed to GKE via Pulumi
 
 This example is a full end to end example of delivering a containerized Xpresso app.
 
-Using an infrastructure as code approach, running this repo will:
+The IaC part of this repo will take care of:
 
-- Provision a GKE cluster
-- Provisions a fully managed Google Cloud SQL PostgreSQL database
-- Builds a containerized Xpresso app, and it to the Google Artifact Registry
-- Deploys that container image as a Kubernetes Service inside of the provisioned GKE cluster
+- Provisioning a Google Kubernetes Engine (GKE) cluster
+- Provisioning a Cloud SQL managed PostgreSQL database
+- Build a containerized Python app and pushes it to Google Artifact Registry (GAR)
+- Deploys that the containerized app in the GKE cluster
 
-## Prerequisites
+## Quick Start
+
+### Prerequisites
 
 Before trying to deploy this example, please make sure you have performed all of the following tasks:
 
@@ -24,8 +26,6 @@ This is installed as part of the
 
 As part of this example, we will setup and deploy a Kubernetes cluster on GKE.
 You may also want to install [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) if you would like to directly interact with the underlying Kubernetes cluster.
-
-## Deploying the Example
 
 ### Set up your GCP Project
 
@@ -72,7 +72,7 @@ Set the required configuration variables for this program:
 ```shell
 pulumi config set xpresso-gke-demo:projectId [your-gcp-project-here]
 pulumi config set xpresso-gke-demo:region us-west1 # any valid region
-pulumi confit set xpresso-gke-demo:appPort 8000  # unless you change the app
+pulumi config set xpresso-gke-demo:appPort 8000  # unless you change the app
 ```
 
 ### Deploy
@@ -91,67 +91,6 @@ pulumi destroy
 pulumi stack rm
 ```
 
-## Local Development
+### Check
 
-This package comes set up with some basic facilities for local development:
-
-- Make targets for bootstrapping, testing and linting
-- Git hooks (via [pre-commit](https://pre-commit.com)) to do code formatting and syncing of derived files
-
-To set up locally you'll need to have Python 3.10 installed.
-If you're using [pyenv](https://github.com/pyenv/pyenv), remember to select the right Python version.
-
-### Bootstrapping
-
-Run:
-
-```shell
-make init
-```
-
-This will:
-
-- Create a virtual environment using [Poetry](https://python-poetry.org) and install all of the app's dependencies.
-- Install git hooks via pre-commit.
-
-### Testing
-
-Run:
-
-```shell
-make test
-```
-
-### Linting
-
-Linting will auto-run on each commit.
-To disable this for a single commit, run:
-
-```shell
-git commit -m "<commit message>" --no-verify
-```
-
-To disable this permanently:
-
-```shell
-poetry run pre-commit --uninstall
-```
-
-To run linting manually (without committing):
-
-```shell
-make lint
-```
-
-### Versioning
-
-So that we can include info about the project version in our infra (in particular, we want the version in the image tag) we keep the source of truth in a `VERSION.txt` file.
-This is also convenient to programmatically check for version bumps (for example in CI).
-
-This version is synced to the Python package version (in `pyproject.toml`) via a pre-commit hook.
-
-### Dependency specification
-
-Dependencies are specified in `pyproject.toml` and managed by Poetry.
-But we don't want to have to install Poetry to build the image, so we export Poetry's lockfile to a `app/requirements.txt` via a pre-commit hook.
-Then when we build the image we can just `pip install -r app/requirements.txt`.
+If you log into the [GCP Console] and select your project, then go to `Kubernetes -> Workloads -> <the newly created deployment>` you'll find the public IP for your service.
