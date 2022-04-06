@@ -29,12 +29,32 @@ There are some prebaked canary scripts for doing things like checking an API or 
     ```
 
 1.  Restore NPM modules via `npm install` or `yarn install`.
+    ```
+    npm install
+    ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
     ```
     $ pulumi up
+    Previewing update (dev)
+    ...
+
+    Updating (dev)
+    View Live: https://app.pulumi.com/acmecorp/aws-synthetics-canary/dev/updates/1
+
+        Type                      Name                       Status      
+    +   pulumi:pulumi:Stack       aws-synthetics-canary-dev  created     
+    +   ├─ aws:s3:BucketV2        canary-results             created     
+    +   ├─ aws:s3:BucketV2        canary-scripts             created     
+    +   ├─ aws:iam:Role           canary-exec-role           created     
+    +   ├─ aws:iam:RolePolicy     canary-exec-policy         created     
+    +   ├─ aws:s3:BucketObjectv2  canary-simple-canary       created     
+    +   └─ aws:synthetics:Canary  canary-simple              created     
     
+    Outputs:
+        canaryName   : "canary-simple-a4a3974"
+        canaryNameArn: "arn:aws:synthetics:us-east-1:052848974346:canary:canary-simple-a4a3974"
     ```
 
 ## Clean up
