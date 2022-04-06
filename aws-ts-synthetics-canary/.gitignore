@@ -1,0 +1,4 @@
+/bin/
+/node_modules/
+# Canaries need to be in a structure with "node_modules" so in this case we don't want to ignore them.
+!canaries/simple-canary/nodejs/node_modules
