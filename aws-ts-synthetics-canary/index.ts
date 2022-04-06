@@ -12,13 +12,13 @@ const canaryScriptsBucket = new aws.s3.BucketV2(`${baseName}-scripts`);
 // Bucket for storing canary results
 const canaryResultsS3Bucket = new aws.s3.BucketV2(`${baseName}-results`, {
   // This allows the bucket to be destroyed even if it contains canary results.
-  forceDestroy: true 
+  forceDestroy: true,
 });
 
 // Canary execution role to allow the canary (lambda) to run.
-// Note though that if the canary code itself has to interact with AWS resources, then the role needs the 
+// Note though that if the canary code itself has to interact with AWS resources, then the role needs the
 // policies to allow the canary to do so.
-// The canary used in this example does not interact with any AWS resources, 
+// The canary used in this example does not interact with any AWS resources,
 // So no canary-specific permissions are needed.
 const canaryExecutionRole = new aws.iam.Role(`${baseName}-exec-role`, {
   assumeRolePolicy: {

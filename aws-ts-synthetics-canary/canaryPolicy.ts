@@ -12,7 +12,7 @@ export function generateCanaryPolicy(canaryResultsBucketArn: string) {
               ],
               "Resource": [
                   `${canaryResultsBucketArn}/*`,
-              ]
+              ],
           },
           {
               "Effect": "Allow",
