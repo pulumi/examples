@@ -38,7 +38,7 @@ class SchemaProvider(ResourceProvider):
         host=args["server_address"],
         database=args["database_name"])
         cursor = connection.cursor()
-        cursor.execute(args["creation_script"])
+        cursor.execute(args["creation_script"], multi=True)
         # The creation process is finished. We assign a unique ID to this resource,
         # and return all the outputs required by the resource (in this case
         # outputs are identical to the inputs)
