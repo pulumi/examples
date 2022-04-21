@@ -43,9 +43,9 @@ const canaryScriptsBucket = new aws.s3.BucketV2(`${baseName}-scripts`);
 const canaryScriptBucketVersioning = new aws.s3.BucketVersioningV2(`${baseName}-scripts-versioning`, {
   bucket: canaryScriptsBucket.id,
   versioningConfiguration: {
-    status: "Enabled"
-  }
-})
+    status: "Enabled",
+  },
+});
 // zip up, upload and deploy the "simple canary"
 const canaryScriptArchive = new pulumi.asset.FileArchive("./canaries/simple-canary/");
 const canaryScriptObject = new aws.s3.BucketObjectv2(`${baseName}-script`, {
