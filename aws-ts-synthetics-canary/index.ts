@@ -2,7 +2,6 @@
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-import { local } from "@pulumi/command";
 import { generateCanaryPolicy } from "./canaryPolicy";
 
 // Used for naming convention
@@ -68,26 +67,6 @@ const canary = new aws.synthetics.Canary(`${baseName}-simple`, {
   s3Version: canaryScriptObject.versionId,
   startCanary: true,
 });
-
-// Create some commands to clean up Canary lambda detritus that is not automatically cleaned up by AWS when the canary is deleted.
-// When this issue is addressed, then this should no longer be necessary: https://github.com/hashicorp/terraform-provider-aws/issues/19288
-// Assumes the environment has the AWS CLI installed.
-const canaryLambdaFunctionName = canary.engineArn.apply(engineArn => engineArn.split(":")[6])
-const canaryLambdaFunctionLatestVersion = canary.engineArn.apply(engineArn => engineArn.split(":")[7])
-const canaryLambdaFunctionCleaner = new local.Command(`${baseName}-lambdaFnCleaner`, {
-  environment: {
-    "CANARY_REGION": aws.config.region || "",
-    "CANARY_LAMBDA_FN_NAME": canaryLambdaFunctionName,
-    "CANARY_LAMBDA_FN_LATEST_VERSION": canaryLambdaFunctionLatestVersion
-  },
-  create: "node ./lambda-cleaner/lambdatester.js",
-  // delete: "node ./lambda-cleaner/lambdacleaner.js"
-}, 
-//{deleteBeforeReplace: true})
-)
-// const canaryLambdaLayerCleaner = new local.Command(`${baseName}-lambdaLayerCleaner`, {
-//   delete: 
-// })
 
 export const simpleCanaryName = canary.name;
 export const simpleCanaryArn = canary.arn;
