@@ -2,14 +2,13 @@
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
+import { local } from "@pulumi/command";
 import { generateCanaryPolicy } from "./canaryPolicy";
 
 // Used for naming convention
 const baseName = "canary";
 
-// Bucket for storing canary scripts
-const canaryScriptsBucket = new aws.s3.BucketV2(`${baseName}-scripts`);
-// Bucket for storing canary results
+// Bucket for storing canary RESULTS
 const canaryResultsS3Bucket = new aws.s3.BucketV2(`${baseName}-results`, {
   // This allows the bucket to be destroyed even if it contains canary results.
   forceDestroy: true,
@@ -39,24 +38,56 @@ const canaryExecutionPolicy = new aws.iam.RolePolicy(`${baseName}-exec-policy`, 
   policy: canaryResultsS3Bucket.arn.apply(arn => generateCanaryPolicy(arn)),
 });
 
-// zip up, upload and deploy the "simple canary"
-const simpleCanaryScriptArchive = new pulumi.asset.FileArchive("./canaries/simple-canary/");
-const simpleCanaryScriptObject = new aws.s3.BucketObjectv2(`${baseName}-simple-canary`, {
+// Bucket for storing the canary SCRIPTS
+const canaryScriptsBucket = new aws.s3.BucketV2(`${baseName}-scripts`);
+// Enable versioning so that as new scripts are uploaded the canary will be updated as well.
+const canaryScriptBucketVersioning = new aws.s3.BucketVersioningV2(`${baseName}-scripts-versioning`, {
   bucket: canaryScriptsBucket.id,
-  source: simpleCanaryScriptArchive,
-});
-const simpleCanary = new aws.synthetics.Canary(`${baseName}-simple`, {
-    artifactS3Location: pulumi.interpolate`s3://${canaryResultsS3Bucket.id}`,
-    executionRoleArn: canaryExecutionRole.arn,
-    handler: "exports.handler",
-    runtimeVersion: "syn-nodejs-puppeteer-3.5",
-    schedule: {
-        expression: "rate(1 minute)",
-    },
-    s3Bucket: canaryScriptsBucket.id,
-    s3Key: simpleCanaryScriptObject.id,
-    startCanary: true,
+  versioningConfiguration: {
+    status: "Enabled"
+  }
+})
+// zip up, upload and deploy the "simple canary"
+const canaryScriptArchive = new pulumi.asset.FileArchive("./canaries/simple-canary/");
+const canaryScriptObject = new aws.s3.BucketObjectv2(`${baseName}-script`, {
+  bucket: canaryScriptBucketVersioning.bucket,
+  source: canaryScriptArchive,
 });
 
-export const canaryName = simpleCanary.name;
-export const canaryNameArn = simpleCanary.arn;
+// Create the canary.
+const canary = new aws.synthetics.Canary(`${baseName}-simple`, {
+  artifactS3Location: pulumi.interpolate`s3://${canaryResultsS3Bucket.id}`,
+  executionRoleArn: canaryExecutionRole.arn,
+  handler: "exports.handler",
+  runtimeVersion: "syn-nodejs-puppeteer-3.5",
+  schedule: {
+      expression: "rate(1 minute)",
+  },
+  s3Bucket: canaryScriptsBucket.id,
+  s3Key: canaryScriptObject.id,
+  s3Version: canaryScriptObject.versionId,
+  startCanary: true,
+});
+
+// Create some commands to clean up Canary lambda detritus that is not automatically cleaned up by AWS when the canary is deleted.
+// When this issue is addressed, then this should no longer be necessary: https://github.com/hashicorp/terraform-provider-aws/issues/19288
+// Assumes the environment has the AWS CLI installed.
+const canaryLambdaFunctionName = canary.engineArn.apply(engineArn => engineArn.split(":")[6])
+const canaryLambdaFunctionLatestVersion = canary.engineArn.apply(engineArn => engineArn.split(":")[7])
+const canaryLambdaFunctionCleaner = new local.Command(`${baseName}-lambdaFnCleaner`, {
+  environment: {
+    "CANARY_REGION": aws.config.region || "",
+    "CANARY_LAMBDA_FN_NAME": canaryLambdaFunctionName,
+    "CANARY_LAMBDA_FN_LATEST_VERSION": canaryLambdaFunctionLatestVersion
+  },
+  create: "node ./lambda-cleaner/lambdatester.js",
+  // delete: "node ./lambda-cleaner/lambdacleaner.js"
+}, 
+//{deleteBeforeReplace: true})
+)
+// const canaryLambdaLayerCleaner = new local.Command(`${baseName}-lambdaLayerCleaner`, {
+//   delete: 
+// })
+
+export const simpleCanaryName = canary.name;
+export const simpleCanaryArn = canary.arn;
