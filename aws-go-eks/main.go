@@ -141,11 +141,11 @@ func main() {
 		}
 
 		ctx.Export("kubeconfig", generateKubeconfig(eksCluster.Endpoint,
-			eksCluster.CertificateAuthority.Data().Elem(), eksCluster.Name))
+			pulumi.StringOutput(eksCluster.CertificateAuthorities), eksCluster.Name))
 
 		k8sProvider, err := providers.NewProvider(ctx, "k8sprovider", &providers.ProviderArgs{
 			Kubeconfig: generateKubeconfig(eksCluster.Endpoint,
-				eksCluster.CertificateAuthority.Data().Elem(), eksCluster.Name),
+				pulumi.StringOutput(eksCluster.CertificateAuthorities), eksCluster.Name),
 		}, pulumi.DependsOn([]pulumi.Resource{nodeGroup}))
 		if err != nil {
 			return err
