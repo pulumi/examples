@@ -1,0 +1,3 @@
+name: azure-java-static-website
+description: Deploys a static website with Pulumi on Azure from Java definitions
+runtime: java
