@@ -1,0 +1,2 @@
+rootProject.name = 'gcp-java-gke-hello-world'
+include('app')

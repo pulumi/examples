@@ -1,0 +1,26 @@
+plugins {
+    id 'application'
+}
+
+group 'com.pulumi.example'
+version '0.0.1-SNAPSHOT'
+
+
+repositories {
+    mavenLocal()
+    maven { // The google mirror is less flaky than mavenCentral()
+        url("https://maven-central.storage-download.googleapis.com/maven2/")
+    }
+    mavenCentral()
+}
+
+dependencies {
+    implementation "com.pulumi:pulumi:(,1.0]"
+    implementation "com.pulumi:azure-native:(1.0,2.0]"
+}
+
+application {
+    mainClass = project.hasProperty("mainClass")
+            ? project.getProperty("mainClass")
+            : "${group}.infra.Main"
+}
