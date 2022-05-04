@@ -1,0 +1,51 @@
+name: azure-static-website
+runtime: yaml
+description: A static website hosted on AWS S3
+resources:
+  staticsitegroup:
+    type: azure-native:resources:ResourceGroup
+  storageaccount:
+    type: azure-native:storage:StorageAccount
+    properties:
+      resourceGroupName: ${staticsitegroup.name}
+      kind: "StorageV2"
+      sku: { name: "Standard_LRS" }
+  staticwebsite:
+    type: azure-native:storage:StorageAccountStaticWebsite
+    properties:
+      resourceGroupName: ${staticsitegroup.name}
+      accountName: ${storageaccount.name}
+      indexDocument: index.html
+      error404Document: 404.html
+  index.html:
+    type: azure-native:storage:Blob
+    properties:
+      resourceGroupName: ${staticsitegroup.name}
+      accountName: ${storageaccount.name}
+      containerName: ${staticwebsite.containerName}
+      contentType: text/html
+      type: 'Block'
+      source:
+          Fn::FileAsset: ./www/index.html
+  favicon.png:
+    type: azure-native:storage:Blob
+    properties:
+      resourceGroupName: ${staticsitegroup.name}
+      accountName: ${storageaccount.name}
+      containerName: ${staticwebsite.containerName}
+      contentType: image/png
+      type: 'Block'
+      source:
+          Fn::FileAsset: ./www/favicon.png
+  404.html:
+    type: azure-native:storage:Blob
+    properties:
+      resourceGroupName: ${staticsitegroup.name}
+      accountName: ${storageaccount.name}
+      containerName: ${staticwebsite.containerName}
+      contentType: text/html
+      type: 'Block'
+      source:
+          Fn::FileAsset: ./www/404.html
+outputs:
+  endpoint: ${storageaccount.primaryEndpoints.web}
