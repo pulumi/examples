@@ -1,0 +1,69 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.6.6'
+    id 'org.springframework.experimental.aot' version '0.11.4'
+}
+
+group 'com.pulumi.example'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { url = uri("https://repo.spring.io/release") } // spring experimental
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+def springNativeVersion = "0.11.2"
+
+dependencies {
+    implementation "org.springframework.experimental:spring-native:${springNativeVersion}"
+    implementation("org.springframework.cloud:spring-cloud-starter-function-webflux:3.2.2") {
+        exclude (group: 'org.springframework.boot', module: 'spring-boot-starter-logging')
+    }
+    implementation("org.springframework.cloud:spring-cloud-function-web")
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.5'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+// Used to run app locally:
+// gradle bootRun
+// curl localhost:8080
+bootRun {
+    systemProperty 'springAot', 'true'
+}
+
+// Used to build the native image locally into a container:
+// gradle bootBuildImage
+// docker run --rm -p 8080:8080 app:1.0-SNAPSHOT
+//
+bootBuildImage {
+    builder = "paketobuildpacks/builder:tiny"
+    environment = [
+            "BP_NATIVE_IMAGE" : "true"
+    ]
+}
+
+springAot {
+    removeSpelSupport = true
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task packageDistribution(type: Zip) {
+    dependsOn(nativeCompile)
+    archiveFileName = "${getParent().getName()}-${getProject().getName()}.zip"
+    destinationDirectory = layout.buildDirectory.dir('dist')
+
+    from 'src/main/function'
+    from 'build/native/nativeCompile/app'
+}
+
