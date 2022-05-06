@@ -9,7 +9,7 @@ import (
 	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/apps/v1"
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/core/v1"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/meta/v1"
-	provider "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes"
+	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -143,7 +143,7 @@ func main() {
 		ctx.Export("kubeconfig", generateKubeconfig(eksCluster.Endpoint,
 			eksCluster.CertificateAuthority.Data().Elem(), eksCluster.Name))
 
-		k8sProvider, err := provider.NewProvider(ctx, "k8sprovider", &provider.ProviderArgs{
+		k8sProvider, err := kubernetes.NewProvider(ctx, "k8sprovider", &kubernetes.ProviderArgs{
 			Kubeconfig: generateKubeconfig(eksCluster.Endpoint,
 				eksCluster.CertificateAuthority.Data().Elem(), eksCluster.Name),
 		}, pulumi.DependsOn([]pulumi.Resource{nodeGroup}))
