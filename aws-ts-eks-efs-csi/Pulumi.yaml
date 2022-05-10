@@ -1,0 +1,3 @@
+name: EKS
+runtime: nodejs
+description: a stack to make an EKS cluster with efs-csi backed PVC
