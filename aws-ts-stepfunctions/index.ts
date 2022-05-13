@@ -2,7 +2,7 @@
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-import { readFileSync } from 'fs';
+import { readFileSync } from "fs";
 
 const region = aws.config.requireRegion();
 
