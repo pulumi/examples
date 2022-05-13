@@ -8,7 +8,7 @@ To set a stack readme, simply set Stack Output named `readme` to the value of yo
 
 
 #### Example Project Structure
-`./index.ts`
+`./__main__.py`
 ```python
 import pulumi
 
