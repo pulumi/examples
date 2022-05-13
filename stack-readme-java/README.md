@@ -1,6 +1,6 @@
 # Example Stack README In the Pulumi Service
 
-This example shows how to set up a [Stack Readme](https://www.pulumi.com/docs/intro/pulumi-service/projects-and-stacks/#stack-readme) in typescript.
+This example shows how to set up a [Stack Readme](https://www.pulumi.com/docs/intro/pulumi-service/projects-and-stacks/#stack-readme) in Java.
 
 Stack READMEs in the [Pulumi Service](https://app.pulumi.com/) dynamically update based on Stack Outputs. Stack READMEs interpolate output variables on the stack (${outputs.instances[0].ARN}) so that each stack can construct links to dashboards, shell commands, and other pieces of documentation. All of this content stays up to date as you stand up new stacks, rename resources, and refactor your infrastructure.
 
@@ -8,15 +8,36 @@ To set a stack readme, simply set Stack Output named `readme` to the value of yo
 
 
 #### Example Project Structure
-`./index.ts`
-```typescript
-import { readFileSync } from "fs";
-export const strVar = "foo";
-export const arrVar = ["fizz", "buzz"];
-// add readme to stack outputs. must be named "readme".
-export const readme = readFileSync("./Pulumi.README.md");
-```
+`./src/main/java/stackreadme/App.java`
+```java
+package stackreadme;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import com.pulumi.Pulumi;
+import com.pulumi.core.Output;
+
+public class App {
+    public static void main(String[] args) {
+        Pulumi.run(ctx -> {
+            var strVar = "foo";
+            var arrVar = new String[]{ "fizz", "buzz" };
+            try {
+                var readme = Files.readString(Paths.get("./Pulumi.README.md"));
+                ctx.export("strVar", Output.of(strVar));
+                ctx.export("arrVar", Output.of(arrVar));
+                ctx.export("readme", Output.of(readme));
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+}
+
+```
 
 `./Pulumi.README.md`
 ```markdown
@@ -30,5 +51,5 @@ Full markdown support! Substitute stack outputs dynamically so that links can de
 
 
 #### How to view the rendered stack readme:
-Run `pulumi up`, then go to the console by running `pulumi console`. Then click the readme tab 
+Run `pulumi up`, then go to the console by running `pulumi console`. Then click the readme tab
 
