@@ -90,7 +90,7 @@ class MyStack : Stack
 
         var privateZone = new AzureNative.Network.PrivateZone($"sqlserver-privateZone", new AzureNative.Network.PrivateZoneArgs
         {
-            PrivateZoneName = server.Name.Apply(servername => servername + ".database.windows.net"),
+            PrivateZoneName = server.Name.Apply(servername => servername + ".privatelink.database.windows.net"),
             ResourceGroupName = resourceGroup.Name,
             Location = "global",
         });
