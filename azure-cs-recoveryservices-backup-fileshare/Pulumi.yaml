@@ -1,0 +1,3 @@
+name: azure-cs-recoveryservices-backup-fileshare
+runtime: dotnet
+description: An example of a how to configure backup of a fileshare on a storage account using Azure Recovery Services 
