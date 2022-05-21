@@ -24,9 +24,6 @@ const virtualNetwork = new network.VirtualNetwork("server-network", {
     }],
 });
 
-// We need to retrieve the subnet before proceeding
-const subnet = virtualNetwork.subnets.apply(subnet => subnet![0])
-
 // Now allocate a public IP and assign it to our NIC.
 const publicIp = new network.PublicIPAddress("server-ip", {
     resourceGroupName,
@@ -37,7 +34,7 @@ const networkInterface = new network.NetworkInterface("server-nic", {
     resourceGroupName,
     ipConfigurations: [{
         name: "webserveripcfg",
-        subnet: subnet,
+        subnet: virtualNetwork.subnets.apply(subnet => subnet![0]),
         privateIPAllocationMethod: network.IPAllocationMethod.Dynamic,
         publicIPAddress: { id: publicIp.id },
     }],
