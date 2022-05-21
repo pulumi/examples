@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "outDir": "bin",
+        "strict": true,
         "target": "es2016",
         "module": "commonjs",
         "moduleResolution": "node",
@@ -8,9 +9,9 @@
         "experimentalDecorators": true,
         "pretty": true,
         "noFallthroughCasesInSwitch": true,
-        "forceConsistentCasingInFileNames": true,
+        "forceConsistentCasingInFileNames": true
     },
     "files": [
-        "index.ts",
+        "index.ts"
     ]
 }
