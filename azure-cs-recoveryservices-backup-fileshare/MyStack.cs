@@ -25,6 +25,7 @@ class MyStack : Stack
             AllowSharedKeyAccess = true,
             AccessTier = Storage.AccessTier.Hot,
         });
+        StorageAccountId = storageAccount.Id;
 
         //configure soft delete of 7 days on storage account
 
@@ -67,6 +68,8 @@ class MyStack : Stack
             },
             VaultName = "recoveryServicesVault",
         });
+
+        RecoveryServicesVaultId = recoveryServicesVault.Id;
 
         // create protection policy. 16 daily, 12 monthly each 1st of the month and 10 annual each 1st of june
         var protectionPolicy = new AzureNative.RecoveryServices.ProtectionPolicy("protectionPolicy", new AzureNative.RecoveryServices.ProtectionPolicyArgs
@@ -207,7 +210,8 @@ class MyStack : Stack
         return string.Empty;
     }
 
-    /*[Output("serverName")]
-    public Output<string> ServerName { get; set; }  */
+    [Output("serverName")]
+    public Output<string> RecoveryServicesVaultId { get; set; }
+    public Output<string> StorageAccountId { get; set; }
 
 }
