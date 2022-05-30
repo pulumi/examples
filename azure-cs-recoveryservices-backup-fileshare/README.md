@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-recoveryservices-backup-fileshare/README.md)
 
-# A SQLServer on Azure PaaS
+# Azure Files with Azure Recovery Services
 
 This example configures [An example of a backup of an Azure Files using Azure Recovery Services](https://docs.microsoft.com/en-us/azure/backup/azure-file-share-backup-overview).
 
