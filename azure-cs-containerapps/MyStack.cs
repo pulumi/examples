@@ -6,11 +6,11 @@ using Pulumi.AzureNative.ContainerRegistry.Inputs;
 using Pulumi.AzureNative.OperationalInsights;
 using Pulumi.AzureNative.OperationalInsights.Inputs;
 using Pulumi.AzureNative.Resources;
-using Pulumi.AzureNative.Web.V20210301;
-using Pulumi.AzureNative.Web.V20210301.Inputs;
+using Pulumi.AzureNative.App;
+using Pulumi.AzureNative.App.Inputs;
 using Pulumi.Docker;
-using ContainerArgs = Pulumi.AzureNative.Web.V20210301.Inputs.ContainerArgs;
-using SecretArgs = Pulumi.AzureNative.Web.V20210301.Inputs.SecretArgs;
+using ContainerArgs = Pulumi.AzureNative.App.Inputs.ContainerArgs;
+using SecretArgs = Pulumi.AzureNative.App.Inputs.SecretArgs;
 
 class MyStack : Stack
 {
@@ -32,10 +32,9 @@ class MyStack : Stack
                 WorkspaceName = items.Item2,
             }));
         
-        var kubeEnv = new KubeEnvironment("env", new KubeEnvironmentArgs
+        var kubeEnv = new ManagedEnvironment("env", new ManagedEnvironmentArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            Type = "Managed",
             AppLogsConfiguration = new AppLogsConfigurationArgs
             {
                 Destination = "log-analytics",
@@ -79,7 +78,7 @@ class MyStack : Stack
         var containerApp = new ContainerApp("app", new ContainerAppArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            KubeEnvironmentId = kubeEnv.Id,
+            ManagedEnvironmentId = kubeEnv.Id,
             Configuration = new ConfigurationArgs
             {
                 Ingress = new IngressArgs
