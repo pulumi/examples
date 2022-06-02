@@ -94,7 +94,7 @@ npm install
 
 One of the interesting aspects of this example is the way it demonstrates how easy it is to use
 Azure resources to configure Kubernetes resources, without the need for intermediate APIs such as
-[OSBA](https://github.com/Azure/open-service-broker-azure). In particular, this example uses the connection strings exposed by the
+[Open Service Broker for Azure](https://github.com/Azure/open-service-broker-azure). In particular, this example uses the connection strings exposed by the
 CosmosDB instance to configure the `bitnami/node` Helm Chart to connect to CosmosDB, instead of
 creating and connecting to an in-cluster MongoDB instance.
 
