@@ -1,2 +1,0 @@
-rootProject.name = 'aws-java-webserver'
-include('app')
