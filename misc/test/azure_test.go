@@ -30,6 +30,20 @@ func TestAccAzureCsAppService(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAzureCsContainerApps(t *testing.T) {
+	test := getAzureBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "azure-cs-containerapps"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertHTTPResult(t, stack.Outputs["url"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Azure Container Apps")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAzureCsWebserver(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
