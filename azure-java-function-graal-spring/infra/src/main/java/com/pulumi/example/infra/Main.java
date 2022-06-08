@@ -111,14 +111,11 @@ public class Main {
 
     static Output<String> getConnectionString(Output<String> resourceGroupName, Output<String> accountName) {
         // Retrieve the primary storage account key.
-        var primaryStorageKey = Output.tuple(resourceGroupName, accountName).apply(
-                t -> Output.of(StorageFunctions.listStorageAccountKeys(
-                                ListStorageAccountKeysArgs.builder()
-                                        .resourceGroupName(t.t1)
-                                        .accountName(t.t2)
-                                        .build())
-                        .thenApply(r -> r.keys().get(0).value()))
-        );
+        var primaryStorageKey = StorageFunctions.listStorageAccountKeys(ListStorageAccountKeysArgs.builder()
+                .resourceGroupName(resourceGroupName)
+                .accountName(accountName)
+                .build())
+            .applyValue(r -> r.keys().get(0).value());
 
         // Build the connection string to the storage account.
         return Output.format(
@@ -129,26 +126,20 @@ public class Main {
 
     static Output<String> signedBlobReadUrl(
             Blob blob, BlobContainer container, StorageAccount account, ResourceGroup resourceGroup) {
-
-        var blobSASServiceSasToken = Output.tuple(
-                        resourceGroup.name(), account.name(), container.name())
-                .apply(
-                        (t) -> Output.of(StorageFunctions.listStorageAccountServiceSAS(
-                                ListStorageAccountServiceSASArgs.builder()
-                                        .resourceGroupName(t.t1)
-                                        .accountName(t.t2)
-                                        .protocols(HttpProtocol.Https)
-                                        .sharedAccessExpiryTime("2030-01-01")
-                                        .sharedAccessStartTime("2021-01-01")
-                                        .resource(SignedResource.C)
-                                        .permissions(Permissions.R)
-                                        .canonicalizedResource(String.format("/blob/%s/%s", t.t2, t.t3))
-                                        .contentType("application/json")
-                                        .cacheControl("max-age=5")
-                                        .contentDisposition("inline")
-                                        .contentEncoding("deflate")
-                                        .build())
-                        ))
+        var blobSASServiceSasToken = StorageFunctions.listStorageAccountServiceSAS(ListStorageAccountServiceSASArgs.builder()
+                    .resourceGroupName(resourceGroup.name())
+                    .accountName(account.name())
+                    .protocols(HttpProtocol.Https)
+                    .sharedAccessExpiryTime("2030-01-01")
+                    .sharedAccessStartTime("2021-01-01")
+                    .resource(SignedResource.C)
+                    .permissions(Permissions.R)
+                    .canonicalizedResource(String.format("/blob/%s/%s", account.name(), container.name()))
+                    .contentType("application/json")
+                    .cacheControl("max-age=5")
+                    .contentDisposition("inline")
+                    .contentEncoding("deflate")
+                    .build())
                 .applyValue(sas -> sas.serviceSasToken());
         return Output.format(
                 "https://%s.blob.core.windows.net/%s/%s?$%s",
