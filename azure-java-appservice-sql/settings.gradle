@@ -1,2 +1,0 @@
-rootProject.name = 'azure-java-static-website'
-include('app')

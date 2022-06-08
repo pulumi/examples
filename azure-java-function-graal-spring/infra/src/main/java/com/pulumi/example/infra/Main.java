@@ -29,6 +29,7 @@ import com.pulumi.azurenative.web.inputs.NameValuePairArgs;
 import com.pulumi.azurenative.web.inputs.SiteConfigArgs;
 import com.pulumi.azurenative.web.inputs.SkuDescriptionArgs;
 import com.pulumi.core.Output;
+import java.io.File;
 
 public class Main {
 
@@ -62,7 +63,7 @@ public class Main {
                 .resourceGroupName(resourceGroup.name())
                 .accountName(storageAccount.name())
                 .containerName(codeContainer.name())
-                .source(new FileArchive("./app/build/dist/azure-function-graal-spring-app.zip"))
+                .source(new FileArchive(findAppArchive().getAbsolutePath()))
                 .build()
         );
 
@@ -153,5 +154,19 @@ public class Main {
                 "https://%s.blob.core.windows.net/%s/%s?$%s",
                 account.name(), container.name(), blob.name(), blobSASServiceSasToken
         );
+    }
+
+    private static File findAppArchive() {
+        var files = new File("../app/build/dist")
+            .listFiles((dir, name) -> name.endsWith("-app.zip"));
+        if (files == null || files.length == 0) {
+            throw new IllegalStateException("Could not find app archive in `./app/build/dist/*-app.zip`;"+
+                                            " did you run `gradle app:packageDistribution`?");
+        }
+        if (files.length > 1) {
+            throw new IllegalStateException("Found more than one app archive `./app/build/dist/*-app.zip`;"+
+                                            " confused which one to use.");
+        }
+        return files[0];
     }
 }

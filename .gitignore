@@ -28,3 +28,4 @@ Gopkg.lock
 .settings/
 .project
 .classpath
+target/
