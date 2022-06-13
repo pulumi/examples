@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿// Copyright 2016-2022, Pulumi Corporation.
+using System.IO;
 using System.Collections.Generic;
 using Pulumi;
 using Pulumi.Aws.S3;
