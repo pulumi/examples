@@ -32,7 +32,7 @@ class MyStack : Stack
                 WorkspaceName = items.Item2,
             }));
         
-        var kubeEnv = new ManagedEnvironment("env", new ManagedEnvironmentArgs
+        var managedEnv = new ManagedEnvironment("env", new ManagedEnvironmentArgs
         {
             ResourceGroupName = resourceGroup.Name,
             AppLogsConfiguration = new AppLogsConfigurationArgs
@@ -78,7 +78,7 @@ class MyStack : Stack
         var containerApp = new ContainerApp("app", new ContainerAppArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            ManagedEnvironmentId = kubeEnv.Id,
+            ManagedEnvironmentId = managedEnv.Id,
             Configuration = new ConfigurationArgs
             {
                 Ingress = new IngressArgs
