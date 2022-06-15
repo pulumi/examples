@@ -2,10 +2,10 @@
 package main
 
 import (
+	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/app"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/containerregistry"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/operationalinsights"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
-	web "github.com/pulumi/pulumi-azure-native/sdk/go/azure/web/v20210301"
 	"github.com/pulumi/pulumi-docker/sdk/v3/go/docker"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -45,12 +45,11 @@ func main() {
 			},
 		).(pulumi.StringOutput)
 
-		kubeEnvironment, err := web.NewKubeEnvironment(ctx, "kubeEnvironment", &web.KubeEnvironmentArgs{
+		managedEnvironment, err := app.NewManagedEnvironment(ctx, "managedEnvironment", &app.ManagedEnvironmentArgs{
 			ResourceGroupName: resourceGroup.Name,
-			Type:              pulumi.String("Managed"),
-			AppLogsConfiguration: web.AppLogsConfigurationArgs{
+			AppLogsConfiguration: app.AppLogsConfigurationArgs{
 				Destination: pulumi.String("log-analytics"),
-				LogAnalyticsConfiguration: web.LogAnalyticsConfigurationArgs{
+				LogAnalyticsConfiguration: app.LogAnalyticsConfigurationArgs{
 					CustomerId: workspace.CustomerId,
 					SharedKey:  sharedKey,
 				},
@@ -105,30 +104,30 @@ func main() {
 			return err
 		}
 
-		containerApp, err := web.NewContainerApp(ctx, "app", &web.ContainerAppArgs{
-			ResourceGroupName: resourceGroup.Name,
-			KubeEnvironmentId: kubeEnvironment.ID(),
-			Configuration: web.ConfigurationArgs{
-				Ingress: web.IngressArgs{
+		containerApp, err := app.NewContainerApp(ctx, "app", &app.ContainerAppArgs{
+			ResourceGroupName:    resourceGroup.Name,
+			ManagedEnvironmentId: managedEnvironment.ID(),
+			Configuration: app.ConfigurationArgs{
+				Ingress: app.IngressArgs{
 					External:   pulumi.Bool(true),
 					TargetPort: pulumi.IntPtr(80),
 				},
-				Registries: web.RegistryCredentialsArray{
-					web.RegistryCredentialsArgs{
+				Registries: app.RegistryCredentialsArray{
+					app.RegistryCredentialsArgs{
 						Server:            registry.LoginServer,
 						Username:          adminUsername,
 						PasswordSecretRef: pulumi.String("pwd")},
 				},
-				Secrets: web.SecretArray{
-					web.SecretArgs{
+				Secrets: app.SecretArray{
+					app.SecretArgs{
 						Name:  pulumi.String("pwd"),
 						Value: adminPassword,
 					},
 				},
 			},
-			Template: web.TemplateArgs{
-				Containers: web.ContainerArray{
-					web.ContainerArgs{
+			Template: app.TemplateArgs{
+				Containers: app.ContainerArray{
+					app.ContainerArgs{
 						Name:  pulumi.String("myapp"),
 						Image: newImage.ImageName,
 					},
