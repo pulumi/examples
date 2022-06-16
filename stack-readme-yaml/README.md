@@ -16,10 +16,6 @@ description: A minimal Pulumi YAML program demonstrating stack readme feature
 variables:
   readme:
     Fn::ReadFile: ./Pulumi.README.md
-  strVar: foo
-  arrVar:
-    - fizz
-    - buzz
 outputs:
   strVar: foo
   arrVar:
