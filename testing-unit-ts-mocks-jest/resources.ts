@@ -6,7 +6,7 @@ import * as aws from "@pulumi/aws";
 const fetch = require("node-fetch");
 
 // Convert the current time into a speech-friendly string.
-export function getSpeechText() {
+function getSpeechText() {
     const now = new Date();
     now.setSeconds(now.getSeconds() + 6);
 
