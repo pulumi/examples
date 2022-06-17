@@ -33,7 +33,7 @@ An example of using [Pulumi](https://pulumi.com/) with [Jest](https://jestjs.io/
 
     In a few moments, the tests should pass.
 
-1. If you'd like to deploy the program as well, run `pulumi up`. In a few moments, the FunctionUrl will emitted as a Pulumi [stack output](https://www.pulumi.com/docs/intro/concepts/stack/#outputs):
+1. If you'd like to deploy the program as well, run `pulumi up`. In a few moments, the `FunctionUrl` of the `timeURL` Lambda will be emitted as a Pulumi [stack output](https://www.pulumi.com/docs/intro/concepts/stack/#outputs) called `audioURL`:
 
     ```bash
     ...
