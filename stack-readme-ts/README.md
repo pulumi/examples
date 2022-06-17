@@ -14,7 +14,7 @@ import { readFileSync } from "fs";
 export const strVar = "foo";
 export const arrVar = ["fizz", "buzz"];
 // add readme to stack outputs. must be named "readme".
-export const readme = readFileSync("./Pulumi.README.md");
+export const readme = readFileSync("./Pulumi.README.md").toString();
 ```
 
 
