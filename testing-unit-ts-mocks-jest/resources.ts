@@ -1,7 +1,7 @@
 // Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 const fetch = require("node-fetch");
 
