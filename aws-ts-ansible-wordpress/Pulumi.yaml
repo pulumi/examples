@@ -1,0 +1,3 @@
+name: pulumi-ansible-wordpress-ts
+runtime: nodejs
+description: Deploy an EC2 Wordpress server using Pulumi and Ansible.

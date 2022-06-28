@@ -3,24 +3,32 @@ runtime: yaml
 description: Deploy an EC2 Wordpress server using Pulumi and Ansible.
 
 configuration:
+  # A path to the EC2 keypair's public key:
   publicKeyPath:
     type: String
     required: true
+  # A path to the EC2 keypair's private key:
   privateKeyPath:
     type: String
     required: true
+  # The WordPress database size:
   dbInstanceSize:
     type: String
     default: db.t3.small
+  # The WordPress database name:
   dbName:
     type: String
     default: wordpressdb
+  # The WordPress database user's name:
   dbUsername:
     type: String
     default: admin
+  # The WordPress database user's password:
   dbPassword:
     type: String
     required: true
+    secret: true
+  # The WordPress EC2 instance's size:
   ec2InstanceSize:
     type: String
     default: t3.small
@@ -87,31 +95,31 @@ resources:
     properties:
       vpcId: ${prod-vpc.id}
   # Create a route table:
-  prod-public-crt:
+  prod-public-rt:
     type: aws:ec2:RouteTable
     properties:
       vpcId: ${prod-vpc.id}
       routes:
           # associated subnets can reach anywhere:
         - cidrBlock: 0.0.0.0/0
-          # CRT uses this IGW to reach the internet:
+          # use this IGW to reach the internet:
           gatewayId: ${prod-igw.id}
-  prod-crta-public-subnet-1:
+  prod-rta-public-subnet-1:
     type: aws:ec2:RouteTableAssociation
     properties:
       subnetId: ${prod-subnet-public-1.id}
-      routeTableId: ${prod-public-crt.id}
+      routeTableId: ${prod-public-rt.id}
   # Security group for EC2:
   ec2-allow-rule:
     type: aws:ec2:SecurityGroup
     properties:
       vpcId: ${prod-vpc.id}
       ingress:
-        - description: ANY
-          fromPort: 0
-          toPort: 0
-          protocol: "-1"
-          cidrBlocks: [0.0.0.0/0]
+        #        - description: ANY
+        #  fromPort: 0
+        #  toPort: 0
+        #  protocol: "-1"
+        #  cidrBlocks: [0.0.0.0/0]
         - description: "HTTPS"
           fromPort: 443
           toPort: 443
@@ -122,11 +130,11 @@ resources:
           toPort: 80
           protocol: "tcp"
           cidrBlocks: [0.0.0.0/0]
-        - description: "MYSQL/Aurora"
-          fromPort: 3306
-          toPort: 3306
-          protocol: "tcp"
-          cidrBlocks: [0.0.0.0/0]
+            #- description: "MYSQL/Aurora"
+            #fromPort: 3306
+            #toPort: 3306
+            #protocol: "tcp"
+            #cidrBlocks: [0.0.0.0/0]
         - description: "SSH"
           fromPort: 22
           toPort: 22
@@ -145,7 +153,8 @@ resources:
     properties:
       vpcId: ${prod-vpc.id}
       ingress:
-        - fromPort: 3306
+        - description: "MySQL"
+          fromPort: 3306
           toPort: 3306
           protocol: "tcp"
           securityGroups: ["${ec2-allow-rule.id}"]
@@ -157,7 +166,7 @@ resources:
           cidrBlocks: [0.0.0.0/0]
       tags:
         Name: "allow ec2"
-  # Create an RDS subnet group:
+          # Place RDS into the private subnets:
   rds-subnet-grp:
     type: aws:rds:SubnetGroup
     properties:
@@ -174,7 +183,7 @@ resources:
       instanceClass: ${dbInstanceSize}
       dbSubnetGroupName: ${rds-subnet-grp.id}
       vpcSecurityGroupIds: ["${rds-allow-rule.id}"]
-      name: ${dbName}
+      dbName: ${dbName}
       username: ${dbUsername}
       password: ${dbPassword}
       skipFinalSnapshot: true
@@ -211,11 +220,11 @@ resources:
       create: "cat playbook.yml | envsubst > playbook_rendered.yml"
       environment:
         DB_RDS: ${wordpressdb.endpoint}
-        DB_NAME: ${wordpressdb.name}
-        DB_USERNAME: ${wordpressdb.username}
-        DB_PASSWORD: ${wordpressdb.password}
+        DB_NAME: ${dbName}
+        DB_USERNAME: ${dbUsername}
+        DB_PASSWORD: ${dbPassword}
 
-  # Run a script to update Python on the remote machine.
+  # Run a script to update packages on the remote machine.
   updatePythonCmd:
     type: command:remote:Command
     properties:
@@ -233,11 +242,16 @@ resources:
   playAnsiblePlaybookCmd:
     type: command:local:Command
     properties:
-      create: "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${wordpress-eip.publicIp},' --private-key ${privateKeyPath} playbook_rendered.yml"
+      create: "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook
+        -u ec2-user
+        -i '${wordpress-eip.publicIp},'
+        --private-key ${privateKeyPath}
+        playbook_rendered.yml"
     options:
       dependsOn:
         - ${renderPlaybookCmd}
         - ${updatePythonCmd}
 
+# Export the resulting wordpress EIP for easy access.
 outputs:
   url: ${wordpress-eip.publicIp}
