@@ -1,0 +1,3 @@
+name: pulumi-ansible-wordpress-java
+runtime: java
+description: Deploy an EC2 Wordpress server using Pulumi and Ansible.
