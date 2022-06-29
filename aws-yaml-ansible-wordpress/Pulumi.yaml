@@ -115,11 +115,6 @@ resources:
     properties:
       vpcId: ${prod-vpc.id}
       ingress:
-        #        - description: ANY
-        #  fromPort: 0
-        #  toPort: 0
-        #  protocol: "-1"
-        #  cidrBlocks: [0.0.0.0/0]
         - description: "HTTPS"
           fromPort: 443
           toPort: 443
@@ -130,11 +125,6 @@ resources:
           toPort: 80
           protocol: "tcp"
           cidrBlocks: [0.0.0.0/0]
-            #- description: "MYSQL/Aurora"
-            #fromPort: 3306
-            #toPort: 3306
-            #protocol: "tcp"
-            #cidrBlocks: [0.0.0.0/0]
         - description: "SSH"
           fromPort: 22
           toPort: 22
