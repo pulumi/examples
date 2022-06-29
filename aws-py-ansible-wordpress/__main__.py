@@ -1,3 +1,5 @@
+# Copyright 2022, Pulumi Corporation.
+
 import pulumi
 import pulumi_aws as aws
 import pulumi_command as command

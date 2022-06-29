@@ -1,6 +1,8 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2022, Pulumi Corporation.
+
 import * as aws from "@pulumi/aws";
 import * as command from "@pulumi/command";
+import * as pulumi from "@pulumi/pulumi";
 import * as fs from "fs";
 
 const config = new pulumi.Config();
@@ -216,7 +218,7 @@ const playAnsiblePlaybookCmd = new command.local.Command("playAnsiblePlaybookCmd
     create: pulumi.interpolate`ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 -u ec2-user -i '${wordpressEip.publicIp},' \
 --private-key ${privateKeyPath} \
-playbook_rendered.yml`
+playbook_rendered.yml`,
 }, {
     dependsOn: [
         renderPlaybookCmd,

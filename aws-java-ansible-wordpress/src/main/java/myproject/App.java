@@ -1,3 +1,5 @@
+// Copyright 2022, Pulumi Corporation.
+
 package myproject;
 
 import java.util.*;

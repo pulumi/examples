@@ -1,3 +1,5 @@
+// Copyright 2022, Pulumi Corporation.
+
 using System.IO;
 using Pulumi;
 using Aws = Pulumi.Aws;
