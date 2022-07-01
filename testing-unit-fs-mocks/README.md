@@ -7,7 +7,7 @@ It defines a stack that deploys a static website to Azure Storage and a suite of
 
 ## Prerequisites
 
-[Install .NET Core 3.1+](https://dotnet.microsoft.com/download)
+[Install .NET](https://dotnet.microsoft.com/download)
 
 ## Running the tests
 

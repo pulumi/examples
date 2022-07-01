@@ -1,15 +1,60 @@
 // Copyright 2016-2020, Pulumi Corporation
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi;
+using Pulumi.AzureNative.Storage;
 using Pulumi.Testing;
 
 namespace UnitTesting
 {
     class Mocks : IMocks
     {
+        /// <summary>
+        /// Returns the resource type token of a type.
+        /// </summary>
+        string Token<T>()
+        {
+            var typeInfo = typeof(T);
+            var attributes = typeInfo.GetCustomAttributesData();
+            foreach (var attribute in attributes)
+            {
+                if (attribute.AttributeType.FullName?.StartsWith("Pulumi") == true)
+                {
+                    return (string)attribute.ConstructorArguments[0].Value!;
+                }
+            }
+            
+            throw new InvalidOperationException($"Could not find the type token for resource {typeInfo.FullName}");
+        }
+        
+        /// <summary>
+        /// Type-safe way to get the wire format of a property name
+        /// </summary>
+        string PropertyName<T>(Func<T, string> map)
+        {
+            var typeInfo = typeof(T);
+            var propertyName = map(default!);
+            var properties = typeInfo.GetProperties();
+            foreach (var property in properties)
+            {
+                if (property.Name == propertyName)
+                {
+                    foreach (var attribute in property.CustomAttributes)
+                    {
+                        if (attribute.AttributeType.FullName?.StartsWith("Pulumi") == true)
+                        {
+                            return (string)attribute.ConstructorArguments[0].Value!;
+                        }
+                    }
+                }
+            }
+            
+            throw new InvalidOperationException($"Could not find the property name for resource {typeInfo.FullName}");
+        }
+        
         public Task<(string? id, object state)> NewResourceAsync(MockResourceArgs args)
         {
             var outputs = ImmutableDictionary.CreateBuilder<string, object>();
@@ -19,24 +64,30 @@ namespace UnitTesting
             
             // Set the name to resource name if it's not set explicitly in inputs.
             if (!args.Inputs.ContainsKey("name"))
+            {
                 outputs.Add("name", args.Name);
+            }
             
-            if (args.Type == "azure-native:storage:Blob")
+            if (args.Type == Token<Blob>())
             {
                 // Assets can't directly go through the engine.
                 // We don't need them in the test, so blank out the property for now.
-                outputs.Remove("source");
+                var source = PropertyName<BlobArgs>(blob => nameof(blob.Source));
+                outputs.Remove(source);
             }
             
-            // For a Storage Account...
-            if (args.Type == "azure-native:storage:StorageAccount")
+            // For a Storage Account
+            if (args.Type == Token<StorageAccount>())
             {
-                // ... set its web endpoint property.
+                // Set its web endpoint property.
                 // Normally this would be calculated by Azure, so we have to mock it. 
-                outputs.Add("primaryEndpoints", new Dictionary<string, string> 
-                { 
-                    { "web", $"https://{args.Name}.web.core.windows.net" },
-                }.ToImmutableDictionary());
+                var primaryEndpoints = PropertyName<StorageAccount>(account => nameof(account.PrimaryEndpoints));
+                var endpoints = new Dictionary<string, string>
+                {
+                    ["web"] = $"https://{args.Name}.web.core.windows.net"
+                };
+                
+                outputs.Add(primaryEndpoints,endpoints.ToImmutableDictionary());
             }
 
             // Default the resource ID to `{name}_id`.

@@ -4,7 +4,7 @@ An example of writing mock-based unit tests with both infrastructure definition 
 
 ## Prerequisites
 
-[Install .NET Core 3.1+](https://dotnet.microsoft.com/download)
+[Install .NET](https://dotnet.microsoft.com/download)
 
 ## Running the tests
 
