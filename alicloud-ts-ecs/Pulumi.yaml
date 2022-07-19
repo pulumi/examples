@@ -1,0 +1,8 @@
+name: alicloud-ts-ecs
+runtime: nodejs
+description: Basic example of an ecs instance
+template:
+  config:
+    alicloud:region:
+      description: The Alicloud region to deploy into
+      default: us-east-1
