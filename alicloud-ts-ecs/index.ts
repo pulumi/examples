@@ -1,4 +1,5 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
+
 import * as alicloud from "@pulumi/alicloud";
 
 const exampleRg = new alicloud.resourcemanager.ResourceGroup("pulumiExampleRg", {
