@@ -2,18 +2,16 @@
 
 import * as alicloud from "@pulumi/alicloud";
 
-const exampleRg = new alicloud.resourcemanager.ResourceGroup("pulumiExampleRg", {
+const exampleRg = new alicloud.resourcemanager.ResourceGroup("pulumiDeployment", {
     displayName: "Pulumi Example RG",
-    resourceGroupName: "pulumiDeployment",
-}, {
-    protect: false,
+    // error: [ERROR] terraform-provider-alicloud@v1.176.0/alicloud/resource_alicloud_resource_manager_resource_group.go:95:
+    //[ERROR] Argument "name" or "resource_group_name" must be set one!
+    resourceGroupName: "pulumiDeployment"
 });
 
 const exampleVpc = new alicloud.vpc.Network("pulumiExampleVpc", {
     description: "Pulumi Example VPC.",
     resourceGroupId: exampleRg.id,
-}, {
-    protect: false,
 });
 
 const exampleSubnet = new alicloud.vpc.Subnet("pulumiExampleSubnet", {
@@ -21,26 +19,19 @@ const exampleSubnet = new alicloud.vpc.Subnet("pulumiExampleSubnet", {
     cidrBlock: "172.20.112.0/20",
     description: "System created default virtual switch.",
     vpcId: exampleVpc.id,
-}, {
-    protect: false,
 });
 
 const exampleSg = new alicloud.ecs.SecurityGroup("pulumiExampleSg", {
     description: "System created security group.",
     innerAccessPolicy: "Accept",
-    name: "pulumiExampleSg",
     vpcId: exampleVpc.id,
-}, {
-    protect: false,
 });
 
 const exampleInstance = new alicloud.ecs.Instance("pulumiExampleInstance", {
     availabilityZone: "us-east-1a",
     creditSpecification: "Standard",
-    hostName: "pulumiExampleInstance",
     imageId: "aliyun_3_x64_20G_alibase_20220527.vhd",
     instanceChargeType: "PostPaid",
-    instanceName: "pulumiExampleInstance",
     instanceType: "ecs.t6-c2m1.large",
     internetChargeType: "PayByTraffic",
     internetMaxBandwidthOut: 25,
@@ -58,6 +49,6 @@ const exampleInstance = new alicloud.ecs.Instance("pulumiExampleInstance", {
         company: "pulumi",
     },
     vswitchId: exampleSubnet.id,
-}, {
-    protect: false,
 });
+
+export const publicIp = exampleInstance.publicIp;
