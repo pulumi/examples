@@ -5,8 +5,8 @@ import * as alicloud from "@pulumi/alicloud";
 const exampleRg = new alicloud.resourcemanager.ResourceGroup("pulumiDeployment", {
     displayName: "Pulumi Example RG",
     // error: [ERROR] terraform-provider-alicloud@v1.176.0/alicloud/resource_alicloud_resource_manager_resource_group.go:95:
-    //[ERROR] Argument "name" or "resource_group_name" must be set one!
-    resourceGroupName: "pulumiDeployment"
+    // [ERROR] Argument "name" or "resource_group_name" must be set one!
+    resourceGroupName: "pulumiDeployment",
 });
 
 const exampleVpc = new alicloud.vpc.Network("pulumiExampleVpc", {
