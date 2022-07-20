@@ -43,7 +43,7 @@ describe("BucketPair", function() {
                     * If you don't have the try/catch in here, if the assert fails it'll just timeout
                     * If you have the try/catch, the "done()" in the catch block will get hit and it won't time out (async fun)
                     */
-                    assert.strictEqual(contentBucketName, 'my_content_buckt');
+                    assert.strictEqual(contentBucketName, 'my_content_bucket');
                     assert.strictEqual(logsBucketName, 'my_logs_bucket');
                     done();
                 } catch(e) {
