@@ -19,8 +19,8 @@ database = pulumi_gcp.sql.Database(
     "database", instance=cloud_sql_instance.name, name=config.require("db-name")
 )
 
-users = pulumi_gcp.sql.User(
-    "users",
+user = pulumi_gcp.sql.User(
+    "user",
     name=config.require("db-name"),
     instance=cloud_sql_instance.name,
     password=config.require_secret("db-password"),
@@ -28,7 +28,7 @@ users = pulumi_gcp.sql.User(
 
 sql_instance_url = Output.concat(
     "postgres://",
-    config.require("db-name"),
+    user.name,
     ":",
     config.require_secret("db-password"),
     "@/",
