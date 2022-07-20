@@ -541,6 +541,10 @@ jobs:
         npm install
         $(npm bin)/mocha -r ts-node/register ec2tests.ts
       working-directory: ${{ matrix.source-dir }}/mocha
+    - run: |-
+        npm install
+        $(npm bin)/mocha -r ts-node/register bucket_pair_test.ts
+      working-directory: ${{ matrix.source-dir }}/mocha
     strategy:
       fail-fast: false
       matrix:
