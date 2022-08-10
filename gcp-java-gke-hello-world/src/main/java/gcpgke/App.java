@@ -13,22 +13,22 @@ import com.pulumi.gcp.container.inputs.NodePoolNodeConfigArgs;
 import com.pulumi.gcp.container.outputs.GetEngineVersionsResult;
 import com.pulumi.kubernetes.Provider;
 import com.pulumi.kubernetes.ProviderArgs;
-import com.pulumi.kubernetes.apps_v1.Deployment;
-import com.pulumi.kubernetes.apps_v1.DeploymentArgs;
-import com.pulumi.kubernetes.apps_v1.inputs.DeploymentSpecArgs;
-import com.pulumi.kubernetes.core_v1.Namespace;
-import com.pulumi.kubernetes.core_v1.NamespaceArgs;
-import com.pulumi.kubernetes.core_v1.Service;
-import com.pulumi.kubernetes.core_v1.ServiceArgs;
-import com.pulumi.kubernetes.core_v1.enums.ServiceSpecType;
-import com.pulumi.kubernetes.core_v1.inputs.ContainerArgs;
-import com.pulumi.kubernetes.core_v1.inputs.ContainerPortArgs;
-import com.pulumi.kubernetes.core_v1.inputs.PodSpecArgs;
-import com.pulumi.kubernetes.core_v1.inputs.PodTemplateSpecArgs;
-import com.pulumi.kubernetes.core_v1.inputs.ServicePortArgs;
-import com.pulumi.kubernetes.core_v1.inputs.ServiceSpecArgs;
-import com.pulumi.kubernetes.meta_v1.inputs.LabelSelectorArgs;
-import com.pulumi.kubernetes.meta_v1.inputs.ObjectMetaArgs;
+import com.pulumi.kubernetes.apps.v1.Deployment;
+import com.pulumi.kubernetes.apps.v1.DeploymentArgs;
+import com.pulumi.kubernetes.apps.v1.inputs.DeploymentSpecArgs;
+import com.pulumi.kubernetes.core.v1.Namespace;
+import com.pulumi.kubernetes.core.v1.NamespaceArgs;
+import com.pulumi.kubernetes.core.v1.Service;
+import com.pulumi.kubernetes.core.v1.ServiceArgs;
+import com.pulumi.kubernetes.core.v1.enums.ServiceSpecType;
+import com.pulumi.kubernetes.core.v1.inputs.ContainerArgs;
+import com.pulumi.kubernetes.core.v1.inputs.ContainerPortArgs;
+import com.pulumi.kubernetes.core.v1.inputs.PodSpecArgs;
+import com.pulumi.kubernetes.core.v1.inputs.PodTemplateSpecArgs;
+import com.pulumi.kubernetes.core.v1.inputs.ServicePortArgs;
+import com.pulumi.kubernetes.core.v1.inputs.ServiceSpecArgs;
+import com.pulumi.kubernetes.meta.v1.inputs.LabelSelectorArgs;
+import com.pulumi.kubernetes.meta.v1.inputs.ObjectMetaArgs;
 import com.pulumi.resources.CustomResourceOptions;
 
 import java.text.MessageFormat;
@@ -42,12 +42,11 @@ public class App {
     private static void stack(Context ctx) {
         final String name = "helloworld";
 
-        final var masterVersion = ctx.config().get("masterVersion").orElse(
-                ContainerFunctions.getEngineVersions()
-                .thenApply(GetEngineVersionsResult::latestMasterVersion).join()
-        );
+        final var masterVersion = ctx.config().get("masterVersion").map(Output::of)
+            .orElseGet(() -> ContainerFunctions.getEngineVersions()
+                       .applyValue(versions -> versions.latestMasterVersion()));
 
-        ctx.export("masterVersion", Output.of(masterVersion));
+        ctx.export("masterVersion", masterVersion);
 
         // Create a GKE cluster
         // We can't create a cluster with no node pool defined, but we want to only use
