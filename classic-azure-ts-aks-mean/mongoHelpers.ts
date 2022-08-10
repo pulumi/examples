@@ -37,7 +37,7 @@ export function parseConnString(
         return Buffer.from(s).toString("base64");
     }
 
-    const retVal:pulumi.Output<{ [key: string]: string }>  = conns.apply(conns => {
+    const retVal: pulumi.Output<{ [key: string]: string }>  = conns.apply(conns => {
 
         const conn = conns[0] ?? "mongodb://username:password@host:port/[database]?ssl=true";
         const noProtocol = conn.replace(/^mongodb\:\/\//, "");
