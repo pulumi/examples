@@ -2,13 +2,14 @@
 
 import * as k8s from "@pulumi/kubernetes";
 import { k8sCluster, k8sProvider } from "./cluster";
+import * as pulumi from "@pulumi/pulumi";
 
 const apache = new k8s.helm.v3.Chart(
     "apache",
     {
         repo: "bitnami",
         chart: "apache",
-        version: "8.3.2",
+        version: "9.1.17",
         fetchOpts: {
             repo: "https://charts.bitnami.com/bitnami",
         },
@@ -18,6 +19,7 @@ const apache = new k8s.helm.v3.Chart(
 
 export let cluster = k8sCluster.name;
 export let kubeConfig = k8sCluster.kubeConfigRaw;
-export let serviceIP = apache
-    .getResourceProperty("v1/Service", "apache", "status")
-    .apply(status => status.loadBalancer.ingress[0].ip);
+// Wait for the cluster to be ready before trying to get the IP info.
+export let serviceIP = pulumi.unsecret(k8sCluster.kubeConfigRaw.apply(kubeconfig => apache
+    .getResourceProperty("v1/Service", "default", "apache", "status")
+    .apply(status => status.loadBalancer.ingress[0].ip)));

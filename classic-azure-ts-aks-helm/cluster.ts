@@ -13,8 +13,6 @@ const adApp = new azuread.Application("aks", {
 const adSp = new azuread.ServicePrincipal("aksSp", { applicationId: adApp.applicationId });
 const adSpPassword = new azuread.ServicePrincipalPassword("aksSpPassword", {
     servicePrincipalId: adSp.id,
-    value: config.password,
-    endDate: "2099-01-01T00:00:00Z",
 });
 
 // Now allocate an AKS cluster.
