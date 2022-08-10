@@ -72,7 +72,7 @@ npm install
 
     ---outputs:---
     cluster        : "aksclusterbfb9388b"
-    frontendAddress: "40.76.25.71"
+    kubeconfig     : "[secret]"
 
     info: 12 changes performed:
         + 12 resources created

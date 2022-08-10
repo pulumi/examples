@@ -37,19 +37,22 @@ export function parseConnString(
         return Buffer.from(s).toString("base64");
     }
 
-    return conns.apply(conns => {
-        const conn = conns[0];
+    const retVal: pulumi.Output<{ [key: string]: string }>  = conns.apply(conns => {
+
+        const conn = conns[0] ?? "mongodb://username:password@host:port/[database]?ssl=true";
         const noProtocol = conn.replace(/^mongodb\:\/\//, "");
         const [username, rest1, rest2] = noProtocol.split(":", 3);
         const [password, host] = rest1.split("@", 2);
         const [port, rest3] = rest2.split("/", 2);
         const database = rest3.replace(/\?ssl=true$/, "");
-        return {
+        const connector: { [key: string]: string } = {
             host: toBase64(host),
             port: toBase64(port),
             username: toBase64(username),
             password: toBase64(encodeURIComponent(password)),
             database: toBase64(database === "" ? "test" : database),
         };
+        return connector;
     });
+    return retVal;
 }
