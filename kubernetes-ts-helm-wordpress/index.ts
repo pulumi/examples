@@ -12,6 +12,6 @@ const wordpress = new k8s.helm.v3.Chart("wpdev", {
 });
 
 // Get the IP address once the chart is deployed and ready.
-export let wordpressIP = wordpress.ready.apply(ready => wordpress 
+export let wordpressIP = wordpress.ready.apply(ready => wordpress
     .getResourceProperty("v1/Service", "default", "wpdev-wordpress", "status")
     .apply(status => status.loadBalancer.ingress[0].ip));

@@ -1,8 +1,8 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
 import * as k8s from "@pulumi/kubernetes";
-import { k8sCluster, k8sProvider } from "./cluster";
 import * as pulumi from "@pulumi/pulumi";
+import { k8sCluster, k8sProvider } from "./cluster";
 
 const apache = new k8s.helm.v3.Chart(
     "apache",
