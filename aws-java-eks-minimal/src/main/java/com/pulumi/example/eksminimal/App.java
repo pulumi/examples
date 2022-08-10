@@ -18,17 +18,15 @@ public class App {
     }
 
     private static void stack(Context ctx) {
-        var vpcIdOutput = Output.of(
-                Ec2Functions.getVpc(
-                        GetVpcArgs.builder().default_(true).build()
-                ).thenApply(GetVpcResult::id)
-        );
+        var vpcIdOutput = Ec2Functions.getVpc(
+                GetVpcArgs.builder().default_(true).build()
+        ).applyValue(GetVpcResult::id);
         ctx.export("vpcIdOutput", vpcIdOutput);
 
         var subnetIdsOutput = vpcIdOutput
-                .apply(vpcId -> Output.of(Ec2Functions.getSubnetIds(GetSubnetIdsArgs.builder()
+                .apply(vpcId -> Ec2Functions.getSubnetIds(GetSubnetIdsArgs.builder()
                                 .vpcId(vpcId)
-                                .build())))
+                                .build()))
                 .applyValue(getSubnetIdsResult ->
                         getSubnetIdsResult.ids()
                                 .stream()
