@@ -554,6 +554,22 @@ jobs:
         - ubuntu-latest
         source-dir:
         - testing-unit-ts
+  status-checks:
+    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
+      == github.repository
+    name: Final Status Check
+    needs:
+      - dotnet-unit-testing
+      - go-unit-testing
+      - python-unit-testing
+      - ts-unit-testing
+      - kubernetes
+      - linting
+      - providers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "Ready for merge"
 name: Run Examples Tests From PR
 "on":
   pull_request:
