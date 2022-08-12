@@ -22,7 +22,7 @@ Provisions Azure SQL Database and Azure Application Insights to be used in combi
 
     ```
     $ pulumi config set azure-native:location westus
-    $ pulumi config set azure-java-appservice-sql:sqlPassword <value>
+    $ pulumi config set azure-java-appservice-sql:sqlPassword <value> --secret
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
