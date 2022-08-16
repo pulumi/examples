@@ -9,7 +9,7 @@ open MimeTypes
 
 let infra () =
     // Create an AWS resource (S3 Bucket)
-    let bucket = Bucket("my-bucket", BucketArgs (Website = BucketWebsiteArgs (IndexDocument =  "index.html")))
+    let bucket = Bucket("my-bucket", BucketArgs (Website = input (BucketWebsiteArgs (IndexDocument = "index.html"))))
     // For each file in wwwroot, create a bucket object
     let bucketObjects = ResizeArray()
     let files = Directory.GetFiles "wwwroot"
@@ -31,7 +31,8 @@ let infra () =
 
     // Export the name of the bucket
     let endpoint = bucket.WebsiteEndpoint.Apply (sprintf "http://%s")
-    dict [("endpoint", endpoint :> obj)]
+
+    dict [ ("endpoint", endpoint :> obj) ]
 
 [<EntryPoint>]
 let main (args: string[]) = Deployment.run infra
