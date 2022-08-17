@@ -20,7 +20,7 @@ using Pulumi;
 
 return await Deployment.RunAsync(Deploy.Infra);
 
-class Deploy
+public class Deploy
 {
     public static Dictionary<string, object?> Infra()
     {
@@ -31,23 +31,17 @@ class Deploy
 Here, the code that creates resources and returns outputs is inside the `Deploy.Infra` function which we can reference from the test project. 
 
 > The return type of `Deploy.Infra` could also have been any of the following 
-> - `void` when we are not returning outputs
+> - `void` when we are not returning any outputs
 > - `Task` when we want to `await` async code
 > - `Task<Dictionary<string, object?>>` when we want to `await` async code _and_ return outputs
 
-There is a catch before we can reference `Deploy.Infra` from the unit tests. Since we don't have an explicit namespace here, we need to add this property to the project file
-```xml
-<ItemGroup>
-  <InternalsVisibleTo Include="Tests"/>
-</ItemGroup>
-```
 Now we are ready to write unit tests. From a test project called `Tests`, add a reference to the project that contains the Pulumi program:
 ```xml
 <ItemGroup>
   <ProjectReference Include="..\infra\Infra.csproj" />
 </ItemGroup>
 ```
-Now, only for the tests we can create a _test stack_ that uses `Deploy.Infra` as follows
+Now, just for the tests we can create a _test stack_ that uses `Deploy.Infra` as follows
 ```csharp
 class TestStack : Stack
 {
