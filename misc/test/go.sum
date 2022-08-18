@@ -573,8 +573,8 @@ github.com/prometheus/procfs v0.0.0-20190507164030-5867b95ac084/go.mod h1:TjEm7z
 github.com/prometheus/procfs v0.0.2/go.mod h1:TjEm7ze935MbeOT/UhFTIMYKhuLP4wbCsTZCD3I8kEA=
 github.com/prometheus/procfs v0.0.8/go.mod h1:7Qr8sr6344vo1JqZ6HhLceV9o3AJ1Ff+GxbHq6oeK9A=
 github.com/prometheus/tsdb v0.7.1/go.mod h1:qhTCs0VvXwvX/y3TZrWD7rabWM+ijKTux40TwIPHuXU=
-github.com/pulumi/pulumi-trace-tool v0.0.0-20210629202931-10ae87ca9439 h1:8nwCPl0rSQOxRYWrr9u6ATVMdX/YWF1hcn3UyHHQ1mo=
-github.com/pulumi/pulumi-trace-tool v0.0.0-20210629202931-10ae87ca9439/go.mod h1:CrD+qPXZjdh0T0+DK5Xclbr1eKKWnQt6svOOeTh4pl4=
+github.com/pulumi/pulumi-trace-tool v0.0.0-20220818154825-5db04013ec98 h1:sVQ6w7xAYPs9126IAHlGdj5QIx8QHse7rEv9kRp54sg=
+github.com/pulumi/pulumi-trace-tool v0.0.0-20220818154825-5db04013ec98/go.mod h1:CrD+qPXZjdh0T0+DK5Xclbr1eKKWnQt6svOOeTh4pl4=
 github.com/pulumi/pulumi/pkg/v3 v3.5.1 h1:6+Y5Fot9mNRxNK23eT9HTeHt0bnjzpqtuJDAhK3re10=
 github.com/pulumi/pulumi/pkg/v3 v3.5.1/go.mod h1:aAGoadWl60wVSE8Ig2FqcxUdfrmMKV6xfErcTOToIV4=
 github.com/pulumi/pulumi/sdk/v3 v3.3.1/go.mod h1:GBHyQ7awNQSRmiKp/p8kIKrGrMOZeA/k2czoM/GOqds=
