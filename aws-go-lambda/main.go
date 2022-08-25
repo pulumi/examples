@@ -42,6 +42,9 @@ func main() {
                 }]
             }`),
 		})
+		if err != nil {
+			return err
+		}
 
 		// Set arguments for constructing the function resource.
 		args := &lambda.FunctionArgs{
