@@ -1,3 +1,4 @@
+//go:build Performance || all
 // +build Performance all
 
 package test
@@ -36,8 +37,8 @@ func TestAccAwsGoS3Folder(t *testing.T) {
 			})
 		},
 	}
-	test := getAWSBase(t).With(opts).With(benchmark.ProgramTestOptions())
-	integration.ProgramTest(t, &test)
+	test := getAWSBase(t).With(opts)
+	programTestAsBenchmark(t, benchmark, test)
 }
 
 func TestAccAwsCsS3Folder(t *testing.T) {
@@ -52,8 +53,8 @@ func TestAccAwsCsS3Folder(t *testing.T) {
 			})
 		},
 	}
-	test := getAWSBase(t).With(opts).With(benchmark.ProgramTestOptions())
-	integration.ProgramTest(t, &test)
+	test := getAWSBase(t).With(opts)
+	programTestAsBenchmark(t, benchmark, test)
 }
 
 func TestAccAwsFsS3Folder(t *testing.T) {
@@ -68,8 +69,8 @@ func TestAccAwsFsS3Folder(t *testing.T) {
 			})
 		},
 	}
-	test := getAWSBase(t).With(opts).With(benchmark.ProgramTestOptions())
-	integration.ProgramTest(t, &test)
+	test := getAWSBase(t).With(opts)
+	programTestAsBenchmark(t, benchmark, test)
 }
 
 func TestAccAwsJsS3Folder(t *testing.T) {
@@ -82,8 +83,8 @@ func TestAccAwsJsS3Folder(t *testing.T) {
 			})
 		},
 	}
-	test := getAWSBase(t).With(opts).With(benchmark.ProgramTestOptions())
-	integration.ProgramTest(t, &test)
+	test := getAWSBase(t).With(opts)
+	programTestAsBenchmark(t, benchmark, test)
 }
 
 func TestAccAwsTsS3Folder(t *testing.T) {
@@ -96,8 +97,8 @@ func TestAccAwsTsS3Folder(t *testing.T) {
 			})
 		},
 	}
-	test := getAWSBase(t).With(opts).With(benchmark.ProgramTestOptions())
-	integration.ProgramTest(t, &test)
+	test := getAWSBase(t).With(opts)
+	programTestAsBenchmark(t, benchmark, test)
 }
 
 func TestAccAwsPyS3Folder(t *testing.T) {
@@ -110,8 +111,8 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 			})
 		},
 	}
-	test := getAWSBase(t).With(opts).With(benchmark.ProgramTestOptions())
-	integration.ProgramTest(t, &test)
+	test := getAWSBase(t).With(opts)
+	programTestAsBenchmark(t, benchmark, test)
 }
 
 type manyResourcesConfig struct {
@@ -166,8 +167,8 @@ func TestManyResources(t *testing.T) {
 				assert.Equal(t, float64(cfg.payloadBytes), stack.Outputs["ResourcePayloadBytes"])
 			},
 		}
-		test := getBaseOptions(t).With(opts).With(cfg.bench.ProgramTestOptions())
-		integration.ProgramTest(t, &test)
+		test := getBaseOptions(t).With(opts)
+		programTestAsBenchmark(t, cfg.bench, test)
 	}
 
 	for _, cfg := range configurations {
@@ -175,6 +176,32 @@ func TestManyResources(t *testing.T) {
 			check(t, cfg)
 		})
 	}
+}
+
+func programTestAsBenchmark(
+	t *testing.T,
+	bench traces.Benchmark,
+	test integration.ProgramTestOptions) {
+
+	// Run preview only to make sure all needed plugins are
+	// downloaded so that these downloads do not skew
+	// measurements.
+	t.Run("prewarm", func(t *testing.T) {
+		prewarmOptions := test.With(integration.ProgramTestOptions{
+			SkipRefresh:            true,
+			SkipEmptyPreviewUpdate: true,
+			SkipExportImport:       true,
+			SkipUpdate:             true,
+		})
+		prewarmOptions.ExtraRuntimeValidation = nil
+		integration.ProgramTest(t, &prewarmOptions)
+	})
+
+	// Run with --tracing to record measured data.
+	t.Run("benchmark", func(t *testing.T) {
+		finalOptions := test.With(bench.ProgramTestOptions())
+		integration.ProgramTest(t, &finalOptions)
+	})
 }
 
 func TestMain(m *testing.M) {
