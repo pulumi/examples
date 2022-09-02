@@ -8,6 +8,7 @@ import * as ec2Compute from "./ec2Compute";
 import * as cloudWatch from "./cloudwatch";
 import * as rds from "./rds";
 import * as s3 from "./s3";
+import * as vpc from "./vpc";
 import * as pulumi from "@pulumi/pulumi";
 const requiredRegion = "us-west-1";
 const stack = pulumi.getStack();
@@ -89,12 +90,18 @@ if (stack == "dev") {
         "mandatory"
       ),
       rds.requireRdsVolumesGp2("rds-gp2-volume", "mandatory"),
+      rds.requireRdsLicenseModel(
+        "rds-license-model",
+        ["license-included", "general-public-license"],
+        "mandatory"
+      ),
       s3.requireBucketLifecycleRules("s3-require-lifecycle", "mandatory"),
       s3.requireSpecificBucketExpirationDays(
         "s3-expire-at-30-days",
         30,
         "advisory"
       ),
+      vpc.requireSingleNatGateway("single-nat-gateway", "mandatory"),
       // BYOL Restriction
     ]
   );

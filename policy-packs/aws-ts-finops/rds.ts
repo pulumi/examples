@@ -83,4 +83,33 @@ export function requireRdsVolumesGp2(
     ],
   };
 }
+
+export function requireRdsLicenseModel(
+  name: string,
+  licenseModel: Iterable<
+    "license-included" | "bring-your-own-license" | "general-public-license"
+  >,
+  enforcementLevel: EnforcementLevel
+): ResourceValidationPolicy {
+  const types = utils.toStringSet(licenseModel);
+  return {
+    name: name,
+    description: `RDS license type should be ${licenseModel}`,
+    enforcementLevel: enforcementLevel,
+    validateResource: [
+      validateResourceOfType(
+        aws.rds.Instance,
+        (instance, args, reportViolation) => {
+          if (
+            instance.licenseModel == undefined ||
+            (instance.licenseModel !== undefined &&
+              !types.has(instance.licenseModel))
+          ) {
+            reportViolation(`RDS license type should be ${licenseModel}`);
+          }
+        }
+      ),
+    ],
+  };
+}
 //Volume Size -- future
