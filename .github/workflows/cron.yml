@@ -39,7 +39,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnet-version:
-        - 3.1.x
+        - 6.0.x
         platform:
         - ubuntu-latest
         source-dir:
@@ -156,7 +156,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnet-version:
-        - 3.1.301
+        - 6.0.300
         go-version:
         - 1.16.x
         node-version:
@@ -297,7 +297,7 @@ jobs:
           - EquinixMetal
           - Cloud
         dotnet-version:
-          - 3.1.301
+          - 6.0.300
         examples-test-matrix:
           - no-latest-packages
         go-version:
@@ -413,7 +413,7 @@ jobs:
         - EquinixMetal
         - Cloud
         dotnet-version:
-        - 3.1.301
+        - 6.0.300
         examples-test-matrix:
         - no-latest-cli
         - no-latest-packages
@@ -539,7 +539,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnet-version:
-        - 3.1.301
+        - 6.0.300
         go-version:
         - 1.16.x
         node-version:
@@ -620,7 +620,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnet-version:
-        - 3.1.301
+        - 6.0.300
         go-version:
         - 1.16.x
         node-version:

@@ -3,12 +3,57 @@
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi;
+using System;
+using Pulumi.Aws.Ec2;
 using Pulumi.Testing;
 
 namespace UnitTesting
 {
     class Mocks : IMocks
     {
+        /// <summary>
+        /// Returns the resource type token of a type.
+        /// </summary>
+        string Token<T>()
+        {
+            var typeInfo = typeof(T);
+            var attributes = typeInfo.GetCustomAttributesData();
+            foreach (var attribute in attributes)
+            {
+                if (attribute.AttributeType.FullName?.StartsWith("Pulumi") == true)
+                {
+                    return (string)attribute.ConstructorArguments[0].Value!;
+                }
+            }
+            
+            throw new InvalidOperationException($"Could not find the type token for resource {typeInfo.FullName}");
+        }
+        
+        /// <summary>
+        /// Type-safe way to get the wire format of a property name
+        /// </summary>
+        string PropertyName<T>(Func<T, string> map)
+        {
+            var typeInfo = typeof(T);
+            var propertyName = map(default!);
+            var properties = typeInfo.GetProperties();
+            foreach (var property in properties)
+            {
+                if (property.Name == propertyName)
+                {
+                    foreach (var attribute in property.CustomAttributes)
+                    {
+                        if (attribute.AttributeType.FullName?.StartsWith("Pulumi") == true)
+                        {
+                            return (string)attribute.ConstructorArguments[0].Value!;
+                        }
+                    }
+                }
+            }
+            
+            throw new InvalidOperationException($"Could not find the property name for resource {typeInfo.FullName}");
+        }
+        
         public Task<(string? id, object state)> NewResourceAsync(MockResourceArgs args)
         {
             var outputs = ImmutableDictionary.CreateBuilder<string, object>();
@@ -16,10 +61,12 @@ namespace UnitTesting
             // Forward all input parameters as resource outputs, so that we could test them.
             outputs.AddRange(args.Inputs);
 
-            if (args.Type == "aws:ec2/instance:Instance")
+            if (args.Type == Token<Instance>())
             {
-                outputs.Add("publicIp", "203.0.113.12");
-                outputs.Add("publicDns", "ec2-203-0-113-12.compute-1.amazonaws.com");
+                var publicIp = PropertyName<Instance>(instance => nameof(instance.PublicIp));
+                var publicDns = PropertyName<Instance>(instance => nameof(instance.PublicDns));
+                outputs.Add(publicIp, "203.0.113.12");
+                outputs.Add(publicDns, "ec2-203-0-113-12.compute-1.amazonaws.com");
             }
 
             // Default the resource ID to `{name}_id`.
@@ -50,10 +97,7 @@ namespace UnitTesting
         /// <summary>
         /// Run the tests for a given stack type.
         /// </summary>
-        public static Task<ImmutableArray<Resource>> RunAsync<T>() where T : Stack, new()
-        {
-            return Deployment.TestAsync<T>(new Mocks(), new TestOptions { IsPreview = false });
-        }
+        public static Task<ImmutableArray<Resource>> RunAsync<T>() where T : Stack, new() => Deployment.TestAsync<T>(new Mocks(), new TestOptions { IsPreview = false });
 
         /// <summary>
         /// Extract the value from an output.

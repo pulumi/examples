@@ -1,9 +1,22 @@
-﻿// Copyright 2016-2021, Pulumi Corporation.
-
-using System.Threading.Tasks;
+﻿// Copyright 2016-2022, Pulumi Corporation.
+using System.Collections.Generic;
 using Pulumi;
+using Pulumi.Aws.SecretsManager;
 
-class Program
+await Deployment.RunAsync(() =>
 {
-    static Task<int> Main() => Deployment.RunAsync<MyStack>();
-}
+    // Create secret
+    var secret = new Secret("secret");
+
+    // Create secret version
+    var secretVersion = new SecretVersion("secretVersion", new SecretVersionArgs
+    {
+        SecretId = secret.Id,
+        SecretString = "my-secret"
+    });
+
+    return new Dictionary<string, object?>
+    {
+        ["secretId"] = secret.Id
+    };
+});

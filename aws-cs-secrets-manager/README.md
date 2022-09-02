@@ -35,7 +35,7 @@ A simple program that creates an AWS secret and a version under AWS Secrets Mana
     +   └─ aws:secretsmanager:SecretVersion  secret                      created
 
     Outputs:
-        SecretId: "arn:aws:secretsmanager:us-east-1:xxxxxxxx:secret:secretContainer-eec74e1-PYcuM8"
+        secretId: "arn:aws:secretsmanager:us-east-1:xxxxxxxx:secret:secretContainer-eec74e1-PYcuM8"
 
     Resources:
         + 3 created
