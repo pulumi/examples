@@ -6,11 +6,9 @@ configuration:
   # A path to the EC2 keypair's public key:
   publicKeyPath:
     type: String
-    required: true
   # A path to the EC2 keypair's private key:
   privateKeyPath:
     type: String
-    required: true
   # The WordPress database size:
   dbInstanceSize:
     type: String
@@ -26,7 +24,6 @@ configuration:
   # The WordPress database user's password:
   dbPassword:
     type: String
-    required: true
     secret: true
   # The WordPress EC2 instance's size:
   ec2InstanceSize:
@@ -64,7 +61,6 @@ resources:
       cidrBlock: 10.192.0.0/16
       enableDnsSupport: true # gives you an internal domain name
       enableDnsHostnames: true # gives you an internal host name
-      enableClassiclink: false
       instanceTenancy: default
   # Create public subnets for the EC2 instance.
   prod-subnet-public-1:
