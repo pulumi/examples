@@ -10,7 +10,7 @@ import * as rds from "./rds";
 import * as s3 from "./s3";
 import * as vpc from "./vpc";
 import * as pulumi from "@pulumi/pulumi";
-const requiredRegion = "us-west-1";
+const requiredRegion = "us-west-2";
 const stack = pulumi.getStack();
 
 const policyPackArgs: PolicyPackArgs = {
@@ -24,7 +24,7 @@ const policyPackArgs: PolicyPackArgs = {
           allowedRegions: {
             type: "array",
             items: { type: "string" },
-            default: ["us-west-2"],
+            default: [requiredRegion],
           },
         },
       },
@@ -46,6 +46,7 @@ const policyPackArgs: PolicyPackArgs = {
   ],
 };
 
+//Example of instance types as strings
 const requiredInstanceTypes: aws.ec2.InstanceType[] = [
   "t4g.nano",
   "t4g.micro",
@@ -56,6 +57,7 @@ const requiredInstanceTypes: aws.ec2.InstanceType[] = [
   "t4g.2xlarge",
 ];
 
+//Example of instance types as type
 const requiredRdsBurstTypes: aws.rds.InstanceType[] = [
   aws.rds.InstanceType.T4G_Micro,
   aws.rds.InstanceType.T4G_Small,
@@ -102,7 +104,6 @@ if (stack == "dev") {
         "advisory"
       ),
       vpc.requireSingleNatGateway("single-nat-gateway", "mandatory"),
-      // BYOL Restriction
     ]
   );
 } else if (stack == "uat") {
