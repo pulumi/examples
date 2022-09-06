@@ -1,4 +1,4 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
 import { PolicyPack, ReportViolation, validateResourceOfType } from "@pulumi/policy";

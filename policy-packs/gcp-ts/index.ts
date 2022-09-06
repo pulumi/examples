@@ -1,4 +1,4 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
 
 import * as gcp from "@pulumi/gcp";
 import { PolicyPack, validateResourceOfType } from "@pulumi/policy";
