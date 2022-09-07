@@ -136,22 +136,22 @@ public class App {
 
     private static Output<String> getSASToken(Output<String> storageAccountName, Output<String> storageContainerName,
                                               Output<String> blobName, Output<String> resourceGroupName) {
-        var blobSAS = Output.tuple(resourceGroupName, storageAccountName, storageContainerName).apply(t -> Output.of(
-                StorageFunctions.listStorageAccountServiceSAS(
-                        ListStorageAccountServiceSASArgs.builder().resourceGroupName(t.t1)
-                                .accountName(t.t2)
-                                .protocols(HttpProtocol.Https)
-                                .sharedAccessStartTime("2022-01-01")
-                                .sharedAccessExpiryTime("2030-01-01")
-                                .resource(SignedResource.C)
-                                .permissions(Permissions.R)
-                                .canonicalizedResource(String.format("/blob/%s/%s", t.t2, t.t3))
-                                .contentType("application/json")
-                                .cacheControl("max-age=5")
-                                .contentDisposition("inline")
-                                .contentEncoding("deflate")
-                                .build())));
+        var blobSAS = StorageFunctions.listStorageAccountServiceSAS(ListStorageAccountServiceSASArgs.builder()
+            .resourceGroupName(resourceGroupName)
+            .accountName(storageAccountName)
+            .protocols(HttpProtocol.Https)
+            .sharedAccessStartTime("2022-01-01")
+            .sharedAccessExpiryTime("2030-01-01")
+            .resource(SignedResource.C)
+            .permissions(Permissions.R)
+            .canonicalizedResource(String.format("/blob/%s/%s", storageAccountName, storageContainerName))
+            .contentType("application/json")
+            .cacheControl("max-age=5")
+            .contentDisposition("inline")
+            .contentEncoding("deflate")
+            .build());
         var token = blobSAS.applyValue(ListStorageAccountServiceSASResult::serviceSasToken);
         return Output.format("https://%s.blob.core.windows.net/%s/%s?%s", storageAccountName, storageContainerName, blobName, token);
     }
 }
+//?
