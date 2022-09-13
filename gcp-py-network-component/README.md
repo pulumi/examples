@@ -89,14 +89,14 @@ can be composed into a higher-level, reusable abstraction.
 1. Get the IP address of the newly-created instance from the stack's outputs: 
 
     ```bash
-    $ pulumi stack output public_ip
+    $ pulumi stack output nginx_public_ip
     13.64.196.146
     ```
 
 1. Check to see that your server is now running:
 
     ```bash
-    $ curl http://$(pulumi stack output public_ip)
+    $ curl http://$(pulumi stack output nginx_public_ip)
     Powered by Pulumi!
     ```
 
@@ -121,7 +121,7 @@ can be composed into a higher-level, reusable abstraction.
 
     Outputs:
     - network  : "demo-7a734d7"
-    - public_ip: "34.66.58.210"
+    - nginx_public_ip: "34.66.58.210"
 
     Resources:
         - 11 to delete
@@ -143,7 +143,7 @@ can be composed into a higher-level, reusable abstraction.
 
     Outputs:
     - network  : "demo-7a734d7"
-    - public_ip: "34.66.58.210"
+    - nginx_public_ip: "34.66.58.210"
 
     Resources:
         - 11 deleted
