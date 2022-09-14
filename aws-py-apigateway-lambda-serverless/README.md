@@ -29,6 +29,26 @@ This sample uses the following AWS products:
 
 2.  To view the runtime logs of the Lambda function, use the `pulumi logs` command. To get a log stream, use `pulumi logs --follow`.
 
+## Test the Endpoints
+
+Use a HTTP tool like `curl` or [`httpie`](https://github.com/httpie/httpie) (`pip3 install httpie`) to query the API Gateway endpoints using the Pulumi stack outputs.
+
+Example using `curl`:
+
+```
+curl $(pulumi stack output apigateway-rest-endpoint)
+curl $(pulumi stack output apigatewayv2-http-endpoint)
+```
+
+Example using `httpie`:
+
+```
+http $(pulumi stack output apigateway-rest-endpoint)
+http $(pulumi stack output apigatewayv2-http-endpoint)
+```
+
+Output should include `"Cheers from AWS Lambda!!"`.
+
 ## Clean Up
 
 1.  Run `pulumi destroy` to tear down all resources.
