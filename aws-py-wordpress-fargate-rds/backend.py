@@ -53,7 +53,7 @@ class Db(ComponentResource):
 
         rds_name = f'{name}-rds'
         self.db = rds.Instance(rds_name,
-            name=args.db_name,
+            db_name=args.db_name,
             allocated_storage=args.allocated_storage,
             engine=args.engine,
             engine_version=args.engine_version,

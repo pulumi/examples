@@ -23,7 +23,7 @@ if not db_password:
     password=random.RandomPassword('db_password',
         length=16,
         special=True,
-        override_special='_%@',
+        override_special='_%',
         )
     # Pulumi knows this provider is used to create a password and thus automatically protects it going forward.
     db_password=password.result
@@ -58,6 +58,7 @@ fe=frontend.WebService(f'{service_name}-fe', frontend.WebServiceArgs(
 web_url=pulumi.Output.concat('http://', fe.alb.dns_name)
 pulumi.export('Web Service URL', web_url)
 pulumi.export('ECS Cluster Name', fe.cluster.name)
+pulumi.export('ECS Service Name', fe.service.name)
 
 pulumi.export('DB Endpoint', be.db.address)
 pulumi.export('DB User Name', be.db.username)
