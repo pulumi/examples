@@ -82,9 +82,6 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
-      with:
-        lfs: true
-        ref: ${{ env.PR_COMMIT_SHA }}
     - name: Install DotNet ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v1
       with:
@@ -154,7 +151,6 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v3
     - name: Checkout Scripts Repo
       uses: actions/checkout@v3
       with:
@@ -196,9 +192,6 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
-      with:
-        lfs: true
-        ref: ${{ env.PR_COMMIT_SHA }}
     - name: Install DotNet ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v1
       with:
@@ -268,7 +261,6 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v3
     - name: Checkout Scripts Repo
       uses: actions/checkout@v3
       with:
@@ -344,9 +336,6 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
-      with:
-        lfs: true
-        ref: ${{ env.PR_COMMIT_SHA }}
     - name: Install DotNet ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v1
       with:
@@ -416,7 +405,6 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v3
     - name: Checkout Scripts Repo
       uses: actions/checkout@v3
       with:
@@ -450,9 +438,6 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
-      with:
-        lfs: true
-        ref: ${{ env.PR_COMMIT_SHA }}
     - name: Install DotNet ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v1
       with:
@@ -522,7 +507,6 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v3
     - name: Checkout Scripts Repo
       uses: actions/checkout@v3
       with:
