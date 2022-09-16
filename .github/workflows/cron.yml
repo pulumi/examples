@@ -187,6 +187,9 @@ jobs:
         - "3.7"
   linting:
     name: lint
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v3

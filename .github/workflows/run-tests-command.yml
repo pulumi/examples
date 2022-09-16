@@ -214,6 +214,9 @@ jobs:
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
     name: lint
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v3
