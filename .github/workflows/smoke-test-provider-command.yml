@@ -5,13 +5,16 @@ env:
   ARM_LOCATION: westus
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-  AWS_ACCESS_KEY_ID: ' ${{ secrets.AWS_ACCESS_KEY_ID }}'
+  AWS_ACCESS_KEY_ID: " ${{ secrets.AWS_ACCESS_KEY_ID }}"
   AWS_REGION: us-west-2
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   CLOUDSDK_CORE_DISABLE_PROMPTS: 1
   DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
-  GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-  GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+  GOOGLE_CI_SERVICE_ACCOUNT_EMAIL: pulumi-ci@pulumi-ci-gcp-provider.iam.gserviceaccount.com
+  GOOGLE_CI_WORKLOAD_IDENTITY_POOL: pulumi-ci
+  GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER: pulumi-ci
+  GOOGLE_PROJECT: pulumi-ci-gcp-provider
+  GOOGLE_PROJECT_NUMBER: "895284651812"
   GOOGLE_REGION: us-central1
   GOOGLE_ZONE: us-central1-a
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
@@ -32,7 +35,7 @@ jobs:
     - name: Install Latest Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v1.0.1
     - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - run: dotnet test
       working-directory: ${{ matrix.source-dir }}
     strategy:
@@ -57,7 +60,7 @@ jobs:
     - name: Install Latest Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v1.0.1
     - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - run: go test
       working-directory: ${{ matrix.source-dir }}
     strategy:
@@ -72,6 +75,9 @@ jobs:
   kubernetes:
     name: smoke-test-kubernetes-provider
     needs: test-infra-setup
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Install DotNet ${{ matrix.dotnet-version }}
@@ -95,26 +101,43 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install aws-iam-authenticator
-      run: |-
-        curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+      run: >-
+        curl -o aws-iam-authenticator
+        https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+
         chmod +x ./aws-iam-authenticator
+
         sudo mv aws-iam-authenticator /usr/local/bin
     - name: Install Kubectl
-      run: |-
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+      run: >-
+        curl -LO
+        https://storage.googleapis.com/kubernetes-release/release/$(curl -s
+        https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+
         chmod +x ./kubectl
+
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
-      run: |-
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      run: >-
+        curl -o- -L
+        https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get |
+        bash
+
+        helm init -c
+
         helm repo add bitnami https://charts.bitnami.com/bitnami
-    - name: Configure GCP credentials
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0
+      with:
+        service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
+        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
+          }}/locations/global/workloadIdentityPools/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
+    - name: Setup gcloud auth
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ env.GOOGLE_PROJECT }}
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        version: 285.0.0
+        install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
@@ -126,9 +149,9 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Checkout Scripts Repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: ci-scripts
         repository: pulumi/scripts
@@ -137,20 +160,15 @@ jobs:
       with:
         pulumi-version: ${{ env.PULUMI_VERSION }}
     - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - name: Set up gotestfmt
-      uses: haveyoudebuggedit/gotestfmt-action@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install Go Dependencies
       run: make ensure
     - name: Setup Config
-      run: |-
+      run: >-
         mkdir -p "$HOME/.kube/"
+
         pulumi stack -s "${{ env.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
     - name: Run Kubernetes Smoke Tests
-      run: |
-        set -euo pipefail
-        cd misc/test && go test . --timeout 4h -v -json -count=1 -short -parallel 40 --tags=Kubernetes --run=TestAccKubernetes 2>&1 | tee /tmp/gotest.log | gotestfmt
+      run: make specific_tag_set TagSet=Kubernetes
     strategy:
       fail-fast: false
       matrix:
@@ -159,13 +177,16 @@ jobs:
         go-version:
         - 1.16.x
         node-version:
-        - 14.x
+        - 13.x
         platform:
         - ubuntu-latest
         python-version:
         - "3.7"
   providers:
     name: smoke-test-providers
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Install DotNet ${{ matrix.dotnet-version }}
@@ -189,26 +210,43 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install aws-iam-authenticator
-      run: |-
-        curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+      run: >-
+        curl -o aws-iam-authenticator
+        https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+
         chmod +x ./aws-iam-authenticator
+
         sudo mv aws-iam-authenticator /usr/local/bin
     - name: Install Kubectl
-      run: |-
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+      run: >-
+        curl -LO
+        https://storage.googleapis.com/kubernetes-release/release/$(curl -s
+        https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+
         chmod +x ./kubectl
+
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
-      run: |-
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      run: >-
+        curl -o- -L
+        https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get |
+        bash
+
+        helm init -c
+
         helm repo add bitnami https://charts.bitnami.com/bitnami
-    - name: Configure GCP credentials
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0
+      with:
+        service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
+        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
+          }}/locations/global/workloadIdentityPools/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
+    - name: Setup gcloud auth
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ env.GOOGLE_PROJECT }}
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        version: 285.0.0
+        install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
@@ -220,9 +258,9 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Checkout Scripts Repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: ci-scripts
         repository: pulumi/scripts
@@ -231,16 +269,11 @@ jobs:
       with:
         pulumi-version: ${{ env.PULUMI_VERSION }}
     - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - name: Set up gotestfmt
-      uses: haveyoudebuggedit/gotestfmt-action@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install Testing Dependencies
       run: make ensure
     - name: Running ${{ env.PROVIDER_TESTS_TAG }}${{ matrix.languages }} Smoke Tests
-      run: |
-        set -euo pipefail
-        cd misc/test && go test . --timeout 4h -v -json -count=1 -short -parallel 40 --tags=${{ env.PROVIDER_TESTS_TAG }} --run=TestAcc${{ matrix.languages }} 2>&1 | tee /tmp/gotest.log | gotestfmt
+      run: make specific_tag_set TestSet=${{ matrix.languages }} TagSet=${{
+        env.PROVIDER_TESTS_TAG }}
     strategy:
       fail-fast: false
       matrix:
@@ -255,7 +288,7 @@ jobs:
         - Py
         - Fs
         node-version:
-        - 14.x
+        - 13.x
         platform:
         - ubuntu-latest
         python-version:
@@ -275,7 +308,7 @@ jobs:
     - name: Install Latest Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v1.0.1
     - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - run: |-
         python3 -m venv venv
         source venv/bin/activate
@@ -294,6 +327,9 @@ jobs:
   test-infra-destroy:
     name: test-infra-destroy
     needs: kubernetes
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Install DotNet ${{ matrix.dotnet-version }}
@@ -317,26 +353,43 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install aws-iam-authenticator
-      run: |-
-        curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+      run: >-
+        curl -o aws-iam-authenticator
+        https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+
         chmod +x ./aws-iam-authenticator
+
         sudo mv aws-iam-authenticator /usr/local/bin
     - name: Install Kubectl
-      run: |-
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+      run: >-
+        curl -LO
+        https://storage.googleapis.com/kubernetes-release/release/$(curl -s
+        https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+
         chmod +x ./kubectl
+
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
-      run: |-
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      run: >-
+        curl -o- -L
+        https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get |
+        bash
+
+        helm init -c
+
         helm repo add bitnami https://charts.bitnami.com/bitnami
-    - name: Configure GCP credentials
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0
+      with:
+        service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
+        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
+          }}/locations/global/workloadIdentityPools/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
+    - name: Setup gcloud auth
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ env.GOOGLE_PROJECT }}
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        version: 285.0.0
+        install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
@@ -348,9 +401,9 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Checkout Scripts Repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: ci-scripts
         repository: pulumi/scripts
@@ -358,8 +411,8 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v1.0.1
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Destroy test infra
-      run: make destroy_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{ github.sha
-        }}-${{ github.run_number }}"
+      run: make destroy_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
+        github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
@@ -368,13 +421,16 @@ jobs:
         go-version:
         - 1.16.x
         node-version:
-        - 14.x
+        - 13.x
         platform:
         - ubuntu-latest
         python-version:
         - "3.7"
   test-infra-setup:
     name: test-infra-setup
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Install DotNet ${{ matrix.dotnet-version }}
@@ -398,26 +454,43 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install aws-iam-authenticator
-      run: |-
-        curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+      run: >-
+        curl -o aws-iam-authenticator
+        https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+
         chmod +x ./aws-iam-authenticator
+
         sudo mv aws-iam-authenticator /usr/local/bin
     - name: Install Kubectl
-      run: |-
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+      run: >-
+        curl -LO
+        https://storage.googleapis.com/kubernetes-release/release/$(curl -s
+        https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+
         chmod +x ./kubectl
+
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
-      run: |-
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      run: >-
+        curl -o- -L
+        https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get |
+        bash
+
+        helm init -c
+
         helm repo add bitnami https://charts.bitnami.com/bitnami
-    - name: Configure GCP credentials
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0
+      with:
+        service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
+        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
+          }}/locations/global/workloadIdentityPools/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
+    - name: Setup gcloud auth
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ env.GOOGLE_PROJECT }}
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        version: 285.0.0
+        install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
@@ -429,9 +502,9 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Checkout Scripts Repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: ci-scripts
         repository: pulumi/scripts
@@ -439,8 +512,8 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v1.0.1
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Create Test Infrastructure
-      run: make setup_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{ github.sha
-        }}-${{ github.run_number }}"
+      run: make setup_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
+        github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
@@ -449,7 +522,7 @@ jobs:
         go-version:
         - 1.16.x
         node-version:
-        - 14.x
+        - 13.x
         platform:
         - ubuntu-latest
         python-version:
@@ -465,22 +538,24 @@ jobs:
     - name: Install Latest Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v1.0.1
     - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - run: |-
         npm install
-        $(npm bin)/mocha -r ts-node/register ec2tests.ts
-      working-directory: ${{ matrix.source-dir }}/mocha
+        npm install --global mocha
+        npm install --global ts-node
+        mocha -r ts-node/register ec2tests.ts
+      working-directory: ${{ matrix.source-dir }}
     strategy:
       fail-fast: false
       matrix:
         node-version:
-        - 14.x
+        - 13.x
         platform:
         - ubuntu-latest
         source-dir:
         - testing-unit-ts
 name: Smoke Test Latest Provider Release
-"on":
+on:
   repository_dispatch:
     types:
     - smoke-test-provider
