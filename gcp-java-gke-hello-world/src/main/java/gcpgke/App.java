@@ -101,32 +101,31 @@ public class App {
 
         var kubeconfig = cluster.endpoint()
                 .apply(endpoint -> masterAuthClusterCaCertificate.applyValue(
-                        caCert -> MessageFormat.format(String.join("\n",
-                                "apiVersion: v1",
-                                "clusters:",
-                                "- cluster:",
-                                "    certificate-authority-data: {2}",
-                                "    server: https://{1}",
-                                "  name: {0}",
-                                "contexts:",
-                                "- context:",
-                                "    cluster: {0}",
-                                "    user: {0}",
-                                "  name: {0}",
-                                "current-context: {0}",
-                                "kind: Config",
-                                "preferences: '{}'",
-                                "users:",
-                                "- name: {0}",
-                                "  user:",
-                                "    auth-provider:",
-                                "      config:",
-                                "        cmd-args: config config-helper --format=json",
-                                "        cmd-path: gcloud",
-                                "        expiry-key: \"'{.credential.token_expiry}'\"",
-                                "        token-key: \"'{.credential.access_token}'\"",
-                                "      name: gcp"
-                        ), clusterName, endpoint, caCert)
+                        caCert -> MessageFormat.format("""
+apiVersion: v1,
+clusters:,
+- cluster:,
+    certificate-authority-data: {2},
+    server: https://{1},
+  name: {0},
+contexts:,
+- context:,
+    cluster: {0},
+    user: {0},
+  name: {0},
+current-context: {0},
+kind: Config,
+preferences: '{}',
+users:,
+- name: {0},
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      command: gke-gcloud-auth-plugin
+      installHint: Install gke-gcloud-auth-plugin for use with kubectl by following
+        https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
+      provideClusterInfo: true
+"""), clusterName, endpoint, caCert)
                 ));
         ctx.export("kubeconfig", kubeconfig);
 
