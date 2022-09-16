@@ -80,6 +80,11 @@ jobs:
       id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+      with:
+        lfs: true
+        ref: ${{ env.PR_COMMIT_SHA }}
     - name: Install DotNet ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v1
       with:
@@ -189,6 +194,11 @@ jobs:
       id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+      with:
+        lfs: true
+        ref: ${{ env.PR_COMMIT_SHA }}
     - name: Install DotNet ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v1
       with:
@@ -339,6 +349,11 @@ jobs:
       id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+      with:
+        lfs: true
+        ref: ${{ env.PR_COMMIT_SHA }}
     - name: Install DotNet ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v1
       with:
@@ -440,6 +455,11 @@ jobs:
       id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+      with:
+        lfs: true
+        ref: ${{ env.PR_COMMIT_SHA }}
     - name: Install DotNet ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v1
       with:
