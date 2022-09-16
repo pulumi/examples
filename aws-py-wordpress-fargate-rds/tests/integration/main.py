@@ -62,6 +62,8 @@ def validate_ecs_service(service_name: str, cluster_name: str) -> List[TestFailu
 
     network_config = service["networkConfiguration"]
     vpc_config = network_config["awsvpcConfiguration"]
+
+    # NOTE: this has been setup to fail. Current configuration has this value being set to ENALBED (true) on the ECS Service
     if vpc_config["assignPublicIp"] == "ENABLED":
         test_failures.append(TestFailure("AssignPublicIp", "expected AssignPublicIp to be disabled, actual value is enabled"))
 
