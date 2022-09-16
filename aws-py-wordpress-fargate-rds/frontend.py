@@ -142,7 +142,7 @@ class WebService(ComponentResource):
             launch_type='FARGATE',
             task_definition=self.task_definition.arn,
             network_configuration=aws.ecs.ServiceNetworkConfigurationArgs(
-                assign_public_ip=True,
+                assign_public_ip=False,
                 subnets=args.subnet_ids,
                 security_groups=args.security_group_ids
             ),
