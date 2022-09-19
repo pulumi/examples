@@ -28,10 +28,10 @@ jobs:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install DotNet ${{ matrix.dotnet-version }}
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{matrix.dotnet-version}}
+        dotnet-version: ${{matrix.dotnetversion}}
     - name: Install Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v2
     - name: Print CLI version
@@ -43,8 +43,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dotnet-version:
-        - 3.1.x
+        dotnetversion:
+        - 3.1.301
         platform:
         - ubuntu-latest
         source-dir:
@@ -71,7 +71,7 @@ jobs:
       fail-fast: false
       matrix:
         go-version:
-        - 1.16.x
+        - 1.19.x
         platform:
         - ubuntu-latest
         source-dir:
@@ -86,10 +86,10 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
-    - name: Install DotNet ${{ matrix.dotnet-version }}
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{matrix.dotnet-version}}
+        dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
       uses: actions/setup-node@v2
       with:
@@ -177,16 +177,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dotnet-version:
+        dotnetversion:
         - 3.1.301
         go-version:
-        - 1.16.x
+        - 1.19.x
         node-version:
-        - 13.x
+        - 16.x
         platform:
         - ubuntu-latest
         python-version:
-        - "3.7"
+        - "3.9"
   linting:
     name: lint
     permissions:
@@ -216,7 +216,7 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
-        - 14.x
+        - 16.x
         platform:
         - ubuntu-latest
         yarn-version:
@@ -230,10 +230,10 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
-    - name: Install DotNet ${{ matrix.dotnet-version }}
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{matrix.dotnet-version}}
+        dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
       uses: actions/setup-node@v2
       with:
@@ -336,14 +336,14 @@ jobs:
         - Packet
         - EquinixMetal
         - Cloud
-        dotnet-version:
+        dotnetversion:
         - 3.1.301
         examples-test-matrix:
         - no-latest-cli
         - no-latest-packages
         - default
         go-version:
-        - 1.16.x
+        - 1.19.x
         languages:
         - Cs
         - Js
@@ -351,11 +351,11 @@ jobs:
         - Py
         - Fs
         node-version:
-        - 13.x
+        - 16.x
         platform:
         - ubuntu-latest
         python-version:
-        - "3.7"
+        - "3.9"
   python-unit-testing:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
@@ -386,7 +386,7 @@ jobs:
         platform:
         - ubuntu-latest
         python-version:
-        - 3.7.x
+        - "3.9"
         source-dir:
         - testing-unit-py
   test-infra-destroy:
@@ -399,10 +399,10 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
-    - name: Install DotNet ${{ matrix.dotnet-version }}
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{matrix.dotnet-version}}
+        dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
       uses: actions/setup-node@v2
       with:
@@ -484,16 +484,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dotnet-version:
+        dotnetversion:
         - 3.1.301
         go-version:
-        - 1.16.x
+        - 1.19.x
         node-version:
-        - 13.x
+        - 16.x
         platform:
         - ubuntu-latest
         python-version:
-        - "3.7"
+        - "3.9"
   test-infra-setup:
     name: test-infra-setup
     permissions:
@@ -503,10 +503,10 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
-    - name: Install DotNet ${{ matrix.dotnet-version }}
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{matrix.dotnet-version}}
+        dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
       uses: actions/setup-node@v2
       with:
@@ -588,16 +588,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dotnet-version:
+        dotnetversion:
         - 3.1.301
         go-version:
-        - 1.16.x
+        - 1.19.x
         node-version:
-        - 13.x
+        - 16.x
         platform:
         - ubuntu-latest
         python-version:
-        - "3.7"
+        - "3.9"
   ts-unit-testing:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
@@ -623,7 +623,7 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
-        - 13.x
+        - 16.x
         platform:
         - ubuntu-latest
         source-dir:
