@@ -7,12 +7,11 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Comment PR
-      uses: thollander/actions-comment-pull-request@1.0.1
+      uses: thollander/actions-comment-pull-request@v1
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        message: >-
+        message: >
           PR is now waiting for a maintainer to run the acceptance tests.
-
 
           **Note for the maintainer:** To run the acceptance tests, please comment */run-example-tests* on the PR
 name: New Pull request Open
