@@ -55,10 +55,10 @@ jobs:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v1
+    - name: Install Go
+      uses: actions/setup-go@v2
       with:
-        go-version: ${{matrix.go-version}}
+        go-version: ${{matrix.goversion}}
     - name: Install Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v2
     - name: Print CLI version
@@ -70,7 +70,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version:
+        goversion:
         - 1.19.x
         platform:
         - ubuntu-latest
@@ -103,10 +103,10 @@ jobs:
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
-    - name: Install Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v1
+    - name: Install Go
+      uses: actions/setup-go@v2
       with:
-        go-version: ${{matrix.go-version}}
+        go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
       run: >-
         curl -o aws-iam-authenticator
@@ -179,7 +179,7 @@ jobs:
       matrix:
         dotnetversion:
         - 3.1.301
-        go-version:
+        goversion:
         - 1.19.x
         node-version:
         - 16.x
@@ -247,10 +247,10 @@ jobs:
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
-    - name: Install Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v1
+    - name: Install Go
+      uses: actions/setup-go@v2
       with:
-        go-version: ${{matrix.go-version}}
+        go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
       run: >-
         curl -o aws-iam-authenticator
@@ -342,7 +342,7 @@ jobs:
         - no-latest-cli
         - no-latest-packages
         - default
-        go-version:
+        goversion:
         - 1.19.x
         languages:
         - Cs
@@ -416,10 +416,10 @@ jobs:
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
-    - name: Install Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v1
+    - name: Install Go
+      uses: actions/setup-go@v2
       with:
-        go-version: ${{matrix.go-version}}
+        go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
       run: >-
         curl -o aws-iam-authenticator
@@ -486,7 +486,7 @@ jobs:
       matrix:
         dotnetversion:
         - 3.1.301
-        go-version:
+        goversion:
         - 1.19.x
         node-version:
         - 16.x
@@ -520,10 +520,10 @@ jobs:
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
-    - name: Install Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v1
+    - name: Install Go
+      uses: actions/setup-go@v2
       with:
-        go-version: ${{matrix.go-version}}
+        go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
       run: >-
         curl -o aws-iam-authenticator
@@ -590,7 +590,7 @@ jobs:
       matrix:
         dotnetversion:
         - 3.1.301
-        go-version:
+        goversion:
         - 1.19.x
         node-version:
         - 16.x
