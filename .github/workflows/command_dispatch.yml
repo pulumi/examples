@@ -2,7 +2,8 @@ jobs:
   command-dispatch-for-testing:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout Repo
+      uses: actions/checkout@v3
     - name: Run Build
       uses: peter-evans/slash-command-dispatch@v2
       with:

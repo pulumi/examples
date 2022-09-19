@@ -36,7 +36,8 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v2
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v3
+    - name: Checkout Repo
+      uses: actions/checkout@v3
     - run: dotnet test
       working-directory: ${{ matrix.source-dir }}
     strategy:
@@ -62,7 +63,8 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v2
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v3
+    - name: Checkout Repo
+      uses: actions/checkout@v3
     - run: go test
       working-directory: ${{ matrix.source-dir }}
     strategy:
@@ -192,7 +194,8 @@ jobs:
       id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout Repo
+      uses: actions/checkout@v3
     - name: Setup Node
       uses: actions/setup-node@v2
       with:
@@ -369,7 +372,8 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v2
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v3
+    - name: Checkout Repo
+      uses: actions/checkout@v3
     - run: |-
         python3 -m venv venv
         source venv/bin/activate
@@ -607,7 +611,8 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v2
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v3
+    - name: Checkout Repo
+      uses: actions/checkout@v3
     - run: |-
         npm install
         npm install --global mocha

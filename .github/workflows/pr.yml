@@ -4,7 +4,8 @@ jobs:
     name: comment-on-pr
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout Repo
+      uses: actions/checkout@v3
     - name: Comment PR
       uses: thollander/actions-comment-pull-request@1.0.1
       with:
