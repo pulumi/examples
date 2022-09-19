@@ -206,11 +206,11 @@ jobs:
         - 3.1.301
         goversion:
         - 1.19.x
-        node-version:
+        nodeversion:
         - 16.x
         platform:
         - ubuntu-latest
-        python-version:
+        pythonversion:
         - "3.9"
   linting:
     if: github.event_name == 'repository_dispatch' ||
@@ -242,7 +242,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version:
+        nodeversion:
         - 16.x
         platform:
         - ubuntu-latest
@@ -363,11 +363,11 @@ jobs:
         - Ts
         - Py
         - Fs
-        node-version:
+        nodeversion:
         - 16.x
         platform:
         - ubuntu-latest
-        python-version:
+        pythonversion:
         - "3.9"
   python-unit-testing:
     if: github.event_name == 'repository_dispatch' ||
@@ -400,7 +400,7 @@ jobs:
       matrix:
         platform:
         - ubuntu-latest
-        python-version:
+        pythonversion:
         - "3.9"
         source-dir:
         - testing-unit-py
@@ -505,11 +505,11 @@ jobs:
         - 3.1.301
         goversion:
         - 1.19.x
-        node-version:
+        nodeversion:
         - 16.x
         platform:
         - ubuntu-latest
-        python-version:
+        pythonversion:
         - "3.9"
   test-infra-setup:
     if: github.event_name == 'repository_dispatch' ||
@@ -611,11 +611,11 @@ jobs:
         - 3.1.301
         goversion:
         - 1.19.x
-        node-version:
+        nodeversion:
         - 16.x
         platform:
         - ubuntu-latest
-        python-version:
+        pythonversion:
         - "3.9"
   ts-unit-testing:
     if: github.event_name == 'repository_dispatch' ||
@@ -643,7 +643,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version:
+        nodeversion:
         - 16.x
         platform:
         - ubuntu-latest

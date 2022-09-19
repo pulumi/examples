@@ -183,11 +183,11 @@ jobs:
         - 3.1.301
         goversion:
         - 1.19.x
-        node-version:
+        nodeversion:
         - 16.x
         platform:
         - ubuntu-latest
-        python-version:
+        pythonversion:
         - "3.9"
   providers:
     name: smoke-test-cli-on-providers
@@ -304,11 +304,11 @@ jobs:
         - Ts
         - Py
         - Fs
-        node-version:
+        nodeversion:
         - 16.x
         platform:
         - ubuntu-latest
-        python-version:
+        pythonversion:
         - "3.9"
   python-unit-testing:
     name: Running ${{ matrix.source-dir }} test
@@ -339,7 +339,7 @@ jobs:
       matrix:
         platform:
         - ubuntu-latest
-        python-version:
+        pythonversion:
         - "3.9"
         source-dir:
         - testing-unit-py
@@ -442,11 +442,11 @@ jobs:
         - 3.1.301
         goversion:
         - 1.19.x
-        node-version:
+        nodeversion:
         - 16.x
         platform:
         - ubuntu-latest
-        python-version:
+        pythonversion:
         - "3.9"
   test-infra-setup:
     name: test-infra-setup
@@ -546,11 +546,11 @@ jobs:
         - 3.1.301
         goversion:
         - 1.19.x
-        node-version:
+        nodeversion:
         - 16.x
         platform:
         - ubuntu-latest
-        python-version:
+        pythonversion:
         - "3.9"
   ts-unit-testing:
     name: Running ${{ matrix.source-dir }} test
@@ -576,7 +576,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version:
+        nodeversion:
         - 16.x
         platform:
         - ubuntu-latest
