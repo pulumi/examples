@@ -418,8 +418,9 @@ jobs:
     - providers
     runs-on: ubuntu-latest
     steps:
-    - run: echo "Ready for merge"
+    - name: Checkout Repo
       uses: actions/checkout@v3
+    - run: echo "Ready for merge"
   test-infra-destroy:
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
