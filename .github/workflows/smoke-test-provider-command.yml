@@ -95,18 +95,18 @@ jobs:
       with:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
-    - name: Install Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+    - name: Setup Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{matrix.python-version}}
+        python-version: ${{matrix.pythonversion}}
+    - name: Install Python deps
+      run: |-
+        pip3 install virtualenv==20.0.23
+        pip3 install pipenv
     - name: Install Go ${{ matrix.go-version }}
       uses: actions/setup-go@v1
       with:
         go-version: ${{matrix.go-version}}
-    - name: Install Python Deps
-      run: |-
-        pip3 install virtualenv==20.0.23
-        pip3 install pipenv
     - name: Install aws-iam-authenticator
       run: >-
         curl -o aws-iam-authenticator
@@ -207,18 +207,18 @@ jobs:
       with:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
-    - name: Install Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+    - name: Setup Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{matrix.python-version}}
+        python-version: ${{matrix.pythonversion}}
+    - name: Install Python deps
+      run: |-
+        pip3 install virtualenv==20.0.23
+        pip3 install pipenv
     - name: Install Go ${{ matrix.go-version }}
       uses: actions/setup-go@v1
       with:
         go-version: ${{matrix.go-version}}
-    - name: Install Python Deps
-      run: |-
-        pip3 install virtualenv==20.0.23
-        pip3 install pipenv
     - name: Install aws-iam-authenticator
       run: >-
         curl -o aws-iam-authenticator
@@ -307,11 +307,11 @@ jobs:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+    - name: Setup Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{matrix.python-version}}
-    - name: Install Python Deps
+        python-version: ${{matrix.pythonversion}}
+    - name: Install Python deps
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
@@ -355,18 +355,18 @@ jobs:
       with:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
-    - name: Install Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+    - name: Setup Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{matrix.python-version}}
+        python-version: ${{matrix.pythonversion}}
+    - name: Install Python deps
+      run: |-
+        pip3 install virtualenv==20.0.23
+        pip3 install pipenv
     - name: Install Go ${{ matrix.go-version }}
       uses: actions/setup-go@v1
       with:
         go-version: ${{matrix.go-version}}
-    - name: Install Python Deps
-      run: |-
-        pip3 install virtualenv==20.0.23
-        pip3 install pipenv
     - name: Install aws-iam-authenticator
       run: >-
         curl -o aws-iam-authenticator
@@ -459,18 +459,18 @@ jobs:
       with:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
-    - name: Install Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+    - name: Setup Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{matrix.python-version}}
+        python-version: ${{matrix.pythonversion}}
+    - name: Install Python deps
+      run: |-
+        pip3 install virtualenv==20.0.23
+        pip3 install pipenv
     - name: Install Go ${{ matrix.go-version }}
       uses: actions/setup-go@v1
       with:
         go-version: ${{matrix.go-version}}
-    - name: Install Python Deps
-      run: |-
-        pip3 install virtualenv==20.0.23
-        pip3 install pipenv
     - name: Install aws-iam-authenticator
       run: >-
         curl -o aws-iam-authenticator
