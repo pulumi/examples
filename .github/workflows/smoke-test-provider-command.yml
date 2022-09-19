@@ -28,6 +28,8 @@ jobs:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
     - name: Setup DotNet
       uses: actions/setup-dotnet@v1
       with:
@@ -36,8 +38,6 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v2
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
-    - name: Checkout Repo
-      uses: actions/checkout@v3
     - run: dotnet test
       working-directory: ${{ matrix.source-dir }}
     strategy:
@@ -55,6 +55,8 @@ jobs:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
     - name: Install Go
       uses: actions/setup-go@v2
       with:
@@ -63,8 +65,6 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v2
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
-    - name: Checkout Repo
-      uses: actions/checkout@v3
     - run: go test
       working-directory: ${{ matrix.source-dir }}
     strategy:
@@ -307,6 +307,8 @@ jobs:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
@@ -319,8 +321,6 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v2
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
-    - name: Checkout Repo
-      uses: actions/checkout@v3
     - run: |-
         python3 -m venv venv
         source venv/bin/activate
@@ -549,6 +549,8 @@ jobs:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
     - name: Setup Node
       uses: actions/setup-node@v2
       with:
@@ -558,8 +560,6 @@ jobs:
       uses: pulumi/action-install-pulumi-cli@v2
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
-    - name: Checkout Repo
-      uses: actions/checkout@v3
     - run: |-
         npm install
         npm install --global mocha
