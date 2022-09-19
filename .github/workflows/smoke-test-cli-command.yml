@@ -88,10 +88,11 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{matrix.dotnet-version}}
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{matrix.node-version}}
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
     - name: Install Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -199,10 +200,11 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{matrix.dotnet-version}}
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{matrix.node-version}}
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
     - name: Install Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -352,10 +354,11 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{matrix.dotnet-version}}
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{matrix.node-version}}
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
     - name: Install Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -455,10 +458,11 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{matrix.dotnet-version}}
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{matrix.node-version}}
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
     - name: Install Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -549,10 +553,11 @@ jobs:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{matrix.node-version}}
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
     - name: Install Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v2
     - name: Print CLI version
