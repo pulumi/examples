@@ -32,9 +32,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{matrix.dotnet-version}}
-    - name: Install Latest Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - uses: actions/checkout@v3
     - run: dotnet test
       working-directory: ${{ matrix.source-dir }}
@@ -57,9 +58,10 @@ jobs:
       uses: actions/setup-go@v1
       with:
         go-version: ${{matrix.go-version}}
-    - name: Install Latest Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - uses: actions/checkout@v3
     - run: go test
       working-directory: ${{ matrix.source-dir }}
@@ -156,11 +158,12 @@ jobs:
       with:
         path: ci-scripts
         repository: pulumi/scripts
-    - name: Install Specific Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
       with:
-        pulumi-version: ${{ env.PULUMI_VERSION }}
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
+        pulumi-version: "{{ env.PULUMI_VERSION }}"
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Go Dependencies
       run: make ensure
     - name: Setup Config
@@ -266,11 +269,12 @@ jobs:
       with:
         path: ci-scripts
         repository: pulumi/scripts
-    - name: Install Specific Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
       with:
-        pulumi-version: ${{ env.PULUMI_VERSION }}
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
+        pulumi-version: "{{ env.PULUMI_VERSION }}"
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
       run: make ensure
     - name: Running ${{ env.PROVIDER_TESTS_TAG }}${{ matrix.languages }} Smoke Tests
@@ -307,9 +311,10 @@ jobs:
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
-    - name: Install Latest Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - uses: actions/checkout@v3
     - run: |-
         python3 -m venv venv
@@ -410,9 +415,10 @@ jobs:
       with:
         path: ci-scripts
         repository: pulumi/scripts
-    - name: Install Latest Stable Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Destroy test infra
       run: make destroy_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
         github.sha }}-${{ github.run_number }}"
@@ -512,9 +518,10 @@ jobs:
       with:
         path: ci-scripts
         repository: pulumi/scripts
-    - name: Install Latest Stable Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Create Test Infrastructure
       run: make setup_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
         github.sha }}-${{ github.run_number }}"
@@ -539,9 +546,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{matrix.node-version}}
-    - name: Install Latest Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - uses: actions/checkout@v3
     - run: |-
         npm install
