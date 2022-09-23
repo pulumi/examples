@@ -99,9 +99,7 @@ public class App {
         var masterAuthClusterCaCertificate = cluster.masterAuth()
                 .applyValue(a -> a.clusterCaCertificate().orElseThrow());
 
-        var kubeconfig = cluster.endpoint()
-                .apply(endpoint -> masterAuthClusterCaCertificate.applyValue(
-                        caCert -> MessageFormat.format("""
+        var yamlTemplate = """
 apiVersion: v1,
 clusters:,
 - cluster:,
@@ -125,8 +123,12 @@ users:,
       installHint: Install gke-gcloud-auth-plugin for use with kubectl by following
         https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
       provideClusterInfo: true
-"""), clusterName, endpoint, caCert)
-                ));
+            """;
+
+        var kubeconfig = cluster.endpoint()
+                .apply(endpoint -> masterAuthClusterCaCertificate.applyValue(
+                        caCert -> MessageFormat.format(yamlTemplate, clusterName, endpoint, caCert)));
+
         ctx.export("kubeconfig", kubeconfig);
 
         // Create a Kubernetes provider instance that uses our cluster from above.
