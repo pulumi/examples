@@ -2,8 +2,8 @@
 
 using System;
 using System.Collections.Immutable;
-using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 using Pulumi;
 using Docker = Pulumi.Docker;
 using Ec2 = Pulumi.Aws.Ec2;
@@ -22,7 +22,7 @@ class FargateStack : Stack
 
         var subnets = Ec2.GetSubnets.Invoke(new Ec2.GetSubnetsInvokeArgs
         {
-            Filters = new List<Ec2.Inputs.GetSubnetsFilterInputArgs>
+            Filters = new []
             {
                 new Ec2.Inputs.GetSubnetsFilterInputArgs
                 {
@@ -63,7 +63,7 @@ class FargateStack : Stack
         // Create an ECS cluster to run a container-based service.
         var cluster = new Ecs.Cluster("app-cluster");
 
-        var rolePolicyJson = System.Text.Json.JsonSerializer.Serialize(new
+        var rolePolicyJson = JsonSerializer.Serialize(new
         {
             Version = "2008-10-17",
             Statement = new[]
@@ -151,23 +151,23 @@ class FargateStack : Stack
             NetworkMode = "awsvpc",
             RequiresCompatibilities = { "FARGATE" },
             ExecutionRoleArn = taskExecRole.Arn,
-            ContainerDefinitions = image.ImageName.Apply(imageName => System.Text.Json.JsonSerializer.Serialize(new[]
+            ContainerDefinitions = image.ImageName.Apply(imageName => JsonSerializer.Serialize(new[]
+            {
+                new
                 {
-                    new
+                    name = "my-app",
+                    image = imageName,
+                    portMappings = new[]
                     {
-                        name = "my-app",
-                        image = imageName,
-                        portMappings = new[]
+                        new
                         {
-                            new
-                            {
-                                containerPort = 80,
-                                hostPort = 80,
-                                protocol = "tcp"
-                            }
+                            containerPort = 80,
+                            hostPort = 80,
+                            protocol = "tcp"
                         }
                     }
-                }))
+                }
+            }))
         });
 
         var appSvc = new Ecs.Service("app-svc", new Ecs.ServiceArgs
