@@ -2,13 +2,14 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Collections.Generic;
 using System.Text;
 using Pulumi;
 using Docker = Pulumi.Docker;
 using Ec2 = Pulumi.Aws.Ec2;
 using Ecs = Pulumi.Aws.Ecs;
 using Ecr = Pulumi.Aws.Ecr;
-using Elb = Pulumi.Aws.ElasticLoadBalancingV2;
+using Elb = Pulumi.Aws.LB;
 using Iam = Pulumi.Aws.Iam;
 
 class FargateStack : Stack
@@ -16,11 +17,22 @@ class FargateStack : Stack
     public FargateStack()
     {
         // Read back the default VPC and public subnets, which we will use.
-        var vpcId = Ec2.GetVpc.Invoke(new Ec2.GetVpcInvokeArgs {Default = true})
+        var vpcId = Ec2.GetVpc.Invoke(new Ec2.GetVpcInvokeArgs { Default = true })
             .Apply(vpc => vpc.Id);
 
-        var subnetIds = Ec2.GetSubnetIds.Invoke(new Ec2.GetSubnetIdsInvokeArgs {VpcId = vpcId})
-            .Apply(s => s.Ids);
+        var subnets = Ec2.GetSubnets.Invoke(new Ec2.GetSubnetsInvokeArgs
+        {
+            Filters = new List<Ec2.Inputs.GetSubnetsFilterInputArgs>
+            {
+                new Ec2.Inputs.GetSubnetsFilterInputArgs
+                {
+                    Name = "vpc-id",
+                    Values = new[] { vpcId}
+                }
+            }
+        });
+
+        var subnetIds = subnets.Apply(s => s.Ids);
 
         // Create a SecurityGroup that permits HTTP ingress and unrestricted egress.
         var webSg = new Ec2.SecurityGroup("web-sg", new Ec2.SecurityGroupArgs
@@ -51,21 +63,30 @@ class FargateStack : Stack
         // Create an ECS cluster to run a container-based service.
         var cluster = new Ecs.Cluster("app-cluster");
 
+        var rolePolicyJson = System.Text.Json.JsonSerializer.Serialize(new
+        {
+            Version = "2008-10-17",
+            Statement = new[]
+            {
+                new
+                {
+                    Sid = "",
+                    Effect = "Allow",
+                    Principal = new
+                    {
+                        Service = "ecs-tasks.amazonaws.com"
+                    },
+                    Action = "sts:AssumeRole"
+                }
+            }
+        });
+
         // Create an IAM role that can be used by our service's task.
         var taskExecRole = new Iam.Role("task-exec-role", new Iam.RoleArgs
         {
-            AssumeRolePolicy = @"{
-""Version"": ""2008-10-17"",
-""Statement"": [{
-    ""Sid"": """",
-    ""Effect"": ""Allow"",
-    ""Principal"": {
-        ""Service"": ""ecs-tasks.amazonaws.com""
-    },
-    ""Action"": ""sts:AssumeRole""
-}]
-}"
+            AssumeRolePolicy = rolePolicyJson
         });
+
         var taskExecAttach = new Iam.RolePolicyAttachment("task-exec-policy", new Iam.RolePolicyAttachmentArgs
         {
             Role = taskExecRole.Name,
@@ -76,7 +97,7 @@ class FargateStack : Stack
         var webLb = new Elb.LoadBalancer("web-lb", new Elb.LoadBalancerArgs
         {
             Subnets = subnetIds,
-            SecurityGroups = {webSg.Id}
+            SecurityGroups = { webSg.Id }
         });
         var webTg = new Elb.TargetGroup("web-tg", new Elb.TargetGroupArgs
         {
@@ -102,12 +123,13 @@ class FargateStack : Stack
         // Create a private ECR registry and build and publish our app's container image to it.
         var appRepo = new Ecr.Repository("app-repo");
         var appRepoCredentials = Ecr.GetCredentials
-            .Invoke(new Ecr.GetCredentialsInvokeArgs {RegistryId = appRepo.RegistryId})
+            .Invoke(new Ecr.GetCredentialsInvokeArgs { RegistryId = appRepo.RegistryId })
             .Apply(credentials =>
             {
                 var data = Convert.FromBase64String(credentials.AuthorizationToken);
                 return Encoding.UTF8.GetString(data).Split(":").ToImmutableArray();
             });
+
         var image = new Docker.Image("app-img", new Docker.ImageArgs
         {
             Build = "../App",
@@ -127,18 +149,27 @@ class FargateStack : Stack
             Cpu = "256",
             Memory = "512",
             NetworkMode = "awsvpc",
-            RequiresCompatibilities = {"FARGATE"},
+            RequiresCompatibilities = { "FARGATE" },
             ExecutionRoleArn = taskExecRole.Arn,
-            ContainerDefinitions = image.ImageName.Apply(imageName => @"[{
-""name"": ""my-app"",
-""image"": """ + imageName + @""",
-""portMappings"": [{
-    ""containerPort"": 80,
-    ""hostPort"": 80,
-    ""protocol"": ""tcp""
-}]
-}]")
+            ContainerDefinitions = image.ImageName.Apply(imageName => System.Text.Json.JsonSerializer.Serialize(new[]
+                {
+                    new
+                    {
+                        name = "my-app",
+                        image = imageName,
+                        portMappings = new[]
+                        {
+                            new
+                            {
+                                containerPort = 80,
+                                hostPort = 80,
+                                protocol = "tcp"
+                            }
+                        }
+                    }
+                }))
         });
+
         var appSvc = new Ecs.Service("app-svc", new Ecs.ServiceArgs
         {
             Cluster = cluster.Arn,
@@ -149,7 +180,7 @@ class FargateStack : Stack
             {
                 AssignPublicIp = true,
                 Subnets = subnetIds,
-                SecurityGroups = {webSg.Id}
+                SecurityGroups = { webSg.Id }
             },
             LoadBalancers =
             {
@@ -160,7 +191,7 @@ class FargateStack : Stack
                     ContainerPort = 80
                 }
             }
-        }, new CustomResourceOptions {DependsOn = {webListener}});
+        }, new CustomResourceOptions { DependsOn = { webListener } });
 
         // Export the resulting web address.
         this.Url = Output.Format($"http://{webLb.DnsName}");
