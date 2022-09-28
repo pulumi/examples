@@ -32,4 +32,4 @@ const containerGroup = new containerinstance.ContainerGroup("containerGroup", {
     restartPolicy: "always",
 });
 
-export const containerIPv4Address = containerGroup.ipAddress.apply(ip => ip?.ip);
+export const containerIPv4Address = pulumi.ifThenElse(containerGroup.ipAddress, ip => ip !== undefined, ip => ip!, ip => undefined);

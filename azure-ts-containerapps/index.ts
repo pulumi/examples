@@ -29,7 +29,7 @@ const managedEnv = new app.ManagedEnvironment("env", {
         destination: "log-analytics",
         logAnalyticsConfiguration: {
             customerId: workspace.customerId,
-            sharedKey: workspaceSharedKeys.apply((r: operationalinsights.GetSharedKeysResult) => r.primarySharedKey!),
+            sharedKey: pulumi.nullCoalesce(workspaceSharedKeys.primarySharedKey, ""),
         },
     },
 });
@@ -46,8 +46,8 @@ const credentials = containerregistry.listRegistryCredentialsOutput({
     resourceGroupName: resourceGroup.name,
     registryName: registry.name,
 });
-const adminUsername = credentials.apply((c: containerregistry.ListRegistryCredentialsResult) => c.username!);
-const adminPassword = credentials.apply((c: containerregistry.ListRegistryCredentialsResult) => c.passwords![0].value!);
+const adminUsername = pulumi.nullCoalesce(credentials.username, "");
+const adminPassword = pulumi.nullCoalesce(pulumi.nullCoalesce(credentials.passwords, [])[0].value, "");
 
 const customImage = "node-app";
 const myImage = new docker.Image(customImage, {
@@ -86,4 +86,4 @@ const containerApp = new app.ContainerApp("app", {
     },
 });
 
-export const url = pulumi.interpolate`https://${containerApp.configuration.apply((c: any) => c?.ingress?.fqdn)}`;
+export const url = pulumi.interpolate`https://${containerApp.configuration.ingress.fqdn}`;

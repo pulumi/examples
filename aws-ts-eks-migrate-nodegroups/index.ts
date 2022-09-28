@@ -18,8 +18,7 @@ const vpc = new awsx.ec2.Vpc(`${projectName}`, {
 
 // Export VPC ID and Subnets.
 export const vpcId = vpc.id;
-export const allVpcSubnets = pulumi.all([vpc.privateSubnetIds, vpc.publicSubnetIds])
-                            .apply(([privateSubnetIds, publicSubnetIds]) => privateSubnetIds.concat(publicSubnetIds));
+export const allVpcSubnets = pulumi.arrayConcat(vpc.privateSubnetIds, vpc.publicSubnetIds);
 
 // Create 3 IAM Roles and matching InstanceProfiles to use with the nodegroups.
 const roles = iam.createRoles(projectName, 3);

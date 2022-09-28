@@ -88,8 +88,8 @@ const athena = new aws.athena.Database("tweets_database_1",
 // Sadly, there isn't support for Athena tables in Terraform.
 // See https://github.com/terraform-providers/terraform-provider-aws/pull/1893#issuecomment-351300973
 // So, we'll instead create a query for the table definition
-function createTableQuery(bucket: string) {
-    return `CREATE EXTERNAL TABLE IF NOT EXISTS tweets (
+function createTableQuery(bucket: pulumi.Input<string>) {
+    return pulumi.interpolate`CREATE EXTERNAL TABLE IF NOT EXISTS tweets (
         id string,
         text string,
         user string,
@@ -110,16 +110,16 @@ const topUsersQuery =
     order by followers desc`;
 
 const createTableAthenaQuery = new aws.athena.NamedQuery(
-    "createTable", { database: athena.id, query: bucketName.apply(createTableQuery)});
+    "createTable", { database: athena.id, query: createTableQuery(bucketName) });
 
 const topUsersAthenaQuery = new aws.athena.NamedQuery("topUsers", { database: athena.id, query: topUsersQuery});
 
-function getQueryUri(queryId: string) {
+function getQueryUri(queryId: pulumi.Input<string>) {
     const config = new pulumi.Config("aws");
     const region = config.require("region");
-    return `https://${region}.console.aws.amazon.com/athena/home?force#query/saved/${queryId}`;
+    return pulumi.interpolate`https://${region}.console.aws.amazon.com/athena/home?force#query/saved/${queryId}`;
 }
 
 export const athenaDatabase = athena.id;
-export const topUsersQueryUri = topUsersAthenaQuery.id.apply(getQueryUri);
-export const createTableQueryUri = createTableAthenaQuery.id.apply(getQueryUri);
+export const topUsersQueryUri = getQueryUri(topUsersAthenaQuery.id);
+export const createTableQueryUri = getQueryUri(createTableAthenaQuery.id);

@@ -37,11 +37,11 @@ const frontend = new awsx.ecs.FargateService("voting-app-frontend", {
                 image: awsx.ecs.Image.fromPath("voting-app-frontend", "./frontend"),   // path to the folder containing the Dockerfile
                 memory: 512,
                 portMappings: [frontendListener],
-                environment: redisEndpoint.apply(e => [
-                    { name: "REDIS", value: e.hostname },
-                    { name: "REDIS_PORT", value: e.port.toString() },
+                environment: [
+                    { name: "REDIS", value: redisEndpoint.hostname },
+                    { name: "REDIS_PORT", value: pulumi.toString(redisEndpoint.port) },
                     { name: "REDIS_PWD", value: redisPassword },
-                ]),
+                ],
             },
         },
     },

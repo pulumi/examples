@@ -34,7 +34,7 @@ const canaryExecutionRole = new aws.iam.Role(`${baseName}-exec-role`, {
 });
 const canaryExecutionPolicy = new aws.iam.RolePolicy(`${baseName}-exec-policy`, {
   role: canaryExecutionRole.id,
-  policy: canaryResultsS3Bucket.arn.apply(arn => generateCanaryPolicy(arn)),
+  policy: generateCanaryPolicy(canaryResultsS3Bucket.arn),
 });
 
 // Bucket for storing the canary SCRIPTS

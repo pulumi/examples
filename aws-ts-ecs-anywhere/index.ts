@@ -94,10 +94,7 @@ export const clusterName = cluster.name;
 const logGroup = new aws.cloudwatch.LogGroup("logGroup");
 
 // UserData for Droplets
-const userData = pulumi
-  .all([ssmActivation.activationCode, ssmActivation.id, cluster.name])
-  .apply(
-    ([activationCode, activationId, clusterName]) => `#!/bin/bash
+const userData = pulumi.interpolate`#!/bin/bash
 # Download the ecs-anywhere install Script
 curl -o "ecs-anywhere-install.sh" "https://amazon-ecs-agent-packages-preview.s3.us-east-1.amazonaws.com/ecs-anywhere-install.sh" && sudo chmod +x ecs-anywhere-install.sh
 
@@ -106,18 +103,17 @@ curl -o "ecs-anywhere-install.sh.sha256" "https://amazon-ecs-agent-packages-prev
 
 # Run the install script
 sudo ./ecs-anywhere-install.sh \
-    --cluster ${clusterName} \
-    --activation-id ${activationId} \
-    --activation-code ${activationCode} \
+    --cluster ${cluster.name} \
+    --activation-id ${ssmActivation.id} \
+    --activation-code ${ssmActivation.activationCode} \
     --region ${awsRegion}
-`,
-  );
+`;
 
 const loadBalancerTag = new digitalocean.Tag("lb");
 
 for (let i = 1; i <= numberNodes; i++) {
   const droplet = new digitalocean.Droplet(`droplet-${i}`, {
-    region: digitalocean.Regions.NYC1,
+    region: digitalocean.Region.NYC1,
     size: "s-1vcpu-2gb",
     image: "ubuntu-20-04-x64",
     userData: userData,
@@ -127,18 +123,18 @@ for (let i = 1; i <= numberNodes; i++) {
 
 // Set up load balancer
 const lb = new digitalocean.LoadBalancer("lb", {
-  region: digitalocean.Regions.NYC1,
+  region: digitalocean.Region.NYC1,
   forwardingRules: [
     {
       entryPort: 80,
-      entryProtocol: digitalocean.Protocols.HTTP,
+      entryProtocol: digitalocean.Protocol.HTTP,
       targetPort: 80,
-      targetProtocol: digitalocean.Protocols.HTTP,
+      targetProtocol: digitalocean.Protocol.HTTP,
     },
   ],
   healthcheck: {
     port: 80,
-    protocol: digitalocean.Protocols.HTTP,
+    protocol: digitalocean.Protocol.HTTP,
     path: "/",
   },
   dropletTag: loadBalancerTag.name,
@@ -149,41 +145,37 @@ const repo = new awsx.ecr.Repository("app");
 
 const image = repo.buildAndPushImage("./app");
 
-// Set up task definition
-const taskDefinition = pulumi
-  .all([image, logGroup.name, logGroup.namePrefix])
-  .apply(
-    ([img, logGroupName, nameprefix]) =>
-      new aws.ecs.TaskDefinition("taskdefinition", {
-        family: "ecs-anywhere",
-        requiresCompatibilities: ["EXTERNAL"],
-        taskRoleArn: taskRole.arn,
-        executionRoleArn: executionRole.arn,
-        containerDefinitions: JSON.stringify([
-          {
-            name: "app",
-            image: img,
-            cpu: 256,
-            memory: 256,
-            essential: true,
-            portMappings: [
-              {
-                containerPort: 80,
-                hostPort: 80,
-              },
-            ],
-            logConfiguration: {
-              logDriver: "awslogs",
-              options: {
-                "awslogs-group": logGroupName,
-                "awslogs-region": awsRegion,
-                "awslogs-stream-prefixs": nameprefix,
-              },
-            },
-          },
-        ]),
-      }),
-  );
+// // Set up task definitio
+const taskDefinition = new aws.ecs.TaskDefinition("taskdefinition", {
+  family: "ecs-anywhere",
+  requiresCompatibilities: ["EXTERNAL"],
+  taskRoleArn: taskRole.arn,
+  executionRoleArn: executionRole.arn,
+  containerDefinitions: pulumi.jsonStringify([
+    {
+      name: "app",
+      image: image,
+      cpu: 256,
+      memory: 256,
+      essential: true,
+      portMappings: [
+        {
+          containerPort: 80,
+          hostPort: 80,
+        },
+      ],
+      logConfiguration: {
+        logDriver: "awslogs",
+        options: {
+          "awslogs-group": logGroup.name,
+          "awslogs-region": awsRegion,
+          "awslogs-stream-prefixs": logGroup.namePrefix,
+        },
+      },
+    },
+  ]),
+});
+  
 
 // Deploy containers to droplets
 const service = new aws.ecs.Service("service", {

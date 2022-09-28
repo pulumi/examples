@@ -69,4 +69,4 @@ const creds = containerservice.listManagedClusterUserCredentialsOutput({
 });
 
 const encoded = creds.kubeconfigs[0].value;
-export const kubeconfig = pulumi.secret(encoded.apply(enc => Buffer.from(enc, "base64").toString()));
+export const kubeconfig = pulumi.secret(pulumi.base64decode(encoded));

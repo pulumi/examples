@@ -14,13 +14,12 @@ let keyName: pulumi.Input<string> | undefined = config.get("keyName");
 const publicKey = config.get("publicKey");
 
 // The privateKey associated with the selected key must be provided (either directly or base64 encoded).
-const privateKey = config.requireSecret("privateKey").apply(key => {
-    if (key.startsWith("-----BEGIN RSA PRIVATE KEY-----")) {
-        return key;
-    } else {
-        return Buffer.from(key, "base64").toString("ascii");
-    }
-});
+const privateKey = pulumi.ifThenElse(
+    config.requireSecret("privateKey"), 
+    key => key.startsWith("-----BEGIN RSA PRIVATE KEY-----"),
+    key => key,
+    key => Buffer.from(key, "base64").toString("ascii"),
+);
 
 // Create a new security group that permits SSH and web access.
 const secgrp = new aws.ec2.SecurityGroup("secgrp", {

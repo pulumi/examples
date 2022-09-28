@@ -81,36 +81,24 @@ if (provisionedConcurrentExecutions) {
 // APIGateway RestAPI
 ///////////////////
 
-// Create the Swagger spec for a proxy which forwards all HTTP requests through to the Lambda function.
-function swaggerSpec(lambdaArn: string): string {
-    const swaggerSpec = {
+// Create the API Gateway Rest API, using a swagger spec.
+const restApi = new aws.apigateway.RestApi("api", {
+    body: pulumi.jsonStringify({
         swagger: "2.0",
         info: { title: "api", version: "1.0" },
         paths: {
-            "/{proxy+}": swaggerRouteHandler(lambdaArn),
-        },
-    };
-    return JSON.stringify(swaggerSpec);
-}
-
-// Create a single Swagger spec route handler for a Lambda function.
-function swaggerRouteHandler(lambdaArn: string) {
-    const region = aws.config.requireRegion();
-    return {
-        "x-amazon-apigateway-any-method": {
-            "x-amazon-apigateway-integration": {
-                uri: `arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations`,
-                passthroughBehavior: "when_no_match",
-                httpMethod: "POST",
-                type: "aws_proxy",
+            "/{proxy+}": {
+                "x-amazon-apigateway-any-method": {
+                    "x-amazon-apigateway-integration": {
+                        uri: pulumi.interpolate`arn:aws:apigateway:${aws.config.requireRegion()}:lambda:path/2015-03-31/functions/${lambda.arn}/invocations`,
+                        passthroughBehavior: "when_no_match",
+                        httpMethod: "POST",
+                        type: "aws_proxy",
+                    },
+                },
             },
         },
-    };
-}
-
-// Create the API Gateway Rest API, using a swagger spec.
-const restApi = new aws.apigateway.RestApi("api", {
-    body: lambda.arn.apply(lambdaArn => swaggerSpec(lambdaArn)),
+    })
 });
 
 // Create a deployment of the Rest API.

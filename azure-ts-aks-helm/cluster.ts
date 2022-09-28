@@ -58,9 +58,7 @@ const creds = containerservice.listManagedClusterUserCredentialsOutput({
     resourceName: k8sCluster.name,
 });
 
-export const kubeconfig =
-    creds.kubeconfigs[0].value
-        .apply(enc => Buffer.from(enc, "base64").toString());
+export const kubeconfig = pulumi.base64decode(creds.kubeconfigs[0].value);
 
 export const k8sProvider = new k8s.Provider("k8s-provider", {
     kubeconfig: kubeconfig,

@@ -59,8 +59,8 @@ const credentials = containerregistry.listRegistryCredentialsOutput({
     registryName: registry.name,
 });
 
-const adminUsername = credentials.apply(credentials => credentials.username!);
-const adminPassword = credentials.apply(credentials => credentials.passwords![0].value!);
+const adminUsername = pulumi.nullCoalesce(credentials.username, "");
+const adminPassword = pulumi.nullCoalesce(pulumi.nullCoalesce(credentials.passwords, [])[0].value, "");
 
 const myImage = new docker.Image(customImage, {
     imageName: pulumi.interpolate`${registry.loginServer}/${customImage}:v1.0.0`,

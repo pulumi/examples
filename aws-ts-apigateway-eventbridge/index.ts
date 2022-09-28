@@ -112,18 +112,16 @@ const integration = new aws.apigateway.Integration("integration", {
         "integration.request.header.Content-Type": "'application/x-amz-json-1.1'",
     },
     requestTemplates: {
-        "application/json": bus.name.apply((busName) =>
-            JSON.stringify({
-                Entries: [
-                    {
-                        Source: "my-event-source",
-                        EventBusName: busName,
-                        DetailType: "my-detail-type",
-                        Detail: "$util.escapeJavaScript($input.body)",
-                    },
-                ],
-            }),
-        ),
+        "application/json": pulumi.jsonStringify({
+            Entries: [
+                {
+                    Source: "my-event-source",
+                    EventBusName: bus.name,
+                    DetailType: "my-detail-type",
+                    Detail: "$util.escapeJavaScript($input.body)",
+                },
+            ],
+        }),
     },
 });
 
@@ -171,33 +169,13 @@ const deployment = new aws.apigateway.Deployment(
         // https://www.pulumi.com/registry/packages/aws/api-docs/apigateway/deployment/#triggers_python
         // https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_deployment#triggers
         triggers: {
-            // The property name ("deployment") isn't relevant here; it can actually be anything you like.
-            deployment: pulumi
-                .all([
-                    resource.id,
-                    method.id,
-                    integration.requestTemplates,
-                    integrationResponse.responseTemplates,
-                    method.requestValidatorId,
-                ])
-                .apply(
-                    ([
-                        resourceID,
-                        methodID,
-                        methodRequestValidatorID,
-                        integrationRequestTemplates,
-                        integrationResponseTemplates,
-                    ]) =>
-                        // Stringify the array of properties to create a diff (triggering
-                        // a redeployment) if/when one of the properties listed changes.
-                        JSON.stringify([
-                            resourceID,
-                            methodID,
-                            methodRequestValidatorID,
-                            integrationRequestTemplates,
-                            integrationResponseTemplates,
-                        ]),
-                ),
+            deployment: pulumi.jsonStringify([
+                resource.id,
+                method.id,
+                method.requestValidatorId,
+                integration.requestTemplates,
+                method.requestValidatorId,
+            ]),
         },
     },
 );

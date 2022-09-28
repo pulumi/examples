@@ -15,7 +15,7 @@ export class HourlyPartitionRegistrar extends pulumi.ComponentResource {
         const { dataWarehouseBucket, athenaResultsBucket, scheduleExpression, table, partitionKey } = args;
         const location = getS3Location(dataWarehouseBucket, table);
 
-        const resultsBucket = athenaResultsBucket.arn.apply(a => `s3://${a.split(":::")[1]}`);
+        const resultsBucket = pulumi.interpolate`s3://${pulumi.stringSplit(athenaResultsBucket.arn, ":::")[1]}`;
 
         const policyARNsToAttach = [
             aws.iam.ManagedPolicies.AmazonAthenaFullAccess,

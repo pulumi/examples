@@ -57,13 +57,12 @@ const cacheCluster = new aws.elasticache.Cluster("cachecluster", {
     securityGroupIds: securityGroupIds,
 });
 
-const hosts = pulumi.all([db.endpoint.apply(e => e.split(":")[0]), cacheCluster.cacheNodes[0].address]);
-const environment = hosts.apply(([postgresHost, redisHost]) => [
-    { name: "POSTGRES_HOST", value: postgresHost },
+const environment:  pulumi.Input<awsx.ecs.KeyValuePair[]> = [
+    { name: "POSTGRES_HOST", value: pulumi.stringSplit(db.endpoint, ":")[0] },
     { name: "POSTGRES_PASSWORD", value: dbPassword },
-    { name: "REDIS_HOST", value: redisHost },
+    { name: "REDIS_HOST", value: cacheCluster.cacheNodes[0].address },
     { name: "EXECUTOR", value: "Celery" },
-]);
+]
 
 const airflowControllerListener = new awsx.elasticloadbalancingv2.ApplicationListener("airflowcontroller", {
     external: true,

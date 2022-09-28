@@ -19,9 +19,7 @@ const unprivilegedUserCreds = new aws.iam.AccessKey("unprivileged-user-key", {
 
 const allowS3ManagementRole = new aws.iam.Role("allow-s3-management", {
     description: "Allow management of S3 buckets",
-    assumeRolePolicy: unprivilegedUser.arn.apply(arn => {
-        return aws.iam.assumeRolePolicyForPrincipal({AWS: arn});
-    }),
+    assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({AWS: unprivilegedUser.arn}),
 });
 
 const policy = new aws.iam.RolePolicy("allow-s3-management-policy", {

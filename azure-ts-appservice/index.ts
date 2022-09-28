@@ -95,8 +95,7 @@ const app = new web.WebApp("webapp", {
         connectionStrings: [{
             name: "db",
             connectionString:
-                pulumi.all([sqlServer.name, database.name]).apply(([server, db]) =>
-                    `Server=tcp:${server}.database.windows.net;initial catalog=${db};user ID=${username};password=${pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;`),
+                pulumi.interpolate`Server=tcp:${sqlServer.name}.database.windows.net;initial catalog=${database.name};user ID=${username};password=${pwd};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;`,
             type: web.ConnectionStringType.SQLAzure,
         }],
     },
@@ -122,6 +121,5 @@ function getSASToken(storageAccountName: pulumi.Input<string>,
         contentDisposition: "inline",
         contentEncoding: "deflate",
     });
-    const token = blobSAS.apply(x => x.serviceSasToken);
-    return pulumi.interpolate `https://${storageAccountName}.blob.core.windows.net/${storageContainerName}/${blobName}?${token}`;
+    return pulumi.interpolate`https://${storageAccountName}.blob.core.windows.net/${storageContainerName}/${blobName}?${blobSAS.serviceSasToken}`;
 }

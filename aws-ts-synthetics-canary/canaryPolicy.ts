@@ -1,7 +1,9 @@
 // Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
 
-export function generateCanaryPolicy(canaryResultsBucketArn: string) {
-    return JSON.stringify({
+import * as pulumi from "@pulumi/pulumi";
+
+export function generateCanaryPolicy(canaryResultsBucketArn: pulumi.Input<string>) {
+    return pulumi.jsonStringify({
       "Version": "2012-10-17",
       "Statement": [
           {

@@ -1,5 +1,5 @@
 import * as aws from "@pulumi/aws";
-import { ComponentResource, ComponentResourceOptions, Input, Output } from "@pulumi/pulumi";
+import { ComponentResource, ComponentResourceOptions, Input, Output, toString } from "@pulumi/pulumi";
 
 export interface RdsArgs {
     description: Input<string>;
@@ -65,7 +65,7 @@ export class RdsInstance extends ComponentResource {
     }
 
     public instancePort(): Output<string> {
-        return this.db.port.apply(x => String(x));
+        return toString(this.db.port);
     }
 
     public instanceAddress(): Output<string> {
