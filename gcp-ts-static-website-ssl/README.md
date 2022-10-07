@@ -65,7 +65,7 @@ with `***`.
     +   └─ gcp:compute:GlobalForwardingRule       https-forwarding-rule   created     
     
     Outputs:
-        cdnHttpHostname: "34.117.212.111"
+        cdnHttpHostname: "***.***.***.***"
         cdnHttpURL     : "http://***"
         cdnHttpsURL    : "https://***"
         originHostname : "storage.googleapis.com/bucket-***"
