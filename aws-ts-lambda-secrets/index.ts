@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 interface LambdaConfig {
     envvars: string[];
@@ -9,25 +11,27 @@ interface LambdaConfig {
 const config = new pulumi.Config();
 const lambdaconfig = config.requireObject<LambdaConfig>("lambdawithsecrets");
 
-let secretsArnArray: pulumi.Output<string>[] = new Array();
-let secretArray: aws.secretsmanager.Secret[] = new Array();
-for (let key in lambdaconfig.secrets) {
-    const secret = new aws.secretsmanager.Secret(`${key}`);
-    new aws.secretsmanager.SecretVersion(`secretversion-${key}`, {
-        secretId: secret.id,
-        secretString: lambdaconfig.secrets[key]
-    });
-    secretArray.push(secret);
-    secretsArnArray[key.toLocaleUpperCase()] = secret.id;
+const secretsArnArray: pulumi.Output<string>[] = new Array();
+const secretArray: aws.secretsmanager.Secret[] = new Array();
+for (const key in lambdaconfig.secrets) {
+    if (lambdaconfig.secrets.hasOwnProperty(key)) {
+        const secret = new aws.secretsmanager.Secret(`${key}`);
+        const secretVersion = new aws.secretsmanager.SecretVersion(`secretversion-${key}`, {
+            secretId: secret.id,
+            secretString: lambdaconfig.secrets[key],
+        });
+        secretArray.push(secret);
+        secretsArnArray[key.toLocaleUpperCase()] = secret.id;
+    }
 }
 
 const role = new aws.iam.Role("roleLambdaWithSecrets", {
-    assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(aws.iam.Principals.LambdaPrincipal)
+    assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(aws.iam.Principals.LambdaPrincipal),
 });
 
-new aws.iam.RolePolicyAttachment("rpa-basic", {
+const rpaBasic = new aws.iam.RolePolicyAttachment("rpa-basic", {
     role: role,
-    policyArn: aws.iam.ManagedPolicy.AWSLambdaBasicExecutionRole
+    policyArn: aws.iam.ManagedPolicy.AWSLambdaBasicExecutionRole,
 });
 
 
@@ -39,43 +43,47 @@ const secretManagerPolicyDoc = aws.iam.getPolicyDocumentOutput({
             actions: [
                 "secretsmanager:GetSecretValue",
             ],
-            resources: secretArray.map(x => pulumi.interpolate`${x.arn}`)
-        }
-    ]
+            resources: secretArray.map(x => pulumi.interpolate`${x.arn}`),
+        },
+    ],
 });
 
 const secretManagerPolicy = new aws.iam.Policy("secretsPolicy", {
-    policy: secretManagerPolicyDoc.apply(doc => doc.json)
+    policy: secretManagerPolicyDoc.apply(doc => doc.json),
 });
 
-new aws.iam.RolePolicyAttachment("rpa-secrets", {
+const rpaSecrets = new aws.iam.RolePolicyAttachment("rpa-secrets", {
     role: role,
-    policyArn: secretManagerPolicy.arn
+    policyArn: secretManagerPolicy.arn,
 });
 
-let lambdaEnvVars: pulumi.Input<{
+const lambdaEnvVars: pulumi.Input<{
     [key: string]: pulumi.Input<string>;
 }> = {};
 
-for (let key in secretsArnArray) {
-    lambdaEnvVars[key] = secretsArnArray[key];
+for (const key in secretsArnArray) {
+    if (secretsArnArray.hasOwnProperty(key)) {
+        lambdaEnvVars[key] = secretsArnArray[key];
+    }
 }
 
-for (let key in lambdaconfig.envvars) {
-    lambdaEnvVars[key.toLocaleUpperCase()] = lambdaconfig.envvars[key];
+for (const key in lambdaconfig.envvars) {
+    if (lambdaconfig.envvars.hasOwnProperty(key)) {
+        lambdaEnvVars[key.toLocaleUpperCase()] = lambdaconfig.envvars[key];
+    }
 }
 
 const lambda = new aws.lambda.Function("lambdaWithSecrets", {
     code: new pulumi.asset.AssetArchive({
-        ".": new pulumi.asset.FileArchive("./app")
+        ".": new pulumi.asset.FileArchive("./app"),
     }),
     role: role.arn,
     handler: "index.handler",
     runtime: aws.lambda.Runtime.NodeJS16dX,
     environment: {
-        variables: lambdaEnvVars
+        variables: lambdaEnvVars,
     },
-    timeout: 15
-})
+    timeout: 15,
+});
 
 export const lambdaName = lambda.name;
