@@ -70,7 +70,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          repo: haveyoudebuggedit/gotestfmt
+          repo: gotesttools/gotestfmt
           tag: v2.3.2
           cache: enable
       - name: Create a Folder for Collecting Traces
