@@ -1,0 +1,47 @@
+// Deploys:
+// - Network: VPC, Subnets, Security Groups
+// - DB Backend: MySQL RDS
+// - FrontEnd: WordPress in Fargate
+
+import * as pulumi from "@pulumi/pulumi";
+import * as random from "@pulumi/random";
+import * as network from "./network";
+import * as backend from "./backend";
+import * as frontend from "./frontend";
+
+// Get config data
+const config = new pulumi.Config()
+const serviceName = config.get('serviceName') || "wp-fargate-rds"
+const dbName = config.get('dbName') || "wordpress"
+const dbUser = config.get('dbUser') || 'admin'
+
+// Get secretified password from config or create one using the "random" package
+var dbPassword = config.getSecret('dbPassword')
+if (!dbPassword) {
+  dbPassword = new random.RandomPassword('dbPassword', {
+    length: 16,
+    special: true,
+    overrideSpecial: '_%'
+  }).result
+}
+
+const vpc = new network.Vpc(`${serviceName}-net`, {})
+
+const db = new backend.Db(`${serviceName}-db`, {
+  dbName: dbName,
+  dbUser: dbUser,
+  dbPassword: dbPassword,
+  subnetIds: vpc.subnetIds,
+  securityGroupIds: vpc.rdsSecurityGroupIds
+})
+
+const fe = new frontend.WebService(`${serviceName}-fe`, {
+  dbHost: db.dbAddress,
+  dbPort: "3306",
+  dbName: db.dbName,
+  dbUser: db.dbUser,
+  dbPassword: db.dbPassword,
+  vpcId: vpc.vpcId,
+  subnetIds: vpc.subnetIds,
+  securityGroupIds: vpc.feSecurityGroupIds
+})
