@@ -45,3 +45,9 @@ const fe = new frontend.WebService(`${serviceName}-fe`, {
   subnetIds: vpc.subnetIds,
   securityGroupIds: vpc.feSecurityGroupIds
 })
+
+export const webServiceUrl = pulumi.interpolate`http://${fe.dnsName}`
+export const ecsClusterName = fe.clusterName
+export const databaseEndpoint = db.dbAddress
+export const databaseUserName = db.dbUser
+export const databasePassword = db.dbPassword

@@ -5,8 +5,8 @@ import * as aws from "@pulumi/aws"
 export interface WebServiceArgs {
   dbHost: pulumi.Output<string>;
   dbName: pulumi.Output<string>;
-  dbUser: string;
-  dbPassword: pulumi.Output<string>;
+  dbUser: pulumi.Output<string>;
+  dbPassword: pulumi.Output<string | undefined>;
   dbPort: string;
   vpcId: pulumi.Output<string>;
   subnetIds: pulumi.Output<string>[];
@@ -15,6 +15,8 @@ export interface WebServiceArgs {
 
 // Creates DB
 export class WebService extends pulumi.ComponentResource {
+  public readonly dnsName: pulumi.Output<string>;
+  public readonly clusterName: pulumi.Output<string>;
 
   constructor(name: string, args: WebServiceArgs, opts?: pulumi.ComponentResourceOptions) {
 
@@ -78,11 +80,65 @@ export class WebService extends pulumi.ComponentResource {
     // Spin up a load balanced service running our container image.
     const taskName = `${name}-app-task`
     const containerName = `${name}-app-container`
-    const taskDefinition = pulumi.all(args.db_host, args.db_port, args.db_name, args.db_user, args.db_password).apply(
+    const taskDefinition = pulumi.all([args.dbHost, args.dbPort, args.dbName, args.dbUser, args.dbPassword]).
+      apply(([dbHost, dbPort, dbName, dbUser, dbPassword]) =>
+        new aws.ecs.TaskDefinition(taskName, {
+          family: "fargate-task-definition",
+          cpu: "256",
+          memory: "512",
+          networkMode: "awsvpc",
+          requiresCompatibilities: ["FARGATE"],
+          executionRoleArn: role.arn,
+          containerDefinitions: JSON.stringify([{
+            'name': containerName,
+            'image': 'wordpress',
+            'portMappings': [{
+              'containerPort': 80,
+              'hostPort': 80,
+              'protocol': 'tcp',
+            }],
+            'environment': [
+              {
+                'name': 'WORDPRESS_DB_HOST',
+                'value': `${dbHost}:${dbPort}`
+              },
+              {
+                'name': 'WORDPRESS_DB_NAME',
+                'value': `${dbName}`
+              },
+              {
+                'name': 'WORDPRESS_DB_USER',
+                'value': `${dbUser}`
+              },
+              {
+                'name': 'WORDPRESS_DB_PASSWORD',
+                'value': `${dbPassword}`
+              },
+            ]
+          }])
+        }, { parent: this })
+      )
 
-// ...
-let connectionString = pulumi.all([sqlServer.name, database.name])
-    .apply(([server, db]) => `Server=tcp:${server}.database.windows.net;initial catalog=${db}...`);
+    const service = new aws.ecs.Service(`${name}-app-svc`, {
+      cluster: cluster.arn,
+      desiredCount: 1,
+      launchType: "FARGATE",
+      taskDefinition: taskDefinition.arn,
+      networkConfiguration: {
+        assignPublicIp: true,
+        subnets: args.subnetIds,
+        securityGroups: args.securityGroupIds
+      },
+      loadBalancers: [{
+          targetGroupArn: atg.arn,
+          containerName: containerName,
+          containerPort: 80
+      }],
+    }, { dependsOn: [wl], parent: this})
+
+    this.dnsName = alb.dnsName
+    this.clusterName = cluster.name
+
     this.registerOutputs({});
   }
 }
