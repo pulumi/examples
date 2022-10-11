@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi"
-import * as aws from "@pulumi/aws"
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
+import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 // Interface for backend args
 export interface WebServiceArgs {
@@ -20,16 +22,16 @@ export class WebService extends pulumi.ComponentResource {
 
   constructor(name: string, args: WebServiceArgs, opts?: pulumi.ComponentResourceOptions) {
 
-    super("custom:resource:WebService", name, args, opts)
+    super("custom:resource:WebService", name, args, opts);
 
     // Create ECS cluster to run a container-based service
-    const cluster = new aws.ecs.Cluster(`${name}-ecs`, {}, { parent: this })
+    const cluster = new aws.ecs.Cluster(`${name}-ecs`, {}, { parent: this });
 
     // Create load balancer to listen for HTTP traffic
     const alb = new aws.lb.LoadBalancer(`${name}-alb`, {
       securityGroups: args.securityGroupIds,
       subnets: args.subnetIds,
-    }, { parent: this })
+    }, { parent: this });
 
     const atg = new aws.lb.TargetGroup(`${name}-app-tg`, {
       port: 80,
@@ -41,9 +43,9 @@ export class WebService extends pulumi.ComponentResource {
         interval: 5,
         timeout: 4,
         protocol: "HTTP",
-        matcher: "200-399"
-      }
-    }, { parent: this })
+        matcher: "200-399",
+      },
+    }, { parent: this });
 
     const wl = new aws.lb.Listener(`${name}-listener`, {
       loadBalancerArn: alb.arn,
@@ -51,35 +53,35 @@ export class WebService extends pulumi.ComponentResource {
       defaultActions: [
         {
           type: "forward",
-          targetGroupArn: atg.arn
-        }
-      ]
-    }, { parent: this })
+          targetGroupArn: atg.arn,
+        },
+      ],
+    }, { parent: this });
 
     const assumeRolePolicy = {
-      'Version': '2008-10-17',
-      'Statement': [{
-          'Sid': '',
-          'Effect': 'Allow',
-          'Principal': {
-              'Service': 'ecs-tasks.amazonaws.com'
+      "Version": "2008-10-17",
+      "Statement": [{
+          "Sid": "",
+          "Effect": "Allow",
+          "Principal": {
+              "Service": "ecs-tasks.amazonaws.com",
           },
-          'Action': 'sts:AssumeRole',
-      }]
+          "Action": "sts:AssumeRole",
+      }],
     };
 
     const role = new aws.iam.Role(`${name}-task-role`, {
-      assumeRolePolicy: JSON.stringify(assumeRolePolicy) 
-      }, { parent: this })
+      assumeRolePolicy: JSON.stringify(assumeRolePolicy),
+      }, { parent: this });
 
     const rpa = new aws.iam.RolePolicyAttachment(`${name}-task-policy`, {
       role: role.name,
       policyArn: "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
-    }, { parent: this })
+    }, { parent: this });
 
     // Spin up a load balanced service running our container image.
-    const taskName = `${name}-app-task`
-    const containerName = `${name}-app-container`
+    const taskName = `${name}-app-task`;
+    const containerName = `${name}-app-container`;
     const taskDefinition = pulumi.all([args.dbHost, args.dbPort, args.dbName, args.dbUser, args.dbPassword]).
       apply(([dbHost, dbPort, dbName, dbUser, dbPassword]) =>
         new aws.ecs.TaskDefinition(taskName, {
@@ -90,34 +92,34 @@ export class WebService extends pulumi.ComponentResource {
           requiresCompatibilities: ["FARGATE"],
           executionRoleArn: role.arn,
           containerDefinitions: JSON.stringify([{
-            'name': containerName,
-            'image': 'wordpress',
-            'portMappings': [{
-              'containerPort': 80,
-              'hostPort': 80,
-              'protocol': 'tcp',
+            "name": containerName,
+            "image": "wordpress",
+            "portMappings": [{
+              "containerPort": 80,
+              "hostPort": 80,
+              "protocol": "tcp",
             }],
-            'environment': [
+            "environment": [
               {
-                'name': 'WORDPRESS_DB_HOST',
-                'value': `${dbHost}:${dbPort}`
+                "name": "WORDPRESS_DB_HOST",
+                "value": `${dbHost}:${dbPort}`,
               },
               {
-                'name': 'WORDPRESS_DB_NAME',
-                'value': `${dbName}`
+                "name": "WORDPRESS_DB_NAME",
+                "value": `${dbName}`,
               },
               {
-                'name': 'WORDPRESS_DB_USER',
-                'value': `${dbUser}`
+                "name": "WORDPRESS_DB_USER",
+                "value": `${dbUser}`,
               },
               {
-                'name': 'WORDPRESS_DB_PASSWORD',
-                'value': `${dbPassword}`
+                "name": "WORDPRESS_DB_PASSWORD",
+                "value": `${dbPassword}`,
               },
-            ]
-          }])
-        }, { parent: this })
-      )
+            ],
+          }]),
+        }, { parent: this }),
+      );
 
     const service = new aws.ecs.Service(`${name}-app-svc`, {
       cluster: cluster.arn,
@@ -127,17 +129,17 @@ export class WebService extends pulumi.ComponentResource {
       networkConfiguration: {
         assignPublicIp: true,
         subnets: args.subnetIds,
-        securityGroups: args.securityGroupIds
+        securityGroups: args.securityGroupIds,
       },
       loadBalancers: [{
           targetGroupArn: atg.arn,
           containerName: containerName,
-          containerPort: 80
+          containerPort: 80,
       }],
-    }, { dependsOn: [wl], parent: this})
+    }, { dependsOn: [wl], parent: this});
 
-    this.dnsName = alb.dnsName
-    this.clusterName = cluster.name
+    this.dnsName = alb.dnsName;
+    this.clusterName = cluster.name;
 
     this.registerOutputs({});
   }
