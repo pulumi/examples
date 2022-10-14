@@ -34,7 +34,7 @@ export class Vpc extends pulumi.ComponentResource {
       cidrBlock: cidrBlock,
       instanceTenancy: instanceTenancy,
       enableDnsHostnames: enableDnsHostnames,
-      enableDnsSupport: enableDnsHostnames,
+      enableDnsSupport: enableDnsSupport,
       tags: { "Name": vpcName },
     }, { parent: this });
 
@@ -68,7 +68,7 @@ export class Vpc extends pulumi.ComponentResource {
         tags: {"Name": subnetName},
       }, { parent: this });
 
-      const rtAssociation = new ec2.RouteTableAssociation(`vpc-route-table-assoc-${i}`, {
+      new ec2.RouteTableAssociation(`vpc-route-table-assoc-${i}`, {
         routeTableId: routeTable.id,
         subnetId: vpcSubnet.id,
       }, { parent: this });
