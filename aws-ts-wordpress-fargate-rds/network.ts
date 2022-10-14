@@ -68,7 +68,7 @@ export class Vpc extends pulumi.ComponentResource {
         tags: {"Name": subnetName},
       }, { parent: this });
 
-      new ec2.RouteTableAssociation(`vpc-route-table-assoc-${i}`, {
+      const _ = new ec2.RouteTableAssociation(`vpc-route-table-assoc-${i}`, {
         routeTableId: routeTable.id,
         subnetId: vpcSubnet.id,
       }, { parent: this });
