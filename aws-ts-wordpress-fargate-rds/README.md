@@ -16,12 +16,12 @@ This sample uses the following AWS products (and related Pulumi providers):
 ## Getting Started
 
 There are no required configuration parameters for this project since the code will use defaults or generate values as needed - see the beginning of `index.ts` to see the defaults.
-However, you can override these defaults by using `pulumi config` to set the following values (e.g. `pulumi config set service_name my-wp-demo`).
+However, you can override these defaults by using `pulumi config` to set the following values (e.g. `pulumi config set serviceName my-wp-demo`).
 
-- `service_name` - This is used as a prefix for resources created by the Pulumi program.
-- `db_name` - The name of the MySQL DB created in RDS.
-- `db_user` - The user created with access to the MySQL DB.
-- `db_password` - The password for the DB user. Be sure to use `--secret` if creating this config value (e.g. `pulumi config set db_password --secret`).
+- `serviceName` - This is used as a prefix for resources created by the Pulumi program.
+- `dbName` - The name of the MySQL DB created in RDS.
+- `dbUser` - The user created with access to the MySQL DB.
+- `dbPassword` - The password for the DB user. Be sure to use `--secret` if creating this config value (e.g. `pulumi config set dbPassword --secret`).
 
 ## Deploying and running the program
 
@@ -40,7 +40,7 @@ Note: some values in this example will be different from run to run.
    ```
 
 1. Run `pulumi up` to preview and deploy changes. After the preview is shown you will be
-   prompted if you want to continue or not. Note: If you set the `db_password` in the configuration as described above, you will not see the `RandomPassword` resource below.
+   prompted if you want to continue or not. Note: If you set the `dbPassword` in the configuration as described above, you will not see the `RandomPassword` resource below.
 
    ```bash
    $ pulumi up
