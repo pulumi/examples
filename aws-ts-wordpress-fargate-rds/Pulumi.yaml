@@ -1,0 +1,3 @@
+name: aws-ts-wordpress-fargate-rds
+description: Deploys Wordpress in ECS Fargate with RDS backend.
+runtime: nodejs
