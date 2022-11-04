@@ -1,0 +1,26 @@
+name: aws-ts-redshift
+description: A TypeScript program that deploys an Amazon Redshift cluster
+runtime: nodejs
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
+    availabilityZone:
+      description: The AWS availability zone to deploy into
+      default: us-east-1a
+    clusterIdentifier:
+      description: The Redshift cluster identifier
+      default: my-redshift-cluster
+    dbName:
+      description: The name of the initial database to be created
+      default: dev
+    dbUsername:
+      description: The username for the primary database user
+      default: admin
+    dbPassword:
+      description: The password for the primary database user
+      secret: true
+    nodeType:
+      description: The node type to use for the Redshift cluster
+      default: dc2.large
