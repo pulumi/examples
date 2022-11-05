@@ -20,15 +20,19 @@ storage_account = storage.StorageAccount(
     kind=storage.Kind.STORAGE_V2,
     sku=storage.SkuArgs(
         name=storage.SkuName.STANDARD_RAGRS,
-    ))
+    ),
+)
 
-data_lake_storage_account_url = storage_account.name.apply(lambda name: f"https://{name}.dfs.core.windows.net")
+data_lake_storage_account_url = storage_account.name.apply(
+    lambda name: f"https://{name}.dfs.core.windows.net"
+)
 
 users = storage.BlobContainer(
     "users",
     resource_group_name=resource_group.name,
     account_name=storage_account.name,
-    public_access=storage.PublicAccess.NONE)
+    public_access=storage.PublicAccess.NONE,
+)
 
 workspace = synapse.Workspace(
     "workspace",
@@ -41,19 +45,23 @@ workspace = synapse.Workspace(
         type=synapse.ResourceIdentityType.SYSTEM_ASSIGNED,
     ),
     sql_administrator_login="sqladminuser",
-    sql_administrator_login_password=random.RandomPassword("workspacePwd", length=12).result)
+    sql_administrator_login_password=random.RandomPassword(
+        "workspacePwd", length=12
+    ).result,
+)
 
 allow_all = synapse.IpFirewallRule(
     "allowAll",
     resource_group_name=resource_group.name,
     workspace_name=workspace.name,
     end_ip_address="255.255.255.255",
-    start_ip_address="0.0.0.0")
+    start_ip_address="0.0.0.0",
+)
 
-subscription_id = resource_group.id.apply(lambda id: id.split('/')[2])
+subscription_id = resource_group.id.apply(lambda id: id.split("/")[2])
 role_definition_id = subscription_id.apply(
-    lambda
-        id: f"/subscriptions/{id}/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe")
+    lambda id: f"/subscriptions/{id}/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe"
+)
 
 storage_access = authorization.RoleAssignment(
     "storageAccess",
@@ -61,7 +69,8 @@ storage_access = authorization.RoleAssignment(
     scope=storage_account.id,
     principal_id=workspace.identity.principal_id.apply(lambda v: v or "<preview>"),
     principal_type="ServicePrincipal",
-    role_definition_id=role_definition_id)
+    role_definition_id=role_definition_id,
+)
 
 user_access = authorization.RoleAssignment(
     "userAccess",
@@ -69,7 +78,8 @@ user_access = authorization.RoleAssignment(
     scope=storage_account.id,
     principal_id=config.require("userObjectId"),
     principal_type="User",
-    role_definition_id=role_definition_id)
+    role_definition_id=role_definition_id,
+)
 
 sql_pool = synapse.SqlPool(
     "SQLPOOL1",
@@ -79,7 +89,8 @@ sql_pool = synapse.SqlPool(
     create_mode="Default",
     sku=synapse.SkuArgs(
         name="DW100c",
-    ))
+    ),
+)
 
 spark_pool = synapse.BigDataPool(
     "Spark1",
@@ -97,4 +108,5 @@ spark_pool = synapse.BigDataPool(
     node_count=3,
     node_size="Small",
     node_size_family="MemoryOptimized",
-    spark_version="2.4")
+    spark_version="2.4",
+)

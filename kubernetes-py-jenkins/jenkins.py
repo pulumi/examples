@@ -29,17 +29,23 @@ from pulumi_kubernetes.core.v1 import (
 )
 from pulumi_kubernetes.meta.v1 import LabelSelectorArgs, ObjectMetaArgs
 
+
 class DeploymentArgs(NamedTuple):
     metadata: ObjectMetaArgs
     spec: DeploymentSpecArgs
 
+
 def create_deployment_args(name, credentials, resources, image=None) -> DeploymentArgs:
-    image = image if image is not None else {
-        "registry": "docker.io",
-        "repository": "bitnami/jenkins",
-        "tag": "2.121.2",
-        "pullPolicy": "IfNotPresent",
-    }
+    image = (
+        image
+        if image is not None
+        else {
+            "registry": "docker.io",
+            "repository": "bitnami/jenkins",
+            "tag": "2.121.2",
+            "pullPolicy": "IfNotPresent",
+        }
+    )
 
     # This object is a projection of the Kubernetes object model into the Pulumi object model.
     # Its structure is derived from the Deployment object in the Kubernetes API.
@@ -70,7 +76,11 @@ def create_deployment_args(name, credentials, resources, image=None) -> Deployme
                     containers=[
                         ContainerArgs(
                             name=name,
-                            image=image["registry"] + "/" + image["repository"] + ":" + image["tag"],
+                            image=image["registry"]
+                            + "/"
+                            + image["repository"]
+                            + ":"
+                            + image["tag"],
                             image_pull_policy=image["pullPolicy"],
                             env=[
                                 EnvVarArgs(
@@ -131,7 +141,7 @@ def create_deployment_args(name, credentials, resources, image=None) -> Deployme
                     ],
                 ),
             ),
-        )
+        ),
     )
 
 
@@ -141,24 +151,32 @@ class Instance(pulumi.ComponentResource):
     """
 
     def __init__(self, name, credentials, resources, image=None, opts=None):
-        super().__init__("jenkins:jenkins:Instance", name, {"credentials": credentials, "resources": resources, "image": image}, opts)
+        super().__init__(
+            "jenkins:jenkins:Instance",
+            name,
+            {"credentials": credentials, "resources": resources, "image": image},
+            opts,
+        )
 
         # The Secret will contain the root password for this instance.
         secret = Secret(
-            name+"-secret",
+            name + "-secret",
             metadata=ObjectMetaArgs(
                 name=name,
             ),
             type="Opaque",
             data={
-                "jenkins-password": str(base64.b64encode(bytes(credentials["password"],"utf-8"),None),"utf-8"),
+                "jenkins-password": str(
+                    base64.b64encode(bytes(credentials["password"], "utf-8"), None),
+                    "utf-8",
+                ),
             },
             opts=ResourceOptions(parent=self),
         )
 
         # The PVC provides persistent storage for Jenkins states.
         pvc = PersistentVolumeClaim(
-            name+"-pvc",
+            name + "-pvc",
             metadata=ObjectMetaArgs(
                 name=name,
             ),
@@ -176,7 +194,7 @@ class Instance(pulumi.ComponentResource):
         # The Deployment describes the desired state for our Jenkins setup.
         deploymentArgs = create_deployment_args(name, credentials, resources, image)
         deployment = Deployment(
-            name+"-deploy",
+            name + "-deploy",
             metadata=deploymentArgs.metadata,
             spec=deploymentArgs.spec,
             opts=ResourceOptions(parent=self),
@@ -184,7 +202,7 @@ class Instance(pulumi.ComponentResource):
 
         # The Service exposes Jenkins to the external internet by providing load-balanced ingress for HTTP and HTTPS.
         service = Service(
-            name+"-service",
+            name + "-service",
             metadata=ObjectMetaArgs(
                 name=name,
             ),
@@ -206,7 +224,7 @@ class Instance(pulumi.ComponentResource):
                     "app": name,
                 },
             ),
-            opts=ResourceOptions(parent=self)
+            opts=ResourceOptions(parent=self),
         )
 
         ingress = service.status.apply(lambda s: s.load_balancer.ingress[0])

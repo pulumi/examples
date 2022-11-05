@@ -23,10 +23,8 @@ config_values = {
     # Target destination and travel time offset.
     "DESTINATION": config.get("destination"),
     "TRAVEL_OFFSET": config.get("travelOffset"),
-
     # Google Maps API key.
     "GOOGLE_MAPS_API_KEY": config.get("googleMapsApiKey"),
-
     # Twilio account for sending SMS messages.
     "TWILLIO_ACCESS_TOKEN": config.get("twillioAccessToken"),
     "TWILLIO_ACCOUNT_SID": config.get("twillioAccountSid"),
@@ -53,7 +51,8 @@ source_archive_object = storage.BucketObject(
     "eta_demo_object",
     name="main.py-%f" % time.time(),
     bucket=bucket.name,
-    source=archive)
+    source=archive,
+)
 
 # Create the Cloud Function, deploying the source we just uploaded to Google
 # Cloud Storage.
@@ -65,7 +64,8 @@ fxn = cloudfunctions.Function(
     runtime="python37",
     source_archive_bucket=bucket.name,
     source_archive_object=source_archive_object.name,
-    trigger_http=True)
+    trigger_http=True,
+)
 
 invoker = cloudfunctions.FunctionIamMember(
     "invoker",

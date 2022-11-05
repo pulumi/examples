@@ -4,9 +4,7 @@ from pulumi import export
 
 random_host_name = random.RandomPet("hostname")
 
-project = metal.get_project(
-    name="ci-project"
-)
+project = metal.get_project(name="ci-project")
 
 vm = metal.Device(
     "vm",
@@ -16,12 +14,15 @@ vm = metal.Device(
     operating_system="ubuntu_20_04",
     plan="c3.small.x86",
     project_id=project.id,
-    ip_addresses=[{
-        "type": "public_ipv4",
-    }, {
-        "type": "private_ipv4",
-    }]
+    ip_addresses=[
+        {
+            "type": "public_ipv4",
+        },
+        {
+            "type": "private_ipv4",
+        },
+    ],
 )
 
-export('ip', vm.access_public_ipv4)
-export('name', vm.hostname)
+export("ip", vm.access_public_ipv4)
+export("name", vm.hostname)

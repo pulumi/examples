@@ -10,15 +10,9 @@ firewall = compute.Firewall(
     "poc",
     network=network.self_link,
     allows=[
-        compute.FirewallAllowArgs(
-            protocol="tcp",
-            ports=["22"]
-        ),
-        compute.FirewallAllowArgs(
-            protocol="tcp",
-            ports=["80"]
-        ),
-    ]
+        compute.FirewallAllowArgs(protocol="tcp", ports=["22"]),
+        compute.FirewallAllowArgs(protocol="tcp", ports=["80"]),
+    ],
 )
 
 #
@@ -41,9 +35,11 @@ instance = compute.Instance(
     network_interfaces=[
         compute.InstanceNetworkInterfaceArgs(
             network=network.id,
-            access_configs=[compute.InstanceNetworkInterfaceAccessConfigArgs(
-                nat_ip=instance_addr.address
-            )]
+            access_configs=[
+                compute.InstanceNetworkInterfaceAccessConfigArgs(
+                    nat_ip=instance_addr.address
+                )
+            ],
         )
     ],
     metadata_startup_script=script,
@@ -83,9 +79,11 @@ container_instance = compute.Instance(
     network_interfaces=[
         compute.InstanceNetworkInterfaceArgs(
             network=network.id,
-            access_configs=[compute.InstanceNetworkInterfaceAccessConfigArgs(
-                nat_ip=container_instance_addr.address
-            )]
+            access_configs=[
+                compute.InstanceNetworkInterfaceAccessConfigArgs(
+                    nat_ip=container_instance_addr.address
+                )
+            ],
         )
     ],
     service_account=compute.InstanceServiceAccountArgs(
