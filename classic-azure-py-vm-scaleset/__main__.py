@@ -127,7 +127,7 @@ scale_set = compute.ScaleSet(
         name="",
     ),
     upgrade_policy_mode="Manual",
-    opts=ResourceOptions(depends_on=[bpepool]),
+    opts=ResourceOptions(depends_on=[bpepool, ssh_probe]),
 )
 
 export("public_address", public_ip.fqdn)
