@@ -2,7 +2,7 @@ name: pulumi-ansible-wordpress
 runtime: yaml
 description: Deploy an EC2 Wordpress server using Pulumi and Ansible.
 
-configuration:
+config:
   # A path to the EC2 keypair's public key:
   publicKeyPath:
     type: String

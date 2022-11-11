@@ -1,7 +1,7 @@
 name: azure-app-service
 runtime: yaml
 description: A static website hosted on AWS S3
-configuration:
+config:
   sqlAdmin:
     type: String
     default: pulumi

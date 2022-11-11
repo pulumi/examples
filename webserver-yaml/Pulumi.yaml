@@ -1,7 +1,7 @@
 name: webserver
 runtime: yaml
 description: Basic example of an AWS web server accessible over HTTP
-configuration:
+config:
   InstanceType:
     type: String
     default: t3.micro

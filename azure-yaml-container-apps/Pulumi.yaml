@@ -1,7 +1,7 @@
 name: azure-container-apps
 runtime: yaml
 description: Azure Container Apps example
-configuration:
+config:
   sqlAdmin:
     type: String
     default: pulumi
@@ -74,7 +74,7 @@ resources:
     properties:
       resourceGroupName: ${resourceGroup.name}
       kubeEnvironmentId: ${kubeEnv}
-      configuration:
+      config:
         ingress:
             external: true
             targetPort: 80
