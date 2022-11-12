@@ -3,7 +3,7 @@ runtime: yaml
 description: Basic example of an AWS web server accessible over HTTP
 config:
   InstanceType:
-    type: String
+    type: string
     default: t3.micro
 variables:
   ec2ami:

@@ -5,29 +5,29 @@ description: Deploy an EC2 Wordpress server using Pulumi and Ansible.
 config:
   # A path to the EC2 keypair's public key:
   publicKeyPath:
-    type: String
+    type: string
   # A path to the EC2 keypair's private key:
   privateKeyPath:
-    type: String
+    type: string
   # The WordPress database size:
   dbInstanceSize:
-    type: String
+    type: string
     default: db.t3.small
   # The WordPress database name:
   dbName:
-    type: String
+    type: string
     default: wordpressdb
   # The WordPress database user's name:
   dbUsername:
-    type: String
+    type: string
     default: admin
   # The WordPress database user's password:
   dbPassword:
-    type: String
+    type: string
     secret: true
   # The WordPress EC2 instance's size:
   ec2InstanceSize:
-    type: String
+    type: string
     default: t3.small
 
 variables:

@@ -3,7 +3,7 @@ runtime: yaml
 description: A static website hosted on AWS S3
 config:
   sqlAdmin:
-    type: String
+    type: string
     default: pulumi
 variables:
   blobAccessToken:
