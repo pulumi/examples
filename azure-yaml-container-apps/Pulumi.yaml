@@ -1,9 +1,9 @@
 name: azure-container-apps
 runtime: yaml
 description: Azure Container Apps example
-configuration:
+config:
   sqlAdmin:
-    type: String
+    type: string
     default: pulumi
 variables:
   sharedKey:
