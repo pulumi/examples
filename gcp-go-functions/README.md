@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-go-functions/README.md)
 
-# Google Cloud Functions in Python deployed with Go
+# Google Cloud Functions in Go deployed with Go
 
 This example deploys a Google Cloud Function implemented in Go. Pulumi program is also implemented in Go.
 
