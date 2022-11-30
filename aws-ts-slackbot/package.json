@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "dependencies": {
         "@pulumi/aws": "^5.0.0",
-        "@pulumi/awsx": "^0.30.0",
+        "@pulumi/awsx": "^0.40.0",
         "@pulumi/pulumi": "^3.0.0",
         "qs": "^6.7.0",
         "superagent": "^5.0.2"
