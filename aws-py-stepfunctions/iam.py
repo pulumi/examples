@@ -2,7 +2,8 @@
 
 from pulumi_aws import config, iam
 
-lambda_role = iam.Role('lambdaRole',
+lambda_role = iam.Role(
+    "lambdaRole",
     assume_role_policy="""{
         "Version": "2012-10-17",
         "Statement": [
@@ -15,10 +16,11 @@ lambda_role = iam.Role('lambdaRole',
                 "Sid": ""
             }
         ]
-    }"""
+    }""",
 )
 
-lambda_role_policy = iam.RolePolicy('lambdaRolePolicy',
+lambda_role_policy = iam.RolePolicy(
+    "lambdaRolePolicy",
     role=lambda_role.id,
     policy="""{
         "Version": "2012-10-17",
@@ -31,10 +33,11 @@ lambda_role_policy = iam.RolePolicy('lambdaRolePolicy',
             ],
             "Resource": "arn:aws:logs:*:*:*"
         }]
-    }"""
+    }""",
 )
 
-sfn_role = iam.Role('sfnRole',
+sfn_role = iam.Role(
+    "sfnRole",
     assume_role_policy="""{
         "Version": "2012-10-17",
         "Statement": [
@@ -46,10 +49,12 @@ sfn_role = iam.Role('sfnRole',
                 "Action": "sts:AssumeRole"
             }
         ]
-    }""" % config.region
+    }"""
+    % config.region,
 )
 
-sfn_role_policy = iam.RolePolicy('sfnRolePolicy',
+sfn_role_policy = iam.RolePolicy(
+    "sfnRolePolicy",
     role=sfn_role.id,
     policy="""{
         "Version": "2012-10-17",
@@ -62,5 +67,5 @@ sfn_role_policy = iam.RolePolicy('sfnRolePolicy',
                 "Resource": "*"
             }
         ]
-    }"""
+    }""",
 )

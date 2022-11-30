@@ -22,16 +22,15 @@ def get_travel_time(origin, destination, offset):
     gmaps = googlemaps.Client(key=key)
     now = datetime.now()
     directions_result = gmaps.directions(
-        origin=origin,
-        destination=destination,
-        mode="driving",
-        departure_time=now)
+        origin=origin, destination=destination, mode="driving", departure_time=now
+    )
 
     travel_time = directions_result[0]["legs"][0]["duration"]["value"]
     travel_time /= 60  # seconds to minutes
     travel_time += offset
 
     return "%d minutes" % travel_time
+
 
 def send_text(message_body):
     """Sends an SMS using the Twilio API."""
@@ -42,12 +41,10 @@ def send_text(message_body):
 
     if account_sid and auth_token and to_number and from_number:
         client = twilio.rest.Client(account_sid, auth_token)
-        client.messages.create(
-            to=to_number,
-            from_=from_number,
-            body=message_body)
+        client.messages.create(to=to_number, from_=from_number, body=message_body)
         return "Sent text message to %s\n%s" % (to_number, message_body)
     return "[ENABLE TWILIO TO SEND A TEXT]: \n%s" % (message_body)
+
 
 def get_demo(request):
     """The Google Cloud Function computing estimated travel time."""
@@ -60,18 +57,19 @@ def get_demo(request):
     else:
         origin = "Pulumi HQ, Seattle, WA"
 
-    destination = os.getenv(
-        "DESTINATION",
-        "Space Needle, Seattle, WA")
+    destination = os.getenv("DESTINATION", "Space Needle, Seattle, WA")
 
     # Optional travel time offset, e.g. add a static 5m delay.
     travel_offset_str = os.getenv("TRAVEL_OFFSET", "0")
     travel_offset = int(travel_offset_str)
 
     travel_time_str = get_travel_time(
-        origin=origin, destination=destination, offset=travel_offset)
+        origin=origin, destination=destination, offset=travel_offset
+    )
 
     # Send the message. Returns a summary in the Cloud Function's response.
     message = "Hey! I'm leaving now, I'll be at '%s' to pick you up in about %s." % (
-        destination, travel_time_str)
+        destination,
+        travel_time_str,
+    )
     return send_text(message)

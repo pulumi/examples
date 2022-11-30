@@ -1,6 +1,4 @@
-def handler(request): 
-    headers = {
-        'Content-Type': 'text/plain'
-    }
+def handler(request):
+    headers = {"Content-Type": "text/plain"}
 
-    return ('Hello World!', 200, headers)
+    return ("Hello World!", 200, headers)

@@ -82,8 +82,10 @@ class WebServer(ComponentResource):
         # The public IP address is not allocated until the VM is
         # running, so we wait for that resource to create, and then
         # lookup the IP address again to report its public IP.
-        self.public_ip_addr = vm.id.apply(lambda _: network.get_public_ip_output(
-            name=public_ip.name,
-            resource_group_name=public_ip.resource_group_name).ip_address)
+        self.public_ip_addr = vm.id.apply(
+            lambda _: network.get_public_ip_output(
+                name=public_ip.name, resource_group_name=public_ip.resource_group_name
+            ).ip_address
+        )
 
         self.register_outputs({})

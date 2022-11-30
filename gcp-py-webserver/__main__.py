@@ -10,10 +10,12 @@ compute_network = compute.Network(
 compute_firewall = compute.Firewall(
     "firewall",
     network=compute_network.self_link,
-    allows=[compute.FirewallAllowArgs(
-        protocol="tcp",
-        ports=["22", "80"],
-    )]
+    allows=[
+        compute.FirewallAllowArgs(
+            protocol="tcp",
+            ports=["22", "80"],
+        )
+    ],
 )
 
 # A simple bash script that will run when the webserver is initalized
@@ -31,12 +33,16 @@ compute_instance = compute.Instance(
             image="debian-cloud/debian-9-stretch-v20181210"
         )
     ),
-    network_interfaces=[compute.InstanceNetworkInterfaceArgs(
+    network_interfaces=[
+        compute.InstanceNetworkInterfaceArgs(
             network=compute_network.id,
-            access_configs=[compute.InstanceNetworkInterfaceAccessConfigArgs(
-                nat_ip=instance_addr.address
-            )],
-    )],
+            access_configs=[
+                compute.InstanceNetworkInterfaceAccessConfigArgs(
+                    nat_ip=instance_addr.address
+                )
+            ],
+        )
+    ],
     service_account=compute.InstanceServiceAccountArgs(
         scopes=["https://www.googleapis.com/auth/cloud-platform"],
     ),

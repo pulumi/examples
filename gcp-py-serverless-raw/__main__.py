@@ -6,9 +6,8 @@ bucket = storage.Bucket("bucket")
 py_bucket_object = storage.BucketObject(
     "python-zip",
     bucket=bucket.name,
-    source=asset.AssetArchive({
-        ".": asset.FileArchive("./pythonfunc")
-    }))
+    source=asset.AssetArchive({".": asset.FileArchive("./pythonfunc")}),
+)
 
 py_function = cloudfunctions.Function(
     "python-func",
@@ -34,9 +33,8 @@ export("python_endpoint", py_function.https_trigger_url)
 go_bucket_object = storage.BucketObject(
     "go-zip",
     bucket=bucket.name,
-    source=asset.AssetArchive({
-        ".": asset.FileArchive("./gofunc")
-    }))
+    source=asset.AssetArchive({".": asset.FileArchive("./gofunc")}),
+)
 
 go_function = cloudfunctions.Function(
     "go-func",

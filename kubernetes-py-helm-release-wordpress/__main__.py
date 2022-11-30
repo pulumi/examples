@@ -25,7 +25,10 @@ wordpress = Release(
     ),
 )
 
-srv = Service.get("wpdev-wordpress", Output.concat(wordpress.status.namespace, "/", wordpress.status.name, "-wordpress"))
+srv = Service.get(
+    "wpdev-wordpress",
+    Output.concat(wordpress.status.namespace, "/", wordpress.status.name, "-wordpress"),
+)
 # Export the Cluster IP for Wordpress.
 pulumi.export("frontendIp", srv.spec.cluster_ip)
 # Command to run to access the wordpress frontend on localhost:8080

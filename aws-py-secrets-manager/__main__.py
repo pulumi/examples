@@ -7,10 +7,9 @@ from pulumi_aws import secretsmanager
 secret = secretsmanager.Secret("secret")
 
 # Create secret version
-secret_version = secretsmanager.SecretVersion("secret_version",
-                                              secret_id=secret.id,
-                                              secret_string="mysecret"
-                                              )
+secret_version = secretsmanager.SecretVersion(
+    "secret_version", secret_id=secret.id, secret_string="mysecret"
+)
 
 # Export secret ID (in this case the ARN)
 pulumi.export("secret_id", secret.id)

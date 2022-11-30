@@ -18,25 +18,32 @@ net = network.VirtualNetwork(
     address_space=network.AddressSpaceArgs(
         address_prefixes=["10.0.0.0/16"],
     ),
-    subnets=[network.SubnetArgs(
-        name="default",
-        address_prefix="10.0.1.0/24",
-    )])
+    subnets=[
+        network.SubnetArgs(
+            name="default",
+            address_prefix="10.0.1.0/24",
+        )
+    ],
+)
 
 public_ip = network.PublicIPAddress(
     "server-ip",
     resource_group_name=resource_group.name,
-    public_ip_allocation_method=network.IPAllocationMethod.DYNAMIC)
+    public_ip_allocation_method=network.IPAllocationMethod.DYNAMIC,
+)
 
 network_iface = network.NetworkInterface(
     "server-nic",
     resource_group_name=resource_group.name,
-    ip_configurations=[network.NetworkInterfaceIPConfigurationArgs(
-        name="webserveripcfg",
-        subnet=network.SubnetArgs(id=net.subnets[0].id),
-        private_ip_allocation_method=network.IPAllocationMethod.DYNAMIC,
-        public_ip_address=network.PublicIPAddressArgs(id=public_ip.id),
-    )])
+    ip_configurations=[
+        network.NetworkInterfaceIPConfigurationArgs(
+            name="webserveripcfg",
+            subnet=network.SubnetArgs(id=net.subnets[0].id),
+            private_ip_allocation_method=network.IPAllocationMethod.DYNAMIC,
+            public_ip_address=network.PublicIPAddressArgs(id=public_ip.id),
+        )
+    ],
+)
 
 init_script = """#!/bin/bash
 
@@ -74,10 +81,13 @@ vm = compute.VirtualMachine(
             sku="16.04-LTS",
             version="latest",
         ),
-    ))
+    ),
+)
 
-public_ip_addr = vm.id.apply(lambda _: network.get_public_ip_address_output(
-    public_ip_address_name=public_ip.name,
-    resource_group_name=resource_group.name))
+public_ip_addr = vm.id.apply(
+    lambda _: network.get_public_ip_address_output(
+        public_ip_address_name=public_ip.name, resource_group_name=resource_group.name
+    )
+)
 
 export("public_ip", public_ip_addr.ip_address)

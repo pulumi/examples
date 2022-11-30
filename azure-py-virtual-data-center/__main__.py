@@ -13,7 +13,7 @@ resource_group_name = vdc.resource_group(config.stack)
 
 # single hub with gateways, firewall, DMZ, shared services, bastion (optional)
 hub = Hub(
-    'hub',  # stem of child resource names (<4 chars)
+    "hub",  # stem of child resource names (<4 chars)
     HubProps(
         azure_bastion=config.azure_bastion,
         forced_tunnel=config.forced_tunnel,
@@ -26,8 +26,8 @@ hub = Hub(
         separator=config.separator,
         stack=config.stack,
         subnets=[  # extra columns for future ASGs
-            ('domain', 'any', 'any'),
-            ('files', 'any', 'none'),
+            ("domain", "any", "any"),
+            ("files", "any", "none"),
         ],
         suffix=config.suffix,
         tags=config.default_tags,
@@ -36,7 +36,7 @@ hub = Hub(
 
 # multiple spokes for application environments with bastion access (optional)
 spoke1 = Spoke(
-    's01',  # stem of child resource names (<6 chars)
+    "s01",  # stem of child resource names (<6 chars)
     SpokeProps(
         azure_bastion=config.azure_bastion,
         fw_rt_name=hub.fw_rt_name,
@@ -48,9 +48,9 @@ spoke1 = Spoke(
         separator=config.separator,
         spoke_address_space=str(next(config.stack_sn)),
         subnets=[  # extra columns for future ASGs
-            ('web', 'any', 'app'),
-            ('app', 'web', 'db'),
-            ('db', 'app', 'none'),
+            ("web", "any", "app"),
+            ("app", "web", "db"),
+            ("db", "app", "none"),
         ],
         suffix=config.suffix,
         tags=config.default_tags,
@@ -58,7 +58,7 @@ spoke1 = Spoke(
 )
 
 spoke2 = Spoke(
-    's02',  # stem of child resource names (<6 chars)
+    "s02",  # stem of child resource names (<6 chars)
     SpokeProps(
         azure_bastion=config.azure_bastion,
         fw_rt_name=hub.fw_rt_name,
@@ -70,9 +70,9 @@ spoke2 = Spoke(
         separator=config.separator,
         spoke_address_space=str(next(config.stack_sn)),
         subnets=[  # extra columns for future ASGs
-            ('web', 'any', 'app'),
-            ('app', 'web', 'db'),
-            ('db', 'app', 'none'),
+            ("web", "any", "app"),
+            ("app", "web", "db"),
+            ("db", "app", "none"),
         ],
         suffix=config.suffix,
         tags=config.default_tags,
@@ -80,11 +80,11 @@ spoke2 = Spoke(
 )
 
 # export information about the stack required for stack peering
-export('dmz_ar', hub.dmz_ar)
-export('fw_ip', hub.fw_ip)
-export('hub_as', hub.address_space)
-export('hub_id', hub.id)
-export('s01_as', spoke1.address_space)
-export('s01_id', spoke1.id)
-export('s02_as', spoke2.address_space)
-export('s02_id', spoke2.id)
+export("dmz_ar", hub.dmz_ar)
+export("fw_ip", hub.fw_ip)
+export("hub_as", hub.address_space)
+export("hub_id", hub.id)
+export("s01_as", spoke1.address_space)
+export("s01_id", spoke1.id)
+export("s02_as", spoke2.address_space)
+export("s02_id", spoke2.id)

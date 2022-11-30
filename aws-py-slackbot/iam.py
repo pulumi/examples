@@ -2,7 +2,8 @@
 
 from pulumi_aws import iam
 
-lambda_role = iam.Role('lambdaRole',
+lambda_role = iam.Role(
+    "lambdaRole",
     assume_role_policy="""{
         "Version": "2012-10-17",
         "Statement": [
@@ -15,10 +16,11 @@ lambda_role = iam.Role('lambdaRole',
                 "Sid": ""
             }
         ]
-    }"""
+    }""",
 )
 
-lambda_role_policy = iam.RolePolicy('lambdaRolePolicy',
+lambda_role_policy = iam.RolePolicy(
+    "lambdaRolePolicy",
     role=lambda_role.id,
     policy="""{
         "Version": "2012-10-17",
@@ -31,5 +33,5 @@ lambda_role_policy = iam.RolePolicy('lambdaRolePolicy',
             ],
             "Resource": "arn:aws:logs:*:*:*"
         }]
-    }"""
+    }""",
 )

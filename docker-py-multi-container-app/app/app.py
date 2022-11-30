@@ -15,14 +15,15 @@ def get_hit_count():
     retries = 5
     while True:
         try:
-            return cache.incr('hits')
+            return cache.incr("hits")
         except redis.exceptions.ConnectionError as exc:
             if retries == 0:
                 raise exc
             retries -= 1
             time.sleep(0.5)
 
-@app.route('/')
+
+@app.route("/")
 def hello():
-    count = get_hit_count()  
-    return 'I have been viewed {} times.\n'.format(count)
+    count = get_hit_count()
+    return "I have been viewed {} times.\n".format(count)
