@@ -7,8 +7,8 @@ package main
 import (
 	"encoding/base64"
 
-	cs "github.com/pulumi/pulumi-azure-native/sdk/go/azure/containerservice"
-	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
+	cs "github.com/pulumi/pulumi-azure-native-sdk/containerservice"
+	"github.com/pulumi/pulumi-azure-native-sdk/resources"
 	"github.com/pulumi/pulumi-azuread/sdk/v4/go/azuread"
 	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
