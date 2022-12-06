@@ -29,9 +29,9 @@ func main() {
 
 		chartArgs := helm.ChartArgs{
 			Chart:   pulumi.String("apache"),
-			Version: pulumi.String("8.3.2"),
+			Version: pulumi.String("8.12.1"),
 			FetchArgs: helm.FetchArgs{
-				Repo: pulumi.String("https://charts.bitnami.com/bitnami"),
+				Repo: pulumi.String("https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"),
 			},
 		}
 
