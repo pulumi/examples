@@ -13,4 +13,4 @@ jobs:
         uses: actions/add-to-project@v0.4.0
         with:
           project-url: https://github.com/orgs/pulumi/projects/47
-          github-token: ${{ secrets.PULUMI_BOT_TOKEN }}
+          github-token: ${{ secrets.PULUMI_BOT_GHA_MARKETING }}
