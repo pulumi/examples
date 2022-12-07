@@ -33,13 +33,13 @@ config:
 variables:
   # Dynamically fetch AZs so we can spread across them.
   availabilityZones:
-    Fn::Invoke:
-      Function: aws:getAvailabilityZones
+    fn::invoke:
+      function: aws:getAvailabilityZones
   # Dynamically query for the Amazon Linux 2 AMI in this region.
   awsLinuxAmi:
-    Fn::Invoke:
-      Function: aws:ec2:getAmi
-      Arguments:
+    fn::invoke:
+      function: aws:ec2:getAmi
+      arguments:
         owners: ["amazon"]
         filters:
           - name: name

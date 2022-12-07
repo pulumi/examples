@@ -3,15 +3,15 @@ runtime: yaml
 description: An EKS cluster
 variables:
   vpcId:
-    Fn::Invoke:
-      Function: aws:ec2:getVpc
-      Arguments:
+    fn::invoke:
+      function: aws:ec2:getVpc
+      arguments:
         default: true
       Return: id
   subnetIds:
-    Fn::Invoke:
-      Function: aws:ec2:getSubnetIds
-      Arguments:
+    fn::invoke:
+      function: aws:ec2:getSubnetIds
+      arguments:
         vpcId: ${vpcId}
       Return: ids
 resources:
