@@ -27,7 +27,7 @@
       "Properties": {
         "instanceType": "${InstanceType}",
         "ami": {
-          "Fn::Invoke": {
+          "fn::invoke": {
             "Function": "aws:getAmi",
             "Arguments": {
               "filters": [

@@ -7,9 +7,9 @@ config:
     default: t3.micro
 variables:
   ec2ami:
-    Fn::Invoke:
-      Function: aws:getAmi
-      Arguments:
+    fn::invoke:
+      function: aws:getAmi
+      arguments:
         filters:
           - name: name
             values: ["amzn-ami-hvm-*-x86_64-ebs"]
