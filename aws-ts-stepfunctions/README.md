@@ -4,7 +4,7 @@
 
 A basic example that demonstrates using AWS Step Functions with a Lambda function.
 
-This example also utilizes our [Stack Readme](https://www.pulumi.com/docs/intro/pulumi-service/projects-and-stacks/#stack-readme) feature. You can view the stack readme by going to the console by running `pulumi console` and clicking on the README tab. See the [`ts-readme`](../ts-readme/) example for a more detailed example
+This example also utilizes our [Stack Readme](https://www.pulumi.com/docs/intro/pulumi-service/projects-and-stacks/#stack-readme) feature. You can view the stack readme by going to the console by running `pulumi console` and selecting the README tab. See the [`stack-readme-ts`](../stack-readme-ts) example for a more detailed example.
 
 ```
 # Create and configure a new stack
