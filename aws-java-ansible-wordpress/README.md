@@ -1,6 +1,6 @@
-# Deploy Wordpress to AWS EC2 using Pulumi and Ansible
+# Deploy Wordpress to AWS EC2 using Pulumi, Ansible, and Java
 
-This project demonstrates how to use Pulumi and Ansible together. Pulumi handles provisioning the AWS infrastructure
+This project uses Java to demonstrate how to use Pulumi and Ansible together. Pulumi handles provisioning the AWS infrastructure
 required to run Wordpress on an EC2 instance, with an RDS MySQL database, running inside of a VPC with proper public
 and private subnets, and exposed to the Internet using an Elastic IP address. Ansible handles configuring the EC2
 virtual machine after it's been provisioned with a playbook that knows how to install and configure Wordpress.

@@ -1,8 +1,8 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
 
-# Setup AWS Secrets manager
+# Setup AWS Secrets manager using TypeScript
 
-A simple program that creates an AWS secret and a version under AWS Secrets Manager
+A TypeScript program that creates an AWS secret and a version under AWS Secrets Manager
 
 ## Deploying and running the program
 

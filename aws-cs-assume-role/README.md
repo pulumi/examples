@@ -1,6 +1,6 @@
-# AWS Resources Using AssumeRole
+# AWS Resources Using AssumeRole and C#
 
-This example shows how to use the AssumeRole functionality of the AWS provider to create resources in the security context of an IAM Role assumed by the IAM User running the Pulumi programs.
+Using C#, this example shows how to use the AssumeRole functionality of the AWS provider to create resources in the security context of an IAM Role assumed by the IAM User running the Pulumi programs.
 
 ## Deploying the Example
 
