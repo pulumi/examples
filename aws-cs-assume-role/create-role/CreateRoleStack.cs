@@ -2,8 +2,6 @@ using Pulumi;
 using Iam = Pulumi.Aws.Iam;
 using Log = Pulumi.Log;
 using System.Collections.Generic;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 class CreateRoleStack : Stack
 {
@@ -25,11 +23,8 @@ class CreateRoleStack : Stack
         // https://www.pulumi.com/docs/intro/concepts/resources/#additionalsecretoutputs
         new CustomResourceOptions { AdditionalSecretOutputs = { "secret" } });
 
-        var tempPolicy = unprivilegedUser.Arn.Apply((string arn) =>
-        {
-            AssumeRolePolicyArgs policyArgs = new AssumeRolePolicyArgs(arn);
-            return JsonSerializer.Serialize<AssumeRolePolicyArgs>(policyArgs);
-        });
+        AssumeRolePolicyArgs policyArgs = new AssumeRolePolicyArgs(unprivilegedUser.Arn);
+        var tempPolicy = Output.JsonSerialize<AssumeRolePolicyArgs>(policyArgs);
 
         var allowS3ManagementRole = new Iam.Role("allow-s3-management", new Iam.RoleArgs
         {
@@ -63,7 +58,7 @@ class CreateRoleStack : Stack
         public string Version => "2012-10-17";
         public StatementArgs Statement { get; private set; }
 
-        public AssumeRolePolicyArgs(string arn)
+        public AssumeRolePolicyArgs(Input<string> arn)
         {
             Statement = new StatementArgs(arn);
         }
@@ -77,7 +72,7 @@ class CreateRoleStack : Stack
         public PrincipalArgs Principal { get; private set; }
         public string Action => "sts:AssumeRole";
 
-        public StatementArgs(string arn)
+        public StatementArgs(Input<string> arn)
         {
             Principal = new PrincipalArgs(arn);
         }
@@ -85,16 +80,13 @@ class CreateRoleStack : Stack
 
     public class PrincipalArgs
     {
-        public string AWS { get; private set; }
+        public Input<string> AWS { get; private set; }
 
-        public PrincipalArgs(string arn)
+        public PrincipalArgs(Input<string> arn)
         {
             AWS = arn;
         }
     }
-
-
-
 
     [Output]
     public Output<string> roleArn { get; set; }
