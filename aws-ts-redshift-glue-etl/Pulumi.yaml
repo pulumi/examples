@@ -1,0 +1,3 @@
+name: aws-ts-redshift-glue-etl
+runtime: nodejs
+description: An example of using Pulumi to deploy an ETL pipeline with Amazon Redshift and AWS Glue

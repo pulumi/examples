@@ -1,0 +1,6 @@
+name: aws-py-redshift-glue-etl
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: An example of using Pulumi to deploy an ETL pipeline with Amazon Redshift and AWS Glue
