@@ -1,0 +1,3 @@
+asyncpg==0.25.0  # postgres driver
+uvicorn[standard]==0.17.6  # http server
+xpresso==0.37.0  # web framework

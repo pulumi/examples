@@ -1,0 +1,243 @@
+name: pulumi-ansible-wordpress
+runtime: yaml
+description: Deploy an EC2 Wordpress server using Pulumi and Ansible.
+
+config:
+  # A path to the EC2 keypair's public key:
+  publicKeyPath:
+    type: string
+  # A path to the EC2 keypair's private key:
+  privateKeyPath:
+    type: string
+  # The WordPress database size:
+  dbInstanceSize:
+    type: string
+    default: db.t3.small
+  # The WordPress database name:
+  dbName:
+    type: string
+    default: wordpressdb
+  # The WordPress database user's name:
+  dbUsername:
+    type: string
+    default: admin
+  # The WordPress database user's password:
+  dbPassword:
+    type: string
+    secret: true
+  # The WordPress EC2 instance's size:
+  ec2InstanceSize:
+    type: string
+    default: t3.small
+
+variables:
+  # Dynamically fetch AZs so we can spread across them.
+  availabilityZones:
+    fn::invoke:
+      function: aws:getAvailabilityZones
+  # Dynamically query for the Amazon Linux 2 AMI in this region.
+  awsLinuxAmi:
+    fn::invoke:
+      function: aws:ec2:getAmi
+      arguments:
+        owners: ["amazon"]
+        filters:
+          - name: name
+            values: ["amzn2-ami-hvm-*-x86_64-ebs"]
+        mostRecent: true
+  # Read in the public key for easy use below.
+  publicKey:
+    Fn::ReadFile: ${publicKeyPath}
+  # Read in the private key for easy use below (and to ensure it's marked a secret!)
+  privateKey:
+    Fn::Secret:
+      Fn::ReadFile: ${privateKeyPath}
+
+resources:
+  # Set up a Virtual Private Cloud to deploy our EC2 instance and RDS datbase into.
+  prod-vpc:
+    type: aws:ec2:Vpc
+    properties:
+      cidrBlock: 10.192.0.0/16
+      enableDnsSupport: true # gives you an internal domain name
+      enableDnsHostnames: true # gives you an internal host name
+      instanceTenancy: default
+  # Create public subnets for the EC2 instance.
+  prod-subnet-public-1:
+    type: aws:ec2:Subnet
+    properties:
+      vpcId: ${prod-vpc.id}
+      cidrBlock: 10.192.0.0/24
+      mapPublicIpOnLaunch: true # public subnet
+      availabilityZone: ${availabilityZones.names[0]}
+  # Create private subnets for RDS:
+  prod-subnet-private-1:
+    type: aws:ec2:Subnet
+    properties:
+      vpcId: ${prod-vpc.id}
+      cidrBlock: 10.192.20.0/24
+      mapPublicIpOnLaunch: false # private subnet
+      availabilityZone: ${availabilityZones.names[1]}
+  prod-subnet-private-2:
+    type: aws:ec2:Subnet
+    properties:
+      vpcId: ${prod-vpc.id}
+      cidrBlock: 10.192.21.0/24
+      mapPublicIpOnLaunch: false # private subnet
+      availabilityZone: ${availabilityZones.names[2]}
+  # Create a gateway for internet connectivity:
+  prod-igw:
+    type: aws:ec2:InternetGateway
+    properties:
+      vpcId: ${prod-vpc.id}
+  # Create a route table:
+  prod-public-rt:
+    type: aws:ec2:RouteTable
+    properties:
+      vpcId: ${prod-vpc.id}
+      routes:
+          # associated subnets can reach anywhere:
+        - cidrBlock: 0.0.0.0/0
+          # use this IGW to reach the internet:
+          gatewayId: ${prod-igw.id}
+  prod-rta-public-subnet-1:
+    type: aws:ec2:RouteTableAssociation
+    properties:
+      subnetId: ${prod-subnet-public-1.id}
+      routeTableId: ${prod-public-rt.id}
+  # Security group for EC2:
+  ec2-allow-rule:
+    type: aws:ec2:SecurityGroup
+    properties:
+      vpcId: ${prod-vpc.id}
+      ingress:
+        - description: "HTTPS"
+          fromPort: 443
+          toPort: 443
+          protocol: "tcp"
+          cidrBlocks: [0.0.0.0/0]
+        - description: "HTTP"
+          fromPort: 80
+          toPort: 80
+          protocol: "tcp"
+          cidrBlocks: [0.0.0.0/0]
+        - description: "SSH"
+          fromPort: 22
+          toPort: 22
+          protocol: "tcp"
+          cidrBlocks: [0.0.0.0/0]
+      egress:
+         - fromPort: 0
+           toPort: 0
+           protocol: "-1"
+           cidrBlocks: [0.0.0.0/0]
+      tags:
+        Name: "allow ssh,http,https"
+  # Security group for RDS:
+  rds-allow-rule:
+    type: aws:ec2:SecurityGroup
+    properties:
+      vpcId: ${prod-vpc.id}
+      ingress:
+        - description: "MySQL"
+          fromPort: 3306
+          toPort: 3306
+          protocol: "tcp"
+          securityGroups: ["${ec2-allow-rule.id}"]
+      # Allow all outbound traffic.
+      egress:
+        - fromPort: 0
+          toPort: 0
+          protocol: "-1"
+          cidrBlocks: [0.0.0.0/0]
+      tags:
+        Name: "allow ec2"
+          # Place RDS into the private subnets:
+  rds-subnet-grp:
+    type: aws:rds:SubnetGroup
+    properties:
+      subnetIds:
+        - ${prod-subnet-private-1.id}
+        - ${prod-subnet-private-2.id}
+  # Create the RDS instance:
+  wordpressdb:
+    type: aws:rds:Instance
+    properties:
+      allocatedStorage: 10
+      engine: "mysql"
+      engineVersion: "5.7"
+      instanceClass: ${dbInstanceSize}
+      dbSubnetGroupName: ${rds-subnet-grp.id}
+      vpcSecurityGroupIds: ["${rds-allow-rule.id}"]
+      dbName: ${dbName}
+      username: ${dbUsername}
+      password: ${dbPassword}
+      skipFinalSnapshot: true
+  # Create a keypair to access the EC2 instance:
+  wordpress-keypair:
+    type: aws:ec2:KeyPair
+    properties:
+      publicKey: ${publicKey}
+  # Create an EC2 instance to run Wordpress (after RDS is ready).
+  wordpress-instance:
+    type: aws:ec2:Instance
+    properties:
+      ami: ${awsLinuxAmi.id}
+      instanceType: ${ec2InstanceSize}
+      subnetId: ${prod-subnet-public-1.id}
+      vpcSecurityGroupIds: ["${ec2-allow-rule.id}"]
+      keyName: ${wordpress-keypair.id}
+      tags:
+        Name: "Wordpress.web"
+    options:
+      dependsOn:
+        # Only create after RDS is provisioned.
+        - ${wordpressdb}
+  # Give our EC2 instance an elastic IP address.
+  wordpress-eip:
+    type: aws:ec2:Eip
+    properties:
+      instance: ${wordpress-instance.id}
+
+  # Render the Ansible playbook using RDS info.
+  renderPlaybookCmd:
+    type: command:local:Command
+    properties:
+      create: "cat playbook.yml | envsubst > playbook_rendered.yml"
+      environment:
+        DB_RDS: ${wordpressdb.endpoint}
+        DB_NAME: ${dbName}
+        DB_USERNAME: ${dbUsername}
+        DB_PASSWORD: ${dbPassword}
+
+  # Run a script to update packages on the remote machine.
+  updatePythonCmd:
+    type: command:remote:Command
+    properties:
+      connection:
+        host: ${wordpress-eip.publicIp}
+        port: 22
+        user: ec2-user
+        privateKey: ${privateKey}
+      create: >
+        (sudo yum update -y || true);
+        (sudo yum install python35 -y);
+        (sudo yum install amazon-linux-extras -y)
+
+  # Finally, play the Ansible playbook to finish installing.
+  playAnsiblePlaybookCmd:
+    type: command:local:Command
+    properties:
+      create: "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook
+        -u ec2-user
+        -i '${wordpress-eip.publicIp},'
+        --private-key ${privateKeyPath}
+        playbook_rendered.yml"
+    options:
+      dependsOn:
+        - ${renderPlaybookCmd}
+        - ${updatePythonCmd}
+
+# Export the resulting wordpress EIP for easy access.
+outputs:
+  url: ${wordpress-eip.publicIp}

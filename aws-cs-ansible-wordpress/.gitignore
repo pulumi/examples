@@ -1,0 +1,4 @@
+/Pulumi.*.yaml
+/playbook_rendered.yml
+/wordpress-keypair
+/wordpress-keypair.pub

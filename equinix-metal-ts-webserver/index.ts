@@ -8,11 +8,11 @@ const randomHostName = new random.RandomPet("hostname");
 const project = metal.getProject({name: "ci-project"});
 
 const vm = new metal.Device("vm", {
-    facilities: [metal.Facility.EWR1],
+    metro: "da",
     billingCycle: metal.BillingCycle.Hourly,
     hostname: randomHostName.id,
-    operatingSystem: metal.OperatingSystem.CoreOSStable,
-    plan: metal.Plan.T1SmallX86,
+    operatingSystem: metal.OperatingSystem.Ubuntu2004,
+    plan: metal.Plan.C3SmallX86,
     projectId:  project.then(p => p.id),
     ipAddresses: [{
         type: "public_ipv4",

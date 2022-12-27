@@ -5,7 +5,7 @@ import * as gcp from "@pulumi/gcp";
 /**
  * Deploy a function using the default runtime.
  */
-const greeting = new gcp.cloudfunctions.HttpCallbackFunction("greeting", (req, res) => {
+const greeting = new gcp.cloudfunctions.HttpCallbackFunction("greeting", (req: any, res: any) => {
     res.send(`Greetings from ${req.body.name || "Google Cloud Functions"}!`);
 });
 
@@ -25,7 +25,7 @@ export const url = greeting.httpsTriggerUrl;
 const runtime = "nodejs14"; // https://cloud.google.com/functions/docs/concepts/exec#runtimes
 const explicitRuntimeGreeting = new gcp.cloudfunctions.HttpCallbackFunction(`greeting-${runtime}`, {
     runtime: runtime,
-    callback: (req, res) => {
+    callback: (req: any, res: any) => {
         res.send(`Greetings from ${req.body.name || "Google Cloud Functions"}!`);
     },
 });

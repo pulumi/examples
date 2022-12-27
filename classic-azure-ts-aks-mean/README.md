@@ -9,11 +9,11 @@ with our managed CosmosDB instance.
 
 ## Prerequisites
 
-Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
+Ensure you have downloaded and installed the [Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
 
 We will be deploying to Azure, so you will need an Azure account. If you don't have an account,
-[sign up for free here](https://azure.microsoft.com/en-us/free/). [Follow the instructions
-here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect Pulumi to your Azure account.
+sign up for [free Azure ccount](https://azure.microsoft.com/en-us/free/). Follow the instructions to 
+[connect Pulumi to Azure account](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/).
 
 This example deploys a Helm Chart from [Bitnami's Helm chart repository](https://github.com/bitnami/charts)
 
@@ -44,11 +44,11 @@ npm install
 
 1. Perform the deployment:
 
-    > **Note**: Due to an [issue](https://github.com/terraform-providers/terraform-provider-azuread/issues/156) in Azure Terraform Provider, the
+    > **Note**: Due to an [issue in Azure Terraform Provider](https://github.com/terraform-providers/terraform-provider-azuread/issues/156), the
     > creation of an Azure Service Principal, which is needed to create the Kubernetes cluster (see cluster.ts), is delayed and may not
     > be available when the cluster is created.  If you get a "Service Principal not found" error, as a work around, you should be able to run `pulumi up`
-    > again, at which time the Service Principal replication should have been completed. See [this issue](https://github.com/Azure/AKS/issues/1206) and
-    > [this doc](https://docs.microsoft.com/en-us/azure/aks/troubleshooting#im-receiving-errors-that-my-service-principal-was-not-found-when-i-try-to-create-a-new-cluster-without-passing-in-an-existing-one)
+    > again, at which time the Service Principal replication should have been completed. See [Azure AKS issue](https://github.com/Azure/AKS/issues/1206) and
+    > this [troubleshooting doc](https://docs.microsoft.com/en-us/azure/aks/troubleshooting#im-receiving-errors-that-my-service-principal-was-not-found-when-i-try-to-create-a-new-cluster-without-passing-in-an-existing-one)
     > for further details.
 
     ```sh
@@ -72,7 +72,7 @@ npm install
 
     ---outputs:---
     cluster        : "aksclusterbfb9388b"
-    frontendAddress: "40.76.25.71"
+    kubeconfig     : "[secret]"
 
     info: 12 changes performed:
         + 12 resources created
@@ -94,7 +94,7 @@ npm install
 
 One of the interesting aspects of this example is the way it demonstrates how easy it is to use
 Azure resources to configure Kubernetes resources, without the need for intermediate APIs such as
-[OSBA](https://osba.sh/). In particular, this example uses the connection strings exposed by the
+[Open Service Broker for Azure](https://github.com/Azure/open-service-broker-azure). In particular, this example uses the connection strings exposed by the
 CosmosDB instance to configure the `bitnami/node` Helm Chart to connect to CosmosDB, instead of
 creating and connecting to an in-cluster MongoDB instance.
 

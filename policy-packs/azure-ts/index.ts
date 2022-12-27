@@ -1,4 +1,4 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure-native";
 import { PolicyPack, validateResourceOfType } from "@pulumi/policy";

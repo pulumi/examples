@@ -1,0 +1,54 @@
+name: simple-kubernetes
+runtime: yaml
+config:
+  hostname:
+    default: example.com
+    type: string
+resources:
+  nginx-demo: # namespace name generated based on resource name
+    type: kubernetes:core/v1:Namespace
+  app:
+    type: kubernetes:apps/v1:Deployment
+    properties:
+      metadata:
+        namespace: ${nginx-demo.metadata.name}
+      spec:
+        selector:
+          matchLabels:
+            app.kubernetes.io/name: nginx-demo
+        replicas: 1
+        template:
+          metadata:
+            labels:
+              app.kubernetes.io/name: nginx-demo
+          spec:
+            containers: [{ name: app, image: "nginx:1.15-alpine" }]
+  service:
+    type: kubernetes:core/v1:Service
+    properties:
+      metadata:
+        namespace: ${nginx-demo.metadata.name}
+        labels:
+          app.kubernetes.io/name: nginx-demo
+      spec:
+        type: ClusterIP
+        ports: [{ port: 80, targetPort: 80, protocol: "TCP" }]
+        selector:
+          app.kubernetes.io/name: nginx-demo
+  ingress:
+    type: kubernetes:networking.k8s.io/v1:Ingress
+    properties:
+      metadata:
+        namespace: ${nginx-demo.metadata.name}
+      spec:
+        rules:
+        - host: ${hostname}
+          http:
+            paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: ${service.metadata.name}
+                  port:
+                    number: 80

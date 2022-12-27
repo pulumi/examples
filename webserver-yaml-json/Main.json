@@ -1,0 +1,61 @@
+{
+  "Configuration": {
+    "InstanceType": {
+      "type": "String",
+      "default": "t3.micro"
+    }
+  },
+  "Resources": {
+    "WebSecGrp": {
+      "Type": "aws:ec2:SecurityGroup",
+      "Properties": {
+        "ingress": [
+          {
+            "protocol": "tcp",
+            "fromPort": 80,
+            "toPort": 80,
+            "cidrBlocks": ["0.0.0.0/0"]
+          }
+        ]
+      },
+      "Options": {
+        "Version": "4.37.1"
+      }
+    },
+    "WebServer": {
+      "Type": "aws:ec2:Instance",
+      "Properties": {
+        "instanceType": "${InstanceType}",
+        "ami": {
+          "fn::invoke": {
+            "Function": "aws:getAmi",
+            "Arguments": {
+              "filters": [
+                { "name": "name", "values": ["amzn-ami-hvm-*-x86_64-ebs"] }
+              ],
+              "owners": ["137112412989"],
+              "mostRecent": true
+            },
+            "Return": "id"
+          }
+        },
+        "userData": {
+          "Fn::Join": [
+            "\n",
+            [
+              "#!/bin/bash",
+              "echo 'Hello, World from ${WebSecGrp.arn}!' > index.html",
+              "nohup python -m SimpleHTTPServer 80 &"
+            ]
+          ]
+        },
+        "vpcSecurityGroupIds": ["${WebSecGrp.id}"]
+      }
+    }
+  },
+  "Outputs": {
+    "InstanceId": "${WebServer.id}",
+    "PublicIp": "${WebServer.publicIp}",
+    "PublicHostName": "${WebServer.publicDns}"
+  }
+}

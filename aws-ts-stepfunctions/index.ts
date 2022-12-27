@@ -2,6 +2,7 @@
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
+import { readFileSync } from "fs";
 
 const region = aws.config.requireRegion();
 
@@ -83,3 +84,4 @@ const stateMachine = new aws.sfn.StateMachine("stateMachine", {
 });
 
 export const stateMachineArn = stateMachine.id;
+export const readme = readFileSync("./Pulumi.README.md").toString();

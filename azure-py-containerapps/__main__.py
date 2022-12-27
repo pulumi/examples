@@ -4,7 +4,7 @@ import pulumi
 from pulumi_azure_native import containerregistry
 from pulumi_azure_native import operationalinsights
 from pulumi_azure_native import resources
-import pulumi_azure_native.web.v20210301 as web
+from pulumi_azure_native import app
 import pulumi_docker as docker
 
 resource_group = resources.ResourceGroup("rg")
@@ -20,12 +20,11 @@ workspace_shared_keys = pulumi.Output.all(resource_group.name, workspace.name) \
         workspace_name=args[1]
     ))
 
-kube_env = web.KubeEnvironment("env",
+managed_env = app.ManagedEnvironment("env",
     resource_group_name=resource_group.name,
-    type="Managed",
-    app_logs_configuration=web.AppLogsConfigurationArgs(
+    app_logs_configuration=app.AppLogsConfigurationArgs(
         destination="log-analytics",
-        log_analytics_configuration=web.LogAnalyticsConfigurationArgs(
+        log_analytics_configuration=app.LogAnalyticsConfigurationArgs(
             customer_id=workspace.customer_id,
             shared_key=workspace_shared_keys.apply(lambda r: r.primary_shared_key)
     )))
@@ -51,29 +50,29 @@ my_image = docker.Image(custom_image,
         username=admin_username,
         password=admin_password))
 
-container_app = web.ContainerApp("app",
+container_app = app.ContainerApp("app",
     resource_group_name=resource_group.name,
-    kube_environment_id=kube_env.id,
-    configuration=web.ConfigurationArgs(
-        ingress=web.IngressArgs(
+    managed_environment_id=managed_env.id,
+    configuration=app.ConfigurationArgs(
+        ingress=app.IngressArgs(
             external=True,
             target_port=80
         ),
         registries=[
-            web.RegistryCredentialsArgs(
+            app.RegistryCredentialsArgs(
                 server=registry.login_server,
                 username=admin_username,
                 password_secret_ref="pwd")
         ],
         secrets=[
-            web.SecretArgs(
+            app.SecretArgs(
                 name="pwd",
                 value=admin_password)
         ],
     ),
-    template=web.TemplateArgs(
+    template=app.TemplateArgs(
         containers = [
-            web.ContainerArgs(
+            app.ContainerArgs(
                 name="myapp",
                 image=my_image.image_name)
         ]))

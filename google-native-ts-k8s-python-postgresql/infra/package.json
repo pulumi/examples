@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "@pulumi/docker": "^3.1.0",
+    "@pulumi/gcp": "^6.11.0",
+    "@pulumi/google-native": "^0.14.0",
+    "@pulumi/kubernetes": "^3.15.2",
+    "@pulumi/pulumi": "^3.24.1",
+    "@pulumi/random": "^4.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.17"
+  },
+  "name": "xpresso-gke-demo"
+}

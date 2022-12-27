@@ -72,7 +72,7 @@ Example   | Description |
 [API Gateway](aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
 [API Gateway HTTP API with routes](aws-ts-apigatewayv2-http-api) | Deploy a HTTP API that invokes a Lambda.
 [API Gateway HTTP API quickstart](aws-ts-apigatewayv2-http-api-quickcreate) | Deploy a very simple HTTP API that invokes a Lambda.
-[API Gateway V1 with EventBridge and Lambda](aws-ts-apigateway-eventbridge) | Deploy a REST API that uses EventBridge to target a Lambda function. Includes API Gateway model validation and custom integration-response mapping. 
+[API Gateway V1 with EventBridge and Lambda](aws-ts-apigateway-eventbridge) | Deploy a REST API that uses EventBridge to target a Lambda function. Includes API Gateway model validation and custom integration-response mapping.
 [API Gateway V2 with EventBridge and Lambda](aws-ts-apigatewayv2-eventbridge) | Deploy an HTTP API that uses EventBridge to target a Lambda function.
 [Apigateway - Auth0](aws-ts-apigateway-auth0) | Deploy a simple REST API protected by Auth0.
 [AppSync](aws-ts-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
@@ -220,6 +220,8 @@ Cluster.
 [Azure Functions](azure-cs-functions) | Deploy a Node.js serverless function to Azure Functions.
 [Static Website](azure-cs-static-website) | Configure static website hosting in Azure Storage.
 [Azure Synapse](azure-cs-synapse) | Starting point for enterprise analytics solutions based on Azure Synapse.
+[Azure SQL Server](azure-cs-sqlserver) | An example of a SQLServer on Azure PaaS.
+
 
 ## GCP
 

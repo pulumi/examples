@@ -1,0 +1,6 @@
+name: cue
+runtime:
+  name: yaml
+  options:
+    compiler: cue export
+description: CUE Example

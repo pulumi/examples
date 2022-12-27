@@ -1,0 +1,93 @@
+name: azure-container-apps
+runtime: yaml
+description: Azure Container Apps example
+config:
+  sqlAdmin:
+    type: string
+    default: pulumi
+variables:
+  sharedKey:
+    fn::invoke:
+      function: azure-native:operationalinsights:getSharedKeys
+      arguments:
+        resourceGroupName: ${resourceGroup.name}
+        workspaceName: ${workspace.name}
+      Return: primarySharedKey
+  adminUsername:
+    fn::invoke:
+      function: azure-native:containerregistry:listRegistryCredentials
+      arguments:
+        resourceGroupName: ${resourceGroup.name}
+        registryName: ${registry.name}
+      Return: username
+  adminPasswords:
+    fn::invoke:
+      function: azure-native:containerregistry:listRegistryCredentials
+      arguments:
+        resourceGroupName: ${resourceGroup.name}
+        registryName: ${registry.name}
+      Return: passwords
+resources:
+  resourceGroup:
+    type: azure-native:resources:ResourceGroup
+  workspace:
+    type: azure-native:operationalinsights:Workspace
+    properties:
+      resourceGroupName: ${resourceGroup.name}
+      sku:
+        name: "PerGB2018"
+      retentionInDays: 30
+  kubeEnv:
+    type: azure-native:web:KubeEnvironment
+    properties:
+      resourceGroupName: ${resourceGroup.name}
+      environmentType: Managed
+      appLogsConfiguration:
+        destination: "log-analytics"
+        logAnalyticsConfiguration:
+          customerId: ${workspace.customerId}
+          sharedKey: ${sharedKey}
+  registry:
+    type: azure-native:containerregistry:Registry
+    properties:
+      resourceGroupName: ${resourceGroup.name}
+      sku:
+        name: "Basic"
+      adminUserEnabled: true
+  provider:
+    type: pulumi:providers:docker
+    properties:
+      registryAuth:
+        - address: ${registry.loginServer}
+          username: ${adminUsername}
+          password: ${adminPasswords[0].value}
+  myImage:
+    type: docker:RegistryImage
+    properties:
+      name: ${registry.loginServer}/node-app:v1.0.0
+      build:
+        context: ${pulumi.cwd}/node-app
+    options:
+      provider: ${provider}
+  containerapp:
+    type: azure-native:web:ContainerApp
+    properties:
+      resourceGroupName: ${resourceGroup.name}
+      kubeEnvironmentId: ${kubeEnv}
+      configuration:
+        ingress:
+            external: true
+            targetPort: 80
+        registries:
+          - server: ${registry.loginServer}
+            username: ${adminUsername}
+            passwordSecretRef: "pwd"
+        secrets:
+          - name: "pwd"
+            value: ${adminPasswords[0].value}
+      template:
+        containers:
+          - name: "myapp"
+            image: ${myImage.name}
+outputs:
+  endpoint: https://${containerapp.configuration.ingress.fqdn}

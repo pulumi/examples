@@ -4,7 +4,7 @@
     "@types/node": "^12.0.0"
   },
   "dependencies": {
-    "@pulumi/awsx": "^0.30.0",
+    "@pulumi/awsx": "^0.40.0",
     "@pulumi/azure": "^4.0.0",
     "@pulumi/azuread": "^4.0.0",
     "@pulumi/eks": "^0.30.0",

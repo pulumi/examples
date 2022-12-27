@@ -1,0 +1,44 @@
+name: aws-native-static-website
+runtime: yaml
+description: A static website hosted on AWS S3
+resources:
+  site-bucket:
+    type: aws-native:s3:Bucket
+    properties:
+      websiteConfiguration:
+        indexDocument: index.html
+  index.html:
+    type: aws:s3:BucketObject
+    properties:
+      bucket: ${site-bucket}
+      source:
+        Fn::FileAsset: ./www/index.html
+      acl: public-read
+      contentType: text/html
+  favicon.png:
+    type: aws:s3:BucketObject
+    properties:
+      bucket: ${site-bucket}
+      source:
+        Fn::FileAsset: ./www/favicon.png
+      acl: public-read
+      contentType: image/png
+  bucketPolicy:
+    type: aws:s3:BucketPolicy
+    properties:
+      bucket: ${site-bucket}
+      policy: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": "*",
+              "Action": ["s3:GetObject"],
+              "Resource": ["${site-bucket.arn}/*"]
+            }
+          ]
+        }
+outputs:
+  bucketName: ${site-bucket.bucketName}
+  websiteUrl: ${site-bucket.websiteURL}

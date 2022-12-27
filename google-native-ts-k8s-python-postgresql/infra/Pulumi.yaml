@@ -1,0 +1,3 @@
+name: xpresso-gke-demo
+runtime: nodejs
+description: A demo Xpresso app running on GCP with IaC using Pulumi

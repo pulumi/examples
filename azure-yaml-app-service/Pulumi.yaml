@@ -1,0 +1,103 @@
+name: azure-app-service
+runtime: yaml
+description: A static website hosted on AWS S3
+config:
+  sqlAdmin:
+    type: string
+    default: pulumi
+variables:
+  blobAccessToken:
+    fn::invoke:
+      function: azure-native:storage:listStorageAccountServiceSAS
+      arguments:
+        accountName: ${sa.name}
+        protocols: https
+        sharedAccessStartTime: '2022-01-01'
+        sharedAccessExpiryTime: '2030-01-01'
+        resource: c
+        resourceGroupName: ${appservicegroup.name}
+        permissions: r
+        canonicalizedResource: /blob/${sa.name}/${container.name}
+        contentType: application/json
+        cacheControl: max-age=5
+        contentDisposition: inline
+        contentEncoding: deflate
+      Return: serviceSasToken
+resources:
+  appservicegroup:
+    type: azure-native:resources:ResourceGroup
+  sa:
+    type: azure-native:storage:StorageAccount
+    properties:
+      resourceGroupName: ${appservicegroup.name}
+      kind: 'StorageV2'
+      sku: { name: 'Standard_LRS' }
+  appserviceplan:
+    type: azure-native:web:AppServicePlan
+    properties:
+      resourceGroupName: ${appservicegroup.name}
+      kind: App
+      sku:
+        name: B1
+        tier: Basic
+  container:
+    type: azure-native:storage:BlobContainer
+    properties:
+      resourceGroupName: ${appservicegroup.name}
+      accountName: ${sa.name}
+      publicAccess: None
+  blob:
+    type: azure-native:storage:Blob
+    properties:
+      resourceGroupName: ${appservicegroup.name}
+      accountName: ${sa.name}
+      containerName: ${container.name}
+      type: 'Block'
+      source:
+        Fn::FileArchive: ./www
+  appInsights:
+    type: azure-native:insights:Component
+    properties:
+      resourceGroupName: ${appservicegroup.name}
+      applicationType: web
+      kind: web
+  sqlPassword:
+    type: random:RandomPassword
+    properties:
+      length: 16
+      special: true
+  sqlServer:
+    type: azure-native:sql:Server
+    properties:
+      resourceGroupName: ${appservicegroup.name}
+      administratorLogin: ${sqlAdmin}
+      administratorLoginPassword: ${sqlPassword.result}
+      version: '12.0'
+  db:
+    type: azure-native:sql:Database
+    properties:
+      resourceGroupName: ${appservicegroup.name}
+      serverName: ${sqlServer.name}
+      sku: { name: 'S0' }
+
+  app:
+    type: azure-native:web:WebApp
+    properties:
+      resourceGroupName: ${appservicegroup.name}
+      serverFarmId: ${appserviceplan}
+      siteConfig:
+        appSettings:
+          - name: WEBSITE_RUN_FROM_PACKAGE
+            value: https://${sa.name}.blob.core.windows.net/${container.name}/${blob.name}?${blobAccessToken}
+          - name: APPINSIGHTS_INSTRUMENTATIONKEY
+            value: ${appInsights.instrumentationKey}
+          - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+            value: InstrumentationKey=${appInsights.instrumentationKey}
+          - name: ApplicationInsightsAgent_EXTENSION_VERSION
+            value: ~2
+        connectionStrings:
+          - name: db
+            type: SQLAzure
+            connectionString: Server= tcp:${sqlServer.name}.database.windows.net;initial catalog=${db.name};userID=${sqlAdmin};password=${sqlPassword.result};Min Pool Size=0;Max Pool Size=30;Persist Security Info=true;
+outputs:
+  endpoint: ${app.defaultHostName}

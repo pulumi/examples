@@ -1,0 +1,84 @@
+# An Ansible Playbook that installs Wordpress on a fresh Amazon Linux 2 Server.
+# The only prerequisite is that Python 2.7 and Ansible are available on the server.
+- name: Install Wordpress on new Amazon Linux 2 Server.
+  hosts: all
+  become: yes
+
+  vars:
+    # Explicitly use Python2.7, since this playbook requires it.
+    ansible_python_interpreter: /usr/bin/python
+
+  tasks:
+
+  - name: Setting up variables
+    set_fact:
+      php_modules:
+        - 'php-fpm'
+        - 'php-mysqlnd'
+        - 'php-curl'
+        - 'php-gd'
+        - 'php-mbstring'
+        - 'php-xml'
+        - 'php-xmlrpc'
+        - 'php-soap'
+        - 'php-intl'
+        - 'php-zip'
+
+      # RDS MySQL variables populated post-provisioning:
+      mysql_rds: $DB_RDS
+      mysql_db: $DB_NAME
+      mysql_user: $DB_USERNAME
+      mysql_password: $DB_PASSWORD
+
+  - name: Yum update
+    yum:
+      name: '*'
+      state: latest
+
+  # Install Apache and PHP.
+  - name: Install Apache server
+    yum: name={{ item }} state=present
+    loop: [ 'httpd', 'mysql' ]
+  - name: Installing PHP
+    shell: amazon-linux-extras enable php7.4
+
+  - name: Clean Yum metadata
+    shell: yum clean metadata
+
+  # Install PHP extension that Wordpress needs.
+  - name: Install PHP extensions
+    yum: name={{ item }} state=present
+    loop: "{{ php_modules }}"
+
+  - name: Set permissions for HTML directories
+    shell: "/usr/bin/find /var/www/html/ -type d -exec chmod 2775 {} \\;"
+
+  - name: Set permissions for HTML files
+    shell: "/usr/bin/find /var/www/html/ -type f -exec chmod 0664 {} \\;"
+
+  # Download and install Wordpress.
+  - name: Download and unpack Wordpress
+    unarchive:
+      src: https://wordpress.org/latest.tar.gz
+      dest: "/var/www"
+      remote_src: yes
+  - name: Copy wordpress files to /html folder
+    shell: cp /var/www/wordpress/. /var/www/html -r
+  - name: Delete old wordpress files
+    shell: rm /var/www/wordpress -r
+  - name: Set up wp-config
+    template:
+      src: "files/wp-config.php.j2"
+      dest: "/var/www/html/wp-config.php"
+
+  # Prepare the HTML director for Apache to serve it.
+  - name: Set HTML dir ownership (chown)
+    shell: chown -R ec2-user:apache /var/www/html
+
+  - name: Set HTML dir permission (chmod 774)
+    shell: chown -R ec2-user:apache /var/www/html
+
+  # Off to the races!
+  - name: Start the Apache Server
+    service: name={{ item }} state=restarted enabled=True
+    loop: [ 'httpd' ]

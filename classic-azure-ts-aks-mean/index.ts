@@ -14,8 +14,8 @@ const cosmosdb = new azure.cosmosdb.Account("cosmosDb", {
     resourceGroupName: config.resourceGroup.name,
     consistencyPolicy: {
         consistencyLevel: "BoundedStaleness",
-        maxIntervalInSeconds: 10,
-        maxStalenessPrefix: 200,
+        maxIntervalInSeconds: 300,
+        maxStalenessPrefix: 100000,
     },
     offerType: "Standard",
     enableAutomaticFailover: true,
@@ -40,7 +40,7 @@ const node = new k8s.helm.v3.Chart(
     "node",
     {
         chart: "node",
-        version: "4.0.1",
+        version: "19.0.2",
         fetchOpts: {
             repo: "https://charts.bitnami.com/bitnami",
         },
@@ -57,6 +57,3 @@ const node = new k8s.helm.v3.Chart(
 // be accessed from the CLI, like: `pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml`.
 export const kubeconfig = k8sCluster.kubeConfigRaw;
 export const cluster = k8sCluster.name;
-export const frontendAddress = node
-    .getResourceProperty("v1/Service", "node-node", "status")
-    .apply(status => status.loadBalancer.ingress[0].ip);

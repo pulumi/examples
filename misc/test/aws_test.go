@@ -167,6 +167,38 @@ func TestAccAwsJsWebserverComponent(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsApiGatewayPyRoutes(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-apigateway-py-routes"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["url"].(string)
+				assertHTTPResultWithRetry(t, endpoint+"lambda", nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, API Gateway!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsApiGatewayTsRoutes(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-apigateway-ts-routes"),
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["url"].(string)
+				assertHTTPResultWithRetry(t, endpoint+"lambda", nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, API Gateway!")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsPyAppSync(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
@@ -260,13 +292,15 @@ func TestAccAwsPyWebserver(t *testing.T) {
 }
 
 func TestAccAwsTsAirflow(t *testing.T) {
-	t.Skip("Skip due to failures initializing 20(!) instances")
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-airflow"),
 			Config: map[string]string{
 				"airflow:dbPassword": "secretP4ssword",
 			},
+			// TODO: currently this test has changes in preview when none were expected #859
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)

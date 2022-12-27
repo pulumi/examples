@@ -1,5 +1,5 @@
 pulumi>=3.5.1,<4.0.0
-pulumi-aws>=4.0.0,<5.0.0
+pulumi-aws>=5.0.0,<6.0.0
 pulumi-docker>=3.0.0,<4.0.0
 pulumi-mysql>=3.0.0,<4.0.0
 mysql-connector-python>=1.0.0,<10.0.0

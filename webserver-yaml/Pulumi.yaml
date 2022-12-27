@@ -1,0 +1,50 @@
+name: webserver
+runtime: yaml
+description: Basic example of an AWS web server accessible over HTTP
+config:
+  InstanceType:
+    type: string
+    default: t3.micro
+variables:
+  ec2ami:
+    fn::invoke:
+      function: aws:getAmi
+      arguments:
+        filters:
+          - name: name
+            values: ["amzn-ami-hvm-*-x86_64-ebs"]
+        owners: ["137112412989"]
+        mostRecent: true
+      Return: id
+resources:
+  WebSecGrp:
+    type: aws:ec2:SecurityGroup
+    properties:
+      ingress:
+        - protocol: tcp
+          fromPort: 80
+          toPort: 80
+          cidrBlocks: ["0.0.0.0/0"]
+  WebServer:
+    type: aws:ec2:Instance
+    properties:
+      instanceType: ${InstanceType}
+      ami: ${ec2ami}
+      userData: |-
+          #!/bin/bash
+          echo 'Hello, World from ${WebSecGrp.arn}!' > index.html
+          nohup python -m SimpleHTTPServer 80 &
+      vpcSecurityGroupIds:
+        - ${WebSecGrp}
+  UsEast2Provider:
+    type: pulumi:providers:aws
+    properties:
+      region: us-east-2
+  MyBucket:
+    type: aws:s3:Bucket
+    options:
+      provider: ${UsEast2Provider}
+outputs:
+  InstanceId: ${WebServer.id}
+  PublicIp: ${WebServer.publicIp}
+  PublicHostName: ${WebServer.publicDns}

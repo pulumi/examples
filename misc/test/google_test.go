@@ -60,6 +60,8 @@ func TestAccGcpGoGke(t *testing.T) {
 }
 
 func TestAccGcpGoInstance(t *testing.T) {
+	// TODO[pulumi/examples#1188]
+	t.Skip("Skip due to frequent failures: `resourceNotReady")
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-instance"),

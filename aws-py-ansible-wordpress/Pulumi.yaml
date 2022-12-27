@@ -1,0 +1,6 @@
+name: pulumi-ansible-wordpress-py
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Deploy an EC2 Wordpress server using Pulumi and Ansible.

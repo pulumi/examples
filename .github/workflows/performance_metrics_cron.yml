@@ -65,6 +65,14 @@ jobs:
       - run: echo "Currently Pulumi $(pulumi version) is installed"
       - name: Install Testing Dependencies
         run: make ensure
+      - name: Install gotestfmt
+        uses: jaxxstorm/action-install-gh-release@v1.7.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repo: gotesttools/gotestfmt
+          tag: v2.3.2
+          cache: enable
       - name: Create a Folder for Collecting Traces
         run: |-
           mkdir "$PWD/traces"
@@ -74,7 +82,19 @@ jobs:
           echo "PULUMI_TRACING_TAG_PULUMI_VERSION=$(pulumi version)" >> $GITHUB_ENV
           echo "PULUMI_TRACING_DIR=$PWD/traces"                      >> $GITHUB_ENV
       - name: Run Performance Matrix
-        run: make performance_test_set
+        # Even if some Go tests fail, others may have succeded and
+        # produced perf data; continue to try to upload it.
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd misc/test && go test . --timeout 4h -count=1 -json -short -parallel 40 --tags=Performance 2>&1 | tee /tmp/gotest.log | gotestfmt
+      - name: Upload traces GHA artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: traces
+          path: traces
+          retention-days: 14
       - name: Upload Traces to s3://cli-performance-metrics
         run: |-
             F="$PWD/traces/metrics.parquet.snappy"

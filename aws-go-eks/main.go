@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/ec2"
-	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/eks"
-	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/iam"
+	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/ec2"
+	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/eks"
+	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/iam"
+	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes"
 	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/apps/v1"
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/core/v1"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/meta/v1"
-	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/providers"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -143,7 +143,7 @@ func main() {
 		ctx.Export("kubeconfig", generateKubeconfig(eksCluster.Endpoint,
 			eksCluster.CertificateAuthority.Data().Elem(), eksCluster.Name))
 
-		k8sProvider, err := providers.NewProvider(ctx, "k8sprovider", &providers.ProviderArgs{
+		k8sProvider, err := kubernetes.NewProvider(ctx, "k8sprovider", &kubernetes.ProviderArgs{
 			Kubeconfig: generateKubeconfig(eksCluster.Endpoint,
 				eksCluster.CertificateAuthority.Data().Elem(), eksCluster.Name),
 		}, pulumi.DependsOn([]pulumi.Resource{nodeGroup}))
@@ -222,7 +222,7 @@ func main() {
 	})
 }
 
-//Create the KubeConfig Structure as per https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
+// Create the KubeConfig Structure as per https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
 func generateKubeconfig(clusterEndpoint pulumi.StringOutput, certData pulumi.StringOutput, clusterName pulumi.StringOutput) pulumi.StringOutput {
 	return pulumi.Sprintf(`{
         "apiVersion": "v1",
@@ -246,7 +246,7 @@ func generateKubeconfig(clusterEndpoint pulumi.StringOutput, certData pulumi.Str
             "name": "aws",
             "user": {
                 "exec": {
-                    "apiVersion": "client.authentication.k8s.io/v1alpha1",
+                    "apiVersion": "client.authentication.k8s.io/v1beta1",
                     "command": "aws-iam-authenticator",
                     "args": [
                         "token",

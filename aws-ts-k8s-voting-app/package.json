@@ -5,8 +5,8 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/aws": "^4.0.0",
-        "@pulumi/awsx": "^0.30.0",
+        "@pulumi/aws": "^5.0.0",
+        "@pulumi/awsx": "^0.40.0",
         "@pulumi/cloud-aws": "^0.30.0",
         "@pulumi/eks": "^0.30.0",
         "@pulumi/postgresql": "^3.0.0",

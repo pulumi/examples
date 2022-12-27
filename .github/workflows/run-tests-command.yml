@@ -5,17 +5,20 @@ env:
   ARM_LOCATION: westus
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-  AWS_ACCESS_KEY_ID: ' ${{ secrets.AWS_ACCESS_KEY_ID }}'
+  AWS_ACCESS_KEY_ID: " ${{ secrets.AWS_ACCESS_KEY_ID }}"
   AWS_REGION: us-west-2
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   CLOUDSDK_CORE_DISABLE_PROMPTS: 1
   DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
-  GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-  GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+  GOOGLE_CI_SERVICE_ACCOUNT_EMAIL: pulumi-ci@pulumi-ci-gcp-provider.iam.gserviceaccount.com
+  GOOGLE_CI_WORKLOAD_IDENTITY_POOL: pulumi-ci
+  GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER: pulumi-ci
+  GOOGLE_PROJECT: pulumi-ci-gcp-provider
+  GOOGLE_PROJECT_NUMBER: "895284651812"
   GOOGLE_REGION: us-central1
   GOOGLE_ZONE: us-central1-a
-  PR_COMMIT_SHA: ${{ github.event.client_payload.pull_request.head.sha }}
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
+  PR_COMMIT_SHA: ${{ github.event.client_payload.pull_request.head.sha }}
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_API: https://api.pulumi-staging.io
   PULUMI_TEST_OWNER: moolumi
@@ -28,7 +31,8 @@ jobs:
     steps:
     - id: vars
       name: Create URL to the run output
-      run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+      run: echo ::set-output
+        name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
     - name: Update with Result
       uses: peter-evans/create-or-update-comment@v1
       with:
@@ -36,32 +40,32 @@ jobs:
           Please view the results of the PR Build [Here][1]
 
           [1]: ${{ steps.vars.outputs.run-url }}
-        issue-number: ${{ github.event.client_payload.github.payload.issue.number
-          }}
-        repository: ${{ github.event.client_payload.github.payload.repository.full_name
-          }}
+        issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+        repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
         token: ${{ secrets.GITHUB_TOKEN }}
   dotnet-unit-testing:
-    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
-      == github.repository
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install DotNet ${{ matrix.dotnet-version }}
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{matrix.dotnet-version}}
-    - name: Install Latest Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v2
+        dotnet-version: ${{matrix.dotnetversion}}
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: dotnet test
       working-directory: ${{ matrix.source-dir }}
     strategy:
       fail-fast: false
       matrix:
-        dotnet-version:
-        - 3.1.x
+        dotnetversion:
+        - 3.1.301
         platform:
         - ubuntu-latest
         source-dir:
@@ -69,78 +73,103 @@ jobs:
         - testing-unit-cs-mocks
         - testing-unit-fs-mocks
   go-unit-testing:
-    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
-      == github.repository
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v1
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+    - name: Install Go
+      uses: actions/setup-go@v2
       with:
-        go-version: ${{matrix.go-version}}
-    - name: Install Latest Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v2
+        go-version: ${{matrix.goversion}}
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: go test
       working-directory: ${{ matrix.source-dir }}
     strategy:
       fail-fast: false
       matrix:
-        go-version:
-        - 1.16.x
+        goversion:
+        - 1.19.x
         platform:
         - ubuntu-latest
         source-dir:
         - testing-unit-go
   kubernetes:
-    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
-      == github.repository
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     name: kubernetes
     needs: test-infra-setup
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install DotNet ${{ matrix.dotnet-version }}
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{matrix.dotnet-version}}
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+        dotnet-version: ${{matrix.dotnetversion}}
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{matrix.node-version}}
-    - name: Install Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
+    - name: Setup Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{matrix.python-version}}
-    - name: Install Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v1
-      with:
-        go-version: ${{matrix.go-version}}
-    - name: Install Python Deps
+        python-version: ${{matrix.pythonversion}}
+    - name: Install Python deps
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
-      run: |-
-        curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+      run: >-
+        curl -o aws-iam-authenticator
+        https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+
         chmod +x ./aws-iam-authenticator
+
         sudo mv aws-iam-authenticator /usr/local/bin
     - name: Install Kubectl
-      run: |-
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+      run: >-
+        curl -LO
+        https://storage.googleapis.com/kubernetes-release/release/$(curl -s
+        https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+
         chmod +x ./kubectl
+
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
-      run: |-
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      run: >-
+        curl -o- -L
+        https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get |
+        bash
+
+        helm init -c
+
         helm repo add bitnami https://charts.bitnami.com/bitnami
-    - name: Configure GCP credentials
-      uses: google-github-actions/setup-gcloud@master
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0
       with:
-        project_id: ${{ env.GOOGLE_PROJECT }}
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        version: 285.0.0
+        service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
+        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
+          }}/locations/global/workloadIdentityPools/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
+    - name: Setup gcloud auth
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
@@ -152,56 +181,56 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v2
     - name: Checkout Scripts Repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: ci-scripts
         repository: pulumi/scripts
-    - name: Install Latest Stable Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - name: Set up gotestfmt
-      uses: haveyoudebuggedit/gotestfmt-action@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Go Dependencies
       run: make ensure
     - name: Setup Config
-      run: |-
+      run: >-
         mkdir -p "$HOME/.kube/"
+
         pulumi stack -s "${{ env.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
-    - name: Run Kubernetes Tests
-      run: |
-        set -euo pipefail
-        cd misc/test && go test . --timeout 4h -v -json -count=1 -short -parallel 40 --tags=all --run=TestAccKubernetes 2>&1 | tee /tmp/gotest.log | gotestfmt
+    - name: Run ${{ matrix.tests-set }} Tests
+      run: make specific_test_set TestSet=Kubernetes
     strategy:
       fail-fast: false
       matrix:
-        dotnet-version:
+        dotnetversion:
         - 3.1.301
-        go-version:
-        - 1.16.x
-        node-version:
-        - 14.x
+        goversion:
+        - 1.19.x
+        nodeversion:
+        - 16.x
         platform:
         - ubuntu-latest
-        python-version:
-        - "3.7"
+        pythonversion:
+        - "3.9"
   linting:
-    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
-      == github.repository
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     name: lint
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{matrix.node-version}}
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
     - name: Install Yarn
-      run: curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version ${{ matrix.yarn-version
-        }}
+      run: curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version ${{
+        matrix.yarn-version }}
     - name: Update PATH for Yarn
       run: |-
         echo "$HOME/.yarn/bin" >> $GITHUB_PATH
@@ -213,59 +242,82 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version:
-        - 14.x
+        nodeversion:
+        - 16.x
         platform:
         - ubuntu-latest
         yarn-version:
         - 1.13.0
   providers:
-    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
-      == github.repository
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     name: run-provider-tests
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install DotNet ${{ matrix.dotnet-version }}
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{matrix.dotnet-version}}
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+        dotnet-version: ${{matrix.dotnetversion}}
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{matrix.node-version}}
-    - name: Install Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
+    - name: Setup Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{matrix.python-version}}
-    - name: Install Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v1
-      with:
-        go-version: ${{matrix.go-version}}
-    - name: Install Python Deps
+        python-version: ${{matrix.pythonversion}}
+    - name: Install Python deps
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
-      run: |-
-        curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+      run: >-
+        curl -o aws-iam-authenticator
+        https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+
         chmod +x ./aws-iam-authenticator
+
         sudo mv aws-iam-authenticator /usr/local/bin
     - name: Install Kubectl
-      run: |-
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+      run: >-
+        curl -LO
+        https://storage.googleapis.com/kubernetes-release/release/$(curl -s
+        https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+
         chmod +x ./kubectl
+
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
-      run: |-
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      run: >-
+        curl -o- -L
+        https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get |
+        bash
+
+        helm init -c
+
         helm repo add bitnami https://charts.bitnami.com/bitnami
-    - name: Configure GCP credentials
-      uses: google-github-actions/setup-gcloud@master
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0
       with:
-        project_id: ${{ env.GOOGLE_PROJECT }}
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        version: 285.0.0
+        service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
+        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
+          }}/locations/global/workloadIdentityPools/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
+    - name: Setup gcloud auth
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
@@ -277,25 +329,19 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v2
     - name: Checkout Scripts Repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: ci-scripts
         repository: pulumi/scripts
-    - name: Install Latest Stable Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - name: Set up gotestfmt
-      uses: haveyoudebuggedit/gotestfmt-action@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
       run: make ensure
     - name: Running ${{ matrix.clouds }}${{ matrix.languages }} Tests
-      run: |
-        set -euo pipefail
-        cd misc/test && go test . --timeout 4h -v -json -count=1 -short -parallel 40 --tags=all --run=TestAcc${{ matrix.clouds }}${{ matrix.languages }} 2>&1 | tee /tmp/gotest.log | gotestfmt
+      run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
     strategy:
       fail-fast: false
       matrix:
@@ -304,43 +350,45 @@ jobs:
         - Aws
         - Azure
         - Gcp
+        - Packet
         - EquinixMetal
         - Cloud
-        dotnet-version:
+        dotnetversion:
         - 3.1.301
-        go-version:
-        - 1.16.x
+        goversion:
+        - 1.19.x
         languages:
         - Cs
-        - Go
         - Js
         - Ts
         - Py
         - Fs
-        node-version:
-        - 14.x
+        nodeversion:
+        - 16.x
         platform:
         - ubuntu-latest
-        python-version:
-        - "3.7"
+        pythonversion:
+        - "3.9"
   python-unit-testing:
-    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
-      == github.repository
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+    - name: Setup Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{matrix.python-version}}
-    - name: Install Python Deps
+        python-version: ${{matrix.pythonversion}}
+    - name: Install Python deps
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
-    - name: Install Latest Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v2
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: |-
         python3 -m venv venv
         source venv/bin/activate
@@ -352,58 +400,98 @@ jobs:
       matrix:
         platform:
         - ubuntu-latest
-        python-version:
-        - 3.7.x
+        pythonversion:
+        - "3.9"
         source-dir:
         - testing-unit-py
+  status-checks:
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name
+    name: Final Status Check
+    needs:
+    - dotnet-unit-testing
+    - go-unit-testing
+    - python-unit-testing
+    - ts-unit-testing
+    - kubernetes
+    - linting
+    - providers
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+    - run: echo "Ready for merge"
   test-infra-destroy:
-    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
-      == github.repository
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     name: test-infra-destroy
     needs: kubernetes
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install DotNet ${{ matrix.dotnet-version }}
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{matrix.dotnet-version}}
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+        dotnet-version: ${{matrix.dotnetversion}}
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{matrix.node-version}}
-    - name: Install Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
+    - name: Setup Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{matrix.python-version}}
-    - name: Install Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v1
-      with:
-        go-version: ${{matrix.go-version}}
-    - name: Install Python Deps
+        python-version: ${{matrix.pythonversion}}
+    - name: Install Python deps
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
-      run: |-
-        curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+      run: >-
+        curl -o aws-iam-authenticator
+        https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+
         chmod +x ./aws-iam-authenticator
+
         sudo mv aws-iam-authenticator /usr/local/bin
     - name: Install Kubectl
-      run: |-
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+      run: >-
+        curl -LO
+        https://storage.googleapis.com/kubernetes-release/release/$(curl -s
+        https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+
         chmod +x ./kubectl
+
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
-      run: |-
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      run: >-
+        curl -o- -L
+        https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get |
+        bash
+
+        helm init -c
+
         helm repo add bitnami https://charts.bitnami.com/bitnami
-    - name: Configure GCP credentials
-      uses: google-github-actions/setup-gcloud@master
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0
       with:
-        project_id: ${{ env.GOOGLE_PROJECT }}
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        version: 285.0.0
+        service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
+        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
+          }}/locations/global/workloadIdentityPools/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
+    - name: Setup gcloud auth
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
@@ -415,78 +503,101 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v2
     - name: Checkout Scripts Repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: ci-scripts
         repository: pulumi/scripts
-    - name: Install Latest Stable Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Destroy test infra
-      run: make destroy_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{ github.sha
-        }}-${{ github.run_number }}"
+      run: make destroy_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
+        github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
-        dotnet-version:
+        dotnetversion:
         - 3.1.301
-        go-version:
-        - 1.16.x
-        node-version:
-        - 14.x
+        goversion:
+        - 1.19.x
+        nodeversion:
+        - 16.x
         platform:
         - ubuntu-latest
-        python-version:
-        - "3.7"
+        pythonversion:
+        - "3.9"
   test-infra-setup:
-    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
-      == github.repository
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     name: test-infra-setup
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install DotNet ${{ matrix.dotnet-version }}
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{matrix.dotnet-version}}
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+        dotnet-version: ${{matrix.dotnetversion}}
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{matrix.node-version}}
-    - name: Install Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
+    - name: Setup Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{matrix.python-version}}
-    - name: Install Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v1
-      with:
-        go-version: ${{matrix.go-version}}
-    - name: Install Python Deps
+        python-version: ${{matrix.pythonversion}}
+    - name: Install Python deps
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
-      run: |-
-        curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+      run: >-
+        curl -o aws-iam-authenticator
+        https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+
         chmod +x ./aws-iam-authenticator
+
         sudo mv aws-iam-authenticator /usr/local/bin
     - name: Install Kubectl
-      run: |-
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+      run: >-
+        curl -LO
+        https://storage.googleapis.com/kubernetes-release/release/$(curl -s
+        https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+
         chmod +x ./kubectl
+
         sudo mv kubectl /usr/local/bin
     - name: Install + Configure Helm
-      run: |-
-        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      run: >-
+        curl -o- -L
+        https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get |
+        bash
+
+        helm init -c
+
         helm repo add bitnami https://charts.bitnami.com/bitnami
-    - name: Configure GCP credentials
-      uses: google-github-actions/setup-gcloud@master
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0
       with:
-        project_id: ${{ env.GOOGLE_PROJECT }}
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        version: 285.0.0
+        service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
+        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
+          }}/locations/global/workloadIdentityPools/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
+          env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
+    - name: Setup gcloud auth
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
@@ -498,60 +609,66 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - uses: actions/checkout@v2
     - name: Checkout Scripts Repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: ci-scripts
         repository: pulumi/scripts
-    - name: Install Latest Stable Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Create Test Infrastructure
-      run: make setup_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{ github.sha
-        }}-${{ github.run_number }}"
+      run: make setup_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
+        github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
-        dotnet-version:
+        dotnetversion:
         - 3.1.301
-        go-version:
-        - 1.16.x
-        node-version:
-        - 14.x
+        goversion:
+        - 1.19.x
+        nodeversion:
+        - 16.x
         platform:
         - ubuntu-latest
-        python-version:
-        - "3.7"
+        pythonversion:
+        - "3.9"
   ts-unit-testing:
-    if: github.event_name == 'repository_dispatch' || github.event.pull_request.head.repo.full_name
-      == github.repository
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+    - name: Setup Node
+      uses: actions/setup-node@v2
       with:
-        node-version: ${{matrix.node-version}}
-    - name: Install Latest Pulumi CLI
-      uses: pulumi/action-install-pulumi-cli@v1.0.1
-    - run: echo "Currently Pulumi $(pulumi version) is installed"
-    - uses: actions/checkout@v2
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
+    - name: Install Pulumi CLI
+      uses: pulumi/action-install-pulumi-cli@v2
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: |-
         npm install
-        $(npm bin)/mocha -r ts-node/register ec2tests.ts
+        npm install --global mocha
+        npm install --global ts-node
+        mocha -r ts-node/register ec2tests.ts
+        mocha -r ts-node/register bucket_pair_test.ts
       working-directory: ${{ matrix.source-dir }}/mocha
     strategy:
       fail-fast: false
       matrix:
-        node-version:
-        - 14.x
+        nodeversion:
+        - 16.x
         platform:
         - ubuntu-latest
         source-dir:
         - testing-unit-ts
 name: Run Examples Tests From PR
-"on":
+on:
   pull_request:
     branches:
     - master

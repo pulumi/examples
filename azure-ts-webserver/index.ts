@@ -34,7 +34,7 @@ const networkInterface = new network.NetworkInterface("server-nic", {
     resourceGroupName,
     ipConfigurations: [{
         name: "webserveripcfg",
-        subnet: { id: virtualNetwork.subnets[0].id },
+        subnet: virtualNetwork.subnets.apply(subnet => subnet![0]),
         privateIPAllocationMethod: network.IPAllocationMethod.Dynamic,
         publicIPAddress: { id: publicIp.id },
     }],

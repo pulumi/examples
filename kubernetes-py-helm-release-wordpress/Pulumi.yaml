@@ -1,0 +1,7 @@
+name: kubernetes-py-helm-release-wordpress
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: A minimal installation of the Wordpress Helm chart using Helm Release
+  support

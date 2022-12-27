@@ -1,0 +1,8 @@
+name: testing-unit-ts-mocks-jest
+runtime: nodejs
+description: An example of using Jest with Pulumi to write test-driven code that mocks AWS infrastructure.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2
