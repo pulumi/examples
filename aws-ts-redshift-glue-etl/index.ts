@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 // Import the stack's configuration settings.
 const config = new pulumi.Config();
@@ -87,7 +89,7 @@ const cluster = new aws.redshift.Cluster("cluster", {
 
 // Define an AWS cron expression of "every 15 minutes".
 // https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html
-const every15minutes= "cron(0/15 * * * ? *)";
+const every15minutes = "cron(0/15 * * * ? *)";
 
 // Create a Glue catalog database.
 const glueCatalogDB = new aws.glue.CatalogDatabase("glue-catalog-db", {
@@ -123,7 +125,7 @@ const glueCrawler = new aws.glue.Crawler("glue-crawler", {
     s3Targets: [
         {
             path: pulumi.interpolate`s3://${eventsBucket.bucket}`,
-        }
+        },
     ],
 });
 
@@ -166,7 +168,7 @@ const glueJob = new aws.glue.Job("glue-job", {
 
         "--ConnectionName": glueRedshiftConnection.name,
         "--GlueDBName": glueDBName,
-        "--GlueDBTableName": eventsBucket.bucket.apply(name => name.replace('-', '_')),
+        "--GlueDBTableName": eventsBucket.bucket.apply(name => name.replace("-", "_")),
         "--RedshiftDBName": clusterDBName,
         "--RedshiftDBTableName": "events",
         "--RedshiftRoleARN": redshiftRole.arn,
