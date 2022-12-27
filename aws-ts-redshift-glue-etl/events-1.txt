@@ -1,0 +1,3 @@
+{"id": 1, "name": "An interesting event"}
+{"id": 2, "name": "Another interesting event"}
+{"id": 3, "name": "An event of monumental importance"}
