@@ -1,6 +1,6 @@
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-serverless-raw/README.md)
 
-# Google Cloud Functions in Python and Go Deployed with TypeScript
+# Google Cloud Functions in Python, Go, and Typescript Deployed with TypeScript
 
 This example deploys two Google Cloud Functions. "Hello World" functions are implemented in Python and Go. Pulumi program is implemented in TypeScript.
 
@@ -28,7 +28,15 @@ $ curl $(pulumi stack output pythonEndpoint)
 "Hello World!"
 $ curl $(pulumi stack output goEndpoint)
 "Hello World!"
+$ curl $(pulumi stack output tsEndpoint)
+"Hello World!"
 
 # Remove the app
 $ pulumi destroy
 ```
+
+## Typescript Notes
+
+In the `typescriptfunc` folder you'll notice more than a function. Some configuration is needed to inform gcp how to build typescript into nodejs. 
+See [this example from google for more details](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/blob/master/docs/typescript.md)
+
