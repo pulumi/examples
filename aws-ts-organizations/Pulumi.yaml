@@ -1,0 +1,3 @@
+name: aws-ts-organizations
+runtime: nodejs
+description: A TypeScript app to manage member accounts in AWS Organizations
