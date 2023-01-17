@@ -1,6 +1,7 @@
-from pulumi import ComponentResource, ResourceOptions, Output
-import pulumi_aws as aws
 import json
+
+import pulumi_aws as aws
+from pulumi import ComponentResource, Output, ResourceOptions
 
 
 class WebServiceArgs:
@@ -95,9 +96,7 @@ class WebService(ComponentResource):
         # Spin up a load balanced service running our container image.
         task_name = f'{name}-app-task'
         container_name = f'{name}-app-container'
-        self.task_definition = Output.all(args.db_host, args.db_port, args.db_name, args.db_user, args.db_password).apply(
-            lambda args:
-            aws.ecs.TaskDefinition(task_name,
+        self.task_definition=aws.ecs.TaskDefinition(task_name,
             family='fargate-task-definition',
             cpu='256',
             memory='512',
@@ -105,7 +104,7 @@ class WebService(ComponentResource):
             requires_compatibilities=[
                 'FARGATE'],
             execution_role_arn=role.arn,
-            container_definitions=json.dumps([{
+            container_definitions=Output.json_dumps([{
                 'name': container_name,
                 'image': 'wordpress',
                 'portMappings': [{
@@ -116,24 +115,23 @@ class WebService(ComponentResource):
                 'environment': [
                     {
                         'name': 'WORDPRESS_DB_HOST',
-                        'value': f'{args[0]}:{args[1]}'
+                        'value': Output.format("{0}:{1}", args.db_host, args.db_port)
                     },
                     {
                         'name': 'WORDPRESS_DB_NAME',
-                        'value': f'{args[2]}'
+                        'value': args.db_name
                     },
                     {
                         'name': 'WORDPRESS_DB_USER',
-                        'value': f'{args[3]}'
+                        'value': args.db_user
                     },
                     {
                         'name': 'WORDPRESS_DB_PASSWORD',
-                        'value': f'{args[4]}'
+                        'value': args.db_password
                     },
                 ]
             }]),
             opts=ResourceOptions(parent=self)
-            )
         )
 
         self.service = aws.ecs.Service(f'{name}-app-svc',

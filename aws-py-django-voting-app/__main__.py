@@ -1,7 +1,8 @@
 # Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
-import json
 import base64
+import json
+
 import pulumi
 import pulumi_aws as aws
 import pulumi_docker as docker
@@ -255,18 +256,9 @@ django_database_task_definition = aws.ecs.TaskDefinition("django-database-task-d
     requires_compatibilities=["FARGATE"],
     execution_role_arn=app_exec_role.arn,
     task_role_arn=app_task_role.arn,
-    container_definitions=pulumi.Output.all(
-            django_image.image_name,
-            django_secret_key,
-            mysql_database.name,
-            sql_admin_name,
-            sql_admin_password,
-            django_admin_name,
-            django_admin_password,
-            mysql_rds_server.address,
-            mysql_rds_server.port).apply(lambda args: json.dumps([{
+    container_definitions=pulumi.Output.json_dumps([{
         "name": "django-container",
-        "image": args[0],
+        "image": django_image.image_name,
         "memory": 512,
         "essential": True,
         "portMappings": [{
@@ -275,14 +267,14 @@ django_database_task_definition = aws.ecs.TaskDefinition("django-database-task-d
             "protocol": "tcp"
         }],
         "environment": [
-            { "name": "SECRET_KEY", "value": args[1]  },
-            { "name": "DATABASE_NAME", "value": args[2]  },
-            { "name": "USER_NAME", "value": args[3]  },
-            { "name": "USER_PASSWORD", "value": args[4]  },
-            { "name": "DJANGO_NAME", "value": args[5]  },
-            { "name": "DJANGO_PASSWORD", "value": args[6]  },
-            { "name": "DATABASE_ADDRESS", "value": args[7]  },
-            { "name": "DATABASE_PORT", "value": str(int(args[8]))  },
+            { "name": "SECRET_KEY", "value": django_secret_key  },
+            { "name": "DATABASE_NAME", "value": mysql_database.name  },
+            { "name": "USER_NAME", "value": sql_admin_name },
+            { "name": "USER_PASSWORD", "value": sql_admin_password  },
+            { "name": "DJANGO_NAME", "value": django_admin_name  },
+            { "name": "DJANGO_PASSWORD", "value": django_admin_password  },
+            { "name": "DATABASE_ADDRESS", "value": mysql_rds_server.address  },
+            { "name": "DATABASE_PORT", "value": mysql_rds_server.port.apply(lambda x: str(int(x))) },
         ],
         "logConfiguration": {
             "logDriver": "awslogs",
@@ -293,7 +285,7 @@ django_database_task_definition = aws.ecs.TaskDefinition("django-database-task-d
             },
         },
         "command": ["/mysite/setupDatabase.sh"]
-    }])))
+    }]))
 
 # Launching our Django service on Fargate, using our configurations and load balancers
 django_database_service = aws.ecs.Service("django-database-service",
@@ -325,16 +317,9 @@ django_site_task_definition = aws.ecs.TaskDefinition("django-site-task-definitio
     requires_compatibilities=["FARGATE"],
     execution_role_arn=app_exec_role.arn,
     task_role_arn=app_task_role.arn,
-    container_definitions=pulumi.Output.all(
-            django_image.image_name,
-            django_secret_key,
-            mysql_database.name,
-            sql_user_name,
-            sql_user_password,
-            mysql_rds_server.address,
-            mysql_rds_server.port).apply(lambda args: json.dumps([{
+    container_definitions=pulumi.Output.json_dumps([{
         "name": "django-container",
-        "image": args[0],
+        "image": django_image.image_name,
         "memory": 512,
         "essential": True,
         "portMappings": [{
@@ -343,12 +328,12 @@ django_site_task_definition = aws.ecs.TaskDefinition("django-site-task-definitio
             "protocol": "tcp"
         }],
         "environment": [
-            { "name": "SECRET_KEY", "value": args[1]  },
-            { "name": "DATABASE_NAME", "value": args[2]  },
-            { "name": "USER_NAME", "value": args[3]  },
-            { "name": "USER_PASSWORD", "value": args[4]  },
-            { "name": "DATABASE_ADDRESS", "value": args[5]  },
-            { "name": "DATABASE_PORT", "value": str(int(args[6]))  },
+            { "name": "SECRET_KEY", "value": django_secret_key  },
+            { "name": "DATABASE_NAME", "value": mysql_database.name  },
+            { "name": "USER_NAME", "value": sql_user_name  },
+            { "name": "USER_PASSWORD", "value": sql_user_password  },
+            { "name": "DATABASE_ADDRESS", "value": mysql_rds_server.address  },
+            { "name": "DATABASE_PORT", "value": mysql_rds_server.port.apply(lambda x: str(int(x))) },
         ],
         "logConfiguration": {
             "logDriver": "awslogs",
@@ -358,7 +343,7 @@ django_site_task_definition = aws.ecs.TaskDefinition("django-site-task-definitio
                 "awslogs-stream-prefix": "djangoApp-site",
             },
         },
-    }])))
+    }]))
 
 # Launching our Django service on Fargate, using our configurations and load balancers
 django_site_service = aws.ecs.Service("django-site-service",

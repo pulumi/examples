@@ -1,7 +1,8 @@
 # Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
-import json
 import base64
+import json
+
 import pulumi
 import pulumi_aws as aws
 import pulumi_docker as docker
@@ -254,9 +255,9 @@ flask_task_definition = aws.ecs.TaskDefinition("flask-task-definition",
     requires_compatibilities=["FARGATE"],
     execution_role_arn=app_exec_role.arn,
     task_role_arn=app_task_role.arn,
-    container_definitions=pulumi.Output.all(flask_image.image_name, redis_endpoint).apply(lambda args: json.dumps([{
+    container_definitions=pulumi.Output.json_dumps([{
         "name": "flask-container",
-        "image": args[0],
+        "image": flask_image.image_name,
         "memory": 512,
         "essential": True,
         "portMappings": [{
@@ -265,11 +266,11 @@ flask_task_definition = aws.ecs.TaskDefinition("flask-task-definition",
             "protocol": "tcp"
         }],
         "environment": [ # The Redis endpoint we created is given to Flask, allowing it to communicate with the former
-            { "name": "REDIS", "value": args[1]["host"] },
-            { "name": "REDIS_PORT", "value": str(args[1]["port"]) },
+            { "name": "REDIS", "value": redis_endpoint["host"] },
+            { "name": "REDIS_PORT", "value": redis_endpoint["port"].apply(lambda x: str(x)) },
             { "name": "REDIS_PWD", "value": redis_password },
         ],
-    }])))
+    }]))
 
 # Launching our Redis service on Fargate, using our configurations and load balancers
 flask_service = aws.ecs.Service("flask-service",

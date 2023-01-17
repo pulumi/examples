@@ -1,14 +1,16 @@
 import json
+
 import pulumi
+
 
 def generate_kube_config(eks_cluster):
 
-    kubeconfig = pulumi.Output.all(eks_cluster.endpoint, eks_cluster.certificate_authority.apply(lambda v: v.data), eks_cluster.name).apply(lambda args: json.dumps({
+    kubeconfig = pulumi.Output.json_dumps({
         "apiVersion": "v1",
         "clusters": [{
             "cluster": {
-                "server": args[0],
-                "certificate-authority-data": args[1]
+                "server": eks_cluster.endpoint,
+                "certificate-authority-data": eks_cluster.certificate_authority.apply(lambda v: v.data)
             },
             "name": "kubernetes",
         }],
@@ -30,10 +32,10 @@ def generate_kube_config(eks_cluster):
                     "args": [
                         "token",
                         "-i",
-                        args[2],
+                        eks_cluster.endpoint,
                     ],
                 },
             },
         }],
-    }))
+    })
     return kubeconfig
