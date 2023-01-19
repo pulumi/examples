@@ -7,7 +7,7 @@ import { TagPolicies } from "./tagPolicy";
 
 const config = new pulumi.Config();
 
-// If you've already created an organizationin your root account
+// If you've already created an organization in your root account
 // and don't want it managed by Pulumi then simply retrieve it
 // using the `getOrganization` function.
 const organization = aws.organizations.getOrganization({});
@@ -18,6 +18,11 @@ const organization = aws.organizations.getOrganization({});
 
 // The IAM user used to execute this Pulumi app should be granted
 // permissions to assume this role in any account.
+// This role is automatically created in every new account
+// created in an Organization. The name
+// `OrganizationalAccountAccessRole` is the default name.
+// You may choose a different name.
+// https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
 const initialRoleName = "OrganizationalAccountAccessRole";
 // TODO: Be sure to enter the email alias who should be the primary contact
 // for the new AWS account.
@@ -44,6 +49,10 @@ const devAccount = new aws.organizations.Account(
         // your Pulumi app.
         closeOnDeletion: true,
     },
+    // This flag tells Pulumi to protect this resource from being deleted
+    // during a `pulumi destroy` operation. It also means you need to
+    // first unprotect it if you do wish to delete it using Pulumi.
+    // https://www.pulumi.com/docs/intro/concepts/resources/options/protect/
     { protect: true }
 );
 
