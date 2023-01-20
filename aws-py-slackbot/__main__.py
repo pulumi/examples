@@ -1,10 +1,11 @@
 
 # re -> regular expression package
-import re
+import base64
 import json
+import re
+
 import boto3
 import iam
-import base64
 import pulumi
 import pulumi_aws as aws
 
@@ -29,7 +30,7 @@ subscriptions_table = aws.dynamodb.Table('subscriptions',
 # to ensure we don't respond too slowly, all we do is enqueue messages to this topic, and then
 # return immediately.
 # message_bus = aws.cloudwatch.EventBus('messages')
-# message_bus = 
+# message_bus =
 
 ##################
 ## Lambda Function
@@ -83,7 +84,7 @@ def swagger_route_handler(arn):
     return ({
         "x-amazon-apigateway-any-method": {
             "x-amazon-apigateway-integration": {
-                "uri": f'arn:aws:apigateway:{region}:lambda:path/2015-03-31/functions/{arn}/invocations',
+                "uri": pulumi.Output.format('arn:aws:apigateway:{0}:lambda:path/2015-03-31/functions/{1}/invocations', region, arn),
                 "passthroughBehavior": "when_no_match",
                 "httpMethod": "POST",
                 "type": "aws_proxy",
@@ -93,13 +94,13 @@ def swagger_route_handler(arn):
 
 # Create the API Gateway Rest API, using a swagger spec.
 rest_api = aws.apigateway.RestApi("mentionbot",
-    body=lambda_func.arn.apply(lambda arn: json.dumps({
+    body=pulumi.Output.json_dumps({
         "swagger": "2.0",
         "info": {"title": "slackbot-webhooks", "version": "1.0"},
         "paths": {
-            "/{proxy+}": swagger_route_handler(arn),
+            "/{proxy+}": swagger_route_handler(lambda_func.arn),
         },
-    })))
+    }))
 
 # Create a deployment of the Rest API.
 deployment = aws.apigateway.Deployment("api-deployment",

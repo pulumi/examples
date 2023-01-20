@@ -1,7 +1,8 @@
 import json
+
 import pulumi_random as random
-from pulumi import export
-from pulumi_aws import dynamodb, iam, appsync
+from pulumi import Output, export
+from pulumi_aws import appsync, dynamodb, iam
 
 ## Dynamo DB table to hold data for the GraphQL endpoint
 table = dynamodb.Table(
@@ -30,7 +31,7 @@ role = iam.Role(
 
 policy = iam.Policy(
     "iam-policy",
-    policy=table.arn.apply(lambda arn: json.dumps({
+    policy= Output.json_dumps({
         "Version": "2012-10-17",
         "Statement": [{
             "Action": [
@@ -38,9 +39,9 @@ policy = iam.Policy(
                 "dynamodb:GetItem"
             ],
             "Effect": "Allow",
-            "Resource": [arn]
+            "Resource": [table.arn]
         }]
-    })))
+    }))
 
 attachment = iam.RolePolicyAttachment(
     "iam-policy-attachment",

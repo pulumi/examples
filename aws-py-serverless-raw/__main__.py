@@ -50,19 +50,19 @@ role = aws.iam.Role("mylambda-role",
 
 policy = aws.iam.RolePolicy("mylambda-policy",
     role=role.id,
-    policy=counter_table.arn.apply(lambda arn: json.dumps({
+    policy=pulumi.Output.json_dumps({
         "Version": "2012-10-17",
         "Statement": [{
             "Action": ["dynamodb:UpdateItem", "dynamodb:PutItem", "dynamodb:GetItem",
                         "dynamodb:DescribeTable"],
-            "Resource": arn,
+            "Resource": counter_table.arn,
             "Effect": "Allow",
         }, {
             "Action": ["logs:*", "cloudwatch:*"],
             "Resource": "*",
             "Effect": "Allow",
         }],
-    })))
+    }))
 
 # Read the config of whether to provision fixed concurrency for Lambda
 config = pulumi.Config()
@@ -105,7 +105,7 @@ def swagger_route_handler(arn):
     return ({
         "x-amazon-apigateway-any-method": {
             "x-amazon-apigateway-integration": {
-                "uri": f'arn:aws:apigateway:{region}:lambda:path/2015-03-31/functions/{arn}/invocations',
+                "uri": pulumi.Output.format('arn:aws:apigateway:{0}:lambda:path/2015-03-31/functions/{1}/invocations', region, arn),
                 "passthroughBehavior": "when_no_match",
                 "httpMethod": "POST",
                 "type": "aws_proxy",
@@ -115,13 +115,13 @@ def swagger_route_handler(arn):
 
 # Create the API Gateway Rest API, using a swagger spec.
 rest_api = aws.apigateway.RestApi("api",
-    body=lambda_func.arn.apply(lambda arn: json.dumps({
+    body=pulumi.Output.json_dumps({
         "swagger": "2.0",
         "info": {"title": "api", "version": "1.0"},
         "paths": {
-            "/{proxy+}": swagger_route_handler(arn),
+            "/{proxy+}": lambda_func.arn.apply(swagger_route_handler),
         },
-    })))
+    }))
 
 # Create a deployment of the Rest API.
 deployment = aws.apigateway.Deployment("api-deployment",
