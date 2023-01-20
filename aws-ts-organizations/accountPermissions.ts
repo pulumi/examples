@@ -4,6 +4,10 @@ import * as aws from "@pulumi/aws";
 export interface AccountPermissionsArgs {
     automationUser: aws.iam.User;
     managementAccountId: pulumi.Output<string>;
+    /**
+     * The prefix to use when naming child resources in this component.
+     */
+    resourceNamesPrefix: string;
 }
 
 /**
@@ -12,6 +16,7 @@ export interface AccountPermissionsArgs {
  * limited permissions.
  */
 export class AccountPermissions extends pulumi.ComponentResource {
+    private prefix: string;
     private automationUser: aws.iam.User;
     private managementAccountId: pulumi.Output<string>;
 
@@ -29,6 +34,7 @@ export class AccountPermissions extends pulumi.ComponentResource {
 
         super("acme:permissions:AccountPermissions", name, undefined, opts);
 
+        this.prefix = args.resourceNamesPrefix;
         this.automationUser = args.automationUser;
         this.managementAccountId = args.managementAccountId;
 
@@ -41,7 +47,7 @@ export class AccountPermissions extends pulumi.ComponentResource {
     private createRole() {
         const devActions = ["s3:*", "cloudwatch:*", "dynamodb:*", "ec2:*"];
         const permissionsBoundary = new aws.iam.Policy(
-            "devPermsBoundary",
+            `${this.prefix}DevBoundary`,
             {
                 policy: {
                     Version: "2012-10-17",
@@ -60,8 +66,9 @@ export class AccountPermissions extends pulumi.ComponentResource {
         // Create a role that users can assume into the provided account.
         // The role should allow them to use compute, storage and messaging services.
         const role = new aws.iam.Role(
-            AccountPermissions.NonAutomationUserAssumeRoleName,
+            `${this.prefix}DevRole`,
             {
+                name: AccountPermissions.NonAutomationUserAssumeRoleName,
                 assumeRolePolicy: {
                     Version: "2012-10-17",
                     Statement: [
@@ -83,7 +90,7 @@ export class AccountPermissions extends pulumi.ComponentResource {
         );
 
         new aws.iam.RolePolicyAttachment(
-            "devUserPolicyAttach",
+            `${this.prefix}RPAttach`,
             {
                 policyArn: permissionsBoundary.arn,
                 role: role,
@@ -101,7 +108,7 @@ export class AccountPermissions extends pulumi.ComponentResource {
             "iam:*",
         ];
         const permissionsBoundary = new aws.iam.Policy(
-            "automationPermsBoundary",
+            `${this.prefix}AutomationUserBoundary`,
             {
                 policy: {
                     Version: "2012-10-17",
@@ -120,8 +127,9 @@ export class AccountPermissions extends pulumi.ComponentResource {
         // The automation role allows an automation IAM user to assume role into this
         // account and manage AWS resources.
         const automationRole = new aws.iam.Role(
-            AccountPermissions.AutomationUserAssumeRoleName,
+            `${this.prefix}AutomationUserRole`,
             {
+                name: AccountPermissions.AutomationUserAssumeRoleName,
                 assumeRolePolicy: {
                     Version: "2012-10-17",
                     Statement: [
@@ -140,7 +148,7 @@ export class AccountPermissions extends pulumi.ComponentResource {
         );
 
         new aws.iam.RolePolicyAttachment(
-            "automationUserPolicyAttach",
+            `${this.prefix}UserPolicyAttach`,
             {
                 policyArn: permissionsBoundary.arn,
                 role: automationRole,

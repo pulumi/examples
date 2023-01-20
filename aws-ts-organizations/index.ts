@@ -122,6 +122,7 @@ const devAccountPermissions = new AccountPermissions(
         managementAccountId: pulumi.Output.create(
             aws.getCallerIdentity().then((i) => i.accountId)
         ),
+        resourceNamesPrefix: "dev",
     },
     { provider: devAccountProvider }
 );
