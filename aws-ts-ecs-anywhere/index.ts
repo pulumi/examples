@@ -150,40 +150,35 @@ const repo = new awsx.ecr.Repository("app");
 const image = repo.buildAndPushImage("./app");
 
 // Set up task definition
-const taskDefinition = pulumi
-  .all([image, logGroup.name, logGroup.namePrefix])
-  .apply(
-    ([img, logGroupName, nameprefix]) =>
-      new aws.ecs.TaskDefinition("taskdefinition", {
-        family: "ecs-anywhere",
-        requiresCompatibilities: ["EXTERNAL"],
-        taskRoleArn: taskRole.arn,
-        executionRoleArn: executionRole.arn,
-        containerDefinitions: JSON.stringify([
-          {
-            name: "app",
-            image: img,
-            cpu: 256,
-            memory: 256,
-            essential: true,
-            portMappings: [
-              {
-                containerPort: 80,
-                hostPort: 80,
-              },
-            ],
-            logConfiguration: {
-              logDriver: "awslogs",
-              options: {
-                "awslogs-group": logGroupName,
-                "awslogs-region": awsRegion,
-                "awslogs-stream-prefixs": nameprefix,
-              },
-            },
-          },
-        ]),
-      }),
-  );
+const taskDefinition = new aws.ecs.TaskDefinition("taskdefinition", {
+  family: "ecs-anywhere",
+  requiresCompatibilities: ["EXTERNAL"],
+  taskRoleArn: taskRole.arn,
+  executionRoleArn: executionRole.arn,
+  containerDefinitions: pulumi.jsonStringify([
+    {
+      name: "app",
+      image: image,
+      cpu: 256,
+      memory: 256,
+      essential: true,
+      portMappings: [
+        {
+          containerPort: 80,
+          hostPort: 80,
+        },
+      ],
+      logConfiguration: {
+        logDriver: "awslogs",
+        options: {
+          "awslogs-group": logGroup.name,
+          "awslogs-region": awsRegion,
+          "awslogs-stream-prefixs": logGroup.namePrefix,
+        },
+      },
+    },
+  ]),
+});
 
 // Deploy containers to droplets
 const service = new aws.ecs.Service("service", {

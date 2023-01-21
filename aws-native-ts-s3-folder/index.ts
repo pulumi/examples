@@ -28,7 +28,7 @@ for (const item of fs.readdirSync(siteDir)) {
 // Set the access policy for the bucket so all objects are readable
 const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
     bucket: siteBucket.id, // refer to the bucket created earlier
-    policy: siteBucket.arn.apply(bucketArn => JSON.stringify({
+    policy: pulumi.jsonStringify({
         Version: "2012-10-17",
         Statement: [{
             Effect: "Allow",
@@ -37,10 +37,10 @@ const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
                 "s3:GetObject",
             ],
             Resource: [
-                `${bucketArn}/*`, //
+                pulumi.interpolate `${siteBucket.arn}/*`,
             ],
         }],
-    })),
+    }),
 });
 
 // Stack exports

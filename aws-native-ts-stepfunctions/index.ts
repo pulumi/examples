@@ -75,25 +75,22 @@ const sfnRolePolicy = new aws.iam.RolePolicy("sfnRolePolicy", {
 const stateMachine = new awsnative.stepfunctions.StateMachine("stateMachine", {
     roleArn: sfnRole.arn,
     stateMachineType: "EXPRESS",
-    definitionString: pulumi.all([helloFunction.arn, worldFunction.arn])
-        .apply(([helloArn, worldArn]) => {
-            return JSON.stringify({
-                "Comment": "A Hello World example of the Amazon States Language using two AWS Lambda Functions",
-                "StartAt": "Hello",
-                "States": {
-                    "Hello": {
-                        "Type": "Task",
-                        "Resource": helloArn,
-                        "Next": "World",
-                    },
-                    "World": {
-                        "Type": "Task",
-                        "Resource": worldArn,
-                        "End": true,
-                    },
-                },
-            });
-        }),
+    definitionString: pulumi.jsonStringify({
+        "Comment": "A Hello World example of the Amazon States Language using two AWS Lambda Functions",
+        "StartAt": "Hello",
+        "States": {
+            "Hello": {
+                "Type": "Task",
+                "Resource": helloFunction.arn,
+                "Next": "World",
+            },
+            "World": {
+                "Type": "Task",
+                "Resource": worldFunction.arn,
+                "End": true,
+            },
+        },
+    })
 }, {dependsOn: sfnRolePolicy});
 
 export const stateMachineArn = stateMachine.id;
