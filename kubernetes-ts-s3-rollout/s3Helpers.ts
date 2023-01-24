@@ -64,19 +64,17 @@ export class FileBucket {
 
 // Create an S3 Bucket Policy to allow public read of all objects in bucket
 export function publicReadPolicy(bucket: aws.s3.Bucket): pulumi.Output<string> {
-    return bucket.bucket.apply(bucketName =>
-        JSON.stringify({
-            Version: "2012-10-17",
-            Statement: [
-                {
-                    Effect: "Allow",
-                    Principal: "*",
-                    Action: ["s3:GetObject"],
-                    Resource: [
-                        `arn:aws:s3:::${bucketName}/*`, // policy refers to bucket name explicitly
-                    ],
-                },
-            ],
-        }),
-    );
+    return pulumi.jsonStringify({
+        Version: "2012-10-17",
+        Statement: [
+            {
+                Effect: "Allow",
+                Principal: "*",
+                Action: ["s3:GetObject"],
+                Resource: [
+                    pulumi.interpolate `arn:aws:s3:::${bucket.bucket}/*`, // policy refers to bucket name explicitly
+                ],
+            },
+        ],
+    });
 }
