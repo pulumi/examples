@@ -60,3 +60,31 @@ const goInvoker = new gcp.cloudfunctions.FunctionIamMember("go-invoker", {
 });
 
 export const goEndpoint = functionGo.httpsTriggerUrl;
+
+// Google Cloud Function in TypeScript
+
+const tsBucketObject = new gcp.storage.BucketObject("ts-zip", {
+    bucket: bucket.name,
+    source: new asset.AssetArchive({
+      ".": new asset.FileArchive("./typescriptfunc"),
+    }),
+});
+  
+const tsFunction = new gcp.cloudfunctions.Function("ts-func", {
+    sourceArchiveBucket: bucket.name,
+    runtime: "nodejs16",
+    sourceArchiveObject: tsBucketObject.name,
+    entryPoint: "handler",
+    triggerHttp: true,
+    availableMemoryMb: 128,
+});
+  
+const tsInvoker = new gcp.cloudfunctions.FunctionIamMember("ts-invoker", {
+    project: tsFunction.project,
+    region: tsFunction.region,
+    cloudFunction: tsFunction.name,
+    role: "roles/cloudfunctions.invoker",
+    member: "allUsers",
+});
+
+export const tsEndpoint = tsFunction.httpsTriggerUrl;
