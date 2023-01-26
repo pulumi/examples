@@ -2,7 +2,7 @@
 
 # Google Cloud Functions in Python, Go, and TypeScript Deployed with TypeScript
 
-This example deploys two Google Cloud Functions. "Hello World" functions are implemented in Python and Go. Pulumi program is implemented in TypeScript.
+This example deploys three Google Cloud Functions. "Hello World" functions are implemented in Python, Go, and TypeScript. Pulumi program is implemented in TypeScript.
 
 ```bash
 # Create and configure a new stack
