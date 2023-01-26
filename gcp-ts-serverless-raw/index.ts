@@ -61,7 +61,7 @@ const goInvoker = new gcp.cloudfunctions.FunctionIamMember("go-invoker", {
 
 export const goEndpoint = functionGo.httpsTriggerUrl;
 
-// Google Cloud Function in Typescript
+// Google Cloud Function in TypeScript
 
 const tsBucketObject = new gcp.storage.BucketObject("ts-zip", {
     bucket: bucket.name,
