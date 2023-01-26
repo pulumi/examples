@@ -1,6 +1,6 @@
 name: serverless
 runtime: nodejs
-description: Basic example of a serverless GCP functions in Python and Go
+description: Basic example of a serverless GCP functions in TypeScript, Python and Go
 template:
   config:
     gcp:project:
