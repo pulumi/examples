@@ -35,8 +35,7 @@ $ curl $(pulumi stack output tsEndpoint)
 $ pulumi destroy
 ```
 
-## Typescript Notes
+## TypeScript Notes
 
-In the `typescriptfunc` folder you'll notice more than a function. Some configuration is needed to inform gcp how to build typescript into nodejs. 
-See [this example from google for more details](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/blob/master/docs/typescript.md)
+In the `typescriptfunc` folder you'll notice more than a function. Some configuration is needed to inform GCP how to build TypeScript for the Node.js runtime environment. See [this example from Google for more details](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/blob/master/docs/typescript.md).
 
