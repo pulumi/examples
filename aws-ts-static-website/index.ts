@@ -309,8 +309,8 @@ const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
             Resource: [pulumi.interpolate `${contentBucket.arn}/*`], // Give Cloudfront access to the entire bucket.
             },
         ],
-    })
-});
+    },
+)});
 
 const aRecord = createAliasRecord(config.targetDomain, cdn);
 if (config.includeWWW) {

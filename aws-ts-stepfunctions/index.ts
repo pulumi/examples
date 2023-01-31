@@ -77,8 +77,8 @@ const stateMachine = new aws.sfn.StateMachine("stateMachine", {
           "End": true,
         },
       },
-    })
-  });
+    },
+  )});
 
 export const stateMachineArn = stateMachine.id;
 export const readme = readFileSync("./Pulumi.README.md").toString();

@@ -90,7 +90,7 @@ const stateMachine = new awsnative.stepfunctions.StateMachine("stateMachine", {
                 "End": true,
             },
         },
-    })
-}, {dependsOn: sfnRolePolicy});
+    },
+)}, {dependsOn: sfnRolePolicy});
 
 export const stateMachineArn = stateMachine.id;
