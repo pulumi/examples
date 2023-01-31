@@ -121,8 +121,8 @@ const integration = new aws.apigateway.Integration("integration", {
                     Detail: "$util.escapeJavaScript($input.body)",
                 },
             ],
-        })
-    },
+        },
+    )},
 });
 
 // Define a method response to return HTTP 201 (created) for successful POSTs.

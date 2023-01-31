@@ -69,7 +69,7 @@ const tsBucketObject = new gcp.storage.BucketObject("ts-zip", {
       ".": new asset.FileArchive("./typescriptfunc"),
     }),
 });
-  
+
 const tsFunction = new gcp.cloudfunctions.Function("ts-func", {
     sourceArchiveBucket: bucket.name,
     runtime: "nodejs16",
@@ -78,7 +78,7 @@ const tsFunction = new gcp.cloudfunctions.Function("ts-func", {
     triggerHttp: true,
     availableMemoryMb: 128,
 });
-  
+
 const tsInvoker = new gcp.cloudfunctions.FunctionIamMember("ts-invoker", {
     project: tsFunction.project,
     region: tsFunction.region,
