@@ -2,6 +2,8 @@
 
 [![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-organizations/README.md)
 
+This example shows you how you can automate the creation of member accounts in AWS Organizations with Pulumi. This example is written in TypeScript, however, the concepts used within can be used with any of the supported SDKs in Pulumi. Read the associated [blog post](https://www.pulumi.com/blog/organizing-aws-accounts-with-pulumi) to learn more.
+
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
@@ -23,8 +25,7 @@ also be granted permissions to assume the role identified by `OrganizationalAcco
 Note that unlike other resources that can be created/destroyed easily,
 this app creates an AWS account and closed accounts are in a suspended state
 for 90 days. That means, you won't be able to delete the organizational until until
-the 90 days has elapsed. Read the blog post about [organizing AWS accounts with Pulumi](https://www.pulumi.com/blog/organizing-aws-accounts-with-pulumi)
-to learn more.
+the 90 days has elapsed.
 
 1. Create a new stack:
 
