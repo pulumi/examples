@@ -1,0 +1,11 @@
+{
+    "name": "aws-organizations",
+    "devDependencies": {
+        "@types/node": "^14"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^5.23.0",
+        "@pulumi/awsx": "^0.40.0",
+        "@pulumi/pulumi": "^3.48.0"
+    }
+}
