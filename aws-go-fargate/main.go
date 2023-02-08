@@ -22,7 +22,12 @@ func main() {
 		if err != nil {
 			return err
 		}
-		subnet, err := ec2.GetSubnetIds(ctx, &ec2.GetSubnetIdsArgs{VpcId: vpc.Id})
+
+		subnet, err := ec2.GetSubnets(ctx, &ec2.GetSubnetsArgs{
+			Filters: []ec2.GetSubnetsFilter{
+				{Name: "vpc-id", Values: []string{vpc.Id}},
+			},
+		})
 		if err != nil {
 			return err
 		}

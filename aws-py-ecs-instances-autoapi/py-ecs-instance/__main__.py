@@ -9,9 +9,17 @@ avail_zone = region+"a" # e.g. us-east-1a
 stack_config = pulumi.Config("cfg")
 asg_size = int(stack_config.require("autoscalingGroupSize")) 
 
-# Get the default VPC. 
+# Get the default VPC.
 default_vpc = aws.ec2.get_vpc(default=True)
-default_vpc_subnets = aws.ec2.get_subnet_ids(vpc_id=default_vpc.id)
+default_vpc_subnets = aws.ec2.get_subnets(
+    filters = [
+        aws.ec2.GetSubnetsFilterArgs(
+            name='vpc-id',
+            values=[default_vpc.id],
+        ),
+    ],
+)
+
 
 # Security group to access the nginx container.
 sg = aws.ec2.SecurityGroup(
