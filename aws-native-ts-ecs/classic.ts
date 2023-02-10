@@ -8,7 +8,11 @@ import * as pulumi from "@pulumi/pulumi";
 // available in AWS's Cloud Control API.
 
 const defaultVpc = aws.ec2.getVpcOutput({default: true});
-const defaultVpcSubnets = aws.ec2.getSubnetIdsOutput({vpcId: defaultVpc.id});
+const defaultVpcSubnets = aws.ec2.getSubnetsOutput({
+    filters: [
+        {name: "vpc-id", values: [defaultVpc.id]},
+    ],
+});
 
 const group = new aws.ec2.SecurityGroup("web-secgrp", {
     vpcId: defaultVpc.id,
