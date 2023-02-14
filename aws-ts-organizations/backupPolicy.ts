@@ -1,5 +1,8 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2023, Pulumi Corporation.
+
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
+
 import { Provider } from "@pulumi/aws";
 
 interface BackupPolicyArgs {
@@ -38,7 +41,7 @@ export class BackupPolicy extends pulumi.ComponentResource {
     constructor(
         name: string,
         args: BackupPolicyArgs,
-        opts?: pulumi.ComponentResourceOptions
+        opts?: pulumi.ComponentResourceOptions,
     ) {
         super("acme:policies:BackupPolicy", name, undefined, opts);
 
@@ -48,7 +51,7 @@ export class BackupPolicy extends pulumi.ComponentResource {
         this.orgUnitId = args.orgUnitId;
         this.primaryRegions = args.primaryRegions;
 
-        for (const accountName in args.accounts) {
+        for (const accountName of Object.keys(args.accounts)) {
             const account = args.accounts[accountName];
             const accountProvider = new aws.Provider(
                 `${accountName}Provider`,
@@ -58,7 +61,7 @@ export class BackupPolicy extends pulumi.ComponentResource {
                     },
                     allowedAccountIds: [account.id],
                 },
-                { parent: this }
+                { parent: this },
             );
 
             this.createBackupVault(accountName, accountProvider);
@@ -81,13 +84,13 @@ export class BackupPolicy extends pulumi.ComponentResource {
             // for the purposes of the backup policy that is attached to the
             // organizational unit.
             { name: "Default" },
-            { provider: accountProvider, parent: this }
+            { provider: accountProvider, parent: this },
         );
     }
 
     private createBackupPolicyIamRole(
         accountName: string,
-        accountProvider: Provider
+        accountProvider: Provider,
     ) {
         const backupPolicyRole = new aws.iam.Role(
             `${accountName}BackupPolicyRole`,
@@ -109,7 +112,7 @@ export class BackupPolicy extends pulumi.ComponentResource {
                     "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup",
                 ],
             },
-            { provider: accountProvider, parent: this }
+            { provider: accountProvider, parent: this },
         );
     }
 
@@ -127,16 +130,16 @@ export class BackupPolicy extends pulumi.ComponentResource {
                 type: "BACKUP_POLICY",
                 content,
             },
-            { parent: this }
+            { parent: this },
         );
 
-        new aws.organizations.PolicyAttachment(
+        const attachment = new aws.organizations.PolicyAttachment(
             "orgBackupPolicyAttachment",
             {
                 policyId: backupPolicy.id,
                 targetId: this.orgUnitId,
             },
-            { parent: this }
+            { parent: this },
         );
     }
 
