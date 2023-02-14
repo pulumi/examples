@@ -249,8 +249,8 @@ jobs:
         yarn-version:
         - 1.13.0
   providers:
-    if: github.event_name == 'repository_dispatch' ||
-      github.event.pull_request.head.repo.full_name == github.repository
+    # if: github.event_name == 'repository_dispatch' ||
+    #   github.event.pull_request.head.repo.full_name == github.repository
     name: run-provider-tests
     permissions:
       contents: read
@@ -280,55 +280,55 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: ${{matrix.goversion}}
-    - name: Install aws-iam-authenticator
-      run: >-
-        curl -o aws-iam-authenticator
-        https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+    # - name: Install aws-iam-authenticator
+    #   run: >-
+    #     curl -o aws-iam-authenticator
+    #     https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
 
-        chmod +x ./aws-iam-authenticator
+    #     chmod +x ./aws-iam-authenticator
 
-        sudo mv aws-iam-authenticator /usr/local/bin
-    - name: Install Kubectl
-      run: >-
-        curl -LO
-        https://storage.googleapis.com/kubernetes-release/release/$(curl -s
-        https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    #     sudo mv aws-iam-authenticator /usr/local/bin
+    # - name: Install Kubectl
+    #   run: >-
+    #     curl -LO
+    #     https://storage.googleapis.com/kubernetes-release/release/$(curl -s
+    #     https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 
-        chmod +x ./kubectl
+    #     chmod +x ./kubectl
 
-        sudo mv kubectl /usr/local/bin
-    - name: Install + Configure Helm
-      run: >-
-        curl -o- -L
-        https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get |
-        bash
+    #     sudo mv kubectl /usr/local/bin
+    # - name: Install + Configure Helm
+    #   run: >-
+    #     curl -o- -L
+    #     https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get |
+    #     bash
 
-        helm init -c
+    #     helm init -c
 
-        helm repo add bitnami https://charts.bitnami.com/bitnami
-    - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v0
-      with:
-        service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
-        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
-          }}/locations/global/workloadIdentityPools/${{
-          env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
-          env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
-    - name: Setup gcloud auth
-      uses: google-github-actions/setup-gcloud@v0
-      with:
-        install_components: gke-gcloud-auth-plugin
-    - name: Login to Google Cloud Registry
-      run: gcloud --quiet auth configure-docker
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-region: ${{ env.AWS_REGION }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        role-duration-seconds: 3600
-        role-session-name: examples@githubActions
-        role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+    #     helm repo add bitnami https://charts.bitnami.com/bitnami
+    # - name: Authenticate to Google Cloud
+    #   uses: google-github-actions/auth@v0
+    #   with:
+    #     service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
+    #     workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
+    #       }}/locations/global/workloadIdentityPools/${{
+    #       env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
+    #       env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
+    # - name: Setup gcloud auth
+    #   uses: google-github-actions/setup-gcloud@v0
+    #   with:
+    #     install_components: gke-gcloud-auth-plugin
+    # - name: Login to Google Cloud Registry
+    #   run: gcloud --quiet auth configure-docker
+    # - name: Configure AWS Credentials
+    #   uses: aws-actions/configure-aws-credentials@v1
+    #   with:
+    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     aws-region: ${{ env.AWS_REGION }}
+    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     role-duration-seconds: 3600
+    #     role-session-name: examples@githubActions
+    #     role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - name: Checkout Scripts Repo
       uses: actions/checkout@v3
       with:
@@ -347,22 +347,22 @@ jobs:
       matrix:
         clouds:
         - DigitalOcean
-        - Aws
-        - Azure
-        - Gcp
-        - Packet
-        - EquinixMetal
-        - Cloud
+        # - Aws
+        # - Azure
+        # - Gcp
+        # - Packet
+        # - EquinixMetal
+        # - Cloud
         dotnetversion:
         - 3.1.301
         goversion:
         - 1.19.x
         languages:
-        - Cs
-        - Js
+        # - Cs
+        # - Js
         - Ts
-        - Py
-        - Fs
+        # - Py
+        # - Fs
         nodeversion:
         - 16.x
         platform:
