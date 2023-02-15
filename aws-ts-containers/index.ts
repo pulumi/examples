@@ -11,7 +11,9 @@ const cluster = new aws.ecs.Cluster("cluster", {});
 const loadbalancer = new awsx.lb.ApplicationLoadBalancer("loadbalancer", {});
 
 // An ECR repository to store our application's container image.
-const repo = new awsx.ecr.Repository("repo", {});
+const repo = new awsx.ecr.Repository("repo", {
+    forceDelete: true,
+});
 
 // Build and publish our application's container image from ./app to the ECR repository.
 const image = new awsx.ecr.Image("image", {
