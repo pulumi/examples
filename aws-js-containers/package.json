@@ -1,5 +1,5 @@
 {
-    "name": "container-quickstart",
+    "name": "aws-js-containers",
     "main": "index.js",
     "dependencies": {
         "@pulumi/aws": "^5.0.0",
