@@ -1,8 +1,10 @@
-import * as pulumi from "@pulumi/pulumi";
-import * as aws from "@pulumi/aws";
+// Copyright 2016-2023, Pulumi Corporation.
 
-import { BackupPolicy } from "./backupPolicy";
+import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
+
 import { AccountPermissions } from "./accountPermissions";
+import { BackupPolicy } from "./backupPolicy";
 import { TagPolicies } from "./tagPolicy";
 
 const config = new pulumi.Config();
@@ -53,7 +55,7 @@ const devAccount = new aws.organizations.Account(
     // during a `pulumi destroy` operation. It also means you need to
     // first unprotect it if you do wish to delete it using Pulumi.
     // https://www.pulumi.com/docs/intro/concepts/resources/options/protect/
-    { protect: true }
+    { protect: true },
 );
 
 // Setup a dev IAM group with permissions to assume roles in
@@ -62,14 +64,14 @@ const devGroup = new aws.iam.Group("developers", {
     name: "developers",
 });
 
-new aws.iam.GroupPolicy("developersGroupPolicy", {
+const groupPolicy = new aws.iam.GroupPolicy("developersGroupPolicy", {
     group: devGroup.name,
     policy: {
         Statement: [
             {
                 Effect: "Allow",
                 Action: "sts:AssumeRole",
-                Resource: `arn:aws:iam::*:role/${AccountPermissions.NonAutomationUserAssumeRoleName}`,
+                Resource: `arn:aws:iam::*:role/${AccountPermissions.nonAutomationUserAssumeRoleName}`,
             },
         ],
         Version: "2012-10-17",
@@ -82,13 +84,13 @@ const automationUser = new aws.iam.User("automationUser", {
     name: "cicd-automation",
 });
 
-new aws.iam.UserPolicy("automationUserPolicy", {
+const userPolicy = new aws.iam.UserPolicy("automationUserPolicy", {
     policy: {
         Statement: [
             {
                 Effect: "Allow",
                 Action: "sts:AssumeRole",
-                Resource: `arn:aws:iam::*:role/${AccountPermissions.AutomationUserAssumeRoleName}`,
+                Resource: `arn:aws:iam::*:role/${AccountPermissions.automationUserAssumeRoleName}`,
             },
         ],
         Version: "2012-10-17",
@@ -120,11 +122,11 @@ const devAccountPermissions = new AccountPermissions(
     {
         automationUser,
         managementAccountId: pulumi.Output.create(
-            aws.getCallerIdentity().then((i) => i.accountId)
+            aws.getCallerIdentity().then((i) => i.accountId),
         ),
         resourceNamesPrefix: "dev",
     },
-    { provider: devAccountProvider }
+    { provider: devAccountProvider },
 );
 
 // Lastly, setup the tagging and backup policies

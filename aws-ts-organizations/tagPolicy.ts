@@ -1,5 +1,8 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2023, Pulumi Corporation.
+
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
+
 import { ComponentResourceOptions } from "@pulumi/pulumi";
 
 interface OrgUnitCostCenter {
@@ -32,7 +35,7 @@ export class TagPolicies extends pulumi.ComponentResource {
     constructor(
         name: string,
         args: TagPoliciesArgs,
-        opts?: ComponentResourceOptions
+        opts?: ComponentResourceOptions,
     ) {
         super("acme:policies:TagPolicy", name, undefined, opts);
 
@@ -67,16 +70,16 @@ export class TagPolicies extends pulumi.ComponentResource {
                     },
                 }),
             },
-            { parent: this }
+            { parent: this },
         );
 
-        new aws.organizations.PolicyAttachment(
+        const attachment = new aws.organizations.PolicyAttachment(
             "orgTagPolicyAttachment",
             {
                 policyId: orgTagPolicy.id,
                 targetId: this.orgId,
             },
-            { parent: this }
+            { parent: this },
         );
     }
 
@@ -114,16 +117,16 @@ export class TagPolicies extends pulumi.ComponentResource {
                         },
                     }),
                 },
-                { parent: this }
+                { parent: this },
             );
 
-            new aws.organizations.PolicyAttachment(
+            const attachment = new aws.organizations.PolicyAttachment(
                 `${name}TagPolicyAttachment`,
                 {
                     policyId: orgTagPolicy.id,
                     targetId: costCenter.ou.id,
                 },
-                { parent: this }
+                { parent: this },
             );
         });
     }
