@@ -20,10 +20,10 @@ class KubernetesStack : Stack
         var appReplicaCount = config.GetInt32("appReplicaCount") ?? 5;
         var domainName = config.Get("domainName");
 
-        var cluster = new KubernetesCluster("do-cluser", new KubernetesClusterArgs
+        var cluster = new KubernetesCluster("do-cluster", new KubernetesClusterArgs
         {
             Region = "nyc3",
-            Version = "latest",
+            Version = Pulumi.DigitalOcean.GetKubernetesVersions.Invoke().Apply(versions => versions.LatestVersion),
             NodePool = new KubernetesClusterNodePoolArgs
             {
                 Name = "default",

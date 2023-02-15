@@ -13,7 +13,7 @@ domain_name = config.get("domainName")
 cluster = do.KubernetesCluster(
     "do-cluster",
     region="nyc3",
-    version="latest",
+    version=do.get_kubernetes_versions().latest_version,
     node_pool=do.KubernetesClusterNodePoolArgs(
         name="default",
         size="s-2vcpu-2gb",
