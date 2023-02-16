@@ -89,7 +89,7 @@ const airflowController = new awsx.classic.ecs.EC2Service("airflowcontroller", {
             },
 
             "scheduler": {
-                image: new awsx.ecr.Image("scheduler", {repositoryUrl: repo.url, path: "./airflow-container" }).imageUri,
+                image: new awsx.ecr.Image("scheduler", { repositoryUrl: repo.url, path: "./airflow-container" }).imageUri,
                 environment: environment,
                 command: [ "scheduler" ],
                 memory: 128,

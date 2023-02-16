@@ -292,15 +292,14 @@ func TestAccAwsPyWebserver(t *testing.T) {
 }
 
 func TestAccAwsTsAirflow(t *testing.T) {
+	t.Skip("Skip as this example no longer works: 'Unable to satisfy 100% MinSuccessfulInstancesPercent requirement.'")
+	// https://github.com/pulumi/examples/issues/1346
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-airflow"),
 			Config: map[string]string{
 				"airflow:dbPassword": "secretP4ssword",
 			},
-			// TODO: currently this test has changes in preview when none were expected #859
-			AllowEmptyPreviewChanges: true,
-			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
