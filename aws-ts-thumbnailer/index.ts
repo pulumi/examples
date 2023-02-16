@@ -4,7 +4,7 @@ import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 
 // A simple cluster to run our tasks in.
-const cluster = awsx.ecs.Cluster.getDefault();
+const cluster = awsx.classic.ecs.Cluster.getDefault();
 
 // A bucket to store videos and thumbnails.
 const bucket = new aws.s3.Bucket("bucket");
@@ -12,10 +12,15 @@ const bucket = new aws.s3.Bucket("bucket");
 // Export the bucket name.
 export const bucketName = bucket.id;
 
+// Create a repository for hte FFMPEG image.
+const repo = new awsx.ecr.Repository("repo", {
+    forceDelete: true,
+});
+
 // A task which runs a containerized FFMPEG job to extract a thumbnail image.
-const ffmpegThumbnailTask = new awsx.ecs.FargateTaskDefinition("ffmpegThumbTask", {
+const ffmpegThumbnailTask = new awsx.classic.ecs.FargateTaskDefinition("ffmpegThumbTask", {
     container: {
-        image: awsx.ecs.Image.fromPath("ffmpegThumbTask", "./docker-ffmpeg-thumb"),
+        image: new awsx.ecr.Image("ffmpegThumbTask", { repositoryUrl: repo.url, path: "./docker-ffmpeg-thumb" }).imageUri,
         memoryReservation: 512,
     },
 });
