@@ -40,7 +40,7 @@ ami = aws.ec2.get_ami(
     most_recent=True,
     filters=[aws.ec2.GetAmiFilterArgs(
         name='name',
-        values=['amzn2-ami-hvm-*'],
+        values=['amzn2-ami-hvm-*-x86_64-gp2'],
     )],
 )
 
