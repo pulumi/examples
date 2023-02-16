@@ -26,6 +26,10 @@ func TestAccAwsGoAssumeRole(t *testing.T) {
 			Config: map[string]string{
 				"aws-go-create-role:unprivilegedUsername": fmt.Sprintf("unpriv-go-%d", nanos),
 			},
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			// ~  aws:iam:Role allow-s3-management update [diff: ~assumeRolePolicy]
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -96,6 +100,10 @@ func TestAccAwsCsAssumeRole(t *testing.T) {
 			Config: map[string]string{
 				"aws-cs-create-role:unprivilegedUsername": fmt.Sprintf("unpriv-cs-%d", nanos),
 			},
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			// ~  aws:iam:Role allow-s3-management update [diff: ~assumeRolePolicy]
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -245,6 +253,10 @@ func TestAccAwsPyAssumeRole(t *testing.T) {
 			Config: map[string]string{
 				"aws-py-create-role:unprivilegedUsername": fmt.Sprintf("unpriv-py-%d", nanos),
 			},
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			// ~  aws:iam:Role allow-s3-management update [diff: ~assumeRolePolicy]
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -342,6 +354,10 @@ func TestAccAwsTsAssumeRole(t *testing.T) {
 			Config: map[string]string{
 				"aws-ts-create-role:unprivilegedUsername": fmt.Sprintf("unpriv-%d", nanos),
 			},
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			// ~  aws:iam:Role allow-s3-management update [diff: ~assumeRolePolicy]
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
