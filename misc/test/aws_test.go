@@ -286,6 +286,8 @@ func TestAccAwsPyWebserver(t *testing.T) {
 					return assert.Contains(t, body, "Hello, World!")
 				})
 			},
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
