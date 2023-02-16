@@ -1,4 +1,4 @@
-name: create-role
+name: aws-ts-create-role
 runtime:
   name: python
   options:
