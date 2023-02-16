@@ -286,6 +286,8 @@ func TestAccAwsPyWebserver(t *testing.T) {
 					return assert.Contains(t, body, "Hello, World!")
 				})
 			},
+			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
+			// ~  aws:iam:Role allow-s3-management update [diff: ~assumeRolePolicy]
 			AllowEmptyPreviewChanges: true,
 			AllowEmptyUpdateChanges:  true,
 		})
