@@ -24,7 +24,7 @@ func TestAccAwsGoAssumeRole(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-go-assume-role", "create-role"),
 			Config: map[string]string{
-				"create-role:unprivilegedUsername": fmt.Sprintf("unpriv-go-%d", nanos),
+				"aws-go-create-role:unprivilegedUsername": fmt.Sprintf("unpriv-go-%d", nanos),
 			},
 		})
 
@@ -94,7 +94,7 @@ func TestAccAwsCsAssumeRole(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-cs-assume-role", "create-role"),
 			Config: map[string]string{
-				"create-role:unprivilegedUsername": fmt.Sprintf("unpriv-cs-%d", nanos),
+				"aws-cs-create-role:unprivilegedUsername": fmt.Sprintf("unpriv-cs-%d", nanos),
 			},
 		})
 
@@ -243,7 +243,7 @@ func TestAccAwsPyAssumeRole(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-py-assume-role", "create-role"),
 			Config: map[string]string{
-				"create-role:unprivilegedUsername": fmt.Sprintf("unpriv-py-%d", nanos),
+				"aws-py-create-role:unprivilegedUsername": fmt.Sprintf("unpriv-py-%d", nanos),
 			},
 		})
 
@@ -340,7 +340,7 @@ func TestAccAwsTsAssumeRole(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-assume-role", "create-role"),
 			Config: map[string]string{
-				"create-role:unprivilegedUsername": fmt.Sprintf("unpriv-%d", nanos),
+				"aws-ts-create-role:unprivilegedUsername": fmt.Sprintf("unpriv-%d", nanos),
 			},
 		})
 
