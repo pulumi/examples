@@ -1,7 +1,7 @@
 import pulumi_digitalocean as do
 from pulumi import export, get_stack
 
-droplet_count = 3
+droplet_count = 2
 region = "nyc3"
 
 user_data = """#!/bin/bash

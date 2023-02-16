@@ -8,7 +8,7 @@ class DropletStack : Stack
 {
     public DropletStack()
     {
-        var dropletCount = 3;
+        var dropletCount = 2;
         var region = "nyc3";
 
         var dropletTypeTag = new Tag($"demo-app-{Pulumi.Deployment.Instance.ProjectName}");

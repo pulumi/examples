@@ -3,7 +3,7 @@
 import * as digitalocean from "@pulumi/digitalocean";
 import * as pulumi from "@pulumi/pulumi";
 
-const dropletCount = 3;
+const dropletCount = 2;
 const region = digitalocean.Region.NYC3;
 
 const dropletTypeTag = new digitalocean.Tag(`demo-app-${pulumi.getStack()}`);
