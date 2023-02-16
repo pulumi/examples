@@ -19,7 +19,7 @@ def get_role_id_by_name(name, scope=""):
     client = AuthorizationManagementClient(
         TokenCred(client_token.token), config.subscription_id)
     def_pages = client.role_definitions.list(
-        scope, filter=f'roleName eq {name}')
+        scope, filter=f"roleName eq '{name}'")
     role = None
     for x in def_pages:
         role = x.id
