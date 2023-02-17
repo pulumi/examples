@@ -1,3 +1,8 @@
+name: Smoke Test Latest Provider Release
+on:
+  repository_dispatch:
+    types:
+    - smoke-test-provider
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -164,7 +169,7 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v2
       with:
-        pulumi-version: "{{ env.PULUMI_VERSION }}"
+        pulumi-version: ${{ env.PULUMI_VERSION }}
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Go Dependencies
@@ -276,7 +281,7 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v2
       with:
-        pulumi-version: "{{ env.PULUMI_VERSION }}"
+        pulumi-version: ${{ env.PULUMI_VERSION }}
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
@@ -576,8 +581,3 @@ jobs:
         - ubuntu-latest
         source-dir:
         - testing-unit-ts
-name: Smoke Test Latest Provider Release
-on:
-  repository_dispatch:
-    types:
-    - smoke-test-provider
