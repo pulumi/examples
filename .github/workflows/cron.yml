@@ -1,11 +1,11 @@
 name: Run Examples Cron Job
 on:
+  schedule:
+  - cron: 0 9 * * *
   repository_dispatch:
     types:
     - trigger-cron
   workflow_dispatch: {}
-  schedule:
-  - cron: 0 9 * * *
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -308,26 +308,8 @@ jobs:
         role-duration-seconds: 3600
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - name: Checkout Scripts Repo
-      uses: actions/checkout@v3
-      with:
-        path: ci-scripts
-        repository: pulumi/scripts
-    - if: matrix.examples-test-matrix == 'no-latest-cli'
-      run: echo 'running combination of stable pulumi cli + dev providers'
-    - if: matrix.examples-test-matrix == 'no-latest-packages'
-      run: echo 'running combination of dev pulumi cli + stable providers'
-    - if: matrix.examples-test-matrix == 'default'
-      run: echo 'running combination of dev pulumi cli + dev providers'
-    - if: matrix.examples-test-matrix == 'no-latest-cli'
-      name: Install Latest Stable Pulumi CLI
+    - name: Install Latest Stable Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v2
-    - name: Running ci-scripts/run-at-head with ${{ matrix.examples-test-matrix }}
-        configuration
-      run: ./ci-scripts/ci/run-at-head --${{ matrix.examples-test-matrix }}
-    - if: matrix.examples-test-matrix == 'no-latest-packages' ||
-        matrix.examples-test-matrix == 'default'
-      run: echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
       run: make ensure
@@ -347,8 +329,6 @@ jobs:
         dotnetversion:
         - 3.1.301
         examples-test-matrix:
-        - no-latest-cli
-        - no-latest-packages
         - default
         goversion:
         - 1.19.x
