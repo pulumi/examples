@@ -8,9 +8,9 @@ class DropletStack : Stack
 {
     public DropletStack()
     {
-        var dropletCount = 3;
+        var dropletCount = 2;
         var region = "nyc3";
-        
+
         var dropletTypeTag = new Tag($"demo-app-{Pulumi.Deployment.Instance.ProjectName}");
 
         var userData = @"
@@ -27,7 +27,7 @@ sudo apt-get install -y nginx
                 Image = "ubuntu-18-04-x64",
                 Region = region,
                 PrivateNetworking = true,
-                Size = "512mb",
+                Size = "s-1vcpu-1gb",
                 Tags =
                 {
                     dropletTypeTag.Id,

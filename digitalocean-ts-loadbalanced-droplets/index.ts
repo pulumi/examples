@@ -3,7 +3,7 @@
 import * as digitalocean from "@pulumi/digitalocean";
 import * as pulumi from "@pulumi/pulumi";
 
-const dropletCount = 3;
+const dropletCount = 2;
 const region = digitalocean.Region.NYC3;
 
 const dropletTypeTag = new digitalocean.Tag(`demo-app-${pulumi.getStack()}`);
@@ -18,7 +18,7 @@ for (let i = 0; i < dropletCount; i++) {
         image: "ubuntu-18-04-x64",
         region: region,
         privateNetworking: true,
-        size: digitalocean.DropletSlug.Droplet512mb,
+        size: digitalocean.DropletSlug.DropletS1VCPU1GB,
         tags: [nameTag.id, dropletTypeTag.id],
         userData: userData,
     }));

@@ -1,4 +1,4 @@
-name: assume-role
+name: aws-py-assume-role
 runtime:
   name: python
   options:
