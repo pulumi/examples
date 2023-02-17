@@ -1,3 +1,11 @@
+name: Run Examples Tests From PR
+on:
+  pull_request:
+    branches:
+    - master
+  repository_dispatch:
+    types:
+    - run-example-tests-command
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -667,11 +675,3 @@ jobs:
         - ubuntu-latest
         source-dir:
         - testing-unit-ts
-name: Run Examples Tests From PR
-on:
-  pull_request:
-    branches:
-    - master
-  repository_dispatch:
-    types:
-    - run-example-tests-command

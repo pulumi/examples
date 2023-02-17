@@ -1,3 +1,6 @@
+name: New Pull request Open
+on:
+  pull_request_target: {}
 jobs:
   comment-on-pr:
     if: github.event.pull_request.head.repo.full_name != github.repository
@@ -14,6 +17,3 @@ jobs:
           PR is now waiting for a maintainer to run the acceptance tests.
 
           **Note for the maintainer:** To run the acceptance tests, please comment */run-example-tests* on the PR
-name: New Pull request Open
-on:
-  pull_request_target: {}

@@ -1,3 +1,10 @@
+name: Run Examples Cron Job
+on:
+  repository_dispatch:
+    types:
+    - trigger-cron
+  schedule:
+  - cron: 0 9 * * *
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -629,10 +636,3 @@ jobs:
         - ubuntu-latest
         source-dir:
         - testing-unit-ts
-name: Run Examples Cron Job
-on:
-  repository_dispatch:
-    types:
-    - trigger-cron
-  schedule:
-  - cron: 0 9 * * *
