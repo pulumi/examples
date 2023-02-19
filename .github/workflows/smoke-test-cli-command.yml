@@ -1,3 +1,8 @@
+name: Smoke Test Specific Version of CLI
+on:
+  repository_dispatch:
+    types:
+    - smoke-test-cli
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -583,8 +588,3 @@ jobs:
         - ubuntu-latest
         source-dir:
         - testing-unit-ts
-name: Smoke Test Specific Version of CLI
-on:
-  repository_dispatch:
-    types:
-    - smoke-test-cli

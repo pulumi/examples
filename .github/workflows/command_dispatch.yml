@@ -1,3 +1,9 @@
+name: Command Dispatch for testing
+on:
+  issue_comment:
+    types:
+    - created
+    - edited
 jobs:
   command-dispatch-for-testing:
     runs-on: ubuntu-latest
@@ -13,9 +19,3 @@ jobs:
         reaction-token: ${{ secrets.GITHUB_TOKEN }}
         repository: pulumi/examples
         token: ${{ secrets.EVENT_PAT }}
-name: Command Dispatch for testing
-on:
-  issue_comment:
-    types:
-    - created
-    - edited

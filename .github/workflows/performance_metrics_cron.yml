@@ -1,5 +1,5 @@
 name: Run Performance Metrics Cron Job
-"on":
+on:
   workflow_dispatch: {}
   schedule:
     - cron: 0 */6 * * *
