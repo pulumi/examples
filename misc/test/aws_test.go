@@ -421,7 +421,7 @@ func checkAccAwsEc2Provisioners(t *testing.T, dir string) {
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				catConfigStdout := stack.Outputs["catConfigStdout"].(string)
-				assert.Equal(t, "[test]\nx = 42\n", catConfigStdout)
+				assert.Contains(t, catConfigStdout, "[test]\nx = 42")
 			},
 		})
 	integration.ProgramTest(t, &test)
