@@ -169,7 +169,7 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v2
       with:
-        pulumi-version: "{{ env.PULUMI_VERSION }}"
+        pulumi-version: ${{ env.PULUMI_VERSION }}
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Go Dependencies
@@ -281,7 +281,7 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/action-install-pulumi-cli@v2
       with:
-        pulumi-version: "{{ env.PULUMI_VERSION }}"
+        pulumi-version: ${{ env.PULUMI_VERSION }}
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
