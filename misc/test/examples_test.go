@@ -37,9 +37,11 @@ func getBaseOptions(t *testing.T) integration.ProgramTestOptions {
 	}
 
 	base := integration.ProgramTestOptions{
-		ExpectRefreshChanges: true,
-		Overrides:            overrides,
-		RetryFailedSteps:     true,
+		ExpectRefreshChanges:     true,
+		Overrides:                overrides,
+		RetryFailedSteps:         true,
+		AllowEmptyPreviewChanges: true,
+		AllowEmptyUpdateChanges:  true,
 	}
 
 	return base
@@ -149,6 +151,8 @@ func getAWSBase(t *testing.T) integration.ProgramTestOptions {
 		Config: map[string]string{
 			"aws:region": awsRegion,
 		},
+		AllowEmptyPreviewChanges: true,
+		AllowEmptyUpdateChanges:  true,
 	})
 	return awsBase
 }

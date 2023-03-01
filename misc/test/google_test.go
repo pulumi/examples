@@ -110,13 +110,6 @@ func TestAccGcpPyFunctions(t *testing.T) {
 					return assert.Contains(t, body, "Space Needle, Seattle, WA")
 				})
 			},
-			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
-			//  -- gcp:storage:BucketObject eta_demo_object delete original
-			//  +- gcp:storage:BucketObject eta_demo_object replace [diff: ~name]
-			//  ++ gcp:storage:BucketObject eta_demo_object create replacement [diff: ~name]
-			//  ~  gcp:cloudfunctions:Function eta_demo_function update [diff: ~sourceArchiveObject]
-			AllowEmptyPreviewChanges: true,
-			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -201,10 +194,6 @@ func TestAccGcpTsCloudRun(t *testing.T) {
 					return assert.Contains(t, body, "Hello Pulumi!")
 				})
 			},
-			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
-			// ~  gcp:cloudrun:Service ruby update [diff: ~template]
-			AllowEmptyPreviewChanges: true,
-			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -249,6 +238,8 @@ func getGoogleBase(t *testing.T) integration.ProgramTestOptions {
 			"gcp:project": googleProject,
 			"gcp:zone":    googleZone,
 		},
+		AllowEmptyPreviewChanges: true,
+		AllowEmptyUpdateChanges:  true,
 	})
 	return gkeBase
 }

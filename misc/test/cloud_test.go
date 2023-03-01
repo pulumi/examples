@@ -1,3 +1,4 @@
+//go:build Cloud || all
 // +build Cloud all
 
 package test
@@ -65,14 +66,6 @@ func TestAccCloudJsThumbnailer(t *testing.T) {
 			Config: map[string]string{
 				"cloud-aws:useFargate": "true",
 			},
-			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
-			// ++ aws:ecs:TaskDefinition ffmpegThumbTask create replacement [diff: ~containerDefinitions]
-			// +- aws:ecs:TaskDefinition ffmpegThumbTask replace [diff: ~containerDefinitions]
-			// ~  aws:lambda:Function onNewVideo update [diff: ~code]
-			// ~  aws:s3:BucketNotification onNewVideo update [diff: ~lambdaFunctions]
-			// -- aws:ecs:TaskDefinition ffmpegThumbTask delete original [diff: ~containerDefinitions]
-			AllowEmptyPreviewChanges: true,
-			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -91,16 +84,6 @@ func TestAccCloudJsThumbnailerMachineLearning(t *testing.T) {
 					"arn:aws:iam::aws:policy/AmazonRekognitionFullAccess," +
 					"arn:aws:iam::aws:policy/IAMFullAccess",
 			},
-			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
-			//  ++ aws:ecs:TaskDefinition ffmpegThumbTask create replacement [diff: ~containerDefinitions]
-			//  +- aws:ecs:TaskDefinition ffmpegThumbTask replace [diff: ~containerDefinitions]
-			//  ~  aws:lambda:Function AmazonRekognitionTopic_labelResults update [diff: ~code]
-			//  ++ aws:sns:TopicSubscription AmazonRekognitionTopic_labelResults create replacement [diff: ~endpoint]
-			//  +- aws:sns:TopicSubscription AmazonRekognitionTopic_labelResults replace [diff: ~endpoint]
-			//  -- aws:sns:TopicSubscription AmazonRekognitionTopic_labelResults delete original [diff: ~endpoint]
-			//  -- aws:ecs:TaskDefinition ffmpegThumbTask delete original [diff: ~containerDefinitions]
-			AllowEmptyPreviewChanges: true,
-			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -173,6 +156,8 @@ func getCloudBase(t *testing.T) integration.ProgramTestOptions {
 		Config: map[string]string{
 			"aws:region": awsRegion,
 		},
+		AllowEmptyPreviewChanges: true,
+		AllowEmptyUpdateChanges:  true,
 	})
 	return azureBase
 }
