@@ -1,3 +1,4 @@
+//go:build DigitalOcean || all
 // +build DigitalOcean all
 
 package test
@@ -19,10 +20,6 @@ func TestAccDigitalOceanPyK8s(t *testing.T) {
 					return assert.Contains(t, body, "Welcome to nginx!")
 				})
 			},
-			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
-			//  ~  digitalocean:index:KubernetesCluster do-cluser update [diff: ~version]
-			AllowEmptyPreviewChanges: true,
-			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -52,10 +49,6 @@ func TestAccDigitalOceanTsK8s(t *testing.T) {
 					return assert.Contains(t, body, "Welcome to nginx!")
 				})
 			},
-			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
-			//  ~  pulumi:providers:kubernetes do-k8s update [diff: ~kubeconfig]
-			AllowEmptyPreviewChanges: true,
-			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)
@@ -84,10 +77,6 @@ func TestAccDigitalOceanCsK8s(t *testing.T) {
 					return assert.Contains(t, body, "Welcome to nginx!")
 				})
 			},
-			// TODO[pulumi/examples#859]: Currently this examples leads to a no-op preview diff of:
-			//  ~  digitalocean:index:KubernetesCluster do-cluser update [diff: ~version]
-			AllowEmptyPreviewChanges: true,
-			AllowEmptyUpdateChanges:  true,
 		})
 
 	integration.ProgramTest(t, &test)

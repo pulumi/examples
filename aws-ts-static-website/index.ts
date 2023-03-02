@@ -10,7 +10,7 @@ import * as path from "path";
 // Load the Pulumi program configuration. These act as the "parameters" to the Pulumi program,
 // so that different Pulumi Stacks can be brought up using the same code.
 
-const stackConfig = new pulumi.Config("static-website");
+const stackConfig = new pulumi.Config();
 
 const config = {
     // pathToWebsiteContents is a relativepath to the website's contents.
@@ -89,7 +89,7 @@ let certificateArn: pulumi.Input<string> = config.certificateArn!;
 /**
  * Only provision a certificate (and related resources) if a certificateArn is _not_ provided via configuration.
  */
-if (config.certificateArn === undefined) {
+if (!config.certificateArn) {
 
     const eastRegion = new aws.Provider("east", {
         profile: aws.config.profile,
@@ -155,7 +155,7 @@ if (config.certificateArn === undefined) {
 
 // Generate Origin Access Identity to access the private s3 bucket.
 const originAccessIdentity = new aws.cloudfront.OriginAccessIdentity("originAccessIdentity", {
-  comment: "this is needed to setup s3 polices and make s3 not public.",
+    comment: "this is needed to setup s3 polices and make s3 not public.",
 });
 
 // if config.includeWWW include an alias for the www subdomain
@@ -174,7 +174,7 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
     origins: [
         {
             originId: contentBucket.arn,
-            domainName: contentBucket.websiteEndpoint,
+            domainName: contentBucket.bucketRegionalDomainName,
             s3OriginConfig: {
                 originAccessIdentity: originAccessIdentity.cloudfrontAccessIdentityPath,
             },

@@ -188,10 +188,12 @@ func programTestAsBenchmark(
 	// measurements.
 	t.Run("prewarm", func(t *testing.T) {
 		prewarmOptions := test.With(integration.ProgramTestOptions{
-			SkipRefresh:            true,
-			SkipEmptyPreviewUpdate: true,
-			SkipExportImport:       true,
-			SkipUpdate:             true,
+			SkipRefresh:              true,
+			SkipEmptyPreviewUpdate:   true,
+			SkipExportImport:         true,
+			SkipUpdate:               true,
+			AllowEmptyPreviewChanges: true,
+			AllowEmptyUpdateChanges:  true,
 		})
 		prewarmOptions.ExtraRuntimeValidation = nil
 		integration.ProgramTest(t, &prewarmOptions)
