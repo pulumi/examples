@@ -5,7 +5,7 @@ echo Creating ephemeral Kubernetes cluster for CI testing...
 
 pushd misc/scripts/testinfra/
 yarn
-pulumi stack init --non-interactive ${1}
+pulumi stack init --non-interactive ${1} || true
 pulumi up --skip-preview --yes
 
 popd
