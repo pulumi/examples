@@ -3,7 +3,7 @@
 import pulumi
 import pulumi_aws as aws
 
-from hub import HubVpc, HubVpcArgs
+from inspection import InspectionVpc, InspectionVpcArgs
 from spoke import SpokeVpc, SpokeVpcArgs
 from spoke_workload import SpokeWorkload, SpokeWorkloadArgs
 from firewall_rules import create_firewall_policy
@@ -11,7 +11,7 @@ from firewall_rules import create_firewall_policy
 project = pulumi.get_project()
 
 config = pulumi.Config()
-hub_and_spoke_supernet = config.require("hub-and-spoke-supernet")
+supernet_cidr = config.get("supernet-cidr") or "10.0.0.0/8"
 
 tgw = aws.ec2transitgateway.TransitGateway(
     "tgw",
@@ -56,12 +56,12 @@ spoke_tgw_route_table = aws.ec2transitgateway.RouteTable(
     ),
 )
 
-hub_tgw_route_table = aws.ec2transitgateway.RouteTable(
-    "hub-tgw-route-table",
+inspection_tgw_route_table = aws.ec2transitgateway.RouteTable(
+    "insp-tgw-route-table",
     aws.ec2transitgateway.RouteTableArgs(
         transit_gateway_id=tgw.id,
         tags={
-            "Name": "hub-tgw-route-table",
+            "Name": "insp-tgw-route-table",
         }
     ),
     opts=pulumi.ResourceOptions(
@@ -69,21 +69,21 @@ hub_tgw_route_table = aws.ec2transitgateway.RouteTable(
     ),
 )
 
-firewall_policy_arn = create_firewall_policy(hub_and_spoke_supernet)
+firewall_policy_arn = create_firewall_policy(supernet_cidr)
 
-hub_vpc = HubVpc(
-    "hub",
-    HubVpcArgs(
-        supernet_cidr_block=hub_and_spoke_supernet,
+insp_vpc = InspectionVpc(
+    "inspection",
+    InspectionVpcArgs(
+        supernet_cidr_block=supernet_cidr,
         vpc_cidr_block="10.129.0.0/24",
         tgw_id=tgw.id,
-        hub_tgw_route_table_id=hub_tgw_route_table.id,
+        inspection_tgw_route_table_id=inspection_tgw_route_table.id,
         spoke_tgw_route_table_id=spoke_tgw_route_table.id,
         firewall_policy_arn=firewall_policy_arn,
     )
 )
 
-pulumi.export("nat-gateway-eip", hub_vpc.eip.public_ip)
+pulumi.export("nat-gateway-eip", insp_vpc.eip.public_ip)
 
 spoke1_vpc = SpokeVpc(
     "spoke1",
@@ -95,10 +95,10 @@ spoke1_vpc = SpokeVpc(
 )
 
 aws.ec2transitgateway.RouteTablePropagation(
-    "hub-to-spoke1",
+    "insp-to-spoke1",
     aws.ec2transitgateway.RouteTablePropagationArgs(
         transit_gateway_attachment_id=spoke1_vpc.tgw_attachment.id,
-        transit_gateway_route_table_id=hub_tgw_route_table.id,
+        transit_gateway_route_table_id=inspection_tgw_route_table.id,
     )
 )
 
@@ -110,29 +110,29 @@ spoke1_workload = SpokeWorkload(
     )
 )
 
-# spoke2_vpc = SpokeVpc(
-#     "spoke2",
-#     SpokeVpcArgs(
-#         vpc_cidr_block="10.1.0.0/16",
-#         tgw_id=tgw.id,
-#         tgw_route_table_id=spoke_tgw_route_table.id,
-#     ),
-# )
+spoke2_vpc = SpokeVpc(
+    "spoke2",
+    SpokeVpcArgs(
+        vpc_cidr_block="10.1.0.0/16",
+        tgw_id=tgw.id,
+        tgw_route_table_id=spoke_tgw_route_table.id,
+    ),
+)
 
 
-# aws.ec2transitgateway.RouteTablePropagation(
-#     "hub-to-spoke2",
-#     aws.ec2transitgateway.RouteTablePropagationArgs(
-#         transit_gateway_attachment_id=spoke2_vpc.tgw_attachment.id,
-#         transit_gateway_route_table_id=hub_tgw_route_table.id,
-#     ),
-# )
+aws.ec2transitgateway.RouteTablePropagation(
+    "insp-to-spoke2",
+    aws.ec2transitgateway.RouteTablePropagationArgs(
+        transit_gateway_attachment_id=spoke2_vpc.tgw_attachment.id,
+        transit_gateway_route_table_id=inspection_tgw_route_table.id,
+    ),
+)
 
 
-# spoke2_workload = SpokeWorkload(
-#     "spoke2",
-#     SpokeWorkloadArgs(
-#         spoke_instance_subnet_id=spoke2_vpc.workload_subnet_ids[0],
-#         spoke_vpc_id=spoke2_vpc.vpc.vpc_id,
-#     )
-# )
+spoke2_workload = SpokeWorkload(
+    "spoke2",
+    SpokeWorkloadArgs(
+        spoke_instance_subnet_id=spoke2_vpc.workload_subnet_ids[0],
+        spoke_vpc_id=spoke2_vpc.vpc.vpc_id,
+    )
+)

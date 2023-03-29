@@ -9,18 +9,18 @@ from pprint import pprint
 
 
 @dataclass
-class HubVpcArgs:
+class InspectionVpcArgs:
     supernet_cidr_block: str
     vpc_cidr_block: str
     tgw_id: pulumi.Input[str]
     spoke_tgw_route_table_id: pulumi.Input[str]
-    hub_tgw_route_table_id: pulumi.Input[str]
+    inspection_tgw_route_table_id: pulumi.Input[str]
     firewall_policy_arn: pulumi.Input[str]
 
 
-class HubVpc(pulumi.ComponentResource):
-    def __init__(self, name: str, args: HubVpcArgs, opts: pulumi.ResourceOptions = None) -> None:
-        super().__init__("awsAdvancedNetworkingWorkshop:index:HubVpc", name, None, opts)
+class InspectionVpc(pulumi.ComponentResource):
+    def __init__(self, name: str, args: InspectionVpcArgs, opts: pulumi.ResourceOptions = None) -> None:
+        super().__init__("awsAdvancedNetworkingWorkshop:index:InspectionVpc", name, None, opts)
 
         # So we can reference later in our apply handler:
         self.name = name
@@ -116,7 +116,7 @@ class HubVpc(pulumi.ComponentResource):
             f"{name}-tgw-route-table-assoc",
             aws.ec2transitgateway.RouteTableAssociationArgs(
                 transit_gateway_attachment_id=self.tgw_attachment.id,
-                transit_gateway_route_table_id=args.hub_tgw_route_table_id,
+                transit_gateway_route_table_id=args.inspection_tgw_route_table_id,
             ),
             pulumi.ResourceOptions(
                 parent=self
@@ -153,8 +153,8 @@ class HubVpc(pulumi.ComponentResource):
 
     def create_direct_nat_routes(self, public_subnet_ids: Sequence[str], isolated_subnet_ids: Sequence[str]):
         # Create routes for the supernet (a CIDR block that encompasses all
-        # spoke VPCs) from the public subnets in the hub VPC (where the NAT
-        # Gateways for centralized egress live) to the TGW.
+        # spoke VPCs) from the public subnets in the inspection VPC (where the
+        # NAT Gateways for centralized egress live) to the TGW.
         for subnet_id in public_subnet_ids:
             route_table = aws.ec2.get_route_table(
                 subnet_id=subnet_id
