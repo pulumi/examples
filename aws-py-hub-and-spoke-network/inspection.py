@@ -15,12 +15,13 @@ class InspectionVpcArgs:
     tgw_id: pulumi.Input[str]
     spoke_tgw_route_table_id: pulumi.Input[str]
     inspection_tgw_route_table_id: pulumi.Input[str]
+    # This is only used if we're creating a firewall:
     firewall_policy_arn: pulumi.Input[str]
 
 
 class InspectionVpc(pulumi.ComponentResource):
     def __init__(self, name: str, args: InspectionVpcArgs, opts: pulumi.ResourceOptions = None) -> None:
-        super().__init__("awsAdvancedNetworkingWorkshop:index:InspectionVpc", name, None, opts)
+        super().__init__("awsAdvancedNetworking:index:InspectionVpc", name, None, opts)
 
         # So we can reference later in our apply handler:
         self.name = name
@@ -44,8 +45,8 @@ class InspectionVpc(pulumi.ComponentResource):
                     ),
                 ],
                 # We specify no NAT Gateways because at the time of writing we
-                # have overly-strict validation for NAT Gateway strategy. This
-                # can be changed to SINGLE when
+                # have overly-strict validation for NAT Gateway strategy. We can
+                # specify directly here once
                 # https://github.com/pulumi/pulumi-awsx/issues/966 is resolved.
                 nat_gateways=awsx.ec2.NatGatewayConfigurationArgs(
                     strategy=awsx.ec2.NatGatewayStrategy.NONE
@@ -101,7 +102,7 @@ class InspectionVpc(pulumi.ComponentResource):
         )
 
         aws.ec2transitgateway.Route(
-            f"{name}-default-spoke-to-inspection",
+            f"{name}-spoke-to-inspection",
             aws.ec2transitgateway.RouteArgs(
                 destination_cidr_block="0.0.0.0/0",
                 transit_gateway_attachment_id=self.tgw_attachment.id,
@@ -123,31 +124,17 @@ class InspectionVpc(pulumi.ComponentResource):
             ),
         )
 
-        # NOTE: For the purposes of demonstration, we spin up the AWS Firewall
-        # regardless of whether we are using it or not. Comment this out if you
-        # are not using AWS Firewall.
-        self.create_firewall()
-
-        # NOTE: To route traffic through the firewall, uncomment the call to
-        # create_firewall_routes. To route traffic directly from the TGW to the
-        # NAT Gateway, uncomment the call to create_direct_nat_routes. You may
-        # need to run `pulumi up` with both routes commented to switch between
-        # routing traffic directly/through the firewall because there is an
-        # identical route that cannot be defined twice.
-
-        # pulumi.Output.all(self.firewall.firewall_statuses,
-        #                   self.vpc.public_subnet_ids, self.vpc.isolated_subnet_ids).apply(lambda args: self.create_firewall_routes(args[0], args[1], args[2]))
-
-        pulumi.Output.all(self.vpc.public_subnet_ids,
-                          self.vpc.isolated_subnet_ids).apply(lambda args: self.create_direct_nat_routes(args[0], args[1]))
+        if args.firewall_policy_arn:
+            self.create_firewall()
+            pulumi.Output.all(self.firewall.firewall_statuses,
+                              self.vpc.public_subnet_ids, self.vpc.isolated_subnet_ids).apply(lambda args: self.create_firewall_routes(args[0], args[1], args[2]))
+        else:
+            pulumi.Output.all(self.vpc.public_subnet_ids,
+                              self.vpc.isolated_subnet_ids).apply(lambda args: self.create_direct_nat_routes(args[0], args[1]))
 
         self.register_outputs({
             "vpc": self.vpc,
             "eip": self.eip,
-            # TODO: Check whether this is being returned before it's actually
-            # provisioned and is causing an issue downstream if we try to spin
-            # this stack all up at once.
-            # (It may also not be a problem.)
             "tgw_attachment": self.tgw_attachment,
         })
 

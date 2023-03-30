@@ -17,7 +17,7 @@ class SpokeVpcArgs:
 
 class SpokeVpc(pulumi.ComponentResource):
     def __init__(self, name: str, args: SpokeVpcArgs, opts: pulumi.ResourceOptions = None) -> None:
-        super().__init__("awsAdvancedNetworkingWorkshop:index:SpokeVpc", name, None, opts)
+        super().__init__("awsAdvancedNetworking:index:SpokeVpc", name, None, opts)
 
         self._name = name
         self._args = args

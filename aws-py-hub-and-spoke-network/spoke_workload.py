@@ -17,7 +17,7 @@ class SpokeWorkload(pulumi.ComponentResource):
     access and security group to verify network connectivity.'''
 
     def __init__(self, name: str, args: SpokeWorkloadArgs, opts: pulumi.ResourceOptions = None) -> None:
-        super().__init__("awsAdvancedNetworkingWorkshop:index:SpokeWorkload", name, None, opts)
+        super().__init__("awsAdvancedNetworking:index:SpokeWorkload", name, None, opts)
 
         sg = aws.ec2.SecurityGroup(
             f"{name}-instance-sg",

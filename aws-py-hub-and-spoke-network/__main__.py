@@ -12,6 +12,7 @@ project = pulumi.get_project()
 
 config = pulumi.Config()
 supernet_cidr = config.get("supernet-cidr") or "10.0.0.0/8"
+create_firewall = config.get_bool("create-firewall") or False
 
 tgw = aws.ec2transitgateway.TransitGateway(
     "tgw",
@@ -24,24 +25,6 @@ tgw = aws.ec2transitgateway.TransitGateway(
         }
     )
 )
-
-
-inspection_tgw_route_table = aws.ec2transitgateway.RouteTable(
-    "post-inspection-tgw-route-table",
-    aws.ec2transitgateway.RouteTableArgs(
-        transit_gateway_id=tgw.id,
-        tags={
-            "Name": "post-inspection",
-        }
-    ),
-    # Adding the TGW as the parent makes the output of `pulumi up` a little
-    # easier to understand as it groups these resources visually under the TGW
-    # on which they depend.
-    opts=pulumi.ResourceOptions(
-        parent=tgw,
-    ),
-)
-
 
 spoke_tgw_route_table = aws.ec2transitgateway.RouteTable(
     "spoke-tgw-route-table",
@@ -69,7 +52,8 @@ inspection_tgw_route_table = aws.ec2transitgateway.RouteTable(
     ),
 )
 
-firewall_policy_arn = create_firewall_policy(supernet_cidr)
+if create_firewall:
+    firewall_policy_arn = create_firewall_policy(supernet_cidr)
 
 insp_vpc = InspectionVpc(
     "inspection",
@@ -79,7 +63,7 @@ insp_vpc = InspectionVpc(
         tgw_id=tgw.id,
         inspection_tgw_route_table_id=inspection_tgw_route_table.id,
         spoke_tgw_route_table_id=spoke_tgw_route_table.id,
-        firewall_policy_arn=firewall_policy_arn,
+        firewall_policy_arn=firewall_policy_arn if create_firewall else None,
     )
 )
 
