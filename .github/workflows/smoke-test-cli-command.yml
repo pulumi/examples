@@ -169,7 +169,7 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/actions@v4
       with:
-        pulumi-version: ${{ env.PULUMI_VERSION != '' && format('v{0}', env.PULUMI_VERSION) }}
+        pulumi-version: ${{ env.PULUMI_VERSION != '' && format('v{0}', env.PULUMI_VERSION) || null }}
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Go Dependencies
@@ -281,7 +281,7 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/actions@v4
       with:
-        pulumi-version: ${{ env.PULUMI_VERSION != '' && format('v{0}', env.PULUMI_VERSION) }}
+        pulumi-version: ${{ env.PULUMI_VERSION != '' && format('v{0}', env.PULUMI_VERSION) || null }}
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
