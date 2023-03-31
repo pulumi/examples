@@ -60,7 +60,7 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Setup DotNet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Install Pulumi CLI
@@ -73,7 +73,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.x
         platform:
         - ubuntu-latest
         source-dir:
@@ -120,7 +120,7 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Setup DotNet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
@@ -211,7 +211,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.x
         goversion:
         - 1.19.x
         nodeversion:
@@ -268,7 +268,7 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Setup DotNet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
@@ -362,7 +362,7 @@ jobs:
         - EquinixMetal
         - Cloud
         dotnetversion:
-        - 3.1.301
+        - 6.0.x
         goversion:
         - 1.19.x
         languages:
@@ -442,7 +442,7 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Setup DotNet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
@@ -527,7 +527,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.x
         goversion:
         - 1.19.x
         nodeversion:
@@ -548,7 +548,7 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Setup DotNet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
@@ -633,7 +633,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.x
         goversion:
         - 1.19.x
         nodeversion:
