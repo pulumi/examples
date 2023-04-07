@@ -102,7 +102,7 @@ This is caused by CloudFront confirming the ETag of the resource before applying
 ETag is essentially a "version", and AWS is rejecting any requests that are trying to update
 any version but the "latest".
 
-This error will occur when the state of the ETag get out of sync between the Pulumi Service
+This error will occur when the state of the ETag get out of sync between the Pulumi Cloud
 and AWS. (Which can happen when inspecting the CloudFront distribution in the AWS console.)
 
 You can fix this by running `pulumi refresh` to pickup the newer ETag values.
