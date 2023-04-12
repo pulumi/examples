@@ -53,7 +53,7 @@ Output should include `"Cheers from AWS Lambda!!"`.
 
 1.  Run `pulumi destroy` to tear down all resources.
 
-2.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi Console.
+2.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi console.
 
 ## Summary
 

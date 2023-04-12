@@ -46,7 +46,7 @@ $ cat rsa.pub | pulumi config set publicKey --
 $ cat rsa | pulumi config set privateKey --secret --
 ```
 
-Notice that we've used `--secret` for `privateKey`. This ensures their are stored in encrypted form in the Pulumi secrets system.
+Notice that we've used `--secret` for `privateKey`. This ensures the private key is stored as an encrypted [Pulumi secret](https://www.pulumi.com/docs/intro/concepts/secrets/).
 
 From there, you can run `pulumi up` and all resources will be provisioned and configured.
 

@@ -79,7 +79,7 @@ const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
 
             const webhook = new IncomingWebhook(stackConfig.slackWebhook.get());
 
-            const fallbackText = `Pulumi Service Webhook (\`${webhookKind}\`)\n` + "```\n" + prettyPrintedPayload + "```\n";
+            const fallbackText = `Pulumi Cloud Webhook (\`${webhookKind}\`)\n` + "```\n" + prettyPrintedPayload + "```\n";
             const messageArgs: IncomingWebhookSendArguments = {
                 channel: stackConfig.slackChannel,
                 text: fallbackText,
