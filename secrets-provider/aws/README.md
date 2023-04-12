@@ -6,7 +6,7 @@ This example shows how this might be done for AWS KMS. It creates an S3 bucket w
 
 # Getting Started
 
-To use this example, perform the following steps. This examples assumes you have the pulumi-cli installed and the aws-cli installed.
+To use this example, perform the following steps. This examples assumes you have the Pulumi CLI installed and the AWS CLI installed.
 
 You should also ensure you have the correct `AWS_PROFILE` set:
 

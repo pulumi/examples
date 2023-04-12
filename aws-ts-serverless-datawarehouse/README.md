@@ -58,7 +58,7 @@ A container for your data warehouse that creates and manages a Glue Database, an
 #### `ServerlessDataWarehouse(name: string, args?: DataWarehouseArgs, opts?: pulumi.ComponentResourceOptions)` 
 
 Parameters:
-- `name: string`: Name of the pulumi resource. Will also be used for the Glue Database.
+- `name: string`: Name of the Pulumi resource. Will also be used for the Glue Database.
 - `args: DataWarehouseArgs`:
   - `database?: aws.glue.CatalogDatabase`: optionally provide an existing Glue Database.
   - `isDev?: boolean`: flag for development, enables force destroy on S3 buckets to simplify stack teardown. 

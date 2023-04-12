@@ -18,7 +18,7 @@
     pulumi stack init
     ```
 
-1. Apply the required configuration properties, making adjustments as you like, and taking care to choose strong passwords for the database user and service administrator (which will be stored as encrypted [Pulumi secrets](https://www.pulumi.com/docs/intro/concepts/config/):
+1. Apply the required configuration properties, making adjustments as you like, and taking care to choose strong passwords for the database user and service administrator (which will be stored as encrypted [Pulumi secrets](https://www.pulumi.com/docs/intro/concepts/secrets/):
 
     ```bash
     pulumi config set aws:region us-west-2
