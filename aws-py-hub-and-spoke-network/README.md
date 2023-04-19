@@ -89,9 +89,9 @@ pulumi stack rm
 
 ## Troubleshooting
 
-You may encounter a condition where the security group fails to delete, this may be due to incomplete deletion of VPC endpoints. To fix this condition, perform the following in the AWS console:
+You may encounter a condition where the security group fails to delete. This may be due to incomplete deletion of VPC endpoints. To fix this condition, perform the following in the AWS console:
 
-1. Delete all VPC endpoints in the VPC that contains the security group that is failing to delete. Wait for the endpoints finish deletion.
+1. Delete all VPC endpoints in the VPC that contains the security group that is failing to delete. Wait for the endpoints to finish deleting.
 1. Once the VPC endpoints are deleted, attempt to delete the security group in the console. If any ENIs are still using the security group, wait a few seconds and try again. ENIs created for VPC endpoints may take an additional minute or two to be deleted after deleting the associated VPC endpoint.
 1. Run `pulumi destroy` again.
 
