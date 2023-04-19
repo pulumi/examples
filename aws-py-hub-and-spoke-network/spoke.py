@@ -53,6 +53,9 @@ class SpokeVpc(pulumi.ComponentResource):
                 ),
                 enable_dns_hostnames=True,
                 enable_dns_support=True,
+            ),
+            pulumi.ResourceOptions(
+                parent=self,
             )
         )
 
@@ -169,7 +172,13 @@ class SpokeVpc(pulumi.ComponentResource):
                         from_port=0,
                         to_port=0
                     ),
-                ]
+                ],
+                tags={
+                    'Name': f"{self._name}-vpc-endpoint-sg"
+                }
+            ),
+            pulumi.ResourceOptions(
+                parent=self,
             )
         )
 
@@ -186,6 +195,9 @@ class SpokeVpc(pulumi.ComponentResource):
                         "Name": f"{self._name}-{service}"
                     },
                     subnet_ids=subnet_ids
+                ),
+                pulumi.ResourceOptions(
+                    parent=self,
                 )
             )
 

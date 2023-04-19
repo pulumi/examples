@@ -52,7 +52,10 @@ class SpokeWorkload(pulumi.ComponentResource):
                         "Action": "sts:AssumeRole",
                     },
                 })
-            )
+            ),
+            opts=pulumi.ResourceOptions(
+                parent=self
+            ),
         )
 
         aws.iam.RolePolicyAttachment(
@@ -60,14 +63,20 @@ class SpokeWorkload(pulumi.ComponentResource):
             aws.iam.RolePolicyAttachmentArgs(
                 role=ec2_role.name,
                 policy_arn="arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-            )
+            ),
+            opts=pulumi.ResourceOptions(
+                parent=self
+            ),
         )
 
         instance_profile = aws.iam.InstanceProfile(
             f"{name}-instance-profile",
             aws.iam.InstanceProfileArgs(
                 role=ec2_role.name,
-            )
+            ),
+            opts=pulumi.ResourceOptions(
+                parent=self
+            ),
         )
 
         amazon_linux_2 = aws.ec2.get_ami(

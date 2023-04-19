@@ -62,6 +62,7 @@ class InspectionVpc(pulumi.ComponentResource):
             f"{name}-eip",
             opts=pulumi.ResourceOptions(
                 parent=self,
+                depends_on=[self.vpc],
             ),
         )
 
@@ -75,7 +76,8 @@ class InspectionVpc(pulumi.ComponentResource):
                 }
             ),
             pulumi.ResourceOptions(
-                parent=self
+                parent=self,
+                depends_on=[self.vpc],
             )
         )
 
@@ -157,6 +159,7 @@ class InspectionVpc(pulumi.ComponentResource):
                 pulumi.ResourceOptions(
                     depends_on=[self.tgw_attachment],
                     parent=self,
+                    delete_before_replace=True,
                 ),
             )
 
@@ -240,6 +243,7 @@ class InspectionVpc(pulumi.ComponentResource):
                 ),
                 opts=pulumi.ResourceOptions(
                     parent=route_table,
+                    delete_before_replace=True,
                 ),
             )
 
@@ -252,8 +256,8 @@ class InspectionVpc(pulumi.ComponentResource):
                 ),
                 opts=pulumi.ResourceOptions(
                     parent=route_table,
+                    delete_before_replace=True,
                 ),
-
             )
 
         subnet_mappings = list(map(lambda id: {"subnet_id": id}, subnet_ids))
@@ -305,6 +309,7 @@ class InspectionVpc(pulumi.ComponentResource):
                 ),
                 pulumi.ResourceOptions(
                     parent=self,
+                    delete_before_replace=True,
                 ),
             )
 
