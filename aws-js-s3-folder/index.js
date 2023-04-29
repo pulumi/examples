@@ -11,6 +11,20 @@ let siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     },
 });
 
+// Configure ownership controls for the new S3 bucket
+const ownershipControls = new aws.s3.BucketOwnershipControls("ownership-controls", {
+    bucket: siteBucket.id,
+    rule: {
+        objectOwnership: "ObjectWriter",
+    },
+});
+
+// Configure public ACL block on the new S3 bucket
+const publicAccessBlock = new aws.s3.BucketPublicAccessBlock("public-access-block", {
+    bucket: siteBucket.id,
+    blockPublicAcls: false,
+});
+
 let siteDir = "www"; // directory for content files
 
 // For each file in the directory, create an S3 object stored in `siteBucket`
@@ -20,7 +34,7 @@ for (let item of require("fs").readdirSync(siteDir)) {
         bucket: siteBucket,                               // reference the s3.Bucket object
         source: new pulumi.asset.FileAsset(filePath),     // use FileAsset to point to a file
         contentType: mime.getType(filePath) || undefined, // set the MIME type of the file
-    });
+    }, { dependsOn: [ownershipControls, publicAccessBlock] });
 }
 
 // Create an S3 Bucket Policy to allow public read of all objects in bucket
@@ -44,7 +58,7 @@ function publicReadPolicyForBucket(bucketName) {
 let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
     bucket: siteBucket.bucket, // refer to the bucket created earlier
     policy: siteBucket.bucket.apply(publicReadPolicyForBucket) // use output property `siteBucket.bucket`
-});
+}, { dependsOn: [ownershipControls, publicAccessBlock] });
 
 // Stack exports
 exports.bucketName = siteBucket.bucket;
