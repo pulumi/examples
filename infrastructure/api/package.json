@@ -1,0 +1,16 @@
+{
+    "name": "pulumi-examples-api",
+    "version": "0.1.0",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^16"
+    },
+    "dependencies": {
+        "@octokit/rest": "^19.0.7",
+        "@pulumi/aws": "^5.0.0",
+        "@pulumi/aws-apigateway": "^1.0.1",
+        "@pulumi/awsx": "^1.0.0",
+        "@pulumi/command": "^0.7.1",
+        "@pulumi/pulumi": "^3.0.0"
+    }
+}

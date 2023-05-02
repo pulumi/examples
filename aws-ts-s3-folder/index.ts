@@ -2,6 +2,7 @@
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
+import * as path from "path";
 import * as fs from "fs";
 import * as mime from "mime";
 
@@ -12,16 +13,30 @@ const siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     },
 });
 
-const siteDir = "www"; // directory for content files
+// Configure ownership controls for the new S3 bucket
+const ownershipControls = new aws.s3.BucketOwnershipControls("ownership-controls", {
+    bucket: siteBucket.id,
+    rule: {
+        objectOwnership: "ObjectWriter",
+    },
+});
+
+// Configure public ACL block on the new S3 bucket
+const publicAccessBlock = new aws.s3.BucketPublicAccessBlock("public-access-block", {
+    bucket: siteBucket.id,
+    blockPublicAcls: false,
+});
+
+let siteDir = "www"; // directory for content files
 
 // For each file in the directory, create an S3 object stored in `siteBucket`
-for (const item of fs.readdirSync(siteDir)) {
-    const filePath = require("path").join(siteDir, item);
-    const siteObject = new aws.s3.BucketObject(item, {
+for (let item of fs.readdirSync(siteDir)) {
+    let filePath = path.join(siteDir, item);
+    let object = new aws.s3.BucketObject(item, {
         bucket: siteBucket,                               // reference the s3.Bucket object
         source: new pulumi.asset.FileAsset(filePath),     // use FileAsset to point to a file
         contentType: mime.getType(filePath) || undefined, // set the MIME type of the file
-    });
+    }, { dependsOn: [ownershipControls, publicAccessBlock] });
 }
 
 // Set the access policy for the bucket so all objects are readable
@@ -40,7 +55,7 @@ const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
             ],
         }],
     }),
-});
+}, { dependsOn: [ownershipControls, publicAccessBlock] });
 
 // Stack exports
 export const bucketName = siteBucket.bucket;
