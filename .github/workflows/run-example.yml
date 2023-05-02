@@ -1,0 +1,152 @@
+name: Run individual example
+
+on:
+  push:
+
+  workflow_dispatch:
+    inputs:
+      path:
+        type: string
+        description: The path to the example to run
+      runner:
+        type: string
+        description: The S3 bucket URL of the runner app
+
+env:
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_ENVIRONMENT: public
+  ARM_LOCATION: westus
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+  AWS_ACCESS_KEY_ID: " ${{ secrets.AWS_ACCESS_KEY_ID }}"
+  AWS_REGION: us-west-2
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+  DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+  GOOGLE_CI_SERVICE_ACCOUNT_EMAIL: pulumi-ci@pulumi-ci-gcp-provider.iam.gserviceaccount.com
+  GOOGLE_CI_WORKLOAD_IDENTITY_POOL: pulumi-ci
+  GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER: pulumi-ci
+  GOOGLE_PROJECT: pulumi-ci-gcp-provider
+  GOOGLE_PROJECT_NUMBER: "895284651812"
+  GOOGLE_REGION: us-central1
+  GOOGLE_ZONE: us-central1-a
+  PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
+  PR_COMMIT_SHA: ${{ github.event.client_payload.pull_request.head.sha }}
+  PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+  PULUMI_API: https://api.pulumi-staging.io
+  PULUMI_TEST_OWNER: moolumi
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  run-example:
+    runs-on: ${{ matrix.platform }}
+
+    strategy:
+      matrix:
+        dotnetversion:
+          - 3.1.301
+        goversion:
+          - 1.19.x
+        nodeversion:
+          - 16.x
+        platform:
+          - ubuntu-latest
+        pythonversion:
+          - 3.9
+
+    steps:
+
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+
+    - name: Setup DotNet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{matrix.dotnetversion}}
+
+    - name: Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{matrix.nodeversion}}
+        registry-url: https://registry.npmjs.org
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{matrix.pythonversion}}
+
+    - name: Install Python deps
+      run: |-
+        pip3 install virtualenv==20.0.23
+        pip3 install pipenv
+
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{matrix.goversion}}
+
+    - name: Install aws-iam-authenticator
+      run: >-
+        curl -o aws-iam-authenticator
+        https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+        chmod +x ./aws-iam-authenticator
+        sudo mv aws-iam-authenticator /usr/local/bin
+
+    - name: Install Kubectl
+      run: >-
+        curl -LO
+        https://storage.googleapis.com/kubernetes-release/release/$(curl -s
+        https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+        chmod +x ./kubectl
+        sudo mv kubectl /usr/local/bin
+
+    - name: Install + Configure Helm
+      run: >-
+        curl -o- -L
+        https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get |
+        bash
+        helm init -c
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0
+      with:
+        service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
+        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{ env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{ env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
+
+    - name: Setup gcloud auth
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        install_components: gke-gcloud-auth-plugin
+
+    - name: Login to Google Cloud Registry
+      run: gcloud --quiet auth configure-docker
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-region: ${{ env.AWS_REGION }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        role-duration-seconds: 3600
+        role-session-name: examples@githubActions
+        role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+
+    - name: Checkout Scripts Repo
+      uses: actions/checkout@v3
+      with:
+        path: ci-scripts
+        repository: pulumi/scripts
+
+    - name: Install Pulumi CLI
+      uses: pulumi/actions@v4
+
+    - name: Print CLI version
+      run: echo "Currently Pulumi $(pulumi version) is installed"
+
+    - name: Install Testing Dependencies
+      run: make ensure
+
+    - name: Running example
+      run: echo 'yay, we are running an example!'
