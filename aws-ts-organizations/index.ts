@@ -13,10 +13,12 @@ const config = new pulumi.Config();
 // and don't want it managed by Pulumi then simply retrieve it
 // using the `getOrganization` function.
 const organization = aws.organizations.getOrganization({});
+const orgId = organization.then(o => o.roots[0].id);
 // Otherwise, create an organization and let Pulumi manage it.
 // If you are going to create the organization using the following
 // construction, you should remove the call to getOrganization above.
-// const organization = new aws.organizations.Organization("");
+//const organization = new aws.organizations.Organization("org");
+//const orgId = organization.roots.apply(rs => rs[0].id);
 
 // The IAM user used to execute this Pulumi app should be granted
 // permissions to assume this role in any account.
@@ -35,7 +37,7 @@ if (!devAccountEmailContact) {
 }
 
 const devOrgUnit = new aws.organizations.OrganizationalUnit("orgUnit", {
-    parentId: organization.then((o) => o.roots[0].id),
+    parentId: orgId,
     name: "Development",
 });
 
@@ -138,7 +140,7 @@ const tagPolicies = new TagPolicies("tagPolicies", {
             ou: devOrgUnit,
         },
     ],
-    orgId: organization.then((o) => o.roots[0].id),
+    orgId: orgId,
 });
 
 const backupPolicy = new BackupPolicy("developmentBackupPolicy", {
