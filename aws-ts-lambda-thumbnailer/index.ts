@@ -6,12 +6,19 @@ import * as awsx from "@pulumi/awsx";
 // A bucket to store videos and thumbnails.
 const bucket = new aws.s3.Bucket("bucket");
 
-const image = awsx.ecr.buildAndPushImage("sampleapp", {
-    context: "./docker-ffmpeg-thumb",
+const repo = new awsx.ecr.Repository("repo", {
+    forceDelete: true,
 });
+
+const image = new awsx.ecr.Image("image", {
+    repositoryUrl: repo.url,
+    path: "./app",
+});
+
 const role = new aws.iam.Role("thumbnailerRole", {
     assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: "lambda.amazonaws.com" }),
 });
+
 const lambdaS3Access =  new aws.iam.RolePolicyAttachment("lambdaFullAccess", {
     role: role.name,
     policyArn: aws.iam.ManagedPolicy.AWSLambdaExecute,
@@ -19,7 +26,7 @@ const lambdaS3Access =  new aws.iam.RolePolicyAttachment("lambdaFullAccess", {
 
 const thumbnailer = new aws.lambda.Function("thumbnailer", {
     packageType: "Image",
-    imageUri: image.imageValue,
+    imageUri: image.imageUri,
     role: role.arn,
     timeout: 900,
 });
