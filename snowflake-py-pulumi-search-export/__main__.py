@@ -9,7 +9,9 @@ import datetime
 import json
 import os
 
-# TODO: Pulumi token secret
+bucket = aws.s3.Bucket("pulumi-search-export")
+
+# TODO: Make this required for security
 config = pulumi.Config()
 pulumi_access_token = config.get_secret(
     "pulumi-access-token") or os.environ['PULUMI_ACCESS_TOKEN']
@@ -50,9 +52,9 @@ aws.iam.RolePolicyAttachment(
 )
 
 ssm_policy = aws.iam.Policy(
-    "ssm-params-policy",
-    description="IAM policy to access all SSM parameters with a path starting with '/foo'",
-    policy=ssm_parameter.arn.apply(lambda arn: json.dumps({
+    f"{lambda_name}-policy",
+    description=f"IAM policy for all perms needed by Lambda function {lambda_name}",
+    policy=pulumi.Output.all(ssm_parameter.arn, bucket.arn).apply(lambda args: json.dumps({
         "Version": "2012-10-17",
         "Statement": [
             {
@@ -62,8 +64,15 @@ ssm_policy = aws.iam.Policy(
                     "ssm:GetParametersByPath"
                 ],
                 "Effect": "Allow",
-                "Resource": arn
-            }
+                "Resource": args[0]
+            },
+            {
+                "Action": [
+                    "s3:PutObject",
+                ],
+                "Effect": "Allow",
+                "Resource": args[1]
+            },
         ]
     })),
 )
@@ -87,15 +96,23 @@ vendor_deps = command.local.Command(
 
 function = aws.lambda_.Function(
     lambda_name,
-    role=lambda_role.arn,
-    runtime="python3.8",
-    handler="handler.handle",
-    code=pulumi.FileArchive('./.build'),
-    timeout=60,
+    aws.lambda_.FunctionArgs(
+        role=lambda_role.arn,
+        runtime="python3.8",
+        handler="handler.handle",
+        code=pulumi.FileArchive('./.build'),
+        timeout=60,
+        environment=aws.lambda_.FunctionEnvironmentArgs(
+            variables={
+                'DESTINATION_BUCKET_ARN': bucket.arn,
+            }
+        )
+    ),
     opts=pulumi.ResourceOptions(
         depends_on=vendor_deps
     )
 )
+
 
 # TODO: Cloudwatch cron
 
