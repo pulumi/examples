@@ -23,10 +23,10 @@ config = Config()
 username = config.require("username")
 password = config.require("password")
 
-# retrieve our Azure subscription ID for later use
+# Retrieve the Azure subscription ID for later use.
 az = authorization.get_client_config()
 
-# project name will become a base part of each resources name
+# Project name will become a base part of each resources name.
 project = get_project()
 
 # Create a resource group.
@@ -73,7 +73,7 @@ lb_public_ip = network.PublicIPAddress(
     )
 )
 
-# We are required to create the IDs for these resources due to how the Azure API structures LoadBalancers
+# We are required to create the IDs for these resources due to how the Azure API structures LoadBalancers.
 lb_name = f"{project}-lb"
 lb_id = Output.concat(
     "/subscriptions/",
@@ -155,7 +155,7 @@ lb = network.LoadBalancer(
     ),
 )
 
-# Create a security group allowing inbound access over port 80 (for HTTP)
+# Create a security group allowing inbound access over port 80 (for HTTP).
 security_group = network.NetworkSecurityGroup(
     f"{project}-security-group",
     resource_group_name=resource_group.name,
@@ -175,7 +175,7 @@ security_group = network.NetworkSecurityGroup(
 )
 
 # Create a network interface with the virtual network, IP address, and security group
-#   that will be used by our LB's backend pool
+# that will be used by the LB's backend pool.
 nic = network.NetworkInterface(
     f"{project}-network-interface",
     resource_group_name=resource_group.name,
