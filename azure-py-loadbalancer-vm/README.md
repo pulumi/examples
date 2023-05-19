@@ -105,7 +105,7 @@ This example deploys an Azure Load Balancer fronting an Azure Virtual Machine an
     $ pulumi destroy --yes
     Previewing destroy (azuredev):
 
-        Type                                      Name                         Plan
+        Type                                          Name                                        Plan
     -   pulumi:pulumi:Stack                           azure-py-loadbalancer-vm-azuredev           delete
     -   ├─ azure-native:compute:VirtualMachine        azure-py-loadbalancer-vm                    delete
     -   ├─ azure-native:network:NetworkInterface      azure-py-loadbalancer-vm-network-interface  delete
@@ -125,7 +125,7 @@ This example deploys an Azure Load Balancer fronting an Azure Virtual Machine an
 
     Destroying (azuredev):
 
-    Type                                      Name                         Status
+    Type                                              Name                                        Status
     -   pulumi:pulumi:Stack                           azure-py-loadbalancer-vm-azuredev           deleted
     -   ├─ azure-native:compute:VirtualMachine        azure-py-loadbalancer-vm                    deleted (42s)
     -   ├─ azure-native:network:NetworkInterface      azure-py-loadbalancer-vm-network-interface  deleted (5s)
