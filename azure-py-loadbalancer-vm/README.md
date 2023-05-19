@@ -36,45 +36,57 @@ This example deploys an Azure Load Balancer fronting an Azure Virtual Machine an
     Previewing update (azuredev):
 
         Type                                      Name                         Plan       
-    +   pulumi:pulumi:Stack                       azure-py-webserver-azuredev  create     
-    +   ├─ azure-native:core:ResourceGroup        server                       create     
-    +   ├─ azure-native:network:VirtualNetwork    server-network               create     
-    +   ├─ azure-native:network:PublicIp          server-ip                    create     
-    +   ├─ azure-native:network:Subnet            server-subnet                create     
-    +   ├─ azure-native:network:NetworkInterface  server-nic                   create     
-    +   └─ azure-native:compute:VirtualMachine    server-vm                    create     
+     +  pulumi:pulumi:Stack                       azure-py-loadbalancer-vm-azuredev           create
+ +   ├─ random:index:RandomString                  azure-py-loadbalancer-vm-lb-domain-label    create
+ +   ├─ azure-native:resources:ResourceGroup       azure-py-loadbalancer-vm-resource-group     create
+ +   ├─ azure-native:network:VirtualNetwork        azure-py-loadbalancer-vm-network            create
+ +   ├─ azure-native:network:NetworkSecurityGroup  azure-py-loadbalancer-vm-security-group     create
+ +   ├─ azure-native:network:PublicIPAddress       azure-py-loadbalancer-vm-lb-public-ip       create
+ +   ├─ azure-native:network:LoadBalancer          azure-py-loadbalancer-vm-lb                 create
+ +   ├─ azure-native:network:NetworkInterface      azure-py-loadbalancer-vm-network-interface  create
+ +   └─ azure-native:compute:VirtualMachine        azure-py-loadbalancer-vm                    create
 
     Resources:
-        + 7 to create
+        + 9 to create
 
     Do you want to perform this update? yes
     Updating (azuredev):
 
         Type                                      Name                         Status      
-    +   pulumi:pulumi:Stack                       azure-py-webserver-azuredev  created     
-    +   ├─ azure-native:core:ResourceGroup        server                       created     
-    +   ├─ azure-native:network:VirtualNetwork    server-network               created     
-    +   ├─ azure-native:network:PublicIp          server-ip                    created     
-    +   ├─ azure-native:network:Subnet            server-subnet                created     
-    +   ├─ azure-native:network:NetworkInterface  server-nic                   created     
-    +   └─ azure-native:compute:VirtualMachine    server-vm                    created     
+     +  pulumi:pulumi:Stack                       azure-py-loadbalancer-vm-azuredev               created (14s)       
+ +   ├─ random:index:RandomString                  azure-py-loadbalancer-vm-lb-domain-label    created (0.28s)     
+ +   ├─ azure-native:resources:ResourceGroup       azure-py-loadbalancer-vm-resource-group     created (0.90s)     
+ +   ├─ azure-native:network:VirtualNetwork        azure-py-loadbalancer-vm-network            created (4s)        
+ +   ├─ azure-native:network:NetworkSecurityGroup  azure-py-loadbalancer-vm-security-group     created (2s)        
+ +   ├─ azure-native:network:PublicIPAddress       azure-py-loadbalancer-vm-lb-public-ip       created (5s)        
+ +   ├─ azure-native:network:LoadBalancer          azure-py-loadbalancer-vm-lb                 created (1s)        
+ +   ├─ azure-native:network:NetworkInterface      azure-py-loadbalancer-vm-network-interface  created (5s)        
+ +   └─ azure-native:compute:VirtualMachine        azure-py-loadbalancer-vm                    created (87s)         
 
     Outputs:
-        public_ip: "137.117.15.111"
+        fqdn : "http://azure-py-loadbalancer-vm-n3jtn905.westus2.cloudapp.azure.com"
+        lb-ip: "20.3.225.29"
 
     Resources:
-        + 7 created
+        + 9 created
 
-    Duration: 2m55s
+    Duration: 1m51s
 
-    Permalink: https://app.pulumi.com/swgillespie/azure-py-webserver/azuredev/updates/3
+    Permalink: https://app.pulumi.com/phillipedwards/azure-py-loadbalancer-vm/azuredev/updates/3
     ```
 
-1. Get the IP address of the newly-created instance from the stack's outputs: 
+1. Get the IP address of the newly-created Load Balancer from the stack's outputs: 
 
     ```bash
-    $ pulumi stack output public_ip
+    $ pulumi stack output lb-ip
     137.117.15.111
+    ```
+
+1. Get the FQDN of the newly-created Load Balancer from the stack's outputs: 
+
+    ```bash
+    $ pulumi stack output fqdn
+    http://azure-py-loadbalancer-vm-n3jtn905.westus2.cloudapp.azure.com
     ```
 
 1. Check to see that your server is now running:
@@ -82,41 +94,54 @@ This example deploys an Azure Load Balancer fronting an Azure Virtual Machine an
     ```
     $ curl http://$(pulumi stack output public_ip)
     Hello, World!
+    $ curl pulumi stack outout fqdn
+    Hello, World!
     ```
 
 1. Destroy the stack:
 
     ```bash
-    ▶ pulumi destroy --yes
+    $ pulumi destroy --yes
     Previewing destroy (azuredev):
 
         Type                                      Name                         Plan       
-    -   pulumi:pulumi:Stack                       azure-py-webserver-azuredev  delete     
-    -   ├─ azure-native:compute:VirtualMachine    server-vm                    delete     
-    -   ├─ azure-native:network:NetworkInterface  server-nic                   delete     
-    -   ├─ azure-native:network:Subnet            server-subnet                delete     
-    -   ├─ azure-native:network:PublicIp          server-ip                    delete     
-    -   ├─ azure-native:network:VirtualNetwork    server-network               delete     
-    -   └─ azure-native:core:ResourceGroup        server                       delete     
+    -   pulumi:pulumi:Stack                           azure-py-loadbalancer-vm-azuredev           delete     
+    -   ├─ azure-native:compute:VirtualMachine        azure-py-loadbalancer-vm                    delete     
+    -   ├─ azure-native:network:NetworkInterface      azure-py-loadbalancer-vm-network-interface  delete     
+    -   ├─ azure-native:network:LoadBalancer          azure-py-loadbalancer-vm-lb                 delete     
+    -   ├─ azure-native:network:PublicIPAddress       azure-py-loadbalancer-vm-lb-public-ip       delete     
+    -   ├─ azure-native:network:NetworkSecurityGroup  azure-py-loadbalancer-vm-security-group     delete     
+    -   ├─ azure-native:network:VirtualNetwork        azure-py-loadbalancer-vm-network            delete     
+    -   ├─ random:index:RandomString                  azure-py-loadbalancer-vm-lb-domain-label    delete     
+    -   └─ azure-native:resources:ResourceGroup       azure-py-loadbalancer-vm-resource-group     delete       
+
+    Outputs:
+     - fqdn : "http://azure-py-loadbalancer-vm-n3jtn905.westus2.cloudapp.azure.com"
+     - lb-ip: "20.3.225.29"
 
     Resources:
-        - 7 to delete
+        - 9 to delete
 
     Destroying (azuredev):
 
-        Type                                      Name                         Status      
-    -   pulumi:pulumi:Stack                       azure-py-webserver-azuredev  deleted     
-    -   ├─ azure-native:compute:VirtualMachine    server-vm                    deleted     
-    -   ├─ azure-native:network:NetworkInterface  server-nic                   deleted     
-    -   ├─ azure-native:network:Subnet            server-subnet                deleted     
-    -   ├─ azure-native:network:VirtualNetwork    server-network               deleted     
-    -   ├─ azure-native:network:PublicIp          server-ip                    deleted     
-    -   └─ azure-native:core:ResourceGroup        server                       deleted     
+    Type                                      Name                         Status      
+    -   pulumi:pulumi:Stack                           azure-py-loadbalancer-vm-azuredev           deleted             
+    -   ├─ azure-native:compute:VirtualMachine        azure-py-loadbalancer-vm                    deleted (42s)       
+    -   ├─ azure-native:network:NetworkInterface      azure-py-loadbalancer-vm-network-interface  deleted (5s)        
+    -   ├─ azure-native:network:LoadBalancer          azure-py-loadbalancer-vm-lb                 deleted (10s)       
+    -   ├─ azure-native:network:PublicIPAddress       azure-py-loadbalancer-vm-lb-public-ip       deleted (20s)       
+    -   ├─ azure-native:network:VirtualNetwork        azure-py-loadbalancer-vm-network            deleted (11s)       
+    -   ├─ azure-native:network:NetworkSecurityGroup  azure-py-loadbalancer-vm-security-group     deleted (3s)        
+    -   ├─ azure-native:resources:ResourceGroup       azure-py-loadbalancer-vm-resource-group     deleted (76s)       
+    -   └─ random:index:RandomString                  azure-py-loadbalancer-vm-lb-domain-label    deleted (0.23s)     
+
+
+    Outputs:
+    - fqdn : "http://azure-py-loadbalancer-vm-n3jtn905.westus2.cloudapp.azure.com"
+    - lb-ip: "20.3.225.29"
 
     Resources:
-        - 7 deleted
+        - 9 deleted
 
-    Duration: 3m49s
-
-    Permalink: https://app.pulumi.com/swgillespie/azure-py-webserver/azuredev/updates/4
+    Duration: 2m38s
     ```
