@@ -35,8 +35,8 @@ This example deploys an Azure Load Balancer fronting an Azure Virtual Machine an
     $ pulumi update
     Previewing update (azuredev):
 
-        Type                                      Name                         Plan
-     +  pulumi:pulumi:Stack                       azure-py-loadbalancer-vm-azuredev           create
+        Type                                           Name                                        Plan
+     +  pulumi:pulumi:Stack                            azure-py-loadbalancer-vm-azuredev           create
      +   ├─ random:index:RandomString                  azure-py-loadbalancer-vm-lb-domain-label    create
      +   ├─ azure-native:resources:ResourceGroup       azure-py-loadbalancer-vm-resource-group     create
      +   ├─ azure-native:network:VirtualNetwork        azure-py-loadbalancer-vm-network            create
@@ -52,8 +52,8 @@ This example deploys an Azure Load Balancer fronting an Azure Virtual Machine an
     Do you want to perform this update? yes
     Updating (azuredev):
 
-        Type                                      Name                         Status
-     +  pulumi:pulumi:Stack                       azure-py-loadbalancer-vm-azuredev               created (14s)
+        Type                                           Name                                        Status
+     +  pulumi:pulumi:Stack                            azure-py-loadbalancer-vm-azuredev           created (14s)
      +   ├─ random:index:RandomString                  azure-py-loadbalancer-vm-lb-domain-label    created (0.28s)
      +   ├─ azure-native:resources:ResourceGroup       azure-py-loadbalancer-vm-resource-group     created (0.90s)
      +   ├─ azure-native:network:VirtualNetwork        azure-py-loadbalancer-vm-network            created (4s)
@@ -92,9 +92,10 @@ This example deploys an Azure Load Balancer fronting an Azure Virtual Machine an
 1. Check to see that your server is now running:
 
     ```
-    $ curl http://$(pulumi stack output public_ip)
+    $ curl "http://$(pulumi stack output lb-ip)"
     Hello, World!
-    $ curl pulumi stack outout fqdn
+
+    $ curl "$(pulumi stack output fqdn)"
     Hello, World!
     ```
 
