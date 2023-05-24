@@ -49,7 +49,7 @@ managed_cluster = containerservice.ManagedCluster(
         "vm_size": "Standard_DS2_v2",
     }],
     enable_rbac=True,
-    kubernetes_version="1.18.14",
+    kubernetes_version="1.26.3",
     linux_profile={
         "admin_username": "testuser",
         "ssh": {
