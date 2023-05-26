@@ -69,7 +69,7 @@ class MyStack : Stack
             },
             DnsPrefix = "AzureNativeprovider",
             EnableRBAC = true,
-            KubernetesVersion = "1.18.14",
+            KubernetesVersion = "1.26.3",
             LinuxProfile = new ContainerServiceLinuxProfileArgs
             {
                 AdminUsername = "testuser",

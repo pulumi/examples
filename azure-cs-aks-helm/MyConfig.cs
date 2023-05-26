@@ -23,7 +23,7 @@ class MyConfig
     {
         var cfg = new Config();
 
-        this.K8SVersion = cfg.Get("k8sVersion") ?? "1.18.14";
+        this.K8SVersion = cfg.Get("k8sVersion") ?? "1.26.3";
         this.NodeCount = cfg.GetInt32("nodeCount") ?? 2;
         this.NodeSize = cfg.Get("nodeSize") ?? "Standard_D2_v2";
 

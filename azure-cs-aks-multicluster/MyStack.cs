@@ -97,7 +97,7 @@ class MyStack : Stack
                     }
                 },
                 DnsPrefix = $"{Pulumi.Deployment.Instance.StackName}-kube",
-                KubernetesVersion = "1.18.14",
+                KubernetesVersion = "1.26.3",
             });
 
             aksClusterNames.Add(cluster.Name);

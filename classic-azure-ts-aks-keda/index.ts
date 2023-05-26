@@ -10,7 +10,7 @@ const resourceGroup = new azure.core.ResourceGroup("keda-pulumi");
 // Create an AKS K8s cluster
 const aks = new AksCluster("keda-cluster", {
     resourceGroupName: resourceGroup.name,
-    kubernetesVersion: "1.13.5",
+    kubernetesVersion: "1.26.3",
     vmSize: "Standard_B2s",
     vmCount: 3,
 });
