@@ -106,10 +106,10 @@ jobs:
         dotnet-version:
           - 3.1.301
         go-version:
-          - 1.16.x
+          - 1.19.x
         node-version:
-          - 14.x
+          - 16.x
         platform:
           - ubuntu-latest
         python-version:
-          - "3.7"
+          - "3.9"
