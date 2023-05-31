@@ -57,7 +57,7 @@ const k8sClusters = aksClusterConfig.map((perClusterConfig, index) => {
             vmSize: perClusterConfig.nodeSize,
         }],
         dnsPrefix: `${pulumi.getStack()}-kube`,
-        kubernetesVersion: "1.18.14",
+        kubernetesVersion: "1.26.3",
     });
     return cluster;
 });
