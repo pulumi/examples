@@ -11,7 +11,7 @@ import os
 
 bucket = aws.s3.Bucket("pulumi-search-export")
 
-# TODO: Make this required for security
+# TODO: Make this required for security - don't pull from the env var.
 config = pulumi.Config()
 pulumi_access_token = config.get_secret(
     "pulumi-access-token") or os.environ['PULUMI_ACCESS_TOKEN']
@@ -104,7 +104,7 @@ function = aws.lambda_.Function(
         timeout=60,
         environment=aws.lambda_.FunctionEnvironmentArgs(
             variables={
-                'DESTINATION_BUCKET_ARN': bucket.arn,
+                'DESTINATION_BUCKET_NAME': bucket.bucket,
             }
         )
     ),
@@ -114,6 +114,10 @@ function = aws.lambda_.Function(
 )
 
 
-# TODO: Cloudwatch cron
+# TODO: Cloudwatch cron (make it configurable)
 
 pulumi.export('lambdaArn', function.arn)
+
+database = snowflake.Database(
+    "my-pulumi-db"
+)

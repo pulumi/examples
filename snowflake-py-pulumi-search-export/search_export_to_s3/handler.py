@@ -33,8 +33,8 @@ HEADERS = {
 }
 
 
-def get_bucket_arn():
-    key = 'DESTINATION_BUCKET_ARN'
+def get_bucket_name():
+    key = 'DESTINATION_BUCKET_NAME'
     if key not in os.environ:
         raise Exception(
             f"Environment variable '{key}' must be set to the ARN of the destination bucket in which to place exported search results.")
@@ -42,7 +42,7 @@ def get_bucket_arn():
     return os.environ[key]
 
 
-BUCKET_ARN = get_bucket_arn()
+BUCKET_NAME = get_bucket_name()
 
 
 def handle(event, context):
@@ -53,6 +53,11 @@ def handle(event, context):
     filename = f'{str(timestamp).replace(" ", "-").replace(":","-")}.csv'
 
     s3 = boto3.client('s3')
-    s3.put_object(BUCKET_ARN, f"pulumi-search-exports/{filename}")
+    s3.put_object(
+        Bucket=BUCKET_NAME,
+        Key=f"pulumi-search-exports/{filename}",
+        Body=r.content
+    )
 
     print(r.content)
+    return "OK"
