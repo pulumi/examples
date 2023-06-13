@@ -2,4 +2,4 @@
 
 This folder contains an example to export search data from Pulumi Cloud to Snowflake. The infrastructure contains:
 
-- An AWS Lambda function that fires on a schedule to export search data from the Pulumi Cloud REST API to an S3 bucket in a customer's account.
+- An AWS Lambda function that queries the Pulumi Cloud REST API to [export search data](https://www.pulumi.com/docs/pulumi-cloud/cloud-rest-api/#resource-search) and places the file in an S3 bucket.
