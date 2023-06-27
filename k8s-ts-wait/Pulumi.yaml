@@ -1,0 +1,3 @@
+name: k8s-ts-wait
+runtime: nodejs
+description: A TypeScript program to deploy Kubernetes jobs with dependencies and wait for them to complete.  

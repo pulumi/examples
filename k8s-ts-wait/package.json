@@ -1,0 +1,14 @@
+{
+    "name": "k8s-ts",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^16"
+    },
+    "dependencies": {
+        "@kubernetes/client-node": "^0.18.1",
+        "@pulumi/kubernetes": "^3.0.0",
+        "@pulumi/pulumi": "^3.0.0",
+        "install": "^0.13.0",
+        "npm": "^9.7.2"
+    }
+}
