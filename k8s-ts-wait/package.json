@@ -1,5 +1,5 @@
 {
-    "name": "k8s-ts",
+    "name": "k8s-ts-wait",
     "main": "index.ts",
     "devDependencies": {
         "@types/node": "^16"

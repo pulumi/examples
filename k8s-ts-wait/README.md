@@ -1,4 +1,4 @@
-# Kubernetes Dependent Jobs and Waiter
+# Kubernetes Wait for Dependent Jobs
 
 This program creates two Kubernetes Jobs that run the "hello-world" image. It uses an async waitForJob function to wait for the first Job to complete, then creates a second Job with a data dependency on the first Job's completion. The program exports the IDs and status details of both Jobs.
 
