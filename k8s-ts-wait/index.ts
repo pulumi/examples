@@ -2,6 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as k8sOutput from "@pulumi/kubernetes/types/output";
 import * as k8sapi from '@kubernetes/client-node';
+import { unknownValue } from "@pulumi/pulumi/runtime";
 
 // Create a Kubernetes Job with a single container running the "hello-world" image
 const job = new k8s.batch.v1.Job("job", {
@@ -44,6 +45,9 @@ async function waitForJob(jobMetadata: k8sOutput.meta.v1.ObjectMeta): Promise<an
         // Throw an error if the Job did not complete within the 10-minute timeout
         throw new Error("timed out waiting for Job to complete");
     }
+
+    const unknown = (pulumi as any).unknown;
+    return { status: { completionTime: unknown} };
 }
 
 // WaitForJob for the first Kubernetes Job to complete
