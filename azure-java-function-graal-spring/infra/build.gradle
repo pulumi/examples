@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     implementation "com.pulumi:pulumi:(,1.0]"
-    implementation "com.pulumi:azure-native:(1.0,2.0]"
+    implementation "com.pulumi:azure-native:(2.0,3.0]"
 }
 
 application {
