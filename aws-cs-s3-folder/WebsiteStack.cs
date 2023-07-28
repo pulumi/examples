@@ -17,6 +17,21 @@ class WebsiteStack : Stack
             }
         });
 
+        var ownershipControls = new BucketOwnershipControls("ownership-controls", new()
+        {
+            Bucket = bucket.Id,
+            Rule = new BucketOwnershipControlsRuleArgs
+            {
+                ObjectOwnership = "ObjectWriter",
+            },
+        }, new CustomResourceOptions {Parent = bucket});
+
+        var publicAccessBlock = new BucketPublicAccessBlock("public-access-block", new()
+        {
+            Bucket = bucket.Id,
+            BlockPublicAcls = false,
+        }, new CustomResourceOptions {Parent = bucket});
+
         // For each file in wwwroot ...
         var files = Directory.GetFiles("wwwroot");
         foreach (var file in files)
@@ -31,7 +46,7 @@ class WebsiteStack : Stack
                 Bucket = bucket.BucketName,
                 ContentType = contentType,
                 Source = new FileAsset(file)
-            }, new CustomResourceOptions {Parent = bucket});
+            }, new CustomResourceOptions {Parent = bucket, DependsOn = new Pulumi.Resource[]{ publicAccessBlock, ownershipControls }});
         }
 
         this.Endpoint = Output.Format($"http://{bucket.WebsiteEndpoint}");

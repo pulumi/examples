@@ -18,7 +18,6 @@ const cluster = new eks.Cluster(name, {
     maxSize: 2,
     storageClasses: "gp2",
     deployDashboard: false,
-    
 });
 
 // Export the clusters' kubeconfig.

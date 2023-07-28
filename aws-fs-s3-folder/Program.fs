@@ -12,7 +12,21 @@ let infra () =
     let bucket =
         Bucket("my-bucket",
                BucketArgs (Website = input (BucketWebsiteArgs (IndexDocument = input "index.html"))))
-        
+
+    let ownershipControls = 
+        BucketOwnershipControls("ownership-controls",
+                                BucketOwnershipControlsArgs
+                                    (Bucket = io bucket.Id,
+                                     Rule = input (BucketOwnershipControlsRuleArgs(ObjectOwnership = input "ObjectWriter"))),
+                                CustomResourceOptions (Parent = bucket))
+
+    let publicAccessBlock = 
+        BucketPublicAccessBlock("public-access-block",
+                                BucketPublicAccessBlockArgs
+                                    (Bucket = io bucket.Id,
+                                     BlockPublicAcls = input false),
+                                CustomResourceOptions (Parent = bucket))
+
     // For each file in wwwroot ...
     let files = Directory.GetFiles "wwwroot"
     let bucketObjects =
@@ -28,7 +42,7 @@ let infra () =
                              Bucket = io bucket.BucketName,
                              ContentType = input contentType,
                              Source = input (FileAsset file :> AssetOrArchive)),
-                         CustomResourceOptions (Parent = bucket)))
+                         CustomResourceOptions (Parent = bucket, DependsOn = inputList [input ownershipControls; input publicAccessBlock])))
     
     // Export the name of the bucket
     let endpoint = bucket.WebsiteEndpoint.Apply (sprintf "http://%s")

@@ -16,6 +16,11 @@ class S3Folder extends pulumi.ComponentResource {
                 indexDocument: "index.html",
             },
         }, { parent: this }); // specify resource parent
+        
+        const publicAccessBlock = new aws.s3.BucketPublicAccessBlock("public-access-block", {
+            bucket: siteBucket.id,
+            blockPublicAcls: false,
+        }, { parent: this });
 
         // For each file in the directory, create an S3 object stored in `siteBucket`
         for (let item of require("fs").readdirSync(path)) {
@@ -31,7 +36,7 @@ class S3Folder extends pulumi.ComponentResource {
         let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
             bucket: siteBucket.bucket,
             policy: siteBucket.bucket.apply(this.publicReadPolicyForBucket),
-        }, { parent: this }); // specify resource parent
+        }, { parent: this, dependsOn: publicAccessBlock }); // specify resource parent
 
         this.bucketName = siteBucket.bucket;
         this.websiteUrl = siteBucket.websiteEndpoint;

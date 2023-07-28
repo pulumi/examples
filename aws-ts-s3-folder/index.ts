@@ -12,6 +12,11 @@ const siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     },
 });
 
+const publicAccessBlock = new aws.s3.BucketPublicAccessBlock("public-access-block", {
+    bucket: siteBucket.id,
+    blockPublicAcls: false,
+});
+
 const siteDir = "www"; // directory for content files
 
 // For each file in the directory, create an S3 object stored in `siteBucket`
@@ -40,7 +45,7 @@ const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
             ],
         }],
     }),
-});
+}, { dependsOn: publicAccessBlock });
 
 // Stack exports
 export const bucketName = siteBucket.bucket;
