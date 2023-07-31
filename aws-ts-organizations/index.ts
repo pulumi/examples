@@ -14,11 +14,13 @@ const config = new pulumi.Config();
 // using the `getOrganization` function.
 const organization = aws.organizations.getOrganization({});
 const orgId = organization.then(o => o.roots[0].id);
+
 // Otherwise, create an organization and let Pulumi manage it.
 // If you are going to create the organization using the following
 // construction, you should remove the call to getOrganization above.
-//const organization = new aws.organizations.Organization("org");
-//const orgId = organization.roots.apply(rs => rs[0].id);
+//
+// const organization = new aws.organizations.Organization("org");
+// const orgId = organization.roots.apply(rs => rs[0].id);
 
 // The IAM user used to execute this Pulumi app should be granted
 // permissions to assume this role in any account.

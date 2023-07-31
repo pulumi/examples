@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Infra/bin/Debug/netcoreapp3.1/docker-cs-multi-container-app.dll",
+            "program": "${workspaceFolder}/Infra/bin/Debug/net6.0/docker-cs-multi-container-app.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Infra",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

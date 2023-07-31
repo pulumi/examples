@@ -62,6 +62,7 @@ export class GkeCluster extends pulumi.ComponentResource {
             version: engineVersion,
             management: {
                 autoRepair: true,
+                autoUpgrade: true,
             }
         }, {
             dependsOn: [k8sCluster]

@@ -4,7 +4,7 @@ RUN apt-get update && \
     apt-get install python-dev python-pip -y && \
     apt-get clean
 
-RUN pip install awscli
+RUN pip install awscli==1.18.69
 
 WORKDIR /tmp/workdir
 
