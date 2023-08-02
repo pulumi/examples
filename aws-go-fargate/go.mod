@@ -3,7 +3,7 @@ module github.com/pulumi/examples/aws-go-fargate
 go 1.19
 
 require (
-	github.com/pulumi/pulumi-aws/sdk/v5 v5.41.0
+	github.com/pulumi/pulumi-aws/sdk/v6 v6.0.0-alpha.5
 	github.com/pulumi/pulumi-awsx/sdk v1.0.2
 	github.com/pulumi/pulumi-docker/sdk/v4 v4.2.4
 	github.com/pulumi/pulumi/sdk/v3 v3.71.0
@@ -44,6 +44,7 @@ require (
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pkg/term v1.1.0 // indirect
+	github.com/pulumi/pulumi-aws/sdk/v5 v5.16.2 // indirect
 	github.com/pulumi/pulumi-docker/sdk/v3 v3.2.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect

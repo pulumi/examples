@@ -6,7 +6,7 @@
         "ts-jest": "^28.0.5"
     },
     "dependencies": {
-        "@pulumi/aws": "^5.0.0",
+        "@pulumi/aws": "6.0.0-alpha.5",
         "@pulumi/awsx": "^0.40.0",
         "@pulumi/pulumi": "^3.0.0",
         "node-fetch": "^2.6.7"

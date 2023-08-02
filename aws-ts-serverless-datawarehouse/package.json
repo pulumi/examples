@@ -9,7 +9,7 @@
         "ts-jest": "^24.3.0"
     },
     "dependencies": {
-        "@pulumi/aws": "^5.0.0",
+        "@pulumi/aws": "6.0.0-alpha.5",
         "@pulumi/pulumi": "^3.0.0",
         "athena-client": "^2.5.1",
         "aws-sdk": "^2.606.0",
