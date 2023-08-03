@@ -9,9 +9,9 @@ import (
 	armauth "github.com/Azure/azure-sdk-for-go/services/authorization/mgmt/2015-07-01/authorization"
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/adal"
-	"github.com/pulumi/pulumi-azure-native-sdk/authorization"
-	"github.com/pulumi/pulumi-azure-native-sdk/containerregistry"
-	"github.com/pulumi/pulumi-azure-native-sdk/resources"
+	"github.com/pulumi/pulumi-azure-native-sdk/authorization/v2"
+	"github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v2"
+	"github.com/pulumi/pulumi-azure-native-sdk/resources/v2"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 

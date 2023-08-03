@@ -46,6 +46,7 @@ const codeBlobUrl = getSASToken(storageAccount.name, storageContainer.name, blob
 const appInsights = new insights.Component("ai", {
     resourceGroupName: resourceGroup.name,
     kind: "web",
+    ingestionMode: "ApplicationInsights",
     applicationType: insights.ApplicationType.Web,
 });
 
