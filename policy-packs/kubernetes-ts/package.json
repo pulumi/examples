@@ -2,7 +2,7 @@
     "name": "example-policy-set",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/kubernetes": "^3.0.0",
+        "@pulumi/kubernetes": "^4.0.3",
         "@pulumi/policy": "^1.2.0"
     },
     "devDependencies": {
