@@ -3,8 +3,8 @@ module goaks
 go 1.18
 
 require (
-	github.com/pulumi/pulumi-azure-native-sdk/containerservice v1.88.1
-	github.com/pulumi/pulumi-azure-native-sdk/resources v1.88.1
+	github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2 v2.1.1
+	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.1.1
 	github.com/pulumi/pulumi-azuread/sdk/v4 v4.0.0
 	github.com/pulumi/pulumi-random/sdk/v4 v4.0.0
 	github.com/pulumi/pulumi-tls/sdk/v4 v4.0.0
@@ -36,7 +36,7 @@ require (
 	github.com/opentracing/opentracing-go v1.1.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pkg/term v1.1.0 // indirect
-	github.com/pulumi/pulumi-azure-native-sdk v1.88.1 // indirect
+	github.com/pulumi/pulumi-azure-native-sdk/v2 v2.1.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20180611051255-d3107576ba94 // indirect
@@ -53,7 +53,7 @@ require (
 	go.uber.org/atomic v1.6.0 // indirect
 	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/term v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	google.golang.org/genproto v0.0.0-20200608115520-7c474a2e3482 // indirect

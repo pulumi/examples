@@ -3,8 +3,8 @@ module azure-go-aks-helm
 go 1.18
 
 require (
-	github.com/pulumi/pulumi-azure-native-sdk/containerservice v1.88.1
-	github.com/pulumi/pulumi-azure-native-sdk/resources v1.88.1
+	github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2 v2.1.1
+	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.1.1
 	github.com/pulumi/pulumi-azuread/sdk/v4 v4.0.0
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.0.3
 	github.com/pulumi/pulumi-random/sdk/v4 v4.0.0
@@ -46,7 +46,7 @@ require (
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pkg/term v1.1.0 // indirect
-	github.com/pulumi/pulumi-azure-native-sdk v1.88.1 // indirect
+	github.com/pulumi/pulumi-azure-native-sdk v2.1.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // indirect
@@ -66,7 +66,7 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/crypto v0.3.1-0.20221117191849-2c476679df9a // indirect
 	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/term v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect

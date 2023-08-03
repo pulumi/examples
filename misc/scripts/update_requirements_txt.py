@@ -5,7 +5,7 @@ DESIRED_DEPS = {
     'pulumi': 'pulumi>=3.5.1,<4.0.0',
 
     'pulumi-azure': 'pulumi-azure>=4.7.0,<5.0.0',
-    'pulumi-azure-native': 'pulumi-azure-native>=1.14.0,<2.0.0',
+    'pulumi-azure-native': 'pulumi-azure-native>=2.0.0,<3.0.0',
     'pulumi-azuread': 'pulumi-azuread>=4.3.0,<5.0.0',
     'pulumi-digitalocean': 'pulumi-digitalocean>=4.4.1,<5.0.0',
     'pulumi-docker': 'pulumi-docker>=3.0.0,<4.0.0',
