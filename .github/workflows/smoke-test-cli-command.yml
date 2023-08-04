@@ -3,6 +3,9 @@ on:
   repository_dispatch:
     types:
     - smoke-test-cli
+  pull_request:
+    branches:
+      - master
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -26,7 +29,7 @@ env:
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_API: https://api.pulumi-staging.io
   PULUMI_TEST_OWNER: moolumi
-  PULUMI_VERSION: ${{ github.event.client_payload.ref }}
+  PULUMI_VERSION: 3.76.1
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 jobs:
   dotnet-unit-testing:
