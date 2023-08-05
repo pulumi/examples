@@ -6,7 +6,7 @@
         "build": "tsc"
     },
     "dependencies": {
-        "@pulumi/aws": "6.0.0-alpha.5",
+        "@pulumi/aws": "6.0.0-alpha.7",
         "@pulumi/pulumi": "^2.0.0",
         "@types/mime": "^2.0.1",
         "mime": "^2.2.2"

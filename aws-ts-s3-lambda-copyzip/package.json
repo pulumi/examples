@@ -4,7 +4,7 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/aws": "6.0.0-alpha.5",
+        "@pulumi/aws": "6.0.0-alpha.7",
         "@pulumi/pulumi": "^3.0.0",
         "adm-zip": "^0.4.13"
     }
