@@ -3,10 +3,12 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
-import * as path from "path";
-import * as mime from "mime";
-import * as glob from "glob";
 import { execSync } from "child_process";
+import * as crypto from "crypto";
+import * as fs from "fs";
+import * as glob from "glob";
+import * as mime from "mime";
+import * as path from "path";
 
 export interface NexJsSiteArgs {
     path?: string;
@@ -15,7 +17,7 @@ export interface NexJsSiteArgs {
 
 export class NextJsSite extends pulumi.ComponentResource {
     path: string;
-    environment: Record<string, pulumi.Input<string>>; 
+    environment: Record<string, pulumi.Input<string>>;
     domainName: pulumi.Output<string>;
     url: pulumi.Output<string>;
     public constructor(name: string, args: NexJsSiteArgs, opts?: pulumi.ComponentResourceOptions) {
@@ -25,22 +27,22 @@ export class NextJsSite extends pulumi.ComponentResource {
         this.environment = args.environment ?? {};
 
         try {
-            // TODO: Can we avoid running this on every preview+update?  
-            // Perhaps we can do a rough hash of the target deployment path and only 
+            // TODO: Can we avoid running this on every preview+update?
+            // Perhaps we can do a rough hash of the target deployment path and only
             // rebuild if there are changes?
-            execSync("npx --yes open-next@2.0.5 build", {
+            execSync("npm install && npx --yes open-next@2.0.5 build", {
                 stdio: "inherit",
                 cwd: this.path,
             });
         } catch (error) {
-            pulumi.log.warn("Could not build Next.js site.")
+            pulumi.log.warn("Could not build Next.js site.");
         }
 
         const bucket = new aws.s3.BucketV2(`${name}-bucket`, {
             forceDestroy: true,
         }, { parent: this });
 
-        new aws.s3.BucketPublicAccessBlock(`${name}-bucket-public-access`, {
+        const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(`${name}-bucket-public-access`, {
             bucket: bucket.id,
             blockPublicAcls: true,
             blockPublicPolicy: true,
@@ -54,12 +56,12 @@ export class NextJsSite extends pulumi.ComponentResource {
             nodir: true,
             follow: true,
         });
-        for (let file of files) {
+        for (const file of files) {
             const cacheControlVersioned = "public,max-age=31536000,immutable";
-            const cacheControlUnversioned =  "public,max-age=0,s-maxage=31536000,must-revalidate";
-            const hex = Buffer.from(file, 'utf8').toString('hex');
+            const cacheControlUnversioned = "public,max-age=0,s-maxage=31536000,must-revalidate";
+            const hex = computeHexHash(file);
             const key = path.join("_assets", file);
-            new aws.s3.BucketObject(`${name}-bucket-object-${hex}`, {
+            const object = new aws.s3.BucketObject(`${name}-bucket-object-${hex}`, {
                 bucket: bucket.id,
                 key: key,
                 source: new pulumi.asset.FileAsset(path.resolve(this.path, ".open-next/assets", file)),
@@ -120,7 +122,7 @@ export class NextJsSite extends pulumi.ComponentResource {
                 cachedMethods: [
                     "GET",
                     "HEAD",
-                    "OPTIONS"
+                    "OPTIONS",
                 ],
                 compress: true,
                 functionAssociations: args.functionArn ? [{
@@ -199,7 +201,7 @@ export class NextJsSite extends pulumi.ComponentResource {
                             "s3:PutObjectRetention",
                             "s3:PutObjectTagging",
                             "s3:PutObjectVersionTagging",
-                            "s3:Abort*"
+                            "s3:Abort*",
                         ],
                         "Effect": "Allow",
                         "Resource": [
@@ -211,11 +213,11 @@ export class NextJsSite extends pulumi.ComponentResource {
                         "Action": [
                             "sqs:SendMessage",
                             "sqs:GetQueueAttributes",
-                            "sqs:GetQueueUrl"
+                            "sqs:GetQueueUrl",
                         ],
                         "Effect": "Allow",
                         "Resource": queue.arn,
-                    }
+                    },
                 ],
                 "Version": "2012-10-17",
             },
@@ -359,11 +361,11 @@ export class NextJsSite extends pulumi.ComponentResource {
                     s3OriginConfig: {
                         originAccessIdentity: originAccessIdentity.cloudfrontAccessIdentityPath,
                     },
-                }
+                },
             ],
         }, { parent: this });
 
-        new aws.s3.BucketPolicy(`${name}-bucket-policy`, {
+        const policy = new aws.s3.BucketPolicy(`${name}-bucket-policy`, {
             bucket: bucket.id,
             policy: {
                 "Version": "2012-10-17",
@@ -375,7 +377,7 @@ export class NextJsSite extends pulumi.ComponentResource {
                             "CanonicalUser": originAccessIdentity.s3CanonicalUserId,
                         },
                         "Resource": pulumi.interpolate`${bucket.arn}/*`,
-                    }
+                    },
                 ],
             },
         }, { parent: this });
@@ -383,4 +385,8 @@ export class NextJsSite extends pulumi.ComponentResource {
         this.domainName = distribution.domainName;
         this.url = pulumi.interpolate`https://${distribution.domainName}`;
     }
+}
+
+function computeHexHash(s: string) {
+    return crypto.createHash("sha256").update(s).digest("hex");
 }
