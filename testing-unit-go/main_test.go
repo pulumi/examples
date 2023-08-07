@@ -53,9 +53,9 @@ func TestInfrastructure(t *testing.T) {
 		// Test if the instance is configured with user_data.
 		pulumi.All(infra.server.URN(), infra.server.UserData).ApplyT(func(all []interface{}) error {
 			urn := all[0].(pulumi.URN)
-			userData := all[1].(*string)
+			userData := all[1].(string)
 
-			assert.Nilf(t, userData, "illegal use of userData on server %v", urn)
+			assert.Equalf(t, "", userData, "illegal use of userData on server %v", urn)
 			wg.Done()
 			return nil
 		})
