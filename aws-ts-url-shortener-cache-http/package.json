@@ -14,7 +14,7 @@
         "@types/send": "^0.14.4"
     },
     "dependencies": {
-        "@pulumi/aws": "6.0.0-alpha.7",
+        "@pulumi/aws": "^5.0.0",
         "@pulumi/awsx": "^0.40.0",
         "@pulumi/cloud-aws": "^0.30.0",
         "@pulumi/pulumi": "^3.0.0",
