@@ -10,7 +10,8 @@ import json
 
 
 ap = argparse.ArgumentParser()
-ap.add_argument('--goversion', required=True)
+ap.add_argument('--goversion')
+ap.add_argument('--nodeversion')
 
 args = ap.parse_args()
 
@@ -49,3 +50,14 @@ if args.goversion:
     for f in go_mod_files:
         if aws_dep(f) is not None:
             update_aws_dep(f, args.goversion)
+
+
+if args.nodeversion:
+    pkg_json_files = [f for f in sp.check_output(['git', 'ls-files',  '**package.json']).decode('utf-8').split('\n') if f]
+    for f in pkg_json_files:
+        if '@pulumi/aws' in json.load(open(f)).get('dependencies', {}):
+            cdir = os.path.dirname(f)
+            try:
+                sp.check_call(['npm', 'i', '@pulumi/aws@'+args.nodeversion], cwd=cdir)
+            except:
+                print(f'WARN ignoring failing {f}, proceeding')
