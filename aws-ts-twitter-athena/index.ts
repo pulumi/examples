@@ -1,8 +1,8 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
+import * as s3sdk from "@aws-sdk/client-s3";
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-import * as s3sdk from "@aws-sdk/client-s3";
 
 const bucket = new aws.s3.Bucket("tweet-bucket", {
     serverSideEncryptionConfiguration: {

@@ -1,7 +1,7 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as aws from "@pulumi/aws";
 import * as s3sdk from "@aws-sdk/client-s3";
+import * as aws from "@pulumi/aws";
 
 // Create a bucket each for TPS reports and their archived zips.
 const tpsReports = new aws.s3.Bucket("tpsReports");
