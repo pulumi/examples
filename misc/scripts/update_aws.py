@@ -71,5 +71,5 @@ if args.pyversion:
         cdir = os.path.dirname(f)
         if 'pulumi-aws' in contents:
             with open(f, 'w') as fp:
-                c = re.sub(r'pulumi-aws[=][=][^n]+$', f'pulumi-aws=={args.pyversion}', contents)
+                c = re.sub(r'pulumi-aws[=][=][.\w]+', f'pulumi-aws=={args.pyversion}', contents)
                 fp.write(c)
