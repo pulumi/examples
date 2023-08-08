@@ -1,7 +1,7 @@
 {
     "name": "aws-ts-eks-hello-world",
     "dependencies": {
-        "@pulumi/aws": "6.0.0-alpha.7",
+        "@pulumi/aws": "^6.0.0-alpha.8",
         "@pulumi/awsx": "^1.0.2",
         "@pulumi/eks": "^1.0.2",
         "@pulumi/kubernetes": "^3.0.0",
