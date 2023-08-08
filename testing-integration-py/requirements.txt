@@ -1,2 +1,3 @@
 pulumi>=3.5.1,<4.0.0
-pulumi-aws==6.0.0a8
+pulumi-aws==6.0.0a7
+boto3==1.16.58
