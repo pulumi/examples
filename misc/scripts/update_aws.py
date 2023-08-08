@@ -12,6 +12,7 @@ import json
 ap = argparse.ArgumentParser()
 ap.add_argument('--goversion')
 ap.add_argument('--nodeversion')
+ap.add_argument('--pyversion')
 
 args = ap.parse_args()
 
@@ -61,3 +62,14 @@ if args.nodeversion:
                 sp.check_call(['npm', 'i', '@pulumi/aws@'+args.nodeversion], cwd=cdir)
             except:
                 print(f'WARN ignoring failing {f}, proceeding')
+
+
+if args.pyversion:
+    req_txt_files = [f for f in sp.check_output(['git', 'ls-files',  '**requirements.txt']).decode('utf-8').split('\n') if f]
+    for f in req_txt_files:
+        contents = open(f).read()
+        cdir = os.path.dirname(f)
+        if 'pulumi-aws' in contents:
+            with open(f, 'w') as fp:
+                c = re.sub(r'pulumi-aws[=][=][^n]+$', f'pulumi-aws=={args.pyversion}', contents)
+                fp.write(c)
