@@ -13,6 +13,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument('--goversion')
 ap.add_argument('--nodeversion')
 ap.add_argument('--pyversion')
+ap.add_argument('--javaversion')
 
 args = ap.parse_args()
 
@@ -72,4 +73,17 @@ if args.pyversion:
         if 'pulumi-aws' in contents:
             with open(f, 'w') as fp:
                 c = re.sub(r'pulumi-aws[=][=][.\w]+', f'pulumi-aws=={args.pyversion}', contents)
+                fp.write(c)
+
+
+if args.javaversion:
+    pom_xml_files = [f for f in sp.check_output(['git', 'ls-files', '**pom.xml']).decode('utf-8').split('\n') if f]
+    for f in pom_xml_files:
+        contents = open(f).read()
+        if '<artifactId>aws</artifactId>' in contents:
+            with open(f, 'w') as fp:
+                c = re.sub(
+                    r'<artifactId>aws</artifactId>(\s*)<version>[^<]+</version>',
+                    fr'<artifactId>aws</artifactId>\1<version>[{args.javaversion}]</version>',
+                    contents)
                 fp.write(c)
