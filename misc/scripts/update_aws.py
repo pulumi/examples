@@ -14,6 +14,7 @@ ap.add_argument('--goversion')
 ap.add_argument('--nodeversion')
 ap.add_argument('--pyversion')
 ap.add_argument('--javaversion')
+ap.add_argument('--csharpversion')
 
 args = ap.parse_args()
 
@@ -85,5 +86,17 @@ if args.javaversion:
                 c = re.sub(
                     r'<artifactId>aws</artifactId>(\s*)<version>[^<]+</version>',
                     fr'<artifactId>aws</artifactId>\1<version>[{args.javaversion}]</version>',
+                    contents)
+                fp.write(c)
+
+if args.csharpversion:
+    csproj_files = [f for f in sp.check_output(['git', 'ls-files', '**.csproj']).decode('utf-8').split('\n') if f]
+    for f in csproj_files:
+        contents = open(f).read()
+        if 'Pulumi.Aws' in contents:
+            with open(f, 'w') as fp:
+                c = re.sub(
+                    r'<PackageReference Include="Pulumi.Aws" Version="[^"]+"\s*/>',
+                    f'<PackageReference Include="Pulumi.Aws" Version="{args.csharpversion}" />',
                     contents)
                 fp.write(c)
