@@ -2,7 +2,7 @@
     "name": "cloud-js-containers",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/aws": "^6.0.0-alpha.8",
+        "@pulumi/aws": "^6.0.2-alpha.2",
         "@pulumi/cloud": "latest",
         "@pulumi/cloud-aws": "latest",
         "@pulumi/pulumi": "latest"
