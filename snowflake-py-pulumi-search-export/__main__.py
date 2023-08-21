@@ -52,7 +52,7 @@ aws.iam.RolePolicyAttachment(
 
 ssm_policy = aws.iam.Policy(
     f"{lambda_name}-policy",
-    description=f"IAM policy for all perms needed by Lambda function {lambda_name}",
+    description=f"All perms needed by Lambda function {lambda_name}",
     policy=pulumi.Output.all(ssm_parameter.arn, bucket.arn).apply(lambda args: json.dumps({
         "Version": "2012-10-17",
         "Statement": [
@@ -177,42 +177,181 @@ snowflake_policy = aws.iam.Policy(
     }))
 )
 
-# We can't create databases right now because of a bug in the provider:
-# https://github.com/pulumi/pulumi-snowflake/issues/266
-DATABASE_NAME = 'pulumi-snowflake-integration-437b96e'
+aws.iam.RolePolicyAttachment(
+    "snowflake-policy-attachment",
+    role=ROLE_NAME,
+    policy_arn=snowflake_policy.arn
+)
+
+database = snowflake.Database(
+    "pulumi-snowflake-integration",
+)
 
 schema = snowflake.Schema(
     "pulumi-snowflake-integration",
     name="PULUMI_SNOWFLAKE_INTEGRATION",
-    database=DATABASE_NAME
+    database=database.name,
 )
 
-# Welcome to my table! I hope the screen-sharing is working well!
+# TODO: Yes, you really do need to define every column in the CSV.
+table = snowflake.Table(
+    "pulumi-search-exports",
+    name="PULUMI_SEARCH_EXPORTS",
+    database=database.name,
+    schema=schema.name,
+    columns=[
+        # Metadata fields:
+        {
+            "name": "FILENAME",
+            "type": "STRING",
+            "nullable": False
+        },
+        {
+            "name": "LAST_MODIFIED_AT",
+            "type": "TIMESTAMP_NTZ",
+            "nullable": False
+        },
+        {
+            "name": "LOADED_AT",
+            "type": "TIMESTAMP_NTZ",
+            "nullable": False
+        },
+        # Fields from the exported file:
+        {
+            "name": "CREATED",
+            "type": "TIMESTAMP_NTZ",
+            "nullable": True
+        },
+        {
+            "name": "CUSTOM",
+            "type": "BOOLEAN",
+            "nullable": False
+        },
+        {
+            "name": "DELETE",
+            "type": "BOOLEAN",
+            "nullable": False
+        },
+        {
+            "name": "ID",
+            "type": "VARCHAR",
+            "nullable": True
+        },
+        {
+            "name": "MODIFIED",
+            "type": "TIMESTAMP_NTZ",
+            "nullable": False
+        },
+        {
+            "name": "MODULE",
+            "type": "VARCHAR",
+            "nullable": False
+        },
+        {
+            "name": "NAME",
+            "type": "VARCHAR",
+            "nullable": False
+        },
+        {
+            "name": "PACKAGE",
+            "type": "VARCHAR",
+            "nullable": False
+        },
+        {
+            "name": "PARENT_URL",
+            "type": "VARCHAR",
+            "nullable": True
+        },
+        # TODO: Our sample data does not have any rows that have a value in this
+        # column. Try to refine this column's definition.
+        {
+            "name": "PENDING",
+            "type": "VARCHAR",
+            "nullable": True
+        },
+        {
+            "name": "PROJECT",
+            "type": "VARCHAR",
+            "nullable": False
+        },
+        {
+            "name": "PROTECTED",
+            "type": "BOOLEAN",
+            "nullable": False
+        },
+        {
+            "name": "PROVIDER_URN",
+            "type": "VARCHAR",
+            "nullable": True
+        },
+        {
+            "name": "STACK",
+            "type": "VARCHAR",
+            "nullable": False
+        },
+        {
+            "name": "TYPE",
+            "type": "VARCHAR",
+            "nullable": False
+        },
+        {
+            "name": "URN",
+            "type": "VARCHAR",
+            "nullable": False
+        },
+        {
+            "name": "TEAMS",
+            "type": "VARCHAR",
+            "nullable": True
+        },
+        {
+            "name": "PROPERTIES",
+            "type": "VARCHAR",
+            "nullable": True
+        },
+    ]
+)
+# created,custom,delete,id,modified,module,name,package,parent_urn,pending,project,protected,provider_urn,stack,type,urn,teams,properties
 
-# This is me writing my usual excellent code! Look at how clean everything is!
+stage = snowflake.Stage(
+    "snowpipe-stage",
+    url=pulumi.Output.format("s3://{0}", bucket.bucket),
+    database=database.name,
+    schema=schema.name,
+    storage_integration=storage_integration.name,
+    comment="Loads data from an S3 bucket containing Pulumi Insights export data"
+)
 
-# table = snowflake.Table(
-#     "pulumi-search-exports",
-#     name="PULUMI_SEARCH_EXPORTS",
-#     database=database.name,
-#     schema=schema.name,
-#     columns=[
-#         {
-#             "name": "FILENAME",
-#             "type": "STRING",
-#             "nullable": False
-#         }, {
-#             "name": "LAST_MODIFIED_AT",
-#             "type": "TIMESTAMP_NTZ",
-#             "nullable": False
-#         }, {
-#             "name": "CONTENT",
-#             "type": "OBJECT",
-#             "nullable": True
-#         }, {
-#             "name": "LOADED_AT",
-#             "type": "TIMESTAMP_NTZ",
-#             "nullable": True
-#         }
-#     ]
-# )
+# TODO: Expand to all columns
+# Notes:
+# 1. The Snowflake PATTERN arguments are regex-style, not `ls` style.
+# 2. The PATTERN clause is so that we do not run the COPY statement for files we don't want to import.
+copy_statment = pulumi.Output.format("""
+COPY INTO \"{0}\".\"{1}\".\"{2}\" 
+FROM (SELECT metadata$filename, metadata$file_last_modified, sysdate(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18 FROM @"{0}"."{1}"."{3}")
+FILE_FORMAT = (TYPE = CSV, SKIP_HEADER = 1)
+PATTERN=\"pulumi-search-exports/.*.csv\"
+""", database.name, schema.name, table.name, stage.name)
+
+
+pulumi.export("copy_statement", copy_statment)
+
+pipe = snowflake.Pipe(
+    "pipe",
+    auto_ingest=True,
+    comment="My pipe's comment",
+    copy_statement=copy_statment,
+    database=database.name,
+    schema=schema.name
+)
+
+aws.s3.BucketNotification(
+    "bucket-notification",
+    bucket=bucket.bucket,
+    queues=[{
+        "queue_arn": pipe.notification_channel,
+        "events": ["s3:ObjectCreated:*"]
+    }]
+)
+
+pulumi.export("lambdaArn", function.arn)
