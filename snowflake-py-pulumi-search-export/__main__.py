@@ -8,13 +8,13 @@ import pulumi_snowflake as snowflake
 import datetime
 import json
 import os
-import hashlib
-import base64
 
 bucket = aws.s3.Bucket("pulumi-search-export")
 
-# TODO: Make this required for security - don't pull from the env var.
 config = pulumi.Config()
+# NOTE: In a production scenario, for security reasons this should should call
+# `config.require_secret()`, use a Pulumi access token specifically designated
+# for this export process, and not fall back to an environment variable:
 pulumi_access_token = config.get_secret(
     "pulumi-access-token") or os.environ['PULUMI_ACCESS_TOKEN']
 
@@ -113,8 +113,6 @@ function = aws.lambda_.Function(
     )
 )
 
-# TODO: Cloudwatch cron (make it configurable)
-
 pulumi.export('lambdaArn', function.arn)
 
 ROLE_NAME = "pulumi-snowflake-storage-integration"
@@ -193,7 +191,6 @@ schema = snowflake.Schema(
     database=database.name,
 )
 
-# TODO: Yes, you really do need to define every column in the CSV.
 table = snowflake.Table(
     "pulumi-search-exports",
     name="PULUMI_SEARCH_EXPORTS",
@@ -311,7 +308,6 @@ table = snowflake.Table(
         },
     ]
 )
-# created,custom,delete,id,modified,module,name,package,parent_urn,pending,project,protected,provider_urn,stack,type,urn,teams,properties
 
 stage = snowflake.Stage(
     "snowpipe-stage",
@@ -322,7 +318,6 @@ stage = snowflake.Stage(
     comment="Loads data from an S3 bucket containing Pulumi Insights export data"
 )
 
-# TODO: Expand to all columns
 # Notes:
 # 1. The Snowflake PATTERN arguments are regex-style, not `ls` style.
 # 2. The PATTERN clause is so that we do not run the COPY statement for files we don't want to import.
