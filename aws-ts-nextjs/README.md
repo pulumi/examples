@@ -2,7 +2,7 @@
 
 # Next.js on AWS
 
-This example deploys a Next.js site on AWS using [OpenNext](https://open-next.js.org/)
+This example deploys a Next.js site on AWS using [OpenNext](https://open-next.js.org/).
 
 ## Deploying the App
 
@@ -12,7 +12,6 @@ To deploy your app, follow the below steps.
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 2. [Install Node.js](https://nodejs.org/en/download/)
-2. [Install Next.js](https://nextjs.org/docs/getting-started/installation)
 3. [Configure AWS Credentials](https://www.pulumi.com/registry/packages/aws/installation-configuration/)
 
 ### Steps
