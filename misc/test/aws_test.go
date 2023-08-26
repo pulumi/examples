@@ -416,6 +416,15 @@ func TestAccAwsTsEks(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsTsNextjs(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-nextjs"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsTsEksHelloWorld(t *testing.T) {
 	t.Skip("Skip due to frequent failures: `timeout while waiting for state to become 'ACTIVE'`")
 	test := getAWSBase(t).
