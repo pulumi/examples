@@ -27,6 +27,7 @@ const service = new awsx.ecs.FargateService("service", {
     assignPublicIp: true,
     taskDefinitionArgs: {
         container: {
+            name: "awsx-ecs",
             image: image.imageUri,
             cpu: 128,
             memory: 512,
