@@ -6,7 +6,7 @@
     "@types/node": "latest"
   },
   "dependencies": {
-    "@pulumi/aws": "^6.0.2-alpha.2",
+    "@pulumi/aws": "^6.0.2",
     "@pulumi/awsx": "latest",
     "@pulumi/pulumi": "latest",
     "@pulumi/random": "latest",

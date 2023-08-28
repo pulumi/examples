@@ -2,7 +2,7 @@
     "name": "pac-ts-eks-tests",
     "version": "0.0.1",
     "dependencies": {
-        "@pulumi/aws": "^6.0.2-alpha.2",
+        "@pulumi/aws": "^6.0.2",
         "@pulumi/eks": "^0.22.0",
         "@pulumi/policy": "latest",
         "@pulumi/pulumi": "^2.0.0"

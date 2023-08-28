@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/aws": "^6.0.2-alpha.2",
+        "@pulumi/aws": "^6.0.2",
         "@pulumi/pulumi": "^3.0.0"
     }
 }
