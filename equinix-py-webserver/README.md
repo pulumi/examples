@@ -1,8 +1,8 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/equinix-metal-ts-webserver/README.md)
+[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/equinix-py-webserver/README.md)
 
-# Equinix Metal Webserver
+# Equinix Webserver
 
-This example demonstrates creating a webserver in Equinix Metal
+This example demonstrates creating a webserver in Equinix with Python
 
 # Running the Example
 
@@ -13,12 +13,8 @@ After cloning this repo, `cd` into it and run these commands.
     ```bash
     $ pulumi stack init
     ```
-   
-1. Install all of the dependencies for the application:
 
-    ```bash
-    $ npm install
-    ```
+1. Install all of the dependencies for the application:
 
 1. Deploy everything with the `pulumi up` command. This provisions the webserver:
 

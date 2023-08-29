@@ -1,0 +1,6 @@
+name: equinix-py-webserver
+description: A simple server on Equinix.
+runtime:
+  name: python
+  options:
+    virtualenv: venv
