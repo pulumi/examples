@@ -55,7 +55,7 @@ public class App {
                         ).build());
 
         ctx.export("bucketName", siteBucket.bucketName());
-        ctx.export("websiteUrl", siteBucket.websiteURL());
+        ctx.export("websiteUrl", siteBucket.websiteUrl());
     }
 
     private static void forEachFileInTree(String siteDir, BiConsumer<Path, String> consumer) {
