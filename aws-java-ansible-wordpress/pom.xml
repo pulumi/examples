@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.pulumi</groupId>
             <artifactId>aws</artifactId>
-            <version>(,6.0.0]</version>
+            <version>(6.0.2,6.99]</version>
         </dependency>
         <dependency>
             <groupId>com.pulumi</groupId>
