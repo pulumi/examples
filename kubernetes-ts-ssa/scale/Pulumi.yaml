@@ -1,0 +1,19 @@
+name: kubernetes-ts-ssa-scale
+runtime: yaml
+description: Scales a deployment using server-side apply.
+config:
+  name:
+    type: string
+  replicas:
+    type: integer
+    default: 3
+resources:
+  nginx:
+    properties:
+      metadata:
+        name: ${name}
+        annotations:
+          "pulumi.com/patchForce": "true"
+      spec:
+        replicas: ${replicas}
+    type: kubernetes:apps/v1:DeploymentPatch

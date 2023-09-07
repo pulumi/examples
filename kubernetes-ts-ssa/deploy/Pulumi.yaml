@@ -1,0 +1,3 @@
+name: kubernetes-ts-ssa-deploy
+runtime: nodejs
+description: Creates a deployment using server-side apply.

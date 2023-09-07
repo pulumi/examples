@@ -1,0 +1,11 @@
+{
+    "name": "kubernetes-ts-ssa-deploy",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^16"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/kubernetes": "^4.0.0"
+    }
+}
