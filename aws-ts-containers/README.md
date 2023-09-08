@@ -19,7 +19,7 @@ with `***`.
     $ pulumi stack init containers-dev
     ```
 
-1.  Configure Pulumi to use an AWS region that supports Fargate. This is currently only available in `us-east-1`, `us-east-2`, `us-west-2`, and `eu-west-1`:
+1.  Configure Pulumi to use an AWS region that supports Fargate (you can view a list of supported regions in the [AWS documentation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate-Regions.html)):
 
     ```
     $ pulumi config set aws:region us-west-2
