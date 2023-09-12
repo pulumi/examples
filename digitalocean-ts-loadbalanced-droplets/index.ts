@@ -15,7 +15,7 @@ const droplets = [];
 for (let i = 0; i < dropletCount; i++) {
     const nameTag = new digitalocean.Tag(`web-${i}`);
     droplets.push(new digitalocean.Droplet(`web-${i}`, {
-        image: "ubuntu-18-04-x64",
+        image: "ubuntu-20-04-x64",
         region: region,
         privateNetworking: true,
         size: digitalocean.DropletSlug.DropletS1VCPU1GB,

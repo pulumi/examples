@@ -24,7 +24,7 @@ sudo apt-get install -y nginx
             var nameTag = new Tag($"web-{i}");
             droplets[i] = new Droplet($"web-{i}", new DropletArgs
             {
-                Image = "ubuntu-18-04-x64",
+                Image = "ubuntu-20-04-x64",
                 Region = region,
                 PrivateNetworking = true,
                 Size = "s-1vcpu-1gb",
