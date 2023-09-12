@@ -11,7 +11,7 @@ This Slackbot example contains a few useful patterns, showing you how to create 
 1. We set up an ApiGateway API to receive push notifications from Slack whenever important events happen.
 2. Slack has strict requirements on how quickly the push endpoint must respond with `200` notifications before they consider the message as "not received", triggering back-off and resending of those same messages.  For this reason, our example does not process Slack `event` messages as they come in.  Instead, they are immediately added to an [AWS SNS Topic](https://aws.amazon.com/sns/) to be processed at a later point in time. This allows the ApiGateway call to return quickly, satisfying Slack's requirements.
 3. Two [AWS Lambdas](https://aws.amazon.com/lambda/) are created naturally using simple JavaScript functions.  One function is used to create the Lambda that is called when Slack pushes a notification.  The other is used to specify the Lamdba that will process the messages added to the Topic.  These JavaScript functions can easily access the other Pulumi resources created, avoiding the need to figure out ways to pass Resource ARNs/IDs/etc. to the Lambdas to ensure they can talk to the right resources.  If these resources are swapped out in the future (for example, using RDS instead of DynamoDB, or SQS instead of SNS), Pulumi will make sure that the Lambdas were updated properly.
-4. [Pulumi Secrets](https://www.pulumi.com/docs/intro/concepts/config/) provides a simple way to pass important credentials (like your Slack tokens) without having to directly embed them in your application code.
+4. [Pulumi Secrets](https://www.pulumi.com/docs/intro/concepts/secrets/) provides a simple way to pass important credentials (like your Slack tokens) without having to directly embed them in your application code.
 
 First, we'll set up the Pulumi App.  Then, we'll go create and configure a Slack App and Bot to interact with our Pulumi App.
 
@@ -180,4 +180,4 @@ And you're set!  From now on when someone from your team mentions you, you'll ge
 
 1.  Run `pulumi destroy` to tear down all resources.
 
-1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi Console.
+1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi console.

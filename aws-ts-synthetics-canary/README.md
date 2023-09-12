@@ -63,4 +63,4 @@ There are some prebaked canary scripts for doing things like checking an API or 
 
     NOTE: Until https://github.com/hashicorp/terraform-provider-aws/issues/19288 is addressed, the Canary's lambda function and related layers are left after the stack is destroyed. So you will want to manually clean up these items.
 
-1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi Console.
+1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi console.

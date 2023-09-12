@@ -318,7 +318,7 @@ if (config.includeWWW) {
 }
 
 // Export properties from this stack. This prints them at the end of `pulumi up` and
-// makes them easier to access from the pulumi.com.
+// makes them easier to access from pulumi.com.
 export const contentBucketUri = pulumi.interpolate`s3://${contentBucket.bucket}`;
 export const contentBucketWebsiteEndpoint = contentBucket.websiteEndpoint;
 export const cloudFrontDomain = cdn.domainName;

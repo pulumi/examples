@@ -7,10 +7,12 @@ This example provisions a Linux web server in an Azure Virtual Machine and gives
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/en/download/)
-- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
+- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/) (you will also need to configure Pulumi for a supported state backend; by default it will use Pulumi Cloud)
 - [Connect Pulumi with your Azure account](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) (if your `az` CLI is configured, no further changes are required)
 
 ## Running the App
+
+These instructions assume you are running all commands in the same folder where the code resides (unless otherwise indicated).
 
 1.  Create a new stack:
 

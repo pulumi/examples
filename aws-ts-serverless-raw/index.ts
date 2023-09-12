@@ -4,7 +4,7 @@ import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
 // The location of the built dotnet3.1 application to deploy
-const dotNetApplicationPublishFolder = "./app/bin/Debug/netcoreapp3.1/publish";
+const dotNetApplicationPublishFolder = "./app/bin/Debug/net6.0/publish";
 const dotNetApplicationEntryPoint = "app::app.Functions::GetAsync";
 // The stage name to use for the API Gateway URL
 const stageName = "api";

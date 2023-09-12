@@ -6,9 +6,9 @@ require (
 	github.com/Azure/azure-sdk-for-go v53.4.0+incompatible
 	github.com/Azure/go-autorest/autorest v0.11.18
 	github.com/Azure/go-autorest/autorest/adal v0.9.13
-	github.com/pulumi/pulumi-azure-native-sdk/authorization v1.88.1
-	github.com/pulumi/pulumi-azure-native-sdk/containerregistry v1.88.1
-	github.com/pulumi/pulumi-azure-native-sdk/resources v1.88.1
+	github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.1.1
+	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v2 v2.1.1
+	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.1.1
 	github.com/pulumi/pulumi/sdk/v3 v3.37.2
 )
 
@@ -44,7 +44,7 @@ require (
 	github.com/opentracing/opentracing-go v1.1.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pkg/term v1.1.0 // indirect
-	github.com/pulumi/pulumi-azure-native-sdk v1.88.1 // indirect
+	github.com/pulumi/pulumi-azure-native-sdk/v2 v2.1.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20180611051255-d3107576ba94 // indirect
@@ -61,7 +61,7 @@ require (
 	go.uber.org/atomic v1.6.0 // indirect
 	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/term v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	google.golang.org/genproto v0.0.0-20200608115520-7c474a2e3482 // indirect

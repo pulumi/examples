@@ -29,7 +29,7 @@ To deploy your infrastructure, follow the below steps.
     pulumi config set gcp:region <gcp-region>
     ```
 
-1. Execute the pulumi program to deploy our function:
+1. Execute the Pulumi program to deploy our function:
 
     ```bash
     pulumi up

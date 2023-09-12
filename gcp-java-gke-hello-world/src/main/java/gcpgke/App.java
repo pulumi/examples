@@ -152,7 +152,7 @@ users:,
 
         // Export the Namespace name
         var namespaceName = ns.metadata()
-                .applyValue(m -> m.orElseThrow().name().orElseThrow());
+                .applyValue(m -> m.name().orElseThrow());
 
         ctx.export("namespaceName", namespaceName);
 
@@ -189,7 +189,7 @@ users:,
 
         // Export the Deployment name
         ctx.export("deploymentName", deployment.metadata()
-                .applyValue(m -> m.orElseThrow().name().orElseThrow()));
+                .applyValue(m -> m.name().orElseThrow()));
 
         // Create a LoadBalancer Service for the NGINX Deployment
         final var service = new Service(name, ServiceArgs.builder()
@@ -206,7 +206,7 @@ users:,
 
         // Export the Service name and public LoadBalancer endpoint
         ctx.export("serviceName", service.metadata()
-                .applyValue(m -> m.orElseThrow().name().orElseThrow()));
+                .applyValue(m -> m.name().orElseThrow()));
 
         ctx.export("servicePublicIP", service.status()
                 .applyValue(s -> s.orElseThrow().loadBalancer().orElseThrow())

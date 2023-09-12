@@ -6,7 +6,7 @@ This example shows how this might be done for GCloud KMS. It creates a storage b
 
 # Getting Started
 
-To use this example, perform the following steps. This examples assumes you have the pulumi-cli installed and the gcloud SDK installed.
+To use this example, perform the following steps. This examples assumes you have the Pulumi CLI installed and the gcloud SDK installed.
 
 You should also ensure:
 

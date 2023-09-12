@@ -170,4 +170,4 @@ And you're set!  From now on when someone mentions you, you'll get a little mess
 
 1.  Run `pulumi destroy` to tear down all resources.
 
-1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi Console.
+1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi console.

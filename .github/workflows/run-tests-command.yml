@@ -73,7 +73,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.114
         platform:
         - ubuntu-latest
         source-dir:
@@ -186,7 +186,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        role-duration-seconds: 3600
+        role-duration-seconds: 7200
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - name: Checkout Scripts Repo
@@ -211,7 +211,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.114
         goversion:
         - 1.19.x
         nodeversion:
@@ -334,7 +334,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        role-duration-seconds: 3600
+        role-duration-seconds: 7200
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - name: Checkout Scripts Repo
@@ -362,7 +362,7 @@ jobs:
         - EquinixMetal
         - Cloud
         dotnetversion:
-        - 3.1.301
+        - 6.0.114
         goversion:
         - 1.19.x
         languages:
@@ -508,7 +508,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        role-duration-seconds: 3600
+        role-duration-seconds: 7200
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - name: Checkout Scripts Repo
@@ -527,7 +527,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.114
         goversion:
         - 1.19.x
         nodeversion:
@@ -614,7 +614,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        role-duration-seconds: 3600
+        role-duration-seconds: 7200
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - name: Checkout Scripts Repo
@@ -633,7 +633,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.114
         goversion:
         - 1.19.x
         nodeversion:

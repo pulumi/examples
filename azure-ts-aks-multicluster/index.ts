@@ -1,6 +1,6 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-import * as containerservice from "@pulumi/azure-native/containerservice/v20190201";
+import * as containerservice from "@pulumi/azure-native/containerservice/v20190601";
 import * as azuread from "@pulumi/azuread";
 import * as pulumi from "@pulumi/pulumi";
 import * as config from "./config";
@@ -57,7 +57,7 @@ const k8sClusters = aksClusterConfig.map((perClusterConfig, index) => {
             vmSize: perClusterConfig.nodeSize,
         }],
         dnsPrefix: `${pulumi.getStack()}-kube`,
-        kubernetesVersion: "1.18.14",
+        kubernetesVersion: "1.26.3",
     });
     return cluster;
 });

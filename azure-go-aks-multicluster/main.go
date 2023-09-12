@@ -5,8 +5,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-azure-native-sdk/containerservice"
-	"github.com/pulumi/pulumi-azure-native-sdk/resources"
+	"github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2"
+	"github.com/pulumi/pulumi-azure-native-sdk/resources/v2"
 	"github.com/pulumi/pulumi-azuread/sdk/v4/go/azuread"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
@@ -110,7 +110,7 @@ func main() {
 					},
 				},
 				DnsPrefix:         pulumi.String(fmt.Sprintf("%s-kube", ctx.Stack())),
-				KubernetesVersion: pulumi.String("1.22.2"),
+				KubernetesVersion: pulumi.String("1.26.3"),
 			})
 			if err != nil {
 				return err
