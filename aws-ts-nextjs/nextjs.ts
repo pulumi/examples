@@ -10,6 +10,8 @@ import * as glob from "glob";
 import * as mime from "mime";
 import * as path from "path";
 
+const region = pulumi.output(aws.getRegion());
+
 export interface NexJsSiteArgs {
     path?: string;
     environment?: Record<string, pulumi.Input<string>>;
@@ -61,7 +63,7 @@ export class NextJsSite extends pulumi.ComponentResource {
             const cacheControlUnversioned = "public,max-age=0,s-maxage=31536000,must-revalidate";
             const hex = computeHexHash(file);
             const key = path.join("_assets", file);
-            const object = new aws.s3.BucketObject(`${name}-bucket-object-${hex}`, {
+            const object = new aws.s3.BucketObjectv2(`${name}-bucket-object-${hex}`, {
                 bucket: bucket.id,
                 key: key,
                 source: new pulumi.asset.FileAsset(path.resolve(this.path, ".open-next/assets", file)),
@@ -235,9 +237,9 @@ export class NextJsSite extends pulumi.ComponentResource {
                 variables: {
                     "CACHE_BUCKET_NAME": bucket.bucket,
                     "CACHE_BUCKET_KEY_PREFIX": "_cache",
-                    "CACHE_BUCKET_REGION": "us-west-2",
+                    "CACHE_BUCKET_REGION": region.name,
                     "REVALIDATION_QUEUE_URL": queue.id,
-                    "REVALIDATION_QUEUE_REGION": "us-west-2",
+                    "REVALIDATION_QUEUE_REGION": region.name,
                     ...this.environment,
                 },
             },
@@ -274,7 +276,7 @@ export class NextJsSite extends pulumi.ComponentResource {
             timeout: 25,
             environment: {
                 variables: {
-                    "BUCKET_NAME": bucket.arn,
+                    "BUCKET_NAME": bucket.bucket,
                     "BUCKET_KEY_PREFIX": "_assets",
                 },
             },
