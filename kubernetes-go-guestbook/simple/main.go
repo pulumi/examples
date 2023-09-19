@@ -20,6 +20,7 @@ import (
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/meta/v1"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 func main() {
@@ -238,11 +239,10 @@ func main() {
 		}
 
 		if isMinikube {
-			ctx.Export("frontendIP", frontendService.Spec.ApplyT(func(spec *corev1.ServiceSpec) *string {
-				return spec.ClusterIP
-			}))
+			ctx.Export("frontendIP", frontendService.Spec.ClusterIP())
 		} else {
-			ctx.Export("frontendIP", frontendService.Status.ApplyT(func(status *corev1.ServiceStatus) *string {
+			status := pulumix.MustConvertTyped[*corev1.ServiceStatus](frontendService.Status)
+			ctx.Export("frontendIP", pulumix.Apply(status, func(status *corev1.ServiceStatus) *string {
 				ingress := status.LoadBalancer.Ingress[0]
 				if ingress.Hostname != nil {
 					return ingress.Hostname

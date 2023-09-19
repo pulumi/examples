@@ -15,16 +15,17 @@
 package main
 
 import (
-	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/apps/v1"
-	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/core/v1"
-	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/meta/v1"
+	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/apps/v1"
+	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/core/v1"
+	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/meta/v1"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 type ServiceDeployment struct {
 	pulumi.ResourceState
 
-	FrontendIP pulumi.StringPtrOutput
+	FrontendIP pulumix.Output[*string]
 	Deployment *appsv1.Deployment
 	Service    *corev1.Service
 }
@@ -137,19 +138,17 @@ func NewServiceDeployment(
 	if err != nil {
 		return nil, err
 	}
-
-	serviceDeployment.FrontendIP = serviceDeployment.Service.Status.ApplyT(
-		func(status *corev1.ServiceStatus) *string {
-			if status.LoadBalancer.Ingress != nil {
-				ingress := status.LoadBalancer.Ingress[0]
-				if ingress.Hostname != nil {
-					return ingress.Hostname
-				}
-				return ingress.Ip
+	serviceDeployment.FrontendIP = pulumix.Apply(serviceDeployment.Service.Status, func(status *corev1.ServiceStatus) *string {
+		if status.LoadBalancer.Ingress != nil {
+			ingress := status.LoadBalancer.Ingress[0]
+			if ingress.Hostname != nil {
+				return ingress.Hostname
 			}
+			return ingress.Ip
+		}
 
-			return nil
-		}).(pulumi.StringPtrOutput)
+		return nil
+	})
 
 	return serviceDeployment, nil
 }

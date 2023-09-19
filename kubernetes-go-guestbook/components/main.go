@@ -15,7 +15,6 @@
 package main
 
 import (
-	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/core/v1"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
@@ -60,8 +59,7 @@ func main() {
 		}
 
 		if isMinikube {
-			ctx.Export("frontendIP", frontend.Service.Spec.ApplyT(
-				func(spec *corev1.ServiceSpec) *string { return spec.ClusterIP }))
+			ctx.Export("frontendIP", frontend.Service.Spec.ClusterIP())
 		} else {
 			ctx.Export("frontendIP", frontend.FrontendIP)
 		}

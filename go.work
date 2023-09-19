@@ -1,0 +1,9 @@
+go 1.21.1
+
+use (
+	./aws-apigateway-go-routes
+	./aws-go-fargate
+	./azure-go-containerapps
+	./kubernetes-go-guestbook/components
+	./kubernetes-go-guestbook/simple
+)

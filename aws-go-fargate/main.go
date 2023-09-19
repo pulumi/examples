@@ -13,6 +13,7 @@ import (
 	awsx "github.com/pulumi/pulumi-awsx/sdk/go/awsx/ec2"
 	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 func main() {
@@ -123,7 +124,7 @@ func main() {
 		}
 
 		// Get credentials for the new ECR repository
-		repoCreds := repo.RegistryId.ApplyT(func(rid string) ([]string, error) {
+		repoCreds := pulumix.ApplyErr[string, []string](repo.RegistryId, func(rid string) ([]string, error) {
 			creds, err := ecr.GetCredentials(ctx, &ecr.GetCredentialsArgs{
 				RegistryId: rid,
 			})
@@ -137,9 +138,9 @@ func main() {
 			}
 
 			return strings.Split(string(data), ":"), nil
-		}).(pulumi.StringArrayOutput)
-		repoUser := repoCreds.Index(pulumi.Int(0))
-		repoPass := repoCreds.Index(pulumi.Int(1))
+		})
+		repoUser := pulumix.Apply[[]string, string](repoCreds, func(arr []string) string { return arr[0] })
+		repoPass := pulumix.Apply[[]string, string](repoCreds, func(arr []string) string { return arr[1] })
 
 		// Build the container image (requires local Docker daemon)
 		image, err := docker.NewImage(ctx, "my-image", &docker.ImageArgs{
@@ -150,8 +151,8 @@ func main() {
 			ImageName: repo.RepositoryUrl,
 			Registry: docker.RegistryArgs{
 				Server:   repo.RepositoryUrl,
-				Username: repoUser,
-				Password: repoPass,
+				Username: pulumix.Cast[pulumi.StringOutput, string](repoUser),
+				Password: pulumix.Cast[pulumi.StringOutput, string](repoPass),
 			},
 		})
 		if err != nil {

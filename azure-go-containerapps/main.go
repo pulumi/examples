@@ -29,21 +29,10 @@ func main() {
 			return err
 		}
 
-		sharedKey := pulumi.All(resourceGroup.Name, workspace.Name).ApplyT(
-			func(args []interface{}) (string, error) {
-				resourceGroupName := args[0].(string)
-				workspaceName := args[1].(string)
-				accountKeys, err := operationalinsights.GetSharedKeys(ctx, &operationalinsights.GetSharedKeysArgs{
-					ResourceGroupName: resourceGroupName,
-					WorkspaceName:     workspaceName,
-				})
-				if err != nil {
-					return "", err
-				}
-
-				return *accountKeys.PrimarySharedKey, nil
-			},
-		).(pulumi.StringOutput)
+		sharedKey := operationalinsights.GetSharedKeysOutput(ctx, operationalinsights.GetSharedKeysOutputArgs{
+			ResourceGroupName: resourceGroup.Name,
+			WorkspaceName:     workspace.Name,
+		}).PrimarySharedKey()
 
 		managedEnvironment, err := app.NewManagedEnvironment(ctx, "managedEnvironment", &app.ManagedEnvironmentArgs{
 			ResourceGroupName: resourceGroup.Name,
@@ -69,25 +58,14 @@ func main() {
 		if err != nil {
 			return err
 		}
-		credentials := pulumi.All(resourceGroup.Name, registry.Name).ApplyT(
-			func(args []interface{}) (*containerregistry.ListRegistryCredentialsResult, error) {
-				resourceGroupName := args[0].(string)
-				registryName := args[1].(string)
-				return containerregistry.ListRegistryCredentials(ctx, &containerregistry.ListRegistryCredentialsArgs{
-					ResourceGroupName: resourceGroupName,
-					RegistryName:      registryName,
-				})
-			},
-		)
 
-		adminUsername := credentials.ApplyT(func(result interface{}) (string, error) {
-			credentials := result.(*containerregistry.ListRegistryCredentialsResult)
-			return *credentials.Username, nil
-		}).(pulumi.StringOutput)
-		adminPassword := credentials.ApplyT(func(result interface{}) (string, error) {
-			credentials := result.(*containerregistry.ListRegistryCredentialsResult)
-			return *credentials.Passwords[0].Value, nil
-		}).(pulumi.StringOutput)
+		credentials := containerregistry.ListRegistryCredentialsOutput(ctx, containerregistry.ListRegistryCredentialsOutputArgs{
+			ResourceGroupName: resourceGroup.Name,
+			RegistryName:      registry.Name,
+		})
+
+		adminUsername := credentials.Username().Elem()
+		adminPassword := credentials.Passwords().Index(pulumi.Int(0)).Value().Elem()
 
 		newImage, err := docker.NewImage(ctx, "node-app", &docker.ImageArgs{
 			ImageName: pulumi.Sprintf("%s/node-app:v1.0.0", registry.LoginServer),
