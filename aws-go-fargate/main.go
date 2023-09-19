@@ -124,7 +124,7 @@ func main() {
 		}
 
 		// Get credentials for the new ECR repository
-		repoCreds := pulumix.ApplyErr[string, []string](repo.RegistryId, func(rid string) ([]string, error) {
+		repoCreds := pulumix.ApplyErr(repo.RegistryId, func(rid string) ([]string, error) {
 			creds, err := ecr.GetCredentials(ctx, &ecr.GetCredentialsArgs{
 				RegistryId: rid,
 			})
@@ -139,8 +139,8 @@ func main() {
 
 			return strings.Split(string(data), ":"), nil
 		})
-		repoUser := pulumix.Apply[[]string, string](repoCreds, func(arr []string) string { return arr[0] })
-		repoPass := pulumix.Apply[[]string, string](repoCreds, func(arr []string) string { return arr[1] })
+		repoUser := pulumix.Apply(repoCreds, func(arr []string) string { return arr[0] })
+		repoPass := pulumix.Apply(repoCreds, func(arr []string) string { return arr[1] })
 
 		// Build the container image (requires local Docker daemon)
 		image, err := docker.NewImage(ctx, "my-image", &docker.ImageArgs{

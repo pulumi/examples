@@ -1,6 +1,6 @@
 module github.com/pulumi/examples/aws-go-fargate
 
-go 1.19
+go 1.21
 
 require (
 	github.com/pulumi/pulumi-aws/sdk/v5 v5.41.0
