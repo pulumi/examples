@@ -2,8 +2,11 @@ go 1.21.1
 
 use (
 	./aws-apigateway-go-routes
+	./aws-go-console-slack-notification
 	./aws-go-fargate
+	./azure-go-appservice-docker
 	./azure-go-containerapps
+	./classic-azure-go-webserver-component
 	./kubernetes-go-guestbook/components
 	./kubernetes-go-guestbook/simple
 )

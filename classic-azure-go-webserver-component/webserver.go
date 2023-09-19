@@ -6,6 +6,7 @@ import (
 	"github.com/pulumi/pulumi-azure/sdk/v4/go/azure/compute"
 	"github.com/pulumi/pulumi-azure/sdk/v4/go/azure/network"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 // Webserver is a reusable web server component that creates and exports a NIC, public IP, and VM.
@@ -107,13 +108,10 @@ func NewWebserver(ctx *pulumi.Context, name string, args *WebserverArgs, opts ..
 	return webserver, nil
 }
 
-func (ws *Webserver) GetIPAddress(ctx *pulumi.Context) pulumi.StringOutput {
+func (ws *Webserver) GetIPAddress(ctx *pulumi.Context) pulumix.Output[string] {
 	// The public IP address is not allocated until the VM is running, so wait for that resource to create, and then
 	// lookup the IP address again to report its public IP.
-	ready := pulumi.All(ws.VM.ID(), ws.PublicIP.Name, ws.PublicIP.ResourceGroupName)
-	return ready.ApplyT(func(args []interface{}) (string, error) {
-		name := args[1].(string)
-		resourceGroupName := args[2].(string)
+	return pulumix.Apply3Err(ws.VM.ID(), ws.PublicIP.Name, ws.PublicIP.ResourceGroupName, func(_ pulumi.ID, name, resourceGroupName string) (string, error) {
 		ip, err := network.GetPublicIP(ctx, &network.GetPublicIPArgs{
 			Name:              name,
 			ResourceGroupName: resourceGroupName,
@@ -122,5 +120,5 @@ func (ws *Webserver) GetIPAddress(ctx *pulumi.Context) pulumi.StringOutput {
 			return "", err
 		}
 		return ip.IpAddress, nil
-	}).(pulumi.StringOutput)
+	})
 }

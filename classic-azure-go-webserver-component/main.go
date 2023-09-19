@@ -5,10 +5,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-azure/sdk/v4/go/azure/core"
-	"github.com/pulumi/pulumi-azure/sdk/v4/go/azure/network"
+	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/core"
+	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/network"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 // Get the desired username and password for our webserver VMs.
@@ -49,7 +50,7 @@ func main() {
 		}).(pulumi.StringOutput)
 
 		// Now, allocate a few websever VMs -- by default, just 2, but this is configurable.
-		var ipAddresses pulumi.StringArray
+		var ipAddresses pulumix.Array[string]
 		for i := 0; i < count; i++ {
 			server, err := NewWebserver(ctx, fmt.Sprintf("ws-%v", i), &WebserverArgs{
 				Username: pulumi.String(username),

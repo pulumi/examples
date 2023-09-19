@@ -88,7 +88,7 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 		return err
 	}
 
-	callerIdentity, err := aws.GetCallerIdentity(ctx, pulumi.Provider(awsProvider))
+	callerIdentity, err := aws.GetCallerIdentity(ctx, &aws.GetCallerIdentityArgs{}, pulumi.Provider(awsProvider))
 	if err != nil {
 		return err
 	}
@@ -116,28 +116,26 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 
 	bucketPolicy, err := s3.NewBucketPolicy(ctx, resourceName, &s3.BucketPolicyArgs{
 		Bucket: bucket.Bucket,
-		Policy: pulumi.All(bucket.Bucket, callerIdentity.AccountId).ApplyT(func(args []interface{}) pulumi.Input {
-			return pulumi.String(fmt.Sprintf(`{
-				"Version": "2012-10-17",
-				"Statement": [
-					{
-						"Sid": "AWSCloudTrailAclCheck20150319",
-						"Effect": "Allow",
-						"Principal": {"Service": "cloudtrail.amazonaws.com"},
-						"Action": "s3:GetBucketAcl",
-						"Resource": "arn:aws:s3:::%s"
-					},
-					{
-						"Sid": "AWSCloudTrailWrite20150319",
-						"Effect": "Allow",
-						"Principal": {"Service": "cloudtrail.amazonaws.com"},
-						"Action": "s3:PutObject",
-						"Resource": "arn:aws:s3:::%s/AWSLogs/%s/*",
-						"Condition": {"StringEquals": {"s3:x-amz-acl": "bucket-owner-full-control"}}
-					}
-				]
-			}`, args[0], args[0], args[1]))
-		}),
+		Policy: pulumi.Sprintf(`{
+			"Version": "2012-10-17",
+			"Statement": [
+				{
+					"Sid": "AWSCloudTrailAclCheck20150319",
+					"Effect": "Allow",
+					"Principal": {"Service": "cloudtrail.amazonaws.com"},
+					"Action": "s3:GetBucketAcl",
+					"Resource": "arn:aws:s3:::%s"
+				},
+				{
+					"Sid": "AWSCloudTrailWrite20150319",
+					"Effect": "Allow",
+					"Principal": {"Service": "cloudtrail.amazonaws.com"},
+					"Action": "s3:PutObject",
+					"Resource": "arn:aws:s3:::%s/AWSLogs/%s/*",
+					"Condition": {"StringEquals": {"s3:x-amz-acl": "bucket-owner-full-control"}}
+				}
+			]
+		}`, bucket.Bucket, bucket.Bucket, callerIdentity.AccountId),
 	}, pulumi.Provider(awsProvider), pulumi.Parent(bucket))
 	if err != nil {
 		return err

@@ -56,9 +56,7 @@ func main() {
 			return err
 		}
 
-		ctx.Export("helloEndpoint", helloApp.DefaultHostName.ApplyT(func(defaultHostName string) (string, error) {
-			return fmt.Sprintf("%v%v", "https://", defaultHostName), nil
-		}).(pulumi.StringOutput))
+		ctx.Export("helloEndpoint", pulumi.Sprintf("https://%v", helloApp.DefaultHostName))
 
 		//
 		// Scenario 2: deploying a custom image from Azure Container Registry.
@@ -84,10 +82,8 @@ func main() {
 		adminPassword := credentials.Passwords().Index(pulumi.Int(0)).Value().Elem()
 
 		myImage, err := docker.NewImage(ctx, customImage, &docker.ImageArgs{
-			ImageName: registry.LoginServer.ApplyT(func(result string) (string, error) {
-				return fmt.Sprintf("%s/%s:v1.0.0", result, customImage), nil
-			}).(pulumi.StringOutput),
-			Build: &docker.DockerBuildArgs{Context: pulumi.String(fmt.Sprintf("./%s", customImage))},
+			ImageName: pulumi.Sprintf("%s/%s:v1.0.0", registry.LoginServer, customImage),
+			Build:     &docker.DockerBuildArgs{Context: pulumi.String(fmt.Sprintf("./%s", customImage))},
 			Registry: &docker.ImageRegistryArgs{
 				Server:   registry.LoginServer,
 				Username: adminUsername,
@@ -108,10 +104,8 @@ func main() {
 						Value: pulumi.String("false"),
 					},
 					&web.NameValuePairArgs{
-						Name: pulumi.String("DOCKER_REGISTRY_SERVER_URL"),
-						Value: registry.LoginServer.ApplyT(func(loginServer string) (string, error) {
-							return fmt.Sprintf("%v%v", "https://", loginServer), nil
-						}).(pulumi.StringOutput),
+						Name:  pulumi.String("DOCKER_REGISTRY_SERVER_URL"),
+						Value: pulumi.Sprintf("https://%s", registry.LoginServer),
 					},
 					&web.NameValuePairArgs{
 						Name:  pulumi.String("DOCKER_REGISTRY_SERVER_USERNAME"),
@@ -126,10 +120,8 @@ func main() {
 						Value: pulumi.String("80"),
 					},
 				},
-				AlwaysOn: pulumi.Bool(true),
-				LinuxFxVersion: myImage.ImageName.ApplyT(func(result string) (string, error) {
-					return fmt.Sprintf("DOCKER|%s", result), nil
-				}).(pulumi.StringOutput),
+				AlwaysOn:       pulumi.Bool(true),
+				LinuxFxVersion: pulumi.Sprintf("DOCKER|%s", myImage.ImageName),
 			},
 			HttpsOnly: pulumi.Bool(true),
 		})
@@ -137,9 +129,7 @@ func main() {
 			return err
 		}
 
-		ctx.Export("getStartedEndpoint", getStartedApp.DefaultHostName.ApplyT(func(defaultHostName string) (string, error) {
-			return fmt.Sprintf("%v%v", "https://", defaultHostName), nil
-		}).(pulumi.StringOutput))
+		ctx.Export("getStartedEndpoint", pulumi.Sprintf("https://%s", getStartedApp.DefaultHostName))
 
 		return nil
 	})
