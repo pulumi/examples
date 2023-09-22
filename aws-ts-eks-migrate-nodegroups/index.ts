@@ -13,11 +13,14 @@ const projectName = pulumi.getProject();
 // Allocate a new VPC with custom settings, and a public & private subnet per AZ.
 const vpc = new awsx.ec2.Vpc(`${projectName}`, {
     cidrBlock: "172.16.0.0/16",
-    subnets: [{ type: "public" }, { type: "private" }],
+    subnetSpecs: [
+        { type: awsx.ec2.SubnetType.Public },
+        { type: awsx.ec2.SubnetType.Private }
+    ],
 });
 
 // Export VPC ID and Subnets.
-export const vpcId = vpc.id;
+export const vpcId = vpc.vpcId;
 export const allVpcSubnets = pulumi.all([vpc.privateSubnetIds, vpc.publicSubnetIds])
                             .apply(([privateSubnetIds, publicSubnetIds]) => privateSubnetIds.concat(publicSubnetIds));
 

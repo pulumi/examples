@@ -81,7 +81,7 @@ const airflowController = new awsx.classic.ecs.EC2Service("airflowcontroller", {
     taskDefinitionArgs: {
         containers: {
             "webserver": {
-                image: new awsx.ecr.Image("webserver", { repositoryUrl: repo.url, path: "./airflow-container" }).imageUri,
+                image: new awsx.ecr.Image("webserver", { repositoryUrl: repo.url, context: "./airflow-container" }).imageUri,
                 portMappings: [airflowControllerListener],
                 environment: environment,
                 command: [ "webserver" ],
@@ -89,7 +89,7 @@ const airflowController = new awsx.classic.ecs.EC2Service("airflowcontroller", {
             },
 
             "scheduler": {
-                image: new awsx.ecr.Image("scheduler", { repositoryUrl: repo.url, path: "./airflow-container" }).imageUri,
+                image: new awsx.ecr.Image("scheduler", { repositoryUrl: repo.url, context: "./airflow-container" }).imageUri,
                 environment: environment,
                 command: [ "scheduler" ],
                 memory: 128,
@@ -111,7 +111,7 @@ const airflower = new awsx.classic.ecs.EC2Service("airflower", {
             // If the container is named "flower", we create environment variables that start
             // with `FLOWER_` and Flower tries and fails to parse them as configuration.
             "notflower": {
-                image: new awsx.ecr.Image("notflower", { repositoryUrl: repo.url, path: "./airflow-container" }).imageUri,
+                image: new awsx.ecr.Image("notflower", { repositoryUrl: repo.url, context: "./airflow-container" }).imageUri,
                 portMappings: [airflowerListener],
                 environment: environment,
                 command: [ "flower" ],
@@ -127,7 +127,7 @@ const airflowWorkers = new awsx.classic.ecs.EC2Service("airflowworkers", {
     taskDefinitionArgs: {
         containers: {
             "worker": {
-                image: new awsx.ecr.Image("worker", { repositoryUrl: repo.url, path: "./airflow-container" }).imageUri,
+                image: new awsx.ecr.Image("worker", { repositoryUrl: repo.url, context: "./airflow-container" }).imageUri,
                 environment: environment,
                 command: [ "worker" ],
                 memory: 1024,

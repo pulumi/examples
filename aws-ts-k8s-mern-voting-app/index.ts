@@ -40,9 +40,11 @@ const ebsVolume = new aws.ebs.Volume("storage-volume", {
 
 const databaseName = "votes";
 
+const repo = new awsx.ecr.Repository("repository");
 
 // Creating a Kubernetes deployment for the MongoDB database. A single pod will receive queries, and will
 // modify the data accordingly
+const dbImage = new awsx.ecr.Image("database-side-service", { repositoryUrl: repo.repository.repositoryUrl, context: "./databaseside" });
 const databaseAppName = "database-side-service";
 const databaseAppLabels = { appClass: databaseAppName };
 const databaseDeployment = new k8s.apps.v1.Deployment(databaseAppName, {
@@ -55,7 +57,7 @@ const databaseDeployment = new k8s.apps.v1.Deployment(databaseAppName, {
             spec: {
                 containers: [{
                     name: databaseAppName,
-                    image: awsx.ecr.buildAndPushImage("database-side-service", "./databaseside").image(),
+                    image: dbImage.imageUri, //awsx.ecr.buildAndPushImage("database-side-service", "./databaseside").image(),
                     ports: [{ name: "http", containerPort: 27017 }],
                     env: [
                         { name: "DATABASE_NAME", value: databaseName },
@@ -121,6 +123,7 @@ const mongodbAddress = databasesideListener.spec.clusterIP;
 
 // Creating a deployment for the server which receives requests from the users, and translates them into
 // queries for the database. Any number of pods can be created for this deployment
+const serverImage = new awsx.ecr.Image("server-side-service", { repositoryUrl: repo.repository.repositoryUrl, context: "./serverside" });
 const serverAppName = "server";
 const serverAppLabels = { appClass: serverAppName };
 const serverDeployment = new k8s.apps.v1.Deployment("server-side-service", {
@@ -133,7 +136,7 @@ const serverDeployment = new k8s.apps.v1.Deployment("server-side-service", {
             spec: {
                 containers: [{
                     name: serverAppName,
-                    image: awsx.ecr.buildAndPushImage("server-side-service", "./serverside").image(),
+                    image: serverImage.imageUri,
                     ports: [{ name: "http", containerPort: 5000 }],
                     env: [
                         { name: "USER_NAME", value: sqlUserName },
@@ -171,6 +174,7 @@ const serversideListener = new k8s.core.v1.Service("server-side-listener", {
 
 // The final deployment is created for the client compoment. It acts as the main web page of the
 // voting application
+const clientImage = new awsx.ecr.Image("client-side-service", { repositoryUrl: repo.repository.repositoryUrl, context: "./clientside" });
 const clientAppName = "client";
 const clientAppLabels = { appClass: clientAppName };
 const clientDeployment = new k8s.apps.v1.Deployment("client-side-service", {
@@ -183,7 +187,7 @@ const clientDeployment = new k8s.apps.v1.Deployment("client-side-service", {
             spec: {
                 containers: [{
                     name: clientAppName,
-                    image: awsx.ecr.buildAndPushImage("client-side-service", "./clientside").image(),
+                    image: clientImage.imageUri,
                     ports: [{ name: "http", containerPort: 3000 }],
                     env: [
                         { name: "SERVER_HOSTNAME", value: serversideListener.status.loadBalancer.ingress[0].hostname },
