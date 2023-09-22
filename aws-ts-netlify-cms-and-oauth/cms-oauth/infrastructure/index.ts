@@ -100,7 +100,7 @@ const certificateValidation = new aws.acm.CertificateValidation("certificateVali
 const cluster = new awsx.ecs.Cluster("cluster");
 
 // Define an ec2 application load balancer alb to distribute incomming application traffic across multiple targets, such as EC2 instances, in multiple Availability Zones.
-const alb = new awsx.elasticloadbalancingv2.ApplicationLoadBalancer(
+const alb = new awsx.lb.ApplicationLoadBalancer(
     "net-lb", { external: true, securityGroups: cluster.securityGroups });
 
 // alb need a listener to listen to 443 the standard port for the HTTPS traffic, certificate is using the certificate we created above
@@ -191,7 +191,7 @@ const appService = new awsx.ecs.FargateService("app-svc", {
 
 // Creates a new Route53 DNS record pointing the domain to the CloudFront distribution.
 function createAliasRecord(
-    targetDomain: string, lb: awsx.elasticloadbalancingv2.ApplicationLoadBalancer): aws.route53.Record {
+    targetDomain: string, lb: awsx.lb.ApplicationLoadBalancer): aws.route53.Record {
     const domainParts = getDomainAndSubdomain(targetDomain);
     const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
     return new aws.route53.Record(

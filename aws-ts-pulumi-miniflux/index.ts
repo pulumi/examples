@@ -16,7 +16,7 @@ const adminPassword = config.require("admin_password");
 // const vpcId = aws.ec2.getVpc({ default: true }, { async: true }).then(r => r.id);
 // const vpc = aws.ec2.getVpcOutput({ default: true }, { async: true });
 const vpc = new aws.ec2.DefaultVpc("defaultVpc", {});
-const subnet = new aws.ec2.Subnet("defaultSubnet", { vpcId: vpc.id })
+const subnet = new aws.ec2.Subnet("defaultSubnet", { vpcId: vpc.id });
 
 // Create a new subnet group for the database.
 const subnetGroup = new aws.rds.SubnetGroup("dbsubnets", {

@@ -46,7 +46,7 @@ const frontend = new awsx.ecs.FargateService("voting-app-frontend", {
                 { name: "REDIS", value: e },
                 { name: "REDIS_PORT", value: p?.toString() },
                 { name: "REDIS_PWD", value: redisPassword },
-            ])
+            ]),
         },
     },
 });

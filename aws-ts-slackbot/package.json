@@ -2,14 +2,19 @@
     "name": "aws-ts-slackbot",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "^5.0.0",
-        "@pulumi/awsx": "^0.40.0",
+        "@aws-sdk/client-dynamodb": "^3.417.0",
+        "@aws-sdk/client-sns": "^3.414.0",
+        "@aws-sdk/lib-dynamodb": "^3.417.0",
+        "@pulumi/aws": "^6.0.0",
+        "@pulumi/aws-apigateway": "1.1.0-alpha.3",
+        "@pulumi/awsx": "2.0.0-beta.3",
         "@pulumi/pulumi": "^3.0.0",
         "qs": "^6.7.0",
-        "superagent": "^5.0.2"
+        "superagent": "^8.1.0"
     },
     "devDependencies": {
         "@types/qs": "^6.5.2",
-        "@types/superagent": "^4.1.1"
+        "@types/superagent": "^4.1.0",
+        "typescript": "^4.6.2"
     }
 }

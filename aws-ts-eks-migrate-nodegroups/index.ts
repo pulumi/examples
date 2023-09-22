@@ -15,7 +15,7 @@ const vpc = new awsx.ec2.Vpc(`${projectName}`, {
     cidrBlock: "172.16.0.0/16",
     subnetSpecs: [
         { type: awsx.ec2.SubnetType.Public },
-        { type: awsx.ec2.SubnetType.Private }
+        { type: awsx.ec2.SubnetType.Private },
     ],
 });
 

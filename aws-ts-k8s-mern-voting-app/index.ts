@@ -57,7 +57,7 @@ const databaseDeployment = new k8s.apps.v1.Deployment(databaseAppName, {
             spec: {
                 containers: [{
                     name: databaseAppName,
-                    image: dbImage.imageUri, //awsx.ecr.buildAndPushImage("database-side-service", "./databaseside").image(),
+                    image: dbImage.imageUri,
                     ports: [{ name: "http", containerPort: 27017 }],
                     env: [
                         { name: "DATABASE_NAME", value: databaseName },
