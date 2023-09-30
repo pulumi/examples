@@ -521,8 +521,7 @@ jobs:
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Destroy test infra
-      run: make destroy_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
-        github.sha }}-${{ github.run_number }}"
+      run: make destroy_test_infra StackName="${{ github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
@@ -627,8 +626,7 @@ jobs:
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Create Test Infrastructure
-      run: make setup_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
-        github.sha }}-${{ github.run_number }}"
+      run: make setup_test_infra StackName="${{ github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
