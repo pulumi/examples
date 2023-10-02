@@ -26,7 +26,6 @@ env:
   PROVIDER_TESTS_TAG: ${{ github.event.client_payload.ref }}
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_API: https://api.pulumi-staging.io
-  PULUMI_TEST_OWNER: moolumi
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 jobs:
   dotnet-unit-testing:
@@ -178,7 +177,7 @@ jobs:
       run: >-
         mkdir -p "$HOME/.kube/"
 
-        pulumi stack -s "${{ env.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
+        pulumi stack -s "${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
     - name: Run Kubernetes Smoke Tests
       run: make specific_tag_set TagSet=Kubernetes
     strategy:
@@ -431,8 +430,7 @@ jobs:
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Destroy test infra
-      run: make destroy_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
-        github.sha }}-${{ github.run_number }}"
+      run: make destroy_test_infra StackName="${{ github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
@@ -535,8 +533,7 @@ jobs:
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Create Test Infrastructure
-      run: make setup_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
-        github.sha }}-${{ github.run_number }}"
+      run: make setup_test_infra StackName="${{ github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
