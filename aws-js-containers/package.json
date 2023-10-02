@@ -2,7 +2,7 @@
     "name": "aws-js-containers",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/aws": "^5.29.1",
+        "@pulumi/aws": "^6.0.0",
         "@pulumi/awsx": "2.0.0-beta.3",
         "@pulumi/pulumi": "^3.55.0"
     }
