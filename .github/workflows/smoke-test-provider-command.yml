@@ -177,7 +177,7 @@ jobs:
       run: >-
         mkdir -p "$HOME/.kube/"
 
-        pulumi stack -s ${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
+        pulumi stack -s "${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
     - name: Run Kubernetes Smoke Tests
       run: make specific_tag_set TagSet=Kubernetes
     strategy:
