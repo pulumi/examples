@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "dependencies": {
         "@pulumi/aws": "^6.0.0",
+        "@pulumi/aws-apigateway": "1.1.0-alpha.3",
         "@pulumi/awsx": "2.0.0-beta.3",
         "@pulumi/pulumi": "^3.0.0"
     },
