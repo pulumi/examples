@@ -68,7 +68,7 @@ interface Event {
 }
 
 const handler = new aws.lambda.CallbackFunction("handler", {
-    callback: async (event) => {
+    callback: async (ev) => {
         try {
             if (!slackToken) {
                 throw new Error("mentionbot:slackToken was not provided");
@@ -78,6 +78,7 @@ const handler = new aws.lambda.CallbackFunction("handler", {
                 throw new Error("mentionbot:verificationToken was not provided");
             }
 
+            const event = <any>ev;
             if (!event.isBase64Encoded || event.body == null) {
                 console.log("Unexpected content received");
                 console.log(JSON.stringify(event));
@@ -182,9 +183,6 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
         // No @mentions in the message, so nothing to do.
         return;
     }
-
-    const dynoClient = new dynamoClient.DynamoDBClient({});
-    const client = dynamoLib.DynamoDBDocumentClient.from(dynoClient);
 
     // There might be multiple @mentions to the same person in the same message.
     // So make into a set to make things unique.
