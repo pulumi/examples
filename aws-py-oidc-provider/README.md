@@ -8,9 +8,14 @@ Install requirements.
 pip3 install -r requirements.txt
 ```
 
-Provide the name of your Pulumi Organization in Python file.
+Provide the name of your Pulumi Organization to the `audience` variable in the `__main__.py` file.
 
-Run `pulumi up -y`.
+```bash
+# Variable in the python program
+audience = "" # Provide the name of your Pulumi Organization
+```
+
+Save file and run `pulumi up -y`.
 
 Copy Role Arn and put into `aws login` section of Environment file.
 
