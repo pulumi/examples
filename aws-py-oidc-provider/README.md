@@ -1,6 +1,15 @@
-## Provisioning an OIDC Provider in AWS for Pulumi
+# Provisioning an OIDC Provider in AWS for Pulumi
 
 WIP - This folder probably needs a better name to reflect that this example is configuring OIDC connection between Pulumi and AWS.
+
+This example is an automation of the process detailed in the [AWS documentation for creating an OIDC provider](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html).
+
+## Running the Example
+Clone repo and navigate to folder.
+
+```bash
+cd examples/aws-py-oidc-provider
+```
 
 Install requirements.
 
