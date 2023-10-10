@@ -1,4 +1,6 @@
-## Steps - WIP
+## Provisioning an OIDC Provider in AWS for Pulumi ESC
+
+WIP
 
 Install requirements.
 
