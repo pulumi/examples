@@ -72,6 +72,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
     Resources:
         + 3 created
     ```
+## Validating the OIDC Configuration
 
 To valdiate your OIDC configuration, copy the value of the `OidcProviderRoleArn` from the stack outputs and provide it to the `roleArn` parameter in the `aws login` section of your Environment file.
 
