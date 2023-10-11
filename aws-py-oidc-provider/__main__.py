@@ -5,7 +5,9 @@ import subprocess
 import OpenSSL
 import json
 
-audience = "" # Provide the name of your Pulumi Organization
+config = pulumi.Config()
+
+audience = config.require("pulumiOrg")
 oidc_idp_url = 'https://api.pulumi.com/oidc'
 base_url = 'api.pulumi.com/oidc'
 
