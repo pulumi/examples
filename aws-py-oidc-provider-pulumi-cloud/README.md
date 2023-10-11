@@ -1,7 +1,5 @@
 # Provisioning an OIDC Provider in AWS for Pulumi Cloud
 
-WIP - This folder probably needs a better name to reflect that this example is configuring OIDC connection between Pulumi and AWS.
-
 This example is an automation of the process detailed in the [AWS documentation for creating an OIDC provider](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html). This automation will create OIDC configuration between Pulumi Cloud and AWS.
 
 ## Prerequisites
@@ -65,7 +63,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
         Creating Provider IAM role...
     
     Outputs:
-        OidcProviderRoleArn: "arn:aws:iam::219544202541:role/oidcProviderRole-c368d93"
+        OidcProviderRoleArn: "arn:aws:iam::219511111111:role/oidcProviderRole-c368d93"
     
     Resources:
         + 3 created
