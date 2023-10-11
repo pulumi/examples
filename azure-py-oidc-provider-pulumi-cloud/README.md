@@ -81,6 +81,7 @@ values:
 Save your environment file and run the `pulumi env open <your-pulumi-org>/<your-environment>` command in the CLI. You should see output similar to the following:
 
 ```bash
+$ pulumi env open myOrg/myEnvironment
 {
   "azure": {
     "login": {
