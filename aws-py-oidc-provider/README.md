@@ -1,8 +1,8 @@
-# Provisioning an OIDC Provider in AWS for Pulumi
+# Provisioning an OIDC Provider in AWS for Pulumi Cloud
 
 WIP - This folder probably needs a better name to reflect that this example is configuring OIDC connection between Pulumi and AWS.
 
-This example is an automation of the process detailed in the [AWS documentation for creating an OIDC provider](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html).
+This example is an automation of the process detailed in the [AWS documentation for creating an OIDC provider](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html). This automation will create OIDC configuration between Pulumi Cloud and AWS.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ Clone [the examples repo](https://github.com/pulumi/examples/tree/master/aws-py-
 
 ```bash
 git clone https://github.com/pulumi/examples.git
-cd examples/aws-py-oidc-provider
+cd examples/aws-py-oidc-provider-pulumi-cloud
 ```
 
 Next, to deploy the application and its infrastructure, follow these steps:
@@ -26,10 +26,11 @@ Next, to deploy the application and its infrastructure, follow these steps:
     $ pulumi stack init dev
     ```
 
-1. Set your desired AWS region:
+1. Set your Pulumi organization name and desired AWS region:
 
     ```bash
-    $ pulumi config set aws:region us-east-1 # any valid AWS region will work
+    pulumi config set pulumiOrg <your-pulumi-org-name> # replace with your Pulumi organization name
+    pulumi config set aws:region us-east-1 # any valid AWS region will work
     ```
 
 1. Install requirements.
@@ -38,13 +39,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
     pip3 install -r requirements.txt
     ```
 
-2. Open the `__main__.py` file and rovide the name of your Pulumi Organization to the `audience` variable.
-
-    ```python
-    # Variable in the python program
-    audience = "" # Provide the name of your Pulumi Organization
-    ```
-3. Save the file and run `pulumi up`. 
+1. Run `pulumi up`. 
 
     ```bash
     $ pulumi up -y
@@ -74,7 +69,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
     ```
 ## Validating the OIDC Configuration
 
-To valdiate your OIDC configuration, copy the value of the `OidcProviderRoleArn` from the stack outputs and provide it to the `roleArn` parameter in the `aws login` section of your Environment file.
+This next section will walk you through validating your OIDC configuration using [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/). Start by [creating a new Pulumi ESC environment](https://www.pulumi.com/docs/pulumi-cloud/esc/get-started/#create-an-environment). Then, add the following environment definition, replacing the value of `roleArn` with the value of the `OidcProviderRoleArn` from your stack outputs.
 
     ```
     values:
@@ -87,7 +82,7 @@ To valdiate your OIDC configuration, copy the value of the `OidcProviderRoleArn`
               sessionName: pulumi-environments-session
     ```
 
-Then run `pulumi env open <your-pulumi-org>/<your-environment>`. You should see output similar to the following:
+Save your environment file and run the `pulumi env open <your-pulumi-org>/<your-environment>` command in the CLI. You should see output similar to the following:
 
 ```bash
 {
@@ -101,7 +96,7 @@ Then run `pulumi env open <your-pulumi-org>/<your-environment>`. You should see 
 }
 ```
 
-You can configure more granular access control by adding the `sub` claim to the Provider role's trust policy conditions with an appropriate pattern. In the following example, the role may only be assumed by the specific Pulumi ESC environment that you designate.
+You can configure more granular access control by adding the `sub` claim to the Provider role's trust policy conditions with the appropriate pattern. In the following example, the role may only be assumed by the specific Pulumi ESC environment that you designate.
 
 ```json
 {
@@ -123,7 +118,7 @@ You can configure more granular access control by adding the `sub` claim to the 
     ]
 }
 ```
-Once you are done, you can destroy all of the resources, and the stack:
+Once you are done, you can destroy all of the resources as well as the stack:
 
 ```bash
 $ pulumi destroy
