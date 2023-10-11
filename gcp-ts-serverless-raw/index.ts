@@ -3,7 +3,7 @@
 import * as gcp from "@pulumi/gcp";
 import { asset } from "@pulumi/pulumi";
 
-const bucket = new gcp.storage.Bucket("bucket",{
+const bucket = new gcp.storage.Bucket("bucket", {
     location: "US",
 });
 

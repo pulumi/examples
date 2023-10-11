@@ -35,7 +35,7 @@ config_values = {
 }
 
 # We will store the source code to the Cloud Function in a Google Cloud Storage bucket.
-bucket = storage.Bucket("eta_demo_bucket", location="US",)
+bucket = storage.Bucket("eta_demo_bucket", location="US")
 
 # The Cloud Function source code itself needs to be zipped up into an
 # archive, which we create using the pulumi.AssetArchive primitive.
