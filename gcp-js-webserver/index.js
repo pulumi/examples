@@ -10,6 +10,7 @@ const computeFirewall = new gcp.compute.Firewall("firewall", {
         protocol: "tcp",
         ports: [ "22", "80" ],
     }],
+    sourceTags: ["web"],
 });
 
 // (optional) create a simple web server using the startup script for the instance
