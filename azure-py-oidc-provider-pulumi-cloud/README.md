@@ -1,4 +1,4 @@
-# Provisioning an OIDC Provider in AWS for Pulumi Cloud
+# Provisioning an OIDC Provider in Azure for Pulumi Cloud
 
 This example will create OIDC configuration between Pulumi Cloud and Azure, specifically demonstrating connectivity with [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/). The program automates the process detailed in the Azure documentation for the following activities:
 
