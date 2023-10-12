@@ -2,12 +2,13 @@ import pulumi
 from pulumi_azure_native import resources, aad, authorization, managedidentity
 import pulumi_azuread as azuread
 from pulumi_azure import core
+import yaml
 
 issuer = "https://api.pulumi.com/oidc"
 
 # Retrieve local Pulumi configuration
 pulumi_config = pulumi.Config()
-audience = pulumi_config.require("pulumiOrg")
+audience = pulumi.get_organization()
 env_name = pulumi_config.require("environmentName")
 
 # Retrieve local Azure configuration
@@ -35,7 +36,30 @@ federated_identity_credential = azuread.ApplicationFederatedIdentityCredential("
     subject=f"pulumi:environments:org:{audience}:env:{env_name}"
 )
 
-# Export Outputs required for Environment definition
-pulumi.export('ApplicationId', application.application_id)
-pulumi.export('DirectoryId', tenant_id)
-pulumi.export('SubscriptionId', az_subscription)
+print("OIDC configuration complete!")
+print("Copy and paste the following template into your Pulumi ESC environment:")
+print("--------")
+
+def create_yaml_structure(args):
+    application_id, tenant_id, subscription_id = args
+    return {
+        'values': {
+            'azure': {
+                'login': {
+                    'fn::open::azure-login': {
+                        'clientId': application_id,
+                        'tenantId': tenant_id,
+                        'subscriptionId': f"/subscriptions/{subscription_id}",
+                        'oidc': True
+                    }
+                }
+            }
+        }
+    }
+
+def print_yaml(args):
+    yaml_structure = create_yaml_structure(args)
+    yaml_string = yaml.dump(yaml_structure, sort_keys=False)
+    print(yaml_string)
+
+pulumi.Output.all(application.application_id, tenant_id, az_subscription).apply(print_yaml)

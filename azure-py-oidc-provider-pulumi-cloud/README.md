@@ -30,7 +30,6 @@ Next, to deploy the application and its infrastructure, follow these steps:
 1. Set your Pulumi organization name, Pulumi ESC environment name, and desired Azure region:
 
     ```bash
-    pulumi config set pulumiOrg <your-pulumi-org-name> # replace with your Pulumi organization name
     pulumi config set environmentName <your-environment-name> # replace with your environment name
     pulumi config set azure-native:location WestUS2 # any valid Azure region will work
     ```
