@@ -42,42 +42,8 @@ Next, to deploy the application and its infrastructure, follow these steps:
     deactivate
     ```
 
-1. Run `pulumi up`. 
+1. Run `pulumi up -y`. Once the program completes, it will output a YAML template for you to use in the next step.
 
-    ```bash
-    $ pulumi up -y
-    Updating (dev)
-    
-         Type                              Name              Status              Info
-     +   pulumi:pulumi:Stack               oidc-python-dev   created (4s)        8 messages
-     +   ├─ aws:iam:OpenIdConnectProvider  oidcProvider      created (0.78s)     
-     +   └─ aws:iam:Role                   oidcProviderRole  created (0.75s)     
-    
-    Diagnostics:
-      pulumi:pulumi:Stack (oidc-python-dev):
-        Forming configuration document URL...
-        Extracting domain name from jwks_uri...
-        Retrieving OpenSSL certificates (this will take some time)...
-        Retrieving last OpenSSL certificate...
-        Saving certificate to file...
-        Retrieving certificate thumbprint...
-        Creating OIDC provider...
-        Creating Provider IAM role...
-        OIDC configuration complete!
-        Copy and paste the following template into your Pulumi ESC environment:
-        --------
-        values:
-          aws:
-            login:
-              fn::open::aws-login:
-                oidc:
-                  duration: 1h
-                  roleArn: arn:aws:iam::219511111111:role/oidcProviderRole-d49faac
-                  sessionName: pulumi-environments-session
-    
-    Resources:
-        + 3 created
-    ```
 ## Validating the OIDC Configuration
 
 This next section will walk you through validating your OIDC configuration using [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/).
