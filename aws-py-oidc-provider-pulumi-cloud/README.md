@@ -1,6 +1,9 @@
 # Provisioning an OIDC Provider in AWS for Pulumi Cloud
 
-This example is an automation of the process detailed in the [AWS documentation for creating an OIDC provider](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html). This automation will create OIDC configuration between Pulumi Cloud and AWS.
+This example will create OIDC configuration between Pulumi Cloud and AWS, specifically demonstrating connectivity with [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/). The program automates the process detailed in the AWS documentation for the following activities:
+
+- [Obtaining the thumbprint for an OpenID Connect Identity Provider](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc_verify-thumbprint.html)
+- [Creating an OpenID Connect Identity Provider](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html)
 
 ## Prerequisites
 
@@ -60,31 +63,29 @@ Next, to deploy the application and its infrastructure, follow these steps:
         Retrieving certificate thumbprint...
         Creating OIDC provider...
         Creating Provider IAM role...
-    
-    Outputs:
-        OidcProviderRoleArn: "arn:aws:iam::219511111111:role/oidcProviderRole-c368d93"
+        OIDC configuration complete!
+        Copy and paste the following template into your Pulumi ESC environment:
+        --------
+        values:
+          aws:
+            login:
+              fn::open::aws-login:
+                oidc:
+                  duration: 1h
+                  roleArn: arn:aws:iam::219511111111:role/oidcProviderRole-d49faac
+                  sessionName: pulumi-environments-session
     
     Resources:
         + 3 created
     ```
 ## Validating the OIDC Configuration
 
-This next section will walk you through validating your OIDC configuration using [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/). Start by [creating a new Pulumi ESC environment](https://www.pulumi.com/docs/pulumi-cloud/esc/get-started/#create-an-environment). Then, add the following environment definition, replacing the value of `roleArn` with the value of the `OidcProviderRoleArn` from your stack outputs.
+This next section will walk you through validating your OIDC configuration using [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/).
 
-    ```
-    values:
-      aws:
-        login:
-          fn::open::aws-login:
-            oidc:
-              duration: 1h
-              roleArn: <your-oidc-role-arn>
-              sessionName: pulumi-environments-session
-    ```
-
-Save your environment file and run the `pulumi env open <your-pulumi-org>/<your-environment>` command in the CLI. You should see output similar to the following:
+Start by [creating a new Pulumi ESC environment](https://www.pulumi.com/docs/pulumi-cloud/esc/get-started/#create-an-environment). Then, copy the template definition from the output in the CLI and paste it into your environment. Save your environment file and run the `pulumi env open <your-pulumi-org>/<your-environment>` command in the CLI. You should see output similar to the following:
 
 ```bash
+$ pulumi env open myOrg/myEnvironment
 {
   "aws": {
     "login": {
