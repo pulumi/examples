@@ -9,3 +9,4 @@ pycparser==2.21
 pyOpenSSL==23.2.0
 requests==2.31.0
 urllib3==1.26.7
+PyYAML

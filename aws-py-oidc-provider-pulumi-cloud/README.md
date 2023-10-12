@@ -24,10 +24,9 @@ Next, to deploy the application and its infrastructure, follow these steps:
     $ pulumi stack init dev
     ```
 
-1. Set your Pulumi organization name and desired AWS region:
+1. Set your desired AWS region:
 
     ```bash
-    pulumi config set pulumiOrg <your-pulumi-org-name> # replace with your Pulumi organization name
     pulumi config set aws:region us-east-1 # any valid AWS region will work
     ```
 

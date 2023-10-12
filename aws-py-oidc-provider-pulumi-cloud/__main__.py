@@ -4,10 +4,9 @@ import requests
 import subprocess
 import OpenSSL
 import json
+import yaml
 
-config = pulumi.Config()
-
-audience = config.require("pulumiOrg")
+audience = pulumi.get_organization()
 oidc_idp_url = 'https://api.pulumi.com/oidc'
 base_url = 'api.pulumi.com/oidc'
 
@@ -68,5 +67,30 @@ oidc_role = iam.Role("oidcProviderRole",
     assume_role_policy=pulumi.Output.all(oidc_provider.url, oidc_provider.arn, audience).apply(create_assume_role_policy)
 )
 
-# Export the ARN of the IAM role
-pulumi.export("OidcProviderRoleArn", oidc_role.arn)
+print("OIDC configuration complete!")
+print("Copy and paste the following template into your Pulumi ESC environment:")
+print("--------")
+def create_yaml_structure(role_arn):
+    return {
+        'values': {
+            'aws': {
+                'login': {
+                    'fn::open::aws-login': {
+                        'oidc': {
+                            'duration': '1h',
+                            'roleArn': role_arn,
+                            'sessionName': 'pulumi-environments-session'
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+def print_yaml(role_arn):
+    yaml_structure = create_yaml_structure(role_arn)
+    yaml_string = yaml.dump(yaml_structure, sort_keys=False)
+    print(yaml_string)
+
+# Use apply to wait for oidc_role.arn to be available, then print the YAML string
+oidc_role.arn.apply(print_yaml)
