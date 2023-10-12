@@ -44,7 +44,33 @@ Next, to deploy the application and its infrastructure, follow these steps:
     deactivate
     ```
 
-1. Run `pulumi up`. 
+1. Run `pulumi up -y`. Once the program completes, it will output a YAML template for you to use in the next step.
 
-    ```bash
-    $ pulumi up -y
+## Validating the OIDC Configuration
+
+This next section will walk you through validating your OIDC configuration using [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/).
+
+Start by [creating a new Pulumi ESC environment](https://www.pulumi.com/docs/pulumi-cloud/esc/get-started/#create-an-environment). Then, copy the template definition from the output in the CLI and paste it into your environment. Save your environment file and run the `pulumi env open <your-pulumi-org>/<your-environment>` command in the CLI. You should see output similar to the following:
+
+```bash
+$ pulumi env open myOrg/myEnvironment
+{
+  "gcp": {
+    "login": {
+      "accessToken": "N777Agel_gBF...",
+      "expiry": "2023-10-12T14:38:00Z",
+      "project": 842111111111,
+      "tokenType": "Bearer"
+    }
+  }
+}
+```
+
+## Clean-Up Resources
+
+Once you are done, you can destroy all of the resources as well as the stack:
+
+```bash
+$ pulumi destroy
+$ pulumi stack rm
+```

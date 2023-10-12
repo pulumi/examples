@@ -20,7 +20,7 @@ project_id = project_config.number
 
 # Create a Workload Identity Pool
 identity_pool = iam.WorkloadIdentityPool("pulumiOidcWorkloadIdentityPool",
-    workload_identity_pool_id="test-pulumi-oidc-identity-pool",
+    workload_identity_pool_id="pulumi-oidc-identity-pool",
     description="Pulumi OIDC Workload Identity Pool",
     display_name="Pulumi OIDC Identity Pool"
 )
@@ -51,7 +51,7 @@ iam_policy_binding = serviceaccount.IAMBinding("iamPolicyBinding",
     service_account_id=service_account.name,
     role="roles/iam.workloadIdentityUser",
     members=identity_pool.name.apply(
-        lambda name: [f"principal://iam.googleapis.com/{name}/subject/{sub_id}"]
+        lambda name: [f"principalSet://iam.googleapis.com/{name}/*"]
     )
 )
 
