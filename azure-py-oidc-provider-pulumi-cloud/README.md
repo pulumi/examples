@@ -12,7 +12,7 @@ This example will create OIDC configuration between Pulumi Cloud and Azure, spec
 
 ## Running the Example
 
-Clone [the examples repo](https://github.com/pulumi/examples/tree/master/aws-py-oidc-provider) and navigate to the folder for this example.
+Clone [the examples repo](https://github.com/pulumi/examples/tree/master/azure-py-oidc-provider) and navigate to the folder for this example.
 
 ```bash
 git clone https://github.com/pulumi/examples.git
@@ -27,7 +27,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
     pulumi stack init dev
     ```
 
-1. Set your Pulumi organization name, Pulumi ESC environment name, and desired Azure region:
+1. Set your Pulumi ESC environment name and desired Azure region:
 
     ```bash
     pulumi config set environmentName <your-environment-name> # replace with your environment name
@@ -43,44 +43,13 @@ Next, to deploy the application and its infrastructure, follow these steps:
     deactivate
     ```
 
-1. Run `pulumi up`. 
+1. Run `pulumi up -y`. Once the program completes, it will output a YAML template for you to use in the next step. 
 
-    ```bash
-    $ pulumi up -y
-    Updating (dev)
-
-     Type                                                     Name                         Status            
-     +   pulumi:pulumi:Stack                                      azure-oidc-dev               created (27s)     
-     +   ├─ azuread:index:Application                             oidc-app-registration        created (14s)     
-     +   ├─ azure-native:resources:ResourceGroup                  resourceGroup                created (1s)      
-     +   └─ azuread:index:ApplicationFederatedIdentityCredential  federatedIdentityCredential  created (16s)     
-    
-    Outputs:
-        ApplicationId : "3e5505f6-90b9-43ce...."
-        DirectoryId   : "706143bc-e1d4-4593...."
-        SubscriptionId: "0282681f-7a9e-424b...."
-    
-    Resources:
-        + 4 created
-    
-    Duration: 46s
-    ```
 ## Validating the OIDC Configuration
 
-This next section will walk you through validating your OIDC configuration using [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/). Start by [creating a new Pulumi ESC environment](https://www.pulumi.com/docs/pulumi-cloud/esc/get-started/#create-an-environment). Then, add the following environment definition, replacing the placeholder text with the values from your stack outputs.
+This next section will walk you through validating your OIDC configuration using [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/).
 
-```yaml
-values:
-  azure:
-    login:
-      fn::open::azure-login:
-        clientId: <your-client-id>
-        tenantId: <your-tenant-id>
-        subscriptionId: /subscriptions/<your-subscription-id>
-        oidc: true
-```
-
-Save your environment file and run the `pulumi env open <your-pulumi-org>/<your-environment>` command in the CLI. You should see output similar to the following:
+Start by [creating a new Pulumi ESC environment](https://www.pulumi.com/docs/pulumi-cloud/esc/get-started/#create-an-environment). Then, copy the template definition from the output in the CLI and paste it into your environment. Save your environment file and run the `pulumi env open <your-pulumi-org>/<your-environment>` command in the CLI. You should see output similar to the following:
 
 ```bash
 $ pulumi env open myOrg/myEnvironment
