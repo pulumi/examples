@@ -12,7 +12,7 @@ const bucket = new aws.s3.Bucket("bucket");
 // Export the bucket name.
 export const bucketName = bucket.id;
 
-// Create a repository for the FFMPEG image.
+// Create a repository for hte FFMPEG image.
 const repo = new awsx.ecr.Repository("repo", {
     forceDelete: true,
 });
@@ -20,7 +20,7 @@ const repo = new awsx.ecr.Repository("repo", {
 // A task which runs a containerized FFMPEG job to extract a thumbnail image.
 const ffmpegThumbnailTask = new awsx.classic.ecs.FargateTaskDefinition("ffmpegThumbTask", {
     container: {
-        image: new awsx.ecr.Image("ffmpegThumbTask", { repositoryUrl: repo.url, context: "./docker-ffmpeg-thumb" }).imageUri,
+        image: new awsx.ecr.Image("ffmpegThumbTask", { repositoryUrl: repo.url, path: "./docker-ffmpeg-thumb" }).imageUri,
         memoryReservation: 512,
     },
 });
