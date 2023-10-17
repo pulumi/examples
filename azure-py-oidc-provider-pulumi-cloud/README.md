@@ -37,7 +37,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
 1. Install requirements.
 
     ```bash
-    python -m venv venv
+    python3 -m venv venv
     source venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
