@@ -38,10 +38,8 @@ Next, to deploy the application and its infrastructure, follow these steps:
 1. Install requirements.
 
     ```bash
-    python -m venv venv
-    source venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
+    python3 -m venv venv
+    venv/bin/pip install -r requirements.txt
     ```
 
 1. Run `pulumi up -y`. Once the program completes, it will output a YAML template for you to use in the next step.
