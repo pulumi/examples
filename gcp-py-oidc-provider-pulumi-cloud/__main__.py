@@ -1,6 +1,9 @@
 import pulumi
 from pulumi_gcp import organizations, iam, serviceaccount
 import yaml
+import random
+
+number = random.randint(1000,9999)
 
 issuer = "https://api.pulumi.com/oidc"
 
@@ -10,17 +13,13 @@ audience = pulumi.get_organization()
 env_name = pulumi_config.require("environmentName")
 sub_id = f"pulumi:environments:org:{audience}:env:{env_name}"
 
-# Select the billing-enabled GCP Project from local GCP config
-client_config = organizations.get_client_config()
-project_name = client_config.project
-
 # Retrieve project details
 project_config = organizations.get_project()
 project_id = project_config.number
 
 # Create a Workload Identity Pool
 identity_pool = iam.WorkloadIdentityPool("pulumiOidcWorkloadIdentityPool",
-    workload_identity_pool_id="pulumi-oidc-identity-pool",
+    workload_identity_pool_id=f"pulumi-oidc-identity-pool-{number}",
     description="Pulumi OIDC Workload Identity Pool",
     display_name="Pulumi OIDC Identity Pool"
 )
@@ -28,7 +27,7 @@ identity_pool = iam.WorkloadIdentityPool("pulumiOidcWorkloadIdentityPool",
 # Create a Workload Identity Provider
 identity_provider = iam.WorkloadIdentityPoolProvider("pulumiOidcIdentityProvider",
     workload_identity_pool_id=identity_pool.workload_identity_pool_id,
-    workload_identity_pool_provider_id="pulumi-oidc-provider",
+    workload_identity_pool_provider_id=f"pulumi-oidc-provider-{number}",
     attribute_mapping={
             "google.subject": "assertion.sub",
         },
@@ -42,7 +41,7 @@ identity_provider = iam.WorkloadIdentityPoolProvider("pulumiOidcIdentityProvider
 
 # Create a service account
 service_account = serviceaccount.Account("serviceAccount",
-    account_id="pulumi-oidc-service-account",
+    account_id=f"pulumi-oidc-service-acct-{number}",
     display_name="Pulumi OIDC Service Account"
 )
 
