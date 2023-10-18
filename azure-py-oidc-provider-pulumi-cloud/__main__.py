@@ -3,6 +3,9 @@ from pulumi_azure_native import resources, aad, authorization, managedidentity
 import pulumi_azuread as azuread
 from pulumi_azure import core
 import yaml
+import random
+
+number = random.randint(1000,9999)
 
 issuer = "https://api.pulumi.com/oidc"
 
@@ -17,11 +20,11 @@ az_subscription = azure_config.subscription_id
 tenant_id = azure_config.tenant_id
 
 # Create an Azure Resource Group (if necessary)
-resource_group = resources.ResourceGroup('resourceGroup')
+resource_group = resources.ResourceGroup(f'resourceGroup-{number}')
 
 # Create an Azure AD Application
 application = azuread.Application(
-    'oidc-app-registration',
+    f'pulumi-oidc-app-reg-{number}',
     display_name='pulumi-environments-oidc-app',
     sign_in_audience='AzureADMyOrg',
 )
@@ -29,7 +32,7 @@ application = azuread.Application(
 # Creates Federated Credentials
 federated_identity_credential = azuread.ApplicationFederatedIdentityCredential("federatedIdentityCredential",
     application_object_id=application.object_id,
-    display_name="pulumi-environments-oidc-fic",
+    display_name=f"pulumi-env-oidc-fic-{number}",
     description="Federated credentials for Pulumi ESC",
     audiences=[audience],
     issuer=issuer,
