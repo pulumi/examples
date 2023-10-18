@@ -32,7 +32,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
 
     ```bash
     pulumi config set environmentName <your-environment-name> # replace with your environment name
-    pulumi config set gcp:project <your-project-name> # replace with your GCP project name
+    pulumi config set gcp:project <your-project-id> # replace with your GCP project ID
     ```
 
 1. Install requirements.
