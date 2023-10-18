@@ -9,6 +9,7 @@ This example will create OIDC configuration between Pulumi Cloud and AWS, specif
 
 * [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 * [Configure Pulumi to Use AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
+* Install Python 3.x
 
 Make sure to deploy this example in an AWS account that does not already have a provider configured for Pulumi, otherwise the deployment will fail with the following error:
 
