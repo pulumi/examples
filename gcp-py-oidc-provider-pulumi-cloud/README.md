@@ -9,7 +9,7 @@ This example will create OIDC configuration between Pulumi Cloud and Google Clou
 
 * [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 * [Configure Pulumi to Use GCP](https://www.pulumi.com/docs/clouds/gcp/get-started/begin/#configure-pulumi-to-access-your-google-cloud-account)
-* [Create a Google Cloud Project](https://cloud.google.com/iam/docs/workload-identity-federation-with-other-providers#configure) with the required APIs enabled
+* [Create a Google Cloud Project with the required APIs enabled](https://cloud.google.com/iam/docs/workload-identity-federation-with-other-providers#configure)
 
 ## Running the Example
 
