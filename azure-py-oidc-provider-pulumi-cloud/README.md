@@ -12,7 +12,7 @@ This example will create OIDC configuration between Pulumi Cloud and Azure, spec
 
 ## Running the Example
 
-Clone [the examples repo](https://github.com/pulumi/examples/tree/master/azure-py-oidc-provider) and navigate to the folder for this example.
+Clone [the examples repo](https://github.com/pulumi/examples) and navigate to the folder for this example.
 
 ```bash
 git clone https://github.com/pulumi/examples.git
