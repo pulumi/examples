@@ -13,7 +13,7 @@ This example will create OIDC configuration between Pulumi Cloud and Google Clou
 
 ## Running the Example
 
-Clone [the examples repo](https://github.com/pulumi/examples/tree/master/gcp-py-oidc-provider) and navigate to the folder for this example.
+Clone [the examples repo](https://github.com/pulumi/examples) and navigate to the folder for this example.
 
 ```bash
 git clone https://github.com/pulumi/examples.git

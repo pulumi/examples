@@ -17,7 +17,7 @@ Make sure to deploy this example in an AWS account that does not already have a 
 
 ## Running the Example
 
-Clone [the examples repo](https://github.com/pulumi/examples/tree/master/aws-py-oidc-provider) and navigate to the folder for this example.
+Clone [the examples repo](https://github.com/pulumi/examples) and navigate to the folder for this example.
 
 ```bash
 git clone https://github.com/pulumi/examples.git
