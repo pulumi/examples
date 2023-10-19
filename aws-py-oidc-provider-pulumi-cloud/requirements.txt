@@ -1,0 +1,12 @@
+pulumi>=3.0.0,<4.0.0
+pulumi-aws>=6.0.2,<7.0.0
+certifi==2023.7.22
+cffi==1.15.1
+charset-normalizer==3.3.0
+cryptography==41.0.4
+idna==3.4
+pycparser==2.21
+pyOpenSSL==23.2.0
+requests==2.31.0
+urllib3==1.26.7
+PyYAML
