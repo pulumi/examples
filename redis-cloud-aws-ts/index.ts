@@ -10,7 +10,7 @@ const region = aws.config.region ?? "";
 const getPreferredAz = function () {
   const value = config.get("preferredAz");
 
-  if (region.toLocaleUpperCase() != "us-east-1" && !value) {
+  if (region.toLowerCase() != "us-east-1" && !value) {
     throw new Error("preferredAz must be defined if AWS region is not us-east-1.");
   }
 
@@ -62,8 +62,6 @@ const database = new rediscloud.SubscriptionDatabase("redis-db", {
   throughputMeasurementBy: "operations-per-second",
   throughputMeasurementValue: 20000,
   replication: true,
-}, {
-  aliases: [{ name: "my-db" }]
 });
 
 export const privateEndpoint = database.privateEndpoint;
@@ -76,7 +74,7 @@ const vpc = new awsx.ec2.Vpc("vpc", {
   }
 });
 
-const callerIdentity = aws.getCallerIdentity({});
+const callerIdentity = aws.getCallerIdentity();
 
 const peering = new rediscloud.SubscriptionPeering("redis-peering", {
   subscriptionId: subscription.id,
