@@ -20,6 +20,7 @@ const getPreferredAz = function () {
 const preferredAvailabilityZone = getPreferredAz();
 const redisVpcCidr = "10.0.0.0/24";
 
+// NOTE: cardType is case-sensitive: "Visa" will work. "visa" will not.
 const card = rediscloud.getPaymentMethodOutput({
   cardType: config.require("cardType"),
   lastFourNumbers: config.require("lastFourNumbers"),
