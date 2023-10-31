@@ -1,12 +1,10 @@
-//go:build Performance || all
-// +build Performance all
-
 package test
 
 import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"path"
 	"testing"
 	"time"
@@ -115,6 +113,29 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 	programTestAsBenchmark(t, benchmark, test)
 }
 
+func TestPolicyPacks(t *testing.T) {
+	policyPack := path.Join(getCwd(t), "..", "benchmarks", "policy-slow")
+
+	// Install the dependencies for the policy pack first
+	npmInstallCmd := exec.Command("npm", "install")
+	npmInstallCmd.Dir = policyPack
+	err := npmInstallCmd.Run()
+	assert.NoError(t, err)
+
+	benchmark := bench("aws-py-s3-folder", "aws", "go", "go")
+	opts := integration.ProgramTestOptions{
+		Dir:                    path.Join(getCwd(t), "..", "..", benchmark.Name),
+		UpdateCommandlineFlags: []string{fmt.Sprintf("--policy-pack=%s", policyPack)},
+		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+			assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
+				return assert.Contains(t, body, "Hello, Pulumi!")
+			})
+		},
+	}
+	test := getAWSBase(t).With(opts)
+	programTestAsBenchmark(t, benchmark, test)
+}
+
 type manyResourcesConfig struct {
 	folder       string
 	bench        traces.Benchmark
@@ -181,8 +202,8 @@ func TestManyResources(t *testing.T) {
 func programTestAsBenchmark(
 	t *testing.T,
 	bench traces.Benchmark,
-	test integration.ProgramTestOptions) {
-
+	test integration.ProgramTestOptions,
+) {
 	// Run preview only to make sure all needed plugins are
 	// downloaded so that these downloads do not skew
 	// measurements.
