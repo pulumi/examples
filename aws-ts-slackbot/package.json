@@ -7,7 +7,7 @@
         "@aws-sdk/lib-dynamodb": "^3.417.0",
         "@pulumi/aws": "^6.0.0",
         "@pulumi/aws-apigateway": "1.1.0-alpha.3",
-        "@pulumi/awsx": "2.0.0-beta.3",
+        "@pulumi/awsx": "^2.0.2",
         "@pulumi/pulumi": "^3.0.0",
         "qs": "^6.7.0",
         "superagent": "^8.1.0"
