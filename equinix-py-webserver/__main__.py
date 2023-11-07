@@ -1,14 +1,14 @@
-import pulumi_equinix_metal as metal
+import pulumi_equinix as equinix
 import pulumi_random as random
 from pulumi import export
 
 random_host_name = random.RandomPet("hostname")
 
-project = metal.get_project(
+project = equinix.get_project(
     name="ci-project"
 )
 
-vm = metal.Device(
+vm = equinix.Device(
     "vm",
     billing_cycle="hourly",
     metro="da",

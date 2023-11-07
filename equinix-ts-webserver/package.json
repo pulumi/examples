@@ -1,11 +1,11 @@
 {
-    "name": "equinix-metal-ts-webserver",
+    "name": "equinix-ts-webserver",
     "version": "0.1.0",
     "devDependencies": {
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/equinix-metal": "^2.0.0",
+        "@pulumi/equinix": "^0.2.1",
         "@pulumi/random": "^4.0.0"
     },
     "license": "Apache-2.0"
