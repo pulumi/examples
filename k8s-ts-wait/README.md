@@ -38,21 +38,27 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi up
     Updating (dev):
 
-         Type                                     Name        Status
+        View in Browser (Ctrl+O): https://app.pulumi.com/../k8s-ts-wait/dev/updates/1
 
+            Type                        Name             Status            Info
+        +   pulumi:pulumi:Stack         k8s-ts-wait-dev  creating (8s).
+        +   ├─ kubernetes:batch/v1:Job  job              created (4s)      Waiting for Job "job-b002d656" to succeed (Active: 0 | Succeeded: 1 | Failed: 0)
+        +   └─ kubernetes:batch/v1:Job  job2             creating (2s)...  Waiting for Job "job2-5f7b1d45" to succeed (Active: 1 | Succeeded: 0 | Failed: 0)
 
     Outputs:
+        job2DoneDetails: {..}
+        jobDoneDetails : {..}
+        jobId          : {..}
+        jobStatus      : {..}
 
     Resources:
+        + 3 created
 
-    Duration: 
+    Duration: 12s
 
-    Permalink: https://app.pulumi.com/.../k8s-ts-wait/dev/updates/1
     ```
 
-   Note that the entire deployment will typically take between ## minutes.
-
-   As part of the update, you'll see some ..
+   As part of the update, you'll see the outputs of the program, showing the Job IDs and status details. The second job will not be created until the first job has completed.
 
 1. From here, feel free to experiment a little bit. Once you've finished experimenting,
    tear down your stack's resources by destroying and removing it:
