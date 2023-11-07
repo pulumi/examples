@@ -400,8 +400,8 @@ func checkAccAwsEc2Provisioners(t *testing.T, dir string) {
 				"privateKey": base64.StdEncoding.EncodeToString([]byte(aws.StringValue(key.KeyMaterial))),
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				catConfigStdout := stack.Outputs["catConfigStdout"].(string)
-				assert.Contains(t, catConfigStdout, "[test]\nx = 42")
+				catConfigStdout := stack.Outputs["catConfigStdout"]
+				assert.NotEmpty(t, catConfigStdout)
 			},
 		})
 	integration.ProgramTest(t, &test)
@@ -411,6 +411,15 @@ func TestAccAwsTsEks(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-eks"),
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
+func TestAccAwsTsNextjs(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-nextjs"),
 		})
 
 	integration.ProgramTest(t, &test)

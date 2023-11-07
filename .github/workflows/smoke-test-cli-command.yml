@@ -25,7 +25,6 @@ env:
   PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_API: https://api.pulumi-staging.io
-  PULUMI_TEST_OWNER: moolumi
   PULUMI_VERSION: ${{ github.event.client_payload.ref }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 jobs:
@@ -49,7 +48,7 @@ jobs:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.114
         platform:
         - ubuntu-latest
         source-dir:
@@ -158,7 +157,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        role-duration-seconds: 3600
+        role-duration-seconds: 7200
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - name: Checkout Scripts Repo
@@ -178,14 +177,14 @@ jobs:
       run: >-
         mkdir -p "$HOME/.kube/"
 
-        pulumi stack -s "${{ env.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
+        pulumi stack -s "${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
     - name: Run ${{ matrix.tests-set }} Tests
       run: make specific_test_set TestSet=Kubernetes
     strategy:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.114
         goversion:
         - 1.19.x
         nodeversion:
@@ -270,7 +269,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        role-duration-seconds: 3600
+        role-duration-seconds: 7200
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - name: Checkout Scripts Repo
@@ -300,7 +299,7 @@ jobs:
         - EquinixMetal
         - Cloud
         dotnetversion:
-        - 3.1.301
+        - 6.0.114
         goversion:
         - 1.19.x
         languages:
@@ -425,7 +424,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        role-duration-seconds: 3600
+        role-duration-seconds: 7200
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - name: Checkout Scripts Repo
@@ -438,13 +437,12 @@ jobs:
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Destroy test infra
-      run: make destroy_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
-        github.sha }}-${{ github.run_number }}"
+      run: make destroy_test_infra StackName="${{ github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.114
         goversion:
         - 1.19.x
         nodeversion:
@@ -529,7 +527,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        role-duration-seconds: 3600
+        role-duration-seconds: 7200
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - name: Checkout Scripts Repo
@@ -542,13 +540,12 @@ jobs:
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Create Test Infrastructure
-      run: make setup_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
-        github.sha }}-${{ github.run_number }}"
+      run: make setup_test_infra StackName="${{ github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
         dotnetversion:
-        - 3.1.301
+        - 6.0.114
         goversion:
         - 1.19.x
         nodeversion:

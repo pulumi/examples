@@ -1,5 +1,5 @@
 import pulumi
-from pulumi_aws import ec2, get_ami, GetAmiFilterArgs
+from pulumi_aws import ec2
 
 group = ec2.SecurityGroup('web-secgrp', ingress=[
     # Uncomment to fail a test:

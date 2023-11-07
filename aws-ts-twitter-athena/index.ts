@@ -1,5 +1,6 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
+import * as s3sdk from "@aws-sdk/client-s3";
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
@@ -72,12 +73,12 @@ const handler = eventRule.onEvent("on-timer-event", async() => {
     const filename = `${outputFolder}/${Date.now()}`;
     const contents = Buffer.from(tweets.join("\n"), "utf8");
 
-    const s3 = new aws.sdk.S3();
+    const s3 = new s3sdk.S3({});
     await s3.putObject({
         Bucket: bucket.id.get(),
         Key: filename,
         Body: contents,
-    }).promise();
+    });
 });
 
 // athena setup

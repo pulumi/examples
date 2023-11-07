@@ -11,6 +11,11 @@ let siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     },
 });
 
+const publicAccessBlock = new aws.s3.BucketPublicAccessBlock("public-access-block", {
+    bucket: siteBucket.id,
+    blockPublicAcls: false,
+});
+
 let siteDir = "www"; // directory for content files
 
 // For each file in the directory, create an S3 object stored in `siteBucket`
@@ -44,7 +49,7 @@ function publicReadPolicyForBucket(bucketName) {
 let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
     bucket: siteBucket.bucket, // refer to the bucket created earlier
     policy: siteBucket.bucket.apply(publicReadPolicyForBucket) // use output property `siteBucket.bucket`
-});
+}, { dependsOn: publicAccessBlock });
 
 // Stack exports
 exports.bucketName = siteBucket.bucket;

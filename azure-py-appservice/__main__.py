@@ -67,6 +67,7 @@ app_insights = insights.Component(
     "appservice-ai",
     application_type=insights.ApplicationType.WEB,
     kind="web",
+    ingestion_mode="applicationInsights",
     resource_group_name=resource_group.name)
 
 sql_server = sql.Server(

@@ -26,7 +26,7 @@ public static class Functions
                     {
                         ResourceGroupName = resourceGroup.Name,
                         Location = region.Location,
-                        Archive = new FileArchive("./app/bin/Debug/netcoreapp3.1/publish"),
+                        Archive = new FileArchive("./app/bin/Debug/net6.0/publish"),
                         AppSettings =
                         {
                             {"CosmosDBConnection", connectionString},

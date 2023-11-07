@@ -5,7 +5,7 @@ import pulumi
 import pulumi_aws as aws
 
 # The location of the built dotnet3.1 application to deploy
-dotnet_application_publish_folder = "./app/bin/Debug/netcoreapp3.1/publish"
+dotnet_application_publish_folder = "./app/bin/Debug/net6.0/publish"
 dotnet_application_entry_point = "app::app.Functions::GetAsync"
 # The stage name to use for the API Gateway URL
 custom_stage_name = "api"

@@ -34,7 +34,7 @@ const dotnetBlob = new storage.Blob("dotnetBlob", {
     resourceGroupName: resourceGroup.name,
     accountName: storageAccount.name,
     containerName: container.name,
-    source: new pulumi.asset.FileArchive("./dotnet/bin/Debug/netcoreapp3.1/publish"),
+    source: new pulumi.asset.FileArchive("./dotnet/bin/Debug/net6.0/publish"),
 });
 
 const dotnetBlobSignedURL = signedBlobReadUrl(dotnetBlob, container, storageAccount, resourceGroup);
@@ -175,7 +175,7 @@ const premiumBlob = new storage.Blob("premiumBlob", {
     resourceGroupName: resourceGroup.name,
     accountName: storageAccount.name,
     containerName: container.name,
-    source: new pulumi.asset.FileArchive("./dotnet/bin/Debug/netcoreapp3.1/publish"),
+    source: new pulumi.asset.FileArchive("./dotnet/bin/Debug/net6.0/publish"),
 });
 
 const premiumBlobSignedURL = signedBlobReadUrl(premiumBlob, container, storageAccount, resourceGroup);
