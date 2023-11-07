@@ -4,7 +4,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/ec2"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ec2"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/stretchr/testify/assert"
@@ -53,9 +53,9 @@ func TestInfrastructure(t *testing.T) {
 		// Test if the instance is configured with user_data.
 		pulumi.All(infra.server.URN(), infra.server.UserData).ApplyT(func(all []interface{}) error {
 			urn := all[0].(pulumi.URN)
-			userData := all[1].(*string)
+			userData := all[1].(string)
 
-			assert.Nilf(t, userData, "illegal use of userData on server %v", urn)
+			assert.Equalf(t, "", userData, "illegal use of userData on server %v", urn)
 			wg.Done()
 			return nil
 		})

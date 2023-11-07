@@ -1,0 +1,6 @@
+name: oidc-test
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: A Python Pulumi program

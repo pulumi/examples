@@ -17,7 +17,7 @@ for x in range(0, droplet_count):
     name_tag = do.Tag(instance_name)
     droplet = do.Droplet(
         instance_name,
-        image="ubuntu-18-04-x64",
+        image="ubuntu-20-04-x64",
         region=region,
         size="s-1vcpu-1gb",
         tags=[name_tag.id, droplet_type_tag.id],
