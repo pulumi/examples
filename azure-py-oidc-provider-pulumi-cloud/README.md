@@ -54,53 +54,24 @@ $ pulumi env open myOrg/myEnvironment
 {
   "azure": {
     "login": {
-      "clientId": "3e5505f6-90b9-....",
+      "clientId": "b537....",
       "oidc": {
-        "token": "eyJhbGciOi...."
+        "token": "eyJh...."
       },
-      "subscriptionId": "/subscriptions/0282681f-7a9e....",
-      "tenantId": "706143bc-e1d4...."
+      "subscriptionId": "0282....",
+      "tenantId": "7061...."
     }
+  },
+  "environmentVariables": {
+    "ARM_CLIENT_ID": "b537....",
+    "ARM_OIDC_REQUEST_TOKEN": "eeyJh....",
+    "ARM_OIDC_REQUEST_URL": "https://api.pulumi.com/oidc",
+    "ARM_OIDC_TOKEN": "eyJh....",
+    "ARM_SUBSCRIPTION_ID": "0282....",
+    "ARM_TENANT_ID": "7061....",
+    "ARM_USE_OIDC": "true"
   }
 }
-```
-
-## Additional Considerations
-
-You can configure more granular access control by adding a `RoleAssignment` resource to your program. In the following example, the application is assigned a role with permissions to read secrets from Azure Keyvault.
-
-```python
-# Create an IAM role assignment at the subscription level
-role_assignment = authorization.RoleAssignment(
-    'role-assignment',
-    scope=pulumi.Output.format('/subscriptions/{subscription_id}', subscription_id=az_subscription),
-    role_definition_id=pulumi.Output.format('/subscriptions/{subscription_id}/providers/Microsoft.Authorization/roleDefinitions/{role_definition_id}',
-                                            subscription_id=az_subscription,
-                                            role_definition_id='4633458b-17de-408a-b874-0445c86b69e6'),  # ID for "Key Vault Secrets User" role
-    principal_id=application.object_id,
-)
-```
-
-For this example, you would need to update your environment file to retrieve a KeyVault secret:
-
-```yaml
-values:
-  azure:
-    login:
-      fn::open::azure-login:
-        clientId: <your-client-id>
-        tenantId: <your-tenant-id>
-        subscriptionId: /subscriptions/<your-subscription-id>
-        oidc: true
-    secrets:
-      fn::open::azure-secrets:
-        login: ${azure.login}
-        vault: <your-vault-name>
-        get:
-          api-key:
-            name: api-key #an example of retrieving a secret named "api-key" and storing it in a parameter
-  environmentVariables:
-    API_KEY: ${azure.secrets.api-key} # an example of how you can reference your api-key value elsewhere in the file
 ```
 
 ## Clean-Up Resources
