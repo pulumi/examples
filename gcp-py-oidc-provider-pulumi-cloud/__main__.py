@@ -1,8 +1,14 @@
 import pulumi
-from pulumi_gcp import organizations, iam, serviceaccount
+from pulumi_gcp import organizations, iam, serviceaccount, projects
 import yaml
 import random
 
+'''
+For the purposes of this example, a random number
+will be generated and assigned to parameter values that
+require unique values. This should be removed in favor
+of providing unique naming conventions where required.
+'''
 number = random.randint(1000,9999)
 
 issuer = "https://api.pulumi.com/oidc"
@@ -45,7 +51,14 @@ service_account = serviceaccount.Account("serviceAccount",
     display_name="Pulumi OIDC Service Account"
 )
 
-# Create an IAM policy binding to grant the identity pool access to the service account
+# Grant the service account 'roles/editor' on the project
+editor_policy_binding = projects.IAMMember("editorIamBinding",
+    member=service_account.email.apply(lambda email: f"serviceAccount:{email}"),
+    role="roles/editor",
+    project=project_id
+)
+
+# Allow the workload identity pool to impersonate the service account
 iam_policy_binding = serviceaccount.IAMBinding("iamPolicyBinding",
     service_account_id=service_account.name,
     role="roles/iam.workloadIdentityUser",
@@ -70,6 +83,12 @@ def create_yaml_structure(args):
                         }
                     }
                 }
+            },
+            'pulumiConfig': { 
+                'gcp:accessToken': '${gcp.login.accessToken}'
+            },
+            'environmentVariables': { 
+                'GOOGLE_PROJECT': '${gcp.login.project}'
             }
         }
     }

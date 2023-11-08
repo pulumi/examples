@@ -53,13 +53,19 @@ Start by [creating a new Pulumi ESC environment](https://www.pulumi.com/docs/pul
 ```bash
 $ pulumi env open myOrg/myEnvironment
 {
+  "environmentVariables": {
+    "GOOGLE_PROJECT": <your-project-id>
+  },
   "gcp": {
     "login": {
-      "accessToken": "N777Agel_gBF...",
-      "expiry": "2023-10-12T14:38:00Z",
-      "project": 842111111111,
+      "accessToken": "ya29.......",
+      "expiry": "2023-11-07T18:02:35Z",
+      "project": <your-project-id>,
       "tokenType": "Bearer"
     }
+  },
+  "pulumiConfig": {
+    "gcp:accessToken": "ya29......."
   }
 }
 ```
