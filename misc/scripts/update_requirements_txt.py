@@ -10,7 +10,7 @@ DESIRED_DEPS = {
     'pulumi-digitalocean': 'pulumi-digitalocean>=4.4.1,<5.0.0',
     'pulumi-docker': 'pulumi-docker>=3.0.0,<4.0.0',
     'pulumi-equinix': 'pulumi-equinix>=0.0.0,<1.0.0',
-    'pulumi-gcp': 'pulumi-gcp>=5.10.1,<6.0.0',
+    'pulumi-gcp': 'pulumi-gcp==7.0.0rc0',
     'pulumi-kubernetes': 'pulumi-kubernetes>=3.4.0,<4.0.0',
     'pulumi-libvirt': 'pulumi-libvirt>=0.1.0,<1.0.0',
     'pulumi-mysql': 'pulumi-mysql>=3.0.0,<4.0.0',
