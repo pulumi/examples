@@ -1,7 +1,9 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2023, Pulumi Corporation.  All rights reserved.
+
+import * as k8sapi from "@kubernetes/client-node";
 import * as k8s from "@pulumi/kubernetes";
 import * as k8sOutput from "@pulumi/kubernetes/types/output";
-import * as k8sapi from '@kubernetes/client-node';
+import * as pulumi from "@pulumi/pulumi";
 import { unknownValue } from "@pulumi/pulumi/runtime";
 
 // Create a Kubernetes Job with a single container running the "hello-world" image
@@ -34,13 +36,13 @@ async function waitForJob(jobMetadata: k8sOutput.meta.v1.ObjectMeta): Promise<an
         // Poll the Kubernetes Job status every 10 seconds for up to 10 minutes
         for (let i = 0; i <60; i++) {
             const jobDetails = (await client.readNamespacedJob(jobMetadata.name, jobMetadata.namespace)).response;
-                if (jobDetails.body && jobDetails.body.status && jobDetails.body.status.succeeded > 0) {
+            if (jobDetails.body && jobDetails.body.status && jobDetails.body.status.succeeded > 0) {
                 // Return the Job details once completed successfully
                 return jobDetails.body;
             }
-            pulumi.log.info(`Waiting for Job to finish (${i})`, job)
+            pulumi.log.info(`Waiting for Job to finish (${i})`, job);
             // Wait for 10s between polls
-            await new Promise(r => setTimeout(r,10000));
+            await new Promise(r => setTimeout(r, 10000));
         }
         // Throw an error if the Job did not complete within the 10-minute timeout
         throw new Error("timed out waiting for Job to complete");
@@ -60,7 +62,7 @@ const job2 = new k8s.batch.v1.Job("job2", {
             // Assign the completionTime of the first Job to an annotation on the second Job
             // This enforces a dependency relationship between the jobs
             "pulumi-waited-on-completion": jobDone.apply(j => j.status.completionTime),
-        }
+        },
     },
     spec: {
         template: {
