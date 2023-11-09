@@ -33,7 +33,7 @@ application = azuread.Application(
 )
 
 # Create Federated Credentials
-# subject = f"pulumi:environments:org:{audience}:env:{env_name}" //
+# subject = f"pulumi:environments:org:{audience}:env:{env_name}"
 '''
 Defining a subject identifier using a specific environment
 name is not currently supported at this time.
