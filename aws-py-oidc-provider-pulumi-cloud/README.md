@@ -58,10 +58,15 @@ $ pulumi env open myOrg/myEnvironment
 {
   "aws": {
     "login": {
-      "accessKeyId": "ASIA......",
-      "secretAccessKey": "PYP.....",
-      "sessionToken": "FwoGZ....."
+      "accessKeyId": "ASIA....",
+      "secretAccessKey": "rtBS....",
+      "sessionToken": "Fwo...."
     }
+  },
+  "environmentVariables": {
+    "AWS_ACCESS_KEY_ID": "ASIA....",
+    "AWS_SECRET_ACCESS_KEY": "rtBS....",
+    "AWS_SESSION_TOKEN": "Fwo...."
   }
 }
 ```
