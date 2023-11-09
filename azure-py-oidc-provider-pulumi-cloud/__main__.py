@@ -33,10 +33,21 @@ application = azuread.Application(
 )
 
 # Create Federated Credentials
-subject = f"pulumi:environments:org:{audience}:env:{env_name}"
+# subject = f"pulumi:environments:org:{audience}:env:{env_name}" //
+'''
+Defining a subject identifier using a specific environment
+name is not currently supported at this time.
+There is a known issue with the value of the subject
+identifier that is sent to Azure from Pulumi. The subject 
+identifier used below is what you need to provide
+to configure OIDC for Pulumi ESC.
+
+See: https://github.com/pulumi/pulumi/issues/14509
+'''
+subject = f"pulumi:environments:org:{audience}:env:<yaml>"
 
 federated_identity_credential = azuread.ApplicationFederatedIdentityCredential("federatedIdentityCredential",
-    application_object_id=application.object_id,
+    application_id=application.object_id.apply(lambda object_id: f"/applications/{object_id}"),
     display_name=f"pulumi-env-oidc-fic-{number}",
     description="Federated credentials for Pulumi ESC",
     audiences=[audience],
@@ -45,7 +56,7 @@ federated_identity_credential = azuread.ApplicationFederatedIdentityCredential("
 )
 
 # Create a Service Principal
-service_principal = azuread.ServicePrincipal('myserviceprincipal', application_id=application.application_id)
+service_principal = azuread.ServicePrincipal('myserviceprincipal', client_id=application.client_id)
 
 # Assign the 'Contributor' role to the Service principal at the scope specified
 CONTRIBUTOR=f"/subscriptions/{az_subscription}/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
@@ -62,13 +73,13 @@ print("Copy and paste the following template into your Pulumi ESC environment:")
 print("--------")
 
 def create_yaml_structure(args):
-    application_id, tenant_id, subscription_id = args
+    client_id, tenant_id, subscription_id = args
     return {
         'values': {
             'azure': {
                 'login': {
                     'fn::open::azure-login': {
-                        'clientId': application_id,
+                        'clientId': client_id,
                         'tenantId': tenant_id,
                         'subscriptionId': subscription_id,
                         'oidc': True
@@ -94,4 +105,4 @@ def print_yaml(args):
     yaml_string = yaml.dump(yaml_structure, sort_keys=False)
     print(yaml_string)
 
-pulumi.Output.all(application.application_id, tenant_id, az_subscription).apply(print_yaml)
+pulumi.Output.all(application.client_id, tenant_id, az_subscription).apply(print_yaml)
