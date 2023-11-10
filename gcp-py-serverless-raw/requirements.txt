@@ -1,2 +1,2 @@
 pulumi>=3.5.1,<4.0.0
-pulumi-gcp==7.0.0rc0
+pulumi-gcp>=7.0.0,<8.0.0
