@@ -3,11 +3,11 @@
     "version": "0.0.1",
     "dependencies": {
         "@pulumi/aws": "^6.0.2",
-        "@pulumi/eks": "2.0.0-alpha.3",
+        "@pulumi/eks": "^2.0.0",
         "@pulumi/policy": "latest",
-        "@pulumi/pulumi": "^2.0.0"
+        "@pulumi/pulumi": "^3.0.0"
     },
     "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@types/node": "^18.0.0"
     }
 }
