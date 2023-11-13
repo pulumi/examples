@@ -1,3 +1,6 @@
+//go:build Performance || all
+// +build Performance all
+
 package test
 
 import (
