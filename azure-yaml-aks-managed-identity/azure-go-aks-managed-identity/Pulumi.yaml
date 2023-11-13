@@ -1,3 +1,0 @@
-name: azure-go-aks-managed-identity
-runtime: go
-description: A minimal Azure Native Pulumi YAML program

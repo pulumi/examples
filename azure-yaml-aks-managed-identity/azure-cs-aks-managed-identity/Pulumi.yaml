@@ -1,3 +1,0 @@
-name: azure-cs-aks-managed-identity
-runtime: dotnet
-description: A minimal Azure Native Pulumi YAML program
