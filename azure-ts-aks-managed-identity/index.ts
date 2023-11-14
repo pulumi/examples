@@ -1,13 +1,20 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 import * as azure_native from "@pulumi/azure-native";
 import * as tls from "@pulumi/tls";
 
+// create a resource group to hold all the resources
 const resourceGroup = new azure_native.resources.ResourceGroup("resourceGroup", {});
+
+// create a private key to use for the cluster's ssh key
 const privateKey = new tls.PrivateKey("privateKey", {
     algorithm: "RSA",
     rsaBits: 4096,
 });
-const identity = new azure_native.managedidentity.UserAssignedIdentity("identity", {resourceGroupName: resourceGroup.name});
+
+// create a user assigned identity to use for the cluster
+const identity = new azure_native.managedidentity.UserAssignedIdentity("identity", { resourceGroupName: resourceGroup.name });
+
+// create the cluster
 const cluster = new azure_native.containerservice.ManagedCluster("cluster", {
     resourceGroupName: resourceGroup.name,
     identity: {
@@ -35,14 +42,20 @@ const cluster = new azure_native.containerservice.ManagedCluster("cluster", {
         },
     },
 });
+
+// retrieve the admin credentials which contain the kubeconfig
 const adminCredentials = azure_native.containerservice.listManagedClusterAdminCredentialsOutput({
     resourceGroupName: resourceGroup.name,
     resourceName: cluster.name,
 });
-const roleAssignment = new azure_native.authorization.RoleAssignment("roleAssignment", {
+
+// grant the 'contributor' role to the identity on the resource group
+const assignment = new azure_native.authorization.RoleAssignment("roleAssignment", {
     principalId: identity.principalId,
     principalType: "ServicePrincipal",
     roleDefinitionId: "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
     scope: resourceGroup.id,
 });
+
+// export the kubeconfig
 export const kubeconfig = adminCredentials.apply(adminCredentials => Buffer.from(adminCredentials.kubeconfigs?.[0]?.value, "base64").toString("utf8"));

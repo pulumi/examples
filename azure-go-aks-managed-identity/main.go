@@ -1,3 +1,4 @@
+// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 package main
 
 import (
@@ -13,11 +14,13 @@ import (
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
+		// create a resource group to hold all the resources
 		resourceGroup, err := resources.NewResourceGroup(ctx, "resourceGroup", nil)
 		if err != nil {
 			return err
 		}
 
+		// create a private key to use for the cluster's ssh key
 		privateKey, err := tls.NewPrivateKey(ctx, "privateKey", &tls.PrivateKeyArgs{
 			Algorithm: pulumi.String("RSA"),
 			RsaBits:   pulumi.Int(4096),
@@ -27,6 +30,7 @@ func main() {
 			return err
 		}
 
+		// craete a user assigned identity to use for the cluster
 		identity, err := managedidentity.NewUserAssignedIdentity(ctx, "identity", &managedidentity.UserAssignedIdentityArgs{
 			ResourceGroupName: resourceGroup.Name,
 		})
@@ -35,6 +39,7 @@ func main() {
 			return err
 		}
 
+		// create the cluster
 		cluster, err := containerservice.NewManagedCluster(ctx, "cluster", &containerservice.ManagedClusterArgs{
 			ResourceGroupName: resourceGroup.Name,
 			Identity: &containerservice.ManagedClusterIdentityArgs{
@@ -73,11 +78,13 @@ func main() {
 			return err
 		}
 
+		// retrieve the admin credentials which contain the kubeconfig
 		adminCredentials := containerservice.ListManagedClusterAdminCredentialsOutput(ctx, containerservice.ListManagedClusterAdminCredentialsOutputArgs{
 			ResourceGroupName: resourceGroup.Name,
 			ResourceName:      cluster.Name,
 		}, nil)
 
+		// grant the 'contributor' role to the identity on the resource group
 		_, err = authorization.NewRoleAssignment(ctx, "roleAssignment", &authorization.RoleAssignmentArgs{
 			PrincipalId:      identity.PrincipalId,
 			PrincipalType:    pulumi.String("ServicePrincipal"),

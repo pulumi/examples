@@ -1,15 +1,21 @@
+# Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 import base64
 import pulumi
 import pulumi_azure_native as azure_native
 import pulumi_tls as tls
 
+# create a resource group to hold all the resources
 resource_group = azure_native.resources.ResourceGroup("resourceGroup")
+
+# create a private key to use for the cluster's  ssh key
 private_key = tls.PrivateKey("privateKey", algorithm="RSA", rsa_bits=4096)
 
+# create a user assigned identity to use for the cluster
 identity = azure_native.managedidentity.UserAssignedIdentity(
     "identity", resource_group_name=resource_group.name
 )
 
+# create the cluster
 cluster = azure_native.containerservice.ManagedCluster(
     "cluster",
     resource_group_name=resource_group.name,
@@ -43,12 +49,14 @@ cluster = azure_native.containerservice.ManagedCluster(
     ),
 )
 
+# retrieve the admin credentials for the cluster
 admin_credentials = (
     azure_native.containerservice.list_managed_cluster_admin_credentials_output(
         resource_group_name=resource_group.name, resource_name=cluster.name
     )
 )
 
+# grant the 'contributor' role to the identity on the resource group
 role_assignment = azure_native.authorization.RoleAssignment(
     "roleAssignment",
     principal_id=identity.principal_id,
@@ -57,6 +65,7 @@ role_assignment = azure_native.authorization.RoleAssignment(
     scope=resource_group.id,
 )
 
+# export the kubeconfig
 pulumi.export(
     "kubeconfig",
     admin_credentials.apply(
