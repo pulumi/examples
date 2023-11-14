@@ -125,9 +125,9 @@ func TestPolicyPacks(t *testing.T) {
 	err := npmInstallCmd.Run()
 	assert.NoError(t, err)
 
-	benchmark := bench("aws-py-s3-folder", "aws", "go", "go")
+	benchmark := bench("policy-test", "aws", "go", "go")
 	opts := integration.ProgramTestOptions{
-		Dir:                    path.Join(getCwd(t), "..", "..", benchmark.Name),
+		Dir:                    path.Join(getCwd(t), "..", "..", "aws-go-s3-folder"),
 		UpdateCommandlineFlags: []string{fmt.Sprintf("--policy-pack=%s", policyPack)},
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 			assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
