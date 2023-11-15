@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-gcp/sdk/v5/go/gcp/cloudfunctions"
-	"github.com/pulumi/pulumi-gcp/sdk/v5/go/gcp/storage"
+	"github.com/pulumi/pulumi-gcp/sdk/v7/go/gcp/cloudfunctions"
+	"github.com/pulumi/pulumi-gcp/sdk/v7/go/gcp/storage"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 

@@ -1,7 +1,7 @@
 from pulumi_gcp import storage, cloudfunctions
 from pulumi import export, asset
 
-bucket = storage.Bucket("bucket")
+bucket = storage.Bucket("bucket", location="US")
 
 py_bucket_object = storage.BucketObject(
     "python-zip",
