@@ -8,7 +8,7 @@ DESIRED_DEPS = {
     'pulumi-azure-native': 'pulumi-azure-native>=2.0.0,<3.0.0',
     'pulumi-azuread': 'pulumi-azuread>=4.3.0,<5.0.0',
     'pulumi-digitalocean': 'pulumi-digitalocean>=4.4.1,<5.0.0',
-    'pulumi-docker': 'pulumi-docker=4.5.0b0',
+    'pulumi-docker': 'pulumi-docker==4.5.0b0',
     'pulumi-equinix': 'pulumi-equinix>=0.0.0,<1.0.0',
     'pulumi-gcp': 'pulumi-gcp>=7.0.0,<8.0.0',
     'pulumi-kubernetes': 'pulumi-kubernetes>=3.4.0,<4.0.0',
