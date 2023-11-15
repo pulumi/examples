@@ -15,7 +15,7 @@ To deploy your infrastructure, follow the below steps.
 
 ### Steps
 
-After cloning this repo, from this working directory, run these commands:
+After [cloning](https://github.com/pulumi/examples#checking-out-a-single-example) this repo, from this working directory, run these commands:
 
 1. Create a new stack, which is an isolated deployment target for this example:
 
@@ -34,7 +34,7 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi up
     ```
 
-1. After 3-4 minutes, your cluster will be ready, and the kubeconfig YAML you'll use to connect to the cluster will be available as an output. You can save this kubeconfig to a file like so:
+1. After 3-4 minutes, your cluster will be ready, and the kubeconfig YAML you'll use to connect to the cluster will be available as an [Output](https://www.pulumi.com/docs/concepts/inputs-outputs/#outputs). You can save this kubeconfig to a file like so:
 
     ```bash
     $ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml

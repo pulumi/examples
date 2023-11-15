@@ -30,7 +30,7 @@ func main() {
 			return err
 		}
 
-		// craete a user assigned identity to use for the cluster
+		// create a user assigned identity to use for the cluster
 		identity, err := managedidentity.NewUserAssignedIdentity(ctx, "identity", &managedidentity.UserAssignedIdentityArgs{
 			ResourceGroupName: resourceGroup.Name,
 		})

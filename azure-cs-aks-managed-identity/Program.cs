@@ -18,7 +18,7 @@ return await Deployment.RunAsync(() =>
         RsaBits = 4096,
     });
 
-    // craete a user assigned identity to use for the cluster
+    // create a user assigned identity to use for the cluster
     var identity = new AzureNative.ManagedIdentity.UserAssignedIdentity("identity", new()
     {
         ResourceGroupName = resourceGroup.Name,
