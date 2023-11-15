@@ -1,14 +1,10 @@
 {
     "name": "k8s-ts-wait",
     "main": "index.ts",
-    "devDependencies": {
-        "@types/node": "^16"
-    },
     "dependencies": {
-        "@kubernetes/client-node": "^0.18.1",
-        "@pulumi/kubernetes": "^3.0.0",
-        "@pulumi/pulumi": "^3.0.0",
-        "install": "^0.13.0",
-        "npm": "^9.7.2"
+        "@kubernetes/client-node": "^0.20.0",
+        "@pulumi/kubernetes": "^4.5.4",
+        "@pulumi/pulumi": "^3.93.0",
+        "node": "^21.1.0"
     }
 }
