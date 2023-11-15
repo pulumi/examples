@@ -16,7 +16,7 @@ const repo = new awsx.ecr.Repository("repo", {
 });
 
 // Build and publish a Docker image to a private ECR registry.
-const img = new awsx.ecr.Image("app-img", { repositoryUrl: repo.url, path: "./app" });
+const img = new awsx.ecr.Image("app-img", { repositoryUrl: repo.url, context: "./app" });
 
 // Create a Fargate service task that can scale out.
 const appService = new awsx.classic.ecs.FargateService("app-svc", {

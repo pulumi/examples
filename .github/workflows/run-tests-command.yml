@@ -169,8 +169,7 @@ jobs:
       uses: google-github-actions/auth@v0
       with:
         service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
-        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
-          }}/locations/global/workloadIdentityPools/${{
+        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{
           env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
           env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
     - name: Setup gcloud auth
@@ -199,6 +198,11 @@ jobs:
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Go Dependencies
       run: make ensure
+    - name: Install gotestfmt
+      uses: GoTestTools/gotestfmt-action@v2
+      with:
+        version: v2.5.0
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Setup Config
       run: >-
         mkdir -p "$HOME/.kube/"
@@ -317,8 +321,7 @@ jobs:
       uses: google-github-actions/auth@v0
       with:
         service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
-        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
-          }}/locations/global/workloadIdentityPools/${{
+        workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{
           env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
           env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
     - name: Setup gcloud auth
@@ -347,6 +350,11 @@ jobs:
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
       run: make ensure
+    - name: Install gotestfmt
+      uses: GoTestTools/gotestfmt-action@v2
+      with:
+        version: v2.5.0
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Running ${{ matrix.clouds }}${{ matrix.languages }} Tests
       run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
     strategy:

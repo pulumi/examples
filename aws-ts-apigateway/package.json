@@ -2,8 +2,10 @@
     "name": "aws-ts-apigateway",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "^5.0.0",
-        "@pulumi/awsx": "^0.40.0",
+        "@aws-sdk/client-dynamodb": "^3.423.0",
+        "@aws-sdk/lib-dynamodb": "^3.423.0",
+        "@pulumi/aws": "^6.0.0",
+        "@pulumi/aws-apigateway": "^2.0.0",
         "@pulumi/pulumi": "^3.0.0"
     }
 }

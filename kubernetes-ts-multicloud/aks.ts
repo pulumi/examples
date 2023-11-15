@@ -16,7 +16,6 @@ import * as azure from "@pulumi/azure";
 import * as azuread from "@pulumi/azuread";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-import * as random from "@pulumi/random";
 import * as tls from "@pulumi/tls";
 
 export class AksCluster extends pulumi.ComponentResource {
@@ -27,12 +26,6 @@ export class AksCluster extends pulumi.ComponentResource {
     constructor(name: string,
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("examples:kubernetes-ts-multicloud:AksCluster", name, {}, opts);
-
-        // Generate a strong password for the Service Principal.
-        const password = new random.RandomPassword("password", {
-            length: 20,
-            special: true,
-        }, {parent: this}).result;
 
         // Create an SSH public key that will be used by the Kubernetes cluster.
         // Note: We create one here to simplify the demo, but a production deployment would probably pass
@@ -49,7 +42,6 @@ export class AksCluster extends pulumi.ComponentResource {
         }, {parent: this});
         const adSpPassword = new azuread.ServicePrincipalPassword("aksSpPassword", {
             servicePrincipalId: adSp.id,
-            value: password,
             endDate: "2099-01-01T00:00:00Z",
         }, {parent: this});
 
@@ -98,7 +90,7 @@ export class AksCluster extends pulumi.ComponentResource {
                 clientSecret: adSpPassword.value,
             },
             kubernetesVersion: "1.16.9",
-            roleBasedAccessControl: {enabled: true},
+            roleBasedAccessControlEnabled: true,
             networkProfile: {
                 networkPlugin: "azure",
                 dnsServiceIp: "10.2.2.254",
