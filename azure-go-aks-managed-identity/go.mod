@@ -1,4 +1,4 @@
-module azure-yaml-aks-managed-identity
+module azure-go-aks-managed-identity
 
 go 1.20
 
