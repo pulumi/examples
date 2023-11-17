@@ -93,6 +93,19 @@ You can configure more granular access control by adding the `sub` claim to the 
     ]
 }
 ```
+
+{{< notes type="warning" >}}
+
+If you are integrating Pulumi ESC with Pulumi IaC, using the specific name of the ESC environment in the subject identifier will not work at this time. There is a [known issue](https://github.com/pulumi/pulumi/issues/14509) with the value of the subject identifier that is sent to the provider from Pulumi.
+
+The steps in this guide will work for Pulumi ESC if you use the following syntax instead:
+
+`pulumi:environments:org:<your-pulumi-org>:env:<yaml>`
+
+Make sure to replace `<your-pulumi-org>` with the name of your Pulumi organization and use the literal value of `<yaml>` as shown above.
+
+{{< /notes >}}
+
 Once you are done, you can destroy all of the resources as well as the stack:
 
 ```bash
