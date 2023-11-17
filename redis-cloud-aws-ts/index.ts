@@ -1,7 +1,8 @@
+// Copyright 2016-2023, Pulumi Corporation.  All rights reserved.
+import * as aws from "@pulumi/aws";
+import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
 import * as rediscloud from "@rediscloud/pulumi-rediscloud";
-import * as awsx from "@pulumi/awsx";
-import * as aws from "@pulumi/aws";
 
 const config = new pulumi.Config();
 
@@ -10,7 +11,7 @@ const region = aws.config.region ?? "";
 const getPreferredAz = function () {
   const value = config.get("preferredAz");
 
-  if (region.toLowerCase() != "us-east-1" && !value) {
+  if (region.toLowerCase() !== "us-east-1" && !value) {
     throw new Error("preferredAz must be defined if AWS region is not us-east-1.");
   }
 
@@ -71,8 +72,8 @@ export const publicEndpoint = database.publicEndpoint;
 const vpc = new awsx.ec2.Vpc("vpc", {
   cidrBlock: "10.1.0.0/16", // Cannot conflict with the Redis CIDR block,
   natGateways: {
-    strategy: "Single"
-  }
+    strategy: "Single",
+  },
 });
 
 const callerIdentity = aws.getCallerIdentity();
@@ -85,9 +86,10 @@ const peering = new rediscloud.SubscriptionPeering("redis-peering", {
   vpcCidr: vpc.vpc.cidrBlock,
 });
 
+/* tslint:disable:no-unused-expression */
 new aws.ec2.VpcPeeringConnectionAccepter("aws-peering-accepter", {
   vpcPeeringConnectionId: peering.awsPeeringId,
-  autoAccept: true
+  autoAccept: true,
 });
 
 const sg = new aws.ec2.SecurityGroup("instance-sg", {
@@ -99,7 +101,7 @@ const sg = new aws.ec2.SecurityGroup("instance-sg", {
     protocol: "-1",
     fromPort: 0,
     toPort: 0,
-  }]
+  }],
 });
 
 const instanceRole = new aws.iam.Role("instance-role", {
@@ -112,7 +114,7 @@ const instanceRole = new aws.iam.Role("instance-role", {
       },
       "Action": "sts:AssumeRole",
     },
-  })
+  }),
 });
 
 new aws.iam.RolePolicyAttachment("instance-role-attachment", {
@@ -130,21 +132,21 @@ const amazonLinux2 = aws.ec2.getAmiOutput({
   filters: [
     { name: "name", values: ["amzn2-ami-hvm-*-x86_64-gp2"] },
     { name: "owner-alias", values: ["amazon"] },
-  ]
+  ],
 });
 
-const instance = new aws.ec2.Instance("instance", {
+new aws.ec2.Instance("instance", {
   ami: amazonLinux2.id,
   instanceType: "t3.micro",
   vpcSecurityGroupIds: [sg.id],
   subnetId: vpc.privateSubnetIds[0],
   tags: {
-    Name: "pulumi-redis-cloud-tester"
+    Name: "pulumi-redis-cloud-tester",
   },
   iamInstanceProfile: instanceProfile.name,
   userData: `#!/bin/bash
   sudo amazon-linux-extras install redis6
-  `
+  `,
 });
 
 vpc.privateSubnetIds.apply(ids => {
