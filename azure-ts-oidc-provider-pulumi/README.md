@@ -46,7 +46,9 @@ Next, to deploy the application and its infrastructure, follow these steps:
 
 This next section will walk you through validating your OIDC configuration using [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/).
 
-Start by [creating a new Pulumi ESC environment](https://www.pulumi.com/docs/pulumi-cloud/esc/get-started/#create-an-environment). Then, copy the template definition from the output in the CLI and paste it into your environment. Save your environment file and run the `pulumi env open <your-pulumi-org>/<your-environment>` command in the CLI. You should see output similar to the following:
+1. Start by [creating a new Pulumi ESC environment](https://www.pulumi.com/docs/pulumi-cloud/esc/get-started/#create-an-environment).
+2. Then, copy the template definition from the output in the CLI and paste it into your environment.
+3. Save your environment file and run the `pulumi env open <your-pulumi-org>/<your-environment>` command in the CLI. You should see output similar to the following:
 
 ```bash
 $ pulumi env open myOrg/myEnvironment
@@ -63,8 +65,6 @@ $ pulumi env open myOrg/myEnvironment
   },
   "environmentVariables": {
     "ARM_CLIENT_ID": "b537....",
-    "ARM_OIDC_REQUEST_TOKEN": "eeyJh....",
-    "ARM_OIDC_REQUEST_URL": "https://api.pulumi.com/oidc",
     "ARM_OIDC_TOKEN": "eyJh....",
     "ARM_SUBSCRIPTION_ID": "0282....",
     "ARM_TENANT_ID": "7061....",
@@ -72,6 +72,11 @@ $ pulumi env open myOrg/myEnvironment
   }
 }
 ```
+
+If your identity provider does not offer an ID token directly but it does offer a way to exchange a local bearer token for an ID token, you will need to replace the `ARM_OIDC_TOKEN` environment variable with both of the following:
+
+- `ARM_OIDC_REQUEST_TOKEN`
+- `ARM_OIDC_REQUEST_URL`
 
 ## Clean-Up Resources
 

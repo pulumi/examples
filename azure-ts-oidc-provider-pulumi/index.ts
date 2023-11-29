@@ -78,10 +78,17 @@ function createYamlStructure(args: [string, string, string]) {
                 ARM_USE_OIDC: 'true',
                 ARM_CLIENT_ID: '${azure.login.clientId}',
                 ARM_TENANT_ID: '${azure.login.tenantId}',
-                ARM_OIDC_REQUEST_TOKEN: '${azure.login.oidc.token}',
+                // ARM_OIDC_REQUEST_TOKEN: '${azure.login.oidc.token}',
+                // ARM_OIDC_REQUEST_URL: 'https://api.pulumi.com/oidc',
+                /*
+                You must set either the ARM_OIDC_REQUEST_TOKEN and ARM_OIDC_REQUEST_URL
+                variables OR the ARM_OIDC_TOKEN variable. Use former pair of variables
+                if your identity provider does not offer an ID token directly
+                but it does offer a way to exchange a local bearer token for an
+                ID token.
+                */
                 ARM_OIDC_TOKEN: '${azure.login.oidc.token}',
-                ARM_SUBSCRIPTION_ID: '${azure.login.subscriptionId}',
-                ARM_OIDC_REQUEST_URL: 'https://api.pulumi.com/oidc'
+                ARM_SUBSCRIPTION_ID: '${azure.login.subscriptionId}'
             }
         }
     };

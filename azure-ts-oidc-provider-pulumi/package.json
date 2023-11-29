@@ -2,7 +2,7 @@
     "name": "azure-ts",
     "main": "index.ts",
     "devDependencies": {
-        "@types/node": "^16.18.61",
+        "@types/node": "^18",
         "typescript": "^4.9.5"
     },
     "dependencies": {
