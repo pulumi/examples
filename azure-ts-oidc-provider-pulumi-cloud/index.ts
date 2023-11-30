@@ -1,13 +1,14 @@
 // Copyright 2016-2021, Pulumi Corporation.
 import { randomInt } from "crypto";
-import * as authorization from "@pulumi/azure-native/authorization";
 import * as azuread from "@pulumi/azuread";
-import * as pulumi from "@pulumi/pulumi";
+import * as authorization from "@pulumi/azure-native/authorization";
 import * as resources from "@pulumi/azure-native/resources";
+import * as pulumi from "@pulumi/pulumi";
 import * as yaml from "yaml";
 
+
 // Generate a random number
-const random_number = randomInt(1000, 9999);
+const randomNumber = randomInt(1000, 9999);
 
 const issuer = "https://api.pulumi.com/oidc";
 
@@ -22,7 +23,7 @@ const azSubscription = azureConfig.then(config => config.subscriptionId);
 const tenantId = azureConfig.then(config => config.tenantId);
 
 // Create a Microsoft Entra Application
-const application = new azuread.Application(`pulumi-oidc-app-reg-${random_number}`, {
+const application = new azuread.Application(`pulumi-oidc-app-reg-${randomNumber}`, {
     displayName: "pulumi-environments-oidc-app",
     signInAudience: "AzureADMyOrg",
 });
@@ -34,7 +35,7 @@ const subject = pulumi.interpolate`pulumi:environments:org:${audience}:env:<yaml
 
 const federatedIdentityCredential = new azuread.ApplicationFederatedIdentityCredential("federatedIdentityCredential", {
     applicationId: application.objectId.apply(objectId => `/applications/${objectId}`),
-    displayName: `pulumi-env-oidc-fic-${random_number}`,
+    displayName: `pulumi-env-oidc-fic-${randomNumber}`,
     description: "Federated credentials for Pulumi ESC",
     audiences: [audience],
     issuer: issuer,
