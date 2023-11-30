@@ -1,11 +1,10 @@
-// Copyright 2016-2021, Pulumi Corporation.
-import { randomInt } from "crypto";
+// Copyright 2023, Pulumi Corporation.
 import * as azuread from "@pulumi/azuread";
 import * as authorization from "@pulumi/azure-native/authorization";
 import * as resources from "@pulumi/azure-native/resources";
 import * as pulumi from "@pulumi/pulumi";
+import { randomInt } from "crypto";
 import * as yaml from "yaml";
-
 
 // Generate a random number
 const randomNumber = randomInt(1000, 9999);
