@@ -1,0 +1,14 @@
+{
+    "name": "azure-ts",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^18",
+        "typescript": "^4.9.5"
+    },
+    "dependencies": {
+        "@pulumi/azure-native": "^2.18.0",
+        "@pulumi/azuread": "^5.45.0",
+        "@pulumi/pulumi": "^3.94.1",
+        "yaml": "^2.3.4"
+    }
+}

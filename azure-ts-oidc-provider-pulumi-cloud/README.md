@@ -16,7 +16,7 @@ Clone [the examples repo](https://github.com/pulumi/examples) and navigate to th
 
 ```bash
 git clone https://github.com/pulumi/examples.git
-cd examples/azure-py-oidc-provider-pulumi-cloud
+cd examples/azure-ts-oidc-provider-pulumi-cloud
 ```
 
 Next, to deploy the application and its infrastructure, follow these steps:
@@ -37,8 +37,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
 1. Install requirements.
 
     ```bash
-    python3 -m venv venv
-    venv/bin/pip install -r requirements.txt
+    npm install
     ```
 
 1. Run `pulumi up -y`. Once the program completes, it will output a YAML template for you to use in the next step. 
