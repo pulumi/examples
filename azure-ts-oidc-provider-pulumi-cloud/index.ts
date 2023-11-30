@@ -1,13 +1,13 @@
-import * as pulumi from "@pulumi/pulumi";
-import * as azuread from "@pulumi/azuread";
-import * as authorization from "@pulumi/azure-native/authorization";
-import * as resources from "@pulumi/azure-native/resources";
-import * as managedidentity from "@pulumi/azure-native/managedidentity";
-import * as yaml from "yaml";
+// Copyright 2016-2021, Pulumi Corporation.
 import { randomInt } from "crypto";
+import * as authorization from "@pulumi/azure-native/authorization";
+import * as azuread from "@pulumi/azuread";
+import * as pulumi from "@pulumi/pulumi";
+import * as resources from "@pulumi/azure-native/resources";
+import * as yaml from "yaml";
 
 // Generate a random number
-const number = randomInt(1000, 9999);
+const random_number = randomInt(1000, 9999);
 
 const issuer = "https://api.pulumi.com/oidc";
 
@@ -22,9 +22,9 @@ const azSubscription = azureConfig.then(config => config.subscriptionId);
 const tenantId = azureConfig.then(config => config.tenantId);
 
 // Create a Microsoft Entra Application
-const application = new azuread.Application(`pulumi-oidc-app-reg-${number}`, {
-    displayName: 'pulumi-environments-oidc-app',
-    signInAudience: 'AzureADMyOrg',
+const application = new azuread.Application(`pulumi-oidc-app-reg-${random_number}`, {
+    displayName: "pulumi-environments-oidc-app",
+    signInAudience: "AzureADMyOrg",
 });
 
 // Create Federated Credentials
@@ -34,22 +34,22 @@ const subject = pulumi.interpolate`pulumi:environments:org:${audience}:env:<yaml
 
 const federatedIdentityCredential = new azuread.ApplicationFederatedIdentityCredential("federatedIdentityCredential", {
     applicationId: application.objectId.apply(objectId => `/applications/${objectId}`),
-    displayName: `pulumi-env-oidc-fic-${number}`,
+    displayName: `pulumi-env-oidc-fic-${random_number}`,
     description: "Federated credentials for Pulumi ESC",
     audiences: [audience],
     issuer: issuer,
-    subject: subject
+    subject: subject,
 });
 
 // Create a Service Principal
-const servicePrincipal = new azuread.ServicePrincipal('myserviceprincipal', {
+const servicePrincipal = new azuread.ServicePrincipal("myserviceprincipal", {
     clientId: application.applicationId,
 });
 
-// Assign the 'Contributor' role to the Service principal
+// Assign the "Contributor" role to the Service principal
 const CONTRIBUTOR = pulumi.interpolate`/subscriptions/${azSubscription}/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c`;
 
-const roleAssignment = new authorization.RoleAssignment('myroleassignment', {
+const roleAssignment = new authorization.RoleAssignment("myroleassignment", {
     roleDefinitionId: CONTRIBUTOR,
     principalId: servicePrincipal.id,
     principalType: "ServicePrincipal",
@@ -66,20 +66,20 @@ function createYamlStructure(args: [string, string, string]) {
         values: {
             azure: {
                 login: {
-                    'fn::open::azure-login': {
+                    "fn::open::azure-login": {
                         clientId,
                         tenantId,
                         subscriptionId,
-                        oidc: true
-                    }
-                }
+                        oidc: true,
+                    },
+                },
             },
-            environmentVariables: { 
-                ARM_USE_OIDC: 'true',
-                ARM_CLIENT_ID: '${azure.login.clientId}',
-                ARM_TENANT_ID: '${azure.login.tenantId}',
-                // ARM_OIDC_REQUEST_TOKEN: '${azure.login.oidc.token}',
-                // ARM_OIDC_REQUEST_URL: 'https://api.pulumi.com/oidc',
+            environmentVariables: {
+                ARM_USE_OIDC: "true",
+                ARM_CLIENT_ID: "${azure.login.clientId}",
+                ARM_TENANT_ID: "${azure.login.tenantId}",
+                // ARM_OIDC_REQUEST_TOKEN: "${azure.login.oidc.token}",
+                // ARM_OIDC_REQUEST_URL: "https://api.pulumi.com/oidc",
                 /*
                 You must set either the ARM_OIDC_REQUEST_TOKEN and ARM_OIDC_REQUEST_URL
                 variables OR the ARM_OIDC_TOKEN variable. Use the former pair of variables
@@ -87,10 +87,10 @@ function createYamlStructure(args: [string, string, string]) {
                 but it does offer a way to exchange a local bearer token for an
                 ID token.
                 */
-                ARM_OIDC_TOKEN: '${azure.login.oidc.token}',
-                ARM_SUBSCRIPTION_ID: '${azure.login.subscriptionId}'
-            }
-        }
+                ARM_OIDC_TOKEN: "${azure.login.oidc.token}",
+                ARM_SUBSCRIPTION_ID: "${azure.login.subscriptionId}",
+            },
+        },
     };
 }
 
