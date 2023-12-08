@@ -84,11 +84,9 @@ def create_yaml_structure(args):
                     }
                 }
             },
-            'pulumiConfig': { 
-                'gcp:accessToken': '${gcp.login.accessToken}'
-            },
             'environmentVariables': { 
-                'GOOGLE_PROJECT': '${gcp.login.project}'
+                'GOOGLE_PROJECT': '${gcp.login.project}',
+                'CLOUDSDK_AUTH_ACCESS_TOKEN': '${gcp.login.accessToken}'
             }
         }
     }
