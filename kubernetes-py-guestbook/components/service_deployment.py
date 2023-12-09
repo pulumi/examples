@@ -81,5 +81,5 @@ class ServiceDeployment(ComponentResource):
                 self.ip_address = self.service.spec.apply(lambda s: s.cluster_ip)
             else:
                 ingress=self.service.status.apply(lambda s: s.load_balancer.ingress[0])
-                self.ip_address = ingress.apply(lambda i: ingress.ip or ingress.hostname or "")
+                self.ip_address = ingress.apply(lambda i: i.ip or i.hostname or "")
         self.register_outputs({})
