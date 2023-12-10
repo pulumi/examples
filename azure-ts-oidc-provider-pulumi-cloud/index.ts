@@ -1,9 +1,9 @@
 // Copyright 2023, Pulumi Corporation.
 import * as authorization from "@pulumi/azure-native/authorization";
-import * as azuread from "@pulumi/azuread";
-import * as pulumi from "@pulumi/pulumi";
-import { randomInt } from "crypto";
 import * as resources from "@pulumi/azure-native/resources";
+import * as azuread from "@pulumi/azuread";
+import { randomInt } from "crypto";
+import * as pulumi from "@pulumi/pulumi";
 import * as yaml from "yaml";
 
 // Generate a random number
