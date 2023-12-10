@@ -1,6 +1,6 @@
 // Copyright 2023, Pulumi Corporation.
-import * as azuread from "@pulumi/azuread";
 import * as authorization from "@pulumi/azure-native/authorization";
+import * as azuread from "@pulumi/azuread";
 import * as resources from "@pulumi/azure-native/resources";
 import * as pulumi from "@pulumi/pulumi";
 import { randomInt } from "crypto";
