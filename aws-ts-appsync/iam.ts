@@ -21,7 +21,7 @@ export function createIamRole(name: string, table: aws.dynamodb.Table) {
         policy: aws.iam.getPolicyDocumentOutput({
             statements: [{
                 actions: ["dynamodb:PutItem", "dynamodb:GetItem"],
-                resources: [table.arn],
+                resources: [table.arn, pulumi.interpolate`${table.arn}/*`],
                 effect: "Allow",
             }],
         }).json,
