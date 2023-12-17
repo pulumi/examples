@@ -38,7 +38,7 @@ export class AksCluster extends pulumi.ComponentResource {
         // Create the AD service principal for the K8s cluster.
         const adApp = new azuread.Application("aks", {displayName: `${name}-ad`}, {parent: this});
         const adSp = new azuread.ServicePrincipal("aksSp", {
-            applicationId: adApp.applicationId,
+            clientId: adApp.clientId,
         }, {parent: this});
         const adSpPassword = new azuread.ServicePrincipalPassword("aksSpPassword", {
             servicePrincipalId: adSp.id,
@@ -86,16 +86,15 @@ export class AksCluster extends pulumi.ComponentResource {
                 },
             },
             servicePrincipal: {
-                clientId: adApp.applicationId,
+                clientId: adApp.clientId,
                 clientSecret: adSpPassword.value,
             },
-            kubernetesVersion: "1.16.9",
+            kubernetesVersion: "1.27",
             roleBasedAccessControlEnabled: true,
             networkProfile: {
                 networkPlugin: "azure",
                 dnsServiceIp: "10.2.2.254",
                 serviceCidr: "10.2.2.0/24",
-                dockerBridgeCidr: "172.17.0.1/16",
             },
         }, {parent: this});
 
@@ -107,6 +106,8 @@ export class AksCluster extends pulumi.ComponentResource {
         this.staticAppIP = new azure.network.PublicIp("staticAppIP", {
             resourceGroupName: this.cluster.nodeResourceGroup,
             allocationMethod: "Static",
+            sku: "Standard", // By default, standard load balancer is used when you create a new cluster instead of basic
+            location: resourceGroup.location,
         }, {parent: this}).ipAddress;
 
         this.registerOutputs();
