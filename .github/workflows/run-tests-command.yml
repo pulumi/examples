@@ -64,6 +64,8 @@ jobs:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Install Pulumi CLI
       uses: pulumi/actions@v4
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: dotnet test
@@ -93,6 +95,8 @@ jobs:
         go-version: ${{matrix.goversion}}
     - name: Install Pulumi CLI
       uses: pulumi/actions@v4
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: go test
@@ -194,6 +198,8 @@ jobs:
         repository: pulumi/scripts
     - name: Install Pulumi CLI
       uses: pulumi/actions@v4
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Go Dependencies
@@ -346,6 +352,8 @@ jobs:
         repository: pulumi/scripts
     - name: Install Pulumi CLI
       uses: pulumi/actions@v4
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
@@ -402,6 +410,8 @@ jobs:
         pip3 install pipenv
     - name: Install Pulumi CLI
       uses: pulumi/actions@v4
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: |-
@@ -525,6 +535,8 @@ jobs:
         repository: pulumi/scripts
     - name: Install Pulumi CLI
       uses: pulumi/actions@v4
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Destroy test infra
@@ -630,6 +642,8 @@ jobs:
         repository: pulumi/scripts
     - name: Install Pulumi CLI
       uses: pulumi/actions@v4
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Create Test Infrastructure
@@ -662,6 +676,8 @@ jobs:
         registry-url: https://registry.npmjs.org
     - name: Install Pulumi CLI
       uses: pulumi/actions@v4
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: |-
