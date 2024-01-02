@@ -63,7 +63,7 @@ jobs:
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
       with:
         pulumi-version: dev
     - name: Print CLI version
@@ -94,7 +94,7 @@ jobs:
       with:
         go-version: ${{matrix.goversion}}
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
       with:
         pulumi-version: dev
     - name: Print CLI version
@@ -197,7 +197,7 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
       with:
         pulumi-version: dev
     - name: Print CLI version
@@ -351,7 +351,7 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
       with:
         pulumi-version: dev
     - name: Print CLI version
@@ -409,7 +409,7 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
       with:
         pulumi-version: dev
     - name: Print CLI version
@@ -534,7 +534,7 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
       with:
         pulumi-version: dev
     - name: Print CLI version
@@ -641,7 +641,7 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
       with:
         pulumi-version: dev
     - name: Print CLI version
@@ -675,7 +675,7 @@ jobs:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
       with:
         pulumi-version: dev
     - name: Print CLI version
