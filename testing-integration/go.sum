@@ -1544,6 +1544,8 @@ github.com/pulumi/pulumi/sdk/v3 v3.33.3-0.20220601044734-8c3b8ab96f3e/go.mod h1:
 github.com/pulumi/pulumi/sdk/v3 v3.34.0 h1:9NaloshJrB5bWT/xBHBNHWG926sVOmrKe9f9GybSRss=
 github.com/pulumi/pulumi/sdk/v3 v3.34.0/go.mod h1:sF9VfTkwRXYNk/gCR7ICd79VDC8WcsyVq37/sb8sV5A=
 github.com/pulumi/pulumi/sdk/v3 v3.99.0/go.mod h1:wFM/6iAMlidgLDSF9QU+p3P+B+vg/xloFyVeZrVwA1w=
+github.com/pulumi/pulumi/sdk/v3 v3.100.0 h1:2XY5+mNxn/cpVEVx06N+gO7Ub9wDoOP0WxLvune4DJo=
+github.com/pulumi/pulumi/sdk/v3 v3.100.0/go.mod h1:SB8P0BEGBRaONBxwoTjUFhGPLU5P3+MHF6/tGitlHOM=
 github.com/rakyll/embedmd v0.0.0-20171029212350-c8060a0752a2/go.mod h1:7jOTMgqac46PZcF54q6l2hkLEG8op93fZu61KmxWDV4=
 github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
 github.com/rivo/uniseg v0.2.0 h1:S1pD9weZBuJdFmowNwbpi7BJ8TNftyUImj/0WQi72jY=
@@ -2049,6 +2051,7 @@ golang.org/x/net v0.6.0/go.mod h1:2Tu9+aMcznHK/AK1HMvgo6xiTLG5rD5rZLDS+rp2Bjs=
 golang.org/x/net v0.7.0 h1:rJrUqqhjsgNp7KqAIc25s9pZnjU7TUcSY7HcVZjdn1g=
 golang.org/x/net v0.7.0/go.mod h1:2Tu9+aMcznHK/AK1HMvgo6xiTLG5rD5rZLDS+rp2Bjs=
 golang.org/x/net v0.18.0/go.mod h1:/czyP5RqHAH4odGYxBJ1qz0+CE5WZ+2j1YgoEo8F2jQ=
+golang.org/x/net v0.19.0/go.mod h1:CfAk/cbD4CthTvqiEl8NpboMuiuOYsAr/7NOjZJtv1U=
 golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be/go.mod h1:N/0e6XlmueqKjAGxoOufVs8QHGRruUQn6yWY3a++T0U=
 golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
 golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
