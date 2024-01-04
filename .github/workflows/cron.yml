@@ -175,6 +175,11 @@ jobs:
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Go Dependencies
       run: make ensure
+    - name: Install gotestfmt
+      uses: GoTestTools/gotestfmt-action@v2
+      with:
+        version: v2.5.0
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Setup Config
       run: >-
         mkdir -p "$HOME/.kube/"
