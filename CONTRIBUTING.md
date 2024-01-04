@@ -20,7 +20,7 @@ The cloud prefix can be one of:
 - `digitalocean` for [DigitalOcean](https://github.com/pulumi/pulumi-digitalocean/)
 - `f5bigip` for [F5's BIG-IP](https://github.com/pulumi/pulumi-f5bigip/)
 - `cloud` for [Pulumi's cross-cloud programming framework](https://github.com/pulumi/pulumi-cloud), which is currently in preview
-- Any [cloud provider](https://www.pulumi.com/docs/reference/pkg/#cloud-providers) with a dedicated Pulumi package
+- Any [cloud provider](https://www.pulumi.com/registry) with a dedicated Pulumi package
 
 The language prefix can be one of:
 - `ts` for TypeScript
@@ -69,4 +69,3 @@ Each example should include a README to give the readers a good walkthrough. It 
 See our [example README template](example-readme-template.md.txt) for detailed explanations on each section.
 
 > The contribution guidelines have been authored in September 2019 and are subject to further refinements and tweaks. Examples prior to September 2019 do not necessarily conform to these guidelines.
-
