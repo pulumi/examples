@@ -75,7 +75,7 @@ jobs:
       fail-fast: false
       matrix:
         goversion:
-        - 1.19.x
+        - 1.20.x
         platform:
         - ubuntu-latest
         source-dir:
@@ -186,13 +186,13 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.20.x
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   providers:
     name: smoke-test-cli-on-providers
     permissions:
@@ -301,7 +301,7 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.20.x
         languages:
         - Cs
         - Js
@@ -309,11 +309,11 @@ jobs:
         - Py
         - Fs
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   python-unit-testing:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
@@ -344,7 +344,7 @@ jobs:
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
         source-dir:
         - testing-unit-py
   test-infra-destroy:
@@ -444,13 +444,13 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.20.x
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   test-infra-setup:
     name: test-infra-setup
     permissions:
@@ -547,13 +547,13 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.20.x
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   ts-unit-testing:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
@@ -580,7 +580,7 @@ jobs:
       fail-fast: false
       matrix:
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         source-dir:

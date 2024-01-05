@@ -101,7 +101,7 @@ jobs:
       fail-fast: false
       matrix:
         goversion:
-        - 1.19.x
+        - 1.20.x
         platform:
         - ubuntu-latest
         source-dir:
@@ -216,13 +216,13 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.20.x
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   linting:
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
@@ -254,7 +254,7 @@ jobs:
       fail-fast: false
       matrix:
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         yarn-version:
@@ -371,7 +371,7 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.20.x
         languages:
         - Cs
         - Js
@@ -379,11 +379,11 @@ jobs:
         - Py
         - Fs
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   python-unit-testing:
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
@@ -416,7 +416,7 @@ jobs:
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
         source-dir:
         - testing-unit-py
   status-checks:
@@ -535,13 +535,13 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.20.x
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   test-infra-setup:
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
@@ -640,13 +640,13 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.20.x
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   ts-unit-testing:
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
@@ -675,7 +675,7 @@ jobs:
       fail-fast: false
       matrix:
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         source-dir:
