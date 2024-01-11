@@ -74,11 +74,6 @@ $ pulumi env open myOrg/myEnvironment
 }
 ```
 
-If your identity provider does not offer an ID token directly but it does offer a way to exchange a local bearer token for an ID token, you will need to replace the `ARM_OIDC_TOKEN` environment variable with both of the following:
-
-- `ARM_OIDC_REQUEST_TOKEN`
-- `ARM_OIDC_REQUEST_URL`
-
 ## Clean-Up Resources
 
 Once you are done, you can destroy all of the resources as well as the stack:
