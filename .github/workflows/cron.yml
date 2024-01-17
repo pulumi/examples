@@ -43,7 +43,9 @@ jobs:
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: dotnet test
@@ -70,7 +72,9 @@ jobs:
       with:
         go-version: ${{matrix.goversion}}
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: go test
@@ -170,7 +174,9 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Go Dependencies
@@ -314,7 +320,9 @@ jobs:
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
     - name: Install Latest Stable Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Install Testing Dependencies
       run: make ensure
@@ -369,7 +377,9 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: |-
@@ -473,7 +483,9 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Destroy test infra
@@ -576,7 +588,9 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Create Test Infrastructure
@@ -606,7 +620,9 @@ jobs:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: |-
