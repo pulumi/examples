@@ -1,27 +1,27 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
+import * as apigateway from "@pulumi/aws-apigateway";
 import * as awsx from "@pulumi/awsx";
+import * as pulumi from "@pulumi/pulumi";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import * as cp from "child_process";
 import * as fs from "fs";
-import * as apigateway from "@pulumi/aws-apigateway";
-import {APIGatewayProxyEvent, APIGatewayProxyResult} from "aws-lambda";
 
 export = async () => {
 
     // VPC
-    const vpc = new awsx.ec2.Vpc("vpc", { 
+    const vpc = new awsx.ec2.Vpc("vpc", {
         subnetStrategy: "Auto",
-        enableDnsHostnames: true
+        enableDnsHostnames: true,
     });
     const subnetIds = await vpc.publicSubnetIds;
 
     // EFS
     const filesystem = new aws.efs.FileSystem("filesystem");
-    
+
     const targets: pulumi.Output<aws.efs.MountTarget[]> = subnetIds.apply(ids => {
-        let targetArray: aws.efs.MountTarget[] = [];
+        const targetArray: aws.efs.MountTarget[] = [];
         for (let i = 0; i < ids.length; i++) {
             targetArray.push(new aws.efs.MountTarget(`fs-mount-${i}`, {
                 fileSystemId: filesystem.id,
@@ -105,8 +105,8 @@ export = async () => {
             fileSystemId: filesystem.id,
             authorizationConfig: { accessPointId: ap.id },
             transitEncryption: "ENABLED",
-        }
-    }
+        },
+    };
 
     // Fargate Service
     const nginx = new awsx.ecs.FargateService("nginx", {
@@ -125,8 +125,8 @@ export = async () => {
         networkConfiguration: {
             securityGroups: [vpc.vpc.defaultSecurityGroupId],
             subnets: vpc.publicSubnetIds,
-            assignPublicIp: true
-        }
+            assignPublicIp: true,
+        },
     });
 
     // Exports
