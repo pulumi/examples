@@ -1,6 +1,7 @@
 # Instance Using Alicloud ECS
 
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/alicloud-ts-ecs/README.md)
+[![Deploy](https://get.pulumi.com/new/button.svg#gh-light-mode-only)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/alicloud-ts-ecs/README.md)
+[![Deploy](https://get.pulumi.com/new/button.svg#gh-dark-mode-only)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/alicloud-ts-ecs/README.md)
 
 This example deploys a simple Alicloud ECS Instance
 
