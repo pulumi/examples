@@ -17,13 +17,9 @@ resource_group = resources.ResourceGroup("azure-native-py-aks")
 ad_app = azuread.Application("aks", display_name="aks")
 ad_sp = azuread.ServicePrincipal("aksSp", application_id=ad_app.application_id)
 
-# Generate random password
-password = random.RandomPassword("password", length=20, special=True)
-
 # Create the Service Principal Password
 ad_sp_password = azuread.ServicePrincipalPassword("aksSpPassword",
                                                   service_principal_id=ad_sp.id,
-                                                  value=password.result,
                                                   end_date="2099-01-01T00:00:00Z")
 
 # Generate an SSH key
