@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-nextjs/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-nextjs/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-nextjs/README.md#gh-dark-mode-only)
 
 # Next.js on AWS
 
@@ -45,9 +46,9 @@ After cloning this repo, from this working directory, run these commands:
     ```
 
 5. Most of the infrastructure will deploy within about 30s, but the CloudFront CDN can take 4-5 minutes.  After this is complete, a CloudFront URL where your application is served will be shown.
-   
 
-    ```bash    
+
+    ```bash
     Outputs:
         url: "https://d119mwdwutz4hu.cloudfront.net"
 
@@ -61,7 +62,7 @@ After cloning this repo, from this working directory, run these commands:
 
     ![Screenshot of demo app](screenshot.png)
 
-7. Make changes to the Next.js app in the `demoapp` folder, or bring your own Next.js app and point the Pulumi component at it instead.  
+7. Make changes to the Next.js app in the `demoapp` folder, or bring your own Next.js app and point the Pulumi component at it instead.
 
 8. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 

@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/vpc-crosswalk-ts/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/vpc-crosswalk-ts/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/vpc-crosswalk-ts/README.md#gh-dark-mode-only)
 
 # Pulumi:  A VPC on AWS built in Typescript.
 
@@ -6,7 +7,7 @@
 
 This example uses [Pulumi CrossWalk for AWS](https://www.pulumi.com/docs/guides/crosswalk/aws/#pulumi-crosswalk-for-aws) for deploying your own vpc using crosswalk [VPC](https://www.pulumi.com/docs/guides/crosswalk/aws/vpc/).  The VPC is built in `typescript`
 
-### Why would you do this?  
+### Why would you do this?
 An example showing that you can easily integrate infrastructure from another Pulumi application written in a different language than the one you are used to.
 
 ## Prerequisites
@@ -14,13 +15,13 @@ An example showing that you can easily integrate infrastructure from another Pul
 * [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 * [Configure Pulumi to Use AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
 
-### Where are the settings? 
+### Where are the settings?
  The settings are in `Pulumi`.stackname`.yaml`
  You will be creating a new file that holds your configs
 
 ### Creating a new `Pulumi`.stackname`.yaml`
 
- 1. Initialize a new stack called: `vpc-fargate` via [pulumi stack init](https://www.pulumi.com/docs/reference/cli/pulumi_stack_init/). 
+ 1. Initialize a new stack called: `vpc-fargate` via [pulumi stack init](https://www.pulumi.com/docs/reference/cli/pulumi_stack_init/).
       ```
       $ pulumi stack init vpc-fargate-dev
       ```
@@ -47,7 +48,7 @@ An example showing that you can easily integrate infrastructure from another Pul
    $ pulumi config set zone_number 3 # number of availability zones
    $ pulumi config set number_of_nat_gateways 3 # number of nat gateways. 1 to N(where N is zone_number). recommended to keep at least 2 for high availability.
    ```
-   
+
 4. View the current config settings
    ```$ pulumi config```
    ```
@@ -124,7 +125,7 @@ Do you want to perform this update?  [Use arrows to move, enter to select, type 
   details
 ```
 
-You need to select `yes` to continue.  The url will look similar to the url below and you will need to replace the `shaht` with your own org, `team-qa`:   
+You need to select `yes` to continue.  The url will look similar to the url below and you will need to replace the `shaht` with your own org, `team-qa`:
    https://app.pulumi.com/`shaht`/crosswalk-vpc/vpc-fargate-dev/
 
 8. The stack outputs will be used as [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) for ECS fargate (resides in ecs-fargate-python folder)
@@ -144,7 +145,7 @@ You need to select `yes` to continue.  The url will look similar to the url belo
       pulumic_vpc_number_of_nat_gateways  3
       ```
 
-9. The value to use in a [`StackReference`](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) can be retrieved from the last line. 
+9. The value to use in a [`StackReference`](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) can be retrieved from the last line.
    ```
       $ pulumi stack
    ```
@@ -154,7 +155,7 @@ You need to select `yes` to continue.  The url will look similar to the url belo
    ...
    More information at: https://app.pulumi.com/shaht/crosswalk-vpc/vpc-fargate-dev
    ```
-   Here is what we need from above to launch things in here.  
+   Here is what we need from above to launch things in here.
    ```
       shaht/crosswalk-vpc/vpc-fargate-dev
    ```

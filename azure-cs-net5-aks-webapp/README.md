@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-net5-aks-webapp/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-net5-aks-webapp/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-net5-aks-webapp/README.md#gh-dark-mode-only)
 
 # Deploy Containerized Web Applications using the native Azure Provider, .NET 5, and C# 9
 
@@ -15,7 +16,7 @@ This example can cover several deployments architectures that are listed below.
 
 ### Public Docker Image to Azure App Service
 
-You can deploy any public Docker image that contains a web application listening to port 80 to an Azure App Service. Modify the constructor of `MyStack` class in `Program.cs` file to 
+You can deploy any public Docker image that contains a web application listening to port 80 to an Azure App Service. Modify the constructor of `MyStack` class in `Program.cs` file to
 
 ```cs
 public MyStack()
@@ -31,7 +32,7 @@ public MyStack()
 
 ### Custom Application to Azure App Service
 
-Builds a Docker container from the files in `app` folder, push it to Azure Container Registry, and deploy it to an Azure App Service. Modify the constructor of `MyStack` class in `Program.cs` file to 
+Builds a Docker container from the files in `app` folder, push it to Azure Container Registry, and deploy it to an Azure App Service. Modify the constructor of `MyStack` class in `Program.cs` file to
 
 ```cs
 public MyStack()
@@ -47,7 +48,7 @@ public MyStack()
 
 ### Public Docker Image to Azure Kubernetes Service
 
-You can deploy any public Docker image that contains a web application listening to port 80 to a new AKS cluster. Modify the constructor of `MyStack` class in `Program.cs` file to 
+You can deploy any public Docker image that contains a web application listening to port 80 to a new AKS cluster. Modify the constructor of `MyStack` class in `Program.cs` file to
 
 ```cs
 public MyStack()
@@ -66,7 +67,7 @@ public MyStack()
 
 ### Custom Application to Azure Kubernetes Service
 
-Builds a Docker container from the files in `app` folder, push it to Azure Container Registry, and deploy it to a new AKS cluster. Modify the constructor of `MyStack` class in `Program.cs` file to 
+Builds a Docker container from the files in `app` folder, push it to Azure Container Registry, and deploy it to a new AKS cluster. Modify the constructor of `MyStack` class in `Program.cs` file to
 
 ```cs
 public MyStack()
@@ -109,7 +110,7 @@ After cloning this repo and making adjustments as described above, from this wor
     ```
 
 1. Set the Azure region location to use:
-    
+
     ```
     $ pulumi config set azure-native:location westus2
     ```

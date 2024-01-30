@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-containerapps/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-containerapps/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-containerapps/README.md#gh-dark-mode-only)
 
 # Azure Container Apps
 
@@ -23,9 +24,9 @@ Starting point for building web application hosted in Azure Container Apps.
     ```
     $ npm install
     ```
-    
+
 1. Set the Azure region location to use:
-    
+
     ```
     $ pulumi config set azure-native:location westus2
     ```

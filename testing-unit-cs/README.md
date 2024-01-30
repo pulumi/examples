@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-cs/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-cs/README.md#gh-dark-mode-only)
+
 # Unit Testing Pulumi programs in C#
 
 An example of writing mock-based unit tests with both infrastructure definition and tests written in C#. The example uses the [NUnit](https://nunit.org/) test framework to define and run the tests, [Moq](https://github.com/moq/moq4) for mocks, and [FluentAssertions](https://github.com/fluentassertions/fluentassertions) for assertions.

@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/redis-cloud-aws-ts/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/redis-cloud-aws-ts/README.md#gh-dark-mode-only)
+
 # Redis Enterprise Cloud AWS Example
 
 This example contains code that creates a [Redis Enterprise Cloud](https://app.redislabs.com/) cluster and connects it to an AWS VPC via VPC Peering. This stack also includes an EC2 instance with SSM Session Manager that can run Redis commands to verify connectivity to the Redis cluster.

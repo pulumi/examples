@@ -1,10 +1,11 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/ecs-fargate-python/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/ecs-fargate-python/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/ecs-fargate-python/README.md#gh-dark-mode-only)
 
 # NGINX on AWS ECS Fargate using Python with a vpc built in Typescript
 
 ### What Is This?
 
-This example demonstrates the ability to deploy resources in Pulumi using one language (TypeScript) and then reference those resources from another Pulumi application using a different language (Python). 
+This example demonstrates the ability to deploy resources in Pulumi using one language (TypeScript) and then reference those resources from another Pulumi application using a different language (Python).
 
 [`vpc-crosswalk-ts`](./vpc-crosswalk-ts) deploys an AWS VPC using TypeScript
 
@@ -14,7 +15,7 @@ It provisions a full [Amazon Elastic Container Service (ECS) "Fargate"](https://
 related infrastructure, running a load-balanced NGINX web server accessible over the Internet on port 80.
 This example is inspired by [Docker's Getting Started Tutorial](https://docs.docker.com/get-started/).
 
-### Why would you do this?  
+### Why would you do this?
 An example showing that you can easily infrastructure written in a different language than the one you are used to.  The vpc outputs from vpc-crosswalk-ts folder are used as inputs via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies)
 
 ## Prerequisites
@@ -32,11 +33,11 @@ As per AWS:  `You must opt in to the new Amazon Resource Name (ARN) and resource
 
 This has to be done per region until AWS enables it as default across the board(April 1, 2021).
 
-AWS Console -> Elastic Container Service ->  Account Settings -> 
+AWS Console -> Elastic Container Service ->  Account Settings ->
 
 BEFORE
 ```
-Resource                My IAM user or role account settings 
+Resource                My IAM user or role account settings
 Container Instance      Undefined
 Service                 Undefined
 Task                    Undefined
@@ -44,7 +45,7 @@ Task                    Undefined
 
 AFTER
 ```
-Resource                My IAM user or role account settings 
+Resource                My IAM user or role account settings
 Container Instance      Enabled
 Service                 Enabled
 Task                    Enabled

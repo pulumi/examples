@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-cosmosapp-component/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-cosmosapp-component/README.md#gh-dark-mode-only)
+
 # Reusable Component to Create Globally-distributed Applications with Azure Cosmos DB
 
 This example demonstrates the usage of Pulumi to create globally-distributed applications with Azure Cosmos DB as the backend and pluggable infrastrustructure as the web tier.

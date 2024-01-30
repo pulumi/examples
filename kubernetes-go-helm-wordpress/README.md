@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-go-helm-wordpress/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-go-helm-wordpress/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-go-helm-wordpress/README.md#gh-dark-mode-only)
 
 # Wordpress Helm Chart
 
@@ -33,19 +34,19 @@ Previewing update (wordpress-dev)
 
 View Live: https://app.pulumi.com/...
 
-     Type                                            Name                                        Plan       
- +   pulumi:pulumi:Stack                             kubernetes-go-helm-wordpress-wordpress-dev  create     
- +   └─ kubernetes:helm.sh/v2:Chart                  wpdev                                       create     
- +      ├─ kubernetes:core/v1:PersistentVolumeClaim  wpdev-wordpress                             create     
- +      ├─ kubernetes:core/v1:Secret                 wpdev-wordpress                             create     
- +      ├─ kubernetes:core/v1:Service                wpdev-wordpress                             create     
- +      ├─ kubernetes:core/v1:ConfigMap              default/wpdev-mariadb                       create     
- +      ├─ kubernetes:core/v1:Secret                 default/wpdev-mariadb                       create     
- +      ├─ kubernetes:core/v1:Pod                    wpdev-credentials-test                      create     
- +      ├─ kubernetes:core/v1:Service                default/wpdev-mariadb                       create     
- +      ├─ kubernetes:apps/v1:Deployment             wpdev-wordpress                             create     
- +      └─ kubernetes:apps/v1:StatefulSet            default/wpdev-mariadb                       create     
- 
+     Type                                            Name                                        Plan
+ +   pulumi:pulumi:Stack                             kubernetes-go-helm-wordpress-wordpress-dev  create
+ +   └─ kubernetes:helm.sh/v2:Chart                  wpdev                                       create
+ +      ├─ kubernetes:core/v1:PersistentVolumeClaim  wpdev-wordpress                             create
+ +      ├─ kubernetes:core/v1:Secret                 wpdev-wordpress                             create
+ +      ├─ kubernetes:core/v1:Service                wpdev-wordpress                             create
+ +      ├─ kubernetes:core/v1:ConfigMap              default/wpdev-mariadb                       create
+ +      ├─ kubernetes:core/v1:Secret                 default/wpdev-mariadb                       create
+ +      ├─ kubernetes:core/v1:Pod                    wpdev-credentials-test                      create
+ +      ├─ kubernetes:core/v1:Service                default/wpdev-mariadb                       create
+ +      ├─ kubernetes:apps/v1:Deployment             wpdev-wordpress                             create
+ +      └─ kubernetes:apps/v1:StatefulSet            default/wpdev-mariadb                       create
+
 Resources:
     + 11 to create
 

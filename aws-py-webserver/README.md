@@ -1,9 +1,10 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-webserver/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-webserver/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-webserver/README.md#gh-dark-mode-only)
 
 # Web Server Using Amazon EC2
 
 An example based on the Amazon sample at:
-http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applications.html. The example deploys an EC2 instance and opens port 80. 
+http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applications.html. The example deploys an EC2 instance and opens port 80.
 
 ## Prerequisites
 
@@ -38,9 +39,9 @@ http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applicat
     Performing changes:
 
     #: Resource Type          Name                                   Status     Extra Info
-    1: pulumi:pulumi:Stack    webserver-py-python-webserver-testing  + created  
-    2: aws:ec2:SecurityGroup  web-secgrp                             + created  
-    3: aws:ec2:Instance       web-server-www                         + created  
+    1: pulumi:pulumi:Stack    webserver-py-python-webserver-testing  + created
+    2: aws:ec2:SecurityGroup  web-secgrp                             + created
+    3: aws:ec2:Instance       web-server-www                         + created
 
     info: 3 changes performed:
         + 3 resources created

@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-functions/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-functions/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-functions/README.md#gh-dark-mode-only)
 
 # Google Cloud Functions
 
@@ -27,13 +28,13 @@ An example of deploying an HTTP Google Cloud Function endpoint using TypeScript.
 3.  Configure your GCP project and region:
 
     ```
-    $ pulumi config set gcp:project <projectname> 
+    $ pulumi config set gcp:project <projectname>
     $ pulumi config set gcp:region <region>
     ```
 
 4.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...

@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/twilio-ts-component/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/twilio-ts-component/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/twilio-ts-component/README.md#gh-dark-mode-only)
 
 # Twilio SMS Handler
 
@@ -18,7 +19,7 @@ A sample for interacting with Twilio SMS. This sample includes a custom Componen
     $ pulumi config set aws:region us-west-2
     ```
 
-1. Configure Twilio settings 
+1. Configure Twilio settings
 
     ```
     $ pulumi config set twilio:accountSid <your account sid from https://www.twilio.com/console>
@@ -28,7 +29,7 @@ A sample for interacting with Twilio SMS. This sample includes a custom Componen
 
 1. Restore NPM modules via `npm install`.
 
-1. Preview and run the deployment via `pulumi up`. 
+1. Preview and run the deployment via `pulumi up`.
     ```
     $ pulumi up
     Previewing update of stack 'url-shortener-dev'
@@ -72,7 +73,7 @@ To clean up resources, run `pulumi destroy` and answer the confirmation question
 
 This example builds and uses a custom `pulumi.CustomResource` to make it easy to spin up a SMS handler on Twilio. It could be extended to support Voice as well, by adding an additional handler to `twilio.IncomingPhoneNumberArgs`.
 
-The custom resource itself is in [`twilio.ts`](./twilio.ts) and handles the work to use `@pulumi/aws-serverless` to create a REST endpoint with `serverless.apigateway.API`. The handler registered with API Gateway does some of the teadious work of decoding the incoming event data and the delegates to the actual handler provided to the custom resource. 
+The custom resource itself is in [`twilio.ts`](./twilio.ts) and handles the work to use `@pulumi/aws-serverless` to create a REST endpoint with `serverless.apigateway.API`. The handler registered with API Gateway does some of the teadious work of decoding the incoming event data and the delegates to the actual handler provided to the custom resource.
 
 In addition, at deployment time, the custom resource uses the Twilio SDK to update the SMS Handler for the provided phone number, instead of forcing you to register it by hand in the Twilio console.
 

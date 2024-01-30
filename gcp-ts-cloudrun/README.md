@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-cloudrun/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-cloudrun/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-cloudrun/README.md#gh-dark-mode-only)
 
 # Google Cloud Run
 
@@ -29,27 +30,27 @@ An example of deploying a custom Docker image into Google Cloud Run service usin
 3.  Configure your GCP project and region:
 
     ```
-    $ pulumi config set gcp:project <projectname> 
+    $ pulumi config set gcp:project <projectname>
     $ pulumi config set gcp:region <region>
     ```
 
 4.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing update (dev):
     ...
 
     Updating (dev):
-        Type                       Name              Status      
-    +   pulumi:pulumi:Stack        gcp-cloudrun-dev  created     
-    +   ├─ docker:image:Image      ruby-app          created     
-    +   ├─ gcp:projects:Service    EnableCloudRun    created     
-    +   ├─ gcp:cloudrun:Service    hello             created     
-    +   ├─ gcp:cloudrun:Service    ruby              created     
-    +   ├─ gcp:cloudrun:IamMember  hello-everyone    created     
-    +   └─ gcp:cloudrun:IamMember  ruby-everyone     created     
-    
+        Type                       Name              Status
+    +   pulumi:pulumi:Stack        gcp-cloudrun-dev  created
+    +   ├─ docker:image:Image      ruby-app          created
+    +   ├─ gcp:projects:Service    EnableCloudRun    created
+    +   ├─ gcp:cloudrun:Service    hello             created
+    +   ├─ gcp:cloudrun:Service    ruby              created
+    +   ├─ gcp:cloudrun:IamMember  hello-everyone    created
+    +   └─ gcp:cloudrun:IamMember  ruby-everyone     created
+
     Outputs:
         helloUrl: "https://hello-a28eea2-q1wszdxb2b-ew.a.run.app"
         rubyUrl : "https://ruby-420a973-q1wszdxb2b-ew.a.run.app"

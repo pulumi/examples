@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-multicloud/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-multicloud/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-multicloud/README.md#gh-dark-mode-only)
 
 # Kubernetes Application Deployed To Multiple Clusters
 
@@ -42,7 +43,7 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi config set gcp:project [your-gcp-project-here]
     $ pulumi config set gcp:zone us-west1-a                 # Any valid GCP zone here.
     ```
-   
+
    Note that you can choose different regions here.
 
    We recommend using `us-west-2` to host your EKS cluster as other regions (notably `us-east-1`) may have capacity
@@ -57,7 +58,7 @@ After cloning this repo, from this working directory, run these commands:
     ```bash
     $ pulumi up
     ```
-   
+
    Here's what it should look like once it completes:
    ![appUrls](images/appUrls.png)
 
@@ -73,7 +74,7 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi destroy --yes
     $ pulumi stack rm --yes
     ```
-   
+
    Note: The static IP workaround required for the AKS Service can cause a destroy failure if the IP has not
    finished detaching from the LoadBalancer. If you encounter this error, simply rerun `pulumi destroy --yes`,
    and it should succeed.

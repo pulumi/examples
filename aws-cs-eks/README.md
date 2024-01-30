@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-eks/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-eks/README.md#gh-dark-mode-only)
+
 # AWS C# EKS Cluster
 This example creates an AWS EKS Cluster and deploys a sample container application to it
 
@@ -51,7 +54,7 @@ After cloning this repo, run these commands from the working directory:
 6. Ensure that the application is running as expected:
 
     ```bash
-   $ curl $(pulumi stack output Url) 
+   $ curl $(pulumi stack output Url)
    ```
 
 

@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-go-aci/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-go-aci/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-go-aci/README.md#gh-dark-mode-only)
 
 # Azure Container Instances on Linux
 
@@ -17,9 +18,9 @@ Starting point for building web application hosted in Azure Container Instances.
     ```
     $ az login
     ```
-   
+
 1. Set the Azure region location to use:
-    
+
     ```
     $ pulumi config set azure-native:location westus2
     ```

@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/multicloud-ts-buckets/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/multicloud-ts-buckets/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/multicloud-ts-buckets/README.md#gh-dark-mode-only)
 
 # AWS and GCP Resources
 
@@ -66,4 +67,3 @@ Duration: 21.713128552s
 
 Permalink: https://app.pulumi.com/jen20/multicloud-ts-buckets-dev
 ```
-

@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-wordpress-fargate-rds/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-wordpress-fargate-rds/README.md#gh-dark-mode-only)
+
 # WordPress Site in AWS Fargate with RDS DB Backend
 
 This example serves a WordPress site in AWS ECS Fargate using an RDS MySQL Backend.

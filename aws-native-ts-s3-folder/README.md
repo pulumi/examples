@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-ts-s3-folder/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-ts-s3-folder/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-ts-s3-folder/README.md#gh-dark-mode-only)
 
 # Host a Static Website on Amazon S3 with the AWS Native Provider
 
@@ -26,7 +27,7 @@ with `***`.
     ```bash
     $ export AWS_REGION=us-west-2
     ```
-    
+
     Or with the stack config
     ```bash
     $ pulumi config set aws:region us-west-2
@@ -42,7 +43,7 @@ with `***`.
     $ pulumi up
     Previewing update (dev)
     ...
-    
+
     Updating (dev)
 
     View Live: https://app.pulumi.com/***/aws-native-ts-s3-folder/dev/updates/1
@@ -79,7 +80,7 @@ with `***`.
     ```bash
     $ aws s3 ls $(pulumi stack output bucketName)
     2021-09-30 15:27:58      13731 favicon.png
-    2021-09-30 15:27:58        198 index.html    
+    2021-09-30 15:27:58        198 index.html
     ```
 
 1.  Open the site URL in a browser to see both the rendered HTML and the favicon:

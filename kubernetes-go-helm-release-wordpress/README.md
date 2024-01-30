@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-go-helm-release-wordpress/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-go-helm-release-wordpress/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-go-helm-release-wordpress/README.md#gh-dark-mode-only)
 
 # Wordpress Helm Chart Deployed Using Helm Release Resource
 
@@ -35,10 +36,10 @@ Previewing update (dev)
 
 View Live: https://app.pulumi.com/.../kubernetes-go-helm-release-wordpress/dev/previews/01ac68a0-bcce-4bc8-a34c-cad12544b839
 
-     Type                              Name                                      Plan       
- +   pulumi:pulumi:Stack               kubernetes-go-helm-release-wordpress-dev  create     
- +   └─ kubernetes:helm.sh/v3:Release  wpdev                                     create     
- 
+     Type                              Name                                      Plan
+ +   pulumi:pulumi:Stack               kubernetes-go-helm-release-wordpress-dev  create
+ +   └─ kubernetes:helm.sh/v3:Release  wpdev                                     create
+
 Resources:
     + 2 to create
 
@@ -47,11 +48,11 @@ Updating (dev)
 
 View Live: https://app.pulumi.com/.../kubernetes-go-helm-release-wordpress/dev/updates/11
 
-     Type                              Name                                      Status      
- +   pulumi:pulumi:Stack               kubernetes-go-helm-release-wordpress-dev  created     
- +   ├─ kubernetes:helm.sh/v3:Release  wpdev                                     created     
-     └─ kubernetes:core/v1:Service     svc                                                   
- 
+     Type                              Name                                      Status
+ +   pulumi:pulumi:Stack               kubernetes-go-helm-release-wordpress-dev  created
+ +   ├─ kubernetes:helm.sh/v3:Release  wpdev                                     created
+     └─ kubernetes:core/v1:Service     svc
+
 Outputs:
     frontendIp        : "10.96.109.99"
     portForwardCommand: "kubectl port-forward svc/wpdev-ysmr245n-wordpress 8080:80"
@@ -78,10 +79,10 @@ Destroying (dev)
 
 View Live: https://app.pulumi.com/.../kubernetes-go-helm-release-wordpress/dev/updates/12
 
-     Type                              Name                                      Status      
- -   pulumi:pulumi:Stack               kubernetes-go-helm-release-wordpress-dev  deleted     
- -   └─ kubernetes:helm.sh/v3:Release  wpdev                                     deleted     
- 
+     Type                              Name                                      Status
+ -   pulumi:pulumi:Stack               kubernetes-go-helm-release-wordpress-dev  deleted
+ -   └─ kubernetes:helm.sh/v3:Release  wpdev                                     deleted
+
 Outputs:
   - frontendIp        : "10.96.109.99"
   - portForwardCommand: "kubectl port-forward svc/wpdev-ysmr245n-wordpress 8080:80"

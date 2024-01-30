@@ -1,8 +1,9 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-apigatewayv2-http-api-quickcreate/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-apigatewayv2-http-api-quickcreate/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-apigatewayv2-http-api-quickcreate/README.md#gh-dark-mode-only)
 
 # AWS API Gateway V2 HTTP API Quickstart
 
-Set up a simple HTTP API using AWS API Gateway V2. The API executes a simple Lambda function 
+Set up a simple HTTP API using AWS API Gateway V2. The API executes a simple Lambda function
 found in `/app/index.js`.
 
 ## Prerequisites
@@ -70,7 +71,7 @@ with `***`.
 1.  To view the runtime logs of the Lambda function, use the `pulumi logs` command. To get a log stream, use `pulumi logs --follow`.
 
 1.  At this point, you have a running HTTP API. Feel free to modify your program, and run `pulumi up`
-to redeploy changes. The Pulumi CLI automatically detects what has changed and makes the minimal 
+to redeploy changes. The Pulumi CLI automatically detects what has changed and makes the minimal
 edits necessary to accomplish these changes. This could be altering the function used by the Lambda,
 or anything else you'd like!
 

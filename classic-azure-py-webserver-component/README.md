@@ -1,11 +1,12 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-webserver-component/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-webserver-component/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-webserver-component/README.md#gh-dark-mode-only)
 
 # Web Server Using Azure Virtual Machine with ComponentResource
 
-This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/resources/#components) 
+This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/resources/#components)
 to create and deploy an Azure Virtual Machine and starts a HTTP server on it.
 
-The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources 
+The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources
 can be composed into a higher-level, reusable abstraction.
 
 ## Prerequisites
@@ -82,7 +83,7 @@ the virtual machine that we are going to create.
     Duration: 2m9s
     ```
 
-1. Get the IP address of the newly-created instance from the stack's outputs: 
+1. Get the IP address of the newly-created instance from the stack's outputs:
 
     ```bash
     $ pulumi stack output public_ip
