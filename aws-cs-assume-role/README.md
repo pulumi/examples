@@ -8,7 +8,7 @@ This example shows how to use the AssumeRole functionality of the AWS provider t
 
 The Pulumi program in `create-role` requires credentials with permissions to create an IAM User, an IAM Role, and assign
 an AWS Access Key to the user. The program creates a new, unprivileged user with no policies attached, and a role which
-specifies a trust policy allowing assumption by the unprivileged user. The role allows the `s3:*` actions on all 
+specifies a trust policy allowing assumption by the unprivileged user. The role allows the `s3:*` actions on all
 resources.
 
 You'll need to set the `create-role:unprivilegedUsername` configuration variable to the name of the unprivilged user, as
@@ -22,7 +22,7 @@ $ pulumi config set aws:region us-east-1
 $ pulumi up
 ```
 
-The program can then be run with `pulumi up`. The outputs of the program tell you the ARN of the Role, and the Access 
+The program can then be run with `pulumi up`. The outputs of the program tell you the ARN of the Role, and the Access
 Key ID and Secret associated with the User:
 
 
@@ -74,7 +74,7 @@ Unset the AWS_SESSION_TOKEN or any additional credential setting if you have set
 $ unset AWS_SESSION_TOKEN
 ```
 
-The program can then be run with `pulumi up`. You can verify that the role is indeed assumed by looking at the 
+The program can then be run with `pulumi up`. You can verify that the role is indeed assumed by looking at the
 CloudTrail logs of the bucket creation operation, or by commenting out the `assumeRole` configuration in the provider
 and ensuring creation is not successful.
 

@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-ts-stepfunctions/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-ts-stepfunctions/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-ts-stepfunctions/README.md#gh-dark-mode-only)
 
 # AWS Step Functions with the AWS Native Provider
 
@@ -57,7 +58,7 @@ with `***`.
     View Live: https://app.pulumi.com/***/stepfunctions/dev/updates/1
 
          Type                                      Name               Status
-    +   pulumi:pulumi:Stack                       stepfunctions-dev  created     
+    +   pulumi:pulumi:Stack                       stepfunctions-dev  created
     +   ├─ aws:iam:Role                           sfnRole            created
     +   ├─ aws:iam:Role                           lambdaRole         created
     +   ├─ aws:iam:RolePolicy                     sfnRolePolicy      created
@@ -65,7 +66,7 @@ with `***`.
     +   ├─ aws-native:lambda:Function             helloFunction      created
     +   ├─ aws-native:lambda:Function             worldFunction      created
     +   └─ aws-native:stepfunctions:StateMachine  stateMachine       created
-   
+
     Outputs:
     + stateMachineArn: "arn:aws:states:us-west-2:***:stateMachine:***"
 

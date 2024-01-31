@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-hdinsight-spark/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-hdinsight-spark/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-hdinsight-spark/README.md#gh-dark-mode-only)
 
 # Spark on Azure HDInsight
 
@@ -26,7 +27,7 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...
@@ -43,7 +44,7 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
     ```
     $ pulumi stack output endpoint
     https://myspark1234abcd.azurehdinsight.net/
-    
+
     # For instance, Jupyter notebooks are available at https://myspark1234abcd.azurehdinsight.net/jupyter/
     # Follow https://docs.microsoft.com/en-us/azure/hdinsight/spark/apache-spark-load-data-run-query to test it out
     ```

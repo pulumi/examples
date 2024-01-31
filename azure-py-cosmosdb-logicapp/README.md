@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-cosmosdb-logicapp/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-cosmosdb-logicapp/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-cosmosdb-logicapp/README.md#gh-dark-mode-only)
 
 # Azure Cosmos DB, an API Connection, and a Logic App
 
@@ -40,16 +41,16 @@ With the native Azure provider we can directly use the Azure resource manager AP
     ```sh
     $ pulumi up
 
-         Type                                                        Name                         Status      
-     +   pulumi:pulumi:Stack                                         azure-cosmosdb-logicapp-dev  created     
-     +   ├─ azure-native:resources:ResourceGroup                     logicappdemo-rg              created     
-     +   ├─ azure-native:storage:StorageAccount                      logicappdemosa               created     
-     +   ├─ azure-native:documentdb:DatabaseAccount                  logicappdemo-cdb             created     
-     +   ├─ azure-native:documentdb:SqlResourceSqlDatabase           db                           created     
-     +   ├─ azure-native:web:Connection                              cosmosdbConnection           created     
-     +   ├─ azure-native:documentdb:SqlResourceSqlContainer          container                    created     
-     +   └─ azure-native:logic:Workflow                              workflow                     created     
- 
+         Type                                                        Name                         Status
+     +   pulumi:pulumi:Stack                                         azure-cosmosdb-logicapp-dev  created
+     +   ├─ azure-native:resources:ResourceGroup                     logicappdemo-rg              created
+     +   ├─ azure-native:storage:StorageAccount                      logicappdemosa               created
+     +   ├─ azure-native:documentdb:DatabaseAccount                  logicappdemo-cdb             created
+     +   ├─ azure-native:documentdb:SqlResourceSqlDatabase           db                           created
+     +   ├─ azure-native:web:Connection                              cosmosdbConnection           created
+     +   ├─ azure-native:documentdb:SqlResourceSqlContainer          container                    created
+     +   └─ azure-native:logic:Workflow                              workflow                     created
+
     Resources:
         + 8 created
 

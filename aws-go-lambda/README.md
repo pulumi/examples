@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-lambda/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-lambda/README.md#gh-dark-mode-only)
+
 # AWS Golang Lambda
 This example creates an AWS Lambda function that does a simple `ToUpper` on the string input and returns it.
 
@@ -22,18 +25,18 @@ After cloning this repo, run these commands from the working directory:
 		```bash
 		make build
 		```
-		
+
 	- For developers on Windows:
-		
+
 		- Get the `build-lambda-zip` tool:
-			
+
 			```bash
 			set GO111MODULE=on
 			go.exe get -u github.com/aws/aws-lambda-go/cmd/build-lambda-zip
 			```
-		
+
 		- Use the tool from your GOPATH:
-				
+
 			```bash
 			set GOOS=linux
 			set GOARCH=amd64
@@ -41,7 +44,7 @@ After cloning this repo, run these commands from the working directory:
 			go build -o handler\handler handler\handler.go
 			%USERPROFILE%\Go\bin\build-lambda-zip.exe -o handler\handler.zip handler\handler
 			```
-		
+
 
 2. Create a new Pulumi stack, which is an isolated deployment target for this example:
 

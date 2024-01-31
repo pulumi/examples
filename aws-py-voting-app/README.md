@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-voting-app/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-voting-app/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-voting-app/README.md#gh-dark-mode-only)
 
 # Voting app Using Redis and Flask
 
@@ -36,32 +37,32 @@ The example shows how easy it is to deploy containers into production and to con
     ```bash
     Updating (aws-py-voting-app):
         Type                                  Name                            Status      Info
-    +   pulumi:pulumi:Stack                   webserver-py-aws-py-voting-app  created     
-    +   ├─ docker:image:Image                 flask-dockerimage               created     
-    +   ├─ aws:ec2:Vpc                        app-vpc                         created     
-    +   ├─ aws:ecs:Cluster                    app-cluster                     created     
-    +   ├─ aws:iam:Role                       app-exec-role                   created     
-    +   ├─ aws:iam:Role                       app-task-role                   created     
-    +   ├─ aws:ecr:Repository                 app-ecr-repo                    created     
-    +   ├─ aws:ecr:LifecyclePolicy            app-lifecycle-policy            created     
-    +   ├─ aws:iam:RolePolicyAttachment       app-exec-policy                 created     
-    +   ├─ aws:iam:RolePolicyAttachment       app-access-policy               created     
-    +   ├─ aws:iam:RolePolicyAttachment       app-lambda-policy               created     
-    +   ├─ aws:ecs:TaskDefinition             redis-task-definition           created     
-    +   ├─ aws:ec2:InternetGateway            app-gateway                     created     
-    +   ├─ aws:ec2:SecurityGroup              security-group                  created     
-    +   ├─ aws:ec2:Subnet                     app-vpc-subnet                  created     
-    +   ├─ aws:lb:TargetGroup                 redis-targetgroup               created     
-    +   ├─ aws:lb:TargetGroup                 flask-targetgroup               created     
-    +   ├─ aws:ec2:RouteTable                 app-routetable                  created     
-    +   ├─ aws:lb:LoadBalancer                redis-balancer                  created     
-    +   ├─ aws:lb:LoadBalancer                flask-balancer                  created     
-    +   ├─ aws:ec2:MainRouteTableAssociation  app_routetable_association      created     
-    +   ├─ aws:lb:Listener                    flask-listener                  created     
-    +   ├─ aws:lb:Listener                    redis-listener                  created     
-    +   ├─ aws:ecs:TaskDefinition             flask-task-definition           created     
-    +   ├─ aws:ecs:Service                    redis-service                   created     
-    +   └─ aws:ecs:Service                    flask-service                   created     
+    +   pulumi:pulumi:Stack                   webserver-py-aws-py-voting-app  created
+    +   ├─ docker:image:Image                 flask-dockerimage               created
+    +   ├─ aws:ec2:Vpc                        app-vpc                         created
+    +   ├─ aws:ecs:Cluster                    app-cluster                     created
+    +   ├─ aws:iam:Role                       app-exec-role                   created
+    +   ├─ aws:iam:Role                       app-task-role                   created
+    +   ├─ aws:ecr:Repository                 app-ecr-repo                    created
+    +   ├─ aws:ecr:LifecyclePolicy            app-lifecycle-policy            created
+    +   ├─ aws:iam:RolePolicyAttachment       app-exec-policy                 created
+    +   ├─ aws:iam:RolePolicyAttachment       app-access-policy               created
+    +   ├─ aws:iam:RolePolicyAttachment       app-lambda-policy               created
+    +   ├─ aws:ecs:TaskDefinition             redis-task-definition           created
+    +   ├─ aws:ec2:InternetGateway            app-gateway                     created
+    +   ├─ aws:ec2:SecurityGroup              security-group                  created
+    +   ├─ aws:ec2:Subnet                     app-vpc-subnet                  created
+    +   ├─ aws:lb:TargetGroup                 redis-targetgroup               created
+    +   ├─ aws:lb:TargetGroup                 flask-targetgroup               created
+    +   ├─ aws:ec2:RouteTable                 app-routetable                  created
+    +   ├─ aws:lb:LoadBalancer                redis-balancer                  created
+    +   ├─ aws:lb:LoadBalancer                flask-balancer                  created
+    +   ├─ aws:ec2:MainRouteTableAssociation  app_routetable_association      created
+    +   ├─ aws:lb:Listener                    flask-listener                  created
+    +   ├─ aws:lb:Listener                    redis-listener                  created
+    +   ├─ aws:ecs:TaskDefinition             flask-task-definition           created
+    +   ├─ aws:ecs:Service                    redis-service                   created
+    +   └─ aws:ecs:Service                    flask-service                   created
 
     Outputs:
         app-url: "flask-balancer-3987b84-b596c9ee2027f152.elb.us-west-2.amazonaws.com"

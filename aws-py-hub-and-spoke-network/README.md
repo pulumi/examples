@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-hub-and-spoke-network/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-hub-and-spoke-network/README.md#gh-dark-mode-only)
+
 # Hub-and-Spoke Network with Centralized Egress and Traffic Inspection use AWS Transit Gateway and AWS Firewall
 
 This example creates a hub and spoke network in AWS with centralized egress and (optional) traffic inspection using AWS VPC, AWS Transit Gateway, and AWS Firewall for traffic inspection. The code creates 2 spoke networks, but additional networks can be added quickly added by modifying the code (see "Additional Options" below).
@@ -68,7 +71,7 @@ You can comment out the `SpokeWorkload` components after testing as it is not re
 
 There are several modifications to the code that can be made:
 
-1. To enable traffic inspection, set the `create-firewall` config variable to `true`. 
+1. To enable traffic inspection, set the `create-firewall` config variable to `true`.
 
     ```bash
     pulumi config set create-firewall true

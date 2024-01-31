@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-appservice-docker/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-appservice-docker/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-appservice-docker/README.md#gh-dark-mode-only)
 
 # Azure App Service Running Docker Containers on Linux
 
@@ -22,7 +23,7 @@ The example shows two scenarios:
     ```bash
     $ az login
     ```
-   
+
 1. Create a Python virtualenv, activate it, and install dependencies:
 
    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
@@ -61,7 +62,7 @@ The example shows two scenarios:
     http://hello-app91dfea21.azurewebsites.net/hello
     $ curl "$(pulumi stack output helloEndpoint)"
     Hello, world!
-    
+
     $ pulumi stack output getStartedEndpoint
     http://get-started-15da13.azurewebsites.net
     $ curl "$(pulumi stack output getStartedEndpoint)"

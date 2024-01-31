@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-ts-s3-folder/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-java-s3-folder/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-java-s3-folder/README.md#gh-dark-mode-only)
 
 # Host a Static Website on Amazon S3 with the AWS Native Provider
 
@@ -20,7 +21,7 @@ with `***`.
     ```bash
     $ export AWS_REGION=us-west-2
     ```
-    
+
     Or with the stack config
     ```bash
     $ pulumi config set aws:region us-west-2
@@ -33,16 +34,16 @@ with `***`.
     ```bash
     $ pulumi up
     Previewing update (dev)
-    
+
     View Live: https://app.pulumi.com/***/aws-java-s3-folder/dev/previews/e251093a-d128-4ed3-a230-4e98888aed84
-    
+
          Type                     Name                    Plan       Info
      +   pulumi:pulumi:Stack      aws-java-s3-folder-dev  create     6 messages
-     +   ├─ aws-native:s3:Bucket  s3-website-bucket       create     
-     +   ├─ aws:s3:BucketPolicy   bucketPolicy            create     
-     +   ├─ aws:s3:BucketObject   index.html              create     
-     +   └─ aws:s3:BucketObject   favicon.ico             create     
-     
+     +   ├─ aws-native:s3:Bucket  s3-website-bucket       create
+     +   ├─ aws:s3:BucketPolicy   bucketPolicy            create
+     +   ├─ aws:s3:BucketObject   index.html              create
+     +   └─ aws:s3:BucketObject   favicon.ico             create
+
     Diagnostics:
       pulumi:pulumi:Stack (aws-java-s3-folder-dev):
         > Task :app:compileJava UP-TO-DATE
@@ -51,19 +52,19 @@ with `***`.
         > Task :app:run
         BUILD SUCCESSFUL in 3s
         2 actionable tasks: 1 executed, 1 up-to-date
-     
-    
+
+
     Updating (dev)
-    
+
     View Live: https://app.pulumi.com/***/aws-java-s3-folder/dev/updates/1
-    
+
          Type                     Name                    Status      Info
      +   pulumi:pulumi:Stack      aws-java-s3-folder-dev  created     6 messages
-     +   ├─ aws-native:s3:Bucket  s3-website-bucket       created     
-     +   ├─ aws:s3:BucketPolicy   bucketPolicy            created     
-     +   ├─ aws:s3:BucketObject   index.html              created     
-     +   └─ aws:s3:BucketObject   favicon.ico             created     
-     
+     +   ├─ aws-native:s3:Bucket  s3-website-bucket       created
+     +   ├─ aws:s3:BucketPolicy   bucketPolicy            created
+     +   ├─ aws:s3:BucketObject   index.html              created
+     +   └─ aws:s3:BucketObject   favicon.ico             created
+
     Diagnostics:
       pulumi:pulumi:Stack (aws-java-s3-folder-dev):
         > Task :app:compileJava UP-TO-DATE
@@ -72,15 +73,15 @@ with `***`.
         > Task :app:run
         BUILD SUCCESSFUL in 1m 5s
         2 actionable tasks: 1 executed, 1 up-to-date
-     
+
     Outputs:
         bucketName: "s3-website-bucket-***"
         urn       : "***"
         websiteUrl: "http://s3-website-bucket-***.s3-website-us-west-2.amazonaws.com"
-    
+
     Resources:
         + 5 created
-    
+
     Duration: 1m6s
     ```
 

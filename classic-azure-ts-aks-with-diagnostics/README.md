@@ -1,8 +1,9 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-aks-with-diagnostics/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-aks-with-diagnostics/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-aks-with-diagnostics/README.md#gh-dark-mode-only)
 
 # Azure Kubernetes Service (AKS) Cluster with Diagnostics
 
-This example demonstrates creating an Azure Kubernetes Service (AKS) Cluster, and enables diagnostics for the cluster. 
+This example demonstrates creating an Azure Kubernetes Service (AKS) Cluster, and enables diagnostics for the cluster.
 Please see https://docs.microsoft.com/en-us/azure/aks/ for more information about AKS.
 
 ## Prerequisites
@@ -39,7 +40,7 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
     $ pulumi up
     ```
 
-4. After a couple minutes, your cluster and Apache server will be ready. Your `kubeconfig` will be the application output and 
+4. After a couple minutes, your cluster and Apache server will be ready. Your `kubeconfig` will be the application output and
    you may also configure your `kubectl` client using the `kubeconfig` configuration:
 
    ```bash

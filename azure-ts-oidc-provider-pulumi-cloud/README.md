@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-oidc-provider-pulumi-cloud/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-oidc-provider-pulumi-cloud/README.md#gh-dark-mode-only)
+
 # Provisioning an OIDC Provider in Azure for Pulumi Cloud
 
 This example will create OIDC configuration between Pulumi Cloud and Azure, specifically demonstrating connectivity with [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/). The program automates the process detailed in the Azure documentation for the following activities:
@@ -40,7 +43,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
     npm install
     ```
 
-1. Run `pulumi up -y`. Once the program completes, it will output a YAML template for you to use in the next step. 
+1. Run `pulumi up -y`. Once the program completes, it will output a YAML template for you to use in the next step.
 
 ## Validating the OIDC Configuration
 

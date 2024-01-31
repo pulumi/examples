@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-py-cloudrun-cloudsql/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-py-cloudrun-cloudsql/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-py-cloudrun-cloudsql/README.md#gh-dark-mode-only)
 
 # Deploy Cloud Run instance connected to Cloud SQL
 
@@ -22,7 +23,7 @@ Example of starting a Cloud Run deployment with Cloud SQL instance
     ```
 
 1.  Preview and deploy changes:
-    ``` 
+    ```
     $ pulumi up
     ```
 

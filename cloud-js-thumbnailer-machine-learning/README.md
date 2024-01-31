@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/cloud-js-thumbnailer-machine-learning/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/cloud-js-thumbnailer-machine-learning/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/cloud-js-thumbnailer-machine-learning/README.md#gh-dark-mode-only)
 
 # Video Thumbnailer with AWS Rekognition
 
@@ -44,58 +45,58 @@ with `***`.
 
     View Live: https://app.pulumi.com/***
 
-        Type                                  Name                                   Plan       
-    +   pulumi:pulumi:Stack                   video-thumbnailer-rekognition-rek-dev  create...  
-    +   ├─ cloud:topic:Topic                  AmazonRekognitionTopic                 create     
-    +   │  ├─ aws:sns:TopicEventSubscription  AmazonRekognitionTopic_labelResults    create     
-    +   │  ├─ aws:iam:Role                    AmazonRekognitionTopic_labelResults    create     
-    +   │  └─ aws:sns:Topic                   AmazonRekognitionTopic                 create     
-    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-b5aeb6b6  create..   
-    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-0cbb1731  create..   
-    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-4aaabb8e  create..   
-    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-2d3346de  create..   
-    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-2d3346de  create     
-    +   │  ├─ aws:iam:Role                    pulumi-rek-dev-execution                      create     
-    +   │  ├─ aws:iam:Role                    pulumi-rek-dev-task                           create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-dev-execution                      create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-task-0cbb1731                      create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-task-2d3346de                      create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-task-b5aeb6b6                      create     
-    +   │  └─ aws:iam:RolePolicyAttachment    pulumi-rek-task-4aaabb8e                      create     
-    +   ├─ awsx:cluster:Cluster               pulumi-rek-dev-global                         create     
-    +   │  └─ aws:ecs:Cluster                 pulumi-rek-dev-global                         create     
-    +   ├─ cloud:bucket:Bucket                bucket                                        create     
-    +   │  ├─ aws:s3:BucketEventSubscription  onNewVideo                                    create     
-    +   pulumi:pulumi:Stack                   video-thumbnailer-rekognition-rek-dev         create     
-    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create     
-    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create     
-    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create     
-    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create     
-    +   │  │  └─ aws:lambda:Permission        AmazonRekognitionTopic_labelResults           create     
-    +   pulumi:pulumi:Stack                   video-thumbnailer-rekognition-rek-dev         create     
-    +   │  ├─ aws:iam:Role                    onNewThumbnail                                create     
-    +   │  ├─ aws:iam:Role                    onNewVideo                                    create     
-    +   │  ├─ aws:s3:Bucket                   bucket                                        create     
-    +   │  │  └─ aws:s3:BucketNotification    onNewVideo                                    create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-0cbb1731                       create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-b5aeb6b6                       create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-2d3346de                       create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-4aaabb8e                       create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-4aaabb8e                           create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-b5aeb6b6                           create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-0cbb1731                           create     
-    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-2d3346de                           create     
-    +   │  ├─ aws:lambda:Function             onNewThumbnail                                create     
-    +   │  └─ aws:lambda:Function             onNewVideo                                    create     
-    +   ├─ cloud:task:Task                    ffmpegThumbTask                               create     
-    +   │  ├─ aws:cloudwatch:LogGroup         ffmpegThumbTask                               create     
-    +   │  └─ aws:ecs:TaskDefinition          ffmpegThumbTask                               create     
-    +   ├─ aws:ecr:Repository                 pulum-dc8d99de-container                      create     
-    +   ├─ aws:iam:Role                       rekognition-role                              create     
-    +   ├─ aws:iam:RolePolicyAttachment       rekognition-access                            create     
-    +   ├─ aws:ecr:LifecyclePolicy            pulum-dc8d99de-container                      create     
-    +   └─ awsx:network:Network               default-vpc                                   create     
-    
+        Type                                  Name                                   Plan
+    +   pulumi:pulumi:Stack                   video-thumbnailer-rekognition-rek-dev  create...
+    +   ├─ cloud:topic:Topic                  AmazonRekognitionTopic                 create
+    +   │  ├─ aws:sns:TopicEventSubscription  AmazonRekognitionTopic_labelResults    create
+    +   │  ├─ aws:iam:Role                    AmazonRekognitionTopic_labelResults    create
+    +   │  └─ aws:sns:Topic                   AmazonRekognitionTopic                 create
+    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-b5aeb6b6  create..
+    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-0cbb1731  create..
+    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-4aaabb8e  create..
+    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-2d3346de  create..
+    +   │  └─ aws:iam:RolePolicyAttachment    AmazonRekognitionTopic_labelResults-2d3346de  create
+    +   │  ├─ aws:iam:Role                    pulumi-rek-dev-execution                      create
+    +   │  ├─ aws:iam:Role                    pulumi-rek-dev-task                           create
+    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-dev-execution                      create
+    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-task-0cbb1731                      create
+    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-task-2d3346de                      create
+    +   │  ├─ aws:iam:RolePolicyAttachment    pulumi-rek-task-b5aeb6b6                      create
+    +   │  └─ aws:iam:RolePolicyAttachment    pulumi-rek-task-4aaabb8e                      create
+    +   ├─ awsx:cluster:Cluster               pulumi-rek-dev-global                         create
+    +   │  └─ aws:ecs:Cluster                 pulumi-rek-dev-global                         create
+    +   ├─ cloud:bucket:Bucket                bucket                                        create
+    +   │  ├─ aws:s3:BucketEventSubscription  onNewVideo                                    create
+    +   pulumi:pulumi:Stack                   video-thumbnailer-rekognition-rek-dev         create
+    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create
+    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create
+    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create
+    +   │  │  └─ aws:lambda:Permission        onNewVideo                                    create
+    +   │  │  └─ aws:lambda:Permission        AmazonRekognitionTopic_labelResults           create
+    +   pulumi:pulumi:Stack                   video-thumbnailer-rekognition-rek-dev         create
+    +   │  ├─ aws:iam:Role                    onNewThumbnail                                create
+    +   │  ├─ aws:iam:Role                    onNewVideo                                    create
+    +   │  ├─ aws:s3:Bucket                   bucket                                        create
+    +   │  │  └─ aws:s3:BucketNotification    onNewVideo                                    create
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-0cbb1731                       create
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-b5aeb6b6                       create
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-2d3346de                       create
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewThumbnail-4aaabb8e                       create
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-4aaabb8e                           create
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-b5aeb6b6                           create
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-0cbb1731                           create
+    +   │  ├─ aws:iam:RolePolicyAttachment    onNewVideo-2d3346de                           create
+    +   │  ├─ aws:lambda:Function             onNewThumbnail                                create
+    +   │  └─ aws:lambda:Function             onNewVideo                                    create
+    +   ├─ cloud:task:Task                    ffmpegThumbTask                               create
+    +   │  ├─ aws:cloudwatch:LogGroup         ffmpegThumbTask                               create
+    +   │  └─ aws:ecs:TaskDefinition          ffmpegThumbTask                               create
+    +   ├─ aws:ecr:Repository                 pulum-dc8d99de-container                      create
+    +   ├─ aws:iam:Role                       rekognition-role                              create
+    +   ├─ aws:iam:RolePolicyAttachment       rekognition-access                            create
+    +   ├─ aws:ecr:LifecyclePolicy            pulum-dc8d99de-container                      create
+    +   └─ awsx:network:Network               default-vpc                                   create
+
     Resources:
     + 54 to create
     ```

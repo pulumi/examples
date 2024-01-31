@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-oidc-provider-pulumi-cloud/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-oidc-provider-pulumi-cloud/README.md#gh-dark-mode-only)
+
 # Provisioning an OIDC Provider in AWS for Pulumi Cloud
 
 This example will create OIDC configuration between Pulumi Cloud and AWS, specifically demonstrating connectivity with [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/). The program automates the process detailed in the AWS documentation for the following activities:
