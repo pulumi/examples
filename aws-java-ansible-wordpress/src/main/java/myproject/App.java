@@ -59,7 +59,6 @@ public class App {
             .cidrBlock("10.192.0.0/16")
             .enableDnsSupport(true)
             .enableDnsHostnames(true)
-            .enableClassiclink(false)
             .instanceTenancy("default")
             .build());
 
