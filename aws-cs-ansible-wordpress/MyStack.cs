@@ -53,7 +53,6 @@ class MyStack : Stack
             CidrBlock = "10.192.0.0/16",
             EnableDnsSupport = true, // gives you an internal domain name.
             EnableDnsHostnames = true, // gives you an internal host name.
-            EnableClassiclink = false,
             InstanceTenancy = "default",
         });
 

@@ -87,7 +87,6 @@ func main() {
 			CidrBlock:          pulumi.String("10.192.0.0/16"),
 			EnableDnsSupport:   pulumi.Bool(true), // gives you an internal domain name.
 			EnableDnsHostnames: pulumi.Bool(true), // gives you an internal host name.
-			EnableClassiclink:  pulumi.Bool(false),
 			InstanceTenancy:    pulumi.String("default"),
 		})
 		if err != nil {
