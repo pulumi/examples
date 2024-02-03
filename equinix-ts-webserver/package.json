@@ -5,7 +5,7 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/equinix": "^0.2.1",
+        "@equinix-labs/pulumi-equinix": "^0.6.0",
         "@pulumi/random": "^4.0.0"
     },
     "license": "Apache-2.0"
