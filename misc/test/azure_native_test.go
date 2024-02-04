@@ -1,5 +1,5 @@
-//go:build Azure || all
-// +build Azure all
+//go:build AzureNative || all
+// +build AzureNative all
 
 package test
 
@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAccAzureCsAppService(t *testing.T) {
+func TestAccAzureNativeCsAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-cs-appservice"),
@@ -30,21 +30,7 @@ func TestAccAzureCsAppService(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureCsWebserver(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-cs-webserver"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["IpAddress"].(string), nil, func(body string) bool {
-					return assert.Contains(t, body, "Hello, World")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureCsSqlServer(t *testing.T) {
+func TestAccAzureNativeCsSqlServer(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-cs-sqlserver"),
@@ -57,24 +43,7 @@ func TestAccAzureCsSqlServer(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureFsAppService(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-fs-appservice"),
-			Config: map[string]string{
-				"sqlPassword": "2@Password@2",
-			},
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-					return assert.Contains(t, body, "Greetings from Azure App Service")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureGoAci(t *testing.T) {
+func TestAccAzureNativeGoAci(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-go-aci"),
@@ -88,20 +57,7 @@ func TestAccAzureGoAci(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureGoWebserverComponent(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-go-webserver-component"),
-			Config: map[string]string{
-				"username": "webmaster",
-				"password": "Password1234!",
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureGoCallAzureSdk(t *testing.T) {
+func TestAccAzureNativeGoCallAzureSdk(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-go-call-azure-sdk"),
@@ -110,7 +66,7 @@ func TestAccAzureGoCallAzureSdk(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzurePyAppService(t *testing.T) {
+func TestAccAzureNativePyAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-appservice"),
@@ -127,7 +83,7 @@ func TestAccAzurePyAppService(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzurePyAppServiceDocker(t *testing.T) {
+func TestAccAzureNativePyAppServiceDocker(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-appservice-docker"),
@@ -141,30 +97,7 @@ func TestAccAzurePyAppServiceDocker(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzurePyArmTemplate(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-py-arm-template"),
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzurePyVmScaleSet(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-py-vm-scaleset"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["public_address"].(string), nil, func(body string) bool {
-					return assert.Contains(t, body, "nginx")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzurePyWebserver(t *testing.T) {
+func TestAccAzureNativePyWebserver(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-webserver"),
@@ -180,7 +113,7 @@ func TestAccAzurePyWebserver(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzurePyCallAzureSdk(t *testing.T) {
+func TestAccAzureNativePyCallAzureSdk(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-py-call-azure-sdk"),
@@ -189,7 +122,7 @@ func TestAccAzurePyCallAzureSdk(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsAppService(t *testing.T) {
+func TestAccAzureNativeTsAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-appservice"),
@@ -206,7 +139,7 @@ func TestAccAzureTsAppService(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsAppServiceDocker(t *testing.T) {
+func TestAccAzureNativeTsAppServiceDocker(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-appservice-docker"),
@@ -220,16 +153,7 @@ func TestAccAzureTsAppServiceDocker(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsArmTemplate(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-ts-arm-template"),
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsFunctions(t *testing.T) {
+func TestAccAzureNativeTsFunctions(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-functions"),
@@ -243,30 +167,7 @@ func TestAccAzureTsFunctions(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsStreamAnalytics(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-ts-stream-analytics"),
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsVmScaleset(t *testing.T) {
-	test := getAzureBase(t).
-		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "classic-azure-ts-vm-scaleset"),
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["publicAddress"].(string), nil, func(body string) bool {
-					return assert.Contains(t, body, "nginx")
-				})
-			},
-		})
-
-	integration.ProgramTest(t, &test)
-}
-
-func TestAccAzureTsWebserver(t *testing.T) {
+func TestAccAzureNativeTsWebserver(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-webserver"),
@@ -284,7 +185,7 @@ func TestAccAzureTsWebserver(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccAzureTsCallAzureSdk(t *testing.T) {
+func TestAccAzureNativeTsCallAzureSdk(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "azure-ts-call-azure-sdk"),
@@ -319,9 +220,10 @@ func getAzureBase(t *testing.T) integration.ProgramTestOptions {
 	base := getBaseOptions(t)
 	azureBase := base.With(integration.ProgramTestOptions{
 		Config: map[string]string{
-			"azure:environment":     azureEnviron,
-			"azure:location":        azureLocation,
-			"azure-native:location": azureLocation,
+			"azure:environment":        azureEnviron,
+			"azure-native:environment": azureEnviron,
+			"azure:location":           azureLocation,
+			"azure-native:location":    azureLocation,
 		},
 	})
 	return azureBase
