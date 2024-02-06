@@ -1,4 +1,4 @@
-module github.com/pulumi/examples
+module github.com/pulumi/examples/misc/test
 
 go 1.20
 

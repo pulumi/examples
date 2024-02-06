@@ -23,7 +23,7 @@ func (e *ExampleTest) run(t *testing.T) {
 		test := getAzureBase(t).
 			With(e.Options).
 			With(integration.ProgramTestOptions{
-				Dir: path.Join(getCwd(t), "..", "..", e.Dir),
+				Dir: path.Join(getCwd(t), "..", "..", "..", e.Dir),
 			})
 
 		integration.ProgramTest(t, &test)
