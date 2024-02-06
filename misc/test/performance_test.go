@@ -12,9 +12,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/pulumi/pulumi-trace-tool/traces"
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
-	"github.com/stretchr/testify/assert"
 )
 
 func bench(name, provider, runtime, lang string) traces.Benchmark {
@@ -28,8 +30,17 @@ func bench(name, provider, runtime, lang string) traces.Benchmark {
 
 func TestAccAwsGoS3Folder(t *testing.T) {
 	benchmark := bench("aws-go-s3-folder", "aws", "go", "go")
+	dir := path.Join(getCwd(t), "..", "..", benchmark.Name)
+
+	// Update AWS to latest.
+	cmd := exec.Command("go", "get", "-u", "github.com/pulumi/pulumi-aws/sdk/v6")
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	require.NoErrorf(t, err, "Failed to update pulumi-aws to latest version: %s", out)
+	t.Logf("Updated pulumi-aws dependency to the latest version")
+
 	opts := integration.ProgramTestOptions{
-		Dir: path.Join(getCwd(t), "..", "..", benchmark.Name),
+		Dir: dir,
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 			maxWait := 10 * time.Minute
 			endpoint := stack.Outputs["websiteUrl"].(string)
@@ -37,6 +48,7 @@ func TestAccAwsGoS3Folder(t *testing.T) {
 				return assert.Contains(t, body, "Hello, world!")
 			})
 		},
+
 	}
 	test := getAWSBase(t).With(opts)
 	programTestAsBenchmark(t, benchmark, test)
