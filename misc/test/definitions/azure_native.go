@@ -20,6 +20,12 @@ func assertAppServiceResult(t *testing.T, output interface{}, check func(string)
 	return helpers.AssertHTTPResultShapeWithRetry(t, output, nil, 5*time.Minute, ready, check)
 }
 
+func assertAppServiceResultContains(t *testing.T, output interface{}, str string) bool {
+	return assertAppServiceResult(t, output, func(body string) bool {
+		return assert.Contains(t, body, "Greetings from Azure App Service")
+	})
+}
+
 type ExampleTest struct {
 	Dir     string
 	Options integration.ProgramTestOptions
@@ -45,9 +51,7 @@ var AzureNativeTests = map[PL][]ExampleTest{
 					"sqlPassword": "2@Password@2",
 				},
 				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResult(t, stack.Outputs["Endpoint"], func(body string) bool {
-						return assert.Contains(t, body, "Greetings from Azure App Service")
-					})
+					assertAppServiceResultContains(t, stack.Outputs["Endpoint"], "Greetings from Azure App Service")
 				},
 			},
 		},
@@ -55,9 +59,7 @@ var AzureNativeTests = map[PL][]ExampleTest{
 			Dir: "azure-cs-sqlserver",
 			Options: integration.ProgramTestOptions{
 				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResult(t, stack.Outputs["serverName"], func(body string) bool {
-						return assert.Contains(t, body, "database.windows.net")
-					})
+					assertAppServiceResultContains(t, stack.Outputs["serverName"], "database.windows.net")
 				},
 			},
 		},
@@ -67,9 +69,7 @@ var AzureNativeTests = map[PL][]ExampleTest{
 			Dir: "azure-go-aci",
 			Options: integration.ProgramTestOptions{
 				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResult(t, stack.Outputs["containerIPv4Address"], func(body string) bool {
-						return assert.Contains(t, body, "Welcome to Azure Container Instances!")
-					})
+					assertAppServiceResultContains(t, stack.Outputs["containerIPv4Address"], "Welcome to Azure Container Instances!")
 				},
 			},
 		},
@@ -85,9 +85,7 @@ var AzureNativeTests = map[PL][]ExampleTest{
 					"sqlPassword": "2@Password@2",
 				},
 				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-						return assert.Contains(t, body, "Greetings from Azure App Service")
-					})
+					assertAppServiceResultContains(t, stack.Outputs["endpoint"], "Greetings from Azure App Service")
 				},
 			},
 		},
@@ -95,9 +93,7 @@ var AzureNativeTests = map[PL][]ExampleTest{
 			Dir: "azure-py-appservice-docker",
 			Options: integration.ProgramTestOptions{
 				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResult(t, stack.Outputs["helloEndpoint"], func(body string) bool {
-						return assert.Contains(t, body, "Hello, world!")
-					})
+					assertAppServiceResultContains(t, stack.Outputs["helloEndpoint"], "Hello, world!")
 				},
 			},
 		},
@@ -125,9 +121,7 @@ var AzureNativeTests = map[PL][]ExampleTest{
 					"sqlPassword": "2@Password@2",
 				},
 				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResult(t, stack.Outputs["endpoint"], func(body string) bool {
-						return assert.Contains(t, body, "Greetings from Azure App Service")
-					})
+					assertAppServiceResultContains(t, stack.Outputs["endpoint"], "Greetings from Azure App Service")
 				},
 			},
 		},
@@ -135,9 +129,7 @@ var AzureNativeTests = map[PL][]ExampleTest{
 			Dir: "azure-ts-appservice-docker",
 			Options: integration.ProgramTestOptions{
 				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResult(t, stack.Outputs["getStartedEndpoint"], func(body string) bool {
-						return assert.Contains(t, body, "Azure App Service")
-					})
+					assertAppServiceResultContains(t, stack.Outputs["getStartedEndpoint"], "Azure App Service")
 				},
 			},
 		},
