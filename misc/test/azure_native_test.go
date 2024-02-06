@@ -13,6 +13,68 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type ExampleTest struct {
+	Dir     string
+	Options integration.ProgramTestOptions
+}
+
+func (e *ExampleTest) run(t *testing.T) {
+	t.Run(e.Dir, func(t *testing.T) {
+		test := getAzureBase(t).
+			With(e.Options).
+			With(integration.ProgramTestOptions{
+				Dir: path.Join(getCwd(t), "..", "..", e.Dir),
+			})
+
+		integration.ProgramTest(t, &test)
+	})
+}
+
+type PL string
+
+const (
+	CS   PL = "cs"
+	FS   PL = "fs"
+	GO   PL = "go"
+	JAVA PL = "java"
+	PY   PL = "py"
+	TS   PL = "ts"
+)
+
+var AzureNativeTests = map[PL][]ExampleTest{
+	CS: {
+		{
+			Dir: "azure-cs-appservice",
+			Options: integration.ProgramTestOptions{
+				Config: map[string]string{
+					"sqlPassword": "2@Password@2",
+				},
+				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+					assertAppServiceResult(t, stack.Outputs["Endpoint"], func(body string) bool {
+						return assert.Contains(t, body, "Greetings from Azure App Service")
+					})
+				},
+			},
+		},
+		{
+			Dir: "azure-cs-sqlserver",
+			Options: integration.ProgramTestOptions{
+				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+					assertAppServiceResult(t, stack.Outputs["serverName"], func(body string) bool {
+						return assert.Contains(t, body, "database.windows.net")
+					})
+				},
+			},
+		},
+	},
+}
+
+func TestAccFooCS(t *testing.T) {
+	for _, example := range AzureNativeTests[CS] {
+		example.run(t)
+	}
+}
+
 func TestAccAzureNativeCsAppService(t *testing.T) {
 	test := getAzureBase(t).
 		With(integration.ProgramTestOptions{
