@@ -103,6 +103,7 @@ Example   | Description |
 [Voting App](aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
 [Web Server](aws-ts-webserver) | Deploy an EC2 Virtual machine using TypeScript to run a Python web server.
 [Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
+[LangServe - Hello OpenAI](aws-ts-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### JavaScript
 
@@ -116,6 +117,7 @@ Example   | Description |
 [Servless SQS to Slack](aws-js-sqs-slack) | Wire up a serverless AWS Lambda to an AWS SQS queue and post a message to Slack.
 [Web Server - Component](aws-js-webserver-component) | Deploy an EC2 instance using a common module for creating an instance.
 [Web Server](aws-js-webserver) | Deploy an EC2 Virtual machine running a Python web server.
+[LangServe - Hello OpenAI](aws-js-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### Python
 
@@ -133,6 +135,7 @@ Example   | Description |
 [Stack Reference](aws-py-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
 [Step Functions](aws-py-stepfunctions) | Use Step Functions with a Lambda function.
 [Web Server](aws-py-webserver) | Deploy an EC2 instance and open port 80.
+[LangServe - Hello OpenAI](aws-py-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### Go
 
@@ -145,6 +148,7 @@ Example   | Description |
 [Lambda](aws-go-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
 [S3 Folder](aws-go-s3-folder) | Serve a static website on S3.
 [Web Server](aws-go-webserver) | Deploy an EC2 Virtual machine running a Python web server.
+[LangServe - Hello OpenAI](aws-go-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### C#
 
@@ -157,6 +161,7 @@ Example   | Description |
 [Lambda](aws-cs-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
 [S3 Folder](aws-cs-s3-folder) | Serve a static website on S3.
 [Web Server](aws-cs-webserver) | Deploy an EC2 instance and open port 80.
+[LangServe - Hello OpenAI](aws-cs-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### F#
 
