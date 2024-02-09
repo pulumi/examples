@@ -1,0 +1,6 @@
+name: aws-js-langserve
+runtime:
+  name: nodejs
+  options:
+    typescript: false
+description: A minimal Langserve AWS JavaScript Pulumi program
