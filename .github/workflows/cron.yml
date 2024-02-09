@@ -319,7 +319,7 @@ jobs:
         role-duration-seconds: 7200
         role-session-name: examples@githubActions
         role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
-    - name: Install Latest Stable Pulumi CLI
+    - name: Install Pulumi CLI
       uses: pulumi/actions@v5
       with:
         pulumi-version: dev
