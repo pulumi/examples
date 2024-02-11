@@ -26,139 +26,131 @@ func assertAppServiceResultContains(t *testing.T, output interface{}, str string
 	})
 }
 
-type ExampleTest struct {
-	Dir     string
-	Options integration.ProgramTestOptions
-}
-
-type PL string
-
-const (
-	CS   PL = "cs"
-	FS   PL = "fs"
-	GO   PL = "go"
-	JAVA PL = "java"
-	PY   PL = "py"
-	TS   PL = "ts"
-)
-
-var AzureNativeTests = map[PL][]ExampleTest{
-	CS: {
-		{
-			Dir: "azure-cs-appservice",
-			Options: integration.ProgramTestOptions{
-				Config: map[string]string{
-					"sqlPassword": "2@Password@2",
-				},
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResultContains(t, stack.Outputs["Endpoint"], "Greetings from Azure App Service")
-				},
+var AzureNativeTests = TestDefinitions{
+	{
+		Tags: []string{"azure-native", CS},
+		Dir:  "azure-cs-appservice",
+		Options: integration.ProgramTestOptions{
+			Config: map[string]string{
+				"sqlPassword": "2@Password@2",
 			},
-		},
-		{
-			Dir: "azure-cs-sqlserver",
-			Options: integration.ProgramTestOptions{
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResultContains(t, stack.Outputs["serverName"], "database.windows.net")
-				},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResultContains(t, stack.Outputs["Endpoint"], "Greetings from Azure App Service")
 			},
 		},
 	},
-	GO: {
-		{
-			Dir: "azure-go-aci",
-			Options: integration.ProgramTestOptions{
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResultContains(t, stack.Outputs["containerIPv4Address"], "Welcome to Azure Container Instances!")
-				},
+	{
+		Tags: []string{"azure-native", CS},
+		Dir:  "azure-cs-sqlserver",
+		Options: integration.ProgramTestOptions{
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResultContains(t, stack.Outputs["serverName"], "database.windows.net")
 			},
-		},
-		{
-			Dir: "azure-go-call-azure-sdk",
 		},
 	},
-	PY: {
-		{
-			Dir: "azure-py-appservice",
-			Options: integration.ProgramTestOptions{
-				Config: map[string]string{
-					"sqlPassword": "2@Password@2",
-				},
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResultContains(t, stack.Outputs["endpoint"], "Greetings from Azure App Service")
-				},
+
+	{
+		Tags: []string{"azure-native", Go},
+		Dir:  "azure-go-aci",
+		Options: integration.ProgramTestOptions{
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResultContains(t, stack.Outputs["containerIPv4Address"], "Welcome to Azure Container Instances!")
 			},
-		},
-		{
-			Dir: "azure-py-appservice-docker",
-			Options: integration.ProgramTestOptions{
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResultContains(t, stack.Outputs["helloEndpoint"], "Hello, world!")
-				},
-			},
-		},
-		{
-			Dir: "azure-py-webserver",
-			Options: integration.ProgramTestOptions{
-				Config: map[string]string{
-					"username": "testuser",
-					"password": "testTEST1234+-*/",
-				},
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					helpers.AssertHTTPHelloWorld(t, stack.Outputs["public_ip"], nil)
-				},
-			},
-		},
-		{
-			Dir: "azure-py-call-azure-sdk",
 		},
 	},
-	TS: {
-		{
-			Dir: "azure-ts-appservice",
-			Options: integration.ProgramTestOptions{
-				Config: map[string]string{
-					"sqlPassword": "2@Password@2",
-				},
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResultContains(t, stack.Outputs["endpoint"], "Greetings from Azure App Service")
-				},
+	{
+		Tags: []string{"azure-native", Go},
+		Dir:  "azure-go-call-azure-sdk",
+	},
+
+	{
+		Tags: []string{"azure-native", Python},
+		Dir:  "azure-py-appservice",
+		Options: integration.ProgramTestOptions{
+			Config: map[string]string{
+				"sqlPassword": "2@Password@2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResultContains(t, stack.Outputs["endpoint"], "Greetings from Azure App Service")
 			},
 		},
-		{
-			Dir: "azure-ts-appservice-docker",
-			Options: integration.ProgramTestOptions{
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					assertAppServiceResultContains(t, stack.Outputs["getStartedEndpoint"], "Azure App Service")
-				},
+	},
+	{
+		Tags: []string{"azure-native", Python},
+		Dir:  "azure-py-appservice-docker",
+		Options: integration.ProgramTestOptions{
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResultContains(t, stack.Outputs["helloEndpoint"], "Hello, world!")
 			},
 		},
-		{
-			Dir: "azure-ts-functions",
-			Options: integration.ProgramTestOptions{
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					helpers.AssertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
-						return assert.Contains(t, body, "Hello from Node.js, Pulumi")
-					})
-				},
+	},
+	{
+		Tags: []string{"azure-native", Python},
+		Dir:  "azure-py-webserver",
+		Options: integration.ProgramTestOptions{
+			Config: map[string]string{
+				"username": "testuser",
+				"password": "testTEST1234+-*/",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				helpers.AssertHTTPHelloWorld(t, stack.Outputs["public_ip"], nil)
 			},
 		},
-		{
-			Dir: "azure-ts-webserver",
-			Options: integration.ProgramTestOptions{
-				Config: map[string]string{
-					"username": "webmaster",
-					"password": "MySuperS3cretPassw0rd",
-				},
-				ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-					helpers.AssertHTTPResult(t, stack.Outputs["ipAddress"].(string), nil, func(body string) bool {
-						return assert.Contains(t, body, "Hello, World")
-					})
-				},
+	},
+	{
+		Tags: []string{"azure-native", Python},
+		Dir:  "azure-py-call-azure-sdk",
+	},
+
+	{
+		Tags: []string{"azure-native", TS},
+		Dir:  "azure-ts-appservice",
+		Options: integration.ProgramTestOptions{
+			Config: map[string]string{
+				"sqlPassword": "2@Password@2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResultContains(t, stack.Outputs["endpoint"], "Greetings from Azure App Service")
 			},
 		},
-		{
-			Dir: "azure-ts-call-azure-sdk",
+	},
+	{
+		Tags: []string{"azure-native", TS},
+		Dir:  "azure-ts-appservice-docker",
+		Options: integration.ProgramTestOptions{
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				assertAppServiceResultContains(t, stack.Outputs["getStartedEndpoint"], "Azure App Service")
+			},
 		},
+	},
+	{
+		Tags: []string{"azure-native", TS},
+		Dir:  "azure-ts-functions",
+		Options: integration.ProgramTestOptions{
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				helpers.AssertHTTPResult(t, stack.Outputs["endpoint"], nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello from Node.js, Pulumi")
+				})
+			},
+		},
+	},
+	{
+		Tags: []string{"azure-native", TS},
+		Dir:  "azure-ts-webserver",
+		Options: integration.ProgramTestOptions{
+			Config: map[string]string{
+				"username": "webmaster",
+				"password": "MySuperS3cretPassw0rd",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				helpers.AssertHTTPResult(t, stack.Outputs["ipAddress"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello, World")
+				})
+			},
+		},
+	},
+	{
+		Tags: []string{"azure-native", TS},
+		Dir:  "azure-ts-call-azure-sdk",
 	},
 }
