@@ -6,10 +6,10 @@ using Pulumi;
 using Pulumi.AzureAD;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.ContainerService;
-using Pulumi.AzureNative.ContainerService.V20190201;
 using Pulumi.AzureNative.ContainerService.Inputs;
 using ManagedCluster = Pulumi.AzureNative.ContainerService.ManagedCluster;
 using ManagedClusterArgs = Pulumi.AzureNative.ContainerService.ManagedClusterArgs;
+using Pulumi.AzureNative.ContainerService.V20190601;
 
 class MyStack : Stack
 {
