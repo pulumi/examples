@@ -230,6 +230,7 @@ func programTestAsBenchmark(
 			SkipUpdate:               true,
 			AllowEmptyPreviewChanges: true,
 			AllowEmptyUpdateChanges:  true,
+			NoParallel:               true,
 		})
 		prewarmOptions.ExtraRuntimeValidation = nil
 		integration.ProgramTest(t, &prewarmOptions)
@@ -237,7 +238,9 @@ func programTestAsBenchmark(
 
 	// Run with --tracing to record measured data.
 	t.Run("benchmark", func(t *testing.T) {
-		finalOptions := test.With(bench.ProgramTestOptions())
+		finalOptions := test.With(bench.ProgramTestOptions()).With(integration.ProgramTestOptions{
+			NoParallel: true,
+		})
 		integration.ProgramTest(t, &finalOptions)
 	})
 }
