@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
-from langchain.chat_models import ChatAnthropic, ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langserve import add_routes
 
 app = FastAPI(

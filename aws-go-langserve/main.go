@@ -83,7 +83,7 @@ func main() {
 		accountId := current.AccountId
 		tmpJSON0, err := json.Marshal(map[string]interface{}{
 			"rules": []map[string]interface{}{
-				map[string]interface{}{
+				{
 					"rulePriority": 1,
 					"description":  "Expire images when they are more than 10 available",
 					"selection": map[string]interface{}{
@@ -120,9 +120,9 @@ func main() {
 				Username: token.ApplyT(func(token ecr.GetAuthorizationTokenResult) (*string, error) {
 					return &token.UserName, nil
 				}).(pulumi.StringPtrOutput),
-				Password: pulumi.ToSecret(token.ApplyT(func(token ecr.GetAuthorizationTokenResult) (*string, error) {
+				Password: token.ApplyT(func(token ecr.GetAuthorizationTokenResult) (*string, error) {
 					return &token.Password, nil
-				}).(pulumi.StringPtrOutput)).(*pulumi.StringOutput),
+				}).(pulumi.StringPtrOutput),
 			},
 		})
 		if err != nil {
@@ -374,7 +374,7 @@ func main() {
 		}
 		tmpJSON2, err := json.Marshal(map[string]interface{}{
 			"Statement": []map[string]interface{}{
-				map[string]interface{}{
+				{
 					"Action": "sts:AssumeRole",
 					"Effect": "Allow",
 					"Principal": map[string]interface{}{
@@ -450,7 +450,7 @@ func main() {
 		}
 		tmpJSON4, err := json.Marshal(map[string]interface{}{
 			"Statement": []map[string]interface{}{
-				map[string]interface{}{
+				{
 					"Action": "sts:AssumeRole",
 					"Effect": "Allow",
 					"Principal": map[string]interface{}{
@@ -467,7 +467,7 @@ func main() {
 		tmpJSON5, err := json.Marshal(map[string]interface{}{
 			"Version": "2012-10-17",
 			"Statement": []map[string]interface{}{
-				map[string]interface{}{
+				{
 					"Action": []string{
 						"ssmmessages:CreateControlChannel",
 						"ssmmessages:OpenControlChannel",
@@ -477,7 +477,7 @@ func main() {
 					"Effect":   "Allow",
 					"Resource": "*",
 				},
-				map[string]interface{}{
+				{
 					"Action": []string{
 						"logs:CreateLogStream",
 						"logs:DescribeLogGroups",
@@ -496,7 +496,7 @@ func main() {
 		tmpJSON6, err := json.Marshal(map[string]interface{}{
 			"Version": "2012-10-17",
 			"Statement": []map[string]interface{}{
-				map[string]interface{}{
+				{
 					"Action":   "iam:*",
 					"Effect":   "Deny",
 					"Resource": "*",
@@ -539,12 +539,12 @@ func main() {
 				langserveLogGroupName := _args[2].(string)
 				var _zero string
 				tmpJSON7, err := json.Marshal([]map[string]interface{}{
-					map[string]interface{}{
+					{
 						"name":  fmt.Sprintf("%v-%v-service", pulumiProject, pulumiStack),
 						"image": repoDigest,
 						"cpu":   0,
 						"portMappings": []map[string]interface{}{
-							map[string]interface{}{
+							{
 								"name":          "target",
 								"containerPort": 8080,
 								"hostPort":      8080,
@@ -553,7 +553,7 @@ func main() {
 						},
 						"essential": true,
 						"secrets": []map[string]interface{}{
-							map[string]interface{}{
+							{
 								"name":      "OPENAI_API_KEY",
 								"valueFrom": langserveSsmParameterName,
 							},

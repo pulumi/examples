@@ -245,7 +245,7 @@ langserve_execution_role = aws.iam.Role("langserve-execution-role",
     }),
     inline_policies=[aws.iam.RoleInlinePolicyArgs(
         name=f"{pulumi_project}-{pulumi_stack}-service-secrets-policy",
-        policy=pulumi.Output.all(langserve_ssm_parameter.arn, langserve_key.arn).apply(lambda langserveSsmParameterArn, langserveKeyArn: json.dumps({
+        policy=pulumi.Output.all(langserve_ssm_parameter.arn, langserve_key.arn).apply(lambda langserve_ssm_parameter_arn, langserve_key_arn: json.dumps({
             "Version": "2012-10-17",
             "Statement": [
                 {
@@ -335,7 +335,7 @@ langserve_task_definition = aws.ecs.TaskDefinition("langserve-task-definition",
     execution_role_arn=langserve_execution_role.arn,
     task_role_arn=langserve_task_role.arn,
     requires_compatibilities=["FARGATE"],
-    container_definitions=pulumi.Output.all(langserve_ecr_image.repo_digest, langserve_ssm_parameter.name, langserve_log_group.name).apply(lambda repo_digest, langserveSsmParameterName, langserveLogGroupName: json.dumps([{
+    container_definitions=pulumi.Output.all(langserve_ecr_image.repo_digest, langserve_ssm_parameter.name, langserve_log_group.name).apply(lambda repo_digest, langserve_ssm_parameter_name, langserve_log_group_name: json.dumps([{
         "name": f"{pulumi_project}-{pulumi_stack}-service",
         "image": repo_digest,
         "cpu": 0,
