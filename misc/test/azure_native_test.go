@@ -15,7 +15,7 @@ import (
 )
 
 func TestAccAzureNative(t *testing.T) {
-	for _, examples := range definitions.AzureNativeTests {
+	for _, examples := range definitions.GetTestsForTag("azure-native") {
 		for _, example := range examples {
 			run(t, example)
 		}
