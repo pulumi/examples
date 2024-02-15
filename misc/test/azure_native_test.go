@@ -15,19 +15,17 @@ import (
 )
 
 func TestAccAzureNative(t *testing.T) {
-	for _, examples := range definitions.GetTestsForTag("azure-native") {
-		for _, example := range examples {
-			run(t, example)
-		}
+	for _, example := range definitions.GetTestsForTag("azure-native") {
+		runAzure(t, example)
 	}
 }
 
-func run(t *testing.T, e definitions.ExampleTest) {
-	t.Run(e.Dir, func(t *testing.T) {
+func runAzure(t *testing.T, def definitions.TestDefinition) {
+	t.Run(def.Dir, func(t *testing.T) {
 		test := getAzureBase(t).
-			With(e.Options).
+			With(def.Options).
 			With(integration.ProgramTestOptions{
-				Dir: path.Join(helpers.GetCwd(t), "..", "..", "..", e.Dir),
+				Dir: path.Join(helpers.GetCwd(t), "..", "..", "..", def.Dir),
 			})
 
 		integration.ProgramTest(t, &test)

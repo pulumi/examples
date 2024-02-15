@@ -15,6 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/pulumi/examples/misc/test/helpers"
 	"github.com/pulumi/pulumi-trace-tool/traces"
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 )
@@ -44,7 +45,7 @@ func TestAccAwsGoS3Folder(t *testing.T) {
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 			maxWait := 10 * time.Minute
 			endpoint := stack.Outputs["websiteUrl"].(string)
-			assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+			helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 				return assert.Contains(t, body, "Hello, world!")
 			})
 		},
@@ -60,7 +61,7 @@ func TestAccAwsCsS3Folder(t *testing.T) {
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 			maxWait := 10 * time.Minute
 			endpoint := stack.Outputs["Endpoint"].(string)
-			assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+			helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 				return assert.Contains(t, body, "Hello, world!")
 			})
 		},
@@ -76,7 +77,7 @@ func TestAccAwsFsS3Folder(t *testing.T) {
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 			maxWait := 10 * time.Minute
 			endpoint := stack.Outputs["endpoint"].(string)
-			assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+			helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 				return assert.Contains(t, body, "Hello, world!")
 			})
 		},
@@ -90,7 +91,7 @@ func TestAccAwsJsS3Folder(t *testing.T) {
 	opts := integration.ProgramTestOptions{
 		Dir: path.Join(getCwd(t), "..", "..", benchmark.Name),
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
+			helpers.AssertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
 				return assert.Contains(t, body, "Hello, Pulumi!")
 			})
 		},
@@ -104,7 +105,7 @@ func TestAccAwsTsS3Folder(t *testing.T) {
 	opts := integration.ProgramTestOptions{
 		Dir: path.Join(getCwd(t), "..", "..", benchmark.Name),
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			assertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
+			helpers.AssertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
 				return assert.Contains(t, body, "Hello, Pulumi!")
 			})
 		},
@@ -118,7 +119,7 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 	opts := integration.ProgramTestOptions{
 		Dir: path.Join(getCwd(t), "..", "..", benchmark.Name),
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
+			helpers.AssertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
 				return assert.Contains(t, body, "Hello, Pulumi!")
 			})
 		},
@@ -141,7 +142,7 @@ func TestPolicyPacks(t *testing.T) {
 		Dir:                    path.Join(getCwd(t), "..", "..", "aws-go-s3-folder"),
 		UpdateCommandlineFlags: []string{fmt.Sprintf("--policy-pack=%s", policyPack)},
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			assertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
+			helpers.AssertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
 				return assert.Contains(t, body, "Hello, Pulumi!")
 			})
 		},

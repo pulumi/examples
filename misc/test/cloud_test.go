@@ -7,6 +7,7 @@ import (
 	"path"
 	"testing"
 
+	"github.com/pulumi/examples/misc/test/helpers"
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 	"github.com/stretchr/testify/assert"
 )
@@ -16,7 +17,7 @@ func TestAccCloudJsApi(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "cloud-js-api"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
 					return assert.Contains(t, body, "{\"route\":\"hello\",\"count\":1}")
 				})
 			},
@@ -33,7 +34,7 @@ func TestAccCloudJsContainers(t *testing.T) {
 				"cloud-aws:useFargate": "true",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["hostname"].(string), nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, stack.Outputs["hostname"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -50,7 +51,7 @@ func TestAccCloudJsHttpServer(t *testing.T) {
 				"cloud:provider": "aws",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, stack.Outputs["endpoint"].(string)+"/hello", nil, func(body string) bool {
 					return assert.Contains(t, body, "{\"route\":\"/hello\",\"count\":1}")
 				})
 			},
@@ -100,7 +101,7 @@ func TestAccCloudTsUrlShortener(t *testing.T) {
 				"cloud-aws:useFargate": "true",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpointUrl"].(string), nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, stack.Outputs["endpointUrl"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Short URL Manager")
 				})
 			},
@@ -120,7 +121,7 @@ func TestAccCloudTsUrlShortenerCache(t *testing.T) {
 				"cloud-aws:useFargate": "true",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["endpointUrl"].(string), nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, stack.Outputs["endpointUrl"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Short URL Manager")
 				})
 			},
@@ -140,7 +141,7 @@ func TestAccCloudTsVotingApp(t *testing.T) {
 				"cloud-aws:useFargate": "true",
 			},
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["frontendURL"].(string), nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, stack.Outputs["frontendURL"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Pulumi Voting App")
 				})
 			},
