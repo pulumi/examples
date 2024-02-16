@@ -42,6 +42,7 @@ func getBaseOptions(t *testing.T) integration.ProgramTestOptions {
 		RetryFailedSteps:         true,
 		AllowEmptyPreviewChanges: true,
 		AllowEmptyUpdateChanges:  true,
+		InstallDevReleases:       true,
 	}
 
 	return base
