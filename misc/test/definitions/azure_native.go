@@ -10,6 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const AzureCloud Tag = "Azure"
+const AzureNativeProvider Tag = "pulumi-azure-native"
+
 func assertAppServiceResult(t *testing.T, output interface{}, check func(string) bool) bool {
 	ready := func(body string) bool {
 		// We got a welcome page from Azure App Service. This means the resource is deployed but our custom code is not
@@ -28,7 +31,7 @@ func assertAppServiceResultContains(t *testing.T, output interface{}, str string
 
 var AzureNativeTests = TestDefinitions{
 	{
-		Tags: []string{"azure-native", CS},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, CS},
 		Dir:  "azure-cs-appservice",
 		Options: integration.ProgramTestOptions{
 			Config: map[string]string{
@@ -40,7 +43,7 @@ var AzureNativeTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure-native", CS},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, CS},
 		Dir:  "azure-cs-sqlserver",
 		Options: integration.ProgramTestOptions{
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -50,7 +53,7 @@ var AzureNativeTests = TestDefinitions{
 	},
 
 	{
-		Tags: []string{"azure-native", Go},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, Go},
 		Dir:  "azure-go-aci",
 		Options: integration.ProgramTestOptions{
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -59,12 +62,12 @@ var AzureNativeTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure-native", Go},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, Go},
 		Dir:  "azure-go-call-azure-sdk",
 	},
 
 	{
-		Tags: []string{"azure-native", Python},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, Python},
 		Dir:  "azure-py-appservice",
 		Options: integration.ProgramTestOptions{
 			Config: map[string]string{
@@ -76,7 +79,7 @@ var AzureNativeTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure-native", Python},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, Python},
 		Dir:  "azure-py-appservice-docker",
 		Options: integration.ProgramTestOptions{
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -85,7 +88,7 @@ var AzureNativeTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure-native", Python},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, Python},
 		Dir:  "azure-py-webserver",
 		Options: integration.ProgramTestOptions{
 			Config: map[string]string{
@@ -98,12 +101,12 @@ var AzureNativeTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure-native", Python},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, Python},
 		Dir:  "azure-py-call-azure-sdk",
 	},
 
 	{
-		Tags: []string{"azure-native", TS},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, TS},
 		Dir:  "azure-ts-appservice",
 		Options: integration.ProgramTestOptions{
 			Config: map[string]string{
@@ -115,7 +118,7 @@ var AzureNativeTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure-native", TS},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, TS},
 		Dir:  "azure-ts-appservice-docker",
 		Options: integration.ProgramTestOptions{
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -124,7 +127,7 @@ var AzureNativeTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure-native", TS},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, TS},
 		Dir:  "azure-ts-functions",
 		Options: integration.ProgramTestOptions{
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -135,7 +138,7 @@ var AzureNativeTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure-native", TS},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, TS},
 		Dir:  "azure-ts-webserver",
 		Options: integration.ProgramTestOptions{
 			Config: map[string]string{
@@ -150,7 +153,7 @@ var AzureNativeTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure-native", TS},
+		Tags: []Tag{AzureCloud, AzureNativeProvider, TS},
 		Dir:  "azure-ts-call-azure-sdk",
 	},
 }

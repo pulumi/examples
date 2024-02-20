@@ -8,9 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const AzureClassicProvider Tag = "pulumi-azure"
+
 var AzureTests = TestDefinitions{
 	{
-		Tags: []string{"azure", CS},
+		Tags: []Tag{AzureCloud, AzureClassicProvider, CS},
 		Dir:  "classic-azure-cs-webserver",
 		Options: integration.ProgramTestOptions{
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -21,7 +23,7 @@ var AzureTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure", FS},
+		Tags: []Tag{AzureCloud, AzureClassicProvider, FS},
 		Dir:  "classic-azure-fs-appservice",
 		Options: integration.ProgramTestOptions{
 			Config: map[string]string{
@@ -35,7 +37,7 @@ var AzureTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure", Go},
+		Tags: []Tag{AzureCloud, AzureClassicProvider, Go},
 		Dir:  "classic-azure-go-webserver-component",
 		Options: integration.ProgramTestOptions{
 			Config: map[string]string{
@@ -45,11 +47,11 @@ var AzureTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure", Python},
+		Tags: []Tag{AzureCloud, AzureClassicProvider, Python},
 		Dir:  "classic-azure-py-arm-template",
 	},
 	{
-		Tags: []string{"azure", Python},
+		Tags: []Tag{AzureCloud, AzureClassicProvider, Python},
 		Dir:  "classic-azure-py-vm-scaleset",
 		Options: integration.ProgramTestOptions{
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -60,15 +62,15 @@ var AzureTests = TestDefinitions{
 		},
 	},
 	{
-		Tags: []string{"azure", TS},
+		Tags: []Tag{AzureCloud, AzureClassicProvider, TS},
 		Dir:  "classic-azure-ts-arm-template",
 	},
 	{
-		Tags: []string{"azure", TS},
+		Tags: []Tag{AzureCloud, AzureClassicProvider, TS},
 		Dir:  "classic-azure-ts-stream-analytics",
 	},
 	{
-		Tags: []string{"azure", TS},
+		Tags: []Tag{AzureCloud, AzureClassicProvider, TS},
 		Dir:  "classic-azure-ts-vm-scaleset",
 		Options: integration.ProgramTestOptions{
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {

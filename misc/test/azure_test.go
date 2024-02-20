@@ -1,5 +1,5 @@
-//go:build AzureNative || all
-// +build AzureNative all
+//go:build Azure || all
+// +build Azure all
 
 package test
 
@@ -14,8 +14,34 @@ import (
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 )
 
-func TestAccAzureNative(t *testing.T) {
-	for _, example := range definitions.GetTestsForTag("azure-native") {
+var azureTests = definitions.GetTestsByTags(definitions.AzureCloud)
+
+func TestAccAzureCs(t *testing.T) {
+	runAzureTestsForLanguage(t, definitions.CS)
+}
+
+func TestAccAzureFs(t *testing.T) {
+	runAzureTestsForLanguage(t, definitions.FS)
+}
+
+func TestAccAzureGo(t *testing.T) {
+	runAzureTestsForLanguage(t, definitions.Go)
+}
+
+func TestAccAzureJs(t *testing.T) {
+	runAzureTestsForLanguage(t, definitions.JS)
+}
+
+func TestAccAzurePy(t *testing.T) {
+	runAzureTestsForLanguage(t, definitions.Python)
+}
+
+func TestAccAzureTs(t *testing.T) {
+	runAzureTestsForLanguage(t, definitions.TS)
+}
+
+func runAzureTestsForLanguage(t *testing.T, language definitions.Tag) {
+	for _, example := range azureTests.GetByTags(language) {
 		runAzure(t, example)
 	}
 }
@@ -25,7 +51,7 @@ func runAzure(t *testing.T, def definitions.TestDefinition) {
 		test := getAzureBase(t).
 			With(def.Options).
 			With(integration.ProgramTestOptions{
-				Dir: path.Join(helpers.GetCwd(t), "..", "..", "..", def.Dir),
+				Dir: path.Join(helpers.GetCwd(t), "..", "..", def.Dir),
 			})
 
 		integration.ProgramTest(t, &test)

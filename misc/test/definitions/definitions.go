@@ -2,45 +2,64 @@ package definitions
 
 import "github.com/pulumi/pulumi/pkg/v3/testing/integration"
 
+type Tag string
+
 const (
-	CS     = "cs"
-	FS     = "fs"
-	Go     = "go"
-	JAVA   = "java"
-	Python = "py"
-	TS     = "ts"
+	CS     Tag = "cs"
+	FS     Tag = "fs"
+	Go     Tag = "go"
+	Java   Tag = "java"
+	JS     Tag = "js"
+	Python Tag = "py"
+	TS     Tag = "ts"
 )
 
 type TestDefinition struct {
-	Tags    []string
+	Tags    []Tag
 	Dir     string
 	Options integration.ProgramTestOptions
 }
 
 type TestDefinitions []TestDefinition
 
-func (td TestDefinitions) GetTestsForTag(tag string) TestDefinitions {
+// GetByTags returns all tests that have _all_ of the given tags. No tags returns an empty result.
+func (td TestDefinitions) GetByTags(tags ...Tag) TestDefinitions {
 	result := TestDefinitions{}
-	for _, test := range td {
-		for _, t := range test.Tags {
-			if t == tag {
-				result = append(result, test)
+	if len(tags) == 0 {
+		return result
+	}
+
+	hasAllTags := func(testTags []Tag) bool {
+		for _, tag := range tags {
+			has := false
+			for _, testTag := range testTags {
+				if testTag == tag {
+					has = true
+					break
+				}
+			}
+			if !has {
+				return false
 			}
 		}
+		return true
 	}
-	return result
-}
 
-func (td TestDefinitions) GetTestsForTags(tag1, tag2 string) TestDefinitions {
-	return td.GetTestsForTag(tag1).GetTestsForTag(tag2)
+	for _, test := range td {
+		if hasAllTags(test.Tags) {
+			result = append(result, test)
+		}
+	}
+
+	return result
 }
 
 func AllTests() TestDefinitions {
 	return concat(AzureNativeTests, AzureTests)
 }
 
-func GetTestsForTag(tag string) TestDefinitions {
-	return AllTests().GetTestsForTag(tag)
+func GetTestsByTags(tags ...Tag) TestDefinitions {
+	return AllTests().GetByTags(tags...)
 }
 
 func concat(defs ...TestDefinitions) TestDefinitions {

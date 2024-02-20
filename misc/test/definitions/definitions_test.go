@@ -9,17 +9,18 @@ import (
 )
 
 func TestGetExamplesByTags(t *testing.T) {
-	azureTests := definitions.GetTestsForTag("azure")
-	require.NotEmpty(t, azureTests)
+	azureNativeTests := definitions.GetTestsByTags(definitions.AzureNativeProvider)
+	require.NotEmpty(t, azureNativeTests)
 
-	typescriptTests := definitions.GetTestsForTag(definitions.TS)
+	typescriptTests := definitions.GetTestsByTags(definitions.TS)
 	require.NotEmpty(t, typescriptTests)
 
-	azureTypescriptTests := definitions.GetTestsForTag("azure").GetTestsForTag(definitions.TS)
-	require.NotEmpty(t, azureTypescriptTests)
+	// Ensure that the intersection of the two tags is correct.
+	azureNativeTypescriptTests := definitions.GetTestsByTags(definitions.AzureNativeProvider, definitions.TS)
+	require.NotEmpty(t, azureNativeTypescriptTests)
 
 	azureTestNames := map[string]struct{}{}
-	for _, test := range azureTests {
+	for _, test := range azureNativeTests {
 		azureTestNames[test.Dir] = struct{}{}
 	}
 	typescriptTestNames := map[string]struct{}{}
@@ -27,7 +28,7 @@ func TestGetExamplesByTags(t *testing.T) {
 		typescriptTestNames[test.Dir] = struct{}{}
 	}
 	azureTypescriptTestNames := map[string]struct{}{}
-	for _, test := range azureTypescriptTests {
+	for _, test := range azureNativeTypescriptTests {
 		azureTypescriptTestNames[test.Dir] = struct{}{}
 	}
 
@@ -43,4 +44,20 @@ func TestGetExamplesByTags(t *testing.T) {
 		}
 	}
 	assert.Equal(t, azureTypescriptTestNames, azureTsIntersection)
+}
+
+func TestGetExamplesByTagsDoesNotReturnDuplicates(t *testing.T) {
+	azureTests := definitions.GetTestsByTags(definitions.AzureCloud, definitions.AzureClassicProvider, definitions.TS)
+	require.NotEmpty(t, azureTests)
+
+	set := map[string]struct{}{}
+	for _, test := range azureTests {
+		set[test.Dir] = struct{}{}
+	}
+	assert.Equal(t, len(azureTests), len(set))
+}
+
+func TestGetExamplesByTagsForNoTags(t *testing.T) {
+	tests := definitions.GetTestsByTags()
+	require.Empty(t, tests)
 }
