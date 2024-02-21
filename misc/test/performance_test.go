@@ -48,7 +48,6 @@ func TestAccAwsGoS3Folder(t *testing.T) {
 				return assert.Contains(t, body, "Hello, world!")
 			})
 		},
-
 	}
 	test := getAWSBase(t).With(opts)
 	programTestAsBenchmark(t, benchmark, test)
@@ -224,6 +223,7 @@ func programTestAsBenchmark(
 	// measurements.
 	t.Run("prewarm", func(t *testing.T) {
 		prewarmOptions := test.With(integration.ProgramTestOptions{
+			RequireService:           true,
 			SkipRefresh:              true,
 			SkipEmptyPreviewUpdate:   true,
 			SkipExportImport:         true,
@@ -239,7 +239,8 @@ func programTestAsBenchmark(
 	// Run with --tracing to record measured data.
 	t.Run("benchmark", func(t *testing.T) {
 		finalOptions := test.With(bench.ProgramTestOptions()).With(integration.ProgramTestOptions{
-			NoParallel: true,
+			RequireService: true,
+			NoParallel:     true,
 		})
 		integration.ProgramTest(t, &finalOptions)
 	})
