@@ -108,7 +108,7 @@ jobs:
         dotnet-version:
           - 6.0.114
         go-version:
-          - 1.20.x
+          - 1.21.x
         node-version:
           - 16.x
         platform:
