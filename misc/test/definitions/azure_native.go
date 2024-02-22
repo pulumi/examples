@@ -25,7 +25,7 @@ func assertAppServiceResult(t *testing.T, output interface{}, check func(string)
 
 func assertAppServiceResultContains(t *testing.T, output interface{}, str string) bool {
 	return assertAppServiceResult(t, output, func(body string) bool {
-		return assert.Contains(t, body, "Greetings from Azure App Service")
+		return assert.Contains(t, body, str)
 	})
 }
 
