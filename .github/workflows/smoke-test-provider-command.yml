@@ -79,7 +79,7 @@ jobs:
       fail-fast: false
       matrix:
         goversion:
-        - 1.20.x
+        - 1.21.x
         platform:
         - ubuntu-latest
         source-dir:
@@ -192,7 +192,7 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.20.x
+        - 1.21.x
         nodeversion:
         - 18.x
         platform:
@@ -302,7 +302,7 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.20.x
+        - 1.21.x
         languages:
         - Cs
         - Js
@@ -449,7 +449,7 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.20.x
+        - 1.21.x
         nodeversion:
         - 18.x
         platform:
@@ -554,7 +554,7 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.20.x
+        - 1.21.x
         nodeversion:
         - 18.x
         platform:
