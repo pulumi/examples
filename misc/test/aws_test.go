@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/pulumi/examples/misc/test/helpers"
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/stretchr/testify/assert"
@@ -38,7 +39,7 @@ func TestAccAwsGoEks(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["url"].(string)
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+				helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello Kubernetes bootcamp!")
 				})
 			},
@@ -63,7 +64,7 @@ func TestAccAwsGoS3FolderComponent(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["websiteUrl"].(string)
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+				helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, world!")
 				})
 			},
@@ -79,7 +80,7 @@ func TestAccAwsGoWebserver(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["publicIp"].(string)
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+				helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World!")
 				})
 			},
@@ -108,7 +109,7 @@ func TestAccAwsJsContainers(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["frontendURL"].(string)
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+				helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -122,7 +123,7 @@ func TestAccAwsJsS3FolderComponent(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-js-s3-folder-component"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -148,7 +149,7 @@ func TestAccAwsJsWebserver(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-js-webserver"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["publicHostName"], nil)
+				helpers.AssertHTTPHelloWorld(t, stack.Outputs["publicHostName"], nil)
 			},
 		})
 
@@ -160,7 +161,7 @@ func TestAccAwsJsWebserverComponent(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-js-webserver-component"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPHelloWorld(t, stack.Outputs["webUrl"], nil)
+				helpers.AssertHTTPHelloWorld(t, stack.Outputs["webUrl"], nil)
 			},
 		})
 
@@ -174,7 +175,7 @@ func TestAccAwsApiGatewayPyRoutes(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["url"].(string)
-				assertHTTPResultWithRetry(t, endpoint+"lambda", nil, maxWait, func(body string) bool {
+				helpers.AssertHTTPResultWithRetry(t, endpoint+"lambda", nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, API Gateway!")
 				})
 			},
@@ -190,7 +191,7 @@ func TestAccAwsApiGatewayTsRoutes(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["url"].(string)
-				assertHTTPResultWithRetry(t, endpoint+"lambda", nil, maxWait, func(body string) bool {
+				helpers.AssertHTTPResultWithRetry(t, endpoint+"lambda", nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, API Gateway!")
 				})
 			},
@@ -227,7 +228,7 @@ func TestAccAwsGoAppSync(t *testing.T) {
 			// 		"x-api-key":    key,
 			// 	}
 
-			// 	assertHTTPResultShapeWithRetry(t, finalURL, headersMap, maxWait, func(body string) bool {
+			// 	helpers.AssertHTTPResultShapeWithRetry(t, finalURL, headersMap, maxWait, func(body string) bool {
 			// 		return !strings.Contains(body, "AccessDeniedException")
 			// 	}, func(body string) bool {
 			// 		return assert.Contains(t, body, "FirstCorp")
@@ -282,7 +283,7 @@ func TestAccAwsPyWebserver(t *testing.T) {
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-py-webserver"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				assertHTTPResult(t, "http://"+stack.Outputs["public_dns"].(string), nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, "http://"+stack.Outputs["public_dns"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World!")
 				})
 			},
@@ -312,7 +313,7 @@ func TestAccAwsTsApiGateway(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["endpoint"].(string)
-				assertHTTPResultWithRetry(t, endpoint+"hello", nil, maxWait, func(body string) bool {
+				helpers.AssertHTTPResultWithRetry(t, endpoint+"hello", nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "route")
 				})
 			},
@@ -350,7 +351,7 @@ func TestAccAwsTsContainers(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 15 * time.Minute
 				endpoint := stack.Outputs["frontendURL"].(string)
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+				helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello, Pulumi!")
 				})
 			},
@@ -433,7 +434,7 @@ func TestAccAwsTsEksHelloWorld(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["serviceHostname"].(string)
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+				helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Welcome to nginx")
 				})
 			},
@@ -449,7 +450,7 @@ func TestAccAwsTsHelloFargate(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["url"].(string)
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+				helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
 				})
 			},
