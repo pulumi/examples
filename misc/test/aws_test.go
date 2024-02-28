@@ -346,8 +346,7 @@ func TestAccAwsTsAssumeRole(t *testing.T) {
 func TestAccAwsTsContainers(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
-			InstallDevReleases: false,
-			Dir:                path.Join(getCwd(t), "..", "..", "aws-ts-containers"),
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-containers"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 15 * time.Minute
 				endpoint := stack.Outputs["frontendURL"].(string)
@@ -412,8 +411,7 @@ func checkAccAwsEc2Provisioners(t *testing.T, dir string) {
 func TestAccAwsTsEks(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
-			InstallDevReleases: false,
-			Dir:                path.Join(getCwd(t), "..", "..", "aws-ts-eks"),
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-eks"),
 		})
 
 	integration.ProgramTest(t, &test)
@@ -422,8 +420,7 @@ func TestAccAwsTsEks(t *testing.T) {
 func TestAccAwsTsNextjs(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
-			InstallDevReleases: false,
-			Dir:                path.Join(getCwd(t), "..", "..", "aws-ts-nextjs"),
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-nextjs"),
 		})
 
 	integration.ProgramTest(t, &test)
@@ -449,8 +446,7 @@ func TestAccAwsTsEksHelloWorld(t *testing.T) {
 func TestAccAwsTsHelloFargate(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
-			InstallDevReleases: false,
-			Dir:                path.Join(getCwd(t), "..", "..", "aws-ts-hello-fargate"),
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-hello-fargate"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				maxWait := 10 * time.Minute
 				endpoint := stack.Outputs["url"].(string)
@@ -537,8 +533,7 @@ func TestAccAwsTsStepFunctions(t *testing.T) {
 func TestAccAwsTsThumbnailer(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
-			InstallDevReleases: false,
-			Dir:                path.Join(getCwd(t), "..", "..", "aws-ts-thumbnailer"),
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-thumbnailer"),
 		})
 
 	integration.ProgramTest(t, &test)
@@ -547,8 +542,7 @@ func TestAccAwsTsThumbnailer(t *testing.T) {
 func TestAccAwsTsLambdaThumbnailer(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
-			InstallDevReleases: false,
-			Dir:                path.Join(getCwd(t), "..", "..", "aws-ts-lambda-thumbnailer"),
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-lambda-thumbnailer"),
 		})
 
 	integration.ProgramTest(t, &test)
@@ -573,8 +567,7 @@ func TestAccAwsTsTwitterAthena(t *testing.T) {
 func TestAccAwsTsLambdaEfs(t *testing.T) {
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
-			InstallDevReleases: false,
-			Dir:                path.Join(getCwd(t), "..", "..", "aws-ts-lambda-efs"),
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-lambda-efs"),
 		})
 
 	integration.ProgramTest(t, &test)
