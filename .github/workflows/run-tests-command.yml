@@ -363,6 +363,11 @@ jobs:
       with:
         version: v2.5.0
         token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Free Disk Space (Ubuntu)
+      uses: jlumbroso/free-disk-space@main
+      with:
+        tool-cache: false
+        swap-storage: false
     - name: Running ${{ matrix.clouds }}${{ matrix.languages }} Tests
       run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
     strategy:

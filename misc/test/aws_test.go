@@ -370,7 +370,8 @@ func TestAccAwsPyEc2Provisioners(t *testing.T) {
 
 func checkAccAwsEc2Provisioners(t *testing.T, dir string) {
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String(getAwsRegion())},
+		Region: aws.String(getAwsRegion()),
+	},
 	)
 	assert.NoError(t, err)
 	svc := ec2.New(sess)
