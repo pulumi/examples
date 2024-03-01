@@ -245,6 +245,19 @@ func programTestAsBenchmark(
 		})
 		integration.ProgramTest(t, &finalOptions)
 	})
+
+	// Run again against filestate backend; rename the benchmark first so that in the data
+	// warehouse one can distinguish easily the filestate time series from the regular ones that
+	// utilize the service backend.
+	t.Run("benchmark-filestate", func(t *testing.T) {
+		renamedBench := bench
+		renamedBench.Name += "-filestate"
+		finalOptions := test.With(renamedBench.ProgramTestOptions()).With(integration.ProgramTestOptions{
+			RequireService: false, // use filestate instead
+			NoParallel:     true,
+		})
+		integration.ProgramTest(t, &finalOptions)
+	})
 }
 
 func TestMain(m *testing.M) {
