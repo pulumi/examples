@@ -1,0 +1,7 @@
+name: nx-monorepo
+description: A project using an Nx monorepo.
+main: dist/index.js
+runtime:
+  name: nodejs
+  options:
+    typescript: false

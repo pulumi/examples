@@ -1,0 +1,15 @@
+{
+  "name": "nx-repo",
+  "version": "1.0.0",
+  "scripts": {},
+  "private": true,
+  "devDependencies": {
+    "@nx/js": "18.0.5",
+    "nx": "18.0.5",
+    "typescript": "^5.3.3"
+  },
+  "workspaces": [
+    "packages/*",
+    "infra"
+  ]
+}
