@@ -6,7 +6,7 @@
         "@pulumi/pulumi": "latest",
         "s3folder": "*",
         "website-deploy": "*",
-        "website-builder": "*"
+        "website": "*"
     },
     "scripts": {
         "build": "tsc",
@@ -18,7 +18,7 @@
             "deploy": {
                 "dependsOn": [
                     "build",
-                    "website-builder:generate"
+                    "website:generate"
                 ]
             }
         }

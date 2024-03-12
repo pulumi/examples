@@ -1,25 +1,23 @@
 # Nx Monorepo
 
-This example shows how to use Nx to organize a mono repo and track dependencies.
+This example shows how to use Nx to organize a mono repo and track dependencies between the packages in the monorepo.
 
 The example consists of the following components:
 
-```
- - packages:
-     - s3folder: ComponentResource that manages a S3 bucket
-     - website-deploy: ComponentResource resource that manages files in a S3 bucket
-     - website-builder: Mock website generator that creates HTML output
- - infra: Pulumi program that uses the s3folder and website ComponentResources to deploy a website
-```
+- packages/s3folder: a [ComponentResource](https://www.pulumi.com/docs/concepts/resources/components/) that manages a S3 bucket and its access policies.
+- packages/website-deploy: [ComponentResource](https://www.pulumi.com/docs/concepts/resources/components/) resource that manages files in a S3 bucket
+- packages/website: A website built with [Astro](https://astro.build).
+- infra: Pulumi program that uses the `s3folder` and `website-deploy` resources to deploy the generated website.
+
+The components are written in TypeScript and have a build step to compile them.
 
 To deploy the latest version of the website, we need to respect the following dependencies:
 
-- website-builder needs to be compiled before we can use it to generate the HTML output.
-- s3folder and website-deploy need to be compiled before we can build infra.
-- We need to generate HTML output before we can deploy the infra.
-- infra needs to be compiled before we can deploy.
+- `website` needs to generate the HTML output.
+- `s3folder` and `website-deploy` need to be compiled before we can build `infra`.
+- `infra` needs to be compiled before we can deploy.
 
-These dependecies can be defined using Nx, for example in [infra/package.json](./infra//package.json) we declare that the `deploy` needs its dependencies to be built, and the HTML to generated:
+These dependecies can be defined using Nx, for example in [infra/package.json](./infra/package.json) we declare that the `deploy` target for the infra package needs its dependencies to be built, and the HTML to generated:
 
 ```
     ...
@@ -27,8 +25,8 @@ These dependecies can be defined using Nx, for example in [infra/package.json](.
         "targets": {
             "deploy": {
                 "dependsOn": [
-                    "build",
-                    "website-builder:generate"
+                    "^build",
+                    "website:generate"
                 ]
             }
         }
