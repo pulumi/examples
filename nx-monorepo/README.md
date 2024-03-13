@@ -1,13 +1,13 @@
 # Nx Monorepo
 
-This example shows how to use Nx to organize a mono repo and track dependencies between the packages in the monorepo.
+This example shows how to use Nx to organize a monorepo and track dependencies between the packages in the monorepo.
 
 The example consists of the following components:
 
-- packages/s3folder: a [ComponentResource](https://www.pulumi.com/docs/concepts/resources/components/) that manages a S3 bucket and its access policies.
-- packages/website-deploy: [ComponentResource](https://www.pulumi.com/docs/concepts/resources/components/) resource that manages files in a S3 bucket
-- packages/website: A website built with [Astro](https://astro.build).
-- infra: Pulumi program that uses the `s3folder` and `website-deploy` resources to deploy the generated website.
+- **components/s3folder**: A [Component Resource](https://www.pulumi.com/docs/concepts/resources/components/) that manages a S3 bucket and its access policies.
+- **components/website-deploy**: A [Component Resource](https://www.pulumi.com/docs/concepts/resources/components/) that manages files in a S3 bucket
+- **website**: A website built with [Astro](https://astro.build).
+- **infra**: A Pulumi program that uses the `s3folder` and `website-deploy` resources to deploy the generated `website`.
 
 The components are written in TypeScript and have a build step to compile them.
 
@@ -59,11 +59,11 @@ npx nx deploy infra
 ```
 
 ```
-  ✔    4/4 dependent project tasks succeeded [0 read from cache]
+  ✔    3/3 dependent project tasks succeeded [0 read from cache]
 
   Hint: you can run the command with --verbose to see the full dependent project outputs
 
-———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+—————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
 
 > nx run infra:build
@@ -79,55 +79,53 @@ npx nx deploy infra
 > infra@1.0.0 deploy
 > pulumi up --stack dev
 
-The stack 'dev' does not exist.
-
-If you would like to create this stack now, please press <ENTER>, otherwise press ^C:
-Created stack 'dev'
 Previewing update (dev)
 
-View in Browser (Ctrl+O): https://app.pulumi.com/julienp/nx-monorepo/dev/previews/fc7630fd-7dc4-4c7e-baa0-3d6e014fc90a
+View in Browser (Ctrl+O): https://app.pulumi.com/v-julien-pulumi-corp/nx-monorepo/dev/previews/19e33681-e8fa-49f0-b830-494cfd996c50
 
      Type                                  Name                 Plan
  +   pulumi:pulumi:Stack                   nx-monorepo-dev      create
  +   ├─ pulumi:examples:WebsiteDeploy      my-website           create
- +   │  └─ aws:s3:BucketObject             index.html           create
+ +   │  ├─ aws:s3:BucketObject             index.html           create
+ +   │  └─ aws:s3:BucketObject             favicon.svg          create
  +   └─ pulumi:examples:S3Folder           my-folder            create
  +      ├─ aws:s3:Bucket                   my-folder            create
  +      ├─ aws:s3:BucketPublicAccessBlock  public-access-block  create
  +      └─ aws:s3:BucketPolicy             bucketPolicy         create
 
 Outputs:
+    bucketId  : output<string>
     websiteUrl: output<string>
 
 Resources:
-    + 7 to create
+    + 8 to create
 
 Do you want to perform this update? yes
 Updating (dev)
 
-View in Browser (Ctrl+O): https://app.pulumi.com/julienp/nx-monorepo/dev/updates/1
+View in Browser (Ctrl+O): https://app.pulumi.com/v-julien-pulumi-corp/nx-monorepo/dev/updates/25
 
      Type                                  Name                 Status
  +   pulumi:pulumi:Stack                   nx-monorepo-dev      created (6s)
- +   ├─ pulumi:examples:S3Folder           my-folder            created (5s)
- +   │  ├─ aws:s3:Bucket                   my-folder            created (1s)
- +   │  ├─ aws:s3:BucketPublicAccessBlock  public-access-block  created (0.76s)
- +   │  └─ aws:s3:BucketPolicy             bucketPolicy         created (0.85s)
- +   └─ pulumi:examples:WebsiteDeploy      my-website           created (2s)
- +      └─ aws:s3:BucketObject             index.html           created (0.80s)
+ +   ├─ pulumi:examples:WebsiteDeploy      my-website           created (1s)
+ +   │  ├─ aws:s3:BucketObject             favicon.svg          created (0.94s)
+ +   │  └─ aws:s3:BucketObject             index.html           created (1s)
+ +   └─ pulumi:examples:S3Folder           my-folder            created (5s)
+ +      ├─ aws:s3:Bucket                   my-folder            created (2s)
+ +      ├─ aws:s3:BucketPublicAccessBlock  public-access-block  created (0.85s)
+ +      └─ aws:s3:BucketPolicy             bucketPolicy         created (1s)
 
 Outputs:
-    websiteUrl: "my-folder-a64ab3c.s3-website.eu-central-1.amazonaws.com"
+    bucketId  : "my-folder-c073a6e"
+    websiteUrl: "http://my-folder-c073a6e.s3-website.eu-central-1.amazonaws.com"
 
 Resources:
-    + 7 created
+    + 8 created
 
-Duration: 9s
+Duration: 10s
 
 
-———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
-
- NX   Successfully ran target deploy for project infra and 5 tasks it depends on (42s)
+———————————————————————————————————————————————————————————————————————————
 ```
 
 To destroy the stack, we run:
@@ -137,6 +135,20 @@ npx nx destroy infra
 ```
 
 ```
+  ✔    2/2 dependent project tasks succeeded [2 read from cache]
+
+  Hint: you can run the command with --verbose to see the full dependent project outputs
+
+—————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+
+> nx run infra:build  [existing outputs match the cache, left as is]
+
+
+> infra@1.0.0 build
+> tsc
+
+
 > nx run infra:destroy
 
 
@@ -145,49 +157,56 @@ npx nx destroy infra
 
 Previewing destroy (dev)
 
-View in Browser (Ctrl+O): https://app.pulumi.com/julienp/nx-monorepo/dev/previews/b640cce7-a9df-49a5-b004-3fbdbe65c4eb
+View in Browser (Ctrl+O): https://app.pulumi.com/v-julien-pulumi-corp/nx-monorepo/dev/previews/8cfe44be-b3e1-4858-8d48-8bf3223a344c
 
      Type                                  Name                 Plan
  -   pulumi:pulumi:Stack                   nx-monorepo-dev      delete
  -   ├─ pulumi:examples:S3Folder           my-folder            delete
- -   │  ├─ aws:s3:BucketPolicy             bucketPolicy         delete
  -   │  ├─ aws:s3:BucketPublicAccessBlock  public-access-block  delete
- -   │  └─ aws:s3:Bucket                   my-folder            delete
+ -   │  ├─ aws:s3:Bucket                   my-folder            delete
+ -   │  └─ aws:s3:BucketPolicy             bucketPolicy         delete
  -   └─ pulumi:examples:WebsiteDeploy      my-website           delete
+ -      ├─ aws:s3:BucketObject             favicon.svg          delete
  -      └─ aws:s3:BucketObject             index.html           delete
 
 Outputs:
-  - websiteUrl: "my-folder-a64ab3c.s3-website.eu-central-1.amazonaws.com"
+  - bucketId  : "my-folder-c073a6e"
+  - websiteUrl: "http://my-folder-c073a6e.s3-website.eu-central-1.amazonaws.com"
 
 Resources:
-    - 7 to delete
+    - 8 to delete
 
 Do you want to perform this destroy? yes
 Destroying (dev)
 
-View in Browser (Ctrl+O): https://app.pulumi.com/julienp/nx-monorepo/dev/updates/2
+View in Browser (Ctrl+O): https://app.pulumi.com/v-julien-pulumi-corp/nx-monorepo/dev/updates/26
 
      Type                                  Name                 Status
- -   pulumi:pulumi:Stack                   nx-monorepo-dev      deleted (0.31s)
- -   ├─ pulumi:examples:WebsiteDeploy      my-website           deleted (0.60s)
- -   │  └─ aws:s3:BucketObject             index.html           deleted (0.88s)
- -   └─ pulumi:examples:S3Folder           my-folder            deleted (0.82s)
- -      ├─ aws:s3:BucketPolicy             bucketPolicy         deleted (0.96s)
- -      ├─ aws:s3:BucketPublicAccessBlock  public-access-block  deleted (0.91s)
- -      └─ aws:s3:Bucket                   my-folder            deleted (0.74s)
+ -   pulumi:pulumi:Stack                   nx-monorepo-dev      deleted (0.25s)
+ -   ├─ pulumi:examples:WebsiteDeploy      my-website           deleted (0.31s)
+ -   │  ├─ aws:s3:BucketObject             favicon.svg          deleted (1s)
+ -   │  └─ aws:s3:BucketObject             index.html           deleted (1s)
+ -   └─ pulumi:examples:S3Folder           my-folder            deleted (0.56s)
+ -      ├─ aws:s3:BucketPolicy             bucketPolicy         deleted (0.86s)
+ -      ├─ aws:s3:BucketPublicAccessBlock  public-access-block  deleted (0.88s)
+ -      └─ aws:s3:Bucket                   my-folder            deleted (0.71s)
 
 Outputs:
-  - websiteUrl: "my-folder-a64ab3c.s3-website.eu-central-1.amazonaws.com"
+  - bucketId  : "my-folder-c073a6e"
+  - websiteUrl: "http://my-folder-c073a6e.s3-website.eu-central-1.amazonaws.com"
 
 Resources:
-    - 7 deleted
+    - 8 deleted
 
-Duration: 7s
+Duration: 8s
 
 The resources in the stack have been deleted, but the history and configuration associated with the stack are still maintained.
 If you want to remove the stack completely, run `pulumi stack rm dev`.
 
-———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+—————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
- NX   Successfully ran target destroy for project infra (18s)
+ NX   Successfully ran target destroy for project infra and 3 tasks it depends on (33s)
+
+Nx read the output from the cache instead of running the command for 3 out of 4 tasks.
+
 ```

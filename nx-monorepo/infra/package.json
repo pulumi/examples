@@ -5,20 +5,27 @@
     "dependencies": {
         "@pulumi/pulumi": "latest",
         "s3folder": "*",
-        "website-deploy": "*",
-        "website": "*"
+        "website": "*",
+        "website-deploy": "*"
     },
     "scripts": {
         "build": "tsc",
         "deploy": "pulumi up --stack dev",
-        "destroy": "pulumi destroy --stack dev"
+        "destroy": "pulumi destroy --stack dev",
+        "refresh": "pulumi refresh --stack dev"
     },
     "nx": {
         "targets": {
             "deploy": {
+                "cache": true,
                 "dependsOn": [
                     "build",
                     "website:generate"
+                ]
+            },
+            "destroy": {
+                "dependsOn": [
+                    "build"
                 ]
             }
         }
