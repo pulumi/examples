@@ -5,11 +5,16 @@ export class S3Folder extends pulumi.ComponentResource {
   readonly bucket: pulumi.Output<aws.s3.Bucket>;
   readonly websiteUrl: pulumi.Output<string>;
 
+  /**
+   * S3Folder manages a S3 bucket and configures it to serve a static website.
+   * @param bucketName The name of the S3 bucket.
+   * @param opts
+   */
   constructor(bucketName: string, opts: pulumi.ComponentResourceOptions) {
     super("pulumi:examples:S3Folder", bucketName, {}, opts);
 
     // Create a bucket and expose a website index document
-    let siteBucket = new aws.s3.Bucket(bucketName, {
+    const siteBucket = new aws.s3.Bucket(bucketName, {
       website: {
         indexDocument: "index.html",
       },
@@ -21,7 +26,7 @@ export class S3Folder extends pulumi.ComponentResource {
     }, { parent: this });
 
     // Set the access policy for the bucket so all objects are readable
-    let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
+    const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
       bucket: siteBucket.bucket,
       policy: siteBucket.bucket.apply(this.publicReadPolicyForBucket),
     }, { parent: this, dependsOn: publicAccessBlock }); // specify resource parent

@@ -6,10 +6,11 @@
   "devDependencies": {
     "@nx/js": "18.0.5",
     "nx": "18.0.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   },
   "workspaces": [
-    "packages/*",
-    "infra"
+    "components/*",
+    "infra",
+    "website"
   ]
 }
