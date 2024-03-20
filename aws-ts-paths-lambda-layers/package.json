@@ -1,0 +1,14 @@
+{
+    "name": "my-infra",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^20"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^6.0.0",
+        "@pulumi/aws-apigateway": "^2.4.0",
+        "@pulumi/command": "^0.9.2",
+        "@pulumi/pulumi": "^3.0.0",
+        "tsconfig-paths": "^4.2.0"
+    }
+}

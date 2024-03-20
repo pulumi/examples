@@ -1,0 +1,12 @@
+name: aws-typescript-38c78f1
+runtime:
+  name: nodejs
+  # options:
+  #   typescript: true
+  #   nodeargs: "--require tsconfig-paths/register"
+
+description: A minimal AWS TypeScript Pulumi program
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-typescript

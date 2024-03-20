@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "outDir": "bin",
+        "target": "es2016",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "pretty": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": ".",
+        "paths": {
+            "@my-alias/utils": [
+                "./layers/utils"
+            ]
+        }
+    },
+    "files": [
+        "index.ts"
+    ],
+    // This *should* work (and does, in Automation API programs run with `ts-node` -- see the example
+    // in./program-runner), but doesn't yet work for programs run with the Pulumi CLI. This project
+    // therefore includes a shim at ./tsconfig-paths-shim.ts to instruct ts-node (via tsconfig-paths)
+    // to use the `paths` compilerOption. See https://github.com/pulumi/pulumi/issues/3061 for details.
+    // "ts-node": {
+    //     "require": ["tsconfig-paths/register"]
+    // }
+}
