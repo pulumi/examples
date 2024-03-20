@@ -4,11 +4,11 @@ from pulumi import export
 
 random_host_name = random.RandomPet("hostname")
 
-project = equinix.get_project(
+project = equinix.metal.get_project(
     name="ci-project"
 )
 
-vm = equinix.Device(
+vm = equinix.metal.Device(
     "vm",
     billing_cycle="hourly",
     metro="da",
