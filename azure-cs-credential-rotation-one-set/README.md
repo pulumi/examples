@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-credential-rotation-one-set/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-credential-rotation-one-set/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-credential-rotation-one-set/README.md#gh-dark-mode-only)
 
 # Automate the rotation of a secret for resources that use one set of authentication credentials
 
@@ -47,11 +48,11 @@ To deploy your infrastructure, follow the below steps.
     ```
 
 1. Set the Azure region location to use:
-    
+
     ```
     $ pulumi config set azure-native:location westus2
     ```
-    
+
 1.  Run `pulumi up` to preview and deploy changes:
 
     ```

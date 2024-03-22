@@ -1,0 +1,66 @@
+name: azure-yaml-aks-managed-identity
+runtime: yaml
+description: A minimal Azure Native Pulumi YAML program
+outputs:
+  # Export the primary key of the Storage Account
+  kubeconfig: 
+    fn::fromBase64: ${adminCredentials.kubeconfigs[0].value}
+resources:
+  # Create a private key for ssh access
+  privateKey:
+    type: tls:PrivateKey
+    properties:
+      algorithm: RSA
+      rsaBits: 4096
+
+  # Create an Azure Resource Group
+  resourceGroup:
+    type: azure-native:resources:ResourceGroup
+
+  identity:
+    type: azure-native:managedidentity:UserAssignedIdentity
+    properties:
+      resourceGroupName: ${resourceGroup.name}
+
+  # Assign a role to the managed identity
+  roleAssignment:
+    type: azure-native:authorization:RoleAssignment
+    properties:
+      principalId: ${identity.principalId}
+      principalType: ServicePrincipal
+      # contributor role
+      # https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#contributor
+      roleDefinitionId: /providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c
+      scope: ${resourceGroup.id}
+
+  # Create an AKS Cluster
+  cluster:
+    type: azure-native:containerservice:ManagedCluster
+    properties:
+      resourceGroupName: ${resourceGroup.name}
+      identity:
+        type: UserAssigned
+        userAssignedIdentities:
+          - ${identity.id}
+      kubernetesVersion: 1.26.3
+      dnsPrefix: dns-prefix
+      enableRBAC: true
+      agentPoolProfiles: 
+        - name: agentpool
+          mode: System
+          count: 1
+          vmSize: Standard_A2_v2
+          osType: Linux
+          osDiskSizeGB: 30
+          type: VirtualMachineScaleSets
+      linuxProfile:
+        adminUsername: aksuser
+        ssh:
+          publicKeys:
+            - keyData: ${privateKey.publicKeyOpenssh}
+ 
+variables:
+  adminCredentials:
+    fn::azure-native:containerservice:listManagedClusterAdminCredentials:
+      resourceGroupName: ${resourceGroup.name}
+      resourceName: ${cluster.name}

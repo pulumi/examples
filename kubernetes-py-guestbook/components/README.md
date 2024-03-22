@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-py-guestbook/components/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-py-guestbook/components/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-py-guestbook/components/README.md#gh-dark-mode-only)
 
 # Kubernetes Guestbook (with Components)
 
@@ -33,36 +34,36 @@ Perform the deployment:
 $ pulumi up
 Previewing update (guestbook):
 
-     Type                                 Name                      Plan       
- +   pulumi:pulumi:Stack                  guestbook-easy-guestbook  create     
- +   ├─ k8sx:component:ServiceDeployment  frontend                  create     
- +   │  ├─ kubernetes:apps:Deployment     frontend                  create     
- +   │  └─ kubernetes:core:Service        frontend                  create     
- +   ├─ k8sx:component:ServiceDeployment  redis-replica             create     
- +   │  ├─ kubernetes:apps:Deployment     redis-replica             create     
- +   │  └─ kubernetes:core:Service        redis-replica             create     
- +   └─ k8sx:component:ServiceDeployment  redis-leader              create     
- +      ├─ kubernetes:apps:Deployment     redis-leader              create     
- +      └─ kubernetes:core:Service        redis-leader              create     
- 
+     Type                                 Name                      Plan
+ +   pulumi:pulumi:Stack                  guestbook-easy-guestbook  create
+ +   ├─ k8sx:component:ServiceDeployment  frontend                  create
+ +   │  ├─ kubernetes:apps:Deployment     frontend                  create
+ +   │  └─ kubernetes:core:Service        frontend                  create
+ +   ├─ k8sx:component:ServiceDeployment  redis-replica             create
+ +   │  ├─ kubernetes:apps:Deployment     redis-replica             create
+ +   │  └─ kubernetes:core:Service        redis-replica             create
+ +   └─ k8sx:component:ServiceDeployment  redis-leader              create
+ +      ├─ kubernetes:apps:Deployment     redis-leader              create
+ +      └─ kubernetes:core:Service        redis-leader              create
+
 Resources:
     + 10 to create
 
 Do you want to perform this update? yes
 Updating (guestbook):
 
-     Type                                 Name                      Status      
- +   pulumi:pulumi:Stack                  guestbook-easy-guestbook  created     
- +   ├─ k8sx:component:ServiceDeployment  redis-leader              created     
- +   │  ├─ kubernetes:apps:Deployment     redis-leader              created     
- +   │  └─ kubernetes:core:Service        redis-leader              created     
- +   ├─ k8sx:component:ServiceDeployment  frontend                  created     
- +   │  ├─ kubernetes:apps:Deployment     frontend                  created     
- +   │  └─ kubernetes:core:Service        frontend                  created     
- +   └─ k8sx:component:ServiceDeployment  redis-replica             created     
- +      ├─ kubernetes:apps:Deployment     redis-replica             created     
- +      └─ kubernetes:core:Service        redis-replica             created     
- 
+     Type                                 Name                      Status
+ +   pulumi:pulumi:Stack                  guestbook-easy-guestbook  created
+ +   ├─ k8sx:component:ServiceDeployment  redis-leader              created
+ +   │  ├─ kubernetes:apps:Deployment     redis-leader              created
+ +   │  └─ kubernetes:core:Service        redis-leader              created
+ +   ├─ k8sx:component:ServiceDeployment  frontend                  created
+ +   │  ├─ kubernetes:apps:Deployment     frontend                  created
+ +   │  └─ kubernetes:core:Service        frontend                  created
+ +   └─ k8sx:component:ServiceDeployment  redis-replica             created
+ +      ├─ kubernetes:apps:Deployment     redis-replica             created
+ +      └─ kubernetes:core:Service        redis-replica             created
+
 Outputs:
     frontend_ip: "10.105.48.30"
 

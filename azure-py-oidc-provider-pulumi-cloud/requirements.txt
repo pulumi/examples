@@ -1,0 +1,5 @@
+pulumi>=3.0.0,<4.0.0
+pulumi-azure-native>=2.0.0,<3.0.0
+pulumi-azuread>=5.0.0, <6.0.0
+pulumi-azure>=5.0.0, <6.0.0
+PyYAML

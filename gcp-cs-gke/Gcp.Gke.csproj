@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Pulumi" Version="3.*" />
-    <PackageReference Include="Pulumi.Gcp" Version="4.*" />
+    <PackageReference Include="Pulumi.Gcp" Version="7.*" />
   </ItemGroup>
 
 </Project>

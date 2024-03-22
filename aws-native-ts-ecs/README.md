@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-ts-ecs/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-ts-ecs/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-native-ts-ecs/README.md#gh-dark-mode-only)
 
 # Create an ECS cluster on AWS with the AWS Native Provider
 
@@ -25,7 +26,7 @@ with `***`.
     ```bash
     $ export AWS_REGION=us-west-2
     ```
-    
+
     Or with the stack config
     ```bash
     $ pulumi config set aws:region us-west-2
@@ -41,7 +42,7 @@ with `***`.
     $ pulumi up
     Previewing update (dev)
     ...
-    
+
     Updating (dev)
 
     View Live: https://app.pulumi.com/***/aws-native-ts-ecs/dev/updates/1

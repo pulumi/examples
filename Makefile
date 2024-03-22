@@ -13,15 +13,15 @@ lint:
 	tslint -c tslint.json **/*.ts
 
 only_test:
-	cd misc/test && go test ./... --timeout 4h -v -count=1 -short -parallel 40 --tags=all
+	bash -c 'set -o pipefail && cd misc/test && go test -json ./... --timeout 4h -v -count=1 -short -parallel 40 --tags=all | gotestfmt'
 
 specific_test_set:
 	echo "running $(TestSet) Acceptance Tests"
-	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel 40 --tags=all --run=TestAcc$(TestSet)
+	bash -c 'set -o pipefail && cd misc/test && go test -json . --timeout 4h -v -count=1 -short -parallel 40 --tags=all --run=TestAcc$(TestSet) | gotestfmt'
 
 specific_tag_set:
 	echo "running $(TagSet)$(TestSet) Acceptance Tests"
-	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel 40 --tags=$(TagSet) --run=TestAcc$(TagSet)$(TestSet)
+	bash -c 'set -o pipefail && cd misc/test && go test -json . --timeout 4h -v -count=1 -short -parallel 40 --tags=$(TagSet) --run=TestAcc$(TagSet)$(TestSet) | gotestfmt'
 
 performance_test_set:
 	cd misc/test && go test . --timeout 4h -count=1 -short -parallel 40 --tags=Performance

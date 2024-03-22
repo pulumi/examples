@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-wordpress-fargate-rds/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-wordpress-fargate-rds/README.md#gh-dark-mode-only)
+
 # WordPress Site in AWS Fargate with RDS DB Backend
 
 This example serves a WordPress site in AWS ECS Fargate using an RDS MySQL Backend.
@@ -5,7 +8,7 @@ This example serves a WordPress site in AWS ECS Fargate using an RDS MySQL Backe
 It leverages the following Pulumi concepts/constructs:
 
 - [Component Resources](https://www.pulumi.com/docs/intro/concepts/programming-model/#components): Allows one to create custom resources that encapsulate one's best practices. In this example, component resource is used to define a "VPC" custom resource, a "Backend" custom resource that sets up the RDS DB, and a "Frontend" resource that sets up the ECS cluster and load balancer and tasks.
-- [Other Providers](https://www.pulumi.com/docs/reference/pkg/): Beyond the providers for the various clouds and Kubernetes, etc, Pulumi allows one to create and manage non-cloud resources. In this case, the program uses the Random provider to create a random password if necessary.
+- [Other Providers](https://www.pulumi.com/registry/): Beyond the providers for the various clouds and Kubernetes, etc, Pulumi allows one to create and manage non-cloud resources. In this case, the program uses the Random provider to create a random password if necessary.
 
 This sample uses the following AWS products (and related Pulumi providers):
 

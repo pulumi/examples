@@ -7,36 +7,36 @@ import * as config from "./config";
 // A simple cache abstraction that wraps Redis.
 export class Cache {
     private readonly redis: awsx.ecs.FargateService;
-    private readonly endpoint: pulumi.Output<awsx.elasticloadbalancingv2.ListenerEndpoint>;
+    private readonly endpoint: pulumi.Output<string>;
 
     public get: (key: string) => Promise<string>;
     public set: (key: string, value: string) => Promise<void>;
 
     constructor(name: string, memory: number = 128) {
         const pw = config.redisPassword;
-        const listener = new awsx.elasticloadbalancingv2.NetworkListener(name, { port: 6379 });
+        const loadBalancer = new awsx.lb.ApplicationLoadBalancer("loadbalancer", {});
         this.redis = new awsx.ecs.FargateService(name, {
             taskDefinitionArgs: {
-                containers: {
-                    redis: {
-                        image: "redis:alpine",
-                        memory: memory,
-                        portMappings: [listener],
-                        command: ["redis-server", "--requirepass", pw],
-                    },
+                container: {
+                    name: "redis",
+                    image: "redis:alpine",
+                    memory: memory,
+                    portMappings: [{containerPort: 6379, targetGroup: loadBalancer.defaultTargetGroup}],
+                    command: ["redis-server", "--requirepass", pw],
                 },
             },
         });
 
-        this.endpoint = listener.endpoint;
+        this.endpoint = loadBalancer.loadBalancer.dnsName;
 
         // Expose get/set as member fields that don't capture 'this'.  That way we don't try to
         // serialize pulumi resources unnecessarily into our lambdas.
         this.get = key => {
-            const ep = listener.endpoint.get();
-            console.log(`Getting key '${key}' on Redis@${ep.hostname}:${ep.port}`);
+            const endpoint = loadBalancer.loadBalancer.dnsName.get();
+            const endpointPort = loadBalancer.defaultTargetGroup.port;
+            console.log(`Getting key '${key}' on Redis@${endpoint}:${endpointPort}`);
 
-            const client = require("redis").createClient(ep.port, ep.hostname, { password: config.redisPassword });
+            const client = require("redis").createClient(endpoint, endpointPort, { password: config.redisPassword });
             return new Promise<string>((resolve, reject) => {
                 client.get(key, (err: any, v: any) => {
                     if (err) {
@@ -49,10 +49,11 @@ export class Cache {
         };
 
         this.set = (key, value) => {
-            const ep = listener.endpoint.get();
-            console.log(`Setting key '${key}' to '${value}' on Redis@${ep.hostname}:${ep.port}`);
+            const endpoint = loadBalancer.loadBalancer.dnsName.get();
+            const endpointPort = loadBalancer.defaultTargetGroup.port;
+            console.log(`Setting key '${key}' to '${value}' on Redis@${endpoint}:${endpointPort}`);
 
-            const client = require("redis").createClient(ep.port, ep.hostname, { password: config.redisPassword });
+            const client = require("redis").createClient(endpoint, endpointPort, { password: config.redisPassword });
             return new Promise<void>((resolve, reject) => {
                 client.set(key, value, (err: any, v: any) => {
                     if (err) {

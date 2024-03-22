@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-slackbot/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-slackbot/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-slackbot/README.md#gh-dark-mode-only)
 
 # Create a Slackbot for Posting Mention Notifications
 
@@ -32,7 +33,7 @@ $ pulumi stack init mentionbot
 $ pulumi config set aws:region us-east-2
 ```
 
-### Step 3: Restore NPM modules 
+### Step 3: Restore NPM modules
 
 Run `npm install` or `yarn install` to restore your NPM modules.
 
@@ -48,7 +49,7 @@ Previewing update (mentionbot):
     Do you want to perform this update? yes
     Updating (mentionbot):
 
-         Type                                Name                          Status 
+         Type                                Name                          Status
      +   pulumi:pulumi:Stack                 aws-ts-slack-mentionbot       created
      +   ├─ aws:sns:TopicEventSubscription   processTopicMessage           created
      +   │  ├─ aws:iam:Role                  processTopicMessage           created
@@ -85,7 +86,7 @@ To create a new Slackbot, first go to https://api.slack.com/apps and create an a
 <p align=center>
 <img src=https://user-images.githubusercontent.com/4564579/55648728-e7127180-5795-11e9-9ddf-849d789ea05b.png>
 </p>
-    
+
 Pick your desired name for the app, and the Workspace the app belongs to.  Here we choose `MentionBot`:
 
 <p align=center>
@@ -99,7 +100,7 @@ Once created, you will need to 'Add features and functionality' to your app. You
 </p>
 
 First, we'll enable 'Incoming Webhooks'.  This allows your Slack bot to post messages into Slack for you:
- 
+
 <p align=center>
 <img src=https://user-images.githubusercontent.com/4564579/55648806-22ad3b80-5796-11e9-8dfd-ba86b7ba9351.png>
 </p>
@@ -129,7 +130,7 @@ Underneath this, we'll set the following Scopes defining the permissions of the 
    <img src=https://user-images.githubusercontent.com/4564579/55647362-55edcb80-5792-11e9-8f60-ae5261fa9c9a.png>
 </p>
 
-Now, we're almost done.  The only thing left to do is supply your Pulumi App with the appropriate secrets/tokens.  We'll need the Bot OAuth token (shown above), and the 'Verification Token' (found under 'Basic Information'): 
+Now, we're almost done.  The only thing left to do is supply your Pulumi App with the appropriate secrets/tokens.  We'll need the Bot OAuth token (shown above), and the 'Verification Token' (found under 'Basic Information'):
 
 <p align=center>
    <img src=https://user-images.githubusercontent.com/4564579/55647507-af55fa80-5792-11e9-80bf-b07b894d996f.png>

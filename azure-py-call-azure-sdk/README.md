@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-call-azure-sdk/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-call-azure-sdk/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-call-azure-sdk/README.md#gh-dark-mode-only)
 
 # Demo of Integrating the native Azure Pulumi provider with the Microsoft Azure SDK
 
@@ -32,7 +33,7 @@ This example demonstrates how to use such integration to lookup a role definitio
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...

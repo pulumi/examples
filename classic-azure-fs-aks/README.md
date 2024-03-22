@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-fs-aks/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-fs-aks/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-fs-aks/README.md#gh-dark-mode-only)
 
 # Azure Kubernetes Service (AKS) Cluster
 
@@ -57,7 +58,7 @@ The [Makefile](Makefile) also works as documentation on what commands you need t
 
 ## Deploying the app (native version)
 
-If you don't have make installed you will have to run the "native" commands. To deploy you run 
+If you don't have make installed you will have to run the "native" commands. To deploy you run
 
 ```bash
 $ pulumi up --yes

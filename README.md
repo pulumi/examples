@@ -1,30 +1,30 @@
 # Pulumi Examples
 
-This repository contains examples of using Pulumi to build and deploy
-cloud applications and infrastructure.
+This repository contains examples of using Pulumi to build and deploy cloud applications and infrastructure across major programming languages.
 
-Each example has a two-part prefix, `<cloud>-<language>`, to indicate which `<cloud>` and `<language>` it pertains to.
-For example, `<cloud>` could be `aws` for [Amazon Web Services](https://github.com/pulumi/pulumi-aws), `azure` for [Microsoft
-Azure](https://github.com/pulumi/pulumi-azure), `gcp` for [Google Cloud
-Platform](https://github.com/pulumi/pulumi-gcp), `kubernetes` for
-[Kubernetes](https://github.com/pulumi/pulumi-kubernetes), or `cloud` for
-[Pulumi's cross-cloud programming framework](https://github.com/pulumi/pulumi-cloud).
+Each example has a two-part prefix, `<cloud>-<language>`, to indicate which `<cloud>` and `<language>` it pertains to. For example, `<cloud>` could be:
+ - `aws` for [Amazon Web Services](https://github.com/pulumi/pulumi-aws) 
+ - `azure` for [Microsoft Azure](https://github.com/pulumi/pulumi-azure)
+ - `gcp` for [Google Cloud Platform](https://github.com/pulumi/pulumi-gcp) 
+ - `kubernetes` for [Kubernetes](https://github.com/pulumi/pulumi-kubernetes) 
+ - `cloud` for [Pulumi's cross-cloud programming framework](https://github.com/pulumi/pulumi-cloud).
 
-See the [Pulumi documentation](https://www.pulumi.com/docs/) for more
-details on getting started with Pulumi.
+See the [Pulumi documentation](https://www.pulumi.com/docs/) for more details on getting started with Pulumi.
 
 ## Checking Out a Single Example
 
-You can checkout only the examples you want by using a [sparse checkout](https://git-scm.com/docs/git-sparse-checkout). The following example shows how checkout only the example you want.
+You can checkout only the example(s) you want by using a [sparse checkout](https://git-scm.com/docs/git-sparse-checkout). The following commands show how checkout only the `aws-go-fargate` example. Replace `aws-go-fargate` with your example of interest. 
 
 ```bash
 $ mkdir examples && cd examples
 $ git init
 $ git remote add origin -f https://github.com/pulumi/examples/
 $ git config core.sparseCheckout true
-$ echo <example> >> .git/info/sparse-checkout
+$ echo "aws-go-fargate" >> .git/info/sparse-checkout ## update this
 $ git pull origin master
 ```
+
+Don't see an example listed? [Try Pulumi AI](https://www.pulumi.com/ai) and use natural-language prompts to generate Pulumi infrastructure-as-code programs in _any_ language.
 
 ## Outline
 
@@ -67,6 +67,8 @@ $ git pull origin master
 
 ### TypeScript
 
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [API Gateway](aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
@@ -101,8 +103,11 @@ Example   | Description |
 [Voting App](aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
 [Web Server](aws-ts-webserver) | Deploy an EC2 Virtual machine using TypeScript to run a Python web server.
 [Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
+[LangServe - Hello OpenAI](aws-ts-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### JavaScript
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -112,8 +117,11 @@ Example   | Description |
 [Servless SQS to Slack](aws-js-sqs-slack) | Wire up a serverless AWS Lambda to an AWS SQS queue and post a message to Slack.
 [Web Server - Component](aws-js-webserver-component) | Deploy an EC2 instance using a common module for creating an instance.
 [Web Server](aws-js-webserver) | Deploy an EC2 Virtual machine running a Python web server.
+[LangServe - Hello OpenAI](aws-js-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### Python
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -127,8 +135,11 @@ Example   | Description |
 [Stack Reference](aws-py-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
 [Step Functions](aws-py-stepfunctions) | Use Step Functions with a Lambda function.
 [Web Server](aws-py-webserver) | Deploy an EC2 instance and open port 80.
+[LangServe - Hello OpenAI](aws-py-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### Go
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -137,8 +148,11 @@ Example   | Description |
 [Lambda](aws-go-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
 [S3 Folder](aws-go-s3-folder) | Serve a static website on S3.
 [Web Server](aws-go-webserver) | Deploy an EC2 Virtual machine running a Python web server.
+[LangServe - Hello OpenAI](aws-go-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### C#
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -147,8 +161,11 @@ Example   | Description |
 [Lambda](aws-cs-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
 [S3 Folder](aws-cs-s3-folder) | Serve a static website on S3.
 [Web Server](aws-cs-webserver) | Deploy an EC2 instance and open port 80.
+[LangServe - Hello OpenAI](aws-cs-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### F#
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -158,6 +175,8 @@ Example   | Description |
 ## Azure
 
 ### TypeScript
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -177,6 +196,8 @@ Example   | Description |
 
 ### Python
 
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Azure Container Apps](azure-py-containerapps) | Run a Docker image on Azure Container Apps.
@@ -194,6 +215,8 @@ Example   | Description |
 
 ### Go
 
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Azure Container Apps](azure-go-containerapps) | Run a Docker image on Azure Container Apps.
@@ -204,6 +227,8 @@ Example   | Description |
 [Azure SDK integration](azure-go-call-azure-sdk) | Call Azure SDK functions from a Pulumi programin Go.
 
 ### C#
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -227,6 +252,8 @@ Cluster.
 
 ### TypeScript
 
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Cloud Run](gcp-ts-cloudrun) | Deploy a custom Docker image into Google Cloud Run service.
@@ -239,11 +266,15 @@ Example   | Description |
 
 ### JavaScript
 
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Web Server](gcp-js-webserver) | Build a web server in Google Cloud.
 
 ### Python
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -255,6 +286,8 @@ Example   | Description |
 
 ### Go
 
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Functions](gcp-go-functions) | Deploy a Go-based Google Cloud Function.
@@ -262,6 +295,8 @@ Example   | Description |
 [Web Server](gcp-go-webserver) | Build a web server in Google Cloud.
 
 ### C#
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -271,6 +306,8 @@ Example   | Description |
 ## Kubernetes
 
 ### TypeScript
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -287,17 +324,23 @@ Example   | Description |
 
 ### Python
 
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Guestbook](kubernetes-py-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
 
 ### C#
 
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Guestbook](kubernetes-cs-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
 
 ### Go
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -310,11 +353,15 @@ Example   | Description |
 
 ### Python
 
+[(Click here to go back to the main list)](#outline)
+
 [Web Server](openstack-py-webserver) | Deploy an Openstack instance and open port 8000.
 
 ## Cloud
 
 ### TypeScript
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -324,6 +371,8 @@ Example   | Description |
 [Voting App](cloud-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
 
 ### JavaScript
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -338,6 +387,8 @@ Example   | Description |
 
 ### TypeScript
 
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Droplets](digitalocean-ts-loadbalanced-droplets) | Build sample architecture.
@@ -345,12 +396,16 @@ Example   | Description |
 
 ### Python
 
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Droplets](digitalocean-py-loadbalanced-droplets) | Build sample architecture.
 [Kubernetes](digitalocean-py-k8s) | Provision a DigitalOcean Kubernetes cluster.
 
 ### C#
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 --------- | --------- |
@@ -360,6 +415,9 @@ Example   | Description |
 ## Multicloud
 
 ### TypeScript
+
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Buckets](multicloud-ts-buckets) | Use a single Pulumi program to provision resources in both AWS and GCP.
@@ -367,6 +425,9 @@ Example   | Description |
 ## F5
 
 ### TypeScript
+
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [BigIP Local Traffic Manager](f5bigip-ts-ltm-pool) | Provide load balancing via an F5 BigIP appliance to backend HTTP instances.
@@ -374,6 +435,9 @@ Example   | Description |
 ## Twilio
 
 ### TypeScript
+
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Component](twilio-ts-component) | Create a custom Component Resource to parse incoming messages from Twilio.
@@ -381,11 +445,17 @@ Example   | Description |
 ## Linode
 
 ### JavaScript
+
+
+[(Click here to go back to the main list)](#outline)
+
 Example   | Description |
 --------- | --------- |
 [Web Server](linode-js-webserver) | Build a web server on Linode.
 
 ## Testing
+
+[(Click here to go back to the main list)](#outline)
 
 Example   | Description |
 -----          | --------- |
@@ -398,4 +468,44 @@ Example   | Description |
 
 ## Automation API
 
+[(Click here to go back to the main list)](#outline)
+
 [Automation API Examples](https://github.com/pulumi/automation-api-examples)
+
+## Community and Social
+
+Engage with our community to elevate your developer experience:
+
+- **Join our online [Pulumi Community on Slack](https://slack.pulumi.com/)** - Interact with over 3K Pulumi developers for collaborative problem-solving and knowledge-sharing!
+- **Join a [Local Pulumi User Groups (PUGs)](https://www.meetup.com/pro/pugs/)**-  Attend tech-packed meetups and hands-on virtual or in-person workshops.
+- **Follow [@PulumiCorp](https://twitter.com/PulumiCorp) on X (Twitter)** - Get real-time updates, technical insights, and sneak peeks into the latest features.
+- **Subscribe to our YouTube Channel, [PulumiTV](https://www.youtube.com/@PulumiTV)** - Learn about AI / ML essentials, launches, workshops, demos and more.
+- **Follow our [LinkedIn](https://www.linkedin.com/company/pulumi/)** - Uncover company news, achievements, and behind-the-scenes glimpses.
+
+## Contributors
+
+Meet the [brilliant minds behind this project](https://github.com/pulumi/examples/graphs/contributors), view their profiles, and learn about their valuable contributions.
+
+## FAQs
+
+### How can I contribute to this repository?
+
+We're glad you asked! Please visit our [CONTRIBUTING](CONTRIBUTING.md) doc for details.
+
+### How can I install the Pulumi CLI?
+
+Visit our [install page](https://www.pulumi.com/docs/install/) for installation steps.
+
+### Is [Pulumi Cloud](https://app.pulumi.com/) free?
+
+Individual accounts are always free and allow unlimited resources. See our [pricing page](https://www.pulumi.com/pricing/) for other options.
+
+## Further Reading
+
+Delve deeper into our project with additional resources:
+
+- [Get Started with Pulumi](https://www.pulumi.com/docs/get-started/): Deploy a simple application in AWS, Azure, Google Cloud, or Kubernetes using Pulumi.
+- [Registry](https://www.pulumi.com/registry/): Search for packages and learn about the supported resources you need. Install the package directly into your project, browse the API documentation, and start building.
+- [Try Pulumi AI](https://www.pulumi.com/ai) - Use natural-language prompts to generate Pulumi infrastructure-as-code programs in any language.
+- [Documentation](https://www.pulumi.com/docs/): Learn about Pulumi concepts, follow user guides, and consult the reference documentation.
+- [Pulumi Blog](https://www.pulumi.com/blog/) - Stay in the loop with our latest tech announcements, insightful articles, and updates.

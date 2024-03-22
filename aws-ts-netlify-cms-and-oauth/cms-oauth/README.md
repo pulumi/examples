@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-netlify-cms-and-oauth/cms-oauth/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-netlify-cms-and-oauth/cms-oauth/README.md#gh-dark-mode-only)
+
 # About the Project
 
 This OAuth Server Project is connected with CMS project which deploy on AWS S3 rather than on Netlify. In this way, it requires us to create a OAuth Client Server for Netlify CMS. Netlify use the Netlify Identity Service which provides OAuth provider server. Based on [Netlify's instruction](https://www.netlifycms.org/docs/external-oauth-clients/) of customize this step we need to provide our own OAuth client.
@@ -6,7 +9,7 @@ In this example, we are using [Netlify CMS's Github backends](https://www.netlif
 
 ## References
 
-The provider's content code is referencing to the [External OAuth Client example from Netlify CMS](https://www.netlifycms.org/docs/external-oauth-clients/). 
+The provider's content code is referencing to the [External OAuth Client example from Netlify CMS](https://www.netlifycms.org/docs/external-oauth-clients/).
 Here are some reference:
 - @igk1972 [OAuth provider](https://github.com/igk1972/netlify-cms-oauth-provider-go) Thanks to Igor Kuznetsov for writing go code for OAuth Provider and it's frontend in file main.go. We updated the code in these ways:
   - Now we have set the [Github scope](https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) (which variable specify what kind of access we want) to be public_repo (only permits read and write on the public repo). See line 132 of main.go for setting different scope.
@@ -21,7 +24,7 @@ Here are some reference:
 - ./infrastructure
   - Pulumi code with setting up AWS Fargate and the configuring certificate and domain
 - ./main.go the code for the provider itself and it's front end
-  - It is fetching the access token sent from Github API using Github's goth library. 
+  - It is fetching the access token sent from Github API using Github's goth library.
 - .github/workflow contain code for the workflow
 
 ## Infrastructure
@@ -34,9 +37,9 @@ It is recommended that you use an IAM role with more permissions in the _target_
 
 # Getting Started (Replace content in {{}} with correct informations)
 
-These steps are now automated using the Github Workflow. If you push to the master or merge a pull request, the OAuth Client Server would be automatically deployed. Open a new branch and push to the branch would only do a pulumi preview where the logs could be check on Github Actions.  
+These steps are now automated using the Github Workflow. If you push to the master or merge a pull request, the OAuth Client Server would be automatically deployed. Open a new branch and push to the branch would only do a pulumi preview where the logs could be check on Github Actions.
 
-### Step 1. Register OAuth Application in Github and Obtain Key and Secret 
+### Step 1. Register OAuth Application in Github and Obtain Key and Secret
 
 - Now it is using the OAuth Application in Pulumi's Github organization account
 - Steps are provided using this link https://docs.netlify.com/visitor-access/oauth-provider-tokens/#setup-and-settings
@@ -89,7 +92,7 @@ $ pulumi up
 
 ### Step 4. Config CMS
 
-You also need to add `base_url` to the backend section of your netlify-cms's config file. 
+You also need to add `base_url` to the backend section of your netlify-cms's config file.
 
 Go to the cms repo which stores resource for CMS and on file public/config.yml add the base_url line with the oauth provider url
 
@@ -101,7 +104,7 @@ backend:
   base_url: https://xxx # Path to ext auth provider
 ```
 
-Then build use 
+Then build use
 ```bash
 $ yarn build
 ```

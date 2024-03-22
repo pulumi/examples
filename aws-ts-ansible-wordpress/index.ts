@@ -44,7 +44,6 @@ const prodVpc = new aws.ec2.Vpc("prod-vpc", {
     cidrBlock: "10.192.0.0/16",
     enableDnsSupport: true, // gives you an internal domain name.
     enableDnsHostnames: true, // gives you an internal host name.
-    enableClassiclink: false,
     instanceTenancy: "default",
 });
 

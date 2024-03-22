@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-go/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-go/README.md#gh-dark-mode-only)
+
 # Unit Testing Pulumi programs in Go
 
 An example of writing mock-based unit tests with both infrastructure definition and tests written in Go.
@@ -10,7 +13,7 @@ An example of writing mock-based unit tests with both infrastructure definition 
 
 2.  Run the tests:
 
-    ``` 
+    ```
     $ go test
 
     PASS

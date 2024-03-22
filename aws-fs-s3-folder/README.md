@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-fs-s3-folder/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-fs-s3-folder/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-fs-s3-folder/README.md#gh-dark-mode-only)
 
 # Host a Static Website on Amazon S3
 
@@ -22,23 +23,23 @@ A static website that uses [S3's website support](https://docs.aws.amazon.com/Am
 
     ```bash
     Previewing update (dev):
-        Type                       Name                  Plan       
-    +   pulumi:pulumi:Stack        aws-cs-s3-folder-dev  create     
-    +   └─ aws:s3:Bucket           my-bucket             create     
-    +      ├─ aws:s3:BucketObject  index.html            create     
-    +      └─ aws:s3:BucketObject  favicon.png           create     
-    
+        Type                       Name                  Plan
+    +   pulumi:pulumi:Stack        aws-cs-s3-folder-dev  create
+    +   └─ aws:s3:Bucket           my-bucket             create
+    +      ├─ aws:s3:BucketObject  index.html            create
+    +      └─ aws:s3:BucketObject  favicon.png           create
+
     Resources:
         + 4 to create
 
     Do you want to perform this update? yes
     Updating (dev):
-        Type                       Name                  Status      
-    +   pulumi:pulumi:Stack        aws-cs-s3-folder-dev  created     
-    +   └─ aws:s3:Bucket           my-bucket             created     
-    +      ├─ aws:s3:BucketObject  index.html            created     
-    +      └─ aws:s3:BucketObject  favicon.png           created     
-    
+        Type                       Name                  Status
+    +   pulumi:pulumi:Stack        aws-cs-s3-folder-dev  created
+    +   └─ aws:s3:Bucket           my-bucket             created
+    +      ├─ aws:s3:BucketObject  index.html            created
+    +      └─ aws:s3:BucketObject  favicon.png           created
+
     Outputs:
         endpoint: "http://my-bucket-1234567.s3-website.us-west-2.amazonaws.com"
     ```

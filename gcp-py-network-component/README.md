@@ -1,11 +1,12 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-py-network-component/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-py-network-component/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-py-network-component/README.md#gh-dark-mode-only)
 
 # Google Cloud Network and Instance with ComponentResource
 
-This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/resources/#components) 
+This example uses `pulumi.ComponentResource` as described [here](https://www.pulumi.com/docs/intro/concepts/resources/#components)
 to create a Google Cloud Network and instance.
 
-The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources 
+The use of `pulumi.ComponentResource` demonstrates how multiple low-level resources
 can be composed into a higher-level, reusable abstraction.
 
 ## Prerequisites
@@ -29,7 +30,7 @@ can be composed into a higher-level, reusable abstraction.
     $ pulumi config set gcp:region us-central1
     ```
 
-1. Configure one or more subnetwork CIDRs for the program to use  
+1. Configure one or more subnetwork CIDRs for the program to use
    Note: This example is using structured configuration as per [Structured Configuration](https://www.pulumi.com/docs/intro/concepts/config/#structured-configuration)
 
     ```bash
@@ -86,7 +87,7 @@ can be composed into a higher-level, reusable abstraction.
     Permalink: https://app.pulumi.com/clstokes/gcp-py-network-component/dev/updates/10
     ```
 
-1. Get the IP address of the newly-created instance from the stack's outputs: 
+1. Get the IP address of the newly-created instance from the stack's outputs:
 
     ```bash
     $ pulumi stack output nginx_public_ip

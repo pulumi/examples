@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/google-native-ts-functions/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/google-native-ts-functions/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/google-native-ts-functions/README.md#gh-dark-mode-only)
 
 # Google Cloud Functions
 
@@ -27,13 +28,13 @@ An example of deploying an HTTP Google Cloud Function endpoint using Google Clou
 3.  Configure your Google Cloud project and region:
 
     ```
-    $ pulumi config set google-native:project <projectname> 
+    $ pulumi config set google-native:project <projectname>
     $ pulumi config set google-native:region <region>
     ```
 
 4.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...

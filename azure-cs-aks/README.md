@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-aks/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-aks/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-aks/README.md#gh-dark-mode-only)
 
 # Azure Kubernetes Service (AKS) Cluster using the native Azure Provider
 
@@ -28,9 +29,9 @@ After cloning this repo, from this working directory, run these commands:
     ```
     $ az login
     ```
-    
+
 1. Set the azure location in which to run the test:
-    
+
     ```
     $ pulumi config set azure-native:location westus2
     ```

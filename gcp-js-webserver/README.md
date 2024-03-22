@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-js-webserver/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-js-webserver/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-js-webserver/README.md#gh-dark-mode-only)
 
 # Web Server Using Compute Engine
 
@@ -27,7 +28,7 @@ Starting point for building the Pulumi web server sample in Google Cloud.
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...

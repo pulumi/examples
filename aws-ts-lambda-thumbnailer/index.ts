@@ -12,7 +12,7 @@ const repo = new awsx.ecr.Repository("repo", {
 
 const image = new awsx.ecr.Image("image", {
     repositoryUrl: repo.url,
-    path: "./app",
+    context: "./app",
 });
 
 const role = new aws.iam.Role("thumbnailerRole", {

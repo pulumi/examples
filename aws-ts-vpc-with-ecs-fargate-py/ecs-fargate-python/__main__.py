@@ -31,7 +31,7 @@ my_tags = {"application": "fargate", "crosswalk-vpc": "yes", "demo": "yes", "cos
            "vpc_name": pulumi_vpc_name, "vpc_cidr": pulumi_vpc_cidr, "pulumi:project": env_project, "pulumi:stack": env_stack}
 
 # Step 1.1: Create the Task Execution IAM Role https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-cli-tutorial-fargate.html
-# IAM Role: https://www.pulumi.com/docs/reference/pkg/aws/iam/role/
+# IAM Role: https://www.pulumi.com/registry/packages/aws/api-docs/iam/role/
 task_execution_role = aws.iam.Role(
     "pulumi-fargate-task-execution-role",
     assume_role_policy=json.dumps(
@@ -51,7 +51,7 @@ task_execution_role = aws.iam.Role(
 )
 
 # Step 1.2 Attach the task execution role policy: https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-cli-tutorial-fargate.html
-# https://www.pulumi.com/docs/reference/pkg/aws/iam/rolepolicyattachment/
+# https://www.pulumi.com/registry/packages/aws/api-docs/iam/rolepolicyattachment/
 task_execution_role_policy_attach = aws.iam.RolePolicyAttachment(
     "pulumi-fargate-task-excution-policy-attach",
     role=task_execution_role.name,
@@ -59,7 +59,7 @@ task_execution_role_policy_attach = aws.iam.RolePolicyAttachment(
 )
 
 # Step 3: Create a Cluster and Configure the Security Group https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-cli-tutorial-fargate.html
-#  https://www.pulumi.com/docs/reference/pkg/aws/ec2/securitygroup/
+#  https://www.pulumi.com/registry/packages/aws/api-docs/ec2/securitygroup/
 
 # tags for security group
 sec_tags = dict(my_tags)
@@ -85,23 +85,23 @@ cluster_tags = dict(my_tags)
 cluster_tags.update({"Name": "pulumi-fargate-ecs-cluster"})
 
 # Create an ECS cluster to run a container-based service.
-# https://www.pulumi.com/docs/reference/pkg/aws/ecs/cluster/
+# https://www.pulumi.com/registry/packages/aws/api-docs/ecs/cluster/
 cluster = aws.ecs.Cluster('pulumi-app-cluster', tags=cluster_tags)
 
 
 # 3. Create a load balancer to listen for requests and route them to the container.
 # AWS CLI install   https://docs.aws.amazon.com/elasticloadbalancing/latest/application/tutorial-application-load-balancer-cli.html
-# https://www.pulumi.com/docs/reference/pkg/aws/alb/loadbalancer/
+# https://www.pulumi.com/registry/packages/aws/api-docs/alb/loadbalancer/
 
 #  tags for Application Load Balancer (ALB)
 alb_tags = dict(my_tags)
 alb_tags.update({"Name": "pulumi-fargate-alb"})
 
-# Created application load balancer in public subnets  https://www.pulumi.com/docs/reference/pkg/aws/alb/loadbalancer/
+# Created application load balancer in public subnets  https://www.pulumi.com/registry/packages/aws/api-docs/alb/loadbalancer/
 alb = aws.lb.LoadBalancer("pulumi-fargate-alb", subnets=pulumi_public_subnets,
                           security_groups=[sgroup.id], tags=alb_tags)
 
-# Create target group  https://www.pulumi.com/docs/reference/pkg/aws/alb/targetgroup/
+# Create target group  https://www.pulumi.com/registry/packages/aws/api-docs/alb/targetgroup/
 alb_target_group = aws.lb.TargetGroup(
     "pulumi-fargate-alb-tg",
     port=80,
@@ -110,7 +110,7 @@ alb_target_group = aws.lb.TargetGroup(
     vpc_id=pulumi_vpc_id
 )
 
-# Create Listener  https://www.pulumi.com/docs/reference/pkg/aws/alb/listener/
+# Create Listener  https://www.pulumi.com/registry/packages/aws/api-docs/alb/listener/
 front_end_listener = aws.lb.Listener(
     "pulumi-fargate-listener",
     load_balancer_arn=alb.arn,
@@ -126,7 +126,7 @@ front_end_listener = aws.lb.Listener(
 task_definition_tags = dict(my_tags)
 task_definition_tags.update({"Name": "pulumi-fargate-task-definition"})
 
-# Task Definition https://www.pulumi.com/docs/reference/pkg/aws/ecs/taskdefinition/
+# Task Definition https://www.pulumi.com/registry/packages/aws/api-docs/ecs/taskdefinition/
 task_definition = aws.ecs.TaskDefinition(
     "pulumi-fargate-task-definition",
     family='fargate-task-definition',
@@ -151,7 +151,7 @@ task_definition = aws.ecs.TaskDefinition(
 service_tags = dict(my_tags)
 service_tags.update({"Name": "pulumi-fargate-service"})
 
-# ecs service https://www.pulumi.com/docs/reference/pkg/aws/ecs/service/
+# ecs service https://www.pulumi.com/registry/packages/aws/api-docs/ecs/service/
 service = aws.ecs.Service(
     'pulumi-fargate-service',
     cluster=cluster.arn,

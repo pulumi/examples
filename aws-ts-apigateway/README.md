@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-apigateway/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-apigateway/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-apigateway/README.md#gh-dark-mode-only)
 
 # Serverless REST API
 
@@ -32,17 +33,17 @@ with `***`.
 
     Updating (count-api-testing):
 
-         Type                                Name                                 Status      
-     +   pulumi:pulumi:Stack                 aws-ts-apigateway-count-api-testing  created     
-     +   ├─ aws:apigateway:x:API             hello-world                          created     
-     +   │  ├─ aws:iam:Role                  hello-world4fcc7b60                  created     
-     +   │  ├─ aws:iam:RolePolicyAttachment  hello-world4fcc7b60-32be53a2         created     
-     +   │  ├─ aws:lambda:Function           hello-world4fcc7b60                  created     
-     +   │  ├─ aws:apigateway:RestApi        hello-world                          created     
-     +   │  ├─ aws:apigateway:Deployment     hello-world                          created     
-     +   │  ├─ aws:lambda:Permission         hello-world-a552609d                 created     
-     +   │  └─ aws:apigateway:Stage          hello-world                          created     
-     +   └─ aws:dynamodb:Table               counterTable                         created     
+         Type                                Name                                 Status
+     +   pulumi:pulumi:Stack                 aws-ts-apigateway-count-api-testing  created
+     +   ├─ aws:apigateway:x:API             hello-world                          created
+     +   │  ├─ aws:iam:Role                  hello-world4fcc7b60                  created
+     +   │  ├─ aws:iam:RolePolicyAttachment  hello-world4fcc7b60-32be53a2         created
+     +   │  ├─ aws:lambda:Function           hello-world4fcc7b60                  created
+     +   │  ├─ aws:apigateway:RestApi        hello-world                          created
+     +   │  ├─ aws:apigateway:Deployment     hello-world                          created
+     +   │  ├─ aws:lambda:Permission         hello-world-a552609d                 created
+     +   │  └─ aws:apigateway:Stage          hello-world                          created
+     +   └─ aws:dynamodb:Table               counterTable                         created
 
     Outputs:
         endpoint: "https://***execute-api.us-east-2.amazonaws.com/stage/"

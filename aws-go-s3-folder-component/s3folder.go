@@ -60,6 +60,15 @@ func NewS3Folder(ctx *pulumi.Context, bucketName string, siteDir string, args *F
 		return nil, err
 	}
 
+	// Allow public ACLs for the bucket
+	accessBlock, err := s3.NewBucketPublicAccessBlock(ctx, "public-access-block", &s3.BucketPublicAccessBlockArgs{
+		Bucket:          siteBucket.ID(),
+		BlockPublicAcls: pulumi.Bool(false),
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	// Set the access policy for the bucket so all objects are readable.
 	if _, err := s3.NewBucketPolicy(ctx, "bucketPolicy", &s3.BucketPolicyArgs{
 		Bucket: siteBucket.ID(), // refer to the bucket created earlier
@@ -78,7 +87,7 @@ func NewS3Folder(ctx *pulumi.Context, bucketName string, siteDir string, args *F
 				},
 			},
 		}),
-	}, pulumi.Parent(&resource)); err != nil {
+	}, pulumi.Parent(&resource), pulumi.DependsOn([]pulumi.Resource{accessBlock})); err != nil {
 		return nil, err
 	}
 	resource.bucketName = siteBucket.ID()

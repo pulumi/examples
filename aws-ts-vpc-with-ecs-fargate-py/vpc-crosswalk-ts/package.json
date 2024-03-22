@@ -1,11 +1,11 @@
 {
     "name": "crosswalk-vpc",
     "devDependencies": {
-        "@types/node": "^14.0.0"
+        "@types/node": "^18.0.0"
     },
     "dependencies": {
-        "@pulumi/aws": "^5.0.0",
-        "@pulumi/awsx": "^0.40.0",
+        "@pulumi/aws": "^6.0.0",
+        "@pulumi/awsx": "^2.0.2",
         "@pulumi/pulumi": "^3.0.0"
     }
 }

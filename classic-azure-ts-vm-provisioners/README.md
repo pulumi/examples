@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-vm-provisioners/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-vm-provisioners/README.md#gh-dark-mode-only)
+
 # Azure WebServer with Manual Provisioning
 
 This demonstrates using the [`@pulumi/command`](https://www.pulumi.com/registry/packages/command/) package to accomplish post-provisioning configuration steps.
@@ -12,7 +15,7 @@ Now, we need to ensure that our dependencies are installed:
 
 ```
 $ npm install
-``` 
+```
 
 
 You'll need to log in to the azure cli. You will be prompted to do this during deployment if you forget this step.

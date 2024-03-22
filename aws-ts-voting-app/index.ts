@@ -10,42 +10,46 @@ const redisPort = 6379;
 
 // The data layer for the application
 // Use the 'image' property to point to a pre-built Docker image.
-const redisListener = new awsx.elasticloadbalancingv2.NetworkListener("voting-app-cache", { port: redisPort });
+const redisLB = new awsx.lb.ApplicationLoadBalancer("voting-app-cache", {});
 const redisCache = new awsx.ecs.FargateService("voting-app-cache", {
     taskDefinitionArgs: {
-        containers: {
-            redis: {
-                image: "redis:alpine",
-                memory: 512,
-                portMappings: [redisListener],
-                command: ["redis-server", "--requirepass", redisPassword],
-            },
+        container: {
+            name: "redis",
+            image: "redis:alpine",
+            memory: 512,
+            portMappings: [{ containerPort: redisPort, targetGroup: redisLB.defaultTargetGroup }],
+            command: ["redis-server", "--requirepass", redisPassword],
         },
     },
 });
 
-const redisEndpoint = redisListener.endpoint;
+const redisEndpoint = redisLB.loadBalancer.dnsName;
+const redistHostPort = redisLB.defaultTargetGroup.port;
 
 // A custom container for the frontend, which is a Python Flask app
 // Use the 'build' property to specify a folder that contains a Dockerfile.
 // Pulumi builds the container for you and pushes to an ECR registry
-const frontendListener = new awsx.elasticloadbalancingv2.NetworkListener("voting-app-frontend", { port: 80 });
+const frontendLB = new awsx.lb.ApplicationLoadBalancer("voting-app-frontend", {});
+const repo = new awsx.ecr.Repository("repo", {});
+const image = new awsx.ecr.Image("voting-app-frontend", {
+    repositoryUrl: repo.url,
+    context: "./frontend",
+});
 const frontend = new awsx.ecs.FargateService("voting-app-frontend", {
     taskDefinitionArgs: {
-        containers: {
-            votingAppFrontend: {
-                image: awsx.ecs.Image.fromPath("voting-app-frontend", "./frontend"),   // path to the folder containing the Dockerfile
-                memory: 512,
-                portMappings: [frontendListener],
-                environment: redisEndpoint.apply(e => [
-                    { name: "REDIS", value: e.hostname },
-                    { name: "REDIS_PORT", value: e.port.toString() },
-                    { name: "REDIS_PWD", value: redisPassword },
-                ]),
-            },
+        container: {
+            name: "votingAppFrontend",
+            image: image.imageUri,
+            memory: 512,
+            portMappings: [{ containerPort: 80, targetGroup: frontendLB.defaultTargetGroup }],
+            environment: pulumi.all([redisEndpoint, redistHostPort]).apply(([e, p]) => [
+                { name: "REDIS", value: e },
+                { name: "REDIS_PORT", value: p?.toString() },
+                { name: "REDIS_PWD", value: redisPassword },
+            ]),
         },
     },
 });
 
 // Export a variable that will be displayed during 'pulumi up'
-export let frontendURL = frontendListener.endpoint;
+export let frontendURL = pulumi.interpolate`http://${frontendLB.loadBalancer.dnsName}:${frontendLB.defaultTargetGroup.port}`;

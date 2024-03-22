@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-serverless-url-shortener-global/README.md)
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-serverless-url-shortener-global/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-serverless-url-shortener-global/README.md#gh-dark-mode-only)
 
 # Globally Distributed Serverless URL Shortener Using Azure Functions and Cosmos DB
 
@@ -32,7 +33,7 @@ Multi-region deployment of Azure Functions and Cosmos DB with Traffic Manager
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...
@@ -52,7 +53,7 @@ Multi-region deployment of Azure Functions and Cosmos DB with Traffic Manager
     $ curl -H "Content-Type: application/json" \
         --request POST \
         -d '{"id":"pulumi","url":"https://pulumi.com"}' \
-        "$(pulumi stack output addEndpoint)"    
+        "$(pulumi stack output addEndpoint)"
     Short URL saved
     ```
 

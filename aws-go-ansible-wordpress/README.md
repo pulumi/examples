@@ -1,3 +1,6 @@
+[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-ansible-wordpress/README.md#gh-light-mode-only)
+[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-ansible-wordpress/README.md#gh-dark-mode-only)
+
 # Deploy Wordpress to AWS EC2 using Pulumi and Ansible
 
 This project demonstrates how to use Pulumi and Ansible together. Pulumi handles provisioning the AWS infrastructure

@@ -26,7 +26,6 @@ env:
   PROVIDER_TESTS_TAG: ${{ github.event.client_payload.ref }}
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_API: https://api.pulumi-staging.io
-  PULUMI_TEST_OWNER: moolumi
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 jobs:
   dotnet-unit-testing:
@@ -40,7 +39,9 @@ jobs:
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: dotnet test
@@ -67,7 +68,9 @@ jobs:
       with:
         go-version: ${{matrix.goversion}}
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: go test
@@ -76,7 +79,7 @@ jobs:
       fail-fast: false
       matrix:
         goversion:
-        - 1.19.x
+        - 1.21.x
         platform:
         - ubuntu-latest
         source-dir:
@@ -167,7 +170,9 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
       with:
         pulumi-version: ${{ env.PULUMI_VERSION != '' && format('v{0}', env.PULUMI_VERSION) || null }}
     - name: Print CLI version
@@ -178,7 +183,7 @@ jobs:
       run: >-
         mkdir -p "$HOME/.kube/"
 
-        pulumi stack -s "${{ env.PULUMI_TEST_OWNER }}/${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
+        pulumi stack -s "${{ github.sha }}-${{ github.run_number }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
     - name: Run Kubernetes Smoke Tests
       run: make specific_tag_set TagSet=Kubernetes
     strategy:
@@ -187,13 +192,13 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.21.x
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   providers:
     name: smoke-test-providers
     permissions:
@@ -279,7 +284,9 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
       with:
         pulumi-version: ${{ env.PULUMI_VERSION != '' && format('v{0}', env.PULUMI_VERSION) || null }}
     - name: Print CLI version
@@ -295,7 +302,7 @@ jobs:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.21.x
         languages:
         - Cs
         - Js
@@ -303,11 +310,11 @@ jobs:
         - Py
         - Fs
         nodeversion:
-        - 16.x
+        - 168x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   python-unit-testing:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
@@ -323,7 +330,9 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: |-
@@ -338,7 +347,7 @@ jobs:
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
         source-dir:
         - testing-unit-py
   test-infra-destroy:
@@ -427,25 +436,26 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Destroy test infra
-      run: make destroy_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
-        github.sha }}-${{ github.run_number }}"
+      run: make destroy_test_infra StackName="${{ github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.21.x
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   test-infra-setup:
     name: test-infra-setup
     permissions:
@@ -531,25 +541,26 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - name: Create Test Infrastructure
-      run: make setup_test_infra StackName="${{ env.PULUMI_TEST_OWNER }}/${{
-        github.sha }}-${{ github.run_number }}"
+      run: make setup_test_infra StackName="${{ github.sha }}-${{ github.run_number }}"
     strategy:
       fail-fast: false
       matrix:
         dotnetversion:
         - 6.0.114
         goversion:
-        - 1.19.x
+        - 1.21.x
         nodeversion:
-        - 16.x
+        - 18.x
         platform:
         - ubuntu-latest
         pythonversion:
-        - "3.9"
+        - 3.9
   ts-unit-testing:
     name: Running ${{ matrix.source-dir }} test
     runs-on: ${{ matrix.platform }}
@@ -562,7 +573,9 @@ jobs:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
     - name: Install Pulumi CLI
-      uses: pulumi/actions@v4
+      uses: pulumi/actions@v5
+      with:
+        pulumi-version: dev
     - name: Print CLI version
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: |-
