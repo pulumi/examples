@@ -1,0 +1,6 @@
+{
+  "snyk-container-scan": {
+    "enforcementLevel": "mandatory",
+    "dockerfileScanning": false
+  }
+}
