@@ -1,4 +1,5 @@
 # Pulumi Examples
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/pulumi/examples)
 
 This repository contains examples of using Pulumi to build and deploy cloud applications and infrastructure across major programming languages.
 
