@@ -55,6 +55,7 @@ Don't see an example listed? [Try Pulumi AI](https://www.pulumi.com/ai) and use 
     - [Go](#go-3)
     - [C#](#c-3)
 - [Openstack](#openstack)
+- [OVHCloud](#ovhcloud)
 - [Cloud](#cloud)
 - [DigitalOcean](#digitalocean)
 - [Multicloud](#multicloud)
@@ -357,6 +358,14 @@ Example   | Description |
 [(Click here to go back to the main list)](#outline)
 
 [Web Server](openstack-py-webserver) | Deploy an Openstack instance and open port 8000.
+
+## OVHCloud
+
+### Go
+
+| Example                              | Description |
+|--------------------------------------| --------- |
+| [Kubernetes](ovhcloud-go-kubernetes) | A sample to deploy a managed Kubernetes cluster on OVHcloud |
 
 ## Cloud
 
