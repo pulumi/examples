@@ -30,7 +30,7 @@ done.
 
     ```bash
     $ git clone git@github.com:pulumi/examples.git
-    $ cd examples/azure-cs-aks-cosmos-helm
+    $ cd examples/azure-csharp-aks-cosmos-helm
     ```
 
 2.  Create a new stack, which is an isolated deployment target for this example:
@@ -54,7 +54,7 @@ done.
     $ pulumi up
 
          Type                                                          Name                          Status      Info
-    +   pulumi:pulumi:Stack                                           azure-cs-aks-cosmos-helm-dev  created     1 warning
+    +   pulumi:pulumi:Stack                                           azure-csharp-aks-cosmos-helm-dev  created     1 warning
     +   ├─ kubernetes:helm.sh/v3:Chart                                node                          created
     +   │  ├─ kubernetes:core/v1:Service                              node                          created
     +   │  └─ kubernetes:apps/v1:Deployment                           node                          created

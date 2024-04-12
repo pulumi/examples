@@ -1,4 +1,0 @@
-name: aws-cs-fargate
-runtime: dotnet
-main: Infra
-description: An ASP.NET application running in AWS ECS Fargate, using C# infrastructure as code

@@ -70,7 +70,7 @@ After cloning this repo, from this working directory, run these commands:
 	Previewing update (dev):
 
         Type                      Name            Plan
-    +   pulumi:pulumi:Stack       gcp-cs-gke-dev  create
+    +   pulumi:pulumi:Stack       gcp-csharp-gke-dev  create
     +   └─ gcp:container:Cluster  helloworld      create
 
 	Resources:
@@ -79,7 +79,7 @@ After cloning this repo, from this working directory, run these commands:
 	Updating (dev):
 
         Type                      Name            Plan
-    +   pulumi:pulumi:Stack       gcp-cs-gke-dev  created
+    +   pulumi:pulumi:Stack       gcp-csharp-gke-dev  created
     +   └─ gcp:container:Cluster  helloworld      created
 
     Outputs:

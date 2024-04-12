@@ -5,7 +5,7 @@ import "github.com/pulumi/pulumi/pkg/v3/testing/integration"
 type Tag string
 
 const (
-	CS     Tag = "cs"
+	CS     Tag = "csharp"
 	FS     Tag = "fs"
 	Go     Tag = "go"
 	Java   Tag = "java"

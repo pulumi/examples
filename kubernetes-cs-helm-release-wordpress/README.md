@@ -31,7 +31,7 @@ Previewing update (dev)
 View Live: https://app.pulumi.com/.../kubernetes-cs-helm-release-wordpress/dev/previews/aa6d614e-d4b9-4abf-9a21-4c2c353fca3f
 
      Type                              Name                                      Plan
- +   pulumi:pulumi:Stack               kubernetes-cs-helm-release-wordpress-dev  create
+ +   pulumi:pulumi:Stack               kubernetes-csharp-helm-release-wordpress-dev  create
  +   ├─ kubernetes:helm.sh/v3:Release  wpdev                                     create
  +   └─ kubernetes:core/v1:Service     wpdev-wordpress                           create
 
@@ -44,7 +44,7 @@ Updating (dev)
 View Live: https://app.pulumi.com/.../kubernetes-cs-helm-release-wordpress/dev/updates/4
 
      Type                              Name                                      Status
- +   pulumi:pulumi:Stack               kubernetes-cs-helm-release-wordpress-dev  created
+ +   pulumi:pulumi:Stack               kubernetes-csharp-helm-release-wordpress-dev  created
  +   ├─ kubernetes:helm.sh/v3:Release  wpdev                                     created
      └─ kubernetes:core/v1:Service     wpdev-wordpress
 
@@ -73,7 +73,7 @@ Destroying (dev)
 View Live: https://app.pulumi.com/.../kubernetes-cs-helm-release-wordpress/dev/updates/5
 
      Type                              Name                                      Status
- -   pulumi:pulumi:Stack               kubernetes-cs-helm-release-wordpress-dev  deleted
+ -   pulumi:pulumi:Stack               kubernetes-csharp-helm-release-wordpress-dev  deleted
  -   └─ kubernetes:helm.sh/v3:Release  wpdev                                     deleted
 
 Outputs:

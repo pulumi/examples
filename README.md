@@ -73,39 +73,39 @@ Don't see an example listed? [Try Pulumi AI](https://www.pulumi.com/ai) and use 
 
 Example   | Description |
 --------- | --------- |
-[API Gateway](aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
-[API Gateway HTTP API with routes](aws-ts-apigatewayv2-http-api) | Deploy a HTTP API that invokes a Lambda.
-[API Gateway HTTP API quickstart](aws-ts-apigatewayv2-http-api-quickcreate) | Deploy a very simple HTTP API that invokes a Lambda.
-[API Gateway V1 with EventBridge and Lambda](aws-ts-apigateway-eventbridge) | Deploy a REST API that uses EventBridge to target a Lambda function. Includes API Gateway model validation and custom integration-response mapping.
-[API Gateway V2 with EventBridge and Lambda](aws-ts-apigatewayv2-eventbridge) | Deploy an HTTP API that uses EventBridge to target a Lambda function.
-[Apigateway - Auth0](aws-ts-apigateway-auth0) | Deploy a simple REST API protected by Auth0.
-[AppSync](aws-ts-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
-[AssumeRole](aws-ts-assume-role) | Use AssumeRole to create resources.
-[Containers](aws-ts-containers) | Provision containers on Fargate.
-[EKS - Dashboard](aws-ts-eks) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then the Kubernetes Dashboard into the cluster.
-[EKS - Hello World](aws-ts-eks-hello-world) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then a Kubernetes namespace and nginx deployment into the cluster.
-[EKS - Migrate Node Groups](aws-ts-eks-migrate-nodegroups) | Create an EKS cluster and node group to use for workload migration with zero downtime.
-[Fargate](aws-ts-hello-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
-[Lambda Thumbnailer](aws-ts-lambda-thumbnailer) | Create a video thumbnail extractor using serverless functions.
-[Miniflux](aws-ts-pulumi-miniflux) | Stand up an RSS Service using Fargate and RDS.
-[Pulumi Webhooks](aws-ts-pulumi-webhooks) | Create a Pulumi `cloud.HttpEndpoint` that receives webhook events delivered by Pulumi Cloud, then echos the event to Slack.
-[RDS and Airflow](aws-ts-airflow) | Deploy a RDS Postgres instance and containerized Airflow.
-[Resources](aws-ts-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
-[Ruby on Rails](aws-ts-ruby-on-rails) | Create a single EC2 virtual machine instance with a local MySQL database.
-[S3 Lambda](aws-ts-s3-lambda-copyzip) | Set up two AWS S3 Buckets and a single Lambda that listens to one and, upon each new object arriving in it, zips it up and copies it to the second bucket.
-[Serverless Application](aws-ts-serverless-raw) | Deploy a complete serverless C# application using raw resources from `@pulumi/aws`.
-[Serverless Datawarehouse](aws-ts-serverless-datawarehouse) | Deploy a serverless data warehouse.
-[Slackbot](aws-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
-[Stack Reference](aws-ts-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
-[Static Website](aws-ts-static-website) | Serve a static website using S3, CloudFront, Route53, and Certificate Manager.
-[Step Functions](aws-ts-stepfunctions) | Use Step Functions with a Lambda function.
-[Thumbnailer](aws-ts-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
-[Twitter](aws-ts-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
-[URL Shortener](aws-ts-url-shortener-cache-http) | Create a serverless URL shortener that uses high-level components.
-[Voting App](aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
-[Web Server](aws-ts-webserver) | Deploy an EC2 Virtual machine using TypeScript to run a Python web server.
-[Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
-[LangServe - Hello OpenAI](aws-ts-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
+[API Gateway](aws/ts/aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
+[API Gateway HTTP API with routes](aws/ts/aws-ts-apigatewayv2-http-api) | Deploy a HTTP API that invokes a Lambda.
+[API Gateway HTTP API quickstart](aws/ts/aws-ts-apigatewayv2-http-api-quickcreate) | Deploy a very simple HTTP API that invokes a Lambda.
+[API Gateway V1 with EventBridge and Lambda](aws/ts/aws-ts-apigateway-eventbridge) | Deploy a REST API that uses EventBridge to target a Lambda function. Includes API Gateway model validation and custom integration-response mapping.
+[API Gateway V2 with EventBridge and Lambda](aws/ts/aws-ts-apigatewayv2-eventbridge) | Deploy an HTTP API that uses EventBridge to target a Lambda function.
+[Apigateway - Auth0](aws/ts/aws-ts-apigateway-auth0) | Deploy a simple REST API protected by Auth0.
+[AppSync](aws/ts/aws-ts-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
+[AssumeRole](aws/ts/aws-ts-assume-role) | Use AssumeRole to create resources.
+[Containers](aws/ts/aws-ts-containers) | Provision containers on Fargate.
+[EKS - Dashboard](aws/ts/aws-ts-eks) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then the Kubernetes Dashboard into the cluster.
+[EKS - Hello World](aws/ts/aws-ts-eks-hello-world) | Deploy an EKS Kubernetes cluster with an EBS-backed StorageClass, then a Kubernetes namespace and nginx deployment into the cluster.
+[EKS - Migrate Node Groups](aws/ts/aws-ts-eks-migrate-nodegroups) | Create an EKS cluster and node group to use for workload migration with zero downtime.
+[Fargate](aws/ts/aws-ts-hello-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
+[Lambda Thumbnailer](aws/ts/aws-ts-lambda-thumbnailer) | Create a video thumbnail extractor using serverless functions.
+[Miniflux](aws/ts/aws-ts-pulumi-miniflux) | Stand up an RSS Service using Fargate and RDS.
+[Pulumi Webhooks](aws/ts/aws-ts-pulumi-webhooks) | Create a Pulumi `cloud.HttpEndpoint` that receives webhook events delivered by Pulumi Cloud, then echos the event to Slack.
+[RDS and Airflow](aws/ts/aws-ts-airflow) | Deploy a RDS Postgres instance and containerized Airflow.
+[Resources](aws/ts/aws-ts-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
+[Ruby on Rails](aws/ts/aws-ts-ruby-on-rails) | Create a single EC2 virtual machine instance with a local MySQL database.
+[S3 Lambda](aws/ts/aws-ts-s3-lambda-copyzip) | Set up two AWS S3 Buckets and a single Lambda that listens to one and, upon each new object arriving in it, zips it up and copies it to the second bucket.
+[Serverless Application](aws/ts/aws-ts-serverless-raw) | Deploy a complete serverless C# application using raw resources from `@pulumi/aws`.
+[Serverless Datawarehouse](aws/ts/aws-ts-serverless-datawarehouse) | Deploy a serverless data warehouse.
+[Slackbot](aws/ts/aws-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
+[Stack Reference](aws/ts/aws-ts-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
+[Static Website](aws/ts/aws-ts-static-website) | Serve a static website using S3, CloudFront, Route53, and Certificate Manager.
+[Step Functions](aws/ts/aws-ts-stepfunctions) | Use Step Functions with a Lambda function.
+[Thumbnailer](aws/ts/aws-ts-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
+[Twitter](aws/ts/aws-ts-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
+[URL Shortener](aws/ts/aws-ts-url-shortener-cache-http) | Create a serverless URL shortener that uses high-level components.
+[Voting App](aws/ts/aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
+[Web Server](aws/ts/aws-ts-webserver) | Deploy an EC2 Virtual machine using TypeScript to run a Python web server.
+[Web Server with Manual Provisioning](aws/ts/aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
+[LangServe - Hello OpenAI](aws/ts/aws-ts-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### JavaScript
 
@@ -113,13 +113,13 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
-[Containers](aws-js-containers) | Provision containers on Fargate.
-[S3 Folder Component](aws-js-s3-folder-component) | Serve a static website on S3 from a component.
-[S3 Folder](aws-js-s3-folder) | Serve a static website on S3.
-[Servless SQS to Slack](aws-js-sqs-slack) | Wire up a serverless AWS Lambda to an AWS SQS queue and post a message to Slack.
-[Web Server - Component](aws-js-webserver-component) | Deploy an EC2 instance using a common module for creating an instance.
-[Web Server](aws-js-webserver) | Deploy an EC2 Virtual machine running a Python web server.
-[LangServe - Hello OpenAI](aws-js-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
+[Containers](aws/js/aws-js-containers) | Provision containers on Fargate.
+[S3 Folder Component](aws/js/aws-js-s3-folder-component) | Serve a static website on S3 from a component.
+[S3 Folder](aws/js/aws-js-s3-folder) | Serve a static website on S3.
+[Servless SQS to Slack](aws/js/aws-js-sqs-slack) | Wire up a serverless AWS Lambda to an AWS SQS queue and post a message to Slack.
+[Web Server - Component](aws/js/aws-js-webserver-component) | Deploy an EC2 instance using a common module for creating an instance.
+[Web Server](aws/js/aws-js-webserver) | Deploy an EC2 Virtual machine running a Python web server.
+[LangServe - Hello OpenAI](aws/js/aws-js-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### Python
 
@@ -127,17 +127,17 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
-[API Gateway HTTP API quickstart](aws-py-apigatewayv2-http-api-quickcreate) | Deploy a very simple HTTP API that invokes a Lambda.
-[API Gateway V2 with EventBridge and Lambda](aws-py-apigatewayv2-eventbridge) | Deploy an HTTP API that uses EventBridge to target a Lambda function.
-[AppSync](aws-py-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
-[AssumeRole](aws-py-assume-role) | Use AssumeRole to create resources.
-[Fargate](aws-py-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
-[Resources](aws-py-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
-[S3 Folder](aws-py-s3-folder) | Serve a static website on S3.
-[Stack Reference](aws-py-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
-[Step Functions](aws-py-stepfunctions) | Use Step Functions with a Lambda function.
-[Web Server](aws-py-webserver) | Deploy an EC2 instance and open port 80.
-[LangServe - Hello OpenAI](aws-py-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
+[API Gateway HTTP API quickstart](aws/py/aws-py-apigatewayv2-http-api-quickcreate) | Deploy a very simple HTTP API that invokes a Lambda.
+[API Gateway V2 with EventBridge and Lambda](aws/py/aws-py-apigatewayv2-eventbridge) | Deploy an HTTP API that uses EventBridge to target a Lambda function.
+[AppSync](aws/py/aws-py-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.
+[AssumeRole](aws/py/aws-py-assume-role) | Use AssumeRole to create resources.
+[Fargate](aws/py/aws-py-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
+[Resources](aws/py/aws-py-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
+[S3 Folder](aws/py/aws-py-s3-folder) | Serve a static website on S3.
+[Stack Reference](aws/py/aws-py-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
+[Step Functions](aws/py/aws-py-stepfunctions) | Use Step Functions with a Lambda function.
+[Web Server](aws/py/aws-py-webserver) | Deploy an EC2 instance and open port 80.
+[LangServe - Hello OpenAI](aws/py/aws-py-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### Go
 
@@ -145,12 +145,12 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
-[AssumeRole](aws-go-assume-role) | Use AssumeRole to create resources.
-[Fargate](aws-go-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
-[Lambda](aws-go-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
-[S3 Folder](aws-go-s3-folder) | Serve a static website on S3.
-[Web Server](aws-go-webserver) | Deploy an EC2 Virtual machine running a Python web server.
-[LangServe - Hello OpenAI](aws-go-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
+[AssumeRole](aws/go/aws-go-assume-role) | Use AssumeRole to create resources.
+[Fargate](aws/go/aws-go-fargate) | Provision a full ECS Fargate cluster running a load-balanced nginx web server.
+[Lambda](aws/go/aws-go-lambda) | Create a lambda that does a simple `ToUpper` on the string input and returns it.
+[S3 Folder](aws/go/aws-go-s3-folder) | Serve a static website on S3.
+[Web Server](aws/go/aws-go-webserver) | Deploy an EC2 Virtual machine running a Python web server.
+[LangServe - Hello OpenAI](aws/go/aws-go-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 ### C#
 
@@ -171,8 +171,8 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
-[Lambda Web Server](aws-fs-lambda-webserver) | Create a web server in AWS lambda using the Giraffe web server.
-[S3 Folder](aws-fs-s3-folder) | Serve a static website on S3.
+[Lambda Web Server](aws/fs/aws-fs-lambda-webserver) | Create a web server in AWS lambda using the Giraffe web server.
+[S3 Folder](aws/fs/aws-fs-s3-folder) | Serve a static website on S3.
 
 ## Azure
 

@@ -1,4 +1,4 @@
-name: azure-cs-aks-multicluster
+name: azure-csharp-aks-multicluster
 runtime: dotnet
 description: Create multiple Azure Kubernetes Service (AKS) clusters in different regions and with different node counts
 template:

@@ -1,6 +1,8 @@
 module azure-go-aks-managed-identity
 
-go 1.20
+go 1.21
+
+toolchain go1.22.1
 
 require (
 	github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.17.0

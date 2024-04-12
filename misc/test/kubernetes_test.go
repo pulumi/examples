@@ -41,7 +41,7 @@ func TestAccKubernetesGuestbook(t *testing.T) {
 			},
 		},
 		integration.ProgramTestOptions{
-			Dir:        path.Join(getCwd(t), "..", "..", "kubernetes-cs-guestbook", "simple"),
+			Dir:        path.Join(getCwd(t), "..", "..", "kubernetes-csharp-guestbook", "simple"),
 			NoParallel: true,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["FrontendIp"].(string)
@@ -51,7 +51,7 @@ func TestAccKubernetesGuestbook(t *testing.T) {
 			},
 		},
 		integration.ProgramTestOptions{
-			Dir:        path.Join(getCwd(t), "..", "..", "kubernetes-cs-guestbook", "components"),
+			Dir:        path.Join(getCwd(t), "..", "..", "kubernetes-csharp-guestbook", "components"),
 			NoParallel: true,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["FrontendIp"].(string)

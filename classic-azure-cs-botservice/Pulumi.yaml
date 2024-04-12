@@ -1,4 +1,4 @@
-name: azure-cs-botservice
+name: azure-csharp-botservice
 description: Creates Azure Bot Service with Application Insights
 runtime: dotnet
 template:
