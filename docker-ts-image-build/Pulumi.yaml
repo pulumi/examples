@@ -1,0 +1,10 @@
+# Configure project names and descriptions with values obtained from `pulumi new`
+name: ${PROJECT}
+description: ${DESCRIPTION}
+runtime: nodejs
+
+template:
+  description: An example that builds a Dockerfile in Docker Build Cloud.
+  config:
+    builder:
+      description: Your existing cloud builder endpoint. (e.g., cloud-pulumi-my-cool-builder)
