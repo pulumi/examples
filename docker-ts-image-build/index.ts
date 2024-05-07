@@ -1,4 +1,6 @@
-// Pulumi program to build a docker image with DBC
+// Copyright 2024, Pulumi Corporation.  All rights reserved.
+
+// Pulumi program to build a docker image with Docker Build Cloud (DBC)
 
 // This Pulumi template is meant to be copied via:
 // $ pulumi new https://<full repo path to this folder>
@@ -8,11 +10,12 @@
 // $ pulumi up
 
 // Pre-requisites:
-// - Docker Build Cloud (DBC) 
+// - Docker Build Cloud (DBC) builder
 // - Docker Desktop / CLI
 // - Pulumi CLI (https://www.pulumi.com/docs/get-started/install/)
 // - *Recommended* Pulumi Cloud account (https://app.pulumi.com/signup)
 // - npm (https://www.npmjs.com/get-npm)
+
 
 // Import required libraries, update package.json if you add more.
 // (Recommended to run `npm update --save` after adding more libraries)
@@ -29,7 +32,7 @@ const builder = config.require("builder"); // Example, "cloud-pulumi-my-cool-bui
 
 const image = new docker_build.Image("image", {
     // Enable exec to run a custom docker-buildx binary with support
-    // for Docker Build Cloud (DBC). 
+    // for Docker Build Cloud (DBC).
     exec: true,
     // Configures the name of your existing buildx builder to use.
     builder: {
@@ -41,12 +44,12 @@ const image = new docker_build.Image("image", {
     exports: [
         {
             cacheonly: {},
-        }
+        },
     ],
     //
     // Other parameters
     //
-    // Tag our image 
+    // Tag our image
     tags: [`nginx:latest`],
     // The Dockerfile resides in the app directory for this example.
     context: {
