@@ -3,14 +3,15 @@
 // Pulumi program to build a docker image with Docker Build Cloud (DBC)
 
 // This Pulumi template is meant to be copied via:
-// $ pulumi new https://<full repo path to this folder>
+// $ pulumi new https://github.com/pulumi/examples/tree/master/dockerbuild-ts-dbc
 // Once copied to your machine, feel free to edit as needed.
 
 // How to run this program in your terminal:
 // $ pulumi up
 
 // Pre-requisites:
-// - Docker Build Cloud (DBC) builder
+// - Docker Build Cloud (DBC) builder  (https://build.docker.com/)
+//   !! You *must* complete the DBC builder setup steps @ https://docs.docker.com/build/cloud/setup/#steps
 // - Docker Desktop / CLI
 // - Pulumi CLI (https://www.pulumi.com/docs/get-started/install/)
 // - *Recommended* Pulumi Cloud account (https://app.pulumi.com/signup)

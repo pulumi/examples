@@ -7,4 +7,4 @@ template:
   description: An example that builds a Dockerfile in Docker Build Cloud.
   config:
     builder:
-      description: Your existing cloud builder endpoint. (e.g., cloud-pulumi-my-cool-builder)
+      description: Your existing (and configured) cloud builder. (e.g., cloud-pulumi-my-cool-builder)

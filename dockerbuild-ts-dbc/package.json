@@ -2,7 +2,7 @@
     "name": "repo-typescript",
     "main": "index.ts",
     "devDependencies": {
-        "@types/node": "^20.12.10"
+        "@types/node": "^20.12.11"
     },
     "dependencies": {
         "@pulumi/docker-build": "^0.0.2",
