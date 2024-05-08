@@ -20,7 +20,7 @@
 
 // Import required libraries, update package.json if you add more.
 // (Recommended to run `npm update --save` after adding more libraries)
-import * as docker_build from "@pulumi/docker-build";
+import * as dockerBuild from "@pulumi/docker-build";
 import * as pulumi from "@pulumi/pulumi"; // Required for Config
 
 // Read the current stack configuration, see Pulumi.<STACK>.yaml file
@@ -31,7 +31,7 @@ const config = new pulumi.Config();
 // Docker Build Cloud (DBC) builder name
 const builder = config.require("builder"); // Example, "cloud-pulumi-my-cool-builder"
 
-const image = new docker_build.Image("image", {
+const image = new dockerBuild.Image("image", {
     // Enable exec to run a custom docker-buildx binary with support
     // for Docker Build Cloud (DBC).
     exec: true,

@@ -24,7 +24,7 @@
 // (Recommended to run `npm update --save` after adding more libraries)
 import * as aws from "@pulumi/aws"; // Required for ECS
 import * as awsx from "@pulumi/awsx";
-import * as docker_build from "@pulumi/docker-build";
+import * as dockerBuild from "@pulumi/docker-build";
 import * as pulumi from "@pulumi/pulumi"; // Required for Config and interpolation
 
 // Read the current stack configuration, see Pulumi.<STACK>.yaml file
@@ -54,7 +54,7 @@ const auth = aws.ecr.getAuthorizationTokenOutput({
 // Build and publish our application's container image from ./app to the ECR repository.
 // This image will be built with Docker Build Cloud (DBC) and pushed to ECR.
 // It uses the Docker Build provider
-const image = new docker_build.Image("image", {
+const image = new dockerBuild.Image("image", {
     //  ____             _               ____        _ _     _
     // |  _ \  ___   ___| | _____ _ __  | __ ) _   _(_) | __| |
     // | | | |/ _ \ / __| |/ / _ \ '__| |  _ \| | | | | |/ _` |
@@ -101,7 +101,7 @@ const image = new docker_build.Image("image", {
     //                               |_|
     // Build multi-platforms
     platforms: [
-        docker_build.Platform.Linux_amd64,
+        dockerBuild.Platform.Linux_amd64,
         // add more as needed
     ],
     //                 _     _
