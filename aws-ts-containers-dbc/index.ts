@@ -1,11 +1,11 @@
 // Copyright 2024, Pulumi Corporation.  All rights reserved.
 
-// Pulumi program to build with DBC and push a Docker image 
+// Pulumi program to build with DBC and push a Docker image
 // to AWS ECR and deploys it in AWS Fargate with an ALB.
 
 // Pre-requisites:
 // - AWS Credentials
-// - Docker Build Cloud (DBC) 
+// - Docker Build Cloud (DBC)
 // - Docker Desktop / CLI
 // - Pulumi CLI (https://www.pulumi.com/docs/get-started/install/)
 // - *Recommended* Pulumi Cloud account (https://app.pulumi.com/signup)
@@ -22,10 +22,10 @@
 
 // Import required libraries, update package.json if you add more.
 // (Recommended to run `npm update --save` after adding more libraries)
+import * as aws from "@pulumi/aws"; // Required for ECS
+import * as awsx from "@pulumi/awsx";
 import * as docker_build from "@pulumi/docker-build";
 import * as pulumi from "@pulumi/pulumi"; // Required for Config and interpolation
-import * as aws from "@pulumi/aws"; // Required for ECS
-import * as awsx from "@pulumi/awsx"; 
 
 // Read the current stack configuration, see Pulumi.<STACK>.yaml file
 // Configuration values can be set with the pulumi config set command
@@ -53,25 +53,25 @@ const auth = aws.ecr.getAuthorizationTokenOutput({
 
 // Build and publish our application's container image from ./app to the ECR repository.
 // This image will be built with Docker Build Cloud (DBC) and pushed to ECR.
-// It uses the Docker Build provider 
+// It uses the Docker Build provider
 const image = new docker_build.Image("image", {
     //  ____             _               ____        _ _     _
     // |  _ \  ___   ___| | _____ _ __  | __ ) _   _(_) | __| |
     // | | | |/ _ \ / __| |/ / _ \ '__| |  _ \| | | | | |/ _` |
     // | |_| | (_) | (__|   <  __/ |    | |_) | |_| | | | (_| |
     // |____/ \___/ \___|_|\_\___|_|    |____/ \__,_|_|_|\__,_|
-    //  / ___| | ___  _   _  __| |                            
-    // | |   | |/ _ \| | | |/ _` |                            
-    // | |___| | (_) | |_| | (_| |                            
-    //  \____|_|\___/ \__,_|\__,_| 
+    //  / ___| | ___  _   _  __| |
+    // | |   | |/ _ \| | | |/ _` |
+    // | |___| | (_) | |_| | (_| |
+    //  \____|_|\___/ \__,_|\__,_|
     // Enable exec to run a custom docker-buildx binary with support
-    // for Docker Build Cloud (DBC). 
+    // for Docker Build Cloud (DBC).
     exec: true,
     // Configures the name of your existing buildx builder to use.
     builder: {
         name: builder, // Example, "cloud-pulumi-my-cool-builder",
     },
-    //                 _     _           
+    //                 _     _
     //   ___ __ _  ___| |__ (_)_ __   __ _
     //  / __/ _` |/ __| '_ \| | '_ \ / _` |
     // | (_| (_| | (__| | | | | | | | (_| |
@@ -90,26 +90,26 @@ const image = new docker_build.Image("image", {
             ref: pulumi.interpolate`${ecr.repository.repositoryUrl}:cache`,
         },
     }],
-    // (Learn more about interpolation with Pulumi) 
+    // (Learn more about interpolation with Pulumi)
     // https://www.pulumi.com/docs/concepts/inputs-outputs/all/#using-string-interpolation
 
-    //                  _ _   _             _       _    __                     
-    //  _ __ ___  _   _| | |_(_)      _ __ | | __ _| |_ / _| ___  _ __ _ __ ___ 
+    //                  _ _   _             _       _    __
+    //  _ __ ___  _   _| | |_(_)      _ __ | | __ _| |_ / _| ___  _ __ _ __ ___
     // | '_ ` _ \| | | | | __| |_____| '_ \| |/ _` | __| |_ / _ \| '__| '_ ` _ \
     // | | | | | | |_| | | |_| |_____| |_) | | (_| | |_|  _| (_) | |  | | | | | |
     // |_| |_| |_|\__,_|_|\__|_|     | .__/|_|\__,_|\__|_|  \___/|_|  |_| |_| |_|
-    //                               |_|                                        
+    //                               |_|
     // Build multi-platforms
     platforms: [
         docker_build.Platform.Linux_amd64,
         // add more as needed
     ],
-    //                 _     _              
-    //  _ __ ___  __ _(_)___| |_ _ __ _   _ 
+    //                 _     _
+    //  _ __ ___  __ _(_)___| |_ _ __ _   _
     // | '__/ _ \/ _` | / __| __| '__| | | |
     // | | |  __/ (_| | \__ \ |_| |  | |_| |
     // |_|  \___|\__, |_|___/\__|_|   \__, |
-    //           |___/                |___/ 
+    //           |___/                |___/
     push: true,
     // Provide our ECR credentials.
     registries: [{
