@@ -42,11 +42,9 @@ const image = new dockerBuild.Image("image", {
     push: false,
     // Silence warning: "No exports were specified so the build
     // will only remain in the local build cache."
-    exports: [
-        {
-            cacheonly: {},
-        },
-    ],
+    exports: [{
+        cacheonly: {},
+    }],
     //
     // Other parameters
     //
