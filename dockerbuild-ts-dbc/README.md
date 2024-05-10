@@ -1,4 +1,4 @@
-# Example to build a docker image with Docker Build Cloud (DBC)
+# Example to build a Docker image with Docker Build Cloud (DBC)
 
 Builds a Docker Image from an NGINX local Dockerfile. This template prompts the user for an existing DBC builder.
 
