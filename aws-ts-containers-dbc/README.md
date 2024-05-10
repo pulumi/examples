@@ -52,19 +52,3 @@ To clean up your infrastructure, run:
 $ pulumi destroy
 # select 'yes' to confirm the expected changes
 ```
-
-## 🧐 Useful resources
-
-- [🤖Try Pulumi AI](https://www.pulumi.com/ai) - Use natural-language prompts to generate Pulumi infrastructure-as-code programs in any language.
-- [📋 Registry](https://www.pulumi.com/registry/) - Search for packages and learn about the supported resources you need. Install the package directly into your project, browse the API documentation, and start building.
-- [📚 Documentation](https://www.pulumi.com/docs/) - Learn about Pulumi concepts, follow user guides, and consult the reference documentation.
-
-## 🏘️ Community and Social
-
-Engage with our community to elevate your developer experience:
-
-- **Join our online [Pulumi Community on Slack](https://slack.pulumi.com/)** - Interact with over 13K Pulumi developers for collaborative problem-solving and knowledge-sharing!
-- **Join a [Local Pulumi User Groups (PUGs)](https://www.meetup.com/pro/pugs/)** -  Attend tech-packed meetups and hands-on virtual or in-person workshops.
-- **Follow [@PulumiCorp](https://twitter.com/PulumiCorp) on X (Twitter)** - Get real-time updates, technical insights, and sneak peeks into the latest features.
-- **Subscribe to our YouTube Channel, [PulumiTV](https://www.youtube.com/@PulumiTV)** - Learn about AI / ML essentials, launches, workshops, demos and more.
-- **Follow our [LinkedIn](https://www.linkedin.com/company/pulumi/)** - Uncover company news, achievements, and behind-the-scenes glimpses.
