@@ -72,7 +72,7 @@ func TestAccDigitalOceanTsLoadbalancedDroplets(t *testing.T) {
 func TestAccDigitalOceanCsK8s(t *testing.T) {
 	test := getBaseOptions(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "digitalocean-cs-k8s"),
+			Dir: path.Join(getCwd(t), "..", "..", "digitalocean-csharp-k8s"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				helpers.AssertHTTPResult(t, stack.Outputs["IngressIp"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Welcome to nginx!")
@@ -86,7 +86,7 @@ func TestAccDigitalOceanCsK8s(t *testing.T) {
 func TestAccDigitalOceanCsLoadbalancedDroplets(t *testing.T) {
 	test := getBaseOptions(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "digitalocean-cs-loadbalanced-droplets"),
+			Dir: path.Join(getCwd(t), "..", "..", "digitalocean-csharp-loadbalanced-droplets"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				helpers.AssertHTTPResult(t, stack.Outputs["Endpoint"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Welcome to nginx!")

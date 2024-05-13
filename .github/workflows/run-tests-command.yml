@@ -78,8 +78,8 @@ jobs:
         platform:
         - ubuntu-latest
         source-dir:
-        - testing-unit-cs
-        - testing-unit-cs-mocks
+        - testing-unit-csharp
+        - testing-unit-csharp-mocks
         - testing-unit-fs-mocks
   go-unit-testing:
     if: github.event_name == 'repository_dispatch' ||

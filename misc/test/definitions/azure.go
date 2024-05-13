@@ -13,7 +13,7 @@ const AzureClassicProvider Tag = "pulumi-azure"
 var AzureTests = TestDefinitions{
 	{
 		Tags: []Tag{AzureCloud, AzureClassicProvider, CS},
-		Dir:  "classic-azure-cs-webserver",
+		Dir:  "classic-azure-csharp-webserver",
 		Options: integration.ProgramTestOptions{
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				helpers.AssertHTTPResult(t, stack.Outputs["IpAddress"].(string), nil, func(body string) bool {

@@ -32,7 +32,7 @@ func assertAppServiceResultContains(t *testing.T, output interface{}, str string
 var AzureNativeTests = TestDefinitions{
 	{
 		Tags: []Tag{AzureCloud, AzureNativeProvider, CS},
-		Dir:  "azure-cs-appservice",
+		Dir:  "azure-csharp-appservice",
 		Options: integration.ProgramTestOptions{
 			Config: map[string]string{
 				"sqlPassword": "2@Password@2",
@@ -44,7 +44,7 @@ var AzureNativeTests = TestDefinitions{
 	},
 	{
 		Tags: []Tag{AzureCloud, AzureNativeProvider, CS},
-		Dir:  "azure-cs-sqlserver",
+		Dir:  "azure-csharp-sqlserver",
 		Options: integration.ProgramTestOptions{
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				assertAppServiceResultContains(t, stack.Outputs["serverName"], "database.windows.net")

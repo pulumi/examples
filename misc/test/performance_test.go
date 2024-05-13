@@ -55,7 +55,7 @@ func TestAccAwsGoS3Folder(t *testing.T) {
 }
 
 func TestAccAwsCsS3Folder(t *testing.T) {
-	benchmark := bench("aws-cs-s3-folder", "aws", "dotnet", "csharp")
+	benchmark := bench("aws-csharp-s3-folder", "aws", "dotnet", "csharp")
 	opts := integration.ProgramTestOptions{
 		Dir: path.Join(getCwd(t), "..", "..", benchmark.Name),
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
@@ -170,8 +170,8 @@ func TestManyResources(t *testing.T) {
 				payloadBytes: 8,
 			},
 			{
-				folder:       "cs-many-resources",
-				bench:        bench(fmt.Sprintf("cs-many-resources-%d", resources), "", "dotnet", "csharp"),
+				folder:       "csharp-many-resources",
+				bench:        bench(fmt.Sprintf("csharp-many-resources-%d", resources), "", "dotnet", "csharp"),
 				resources:    resources,
 				payloadBytes: 8,
 			},

@@ -1,0 +1,3 @@
+name: pulumi-ansible-wordpress-csharp
+runtime: dotnet
+description: Deploy an EC2 Wordpress server using Pulumi and Ansible.

@@ -93,9 +93,9 @@ func TestAccAwsCsAssumeRole(t *testing.T) {
 	nanos := time.Now().UnixNano()
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "aws-cs-assume-role", "create-role"),
+			Dir: path.Join(getCwd(t), "..", "..", "aws-csharp-assume-role", "create-role"),
 			Config: map[string]string{
-				"aws-cs-create-role:unprivilegedUsername": fmt.Sprintf("unpriv-cs-%d", nanos),
+				"aws-csharp-create-role:unprivilegedUsername": fmt.Sprintf("unpriv-csharp-%d", nanos),
 			},
 		})
 

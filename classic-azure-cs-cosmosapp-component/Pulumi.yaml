@@ -1,4 +1,4 @@
-name: azure-cs-cosmosapp-component
+name: azure-csharp-cosmosapp-component
 description: Reusable Component to Create Globally-distributed Applications with Azure Cosmos DB
 runtime: dotnet
 template:

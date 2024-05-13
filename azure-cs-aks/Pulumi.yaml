@@ -1,3 +1,3 @@
-name: azure-cs-aks
+name: azure-csharp-aks
 runtime: dotnet
 description: A C# Pulumi program to provision an Azure Kubernetes Service (AKS) cluster

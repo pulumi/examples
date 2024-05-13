@@ -32,7 +32,7 @@ done.
 
     ```bash
     $ git clone git@github.com:pulumi/examples.git
-    $ cd examples/azure-cs-aks-helm
+    $ cd examples/azure-csharp-aks-helm
     ```
 
 2.  Restore dependencies and build:

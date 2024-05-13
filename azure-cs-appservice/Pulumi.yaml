@@ -1,4 +1,4 @@
-name: azure-cs-appservice
+name: azure-csharp-appservice
 description: Creates Azure App Service with SQL Database and Application Insights
 runtime: dotnet
 template:
