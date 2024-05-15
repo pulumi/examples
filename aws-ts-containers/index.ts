@@ -19,6 +19,7 @@ const repo = new awsx.ecr.Repository("repo", {
 const image = new awsx.ecr.Image("image", {
     repositoryUrl: repo.url,
     context: "./app",
+    platform: "linux/amd64",
 });
 
 // Deploy an ECS Service on Fargate to host the application container.
