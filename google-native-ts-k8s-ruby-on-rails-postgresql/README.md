@@ -1,4 +1,4 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/gcp-ts-k8s-ruby-on-rails-postgresql/infra)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/gcp-ts-k8s-ruby-on-rails-postgresql/infra)
 
 # Containerized Ruby on Rails App Delivery using the Google Native Pulumi Provider
 
@@ -59,7 +59,7 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
 
     Config variables that use the `--secret` flag are [encrypted and not stored as plaintext](https://www.pulumi.com/docs/intro/concepts/config/#secrets).
 
-    By default, your cluster will use the default nodepool. `index.ts` includes a reference incantation to enable an additional nodepool 
+    By default, your cluster will use the default nodepool. `index.ts` includes a reference incantation to enable an additional nodepool
     which can be configured as follows:
     ```bash
     $ pulumi config set clusterNodeCount 5
@@ -84,13 +84,13 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
      Type                                           Name                        Plan       Info
  +   pulumi:pulumi:Stack                            google-rails-dev            create
  +   ├─ docker:image:Image                          rails-app                   create
- +   ├─ google-native:container/v1:Cluster          cluster                     create     
- +   ├─ google-native:sqladmin/v1beta4:Instance     web-db                      create     
- +   ├─ google-native:container/v1:ClusterNodePool  primary-node-pool           create     
- +   ├─ pulumi:providers:kubernetes                 gke-k8s                     create     
- +   ├─ gcp:sql:User                                web-db-user                 create     
- +   ├─ kubernetes:apps/v1:Deployment               rails-deployment            create     
- +   └─ kubernetes:core/v1:Service                  rails-service               create     
+ +   ├─ google-native:container/v1:Cluster          cluster                     create
+ +   ├─ google-native:sqladmin/v1beta4:Instance     web-db                      create
+ +   ├─ google-native:container/v1:ClusterNodePool  primary-node-pool           create
+ +   ├─ pulumi:providers:kubernetes                 gke-k8s                     create
+ +   ├─ gcp:sql:User                                web-db-user                 create
+ +   ├─ kubernetes:apps/v1:Deployment               rails-deployment            create
+ +   └─ kubernetes:core/v1:Service                  rails-service               create
     Diagnostics:
       docker:image:Image (rails-app):
         Building container image: context=../app
