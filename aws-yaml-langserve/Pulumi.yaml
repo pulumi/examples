@@ -324,7 +324,7 @@ resources:
               logDriver: awslogs
               options:
                 awslogs-group: ${langserve-log-group.name}
-                awslogs-region: eu-central-1
+                awslogs-region: ${region.name}
                 awslogs-stream-prefix: pulumi-langserve
             name: ${pulumi-project}-${pulumi-stack}-service
             portMappings:
@@ -393,10 +393,14 @@ resources:
         Name: ${pulumi-project}-${pulumi-stack}
     type: aws:ec2:Vpc
 variables:
+  region:
+    fn::invoke:
+      arguments: {}
+      function: aws:getRegion
   accountId: ${current.accountId}
   availability-zones:
-    - eu-central-1a
-    - eu-central-1b
+    - ${region.name}a
+    - ${region.name}b
   current:
     fn::invoke:
       arguments: {}

@@ -36,9 +36,12 @@ if container_file is None:
 open_api_key = config.get("open-api-key")
 if open_api_key is None:
     open_api_key = "CHANGEME"
+
+region = aws.get_region()
+
 availability_zones = [
-    "eu-central-1a",
-    "eu-central-1b",
+    f"{region.name}a",
+    f"{region.name}b",
 ]
 current = aws.get_caller_identity_output()
 pulumi_project = pulumi.get_project()
@@ -356,7 +359,7 @@ langserve_task_definition = aws.ecs.TaskDefinition("langserve-task-definition",
             "logDriver": "awslogs",
             "options": {
                 "awslogs-group": args[2],
-                "awslogs-region": "eu-central-1",
+                "awslogs-region": region.name,
                 "awslogs-stream-prefix": "pulumi-langserve",
             },
         },
