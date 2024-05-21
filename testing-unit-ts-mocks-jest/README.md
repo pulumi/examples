@@ -1,11 +1,9 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-ts-mocks-jest/README.md#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-ts-mocks-jest/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-ts-mocks-jest/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-ts-mocks-jest/README.md#gh-dark-mode-only)
 
 # Unit Testing AWS Infrastructure with Jest
 
 An example of using [Pulumi](https://pulumi.com/) with [Jest](https://jestjs.io/), the JavaScript testing framework, to write in-memory unit tests that mock AWS infrastructure. The program under test deploys a single [AWS Lambda function](https://aws.amazon.com/lambda/) and an associated [Lambda Function URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html).
-
-[![Deploy with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/testing-unit-ts-mocks-jest)
 
 ## Prerequisites
 

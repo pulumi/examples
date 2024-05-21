@@ -1,4 +1,5 @@
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/gcp-ts-k8s-ruby-on-rails-postgresql/infra)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/gcp-ts-k8s-ruby-on-rails-postgresql/infra#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/gcp-ts-k8s-ruby-on-rails-postgresql/infra#gh-dark-mode-only)
 
 # Containerized Ruby on Rails App Delivery using the Google Native Pulumi Provider
 
