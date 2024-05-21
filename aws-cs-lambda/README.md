@@ -1,5 +1,5 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-lambda/pulumi/Pulumi.cs#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-lambda/pulumi/Pulumi.cs#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-lambda/pulumi/Pulumi.cs#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-lambda/pulumi/Pulumi.cs#gh-dark-mode-only)
 
 # AWS C# Lambda
 This example creates an AWS Lambda function that does a simple `.ToUpper` on the string input and returns it.
