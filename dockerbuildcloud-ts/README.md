@@ -6,7 +6,7 @@ Last revision: May 2024.
 
 ## 📋 Pre-requisites
 
-- [Docker Build Cloud (DBC) builder](https://build.docker.com/)  
+- [Docker Build Cloud (DBC) builder](https://build.docker.com/)
 - 🚨 You **must** complete the [DBC builder setup steps](https://docs.docker.com/build/cloud/setup/#steps) 🚨
 - Docker Desktop / CLI
 - [Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
@@ -25,8 +25,8 @@ Once copied to your machine, feel free to edit as needed.
 
 Alternatively, click the button below to use [Pulumi Deployments](https://www.pulumi.com/docs/pulumi-cloud/deployments/) to deploy this app:
 
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/dockerbuild-ts-dbc/README.md#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/dockerbuild-ts-dbc/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/dockerbuild-ts-dbc/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/dockerbuild-ts-dbc/README.md#gh-dark-mode-only)
 
 ## 🎬 How to run
 
@@ -35,7 +35,7 @@ To deploy your infrastructure, run:
 ```bash
 $ pulumi up
 # select 'yes' to confirm the expected changes
-# 🎉 Ta-Da! 
+# 🎉 Ta-Da!
 ```
 
 ## 🧹 Clean up
