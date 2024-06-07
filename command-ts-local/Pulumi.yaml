@@ -1,0 +1,7 @@
+name: command-ts-local
+runtime: nodejs
+description: A minimal TypeScript Pulumi program
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: typescript

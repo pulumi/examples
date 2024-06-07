@@ -1,0 +1,13 @@
+{
+    "name": "command-ts-local",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^18",
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "@pulumi/command": "^0.11.1",
+        "@pulumi/pulumi": "^3.113.0",
+        "@pulumi/random": "^4.16.2"
+    }
+}
