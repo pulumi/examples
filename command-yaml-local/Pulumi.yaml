@@ -1,0 +1,20 @@
+# Copyright 2016-2024, Pulumi Corporation.
+
+name: command-yaml-local
+runtime: yaml
+description: A minimal Pulumi YAML program
+config: {'pulumi:tags': {value: {'pulumi:template': yaml}}}
+
+resources:
+  pet:
+    type: random:RandomPet
+
+  petFileCommand:
+    type: command:local:Command
+    properties:
+      create: !Sub 'touch "${pet.id}.txt"'
+      delete: !Sub 'rm "${pet.id}.txt"'
+      triggers:
+        # Trigger changes to this resource, i.e., run
+        # the commands, when the pet resource changes.
+        - ${pet.id}
