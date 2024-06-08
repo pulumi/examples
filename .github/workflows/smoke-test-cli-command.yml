@@ -573,9 +573,9 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Setup Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
@@ -587,16 +587,14 @@ jobs:
       run: echo "Currently Pulumi $(pulumi version) is installed"
     - run: |-
         npm install
-        npm install --global mocha
-        npm install --global ts-node
-        mocha -r ts-node/register ec2tests.ts
-        mocha -r ts-node/register bucket_pair_test.ts
+        npx mocha -r ts-node/register ec2tests.ts
+        npx mocha -r ts-node/register bucket_pair_test.ts
       working-directory: ${{ matrix.source-dir }}/mocha
     strategy:
       fail-fast: false
       matrix:
         nodeversion:
-        - 18.x
+        - 20.x
         platform:
         - ubuntu-latest
         source-dir:
