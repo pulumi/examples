@@ -41,7 +41,7 @@ export class Db extends pulumi.ComponentResource {
       allocatedStorage: 20,
       engine: "mysql",
       engineVersion: "5.7",
-      instanceClass: "db.t2.micro",
+      instanceClass: "db.t3.micro",
       storageType: "gp2",
       skipFinalSnapshot: true,
       publiclyAccessible: false,

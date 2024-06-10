@@ -38,7 +38,7 @@ app_routetable = aws.ec2.RouteTable("app-routetable",
     ],
     vpc_id=app_vpc.id)
 
-# Associating our gateway with our VPC to allow the MySQL database to communicate 
+# Associating our gateway with our VPC to allow the MySQL database to communicate
 # with the internet
 app_routetable_association = aws.ec2.MainRouteTableAssociation("app_routetable_association",
     route_table_id=app_routetable.id,
@@ -76,7 +76,7 @@ mysql_rds_server = aws.rds.Instance("mysql-server",
     engine="mysql",
     username=admin_name,
     password=admin_password,
-    instance_class="db.t2.micro",
+    instance_class="db.t3.micro",
     allocated_storage=20,
     skip_final_snapshot=True,
     publicly_accessible=True,
@@ -94,7 +94,7 @@ mysql_database = mysql.Database("mysql-database",
     name="votes-database",
     opts=pulumi.ResourceOptions(provider=mysql_provider))
 
-# Creating a user which will be used to manage MySQL tables 
+# Creating a user which will be used to manage MySQL tables
 mysql_user = mysql.User("mysql-standard-user",
     user=user_name,
     host="example.com",
