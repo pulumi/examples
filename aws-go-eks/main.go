@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"strings"
 
 	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws"
 	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ec2"
@@ -81,6 +83,7 @@ func runPulumiProgram(ctx *pulumi.Context) error {
 		"arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
 		"arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
 	}
+	fmt.Println("nodeGroupPolicies")
 	for i, nodeGroupPolicy := range nodeGroupPolicies {
 		_, err := iam.NewRolePolicyAttachment(ctx, fmt.Sprintf("ngpa-%d", i), &iam.RolePolicyAttachmentArgs{
 			Role:      nodeGroupRole.Name,
@@ -90,6 +93,7 @@ func runPulumiProgram(ctx *pulumi.Context) error {
 			return err
 		}
 	}
+	fmt.Println("after nodegrouppolicies")
 	// Create a Security Group that we can use to actually connect to our cluster
 	clusterSg, err := ec2.NewSecurityGroup(ctx, "cluster-sg", &ec2.SecurityGroupArgs{
 		VpcId: pulumi.String(vpc.Id),
@@ -126,6 +130,7 @@ func runPulumiProgram(ctx *pulumi.Context) error {
 			SubnetIds: toPulumiStringArray(subnet.Ids),
 		},
 	})
+	fmt.Println("created eks cluster", err)
 	if err != nil {
 		return err
 	}
@@ -141,6 +146,7 @@ func runPulumiProgram(ctx *pulumi.Context) error {
 			MinSize:     pulumi.Int(1),
 		},
 	})
+	fmt.Println("created node group", err)
 	if err != nil {
 		return err
 	}
@@ -235,9 +241,23 @@ func main() {
 		if err != nil {
 			return err
 		}
-		return ctx.WithDefaultProviders(func(ctx *pulumi.Context) error {
-			return runPulumiProgram(ctx)
-		}, provider)
+		ctx.RegisterStackTransform(
+			func(_ context.Context, args *pulumi.ResourceTransformArgs) *pulumi.ResourceTransformResult {
+				if strings.HasPrefix(args.Type, "aws:") && args.Opts.Provider == nil {
+					args.Opts.Provider = provider
+					return &pulumi.ResourceTransformResult{
+						Props: args.Props,
+						Opts:  args.Opts,
+					}
+				}
+				return nil
+			},
+		)
+		return runPulumiProgram(ctx)
+		if err != nil {
+			fmt.Println(err)
+		}
+		return err
 	})
 }
 
