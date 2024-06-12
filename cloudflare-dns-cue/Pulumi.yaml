@@ -1,0 +1,6 @@
+name: cloudflare-dns-cue
+runtime:
+  name: yaml
+  options:
+    compiler: cue export
+description: A minimal Pulumi YAML program
