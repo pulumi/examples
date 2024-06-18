@@ -18,7 +18,6 @@ const oidcProvider = new aws.iam.OpenIdConnectProvider("oidcProvider", {
     protect: true,
 });
 
-
 // Create a new role that can be assumed by the OIDC provider
 const role = new aws.iam.Role("oidcProviderRole", {
     assumeRolePolicy: pulumi.all([oidcProvider.url, oidcProvider.arn, audience]).apply(([url, arn, audience]) => JSON.stringify({

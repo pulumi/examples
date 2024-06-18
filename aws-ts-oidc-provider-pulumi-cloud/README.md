@@ -1,35 +1,50 @@
 # AWS OIDC Pulumi program in TypeScript
 
-Last update: June 2024
-
 A Pulumi template to:
 
 - Create AWS resources for AWS OIDC (IdP + Role)
 - Create a new Pulumi Cloud ESC Environment (optional)
 
-## How-tos
+Last update: June 2024
 
-### Get your OIDC thumbprint
+## 📋 Pre-requisites
+
+- AWS CLI and an AWS Account configured
+- [Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
+- [Pulumi Cloud account](https://app.pulumi.com/signup)
+- [npm](https://www.npmjs.com/get-npm)
+
+## 👩‍🏫 Get started
+
+This Pulumi example is written as a template. It is meant to be copied via `pulumi new`
 
 ```bash
-docker run --platform linux/amd64  nullstring/oidc-thumbprint-finder https://api.pulumi.com/oidc
+# login to your Pulumi Cloud if you haven't already
+pulumi login
+
+# pick a name for your output directory (--dir is optional, omit for pwd)
+D=my-aws-oidc
+pulumi new https://github.com/pulumi/examples/aws-ts-oidc-provider-pulumi-cloud --dir ${D}
+cd ${D}
 ```
 
-### Use this template
+Once copied to your machine, feel free to edit as needed.
+
+## 🎬 How to run
+
+To deploy your infrastructure, run:
 
 ```bash
-# copy the template
-OUTPUT_DIR=test
-pulumi new https://github.com/desteves/aws-oidc-typescript/infra --dir ${OUTPUT_DIR}
-# complete the prompts, ensure to indicate if you'd like to also create the ESC Environment.
-
-# create the resources
-pulumi up --cwd ${OUTPUT_DIR} --yes
-
-# clean up
-pulumi destroy --cwd ${OUTPUT_DIR} --yes --remove
+$ pulumi up
+# select 'yes' to confirm the expected changes
+# 🎉 Ta-Da!
 ```
 
-## Reference Material
+## 🧹 Clean up
 
-Based on the [Python version](https://github.com/pulumi/examples/tree/master/aws-py-oidc-provider-pulumi-cloud#readme) at so follow those instructions!
+To clean up your infrastructure, run:
+
+```bash
+$ pulumi destroy
+# select 'yes' to confirm the expected changes
+```
