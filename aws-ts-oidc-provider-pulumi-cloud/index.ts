@@ -58,7 +58,7 @@ else {
                         "oidc": {
                             "duration": "1h",
                             "roleArn": role.arn,
-                            "sessionName": "pulumi-environments-session"
+                            "sessionName": "pulumi-environments-session",
                         },
                     },
                 },
@@ -66,7 +66,7 @@ else {
             "environmentVariables": {
                 "AWS_ACCESS_KEY_ID": "${aws.login.accessKeyId}",
                 "AWS_SECRET_ACCESS_KEY": "${aws.login.secretAccessKey}",
-                "AWS_SESSION_TOKEN": "${aws.login.sessionToken}"
+                "AWS_SESSION_TOKEN": "${aws.login.sessionToken}",
             },
         },
     });
