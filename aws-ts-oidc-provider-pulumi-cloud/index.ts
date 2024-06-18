@@ -1,13 +1,15 @@
+// Copyright 2024, Pulumi Corporation.  All rights reserved.
+
+import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
-import * as aws from "@pulumi/aws";
 
 // Configurations
 const audience = pulumi.getOrganization();
 const config = new pulumi.Config();
-const oidcIdpUrl: string = config.require('oidcIdpUrl');
-const thumbprint: string = config.require('thumbprint');
-const escEnv: string = config.require('escEnv');
+const oidcIdpUrl: string = config.require("oidcIdpUrl");
+const thumbprint: string = config.require("thumbprint");
+const escEnv: string = config.require("escEnv");
 
 // Create a new OIDC Provider
 const oidcProvider = new aws.iam.OpenIdConnectProvider("oidcProvider", {
@@ -38,14 +40,15 @@ const existingPolicy = aws.iam.getPolicy({
 
 
 // Attach other policies to the role as needed
-new aws.iam.RolePolicyAttachment("oidcProviderRolePolicyAttachment", {
+const attach = new aws.iam.RolePolicyAttachment("oidcProviderRolePolicyAttachment", {
     role: role,
     policyArn: existingPolicy.then(policy => policy.arn),
 });
 
 
-if (escEnv === ".")
-    console.log("Skipping ESC Environment creation ...")
+if (escEnv === ".") {
+    console.log("Skipping ESC Environment creation ...");
+}
 else {
     const envJson = pulumi.jsonStringify({
         "values": {
@@ -56,25 +59,24 @@ else {
                             "duration": "1h",
                             "roleArn": role.arn,
                             "sessionName": "pulumi-environments-session"
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
             "environmentVariables": {
                 "AWS_ACCESS_KEY_ID": "${aws.login.accessKeyId}",
                 "AWS_SECRET_ACCESS_KEY": "${aws.login.secretAccessKey}",
                 "AWS_SESSION_TOKEN": "${aws.login.sessionToken}"
-            }
+            },
         },
     });
 
     const envAsset = envJson.apply(json => new pulumi.asset.StringAsset(json));
 
-    new pulumiservice.Environment("oidcEnvironment", {
+    const env = new pulumiservice.Environment("oidcEnvironment", {
         name: escEnv,
         organization: audience,
         yaml: envAsset,
     });
 
 } // end of else
-
