@@ -1,0 +1,20 @@
+name: ${PROJECT}
+description: ${DESCRIPTION}
+runtime: nodejs
+
+template:
+  description: A minimal TypeScript Pulumi program to set up AWS OIDC+Pulumi ESC
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    oidcIdpUrl:
+      description: The URL of the OIDC IdP to use
+      default: https://api.pulumi.com/oidc
+    thumbprint:
+      description: The thumbprint of the OIDC IdP SSL certificate.
+      default: 9e99a48a9960b14926bb7f3b02e22da2b0ab7280
+    escEnv:
+      description: The Pulumi ESC Environment to create ('.' to skip)
+      default: aws-oidc-env
+ 
