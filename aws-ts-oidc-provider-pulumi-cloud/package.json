@@ -1,0 +1,13 @@
+{
+    "name": "aws-ts-oidc-provider-pulumi-cloud",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^20",
+        "typescript": "^5.4.5"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^6.40.0",
+        "@pulumi/pulumi": "^3.120.0",
+        "@pulumi/pulumiservice": "^0.21.2"
+    }
+}
