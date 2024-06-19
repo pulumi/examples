@@ -32,6 +32,8 @@ Once copied to your machine, feel free to edit as needed.
 
 ## 🎬 How to run
 
+Note that this templates contains a default value which contains a valid AWS OIDC thumbprint as of June 2024. If this thumbprint becomes invalid, obtain a new OIDC thumbprint. For more information, see [Obtain the thumbprint for an OpenID Connect identity provider](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc_verify-thumbprint.html) in the AWS docs.
+
 To deploy your infrastructure, run:
 
 ```bash
