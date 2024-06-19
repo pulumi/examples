@@ -15,7 +15,7 @@ const escEnv: string = config.require("escEnv");
 const oidcProvider = new aws.iam.OpenIdConnectProvider("oidcProvider", {
     clientIdLists: [audience],
     url: oidcIdpUrl,
-    thumbprintLists: [thumbprint], // Replace with the thumbprint of the IdP server's certificate
+    thumbprintLists: [thumbprint],
 }, {
     protect: true,
 });
