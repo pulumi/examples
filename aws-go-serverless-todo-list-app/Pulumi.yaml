@@ -1,0 +1,3 @@
+name: aws-go-serverless-todo-list-app
+runtime: go
+description: A serverless To-Do list app
