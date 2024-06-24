@@ -23,10 +23,13 @@ const subnet2Cidr = config.get("subnet-2-cidr") || "10.0.1.0/24";
 const containerContext = config.get("container-context") || ".";
 const containerFile = config.get("container-file") || "./Dockerfile";
 const openApiKey = config.get("open-api-key") || "CHANGEME";
+const region = aws.getRegion({}).then(region => region.name);
+
 const availabilityZones = [
-    "eu-central-1a",
-    "eu-central-1b",
+    pulumi.interpolate`${region}a`,
+    pulumi.interpolate`${region}b`,
 ];
+
 const current = aws.getCallerIdentityOutput({});
 const pulumiProject = pulumi.getProject();
 const pulumiStack = pulumi.getStack();
@@ -364,7 +367,7 @@ const langserveTaskDefinition = new aws.ecs.TaskDefinition("langserve-task-defin
             logDriver: "awslogs",
             options: {
                 "awslogs-group": langserveLogGroupName,
-                "awslogs-region": "eu-central-1",
+                "awslogs-region": region,
                 "awslogs-stream-prefix": "pulumi-langserve",
             },
         },

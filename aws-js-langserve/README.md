@@ -14,6 +14,12 @@ To run this example, you'll need the following tools installed on your machine:
 
 ## Deploying to AWS using Pulumi
 
+Set the region with the following command:
+
+```bash
+pulumi config set aws:region <region>
+```
+
 Run the following command to deploy your LangServe app to AWS:
 
 ```bash

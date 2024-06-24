@@ -28,11 +28,7 @@ return await Deployment.RunAsync(() =>
     var containerContext = config.Get("container-context") ?? ".";
     var containerFile = config.Get("container-file") ?? "./Dockerfile";
     var openApiKey = config.Get("open-api-key") ?? "CHANGEME";
-    var availabilityZones = new[]
-    {
-        "eu-central-1a",
-        "eu-central-1b",
-    };
+    var region = Aws.GetRegion.Invoke();
 
     var current = Aws.GetCallerIdentity.Invoke();
 
@@ -137,7 +133,7 @@ return await Deployment.RunAsync(() =>
     {
         VpcId = langserveVpc.Id,
         CidrBlock = subnet1Cidr,
-        AvailabilityZone = availabilityZones[0],
+        AvailabilityZone = region.Apply(getRegionResult => $"{getRegionResult.Name}a"),
         MapPublicIpOnLaunch = true,
         Tags = 
         {
@@ -149,7 +145,7 @@ return await Deployment.RunAsync(() =>
     {
         VpcId = langserveVpc.Id,
         CidrBlock = subnet2Cidr,
-        AvailabilityZone = availabilityZones[1],
+        AvailabilityZone = region.Apply(getRegionResult => $"{getRegionResult.Name}b"),
         MapPublicIpOnLaunch = true,
         Tags = 
         {
@@ -562,7 +558,7 @@ return await Deployment.RunAsync(() =>
                         ["options"] = new Dictionary<string, object?>
                         {
                             ["awslogs-group"] = langserveLogGroupName,
-                            ["awslogs-region"] = "eu-central-1",
+                            ["awslogs-region"] = region.Apply(getRegionResult => getRegionResult.Name),
                             ["awslogs-stream-prefix"] = "pulumi-langserve",
                         },
                     },

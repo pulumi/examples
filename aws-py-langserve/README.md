@@ -1,89 +1,59 @@
-# AWS Python LangServe Example
+# AWS YAML LangServe Example
 
-## Installation
+This example demonstrates how to use deploy a simple app using Pulumi in YAML.
 
-Install the LangChain CLI if you haven't yet
+## Prerequisites
 
-```bash
-pip install -U langchain-cli
-```
+To run this example, you'll need the following tools installed on your machine:
 
-## Adding packages
+1. [Install Pulumi](https://www.pulumi.com/docs/install/)
+2. [Install Python](https://www.python.org/downloads/)
+2. [Configure AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Docker](https://docs.docker.com/get-docker/)
+4. [Install the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+5. [Install the LangChain CLI](https://python.langchain.com/docs/langserve#installation)
 
-```bash
-# adding packages from 
-# https://github.com/langchain-ai/langchain/tree/master/templates
-langchain app add $PROJECT_NAME
+## Deploying to AWS using Pulumi
 
-# adding custom GitHub repo packages
-langchain app add --repo $OWNER/$REPO
-# or with whole git string (supports other git providers):
-# langchain app add git+https://github.com/hwchase17/chain-of-verification
-
-# with a custom api mount point (defaults to `/{package_name}`)
-langchain app add $PROJECT_NAME --api_path=/my/custom/path/rag
-```
-
-Note: you remove packages by their api path
+Set the region with the following command:
 
 ```bash
-langchain app remove my/custom/path/rag
+pulumi config set aws:region <region>
 ```
-
-## Setup LangSmith (Optional)
-LangSmith will help us trace, monitor and debug LangChain applications. 
-LangSmith is currently in private beta, you can sign up [here](https://smith.langchain.com/). 
-If you don't have access, you can skip this section
-
-
-```shell
-export LANGCHAIN_TRACING_V2=true
-export LANGCHAIN_API_KEY=<your-api-key>
-export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
-```
-
-## Launch LangServe
-
-```bash
-langchain serve
-```
-
-## Deploying to AWS
 
 Run the following command to deploy your LangServe app to AWS:
 
 ```bash
+git clone https://github.com/pulumi/examples.git
+cd examples/aws-py-langserve
+pulumi stack init <your-stack-name>
+pulumi config set open-api-key --secret # Enter your OpenAI API key
 pulumi up
 ```
 
-This will output the URL of your LangServe app. You can use this URL to make requests to your app.
+This last command will show you a preview of the resources that will be created. After reviewing the changes, you will be prompted to continue. Once confirmed, Pulumi will deploy your LangServe app to AWS.
 
-## Running in Docker
+The whole deployoment process will take a couple of minutes. Once it's done, you will see the URL of your LangServe app in the output.
 
-This project folder includes a Dockerfile that allows you to easily build and host your LangServe app.
+```bash
+Outputs:
+    url: "http://<dns>.elb.amazonaws.com"
 
-### Building the Image
-
-To build the image, you simply:
-
-```shell
-docker build . -t my-langserve-app
+Resources:
+    + 27 created
 ```
 
-If you tag your image with something other than `my-langserve-app`,
-note it for use in the next step.
+You can now access the LangServe playground by adding `/openai/playground` to the URL you got from the output.
 
-### Running the Image Locally
+> [!NOTE]  
+> It may take a few minutes for the load balancer to be ready to accept requests. If you see a 503 error, wait a few minutes and try again.
 
-To run the image, you'll need to include any environment variables
-necessary for your application.
+## Clean up
 
-In the below example, we inject the `OPENAI_API_KEY` environment
-variable with the value set in my local environment
-(`$OPENAI_API_KEY`)
+To clean up the resources created by this example, run the following command:
 
-We also expose port 8080 with the `-p 8080:8080` option.
-
-```shell
-docker run -e OPENAI_API_KEY=$OPENAI_API_KEY -p 8080:8080 my-langserve-app
+```bash
+pulumi destroy
 ```
+
+You will be prompted to confirm the deletion of the resources. Once confirmed, Pulumi will delete all the resources created by this example.

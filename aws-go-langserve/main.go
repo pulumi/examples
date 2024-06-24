@@ -60,9 +60,13 @@ func main() {
 		if param := cfg.Get("open-api-key"); param != "" {
 			openApiKey = param
 		}
+		region, err := aws.GetRegion(ctx, nil, nil)
+		if err != nil {
+			return err
+		}
 		availabilityZones := []string{
-			"eu-central-1a",
-			"eu-central-1b",
+			fmt.Sprintf("%va", region.Name),
+			fmt.Sprintf("%vb", region.Name),
 		}
 		current, err := aws.GetCallerIdentity(ctx, nil, nil)
 		if err != nil {
@@ -562,7 +566,7 @@ func main() {
 							"logDriver": "awslogs",
 							"options": map[string]interface{}{
 								"awslogs-group":         langserveLogGroupName,
-								"awslogs-region":        "eu-central-1",
+								"awslogs-region":        region.Name,
 								"awslogs-stream-prefix": "pulumi-langserve",
 							},
 						},
