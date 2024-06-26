@@ -1,0 +1,14 @@
+{
+    "name": "synk-container-scan",
+    "version": "0.0.1",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^18"
+    },
+    "dependencies": {
+        "@pulumi/docker": "^4.5.1",
+        "@pulumi/policy": "^1.10.0",
+        "@pulumi/pulumi": "^3.0.0",
+        "await-spawn": "^4.0.2"
+    }
+}
