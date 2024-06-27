@@ -139,11 +139,12 @@ const connection: command.types.input.remote.ConnectionArgs = {
 };
 
 const changeToken = getFileHash("myapp.conf");
+
 // Copy a config file to our server.
-const cpConfig = new command.remote.CopyFile("config", {
+const cpConfig = new command.remote.CopyToRemote("config", {
     triggers: [changeToken],
     connection,
-    localPath: "myapp.conf",
+    source: new pulumi.asset.FileArchive("myapp.conf"),
     remotePath: `/home/${username}/myapp.conf`,
 }, { dependsOn: [vm, pubIp] });
 

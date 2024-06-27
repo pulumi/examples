@@ -3,8 +3,8 @@
     "version": "0.1.0",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/azure": "^4.0.0",
-        "@pulumi/command": "^0.0.3",
+        "@pulumi/azure": "^5.0.0",
+        "@pulumi/command": "1.0.0-beta.1",
         "@pulumi/pulumi": "^3.0.0",
         "@pulumi/tls": "^4.0.0"
     }
