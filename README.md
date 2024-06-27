@@ -1,7 +1,8 @@
 <p align="center">
   <a href="https://www.pulumi.com?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=top-logo" title="Pulumi Examples - Build and Deploy Infrastructure as Code Solutions on Any Cloud">
     <img src="https://www.pulumi.com/images/logo/logo-on-white-box.svg?" width="350">
-   </a>
+  </a>
+</p>
 
   [![Slack](http://www.pulumi.com/images/docs/badges/slack.svg)](https://slack.pulumi.com?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=slack-badge)
   [![GitHub Discussions](https://img.shields.io/github/discussions/pulumi/pulumi)](https://github.com/pulumi/pulumi/discussions)
