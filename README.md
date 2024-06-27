@@ -10,19 +10,18 @@
 
 **Pulumi** is the easiest way to build and deploy infrastructure, for any architecture and on any cloud, using programming languages that you already know and love. Code and ship infrastructure faster with your favorite languages and tools, and embed IaC anywhere with [Automation API](https://www.pulumi.com/docs/guides/automation-api/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=about-pulumi).
 
-Pulumi is open source under the [Apache 2.0 license](https://github.com/pulumi/pulumi/blob/master/LICENSE), supports many languages and clouds, and is easy to extend.  This repo contains the `pulumi` CLI, language SDKs, and core Pulumi engine, and individual libraries are in their own repos.
+Pulumi is open source under the [Apache 2.0 license](https://github.com/pulumi/pulumi/blob/master/LICENSE), supports many languages and clouds, and is easy to extend.
 
 ## Table of contents
 
-- :rocket: [Pulumi Examples](#pulumi-examples)
-- :toolbox:	[Example Library](#example-library)
-- :busts_in_silhouette: [Pulumi Community](#community)
+- :rocket: [About This Repo](#about-the-pulumi-examples-repo)
+- :toolbox:	[All Pulumi Examples](#all-pulumi-examples)
 - :clap: [Contributors](#contributors)
+- :busts_in_silhouette: [Pulumi Community](#community)
+- :blue_book: [Pulumi Developer Resources](#pulumi-developer-resources)
 - :compass:	[Pulumi Roadmap](#pulumi-roadmap)
-- :blue_book: [Pulumi Resources](#pulumi-resources)
 
-
-# Pulumi Examples
+# About the Pulumi Examples Repo
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/pulumi/examples)
 
 This repository contains examples of using Pulumi to build and deploy cloud applications and infrastructure across major programming languages.
@@ -36,7 +35,7 @@ Each example has a two-part prefix, `<cloud>-<language>`, to indicate which `<cl
 
 See the [Pulumi documentation](https://www.pulumi.com/docs/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) for more details on getting started with Pulumi.
 
-## Checking Out a Single Example
+## Checking out a single example
 
 You can checkout only the example(s) you want by using a [sparse checkout](https://git-scm.com/docs/git-sparse-checkout). The following commands show how checkout only the `aws-go-fargate` example. Replace `aws-go-fargate` with your example of interest. 
 
@@ -49,9 +48,9 @@ $ echo "aws-go-fargate" >> .git/info/sparse-checkout ## update this
 $ git pull origin master
 ```
 
-Don't see an example listed? [Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi infrastructure-as-code programs in _any_ language.
+Don't see an example listed? [Try Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi infrastructure-as-code programs in _any_ language.
 
-## All examples
+## All Pulumi examples
 
 - [AWS](#aws)
     - [TypeScript](#typescript)
@@ -93,9 +92,7 @@ Don't see an example listed? [Try Pulumi Copilot](https://app.pulumi.com/?utm_ca
 
 ### TypeScript
 
-[🔝 Back to the list](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -133,11 +130,11 @@ Example   | Description |
 [Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
 [LangServe - Hello OpenAI](aws-ts-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### JavaScript
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -149,11 +146,11 @@ Example   | Description |
 [Web Server](aws-js-webserver) | Deploy an EC2 Virtual machine running a Python web server.
 [LangServe - Hello OpenAI](aws-js-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### Python
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -169,11 +166,11 @@ Example   | Description |
 [Web Server](aws-py-webserver) | Deploy an EC2 instance and open port 80.
 [LangServe - Hello OpenAI](aws-py-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### Go
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -184,11 +181,11 @@ Example   | Description |
 [Web Server](aws-go-webserver) | Deploy an EC2 Virtual machine running a Python web server.
 [LangServe - Hello OpenAI](aws-go-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### C#
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -199,24 +196,24 @@ Example   | Description |
 [Web Server](aws-cs-webserver) | Deploy an EC2 instance and open port 80.
 [LangServe - Hello OpenAI](aws-cs-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### F#
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
 [Lambda Web Server](aws-fs-lambda-webserver) | Create a web server in AWS lambda using the Giraffe web server.
 [S3 Folder](aws-fs-s3-folder) | Serve a static website on S3.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## Azure
 
 ### TypeScript
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -234,11 +231,11 @@ Example   | Description |
 [Azure Synapse](azure-ts-synapse) | Starting point for enterprise analytics solutions based on Azure Synapse.
 [Web Server](azure-ts-webserver) | Provision a Linux web server in an Azure Virtual Machine.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### Python
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -255,11 +252,11 @@ Example   | Description |
 [Virtual Data Center](azure-py-virtual-data-center) | Deploy Azure Virtual Data Center (VDC) hub-and-spoke network stacks in Azure, complete with ExpressRoute and VPN Gateways, Azure Firewall guarding a DMZ, and Azure Bastion.
 [Web Server](azure-py-webserver) | Provision a Linux web server in an Azure Virtual Machine.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### Go
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -270,11 +267,11 @@ Example   | Description |
 [Static Website](azure-go-static-website) | Configure static website hosting in Azure Storage.
 [Azure SDK integration](azure-go-call-azure-sdk) | Call Azure SDK functions from a Pulumi programin Go.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### C#
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -293,13 +290,13 @@ Cluster.
 [Azure Synapse](azure-cs-synapse) | Starting point for enterprise analytics solutions based on Azure Synapse.
 [Azure SQL Server](azure-cs-sqlserver) | An example of a SQLServer on Azure PaaS.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## GCP
 
 ### TypeScript
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -311,21 +308,21 @@ Example   | Description |
 [Ruby on Rails](gcp-ts-k8s-ruby-on-rails-postgresql) | Deliver a containerized Ruby on Rails application.
 [Slackbot](gcp-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### JavaScript
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
 [Web Server](gcp-js-webserver) | Build a web server in Google Cloud.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### Python
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -335,11 +332,11 @@ Example   | Description |
 [Network Component](gcp-py-network-component) | Use a reusable component to create a Google Cloud Network and instance.
 [nginx Server](gcp-py-instance-nginx) | Build a nginx server in Google Cloud.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### Go
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -347,24 +344,24 @@ Example   | Description |
 [Functions - Raw](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
 [Web Server](gcp-go-webserver) | Build a web server in Google Cloud.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### C#
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
 [Functions - Raw](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
 [Functions](gcp-go-functions) | Deploy a Go-based Google Cloud Function.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## Kubernetes
 
 ### TypeScript
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -379,31 +376,31 @@ Example   | Description |
 [Staged App Rollout](kubernetes-ts-staged-rollout-with-prometheus) | Create a staged rollout gated by checking that the P90 response time reported by Prometheus is less than some amount.
 [Wordpress Helm Chart](kubernetes-ts-helm-wordpress) | Use the Helm API to deploy v2.1.3 of the Wordpress Helm Chart to a Kubernetes cluster.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### Python
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
 [Guestbook](kubernetes-py-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### C#
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
 [Guestbook](kubernetes-cs-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### Go
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -412,15 +409,17 @@ Example   | Description |
 [Wordpress Helm Chart](kubernetes-go-helm-wordpress) | Use the Helm API to deploy v9.6.0 of the Wordpress Helm Chart to a Kubernetes cluster.
 [Expose Deployment](kubernetes-go-exposed-deployment) | Deploy nginx to a Kubernetes cluster, and publicly expose it using a Kubernetes Service.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## Openstack
 
 ### Python
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 [Web Server](openstack-py-webserver) | Deploy an Openstack instance and open port 8000.
+
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
 
 ## OVHCloud
 
@@ -430,13 +429,13 @@ Example   | Description |
 |--------------------------------------| --------- |
 | [Kubernetes](ovhcloud-go-kubernetes) | A sample to deploy a managed Kubernetes cluster on OVHcloud |
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## Cloud
 
 ### TypeScript
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -445,11 +444,11 @@ Example   | Description |
 [URL Shortener](cloud-ts-url-shortener) | Create a complete URL shortener web application that uses the high-level `cloud.Table` and `cloud.HttpServer` components.
 [Voting App](cloud-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### JavaScript
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
@@ -460,46 +459,48 @@ Example   | Description |
 [Thumbnailer](cloud-js-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
 [Twitter](cloud-js-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## DigitalOcean
 
 ### TypeScript
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
 [Droplets](digitalocean-ts-loadbalanced-droplets) | Build sample architecture.
 [Kubernetes](digitalocean-ts-k8s) | Provision a DigitalOcean Kubernetes cluster.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### Python
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
 [Droplets](digitalocean-py-loadbalanced-droplets) | Build sample architecture.
 [Kubernetes](digitalocean-py-k8s) | Provision a DigitalOcean Kubernetes cluster.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ### C#
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
 [Droplets](digitalocean-cs-loadbalanced-droplets) | Build sample architecture.
 [Kubernetes](digitalocean-cs-k8s) | Provision a DigitalOcean Kubernetes cluster.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## Multicloud
 
 ### TypeScript
 
-[(Click here to go back to the library)](#example-library)
+[🔝 Back to the list](#all-pulumi-examples)
 
 [Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
 
@@ -507,48 +508,47 @@ Example   | Description |
 --------- | --------- |
 [Buckets](multicloud-ts-buckets) | Use a single Pulumi program to provision resources in both AWS and GCP.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## F5
 
 ### TypeScript
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
 [BigIP Local Traffic Manager](f5bigip-ts-ltm-pool) | Provide load balancing via an F5 BigIP appliance to backend HTTP instances.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## Twilio
 
 ### TypeScript
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
 [Component](twilio-ts-component) | Create a custom Component Resource to parse incoming messages from Twilio.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## Linode
 
 ### JavaScript
 
-
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 --------- | --------- |
 [Web Server](linode-js-webserver) | Build a web server on Linode.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## Testing
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 Example   | Description |
 -----          | --------- |
@@ -559,11 +559,11 @@ Example   | Description |
 [Testing with Policies](testing-pac-ts)          | Tests based on Policy-as-Code in TypeScript.
 [Integration Testing in Go](testing-integration) | Deploy-check-destroy tests in Go.
 
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## Automation API
 
-[(Click here to go back to the library)](#example-library)
-
-[Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi example programs in _any_ language.
+[🔝 Back to the list](#all-pulumi-examples)
 
 [Automation API Examples](https://github.com/pulumi/automation-api-examples)
 
@@ -581,30 +581,18 @@ Engage with our community to elevate your developer experience:
 
 Meet the [brilliant minds behind this project](https://github.com/pulumi/examples/graphs/contributors), view their profiles, and learn about their valuable contributions.
 
-## FAQs
+Want to contribute an example? Please visit our [CONTRIBUTING](CONTRIBUTING.md) doc for details.
 
-### How can I contribute to this repository?
-
-We're glad you asked! Please visit our [CONTRIBUTING](CONTRIBUTING.md) doc for details.
-
-### How can I install the Pulumi CLI?
-
-Visit our [install page](https://www.pulumi.com/docs/install/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=examples-faq) for installation steps.
-
-### Is [Pulumi Cloud](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=examples-faq) free?
-
-Individual accounts are always free and allow unlimited resources. See our [pricing page](https://www.pulumi.com/pricing/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=examples-faq) for other options.
-
-## Pulumi roadmap
-
-Review the planned work for the upcoming quarter and a selected backlog of issues that are on our mind but not yet scheduled on the [Pulumi Roadmap.](https://github.com/orgs/pulumi/projects/44)
-
-## Pulumi resources
+## Pulumi developer resources
 
 Delve deeper into our project with additional resources:
 
 - [Get Started with Pulumi](https://www.pulumi.com/docs/get-started/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=examples-resources): Deploy a simple application in AWS, Azure, Google Cloud, or Kubernetes using Pulumi.
-- [Registry](https://www.pulumi.com/registry/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=examples-resources): Search for packages and learn about the supported resources you need. Install the package directly into your project, browse the API documentation, and start building.
-- [Try Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=examples-resources) - Use natural-language prompts to generate Pulumi infrastructure-as-code programs in any language.
 - [Documentation](https://www.pulumi.com/docs/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=examples-resources): Learn about Pulumi concepts, follow user guides, and consult the reference documentation.
 - [Pulumi Blog](https://www.pulumi.com/blog/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=examples-resources) - Stay in the loop with our latest tech announcements, insightful articles, and updates.
+- [Registry](https://www.pulumi.com/registry/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=examples-resources): Search for packages and learn about the supported resources you need. Install the package directly into your project, browse the API documentation, and start building.
+- [Try Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=examples-resources) - Use natural-language prompts to generate Pulumi infrastructure-as-code programs in any language.
+
+## Pulumi roadmap
+
+Review the planned work for the upcoming quarter and a selected backlog of issues that are on our mind but not yet scheduled on the [Pulumi Roadmap.](https://github.com/orgs/pulumi/projects/44)
