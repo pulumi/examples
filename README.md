@@ -51,7 +51,7 @@ $ git pull origin master
 
 Don't see an example listed? [Try Pulumi Copilot](https://app.pulumi.com/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi infrastructure-as-code programs in _any_ language.
 
-## Example Library
+## All examples
 
 - [AWS](#aws)
     - [TypeScript](#typescript)
