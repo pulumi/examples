@@ -1,12 +1,12 @@
 {
     "name": "aws-synthetics",
     "devDependencies": {
-        "@types/node": "^14"
+        "@types/node": "^18"
     },
     "dependencies": {
         "@pulumi/aws": "^6.0.2",
         "@pulumi/aws-native": "^0.15.0",
-        "@pulumi/command": "^0.1.0",
+        "@pulumi/command": "^1.0.0",
         "@pulumi/pulumi": "^3.0.0"
     }
 }

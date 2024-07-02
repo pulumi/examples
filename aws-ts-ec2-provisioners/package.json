@@ -3,11 +3,11 @@
     "version": "0.1.0",
     "main": "index.js",
     "devDependencies": {
-        "@types/node": "^17.0.5"
+        "@types/node": "^18"
     },
     "dependencies": {
         "@pulumi/aws": "^6.0.2",
-        "@pulumi/command": "^0.0.3",
+        "@pulumi/command": "^1.0.0",
         "@pulumi/pulumi": "^3.0.0"
     }
 }
