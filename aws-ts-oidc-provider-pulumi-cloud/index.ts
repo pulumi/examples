@@ -3,13 +3,20 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
+import * as tls from "@pulumi/tls";
 
 // Configurations
 const audience = pulumi.getOrganization();
 const config = new pulumi.Config();
-const oidcIdpUrl: string = config.require("oidcIdpUrl");
-const thumbprint: string = config.require("thumbprint");
+const oidcIdpUrl: string = config.get("oidcIdpUrl") || "https://api.pulumi.com/oidc";
 const escEnv: string = config.require("escEnv");
+
+// Get TLS thumbprint for OIDC Provider
+const certs = tls.getCertificateOutput({
+    url: oidcIdpUrl,
+});
+
+const thumbprint = certs.certificates[0].sha1Fingerprint;
 
 // Create a new OIDC Provider
 const oidcProvider = new aws.iam.OpenIdConnectProvider("oidcProvider", {
