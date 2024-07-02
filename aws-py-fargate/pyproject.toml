@@ -1,0 +1,12 @@
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pulumi = ">=3.122.0,<4.0.0"
+pulumi-aws = ">=6.42.1,<7.0.0"
+pyright = ">=1.1.369,<2.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
