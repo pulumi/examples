@@ -3,5 +3,5 @@ description: A container running in AWS ECS Fargate, using Python infrastructure
 runtime:
   name: python
   options:
-    virtualenv: venv
-
+    toolchain: poetry
+    typechecker: pyright
