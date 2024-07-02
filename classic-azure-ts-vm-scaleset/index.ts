@@ -35,19 +35,16 @@ const loadBalancer = new azure.lb.LoadBalancer("lb", {
 });
 
 const bpepool = new azure.lb.BackendAddressPool("bpepool", {
-    resourceGroupName: resourceGroup.name,
     loadbalancerId: loadBalancer.id,
 });
 
 const sshProbe = new azure.lb.Probe("ssh-probe", {
-    resourceGroupName: resourceGroup.name,
     loadbalancerId: loadBalancer.id,
     port: applicationPort,
 });
 
 const natRule = new azure.lb.Rule("lbnatrule-http", {
-    resourceGroupName: resourceGroup.name,
-    backendAddressPoolId: bpepool.id,
+    backendAddressPoolIds: [bpepool.id],
     backendPort: applicationPort,
     frontendIpConfigurationName: "PublicIPAddress",
     frontendPort: applicationPort,
@@ -64,7 +61,7 @@ const vnet = new azure.network.VirtualNetwork("vnet", {
 const subnet = new azure.network.Subnet("subnet", {
     enforcePrivateLinkEndpointNetworkPolicies: false,
     resourceGroupName: resourceGroup.name,
-    addressPrefix: "10.0.2.0/24",
+    addressPrefixes: ["10.0.2.0/24"],
     virtualNetworkName: vnet.name,
 });
 
@@ -120,13 +117,6 @@ packages:
 
 const autoscale = new azure.monitoring.AutoscaleSetting("vmss-autoscale", {
     resourceGroupName: resourceGroup.name,
-    notification: {
-        email: {
-            customEmails: ["admin@contoso.com"],
-            sendToSubscriptionAdministrator: true,
-            sendToSubscriptionCoAdministrator: true,
-        },
-    },
     profiles: [{
         capacity: {
             default: 1,
