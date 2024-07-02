@@ -8,6 +8,7 @@
     "dependencies": {
         "@pulumi/aws": "^6.40.0",
         "@pulumi/pulumi": "^3.120.0",
-        "@pulumi/pulumiservice": "^0.21.2"
+        "@pulumi/pulumiservice": "^0.21.2",
+        "@pulumi/tls": "^5.0.3"
     }
 }
