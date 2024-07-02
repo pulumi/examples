@@ -13,7 +13,7 @@ const escEnv: string = config.require("escEnv");
 
 // Get TLS thumbprint for OIDC Provider
 const certs = tls.getCertificateOutput({
-    url: oidcIdpUrl
+    url: oidcIdpUrl,
 });
 
 const thumbprint = certs.certificates[0].sha1Fingerprint;
