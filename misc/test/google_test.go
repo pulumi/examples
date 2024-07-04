@@ -184,21 +184,21 @@ func TestAccGcpTsServerlessRaw(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccGcpTsCloudRun(t *testing.T) {
-	test := getGoogleBase(t).
-		With(integration.ProgramTestOptions{
-			Dir:           path.Join(getCwd(t), "..", "..", "gcp-ts-cloudrun"),
-			RunUpdateTest: false,
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				endpoint := stack.Outputs["rubyUrl"].(string)
-				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
-					return assert.Contains(t, body, "Hello Pulumi!")
-				})
-			},
-		})
+// Temporarily skipped. See https://github.com/pulumi/pulumi-gcp/issues/2155 for details.
+// func TestAccGcpTsCloudRun(t *testing.T) {
+// 	test := getGoogleBase(t).
+// 		With(integration.ProgramTestOptions{
+// 			Dir: path.Join(getCwd(t), "..", "..", "gcp-ts-cloudrun"),
+// 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+// 				endpoint := stack.Outputs["rubyUrl"].(string)
+// 				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
+// 					return assert.Contains(t, body, "Hello Pulumi!")
+// 				})
+// 			},
+// 		})
 
-	integration.ProgramTest(t, &test)
-}
+// 	integration.ProgramTest(t, &test)
+// }
 
 func getGoogleProject() string {
 	project := os.Getenv("GOOGLE_PROJECT")
