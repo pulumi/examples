@@ -34,14 +34,14 @@ jobs:
   comment-notification:
     if: github.event_name == 'repository_dispatch'
     name: comment-notification
-    runs-on: ubuntu-latest
+    runs-on: pulumi-ubuntu-8core
     steps:
     - id: vars
       name: Create URL to the run output
       run: echo ::set-output
         name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
     - name: Update with Result
-      uses: peter-evans/create-or-update-comment@v1
+      uses: peter-evans/create-or-update-comment@v4
       with:
         body: |-
           Please view the results of the PR Build [Here][1]
@@ -59,7 +59,7 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Setup DotNet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Install Pulumi CLI
@@ -76,7 +76,7 @@ jobs:
         dotnetversion:
         - 6.0.114
         platform:
-        - ubuntu-latest
+        - pulumi-ubuntu-8core
         source-dir:
         - testing-unit-cs
         - testing-unit-cs-mocks
@@ -90,7 +90,7 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Install Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v5
       with:
         go-version: ${{matrix.goversion}}
     - name: Install Pulumi CLI
@@ -107,7 +107,7 @@ jobs:
         goversion:
         - 1.21.x
         platform:
-        - ubuntu-latest
+        - pulumi-ubuntu-8core
         source-dir:
         - testing-unit-go
   kubernetes:
@@ -123,16 +123,16 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Setup DotNet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{matrix.pythonversion}}
     - name: Install Python deps
@@ -140,7 +140,7 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v5
       with:
         go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
@@ -170,20 +170,20 @@ jobs:
 
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v0
+      uses: google-github-actions/auth@v2
       with:
         service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
         workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{
           env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
           env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
     - name: Setup gcloud auth
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/setup-gcloud@v2
       with:
         install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
@@ -226,7 +226,7 @@ jobs:
         nodeversion:
         - 18.x
         platform:
-        - ubuntu-latest
+        - pulumi-ubuntu-8core
         pythonversion:
         - 3.9
   linting:
@@ -239,9 +239,9 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Setup Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
@@ -262,7 +262,7 @@ jobs:
         nodeversion:
         - 18.x
         platform:
-        - ubuntu-latest
+        - pulumi-ubuntu-8core
         yarn-version:
         - 1.13.0
   providers:
@@ -277,16 +277,16 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Setup DotNet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{matrix.pythonversion}}
     - name: Install Python deps
@@ -294,7 +294,7 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v5
       with:
         go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
@@ -324,20 +324,20 @@ jobs:
 
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v0
+      uses: google-github-actions/auth@v2
       with:
         service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
         workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{
           env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
           env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
     - name: Setup gcloud auth
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/setup-gcloud@v2
       with:
         install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
@@ -363,11 +363,6 @@ jobs:
       with:
         version: v2.5.0
         token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@main
-      with:
-        tool-cache: false
-        swap-storage: false
     - name: Running ${{ matrix.clouds }}${{ matrix.languages }} Tests
       run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
     strategy:
@@ -394,7 +389,7 @@ jobs:
         nodeversion:
         - 18.x
         platform:
-        - ubuntu-latest
+        - pulumi-ubuntu-8core
         pythonversion:
         - 3.9
   python-unit-testing:
@@ -406,7 +401,7 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{matrix.pythonversion}}
     - name: Install Python deps
@@ -429,7 +424,7 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-        - ubuntu-latest
+        - pulumi-ubuntu-8core
         pythonversion:
         - 3.9
         source-dir:
@@ -446,7 +441,7 @@ jobs:
     - kubernetes
     - linting
     - providers
-    runs-on: ubuntu-latest
+    runs-on: pulumi-ubuntu-8core
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
@@ -464,16 +459,16 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Setup DotNet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{matrix.pythonversion}}
     - name: Install Python deps
@@ -481,7 +476,7 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v5
       with:
         go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
@@ -511,7 +506,7 @@ jobs:
 
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v0
+      uses: google-github-actions/auth@v2
       with:
         service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
         workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
@@ -519,13 +514,13 @@ jobs:
           env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
           env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
     - name: Setup gcloud auth
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/setup-gcloud@v2
       with:
         install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
@@ -556,7 +551,7 @@ jobs:
         nodeversion:
         - 18.x
         platform:
-        - ubuntu-latest
+        - pulumi-ubuntu-8core
         pythonversion:
         - 3.9
   test-infra-setup:
@@ -571,16 +566,16 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Setup DotNet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{matrix.dotnetversion}}
     - name: Setup Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: ${{matrix.nodeversion}}
         registry-url: https://registry.npmjs.org
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{matrix.pythonversion}}
     - name: Install Python deps
@@ -588,7 +583,7 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v5
       with:
         go-version: ${{matrix.goversion}}
     - name: Install aws-iam-authenticator
@@ -618,7 +613,7 @@ jobs:
 
         helm repo add bitnami https://charts.bitnami.com/bitnami
     - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v0
+      uses: google-github-actions/auth@v2
       with:
         service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
         workload_identity_provider: projects/${{ env.GOOGLE_PROJECT_NUMBER
@@ -626,13 +621,13 @@ jobs:
           env.GOOGLE_CI_WORKLOAD_IDENTITY_POOL }}/providers/${{
           env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
     - name: Setup gcloud auth
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/setup-gcloud@v2
       with:
         install_components: gke-gcloud-auth-plugin
     - name: Login to Google Cloud Registry
       run: gcloud --quiet auth configure-docker
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
@@ -663,7 +658,7 @@ jobs:
         nodeversion:
         - 18.x
         platform:
-        - ubuntu-latest
+        - pulumi-ubuntu-8core
         pythonversion:
         - 3.9
   ts-unit-testing:
@@ -696,6 +691,6 @@ jobs:
         nodeversion:
         - 20.x
         platform:
-        - ubuntu-latest
+        - pulumi-ubuntu-8core
         source-dir:
         - testing-unit-ts

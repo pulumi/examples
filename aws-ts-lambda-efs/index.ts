@@ -4,6 +4,7 @@ import * as aws from "@pulumi/aws";
 import * as apigateway from "@pulumi/aws-apigateway";
 import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
+import * as time from "@pulumiverse/time";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import * as cp from "child_process";
 import * as fs from "fs";
@@ -14,8 +15,29 @@ export = async () => {
     const vpc = new awsx.ec2.Vpc("vpc", {
         subnetStrategy: "Auto",
         enableDnsHostnames: true,
+        enableDnsSupport: true,
     });
     const subnetIds = await vpc.publicSubnetIds;
+
+    const securityGroup = new aws.ec2.SecurityGroup("group", {
+        vpcId: vpc.vpcId,
+        ingress: [
+            {
+                fromPort: 443,
+                toPort: 443,
+                protocol: "tcp",
+                cidrBlocks: ["0.0.0.0/0"],
+            },
+        ],
+        egress: [
+            {
+                fromPort: 0,
+                toPort: 0,
+                protocol: "-1",
+                cidrBlocks: ["0.0.0.0/0"],
+            },
+        ],
+    });
 
     // EFS
     const filesystem = new aws.efs.FileSystem("filesystem");
@@ -26,7 +48,7 @@ export = async () => {
             targetArray.push(new aws.efs.MountTarget(`fs-mount-${i}`, {
                 fileSystemId: filesystem.id,
                 subnetId: subnetIds[i],
-                securityGroups: [vpc.vpc.defaultSecurityGroupId],
+                securityGroups: [securityGroup.id],
             }));
         }
         return targetArray;
@@ -38,17 +60,42 @@ export = async () => {
         rootDirectory: { path: "/www", creationInfo: { ownerGid: 1000, ownerUid: 1000, permissions: "755" } },
     }, { dependsOn: targets });
 
+    // Add a 60-second delay to compensate for an eventual-consistency issue.
+    // See https://github.com/hashicorp/terraform-provider-aws/issues/29828 for details.
+    // This can be removed when the issue above is resolved.
+    const delay = new time.Sleep("delay", {
+        createDuration: "60s"},
+    { dependsOn: targets });
+
+    const lambdaRole = new aws.iam.Role("lambda-role", {
+        assumeRolePolicy: JSON.stringify({
+            Version: "2012-10-17",
+            Statement: [{
+                Action: "sts:AssumeRole",
+                Principal: {
+                    Service: "lambda.amazonaws.com",
+                },
+                Effect: "Allow",
+            }],
+        }),
+        managedPolicyArns: [
+            aws.iam.ManagedPolicy.AWSLambdaVPCAccessExecutionRole,
+            aws.iam.ManagedPolicy.LambdaFullAccess,
+        ],
+    });
+
     // Lambda
     function efsvpcCallback(name: string, f: aws.lambda.Callback<APIGatewayProxyEvent, APIGatewayProxyResult>) {
         return new aws.lambda.CallbackFunction(name, {
-            policies: [aws.iam.ManagedPolicy.AWSLambdaVPCAccessExecutionRole, aws.iam.ManagedPolicy.LambdaFullAccess],
+            role: lambdaRole,
+
             vpcConfig: {
                 subnetIds: vpc.privateSubnetIds,
-                securityGroupIds: [vpc.vpc.defaultSecurityGroupId],
+                securityGroupIds: [securityGroup.id],
             },
             fileSystemConfig: { arn: ap.arn, localMountPath: "/mnt/storage" },
             callback: f,
-        }, {dependsOn: targets});
+        }, { dependsOn: [ delay ]});
     }
 
     // API Gateway
@@ -114,7 +161,7 @@ export = async () => {
         taskDefinitionArgs: {
             container: {
                 image: "nginx",
-                name: "niginx",
+                name: "nginx",
                 memory: 128,
                 portMappings: [{ containerPort: 80, hostPort: 80, protocol: "tcp" }],
                 mountPoints: [{ containerPath: "/usr/share/nginx/html", sourceVolume: efsVolume.name }],
@@ -123,7 +170,7 @@ export = async () => {
         },
         platformVersion: "1.4.0",
         networkConfiguration: {
-            securityGroups: [vpc.vpc.defaultSecurityGroupId],
+            securityGroups: [securityGroup.id],
             subnets: vpc.publicSubnetIds,
             assignPublicIp: true,
         },
@@ -133,5 +180,4 @@ export = async () => {
     return {
         url: api.url,
     };
-
 };

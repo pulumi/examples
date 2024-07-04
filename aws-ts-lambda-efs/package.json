@@ -6,6 +6,7 @@
         "@pulumi/aws-apigateway": "^2.1.1",
         "@pulumi/awsx": "^2.0.0",
         "@pulumi/pulumi": "^3.0.0",
+        "@pulumiverse/time": "^0.0.17",
         "aws-lambda": "^1.0.7"
     }
 }
