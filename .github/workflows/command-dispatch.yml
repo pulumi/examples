@@ -1,4 +1,4 @@
-name: Command Dispatch for testing
+name: Command dispatch for testing
 on:
   issue_comment:
     types:
@@ -13,7 +13,7 @@ jobs:
     - name: Run Build
       uses: peter-evans/slash-command-dispatch@v2
       with:
-        commands: run-example-tests
+        commands: run-tests
         issue-type: pull-request
         permission: write
         reaction-token: ${{ secrets.GITHUB_TOKEN }}
