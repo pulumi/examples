@@ -12,6 +12,7 @@ on:
 
 jobs:
   lint-ts:
+    name: TypeScript lint checks
     runs-on: pulumi-ubuntu-8core
     permissions:
       id-token: write
@@ -33,6 +34,7 @@ jobs:
           tslint -c tslint.json **/*.ts
 
   unit-ts:
+    name: TypeScript unit tests
     runs-on: pulumi-ubuntu-8core
     permissions:
       id-token: write
@@ -49,13 +51,14 @@ jobs:
           aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run unit tests
+      - name: unit tests
         working-directory: testing-unit-ts/mocha
         run: |
           npm install
           npm test
 
   unit-py:
+    name: Python unit tests
     runs-on: pulumi-ubuntu-8core
     permissions:
       id-token: write
@@ -72,13 +75,14 @@ jobs:
           aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run unit tests
+      - name: unit tests
         working-directory: testing-unit-py
         run: |
           pip install -r requirements.txt
           python -m pytest
 
   unit-go:
+    name: Go unit tests
     runs-on: pulumi-ubuntu-8core
     permissions:
       id-token: write
@@ -95,11 +99,12 @@ jobs:
           aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run unit tests
+      - name: unit tests
         working-directory: testing-unit-go
         run: go test
 
   unit-dotnet:
+    name: .NET unit tests
     runs-on: pulumi-ubuntu-8core
     permissions:
       id-token: write
@@ -116,7 +121,7 @@ jobs:
           aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run unit tests
+      - name: unit tests
         working-directory: ${{ matrix.source-dir }}
         run: |
           dotnet test
@@ -130,6 +135,7 @@ jobs:
           - testing-unit-fs-mocks
 
   providers:
+    name: ${{ matrix.clouds }}${{ matrix.languages }} integration tests
     runs-on: pulumi-ubuntu-8core
     permissions:
       id-token: write
@@ -147,7 +153,7 @@ jobs:
           aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run ${{ matrix.clouds }}${{ matrix.languages }} Tests
+      - name: Run tests
         run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
         env:
           AWS_ACCESS_KEY_ID: ${{ steps.setup.outputs.aws-access-key-id }}
@@ -190,6 +196,7 @@ jobs:
           - Fs
 
   kubernetes:
+    name: Kubernetes integration tests
     runs-on: pulumi-ubuntu-8core
     permissions:
       id-token: write
