@@ -30,7 +30,6 @@ const auth = aws.ecr.getAuthorizationTokenOutput({
 
 // Build and publish our application's container image from ./app to the ECR repository.
 const image = new dockerBuild.Image("image", {
-
     // Use the pushed image as a cache source.
     cacheFrom: [{
         registry: {
@@ -44,7 +43,6 @@ const image = new dockerBuild.Image("image", {
             ref: pulumi.interpolate`${ecr.repository.repositoryUrl}:cache`,
         },
     }],
-   
     // Build multi-platforms
     platforms: [
         dockerBuild.Platform.Linux_amd64,
