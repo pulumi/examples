@@ -10,6 +10,7 @@ Last revision: July 2024.
 - *Recommended* [Pulumi Cloud account](https://app.pulumi.com/signup)
 - [npm](https://www.npmjs.com/get-npm)
 - AWS account and credentials configured
+- Docker desktop with a default builder.
 
 ## 👩‍🏫 Get started
 
