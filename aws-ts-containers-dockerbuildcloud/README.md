@@ -19,8 +19,8 @@ Last revision: May 2024.
 This Pulumi example is written as a template. It is meant to be copied via `pulumi new` as follows:
 
 ```bash
-$ pulumi new https://github.com/pulumi/examples/tree/master/aws-ts-containers-dbc
-$ npm install
+pulumi new https://github.com/pulumi/examples/tree/master/aws-ts-containers-dockerbuildcloud
+npm install
 ```
 
 Once copied to your machine, feel free to edit as needed.
