@@ -74,7 +74,7 @@ case `35.226.79.225`. It is exported with a stack output variable, `frontend_ip`
 and `grep` to retrieve the `<title>` of the site the proxy points at.
 
 > _Note_: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure
-> to run `kubectl port-forward service/frontend 8080:80` to forward the cluster port to the local
+> to run `kubectl port-forward $(kubectl get service -l app=nginx -o name) 8080:80` to forward the cluster port to the local
 > machine and access the service via `localhost:8080`.
 
 ```sh
