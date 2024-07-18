@@ -4,3 +4,5 @@ Full markdown support! Substitute stack outputs dynamically so that links can de
 
 1. Reference a string stack output: ${outputs.strVar}
 2. Reference an array stack output: ${outputs.arrVar[1]}
+
+Iteration: 2
