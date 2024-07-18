@@ -1,6 +1,6 @@
 name: stack-readme-yaml
 runtime: yaml
-description: A minimal Pulumi YAML program demonstrating stack readme feature - 3
+description: A minimal Pulumi YAML program demonstrating stack readme feature - 4
 variables:
   readme:
     fn::readFile: ./Pulumi.README.md
