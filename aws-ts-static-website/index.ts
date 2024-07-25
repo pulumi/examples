@@ -233,24 +233,35 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
 const cdn = new aws.cloudfront.Distribution("cdn", distributionArgs);
 
 // Split a domain name into its subdomain and parent domain names.
+// e.g "example.com" => "", "example.com".
 // e.g. "www.example.com" => "www", "example.com".
-function getDomainAndSubdomain(domain: string): { subdomain: string, parentDomain: string } {
-    const parts = domain.split(".");
-    if (parts.length < 2) {
-        throw new Error(`No TLD found on ${domain}`);
-    }
-    // No subdomain, e.g. awesome-website.com.
-    if (parts.length === 2) {
-        return { subdomain: "", parentDomain: domain };
-    }
+// e.g. "subdomain.subdomain.example.com" => "subdomain.subdomain", "example.com".
+function getDomainAndSubdomain(domain: string): {
+  subdomain: string;
+  parentDomain: string;
+} {
+  const parts = domain.split(".");
+  if (parts.length < 2) {
+    throw new Error(`No TLD found on ${domain}`);
+  }
+  // No subdomain, e.g. example.com.
+  if (parts.length === 2) {
+    return { subdomain: "", parentDomain: domain };
+  }
 
-    const subdomain = parts[0];
-    parts.shift();  // Drop first element.
-    return {
-        subdomain,
-        // Trailing "." to canonicalize domain.
-        parentDomain: parts.join(".") + ".",
-    };
+  let subdomain = "";
+  for (let i = 0; i < parts.length - 2; i++) {
+    subdomain += parts[i] + ".";
+  }
+  subdomain = subdomain.slice(0, -1); // Remove trailing dot
+
+  const parentDomain = parts.slice(-2).join(".");
+
+  return {
+    subdomain,
+    // Add trailing "." to canonicalize domain.
+    parentDomain: parentDomain + ".",
+  };
 }
 
 // Creates a new Route53 DNS record pointing the domain to the CloudFront distribution.
