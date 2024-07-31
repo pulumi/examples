@@ -1,0 +1,10 @@
+name: aws-ts-multi-language-lambda
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm
+description: A minimal AWS TypeScript Pulumi program
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-typescript
