@@ -1,9 +1,10 @@
 // Copyright 2016-2024, Pulumi Corporation.  All rights reserved.
 
-import { lambdaSetup } from "./config";
+
 import * as aws from "@pulumi/aws";
 import * as dockerBuild from "@pulumi/docker-build";
 import * as pulumi from "@pulumi/pulumi";
+import { lambdaSetup } from "./config";
 
 export = async () => {
     const role = new aws.iam.Role("lambdarole", {
