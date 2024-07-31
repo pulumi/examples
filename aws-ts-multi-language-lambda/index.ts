@@ -1,15 +1,13 @@
 // Copyright 2016-2024, Pulumi Corporation.  All rights reserved.
 
+import { lambdaSetup } from "./config";
 import * as aws from "@pulumi/aws";
 import * as dockerBuild from "@pulumi/docker-build";
-import { lambdaSetup } from "./config";
 import * as pulumi from "@pulumi/pulumi";
 
 export = async () => {
     const role = new aws.iam.Role("lambdarole", {
-        assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(
-            aws.iam.Principals.LambdaPrincipal
-        ),
+        assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(aws.iam.Principals.LambdaPrincipal),
         managedPolicyArns: [
             aws.iam.ManagedPolicies.AWSLambdaBasicExecutionRole,
         ],
@@ -47,9 +45,7 @@ export = async () => {
             {
                 role: role.arn,
                 code: new pulumi.asset.AssetArchive({
-                    ".": new pulumi.asset.FileArchive(
-                        `./dist/${lambda.language}`
-                    ),
+                    ".": new pulumi.asset.FileArchive(`./dist/${lambda.language}`),
                 }),
                 runtime: lambda.runtime,
                 handler: lambda.handler,
