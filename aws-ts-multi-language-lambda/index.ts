@@ -1,7 +1,9 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2024, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
 import * as dockerBuild from "@pulumi/docker-build";
 import { lambdaSetup } from "./config";
+import * as pulumi from "@pulumi/pulumi";
 
 export = async () => {
     const role = new aws.iam.Role("lambdarole", {
@@ -14,8 +16,7 @@ export = async () => {
     });
 
     const languages = ["dotnet", "go", "python", "typescript"];
-    let lambdaNames: {[key: string]: pulumi.Output<string>} = {};
-    // let lambdaNames: pulumi.Output<string>[] = [];
+    const lambdaNames: {[key: string]: pulumi.Output<string>} = {};
 
     lambdaSetup.map((lambda) => {
         const buildLambdaCode = new dockerBuild.Image(
@@ -38,7 +39,7 @@ export = async () => {
                 labels: {
                     created: new Date().getTime().toString(),
                 },
-            }
+            },
         );
 
         const fn = new aws.lambda.Function(
@@ -53,11 +54,11 @@ export = async () => {
                 runtime: lambda.runtime,
                 handler: lambda.handler,
             },
-            { dependsOn: [buildLambdaCode] }
+            { dependsOn: [buildLambdaCode] },
         );
 
         lambdaNames[`lambdaNames.${lambda.language}`] = fn.name;
     });
 
-    return lambdaNames
+    return lambdaNames;
 };
