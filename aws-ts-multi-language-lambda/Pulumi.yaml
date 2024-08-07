@@ -3,7 +3,7 @@ runtime:
   name: nodejs
   options:
     packagemanager: npm
-description: A minimal AWS TypeScript Pulumi program
+description: Pulumi program to demonstrate how to install dependencies and package up code for deployment to AWS Lambda functions
 config:
   pulumi:tags:
     value:
