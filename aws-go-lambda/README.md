@@ -41,8 +41,8 @@ After cloning this repo, run these commands from the working directory:
 			set GOOS=linux
 			set GOARCH=amd64
 			set CGO_ENABLED=0
-			go build -o handler\handler handler\handler.go
-			%USERPROFILE%\Go\bin\build-lambda-zip.exe -o handler\handler.zip handler\handler
+			go build -o handler\bootstrap handler\handler.go
+			%USERPROFILE%\Go\bin\build-lambda-zip.exe -o handler\handler.zip handler\bootstrap
 			```
 
 
