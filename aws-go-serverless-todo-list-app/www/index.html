@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
+    <script src="index.js"></script>
+</head>
+<body onload="loadToDo()">
+    <div id="content">
+        <h1>To Do List</h1>
+        <div id="input-to-do">
+            <form onsubmit="return false">
+                <input type="text" id="new-to-do" placeholder="Add new item" />
+                <input type="submit" class="Btn AddBtn" value="Add" onclick="postToDo()" />
+            </form>
+        </div>
+    <div id="to-do-list"></div>
+    </div>
+</body>
+</html>
