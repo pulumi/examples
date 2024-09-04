@@ -129,7 +129,7 @@ func TestAccAwsPyS3Folder(t *testing.T) {
 }
 
 func TestPolicyPacks(t *testing.T) {
-	policyPack := path.Join(getCwd(t), "..", "benchmarks", "policy-slow")
+	policyPack := path.Join(getCwd(t), "..", "benchmarks", "policy-pack")
 
 	// Install the dependencies for the policy pack first
 	npmInstallCmd := exec.Command("npm", "install")
@@ -142,8 +142,8 @@ func TestPolicyPacks(t *testing.T) {
 		Dir:                    path.Join(getCwd(t), "..", "..", "aws-go-s3-folder"),
 		UpdateCommandlineFlags: []string{fmt.Sprintf("--policy-pack=%s", policyPack)},
 		ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-			helpers.AssertHTTPResult(t, "http://"+stack.Outputs["website_url"].(string), nil, func(body string) bool {
-				return assert.Contains(t, body, "Hello, Pulumi!")
+			helpers.AssertHTTPResult(t, "http://"+stack.Outputs["websiteUrl"].(string), nil, func(body string) bool {
+				return assert.Contains(t, body, "Hello, world!")
 			})
 		},
 	}
