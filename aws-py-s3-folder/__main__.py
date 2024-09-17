@@ -5,11 +5,10 @@ import os
 from pulumi import FileAsset, Output, export, ResourceOptions
 from pulumi_aws import s3
 
-web_bucket = s3.Bucket(
-    "s3-website-bucket",
-    website={
-        "index_document": "index.html",
-    },
+web_bucket = s3.BucketV2("s3-website-bucket")
+
+web_site = s3.BucketWebsiteConfigurationV2(
+    "s3-website", bucket=web_bucket.bucket, index_document={"suffix": "index.html"}
 )
 
 public_access_block = s3.BucketPublicAccessBlock(
@@ -53,4 +52,4 @@ bucket_policy = s3.BucketPolicy(
 
 # Export the name of the bucket
 export("bucket_name", web_bucket.id)
-export("website_url", web_bucket.website_endpoint)
+export("website_url", web_site.website_endpoint)

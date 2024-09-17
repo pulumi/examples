@@ -32,7 +32,7 @@ with `***`.
 
         Type                    Name                  Plan
     +   pulumi:pulumi:Stack     aws-py-s3-folder-dev  create
-    +   ├─ aws:s3:Bucket        s3-website-bucket     create
+    +   ├─ aws:s3:BucketV2      s3-website-bucket     create
     +   ├─ aws:s3:BucketObject  index.html            create
     +   ├─ aws:s3:BucketObject  python.png            create
     +   ├─ aws:s3:BucketObject  favicon.png           create
