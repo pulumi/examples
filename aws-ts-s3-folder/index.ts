@@ -12,7 +12,7 @@ const siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     },
 });
 
-new aws.s3.BucketWebsiteConfigurationV2("s3-website-bucket-config", {
+const siteBucketWebsiteConfig = new aws.s3.BucketWebsiteConfigurationV2("s3-website-bucket-config", {
     bucket: siteBucket.id,
     indexDocument: {
         suffix: "index.html",
@@ -56,4 +56,4 @@ const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
 
 // Stack exports
 export const bucketName = siteBucket.bucket;
-export const websiteUrl = siteBucket.websiteEndpoint;
+export const websiteUrl = siteBucketWebsiteConfig.websiteEndpoint;
