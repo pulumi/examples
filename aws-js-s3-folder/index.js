@@ -7,7 +7,7 @@ const mime = require("mime");
 // Create a bucket and expose a website index document
 let siteBucket = new aws.s3.BucketV2("s3-website-bucket", {});
 
-new aws.s3.BucketWebsiteConfigurationV2("s3-website-bucket-config", {
+let siteBucketWebsiteConfig = new aws.s3.BucketWebsiteConfigurationV2("s3-website-bucket-config", {
     bucket: siteBucket.id,
     indexDocument: {
         suffix: "index.html",
@@ -56,4 +56,4 @@ let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
 
 // Stack exports
 exports.bucketName = siteBucket.bucket;
-exports.websiteUrl = siteBucket.websiteEndpoint;
+exports.websiteUrl = siteBucketWebsiteConfig.websiteEndpoint;
