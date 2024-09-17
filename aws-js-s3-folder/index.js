@@ -5,9 +5,12 @@ const pulumi = require("@pulumi/pulumi");
 const mime = require("mime");
 
 // Create a bucket and expose a website index document
-let siteBucket = new aws.s3.Bucket("s3-website-bucket", {
-    website: {
-        indexDocument: "index.html",
+let siteBucket = new aws.s3.BucketV2("s3-website-bucket", {});
+
+new aws.s3.BucketWebsiteConfigurationV2("s3-website-bucket-config", {
+    bucket: siteBucket.id,
+    indexDocument: {
+        suffix: "index.html",
     },
 });
 
