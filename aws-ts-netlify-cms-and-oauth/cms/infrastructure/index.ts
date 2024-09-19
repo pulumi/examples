@@ -6,6 +6,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as fs from "fs";
 import * as mime from "mime";
 import * as path from "path";
+import { configureACL } from "./acl";
 
 // Load the Pulumi program configuration. These act as the "parameters" to the Pulumi program,
 // so that different Pulumi Stacks can be brought up using the same code.
@@ -21,17 +22,25 @@ const config = {
 };
 
 // contentBucket is the S3 bucket that the website's contents will be stored in.
-const contentBucket = new aws.s3.Bucket("contentBucket",
+const contentBucket = new aws.s3.BucketV2("contentBucket",
     {
         bucket: config.targetDomain,
-        acl: "public-read",
-        // Configure S3 to serve bucket contents as a website. This way S3 will automatically convert
-        // requests for "foo/" to "foo/index.html".
-        website: {
-            indexDocument: "index.html",
-            // errorDocument: "404.html",
-        },
+        // acl: "public-read",
+        // // Configure S3 to serve bucket contents as a website. This way S3 will automatically convert
+        // // requests for "foo/" to "foo/index.html".
+        // website: {
+        //     indexDocument: "index.html",
+        //     // errorDocument: "404.html",
+        // },
     });
+
+const contentBucketWebsite = new aws.s3.BucketWebsiteConfigurationV2("contentBucket",  {
+    bucket: contentBucket.bucket,
+    indexDocument: {suffix: "index.html"},
+    errorDocument: {key: "404.html"},
+});
+
+configureACL("contentBucket", contentBucket, "public-read");
 
 // crawlDirectory recursive crawls the provided directory, applying the provided function
 // to every file it contains. Doesn't handle cycles from symlinks.
@@ -62,7 +71,7 @@ crawlDirectory(
                 key: relativeFilePath,
 
                 acl: "public-read",
-                bucket: contentBucket,
+                bucket: contentBucket.bucket,
                 contentType: mime.getType(filePath) || undefined,
                 source: new pulumi.asset.FileAsset(filePath),
             },
@@ -72,11 +81,13 @@ crawlDirectory(
     });
 
 // logsBucket is an S3 bucket that will contain the CDN's request logs.
-const logsBucket = new aws.s3.Bucket("requestLogs",
+const logsBucket = new aws.s3.BucketV2("requestLogs",
     {
         bucket: `${config.targetDomain}-logs`,
         acl: "private",
     });
+
+configureACL("requestLogs", logsBucket, "private");
 
 const tenMinutes = 60 * 10;
 
@@ -142,7 +153,7 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
     origins: [
         {
             originId: contentBucket.arn,
-            domainName: contentBucket.websiteEndpoint,
+            domainName: contentBucketWebsite.websiteEndpoint,
             customOriginConfig: {
                 // Amazon S3 doesn't support HTTPS connections when using an S3 bucket configured as a website endpoint.
                 // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesOriginProtocolPolicy
@@ -252,6 +263,6 @@ const aRecord = createAliasRecord(config.targetDomain, cdn);
 // Export properties from this stack. This prints them at the end of `pulumi up` and
 // makes them easier to access from pulumi.com.
 export const contentBucketUri = pulumi.interpolate `s3://${contentBucket.bucket}`;
-export const contentBucketWebsiteEndpoint = contentBucket.websiteEndpoint;
+export const contentBucketWebsiteEndpoint = contentBucketWebsite.websiteEndpoint;
 export const cloudFrontDomain = cdn.domainName;
 export const targetDomainEndpoint = `https://${config.targetDomain}/`;
