@@ -10,11 +10,35 @@ const config = new pulumi.Config();
 const bucketName = config.require('bucketName');
 const secretValue = config.requireSecret('secretValue');
 
+function configureACL(bucketName: string, bucket: aws.s3.BucketV2, acl: string): aws.s3.BucketAclV2 {
+    const ownership = new aws.s3.BucketOwnershipControls(bucketName, {
+        bucket: bucket.bucket,
+        rule: {
+            objectOwnership: "BucketOwnerPreferred",
+        }
+    });
+    const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(bucketName, {
+        bucket: bucket.bucket,
+        blockPublicAcls: false,
+        blockPublicPolicy: false,
+        ignorePublicAcls: false,
+        restrictPublicBuckets: false,
+    });
+    const bucketACL = new aws.s3.BucketAclV2(bucketName, {
+        bucket: bucket.bucket,
+        acl: acl,
+    }, {
+        dependsOn: [ownership, publicAccessBlock]
+    });
+    return bucketACL;
+}
+
 // Create a private bucket
-const bucket = new aws.s3.Bucket("bucket", {
+const bucket = new aws.s3.BucketV2("bucket", {
     bucket: bucketName,
-    acl: "private",
 });
+
+configureACL("bucket", bucket, "private");
 
 // Create an object from the secret value
 const superSecretObject = new aws.s3.BucketObject("secret", {

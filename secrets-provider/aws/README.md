@@ -64,7 +64,7 @@ pulumi up --yes
 Previewing update (aws-kms):
      Type                    Name                    Plan
  +   pulumi:pulumi:Stack     pulumi-aws-kms-aws-kms  create
- +   ├─ aws:s3:Bucket        bucket                  create
+ +   ├─ aws:s3:BucketV2      bucket                  create
  +   └─ aws:s3:BucketObject  secret                  create
 
 Resources:
@@ -73,7 +73,7 @@ Resources:
 Updating (aws-kms):
      Type                    Name                    Status
  +   pulumi:pulumi:Stack     pulumi-aws-kms-aws-kms  created
- +   ├─ aws:s3:Bucket        bucket                  created
+ +   ├─ aws:s3:BucketV2      bucket                  created
  +   └─ aws:s3:BucketObject  secret                  created
 
 Outputs:
@@ -100,9 +100,3 @@ pulumi up --yes
 error: getting secrets manager: secrets (code=Unknown): InvalidSignatureException: The request signature we calculated does not match the signature you provided. Check your AWS Secret Access Key and signing method. Consult the service documentation for details.
 	status code: 400, request id: 35ff51c6-ef88-4c06-9146-361231b8fd4a
 ```
-
-
-
-
-
-
