@@ -5,7 +5,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as fs from "fs";
 import * as mime from "mime";
 import * as path from "path";
-
+import { configureACL } from "./acl";
 
 // Load the Pulumi program configuration. These act as the "parameters" to the Pulumi program,
 // so that different Pulumi Stacks can be brought up using the same code.
@@ -26,16 +26,13 @@ const config = {
 };
 
 // contentBucket is the S3 bucket that the website's contents will be stored in.
-const contentBucket = new aws.s3.Bucket("contentBucket",
-    {
-        bucket: config.targetDomain,
-        // Configure S3 to serve bucket contents as a website. This way S3 will automatically convert
-        // requests for "foo/" to "foo/index.html".
-        website: {
-            indexDocument: "index.html",
-            errorDocument: "404.html",
-        },
-    });
+const contentBucket = new aws.s3.BucketV2("contentBucket", {bucket: config.targetDomain});
+
+const contentBucketWebsite = new aws.s3.BucketWebsiteConfigurationV2("contentBucketWebsite", {
+    bucket: contentBucket.bucket,
+    indexDocument: {suffix: "index.html"},
+    errorDocument: {key: "404.html"},
+});
 
 // crawlDirectory recursive crawls the provided directory, applying the provided function
 // to every file it contains. Doesn't handle cycles from symlinks.
@@ -66,7 +63,7 @@ crawlDirectory(
                 key: relativeFilePath,
 
                 acl: "public-read",
-                bucket: contentBucket,
+                bucket: contentBucket.bucket,
                 contentType: mime.getType(filePath) || undefined,
                 source: new pulumi.asset.FileAsset(filePath),
             },
@@ -76,11 +73,9 @@ crawlDirectory(
     });
 
 // logsBucket is an S3 bucket that will contain the CDN's request logs.
-const logsBucket = new aws.s3.Bucket("requestLogs",
-    {
-        bucket: `${config.targetDomain}-logs`,
-        acl: "private",
-    });
+const logsBucket = new aws.s3.BucketV2("requestLogs", { bucket: `${config.targetDomain}-logs` });
+
+configureACL("requestLogs", logsBucket, "private");
 
 const tenMinutes = 60 * 10;
 
@@ -320,6 +315,6 @@ if (config.includeWWW) {
 // Export properties from this stack. This prints them at the end of `pulumi up` and
 // makes them easier to access from pulumi.com.
 export const contentBucketUri = pulumi.interpolate`s3://${contentBucket.bucket}`;
-export const contentBucketWebsiteEndpoint = contentBucket.websiteEndpoint;
+export const contentBucketWebsiteEndpoint = contentBucketWebsite.websiteEndpoint;
 export const cloudFrontDomain = cdn.domainName;
 export const targetDomainEndpoint = `https://${config.targetDomain}/`;
