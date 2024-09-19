@@ -12,7 +12,7 @@ const myBucketSseConfig = new aws.s3.BucketServerSideEncryptionConfigurationV2("
     bucket: bucket.bucket,
     rules: [{
         applyServerSideEncryptionByDefault: {
-            sseAlgorithm: "aws:kms",
+            sseAlgorithm: "AES256",
         },
     }],
 });
