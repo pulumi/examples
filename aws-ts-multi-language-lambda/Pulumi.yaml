@@ -1,0 +1,10 @@
+name: aws-ts-multi-language-lambda
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm
+description: Pulumi program to demonstrate how to install dependencies and package up code for deployment to AWS Lambda functions
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-typescript
