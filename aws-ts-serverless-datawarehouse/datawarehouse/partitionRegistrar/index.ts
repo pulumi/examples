@@ -57,8 +57,8 @@ export class HourlyPartitionRegistrar extends pulumi.ComponentResource {
 export interface PartitionRegistrarArgs {
     table: string;
     partitionKey: string;
-    dataWarehouseBucket: aws.s3.Bucket;
-    athenaResultsBucket: aws.s3.Bucket;
+    dataWarehouseBucket: aws.s3.BucketV2;
+    athenaResultsBucket: aws.s3.BucketV2;
     database: aws.glue.CatalogDatabase;
     region: string;
     scheduleExpression?: string;
