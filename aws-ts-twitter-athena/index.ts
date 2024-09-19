@@ -4,17 +4,20 @@ import * as s3sdk from "@aws-sdk/client-s3";
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
-const bucket = new aws.s3.Bucket("tweet-bucket", {
-    serverSideEncryptionConfiguration: {
-        rule: {
-            applyServerSideEncryptionByDefault: {
-                sseAlgorithm: "AES256",
-            },
-        },
-    },
+const bucket = new aws.s3.BucketV2("tweet-bucket", {
     forceDestroy: true, // We require this in the example as we are not managing the contents of the bucket via Pulumi
 });
-export const bucketName = bucket.id;
+
+const myBucketSseConfig = new aws.s3.BucketServerSideEncryptionConfigurationV2("my-bucket-sse-config", {
+    bucket: bucket.bucket,
+    rules: [{
+        applyServerSideEncryptionByDefault: {
+            sseAlgorithm: "aws:kms",
+        },
+    }],
+});
+
+export const bucketName = bucket.bucket;
 
 const config = new pulumi.Config();
 const consumerKey = config.require("twitterConsumerKey");
@@ -83,7 +86,7 @@ const handler = eventRule.onEvent("on-timer-event", async() => {
 
 // athena setup
 const athena = new aws.athena.Database("tweets_database_1",
-    { bucket: bucket.id, forceDestroy: true },
+    { bucket: bucket.bucket, forceDestroy: true },
 );
 
 // Sadly, there isn't support for Athena tables in Terraform.
