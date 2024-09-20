@@ -1,89 +1,104 @@
 // Copyright 2024, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
+import * as command from "@pulumi/command";
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
 import * as tls from "@pulumi/tls";
 
 // Configurations
 const audience = pulumi.getOrganization();
-const config = new pulumi.Config();
-const oidcIdpUrl: string = config.get("oidcIdpUrl") || "https://api.pulumi.com/oidc";
-const escEnv: string = config.require("escEnv");
+const oidcIdpUrl: string = "https://api.pulumi.com/oidc";
 
 // Get TLS thumbprint for OIDC Provider
 const certs = tls.getCertificateOutput({
     url: oidcIdpUrl,
 });
-
 const thumbprint = certs.certificates[0].sha1Fingerprint;
 
-// Create a new OIDC Provider
-const oidcProvider = new aws.iam.OpenIdConnectProvider("oidcProvider", {
-    clientIdLists: [audience],
-    url: oidcIdpUrl,
-    thumbprintLists: [thumbprint],
-}, {
-    protect: true,
-});
-
-// Create a new role that can be assumed by the OIDC provider
-const role = new aws.iam.Role("oidcProviderRole", {
-    assumeRolePolicy: pulumi.all([oidcProvider.url, oidcProvider.arn, audience]).apply(([url, arn, audience]) => JSON.stringify({
-        Version: "2012-10-17",
-        Statement: [{
-            Effect: "Allow",
-            Principal: { Federated: arn },
-            Action: "sts:AssumeRoleWithWebIdentity",
-            Condition: { StringEquals: { [`${url}:aud`]: [audience] } },
-        }],
-    })),
-});
-
-// Get the existing AdministratorAccess policy
-const existingPolicy = aws.iam.getPolicy({
-    arn: "arn:aws:iam::aws:policy/AdministratorAccess",
-});
-
-
-// Attach other policies to the role as needed
-const attach = new aws.iam.RolePolicyAttachment("oidcProviderRolePolicyAttachment", {
-    role: role,
-    policyArn: existingPolicy.then(policy => policy.arn),
-});
-
-
-if (escEnv === ".") {
-    console.log("Skipping ESC Environment creation ...");
+function getProviderArn() {
+    const existingProvider = aws.iam.getOpenIdConnectProviderOutput({
+        url: oidcIdpUrl
+    })
+    if (existingProvider) {
+        console.log("OIDC Provider already exists ...");
+        // upsert audience
+        new command.local.Command("oidc-client-id", {
+            create: pulumi.interpolate`aws iam add-client-id-to-open-id-connect-provider --open-id-connect-provider-arn ${existingProvider.arn} --client-id aws:${audience}`,
+            delete: pulumi.interpolate`aws iam remove-client-id-from-open-id-connect-provider --open-id-connect-provider-arn ${existingProvider.arn} --client-id aws:${audience}`,
+        });
+        return existingProvider.arn;
+    } else {
+        console.log("Creating OIDC Provider ...");
+        const provider = new aws.iam.OpenIdConnectProvider("oidcProvider", {
+            clientIdLists: [audience],
+            url: oidcIdpUrl,
+            thumbprintLists: [thumbprint],
+        }, {
+            protect: true,
+        })
+        return provider.arn;
+    }
 }
-else {
-    const envJson = pulumi.jsonStringify({
-        "values": {
-            "aws": {
-                "login": {
-                    "fn::open::aws-login": {
-                        "oidc": {
-                            "duration": "1h",
-                            "roleArn": role.arn,
-                            "sessionName": "pulumi-environments-session",
-                        },
+
+export const arn: pulumi.Output<string> = getProviderArn();
+
+const policyDocument = arn.apply(arn => aws.iam.getPolicyDocument({
+    version: "2012-10-17",
+    statements: [{
+        effect: "Allow",
+        actions: ["sts:AssumeRoleWithWebIdentity"],
+        principals: [{
+            type: "Federated",
+            identifiers: [arn],
+        }],
+        conditions: [{
+            test: "StringEquals",
+            variable: `api.pulumi.com/oidc:aud`,
+            values: [`aws:${audience}`], // new format
+        }]
+    }]
+}));
+
+// // Create a new role that can be assumed by the OIDC provider
+const role = new aws.iam.Role("role", {
+    assumeRolePolicy: policyDocument.json,
+});
+
+// Attach the AWS managed policy "AdministratorAccess" to the role.
+new aws.iam.RolePolicyAttachment("policy", {
+    policyArn: "arn:aws:iam::aws:policy/AdministratorAccess",
+    role: role.name,
+});
+
+
+const envJson = pulumi.jsonStringify({
+    "values": {
+        "aws": {
+            "login": {
+                "fn::open::aws-login": {
+                    "oidc": {
+                        "duration": "1h",
+                        "roleArn": role.arn,
+                        "sessionName": "pulumi-environments-session",
                     },
                 },
             },
-            "environmentVariables": {
-                "AWS_ACCESS_KEY_ID": "${aws.login.accessKeyId}",
-                "AWS_SECRET_ACCESS_KEY": "${aws.login.secretAccessKey}",
-                "AWS_SESSION_TOKEN": "${aws.login.sessionToken}",
-            },
         },
-    });
+        "environmentVariables": {
+            "AWS_ACCESS_KEY_ID": "${aws.login.accessKeyId}",
+            "AWS_SECRET_ACCESS_KEY": "${aws.login.secretAccessKey}",
+            "AWS_SESSION_TOKEN": "${aws.login.sessionToken}",
+        },
+    },
+});
 
-    const envAsset = envJson.apply(json => new pulumi.asset.StringAsset(json));
+export const envAsset = envJson.apply(json => new pulumi.asset.StringAsset(json));
 
-    const env = new pulumiservice.Environment("oidcEnvironment", {
-        name: escEnv,
-        organization: audience,
-        yaml: envAsset,
-    });
-
-} // end of else
+// Create a new environment
+new pulumiservice.Environment("aws-oidc-admin", {
+    name: "test",
+    // project: "auth", // new field
+    organization: audience,
+    yaml: envAsset,
+});

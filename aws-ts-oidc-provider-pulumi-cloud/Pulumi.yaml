@@ -8,7 +8,4 @@ template:
     aws:region:
       description: AWS Region
       default: us-west-2
-    escEnv:
-      description: Pulumi ESC Environment to create ('.' to skip)
-      default: auth/aws
  
