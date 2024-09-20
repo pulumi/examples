@@ -71,7 +71,6 @@ new aws.iam.RolePolicyAttachment("policy", {
     role: role.name,
 });
 
-
 const envJson = pulumi.jsonStringify({
     "values": {
         "aws": {
@@ -93,12 +92,12 @@ const envJson = pulumi.jsonStringify({
     },
 });
 
-export const envAsset = envJson.apply(json => new pulumi.asset.StringAsset(json));
+const envAsset = envJson.apply(json => new pulumi.asset.StringAsset(json));
 
 // Create a new environment
 new pulumiservice.Environment("aws-oidc-admin", {
     name: "test",
-    // project: "auth", // new field
+    // project: "auth", // post esc-GA
     organization: audience,
     yaml: envAsset,
 });
