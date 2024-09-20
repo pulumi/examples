@@ -1,3 +1,0 @@
-name: aws-native-ts-s3-folder
-runtime: nodejs
-description: A static website hosted on AWS S3
