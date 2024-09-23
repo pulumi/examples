@@ -1,4 +1,4 @@
-name: aws-ts-lambda-github
+name: aws-ts-lambda-slack
 runtime:
   name: nodejs
   options:
