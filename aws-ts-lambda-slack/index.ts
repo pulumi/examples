@@ -1,5 +1,8 @@
-import * as pulumi from "@pulumi/pulumi";
+
+// Copyright 2024, Pulumi Corporation. All rights reserved.
+
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 // Create an IAM role for the Lambda function
 const lambdaRole = new aws.iam.Role("lambdaRole", {
@@ -16,7 +19,7 @@ const lambdaRole = new aws.iam.Role("lambdaRole", {
 });
 
 // Attach a policy to the role to allow Lambda to log to CloudWatch
-new aws.iam.RolePolicyAttachment("lambdaRolePolicy", {
+const rpa = new aws.iam.RolePolicyAttachment("lambdaRolePolicy", {
   role: lambdaRole.name,
   policyArn: aws.iam.ManagedPolicies.AWSLambdaBasicExecutionRole,
 });
