@@ -18,12 +18,12 @@ const thumbprint = certs.certificates[0].sha1Fingerprint;
 
 function getProviderArn() {
     const existingProvider = aws.iam.getOpenIdConnectProviderOutput({
-        url: oidcIdpUrl
-    })
+        url: oidcIdpUrl,
+    });
     if (existingProvider) {
         console.log("OIDC Provider already exists ...");
         // upsert audience
-        new command.local.Command("oidc-client-id", {
+        const cmd = new command.local.Command("oidc-client-id", {
             create: pulumi.interpolate`aws iam add-client-id-to-open-id-connect-provider --open-id-connect-provider-arn ${existingProvider.arn} --client-id aws:${audience}`,
             delete: pulumi.interpolate`aws iam remove-client-id-from-open-id-connect-provider --open-id-connect-provider-arn ${existingProvider.arn} --client-id aws:${audience}`,
         });
@@ -36,7 +36,7 @@ function getProviderArn() {
             thumbprintLists: [thumbprint],
         }, {
             protect: true,
-        })
+        });
         return provider.arn;
     }
 }
@@ -56,8 +56,8 @@ const policyDocument = arn.apply(arn => aws.iam.getPolicyDocument({
             test: "StringEquals",
             variable: `api.pulumi.com/oidc:aud`,
             values: [`aws:${audience}`], // new format
-        }]
-    }]
+        }],
+    }],
 }));
 
 // // Create a new role that can be assumed by the OIDC provider
@@ -66,7 +66,7 @@ const role = new aws.iam.Role("role", {
 });
 
 // Attach the AWS managed policy "AdministratorAccess" to the role.
-new aws.iam.RolePolicyAttachment("policy", {
+const rpa = new aws.iam.RolePolicyAttachment("policy", {
     policyArn: "arn:aws:iam::aws:policy/AdministratorAccess",
     role: role.name,
 });
@@ -95,7 +95,7 @@ const envJson = pulumi.jsonStringify({
 const envAsset = envJson.apply(json => new pulumi.asset.StringAsset(json));
 
 // Create a new environment
-new pulumiservice.Environment("aws-oidc-admin", {
+const env = new pulumiservice.Environment("aws-oidc-admin", {
     name: "test",
     // project: "auth", // post esc-GA
     organization: audience,
