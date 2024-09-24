@@ -1,10 +1,11 @@
-name: aws-ts-lambda-slack
-runtime:
-  name: nodejs
-  options:
-    packagemanager: npm
-description: A minimal TypeScript Pulumi program
-config:
-  pulumi:tags:
-    value:
-      pulumi:template: typescript
+name: ${PROJECT}
+description: ${DESCRIPTION}
+runtime: nodejs
+
+template:
+  description: Deploy a Slack webhook Lambda function.
+  config:
+    aws:region:
+      description: AWS Region
+      default: us-west-2
+ 

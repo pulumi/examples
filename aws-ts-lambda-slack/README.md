@@ -19,12 +19,23 @@ Last update: September 2024
 
 ## 👩‍🏫 Get started
 
+This Pulumi example is written as a template. It is meant to be copied via `pulumi new`
+
 ```bash
 # login to your Pulumi Cloud if you haven't already
 $ pulumi login
+
+# create a new dir and cd to it
+$ mkdir my-slack-demo
+$ cd my-slack-demo
+
+# start your pulumi project
+$ pulumi new  https://github.com/pulumi/examples/aws-ts-lambda-slack
 ```
 
 ```bash
+# Add your Pulumi ESC Environment
+$ pulumi config env add YOUR_ESC_ENV --yes --non-interactive   
 $ pulumi up
 # select 'yes' to confirm the expected changes
 # 🎉 Ta-Da!

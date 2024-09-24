@@ -4,6 +4,9 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
+const config = new pulumi.Config();
+const slackWebhookUrl = config.requireSecret("slackWebhookUrl");
+
 // Create an IAM role for the Lambda function
 const lambdaRole = new aws.iam.Role("lambdaRole", {
   assumeRolePolicy: {
@@ -23,11 +26,6 @@ const rpa = new aws.iam.RolePolicyAttachment("lambdaRolePolicy", {
   role: lambdaRole.name,
   policyArn: aws.iam.ManagedPolicies.AWSLambdaBasicExecutionRole,
 });
-
-const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
-if (!slackWebhookUrl) {
-  throw new Error("SLACK_WEBHOOK_URL environment variable is required");
-}
 
 // Create the Lambda function
 const lambdaFunction = new aws.lambda.Function("myLambda", {
