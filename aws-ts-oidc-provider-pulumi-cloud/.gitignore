@@ -1,3 +1,4 @@
 /bin/
 /node_modules/
 test/
+Pulumi.test.yaml

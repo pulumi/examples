@@ -3,9 +3,9 @@
 A Pulumi template to:
 
 - Create AWS resources for AWS OIDC (IdP + Role)
-- Create a new Pulumi Cloud ESC Environment (optional)
+- Create a new Pulumi Cloud ESC Environment
 
-Last update: July 2024
+Last update: September 2024
 
 ## 📋 Pre-requisites
 
@@ -32,23 +32,7 @@ Once copied to your machine, feel free to edit as needed.
 
 ## 🎬 How to run
 
-This template will pick up the thumbprint from the URL that you set in the stack configuration. By default it will use the OIDC IDP URL for Pulumi Cloud, unless you set a different one.
-
-To set a different URL you can run the following command:
-
-```bash
-pulumi config set oidcIdpUrl {url}
-```
-
-(where `{url}` is the URL for the OIDC IDP)
-
-You must also set the name of the environment that you would like to use:
-
-```bash
-pulumi config set escEnv {environment-name}
-```
-
-(Note that `{environment-name}` must be in the format `{orgname}/environmentname}` where `orgname` can be your individual account name or the the organization that you are adding the environment to)
+This template will pick up the thumbprint from the URL that you set in the stack configuration. By default it will use the OIDC IDP URL for Pulumi Cloud.
 
 To deploy your infrastructure, run:
 
