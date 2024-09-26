@@ -1,0 +1,12 @@
+{
+    "name": "aws-ts-lambda-slack",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^22",
+        "typescript": "^5.6.2"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^6.52.0",
+        "@pulumi/pulumi": "^3.133.0"
+    }
+}
