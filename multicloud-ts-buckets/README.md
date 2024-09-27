@@ -39,7 +39,7 @@ Previewing update (multicloud-ts-buckets-dev):
      Type                   Name                                             Plan
  +   pulumi:pulumi:Stack    multicloud-ts-buckets-multicloud-ts-buckets-dev  create
  +   ├─ gcp:storage:Bucket  my-bucket                                        create
- +   └─ aws:s3:Bucket       my-bucket                                        create
+ +   └─ aws:s3:BucketV2     my-bucket                                        create
 
 Resources:
     3 changes
@@ -51,7 +51,7 @@ Updating (multicloud-ts-buckets-dev):
      Type                   Name                                             Status
  +   pulumi:pulumi:Stack    multicloud-ts-buckets-multicloud-ts-buckets-dev  created
  +   ├─ gcp:storage:Bucket  my-bucket                                        created
- +   └─ aws:s3:Bucket       my-bucket                                        created
+ +   └─ aws:s3:BucketV2     my-bucket                                        created
 
 Outputs:
     bucketNames: [
