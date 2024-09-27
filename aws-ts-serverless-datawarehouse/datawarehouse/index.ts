@@ -3,7 +3,7 @@
 import * as aws from "@pulumi/aws";
 import { ARN } from "@pulumi/aws";
 import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
-import { BucketArgs } from "@pulumi/aws/s3";
+import { BucketV2Args } from "@pulumi/aws/s3";
 import { input } from "@pulumi/aws/types";
 import * as pulumi from "@pulumi/pulumi";
 import { getS3Location } from "../utils";
@@ -13,8 +13,8 @@ import { HourlyPartitionRegistrar, PartitionRegistrarArgs } from "./partitionReg
 
 export class ServerlessDataWarehouse extends pulumi.ComponentResource {
 
-    public dataWarehouseBucket: aws.s3.Bucket;
-    public queryResultsBucket: aws.s3.Bucket;
+    public dataWarehouseBucket: aws.s3.BucketV2;
+    public queryResultsBucket: aws.s3.BucketV2;
     public database: aws.glue.CatalogDatabase;
     private tables: { [key: string]: aws.glue.CatalogTable } = {};
     private inputStreams: { [key: string]: aws.kinesis.Stream } = {};
@@ -22,10 +22,10 @@ export class ServerlessDataWarehouse extends pulumi.ComponentResource {
     constructor(name: string, args: DataWarehouseArgs = {}, opts: pulumi.ComponentResourceOptions = {}) {
         super("serverless:data_warehouse", name, opts);
 
-        const bucketArgs: BucketArgs | undefined = args.isDev ? { forceDestroy: true } : undefined;
+        const bucketArgs: BucketV2Args | undefined = args.isDev ? { forceDestroy: true } : undefined;
 
-        const dataWarehouseBucket = new aws.s3.Bucket("datawarehouse-bucket", bucketArgs, { parent: this });
-        const queryResultsBucket = new aws.s3.Bucket("query-results-bucket", bucketArgs, { parent: this });
+        const dataWarehouseBucket = new aws.s3.BucketV2("datawarehouse-bucket", bucketArgs, { parent: this });
+        const queryResultsBucket = new aws.s3.BucketV2("query-results-bucket", bucketArgs, { parent: this });
 
         const database =  args.database || new aws.glue.CatalogDatabase(name, {
             name,

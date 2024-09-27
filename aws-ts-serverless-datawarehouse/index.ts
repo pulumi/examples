@@ -155,7 +155,7 @@ dataWarehouse.withTable("facts", factTableArgs);
 const data = `{"thing": "sky", "color": "blue"}\n{ "thing": "seattle sky", "color": "grey"}\n{ "thing": "oranges", "color": "orange"}`;
 
 const factJSON = new aws.s3.BucketObject("factsFile", {
-    bucket: dataWarehouse.dataWarehouseBucket,
+    bucket: dataWarehouse.dataWarehouseBucket.bucket,
     content: data,
     key: `${factTableName}/facts.json`,
 });
