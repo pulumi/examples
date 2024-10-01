@@ -48,8 +48,8 @@ with `***`.
         Type                              Name                                      Plan
     +   pulumi:pulumi:Stack               static-website-example                    create
     +   ├─ pulumi:providers:aws           east                                      create
-    +   ├─ aws:s3:Bucket                  requestLogs                               create
-    +   ├─ aws:s3:Bucket                  contentBucket                             create
+    +   ├─ aws:s3:BucketV2                requestLogs                               create
+    +   ├─ aws:s3:BucketV2                contentBucket                             create
     +   │  ├─ aws:s3:BucketObject         404.html                                  create
     +   │  └─ aws:s3:BucketObject         index.html                                create
     +   ├─ aws:acm:Certificate            certificate                               create
