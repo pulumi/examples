@@ -6,3 +6,6 @@ template:
     locations:
       description: Comma-separated list of Azure regions
       default: westus,westeurope
+    azure:subscriptionId:
+      description: The Azure Subscription to deploy into
+      TODO: Thread this into the explicit providers

@@ -7,33 +7,34 @@ Multi-region deployment of Azure Functions and Cosmos DB with Traffic Manager
 
 ## Running the App
 
-1.  Create a new stack:
+1. Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1.  Restore NPM dependencies:
+1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
-    ```
-    $ npm install
-    ```
-
-1.  Specify the Azure regions to deploy the application:
-
-    ```
-    $ pulumi config set locations westus,westeurope
+    ```bash
+    az login
     ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Restore NPM dependencies:
 
+    ```bash
+    npm install
     ```
+
+1. Specify the Azure subscription and regions to deploy the application:
+
+    ```bash
+    pulumi config set locations westus,westeurope
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+    ```
+
+1. Run `pulumi up` to preview and deploy changes:
+
+    ```console
     $ pulumi up
     Previewing changes:
     ...
@@ -45,9 +46,9 @@ Multi-region deployment of Azure Functions and Cosmos DB with Traffic Manager
     Update duration: 21m33.3252322s
     ```
 
-1.  Add a short URL:
+1. Add a short URL:
 
-    ```
+    ```console
     $ pulumi stack output addEndpoint
     https://urlshort-add94ac80f8.azurewebsites.net/api/urlshort-add
     $ curl -H "Content-Type: application/json" \
@@ -57,9 +58,9 @@ Multi-region deployment of Azure Functions and Cosmos DB with Traffic Manager
     Short URL saved
     ```
 
-1.  Query a short URL:
+1. Query a short URL:
 
-    ```
+    ```console
     $ pulumi stack output endpoint
     http://urlshort-tm.trafficmanager.net/api/
     $ curl -L $(pulumi stack output endpoint)pulumi

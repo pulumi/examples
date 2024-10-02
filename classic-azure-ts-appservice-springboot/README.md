@@ -7,37 +7,44 @@ This example shows how you can deploy a Spring Boot app to an Azure App Service 
 
 ## Prerequisites
 
-1.  [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1.  [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
 
 ## Steps
 
 ### Step 1: Create a new stack
 
-```
-$ cd infrastructure
-$ pulumi stack init dev
+```bash
+cd infrastructure
+pulumi stack init dev
 ```
 
 ### Step 2: Log in to the Azure CLI
 
 You will be prompted to do this during deployment if you forget this step.
 
-```
-$ az login
+```bash
+az login
 ```
 
 ### Step 3: Install NPM dependencies
 
-```
-$ npm install
+```bash
+npm install
 ```
 
-### Step 4: Deploy your changes
+### Step 4: Configure target Azure environment
+
+```bash
+pulumi config set azure:location <location>
+pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+```
+
+### Step 5: Deploy your changes
 
 Run `pulumi up` to preview and deploy changes:
 
-```
+```console
 $ pulumi up
 Previewing changes:
 +  pulumi:pulumi:Stack jenkins-tutorial-dev create
@@ -50,9 +57,9 @@ Previewing changes:
 ...
 ```
 
-### Step 5: Check the deployed website endpoint
+### Step 6: Check the deployed website endpoint
 
-```
+```console
 $ pulumi stack output appServiceEndpoint
 https://azpulumi-as0ef47193.azurewebsites.net
 

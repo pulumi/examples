@@ -4,7 +4,7 @@
 # Azure Kubernetes Service (AKS) Cluster and Helm Chart
 
 This example demonstrates creating an Azure Kubernetes Service (AKS) Cluster, and deploying a Helm Chart into it,
-all in one Pulumi program. Please see https://docs.microsoft.com/en-us/azure/aks/ for more information about AKS.
+all in one Pulumi program. Please see <https://docs.microsoft.com/en-us/azure/aks/> for more information about AKS.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ This example deploys a Helm Chart from [Bitnami's Helm chart repository](https:/
 
 In addition you will need the following CLI tools:
 
-```
+```console
 $ az --version # Azure CLI
 azure-cli                         2.11.1
 core                              2.11.1
@@ -39,28 +39,29 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
 1. Login to your Azure account:
 
     ```bash
-    $ az login
+    az login
     ```
 
 2. Download nodejs dependencies:
 
     ```bash
-    $ npm install
+    npm install
     ```
 
 3. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init
+    pulumi stack init
     ```
 
 4. Set the required configuration variables for this program:
 
     ```bash
-    $ pulumi config set azure:environment public
-    $ pulumi config set password --secret [your-cluster-password-here]
-    $ ssh-keygen -t rsa -f key.rsa
-    $ pulumi config set sshPublicKey < key.rsa.pub
+    pulumi config set azure:environment public
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+    pulumi config set password --secret [your-cluster-password-here]
+    ssh-keygen -t rsa -f key.rsa
+    pulumi config set sshPublicKey < key.rsa.pub
     ```
 
 5. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including
@@ -74,7 +75,7 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
     > for further details.
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
 
 6. After a couple minutes, your cluster and Apache server will be ready. Three output variables will be printed,
@@ -82,14 +83,14 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
 
    Using these output variables, you may `curl` your Apache server's `serviceIP`:
 
-   ```bash
+   ```console
    $ curl $(pulumi stack output serviceIP)
    <html><body><h1>It works!</h1></body></html>
    ```
 
    And you may also configure your `kubectl` client using the `kubeConfig` configuration:
 
-   ```bash
+   ```console
    $ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
    $ KUBECONFIG=./kubeconfig.yaml kubectl get service
    NAME            TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)                      AGE
@@ -104,13 +105,13 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
 8. Once you are done, you can destroy all of the resources, and the stack:
 
     ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
+    pulumi destroy
+    pulumi stack rm
     ```
 
 9. If you make changes to the example `ts` code outside of an IDE, run
    the TypeScript compiler to check your changes:
 
     ```bash
-    $ tsc --build tsconfig.json
+    tsc --build tsconfig.json
     ```

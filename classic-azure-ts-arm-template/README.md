@@ -21,7 +21,7 @@ here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect
 
 Now, install dependencies:
 
-```sh
+```bash
 npm install
 ```
 
@@ -29,7 +29,7 @@ npm install
 
 1. Create a new stack:
 
-    ```sh
+    ```console
     $ pulumi stack init
     Enter a stack name: azure-arm-dev
     ```
@@ -37,14 +37,15 @@ npm install
 2. Set the required configuration variables for this program, and log into Azure:
 
     ```bash
-    $ pulumi config set azure:environment public
-    $ pulumi config set azure:location westus2
-    $ az login
+    pulumi config set azure:environment public
+    pulumi config set azure:location westus2
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+    az login
     ```
 
 3. Perform the deployment:
 
-    ```sh
+    ```console
     $ pulumi up
     Updating stack 'azure-arm-dev'
     Performing changes:
@@ -68,8 +69,8 @@ npm install
 4. Tidy up and delete all resources allocated by your deployment:
 
     ```bash
-    $ pulumi destroy -y --skip-preview
-    $ pulumi stack rm -y --skip-preview
+    pulumi destroy -y --skip-preview
+    pulumi stack rm -y --skip-preview
     ```
 
 ## Next Steps
