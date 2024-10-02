@@ -16,7 +16,7 @@ provider_config = pulumi.Config("aws")
 aws_region = provider_config.require("region")
 
 # Create an S3 bucket to store some raw data.
-events_bucket = s3.Bucket(
+events_bucket = s3.BucketV2(
     "events",
     s3.BucketArgs(
         force_destroy=True,
@@ -183,7 +183,7 @@ glue_redshift_connection = glue.Connection(
 )
 
 # Create an S3 bucket for Glue scripts and temporary storage.
-glue_job_bucket = s3.Bucket(
+glue_job_bucket = s3.BucketV2(
     "glue-job-bucket",
     s3.BucketArgs(
         force_destroy=True,
