@@ -21,7 +21,7 @@ provider = aws.Provider(
 )
 
 # Creates an AWS resource (S3 Bucket)
-bucket = aws.s3.Bucket(
+bucket = aws.s3.BucketV2(
     'my-bucket',
     opts=ResourceOptions(provider=provider)
 )
