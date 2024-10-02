@@ -37,7 +37,7 @@ with `***`.
         Type                        Name                                                  Status
     +   pulumi:pulumi:Stack         aws-go-s3-folder-component-website-component-testing  created
     +   └─ pulumi:example:S3Folder  pulumi-static-site                                     created
-    +      ├─ aws:s3:Bucket         pulumi-static-site                                     created
+    +      ├─ aws:s3:BucketV2       pulumi-static-site                                     created
     +      ├─ aws:s3:BucketPolicy   bucketPolicy                                          created
     +      ├─ aws:s3:BucketObject   index.html                                            created
     +      └─ aws:s3:BucketObject   favicon.png                                           created
