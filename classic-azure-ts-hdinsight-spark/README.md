@@ -30,6 +30,8 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
     ```bash
     pulumi config set azure:location <location>
     pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+    pulumi config set username <value>
+    pulumi config set password --secret <value>
     ```
 
 1. Run `pulumi up` to preview and deploy changes:

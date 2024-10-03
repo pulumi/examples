@@ -39,6 +39,7 @@ const collection = new azure.cosmosdb.SqlContainer("Urls", {
     resourceGroupName: resourceGroup.name,
     accountName: account.name,
     databaseName: database.name,
+    partitionKeyPaths: ["/key"],
 });
 
 // Traffic Manager as a global HTTP endpoint
@@ -64,7 +65,7 @@ const fn = new azure.appservice.HttpEventSubscription("AddUrl", {
     methods: ["POST"],
     callbackFactory: () => {
         const endpoint = account.endpoint.get();
-        const key = account.primaryMasterKey.get();
+        const key = account.primaryKey.get();
 
         const client = new CosmosClient({ endpoint, key, connectionPolicy: { preferredLocations: [primaryLocation] } });
         const container = client.database(database.name.get()).container(collection.name.get());
@@ -85,7 +86,7 @@ for (const location of locations) {
         route: "{key}",
         callbackFactory: () => {
             const endpoint = account.endpoint.get();
-            const key = account.primaryMasterKey.get();
+            const key = account.primaryKey.get();
 
             const client = new CosmosClient({ endpoint, key, connectionPolicy: { preferredLocations: [location] } });
             const container = client.database(database.name.get()).container(collection.name.get());
@@ -114,13 +115,9 @@ for (const location of locations) {
     const app = fn.functionApp;
 
     // An endpoint per region for Traffic Manager, link to the corresponding Function App
-    const endpoint = new azure.network.TrafficManagerEndpoint(`tme${location}`, {
-        resourceGroupName: resourceGroup.name,
-        profileName: profile.name,
-        type: "azureEndpoints",
+    const endpoint = new azure.network.TrafficManagerAzureEndpoint(`tme${location}`, {
+        profileId: profile.id,
         targetResourceId: app.id,
-        target: app.defaultHostname,
-        endpointLocation: app.location,
     });
 }
 
