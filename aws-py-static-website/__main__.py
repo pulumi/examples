@@ -92,7 +92,6 @@ def bucket_object_converter(filepath):
     content_file = pulumi_aws.s3.BucketObject(
         relative_path,
         key=relative_path,
-        acl='public-read',
         bucket=content_bucket.id,
         content_type=mime_type,
         source=FileAsset(filepath),
