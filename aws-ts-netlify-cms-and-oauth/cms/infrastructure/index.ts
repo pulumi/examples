@@ -22,19 +22,11 @@ const config = {
 };
 
 // contentBucket is the S3 bucket that the website's contents will be stored in.
-const contentBucket = new aws.s3.BucketV2("contentBucket",
-    {
-        bucket: config.targetDomain,
-        // acl: "public-read",
-        // // Configure S3 to serve bucket contents as a website. This way S3 will automatically convert
-        // // requests for "foo/" to "foo/index.html".
-        // website: {
-        //     indexDocument: "index.html",
-        //     // errorDocument: "404.html",
-        // },
-    });
+const contentBucket = new aws.s3.BucketV2("contentBucket", {
+    bucket: config.targetDomain,
+});
 
-const contentBucketWebsite = new aws.s3.BucketWebsiteConfigurationV2("contentBucket",  {
+const contentBucketWebsite = new aws.s3.BucketWebsiteConfigurationV2("contentBucket", {
     bucket: contentBucket.bucket,
     indexDocument: {suffix: "index.html"},
     errorDocument: {key: "404.html"},
@@ -81,13 +73,9 @@ crawlDirectory(
     });
 
 // logsBucket is an S3 bucket that will contain the CDN's request logs.
-const logsBucket = new aws.s3.BucketV2("requestLogs",
-    {
-        bucket: `${config.targetDomain}-logs`,
-        acl: "private",
-    });
-
-configureACL("requestLogs", logsBucket, "private");
+const logsBucket = new aws.s3.BucketV2("requestLogs", {
+    bucket: `${config.targetDomain}-logs`,
+});
 
 const tenMinutes = 60 * 10;
 
