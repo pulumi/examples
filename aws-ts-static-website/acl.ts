@@ -20,7 +20,7 @@ export function configureACL(bucketName: string, bucket: aws.s3.BucketV2, acl: s
         bucket: bucket.bucket,
         acl: acl,
     }, {
-        dependsOn: [ownership, publicAccessBlock]
+        dependsOn: [ownership, publicAccessBlock],
     });
     return bucketACL;
 }
