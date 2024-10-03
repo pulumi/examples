@@ -10,35 +10,15 @@ const config = new pulumi.Config();
 const bucketName = config.require('bucketName');
 const secretValue = config.requireSecret('secretValue');
 
-function configureACL(bucketName: string, bucket: aws.s3.BucketV2, acl: string): aws.s3.BucketAclV2 {
-    const ownership = new aws.s3.BucketOwnershipControls(bucketName, {
-        bucket: bucket.bucket,
-        rule: {
-            objectOwnership: "BucketOwnerPreferred",
-        }
-    });
-    const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(bucketName, {
-        bucket: bucket.bucket,
-        blockPublicAcls: false,
-        blockPublicPolicy: false,
-        ignorePublicAcls: false,
-        restrictPublicBuckets: false,
-    });
-    const bucketACL = new aws.s3.BucketAclV2(bucketName, {
-        bucket: bucket.bucket,
-        acl: acl,
-    }, {
-        dependsOn: [ownership, publicAccessBlock]
-    });
-    return bucketACL;
-}
-
-// Create a private bucket
+// Create a private bucket.
+//
+// The configuration is kept very simple as the goal of this example is to demonstrate KMS encryption, not storing
+// secrets in buckets securely. In a real-world scenario if you are certain you need to be storing sensitive data in
+// buckets and have eliminated other storage options, consider setting up a custom KMS key, enforcing TLS, and enabling
+// versioning for the bucket.
 const bucket = new aws.s3.BucketV2("bucket", {
     bucket: bucketName,
 });
-
-configureACL("bucket", bucket, "private");
 
 // Create an object from the secret value
 const superSecretObject = new aws.s3.BucketObject("secret", {
