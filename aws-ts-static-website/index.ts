@@ -27,6 +27,7 @@ const config = {
 
 // contentBucket is the S3 bucket that the website's contents will be stored in.
 const contentBucket = new aws.s3.BucketV2("contentBucket", {bucket: config.targetDomain});
+configureACL("contentBucket", contentBucket, "public-read");
 
 const contentBucketWebsite = new aws.s3.BucketWebsiteConfigurationV2("contentBucketWebsite", {
     bucket: contentBucket.bucket,
@@ -61,8 +62,6 @@ crawlDirectory(
             relativeFilePath,
             {
                 key: relativeFilePath,
-
-                acl: "public-read",
                 bucket: contentBucket.bucket,
                 contentType: mime.getType(filePath) || undefined,
                 source: new pulumi.asset.FileAsset(filePath),
