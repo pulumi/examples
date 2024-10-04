@@ -59,8 +59,7 @@ path_to_website_contents = stack_config.require('pathToWebsiteContents')
 certificate_arn = stack_config.get('certificateArn')
 
 # Create an S3 bucket configured as a website bucket.
-content_bucket = pulumi_aws.s3.BucketV2('contentBucket', bucket=target_domain)
-setup_acl('contentBucket', content_bucket, 'public-read')
+content_bucket = pulumi_aws.s3.BucketV2(f'{target_domain}-content')
 
 
 content_bucket_website = pulumi_aws.s3.BucketWebsiteConfigurationV2('content-bucket',
@@ -92,7 +91,6 @@ def bucket_object_converter(filepath):
     content_file = pulumi_aws.s3.BucketObject(
         relative_path,
         key=relative_path,
-        acl='public-read',
         bucket=content_bucket.id,
         content_type=mime_type,
         source=FileAsset(filepath),
@@ -139,7 +137,7 @@ if certificate_arn is None:
     certificate_arn = cert_validation.certificate_arn
 
 # Create a logs bucket for the CloudFront logs
-logs_bucket = pulumi_aws.s3.BucketV2('requestLogs', bucket=f'{target_domain}-logs')
+logs_bucket = pulumi_aws.s3.BucketV2(f'{target_domain}-logs')
 setup_acl('requestLogs', logs_bucket, 'private')
 
 # Create the CloudFront distribution
