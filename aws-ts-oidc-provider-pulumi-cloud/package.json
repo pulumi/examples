@@ -9,7 +9,7 @@
         "@pulumi/aws": "^6.52.0",
         "@pulumi/command": "^1.0.1",
         "@pulumi/pulumi": "^3.133.0",
-        "@pulumi/pulumiservice": "0.23.2",
+        "@pulumi/pulumiservice": "^0.26.1",
         "@pulumi/tls": "^5.0.6"
     }
 }

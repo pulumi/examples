@@ -3,9 +3,11 @@ description: ${DESCRIPTION}
 runtime: nodejs
 
 template:
-  description: A minimal TypeScript Pulumi program to set up AWS OIDC
+  description: AWS OIDC setup for Pulumi ESC
   config:
     aws:region:
       description: AWS Region
       default: us-west-2
- 
+    escProject:
+      description: The name of the ESC project in which to place a generated environment.
+      default: aws
