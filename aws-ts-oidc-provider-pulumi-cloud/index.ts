@@ -6,36 +6,42 @@ import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
 import * as tls from "@pulumi/tls";
 
-// Configurations
-const audience = pulumi.getOrganization();
+const config = new pulumi.Config();
+const escProject = config.require("escProject");
+
+const pulumiOrg = pulumi.getOrganization();
+
+// NOTE: At the time of writing, if you are still using the legacy "default"
+// organization, the format for the audience OIDC claim is different. Best
+// practice is to avoid using the legacy default project.
+const oidcAudience = escProject == "default" ? pulumiOrg : `aws:${pulumiOrg}`;
+
 const oidcIdpUrl: string = "https://api.pulumi.com/oidc";
 
-// Get TLS thumbprint for OIDC Provider
 const certs = tls.getCertificateOutput({
     url: oidcIdpUrl,
 });
+
 const thumbprint = certs.certificates[0].sha1Fingerprint;
 
 function getProviderArn() {
     const existingProvider = aws.iam.getOpenIdConnectProviderOutput({
         url: oidcIdpUrl,
     });
+
     if (existingProvider) {
-        console.log("OIDC Provider already exists ...");
-        // upsert audience
-        const cmd = new command.local.Command("oidc-client-id", {
-            create: pulumi.interpolate`aws iam add-client-id-to-open-id-connect-provider --open-id-connect-provider-arn ${existingProvider.arn} --client-id aws:${audience}`,
-            delete: pulumi.interpolate`aws iam remove-client-id-from-open-id-connect-provider --open-id-connect-provider-arn ${existingProvider.arn} --client-id aws:${audience}`,
+        console.log("OIDC Provider already exists. Adding current Pulumi org as an audience to the existing provider.");
+
+        new command.local.Command("oidc-client-id", {
+            create: pulumi.interpolate`aws iam add-client-id-to-open-id-connect-provider --open-id-connect-provider-arn ${existingProvider.arn} --client-id ${oidcAudience}`,
+            delete: pulumi.interpolate`aws iam remove-client-id-from-open-id-connect-provider --open-id-connect-provider-arn ${existingProvider.arn} --client-id ${oidcAudience}`,
         });
         return existingProvider.arn;
     } else {
-        console.log("Creating OIDC Provider ...");
         const provider = new aws.iam.OpenIdConnectProvider("oidcProvider", {
-            clientIdLists: [audience],
+            clientIdLists: [pulumiOrg],
             url: oidcIdpUrl,
             thumbprintLists: [thumbprint],
-        }, {
-            protect: true,
         });
         return provider.arn;
     }
@@ -55,49 +61,38 @@ const policyDocument = arn.apply(arn => aws.iam.getPolicyDocument({
         conditions: [{
             test: "StringEquals",
             variable: `api.pulumi.com/oidc:aud`,
-            values: [`aws:${audience}`], // new format
+            values: [oidcAudience],
         }],
     }],
 }));
 
-// // Create a new role that can be assumed by the OIDC provider
-const role = new aws.iam.Role("role", {
+const role = new aws.iam.Role("pulumi-cloud-admin", {
     assumeRolePolicy: policyDocument.json,
 });
 
-// Attach the AWS managed policy "AdministratorAccess" to the role.
-const rpa = new aws.iam.RolePolicyAttachment("policy", {
+new aws.iam.RolePolicyAttachment("policy", {
     policyArn: "arn:aws:iam::aws:policy/AdministratorAccess",
     role: role.name,
 });
 
-const envJson = pulumi.jsonStringify({
-    "values": {
-        "aws": {
-            "login": {
-                "fn::open::aws-login": {
-                    "oidc": {
-                        "duration": "1h",
-                        "roleArn": role.arn,
-                        "sessionName": "pulumi-environments-session",
-                    },
-                },
-            },
-        },
-        "environmentVariables": {
-            "AWS_ACCESS_KEY_ID": "${aws.login.accessKeyId}",
-            "AWS_SECRET_ACCESS_KEY": "${aws.login.secretAccessKey}",
-            "AWS_SESSION_TOKEN": "${aws.login.sessionToken}",
-        },
-    },
-});
+export const envYaml = pulumi.interpolate`
+values:
+  aws:
+    login:
+      fn::open::aws-login:
+        oidc:
+          duration: 1h
+          roleArn: ${role.arn}
+          sessionName: pulumi-esc
+  environmentVariables:
+    AWS_ACCESS_KEY_ID: \${aws.login.accessKeyId}
+    AWS_SECRET_ACCESS_KEY: \${aws.login.secretAccessKey}
+    AWS_SESSION_TOKEN: \${aws.login.sessionToken}
+`;
 
-const envAsset = envJson.apply(json => new pulumi.asset.StringAsset(json));
-
-// Create a new environment
-const env = new pulumiservice.Environment("aws-oidc-admin", {
-    name: "test",
-    // project: "auth", // post esc-GA
-    organization: audience,
-    yaml: envAsset,
+new pulumiservice.Environment("aws-oidc-admin", {
+    organization: pulumiOrg,
+    project: escProject,
+    name: "aws-oidc-admin",
+    yaml: envYaml.apply(yaml => new pulumi.asset.StringAsset(yaml)),
 });
