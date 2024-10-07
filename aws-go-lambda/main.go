@@ -48,9 +48,9 @@ func main() {
 
 		// Set arguments for constructing the function resource.
 		args := &lambda.FunctionArgs{
-			Handler: pulumi.String("handler"),
+			Handler: pulumi.String("bootstrap"),
 			Role:    role.Arn,
-			Runtime: pulumi.String("go1.x"),
+			Runtime: pulumi.String("provided.al2"),
 			Code:    pulumi.NewFileArchive("./handler/handler.zip"),
 		}
 
