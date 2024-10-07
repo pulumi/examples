@@ -3,7 +3,7 @@
 
 # Azure Kubernetes Service (AKS) Cluster and Azure Functions with KEDA
 
-This example demonstrates creating an Azure Kubernetes Service (AKS) Cluster, and deploying an Azure Function App with Kubernetes-based Event Driven Autoscaling (KEDA) into it, all in one Pulumi program. Please see https://docs.microsoft.com/en-us/azure/aks/ for more information about AKS and https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda for more information about KEDA.
+This example demonstrates creating an Azure Kubernetes Service (AKS) Cluster, and deploying an Azure Function App with Kubernetes-based Event Driven Autoscaling (KEDA) into it, all in one Pulumi program. Please see <https://docs.microsoft.com/en-us/azure/aks/> for more information about AKS and <https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda> for more information about KEDA.
 
 ## Prerequisites
 
@@ -16,16 +16,18 @@ We will be deploying to Azure, so you will need an Azure account. If you don't h
 This example deploys a Helm Chart from Kedacore Helm chart repository.
 
 If you are using Helm v2:
+
 ```bash
-$ helm init --client-only
-$ helm repo add kedacore https://kedacore.github.io/charts
-$ helm repo update
+helm init --client-only
+helm repo add kedacore https://kedacore.github.io/charts
+helm repo update
 ```
 
 If you are using Helm v3:
-```
-$ helm repo add kedacore https://kedacore.github.io/charts
-$ helm repo update
+
+```bash
+helm repo add kedacore https://kedacore.github.io/charts
+helm repo update
 ```
 
 ## Running the Example
@@ -35,13 +37,14 @@ After cloning this repo, `cd` into it and run these commands.
 1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init
+    pulumi stack init
     ```
 
 2. Set the Azure region to deploy to:
 
     ```bash
-    $ pulumi config set azure:location <value>
+    pulumi config set azure:location <value>
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
 3. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including an Active Directory service principal, AKS cluster, and then deploys the Apache Helm Chart, and an Azure Function managed by KEDA, all in a single gesture:
@@ -54,14 +57,14 @@ After cloning this repo, `cd` into it and run these commands.
     > for further details.
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
 
 4. After a couple minutes, your cluster and Azure Function app will be ready. Four output variables will be printed, reflecting your cluster name (`clusterName`), Kubernetes config (`kubeConfig`), Storage Account name (`storageAccountName`), and storage queue name (`queueName`).
 
    Using these output variables, you may configure your `kubectl` client using the `kubeConfig` configuration:
 
-   ```bash
+   ```console
    $ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
    $ KUBECONFIG=./kubeconfig.yaml kubectl get deployment
    NAME           READY     UP-TO-DATE     AVAILABLE    AGE
@@ -73,7 +76,7 @@ After cloning this repo, `cd` into it and run these commands.
 
    Wait for a minute and then query the deployments again:
 
-   ```bash
+   ```console
    $ KUBECONFIG=./kubeconfig.yaml kubectl get deployment
    NAME           READY     UP-TO-DATE     AVAILABLE    AGE
    keda-edge      1/1       1              1            14m
@@ -82,7 +85,7 @@ After cloning this repo, `cd` into it and run these commands.
 
    Note that the `queue-handler` deployment got 1 instance ready. Looking at the pods:
 
-   ```bash
+   ```console
    $ KUBECONFIG=./kubeconfig.yaml kubectl get pod
    NAME                          READY   STATUS    RESTARTS   AGE                                    keda-edge-97664558c-q2mkd     1/1     Running   0          15m
    queue-handler-c496dcfc-mb6tx  1/1     Running   0          2m3s
@@ -90,7 +93,7 @@ After cloning this repo, `cd` into it and run these commands.
 
    There's now a pod processing queue messages. The message should be gone from the storage queue at this point. Query the logs of the pod:
 
-   ```bash
+   ```console
    $ KUBECONFIG=./kubeconfig.yaml kubectl logs queue-handler-c496dcfc-mb6tx
    ...
    C# Queue trigger function processed: Test Message
@@ -103,6 +106,6 @@ After cloning this repo, `cd` into it and run these commands.
 6. Once you are done, you can destroy all of the resources, and the stack:
 
     ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
+    pulumi destroy
+    pulumi stack rm
     ```

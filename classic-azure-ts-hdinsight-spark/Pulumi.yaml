@@ -6,6 +6,8 @@ template:
     azure:environment:
       description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
       default: public
+    azure:subscriptionId:
+      description: The Azure Subscription to deploy into
     username:
       description: Spark username
       secret: true

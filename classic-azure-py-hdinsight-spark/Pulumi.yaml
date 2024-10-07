@@ -12,6 +12,8 @@ template:
     azure:location:
       description: The Azure location to use
       default: WestUS
+    azure:subscriptionId:
+      description: The Azure Subscription to deploy into
     username:
       description: Spark username
       secret: true

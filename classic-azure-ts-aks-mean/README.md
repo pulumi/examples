@@ -28,7 +28,7 @@ npm install
 
 1. Create a new stack:
 
-    ```sh
+    ```console
     $ pulumi stack init
     Enter a stack name: azure-mean
     ```
@@ -36,16 +36,17 @@ npm install
 1. Set the required configuration variables for this program:
 
     ```bash
-    $ pulumi config set azure:environment public
-    $ pulumi config set password --secret [your-cluster-password-here]
-    $ ssh-keygen -t rsa -f key.rsa
-    $ pulumi config set sshPublicKey < key.rsa.pub
-    $ az login
+    pulumi config set azure:environment public
+    pulumi config set password --secret <your-cluster-password-here>
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+    ssh-keygen -t rsa -f key.rsa
+    pulumi config set sshPublicKey < key.rsa.pub
+    az login
     ```
 
 1. Perform the deployment:
 
-    ```sh
+    ```console
     $ pulumi up
     Updating stack 'azure-mean'
     Performing changes:
@@ -79,7 +80,7 @@ npm install
     in this case `40.76.25.71`. It is exported with a stack output variable, `frontendAddress`. We
     can use `curl` and `grep` to retrieve the `<title>` of the site the proxy points at.
 
-    ```sh
+    ```console
     $ curl -sL $(pulumi stack output frontendAddress) | grep "<title>"
         <title>Node/Angular Todo App</title>>
     ```

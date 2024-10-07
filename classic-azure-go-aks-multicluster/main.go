@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-azure/sdk/v4/go/azure/containerservice"
-	"github.com/pulumi/pulumi-azure/sdk/v4/go/azure/core"
-	"github.com/pulumi/pulumi-azuread/sdk/v4/go/azuread"
+	"github.com/pulumi/pulumi-azure/sdk/v6/go/azure/containerservice"
+	"github.com/pulumi/pulumi-azure/sdk/v6/go/azure/core"
+	"github.com/pulumi/pulumi-azuread/sdk/v5/go/azuread"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
@@ -21,7 +21,6 @@ func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Set up configuration variables for this stack.
 		c := config.New(ctx, "")
-		password := c.Require("password")
 		location := c.Get("location")
 		if location == "" {
 			location = "eastus"
@@ -54,13 +53,12 @@ func main() {
 
 		adSpPasswordArgs := azuread.ServicePrincipalPasswordArgs{
 			ServicePrincipalId: adSp.ID(),
-			Value:              pulumi.String(password),
-			EndDate:            pulumi.String("2099-01-01T00:00:00Z"),
 		}
 		adSpPassword, err := azuread.NewServicePrincipalPassword(ctx, "aksSpPassword", &adSpPasswordArgs)
 		if err != nil {
 			return err
 		}
+		ctx.Export("password", adSpPassword.Value)
 
 		// Per-cluster configs
 		aksClusterConfigs := [2]*aksClusterConfig{

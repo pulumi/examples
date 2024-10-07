@@ -8,3 +8,5 @@ template:
       default: public
     azure:location:
       description: The Azure location to use (e.g., `eastus` or `westeurope`)
+    azure:subscriptionId:
+      description: The Azure Subscription to deploy into

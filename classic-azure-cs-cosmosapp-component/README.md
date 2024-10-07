@@ -30,36 +30,37 @@ To deploy your infrastructure, follow the below steps.
 
 #### Step 1: Create a new stack
 
-```
-$ pulumi stack init dev
+```bash
+pulumi stack init dev
 ```
 
 #### Step 2: Log in to the Azure CLI
 
 You will be prompted to do this during deployment if you forget this step.
 
-```
-$ az login
+```bash
+az login
 ```
 
-#### Step 3: Build and publish the Azure Functions project:
+#### Step 3: Build and publish the Azure Functions project
 
-    ```
-    $ dotnet publish app
-    ```
+```bash
+dotnet publish app
+```
 
 #### Step 4: Configure the list of regions to deploy to
 
-```
-$ pulumi config set azure:location westus
-$ pulumi config set locations westus,westeurope
+```bash
+pulumi config set azure:location westus
+pulumi config set locations westus,westeurope
+pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
 ```
 
 #### Step 5: Deploy your changes
 
 Run `pulumi up` to preview and deploy changes:
 
-```
+```console
 $ pulumi up
 Previewing changes:
 +  azure-cs-cosmosapp-component-dev  create
@@ -76,7 +77,7 @@ Previewing changes:
 
 Three endpoints are now available. For example,
 
-```
+```console
 $ pulumi stack output VmssEndpoint
 http://vmssrgcc15ea50.trafficmanager.net/cosmos
 
@@ -91,6 +92,6 @@ Go to the Azure portal and add a document with the ID "cosmos" to receive a non-
 Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
 ```bash
-$ pulumi destroy --yes
-$ pulumi stack rm --yes
+pulumi destroy --yes
+pulumi stack rm --yes
 ```

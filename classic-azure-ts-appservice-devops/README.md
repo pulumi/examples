@@ -9,51 +9,58 @@ Provisions Azure SQL Database and Azure Application Insights to be used in combi
 
 ## Running the App manually with Pulumi CLI
 
-1.  Build and publish the ASP.NET Core project:
+1. Build and publish the ASP.NET Core project:
 
-    ```
-    $ dotnet publish src
-    ```
-
-1.  Navigate to `infra`:
-
-    ```
-    $ cd infra
+    ```bash
+    dotnet publish src
     ```
 
-1.  Create a new stack:
+1. Navigate to `infra`:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    cd infra
     ```
 
-1.  Restore NPM dependencies:
+1. Create a new stack:
 
+    ```bash
+    pulumi stack init dev
     ```
-    $ npm install
+
+1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+
+    ```bash
+    az login
+    ```
+
+1. Restore NPM dependencies:
+
+    ```bash
+    npm install
+    ```
+
+1. Configure target Azure environment:
+
+    ```bash
+    pulumi config set azure:location <location>
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
 1. Define SQL Server username:
 
-    ```
+    ```bash
     pulumi config set sqlUsername <value>
     ```
 
 1. Define SQL Server password (make it complex enough to satisfy Azure policy):
 
-    ```
+    ```bash
     pulumi config set --secret sqlPassword <value>
     ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Run `pulumi up` to preview and deploy changes:
 
-    ```
+    ```console
     $ pulumi up
     Previewing changes:
     ...
@@ -65,9 +72,9 @@ Provisions Azure SQL Database and Azure Application Insights to be used in combi
     Update duration: 1m14.59910109s
     ```
 
-1.  Check the deployed website endpoint:
+1. Check the deployed website endpoint:
 
-    ```
+    ```console
     $ pulumi stack output endpoint
     https://dev-as10d706a2.azurewebsites.net
     $ curl "$(pulumi stack output endpoint)"

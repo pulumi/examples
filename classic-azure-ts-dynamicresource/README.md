@@ -40,29 +40,36 @@ That's it! The dynamic provider will automatically use the underlying Azure prov
 
 ## Running the App
 
-1.  Create a new stack:
+1. Create a new stack:
 
-    ```
-    $ pulumi stack init azure-cdn-custom-domain
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init azure-cdn-custom-domain
     ```
 
-1.  Restore NPM dependencies:
+1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
+    ```bash
+    az login
     ```
-    $ npm install
+
+1. Restore NPM dependencies:
+
+    ```bash
+    npm install
     ```
 
     ...or if you prefer using `yarn`, then `yarn install`.
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Configure target Azure environment:
 
+    ```bash
+    pulumi config set azure:location <location>
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
+
+1. Run `pulumi up` to preview and deploy changes:
+
+    ```console
     $ pulumi up
     Previewing changes:
     ...
@@ -79,7 +86,8 @@ Learn more about dynamic providers [here](https://www.pulumi.com/docs/intro/conc
 
 ## Known Issues
 
-If you get a 404 error when deleting a custom domain or a deserialization error `SyntaxError: Unexpected token o in JSON at position 1`, these were due to bugs in the older versions of the Azure nodeJS SDK. See https://github.com/Azure/azure-sdk-for-js/issues/2842 for more info. Ensure that you have the latest versions by running `npm list @azure/ms-rest-js @azure/ms-rest-azure-js`. The versions you should have are:
+If you get a 404 error when deleting a custom domain or a deserialization error `SyntaxError: Unexpected token o in JSON at position 1`, these were due to bugs in the older versions of the Azure nodeJS SDK. See <https://github.com/Azure/azure-sdk-for-js/issues/2842> for more info. Ensure that you have the latest versions by running `npm list @azure/ms-rest-js @azure/ms-rest-azure-js`. The versions you should have are:
+
 - `@azure/ms-rest-js` - 1.8.10
 - `@azure/ms-rest-azure-js` - 1.3.7
 

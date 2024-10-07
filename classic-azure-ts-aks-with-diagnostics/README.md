@@ -4,7 +4,7 @@
 # Azure Kubernetes Service (AKS) Cluster with Diagnostics
 
 This example demonstrates creating an Azure Kubernetes Service (AKS) Cluster, and enables diagnostics for the cluster.
-Please see https://docs.microsoft.com/en-us/azure/aks/ for more information about AKS.
+Please see <https://docs.microsoft.com/en-us/azure/aks/> for more information about AKS.
 
 ## Prerequisites
 
@@ -21,32 +21,32 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
 1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init
+    pulumi stack init
     ```
 
 2. Set the required configuration variables for this program:
 
     ```bash
-    $ pulumi config set azure:environment public
-    $ pulumi config set password --secret [your-cluster-password-here]
-    $ ssh-keygen -t rsa -f key.rsa
-    $ pulumi config set sshPublicKey < key.rsa.pub
+    pulumi config set azure:environment public
+    pulumi config set password --secret <your-cluster-password-here>
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+    ssh-keygen -t rsa -f key.rsa
+    pulumi config set sshPublicKey < key.rsa.pub
     ```
 
 3. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including
    an Active Directory service principal, AKS cluster, and then enables diagnostics for the cluster, all in a single gesture:
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
 
 4. After a couple minutes, your cluster and Apache server will be ready. Your `kubeconfig` will be the application output and
    you may also configure your `kubectl` client using the `kubeconfig` configuration:
 
    ```bash
-   $ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
-   $ kubectl get namespaces
-   ....
+   pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
+   kubectl get namespaces
    ```
 
 5. At this point, you have a running cluster. Feel free to modify your program, and run `pulumi up` to redeploy changes.
@@ -56,6 +56,6 @@ After cloning this repo, `cd` into it and run these commands. A Kubernetes clust
 6. Once you are done, you can destroy all of the resources, and the stack:
 
     ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
+    pulumi destroy
+    pulumi stack rm
     ```
