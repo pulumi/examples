@@ -30,7 +30,7 @@ function buildFunctionApp({ cosmosAccount, database, container, opts }: GlobalCo
             callbackFactory: () => {
                 const client = new CosmosClient({
                     endpoint: cosmosAccount.endpoint.get(),
-                    key: cosmosAccount.primaryMasterKey.get(),
+                    key: cosmosAccount.primaryKey.get(),
                     connectionPolicy: { preferredLocations: [location] },
                 });
                 const collection = client.database(database.name.get()).container(container.name.get());

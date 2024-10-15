@@ -25,10 +25,6 @@ export class AksCluster extends pulumi.ComponentResource {
                 opts: pulumi.ComponentResourceOptions = {}) {
         super("examples:keda:AksCluster", name, args, opts);
 
-        const password = new random.RandomPassword("password", {
-            length: 20,
-            special: true,
-        }).result;
         const sshPublicKey = new tls.PrivateKey("keda", {
             algorithm: "RSA",
             rsaBits: 4096,
@@ -36,10 +32,9 @@ export class AksCluster extends pulumi.ComponentResource {
 
         // Create the AD service principal for the K8s cluster.
         const adApp = new azuread.Application("aks", {displayName: "aks"}, { parent: this });
-        const adSp = new azuread.ServicePrincipal("aksSp", { applicationId: adApp.applicationId }, { parent: this });
+        const adSp = new azuread.ServicePrincipal("aksSp", { applicationId: adApp.clientId }, { parent: this });
         const adSpPassword = new azuread.ServicePrincipalPassword("aksSpPassword", {
             servicePrincipalId: adSp.id,
-            value: password,
             endDate: "2099-01-01T00:00:00Z",
         }, { parent: this });
 
@@ -53,7 +48,7 @@ export class AksCluster extends pulumi.ComponentResource {
         const subnet = new azure.network.Subnet("keda", {
             resourceGroupName: args.resourceGroupName,
             virtualNetworkName: vnet.name,
-            addressPrefix: "10.2.1.0/24",
+            addressPrefixes: ["10.2.1.0/24"],
         }, { parent: this });
 
         // Now allocate an AKS cluster.
@@ -78,12 +73,11 @@ export class AksCluster extends pulumi.ComponentResource {
                 clientSecret: adSpPassword.value,
             },
             kubernetesVersion: args.kubernetesVersion,
-            roleBasedAccessControl: { enabled: true },
+            roleBasedAccessControlEnabled: true,
             networkProfile: {
                 networkPlugin: "azure",
                 dnsServiceIp: "10.2.2.254",
                 serviceCidr: "10.2.2.0/24",
-                dockerBridgeCidr: "172.17.0.1/16",
             },
         }, { parent: this });
 

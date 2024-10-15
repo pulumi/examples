@@ -38,19 +38,16 @@ function buildVMScaleSetApp({ cosmosAccount, database, container, opts }: Global
         }, opts);
 
         const bpepool = new azure.lb.BackendAddressPool(`bap-${location}`, {
-            resourceGroupName: resourceGroup.name,
             loadbalancerId: loadBalancer.id,
         }, opts);
 
         const probe = new azure.lb.Probe(`ssh-probe-${location}`.substring(0, 16), {
-            resourceGroupName: resourceGroup.name,
             loadbalancerId: loadBalancer.id,
             port: 80,
         }, opts);
 
         const rule = new azure.lb.Rule(`rl-${location}`, {
-            resourceGroupName: resourceGroup.name,
-            backendAddressPoolId: bpepool.id,
+            backendAddressPoolIds: [bpepool.id],
             backendPort: 80,
             frontendIpConfigurationName: "PublicIPAddress",
             frontendPort: 80,
@@ -71,7 +68,7 @@ function buildVMScaleSetApp({ cosmosAccount, database, container, opts }: Global
             virtualNetworkName: vnet.name,
         }, opts);
 
-        const customData = pulumi.all([cosmosAccount.endpoint, cosmosAccount.primaryMasterKey, database.name, container.name])
+        const customData = pulumi.all([cosmosAccount.endpoint, cosmosAccount.primaryKey, database.name, container.name])
             .apply(([endpoint, key, databaseName, collectionName]) => {
                 const s = file.replace("${ENDPOINT}", endpoint)
                     .replace("${MASTER_KEY}", key)
