@@ -35,26 +35,26 @@ To deploy your infrastructure, follow the below steps.
     pulumi stack init dev
     ```
 
-2. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
     az login
     ```
 
-3. Configure the location to deploy the resources to:
+1. Configure the location to deploy the resources to:
 
     ```bash
     pulumi config set azure:location "North Europe"
     pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
-4. Configure the Bot Name:
+1. Configure the Bot Name:
 
     ```bash
     pulumi config set botName PulumiBot1
     ```
 
-5. Run `pulumi up` to preview and deploy changes:
+1. Run `pulumi up` to preview and deploy changes:
 
     ```console
     $ pulumi up
@@ -68,7 +68,7 @@ To deploy your infrastructure, follow the below steps.
     Update duration: 1m22s
     ```
 
-6. Check the deployed bot using either:
+1. Check the deployed bot using either:
 
     * Azure Portal Azure Bot Service - [Test in Webchat feature](https://docs.microsoft.com/en-us/azure/bot-service/abs-quickstart?view=azure-bot-service-4.0#test-the-bot)
     * [Bot Framework Emulator](https://github.com/Microsoft/BotFramework-Emulator) pointing to the output bot endpoint and Microsoft Application Id and the secret you supplied:
@@ -79,7 +79,7 @@ To deploy your infrastructure, follow the below steps.
         MicrosoftAppPassword: "<secret>"
         ```
 
-7. Once you've finished, you can tear down your stack's resources by destroying and removing it:
+1. Once you've finished, you can tear down your stack's resources by destroying and removing it:
 
     ```bash
     pulumi destroy -y

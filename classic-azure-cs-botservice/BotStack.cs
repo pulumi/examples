@@ -7,6 +7,7 @@ using Pulumi.Azure.AppService.Inputs;
 using Pulumi.Azure.Bot;
 using Pulumi.Azure.Core;
 using Pulumi.AzureAD;
+using Pulumi.AzureAD.Inputs;
 using Pulumi.Random;
 using Cognitive = Pulumi.Azure.Cognitive;
 using Storage = Pulumi.Azure.Storage;
@@ -27,15 +28,11 @@ class BotStack : Stack
             AccountTier = "Standard"
         });
 
-        var appServicePlan = new Plan("asp", new PlanArgs
+        var appServicePlan = new ServicePlan("asp", new ServicePlanArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            Kind = "App",
-            Sku = new PlanSkuArgs
-            {
-                Tier = "Basic",
-                Size = "B1"
-            }
+            OsType = "Linux",
+            SkuName = "B1",
         });
 
         var container = new Storage.Container("zips", new Storage.ContainerArgs
@@ -75,57 +72,52 @@ class BotStack : Stack
 
         var msa = new Application("msapp", new ApplicationArgs
         {
-            Oauth2AllowImplicitFlow = false,
-            AvailableToOtherTenants = true,
-            PublicClient = true,
+            PublicClient = new ApplicationPublicClientArgs
+            {
+                RedirectUris =
+                {
+                    "https://address1.com",
+                },
+            },
+            FallbackPublicClientEnabled = true,
             DisplayName = "msapp"
         });
 
-        var pwd = new RandomPassword("password", new RandomPasswordArgs
+        var msaSecret = new ApplicationPassword("msasecret", new Pulumi.AzureAD.ApplicationPasswordArgs
         {
-            Length = 16,
-            MinNumeric = 1,
-            MinSpecial = 1,
-            MinUpper = 1,
-            MinLower = 1
+            ApplicationId = msa.Id,
         });
 
-        var msaSecret = new ApplicationPassword("msasecret", new ApplicationPasswordArgs
-        {
-            ApplicationObjectId = msa.ObjectId,
-            EndDateRelative = "8640h",
-            Value = pwd.Result
-        });
-
-        var app = new AppService("app", new AppServiceArgs
+        var app = new LinuxWebApp("app", new LinuxWebAppArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            AppServicePlanId = appServicePlan.Id,
+            ServicePlanId = appServicePlan.Id,
             AppSettings =
             {
                 {"WEBSITE_RUN_FROM_PACKAGE", codeBlobUrl},
-                {"MicrosoftAppId", msa.ApplicationId},
+                {"MicrosoftAppId", msa.Id},
                 {"MicrosoftAppPassword", msaSecret.Value},
                 {"LuisApiKey", luis.PrimaryAccessKey},
             },
-            HttpsOnly = true
+            HttpsOnly = true,
+            SiteConfig = new LinuxWebAppSiteConfigArgs { },
         });
 
         var bot = new WebApp(botName, new WebAppArgs
         {
             DisplayName = botName,
-            MicrosoftAppId = msa.ApplicationId,
+            MicrosoftAppId = msa.Id,
             ResourceGroupName = resourceGroup.Name,
             Sku = "F0",
             Location = "global",
-            Endpoint = Output.Format($"https://{app.DefaultSiteHostname}/api/messages"),
+            Endpoint = Output.Format($"https://{app.DefaultHostname}/api/messages"),
             DeveloperAppInsightsApiKey = appInsightApiKey.Key,
             DeveloperAppInsightsApplicationId = appInsights.AppId,
             DeveloperAppInsightsKey = appInsights.InstrumentationKey
         });
 
         this.BotEndpoint = bot.Endpoint;
-        this.MicrosoftAppId = msa.ApplicationId;
+        this.MicrosoftAppId = msa.Id;
         this.MicrosoftAppPassword = msaSecret.Value;
     }
 
