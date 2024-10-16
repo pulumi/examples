@@ -104,10 +104,7 @@ scale_set = compute.LinuxVirtualMachineScaleSet(
         caching="ReadWrite",
         storage_account_type="Standard_LRS",
     ),
-    automatic_os_upgrade_policy=compute.LinuxVirtualMachineScaleSetAutomaticOsUpgradePolicyArgs(
-      enable_automatic_os_upgrade=False,
-      disable_automatic_rollback=True,
-    ),
+    upgrade_mode="Manual",
     opts=ResourceOptions(depends_on=[bpepool]))
 
 export("public_address", public_ip.fqdn)
