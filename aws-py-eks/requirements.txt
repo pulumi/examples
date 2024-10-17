@@ -1,2 +1,2 @@
-pulumi>=3.5.1,<4.0.0
+/home/tgummerer/work/pulumi/default-providers/sdk/python/env/src/dist/pulumi-3.116.2.dev0-py2.py3-none-any.whl
 pulumi-aws>=6.0.2,<7.0.0
