@@ -50,9 +50,9 @@ export class KedaService extends pulumi.ComponentResource {
         { provider: args.k8sProvider, parent: this });
 
         // Deploy a KEDA Edge Helm chart
-        const keda = new k8s.helm.v2.Chart("keda-edge", {
+        const keda = new k8s.helm.v4.Chart("keda-edge", {
             chart: "keda",
-            fetchOpts: {
+            repositoryOpts: {
                 repo: "https://kedacore.github.io/charts",
             },
             version: "2.2.1",

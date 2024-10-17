@@ -20,30 +20,31 @@ The application consists of several parts:
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
 1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
-    $ az login
+    az login
     ```
 
 1. Build and publish the ASP.NET Core project:
 
     ```bash
-    $ dotnet publish webapp
+    dotnet publish webapp
     ```
 
-1. Set an appropriate Azure location like:
+1. Set an appropriate Azure location and subscription like:
 
     ```bash
-    $ pulumi config set azure:location westus
+    pulumi config set azure:location westus
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
 1. Run `pulumi up` to preview and deploy changes:
 
-    ```bash
+    ```console
     $ pulumi up
     Previewing changes:
     ...
@@ -57,7 +58,7 @@ The application consists of several parts:
 
 1. Check the deployed website endpoint:
 
-    ```bash
+    ```console
     $ pulumi stack output endpoint
     https://app129968b8.azurewebsites.net/
     $ curl "$(pulumi stack output endpoint)"

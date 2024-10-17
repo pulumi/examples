@@ -26,33 +26,34 @@ To deploy your infrastructure, follow the below steps.
 
 ### Steps
 
-1.  Create a new stack:
+1. Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1.  Build and publish the ASP.NET Core project:
+1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
+    ```bash
+    az login
     ```
-    $ dotnet publish webapp
+
+1. Build and publish the ASP.NET Core project:
+
+    ```bash
+    dotnet publish webapp
     ```
 
 1. Set an appropriate Azure location like:
 
-    ```
-    $ pulumi config set azure:location westus
+    ```bash
+    pulumi config set azure:location westus
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Run `pulumi up` to preview and deploy changes:
 
-    ```
+    ```console
     $ pulumi up
     Previewing changes:
     ...
@@ -64,9 +65,9 @@ To deploy your infrastructure, follow the below steps.
     Update duration: 4m16s
     ```
 
-1.  Check the deployed website endpoint:
+1. Check the deployed website endpoint:
 
-    ```
+    ```console
     $ pulumi stack output Endpoint
     https://app129968b8.azurewebsites.net/
     $ curl "$(pulumi stack output Endpoint)"
@@ -78,6 +79,6 @@ To deploy your infrastructure, follow the below steps.
 1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
     ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
+    pulumi destroy --yes
+    pulumi stack rm --yes
     ```

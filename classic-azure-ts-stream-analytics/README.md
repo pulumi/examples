@@ -7,33 +7,34 @@ An example Pulumi program that deploys an Azure Stream Analytics job to transfor
 
 ## Running the App
 
-1.  Create a new stack:
+1. Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1.  Restore NPM dependencies:
+1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
-    ```
-    $ npm install
-    ```
-
-1.  Configure the location to deploy the example to:
-
-    ```
-    $ pulumi config set azure:location <location>
+    ```bash
+    az login
     ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Restore NPM dependencies:
 
+    ```bash
+    npm install
     ```
+
+1. Configure the Azure location and subscription to deploy the example to:
+
+    ```bash
+    pulumi config set azure:location <location>
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+    ```
+
+1. Run `pulumi up` to preview and deploy changes:
+
+    ```console
     $ pulumi up
     Previewing update (dev):
     ...
@@ -45,9 +46,9 @@ An example Pulumi program that deploys an Azure Stream Analytics job to transfor
     Update duration: 2m43s
     ```
 
-1.  Use the following sample messages for testing:
+1. Use the following sample messages for testing:
 
-    ```
+    ```jsonc
     // Inputs (1 line - 1 event):
     {"Make":"Kia","Sales":2,"Time":"2019-06-26T10:22:36Z"}
     {"Make":"Kia","Sales":1,"Time":"2019-06-26T10:22:37Z"}
@@ -60,8 +61,8 @@ An example Pulumi program that deploys an Azure Stream Analytics job to transfor
 
     You can send a message with a `curl` command:
 
-    ```
+    ```bash
     curl -X POST '$(pulumi stack output inputEndpoint)' -H 'Authorization: $(pulumi stack output sasToken)' -H 'Content-Type: application/atom+xml;type=entry;charset=utf-8' -d '{"Make":"Kia","Sales":2,"Time":"2019-06-26T10:22:36Z"}'
     ```
 
-1.  [Start the Stream Analytics job](https://docs.microsoft.com/en-us/azure/stream-analytics/start-job). The job will start emitting messages to the output Event Hub once per minute. The Azure Function `analytics-output` will start printing those events into the console (you'd have to open the function console in the Azure portal to see them).
+1. [Start the Stream Analytics job](https://docs.microsoft.com/en-us/azure/stream-analytics/start-job). The job will start emitting messages to the output Event Hub once per minute. The Azure Function `analytics-output` will start printing those events into the console (you'd have to open the function console in the Azure portal to see them).

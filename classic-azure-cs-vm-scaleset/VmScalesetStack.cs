@@ -28,7 +28,7 @@ class VmScalesetStack : Stack
             }
         );
 
-        var subnet = new Subnet("subnet", 
+        var subnet = new Subnet("subnet",
             new SubnetArgs
             {
                 ResourceGroupName = resourceGroup.Name,
@@ -61,14 +61,12 @@ class VmScalesetStack : Stack
         var bpePool = new BackendAddressPool("bpepool",
             new BackendAddressPoolArgs
             {
-                ResourceGroupName = resourceGroup.Name,
                 LoadbalancerId = lb.Id,
             });
 
         var sshProbe = new Probe("ssh-probe",
             new ProbeArgs
             {
-                ResourceGroupName = resourceGroup.Name,
                 LoadbalancerId = lb.Id,
                 Port = applicationPort,
             });
@@ -76,8 +74,7 @@ class VmScalesetStack : Stack
         var natRule = new Rule("lbnatrule-http",
             new RuleArgs
             {
-                ResourceGroupName = resourceGroup.Name,
-                BackendAddressPoolId = bpePool.Id,
+                BackendAddressPoolIds = { bpePool.Id },
                 BackendPort = applicationPort,
                 FrontendIpConfigurationName = "PublicIPAddress",
                 FrontendPort = applicationPort,
@@ -86,68 +83,64 @@ class VmScalesetStack : Stack
                 Protocol = "Tcp",
             });
 
-        var scaleSet = new ScaleSet("vmscaleset",
-            new ScaleSetArgs
+        var scaleSet = new LinuxVirtualMachineScaleSet("vmscaleset",
+            new LinuxVirtualMachineScaleSetArgs
             {
                 ResourceGroupName = resourceGroup.Name,
-                NetworkProfiles = new ScaleSetNetworkProfileArgs
+                NetworkInterfaces = new[]
                 {
-                    IpConfigurations = new ScaleSetNetworkProfileIpConfigurationArgs[] {
-                        new ScaleSetNetworkProfileIpConfigurationArgs {
-                            LoadBalancerBackendAddressPoolIds = bpePool.Id,
-                            Name = "IPConfiguration",
-                            Primary = true,
-                            SubnetId = subnet.Id,
-                        }
+                    new LinuxVirtualMachineScaleSetNetworkInterfaceArgs
+                    {
+                        IpConfigurations = new [] {
+                            new LinuxVirtualMachineScaleSetNetworkInterfaceIpConfigurationArgs {
+                                LoadBalancerBackendAddressPoolIds = {bpePool.Id},
+                                Name = "IPConfiguration",
+                                Primary = true,
+                                SubnetId = subnet.Id,
+                            }
+                        },
+                        Name = "networkprofile",
+                        Primary = true
                     },
-                    Name = "networkprofile",
-                    Primary = true
                 },
-                OsProfile = new ScaleSetOsProfileArgs
-                {
-                    ComputerNamePrefix = "vmlab",
-                    AdminUsername = "testadmin",
-                    AdminPassword = "Password1234!",
-                    CustomData =
-                        @"#!/bin/bash
+                AdminUsername = "testadmin",
+                AdminPassword = "Password1234!",
+                ComputerNamePrefix = "vmlab",
+                CustomData = System.Convert.ToBase64String(
+                    System.Text.Encoding.UTF8.GetBytes(@"#!/bin/bash
 echo ""Hello, World by $HOSTNAME!"" > index.html
-nohup python -m SimpleHTTPServer 80 &"
-                },
-                OsProfileLinuxConfig = new ScaleSetOsProfileLinuxConfigArgs
-                {
-                    DisablePasswordAuthentication = false
-                },
-                Sku = new ScaleSetSkuArgs
-                {
-                    Capacity = 1,
-                    Name = "Standard_DS1_v2",
-                    Tier = "Standard",
-                },
-                StorageProfileOsDisk = new ScaleSetStorageProfileOsDiskArgs
+nohup python -m SimpleHTTPServer 80 &")),
+                DisablePasswordAuthentication = false,
+                Sku = "Standard_DS1_V2",
+                OsDisk = new LinuxVirtualMachineScaleSetOsDiskArgs
                 {
                     Caching = "ReadWrite",
-                    CreateOption = "FromImage",
-                    ManagedDiskType = "Standard_LRS",
-                    Name = ""
+                    StorageAccountType = "Standard_LRS",
                 },
-                StorageProfileDataDisks = new ScaleSetStorageProfileDataDiskArgs
+                DataDisks = new[]
                 {
-                    Caching = "ReadWrite",
-                    CreateOption = "Empty",
-                    DiskSizeGb = 10,
-                    Lun = 0
+                    new LinuxVirtualMachineScaleSetDataDiskArgs
+                    {
+                        StorageAccountType = "Standard_LRS",
+                        Caching = "ReadWrite",
+                        CreateOption = "Empty",
+                        DiskSizeGb = 10,
+                        Lun = 0
+                    },
                 },
-                StorageProfileImageReference = new ScaleSetStorageProfileImageReferenceArgs
+                SourceImageReference = new LinuxVirtualMachineScaleSetSourceImageReferenceArgs
                 {
                     Offer = "UbuntuServer",
                     Publisher = "Canonical",
                     Sku = "16.04-LTS",
                     Version = "latest",
                 },
-                UpgradePolicyMode = "Manual"
-
+                AutomaticOsUpgradePolicy = new LinuxVirtualMachineScaleSetAutomaticOsUpgradePolicyArgs
+                {
+                    DisableAutomaticRollback = false,
+                    EnableAutomaticOsUpgrade = false,
+                },
             }, new CustomResourceOptions { DeleteBeforeReplace = true, DependsOn = bpePool });
-
 
         var autoscale = new AutoscaleSetting("vmss-autoscale",
             new AutoscaleSettingArgs
@@ -220,8 +213,8 @@ nohup python -m SimpleHTTPServer 80 &"
                 },
                 TargetResourceId = scaleSet.Id
             });
-            
-                
+
+
 
         // The public IP address is not allocated until the VM is running, so wait for that
         // resource to create, and then lookup the IP address again to report its public IP.
@@ -231,7 +224,7 @@ nohup python -m SimpleHTTPServer 80 &"
             {
                 (_, string name, string resourceGroupName) = t;
                 var ip = await GetPublicIP.InvokeAsync(new GetPublicIPArgs
-                    {Name = name, ResourceGroupName = resourceGroupName});
+                { Name = name, ResourceGroupName = resourceGroupName });
                 return ip.IpAddress;
             });
     }

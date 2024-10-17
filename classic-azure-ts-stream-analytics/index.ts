@@ -10,7 +10,7 @@ const resourceGroup = new azure.core.ResourceGroup("streams-rg");
 // Define an Event Hub Namespace with two Hubs for an input and an output data streams
 const namespace = new azure.eventhub.EventHubNamespace("streams-ns", {
     resourceGroupName: resourceGroup.name,
-    sku: "standard",
+    sku: "Standard",
 });
 
 const inputHub = new azure.eventhub.EventHub("inputs", {
@@ -20,7 +20,7 @@ const inputHub = new azure.eventhub.EventHub("inputs", {
     messageRetention: 7,
 });
 
-const consumerGroup = new azure.eventhub.EventHubConsumerGroup("analytics", {
+const consumerGroup = new azure.eventhub.ConsumerGroup("analytics", {
     resourceGroupName: resourceGroup.name,
     namespaceName: namespace.name,
     eventhubName: inputHub.name,

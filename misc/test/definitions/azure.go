@@ -63,10 +63,6 @@ var AzureTests = TestDefinitions{
 	},
 	{
 		Tags: []Tag{AzureCloud, AzureClassicProvider, TS},
-		Dir:  "classic-azure-ts-arm-template",
-	},
-	{
-		Tags: []Tag{AzureCloud, AzureClassicProvider, TS},
 		Dir:  "classic-azure-ts-stream-analytics",
 	},
 	{

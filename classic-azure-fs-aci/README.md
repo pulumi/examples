@@ -16,27 +16,28 @@ To deploy your infrastructure, follow the below steps.
 
 ### Steps
 
-1.  Create a new stack:
+1. Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1.  Configure the location to deploy the resources to:
+1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
-    ```
-    $ pulumi config set azure:location <location>
+    ```bash
+    az login
     ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Configure the location to deploy the resources to:
 
+    ```bash
+    pulumi config set azure:location <location>
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
+
+1. Run `pulumi up` to preview and deploy changes:
+
+    ```console
     $ pulumi up
     Previewing changes:
     ...
@@ -48,9 +49,9 @@ To deploy your infrastructure, follow the below steps.
     Update duration: 1m56s
     ```
 
-1.  Check the deployed container endpoint:
+1. Check the deployed container endpoint:
 
-    ```
+    ```console
     $ pulumi stack output endpoint
     https://acifsharp.westeurope.azurecontainer.io
     $ curl "$(pulumi stack output endpoint)"
@@ -63,11 +64,11 @@ To deploy your infrastructure, follow the below steps.
     </body></html>
     ```
 
-6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
+1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
-7. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
     ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
+    pulumi destroy --yes
+    pulumi stack rm --yes
     ```

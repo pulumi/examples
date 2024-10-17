@@ -6,7 +6,7 @@ open Pulumi.Azure.AppInsights
 open Pulumi.Azure.AppService
 open Pulumi.Azure.AppService.Inputs
 open Pulumi.Azure.Core
-open Pulumi.Azure.Sql
+open Pulumi.Azure.MSSql
 open Pulumi.Azure.Storage
 
 let infra () =
@@ -19,13 +19,12 @@ let infra () =
                 AccountReplicationType = input "LRS",
                 AccountTier = input "Standard"))
 
-    let sku = PlanSkuArgs(Tier = input "Basic", Size = input "B1")
     let appServicePlan = 
-        Plan("asp", 
-            PlanArgs
+        ServicePlan("asp", 
+            ServicePlanArgs
                (ResourceGroupName = io resourceGroup.Name,
-                Kind = input "App",
-                Sku = input sku))
+                OsType = input "Linux",
+                SkuName = input "B1"))
 
     let container = 
         Container("zips", 
@@ -54,8 +53,8 @@ let infra () =
     let username = config.Get "sqlAdmin"
     let password = config.RequireSecret "sqlPassword"
     let sqlServer = 
-        SqlServer("sql", 
-            SqlServerArgs
+        Server("sql", 
+            ServerArgs
                (ResourceGroupName = io resourceGroup.Name,
                 AdministratorLogin = input (if not(isNull username) then username else "pulumi"),
                 AdministratorLoginPassword = io password,
@@ -64,9 +63,8 @@ let infra () =
     let database =
         Database("db",
             DatabaseArgs
-               (ResourceGroupName = io resourceGroup.Name,
-                ServerName = io sqlServer.Name,
-                RequestedServiceObjectiveName = input "S0"))
+               (ServerId = io sqlServer.Id,
+                SkuName = input "S0"))
 
     let connectionString = 
         Outputs.pair3 sqlServer.Name database.Name password
@@ -76,7 +74,7 @@ let infra () =
                 server database username pwd)
 
     let connectionStringSetting =
-        AppServiceConnectionStringArgs
+        LinuxWebAppConnectionStringArgs
            (Name = input "db",
             Type = input "SQLAzure",
             Value = io connectionString)
@@ -87,19 +85,19 @@ let infra () =
             sprintf "InstrumentationKey=%s" key)
 
     let app = 
-        AppService("app", 
-            AppServiceArgs
+        LinuxWebApp("app", 
+            LinuxWebAppArgs
                (ResourceGroupName = io resourceGroup.Name,
-                AppServicePlanId = io appServicePlan.Id,
+                ServicePlanId = io appServicePlan.Id,
                 AppSettings = inputMap 
                     ["WEBSITE_RUN_FROM_PACKAGE", io codeBlobUrl;
                     "APPINSIGHTS_INSTRUMENTATIONKEY", io appInsights.InstrumentationKey;
                     "APPLICATIONINSIGHTS_CONNECTION_STRING", io appInsightsConnectionString;
                     "ApplicationInsightsAgent_EXTENSION_VERSION", input "~2"],
-
+                SiteConfig = LinuxWebAppSiteConfigArgs(),
                 ConnectionStrings = inputList [input connectionStringSetting]))
 
-    dict [("endpoint", app.DefaultSiteHostname :> obj)]
+    dict [("endpoint", app.DefaultHostname :> obj)]
 
 [<EntryPoint>]
 let main _ =

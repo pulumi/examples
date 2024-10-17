@@ -20,31 +20,32 @@ can be composed into a higher-level, reusable abstraction.
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init
+    pulumi stack init
     ```
 
 1. Set the Azure environment:
 
     ```bash
-    $ pulumi config set azure:environment public
+    pulumi config set azure:environment public
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
 1. Set the required configuration for this example. This example requires you to supply a username and password to
 the virtual machine that we are going to create.
 
     ```bash
-    $ pulumi config set username myusername
+    pulumi config set username myusername
     ```
 
     The password is a secret, so we can ask Pulumi to encrypt the configuration:
 
     ```bash
-    $ pulumi config set --secret password Hunter2hunter2
+    pulumi config set --secret password Hunter2hunter2
     ```
 
 1. Run `pulumi up` to preview and deploy the changes:
 
-    ```bash
+    ```console
     $ pulumi up
     Previewing update (dev):
 
@@ -85,21 +86,21 @@ the virtual machine that we are going to create.
 
 1. Get the IP address of the newly-created instance from the stack's outputs:
 
-    ```bash
+    ```console
     $ pulumi stack output public_ip
     13.64.196.146
     ```
 
 1. Check to see that your server is now running:
 
-    ```bash
+    ```console
     $ curl http://$(pulumi stack output public_ip)
     Hello, World!
     ```
 
 1. Destroy the stack:
 
-    ```bash
+    ```console
     $ pulumi destroy -y
     Previewing destroy (dev):
 
