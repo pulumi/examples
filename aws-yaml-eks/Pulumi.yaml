@@ -21,9 +21,9 @@ resources:
   cluster:
     type: eks:Cluster
     properties:
+      authenticationMode: API_AND_CONFIG_MAP
       vpcId: ${vpcId}
       subnetIds: ${subnetIds}
-      instanceType: "t2.medium"
       desiredCapacity: 2
       minSize: 1
       maxSize: 2
