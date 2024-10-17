@@ -1,0 +1,6 @@
+name: kubernetes-acr-keda
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: k8s Cluster with Keda and Azure Contaier Register
