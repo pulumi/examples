@@ -9,8 +9,8 @@ const vpc = new awsx.ec2.Vpc("vpc", { numberOfAvailabilityZones: 2 });
 // Create the EKS cluster itself and a deployment of the Kubernetes dashboard.
 const cluster = new eks.Cluster("cluster", {
     vpcId: vpc.vpcId,
+    authenticationMode: eks.AuthenticationMode.Api,
     subnetIds: vpc.publicSubnetIds,
-    instanceType: "t2.medium",
     desiredCapacity: 2,
     minSize: 1,
     maxSize: 2,

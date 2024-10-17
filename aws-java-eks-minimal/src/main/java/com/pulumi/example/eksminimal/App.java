@@ -12,6 +12,7 @@ import com.pulumi.aws.ec2.inputs.GetVpcArgs;
 import com.pulumi.aws.ec2.outputs.GetVpcResult;
 import com.pulumi.eks.Cluster;
 import com.pulumi.eks.ClusterArgs;
+import com.pulumi.eks.enums.AuthenticationMode;
 
 public class App {
     public static void main(String[] args) {
@@ -40,8 +41,8 @@ public class App {
 
         var cluster = new Cluster("my-cluster", ClusterArgs.builder()
                 .vpcId(vpcIdOutput)
+                .authenticationMode(AuthenticationMode.ApiAndConfigMap)
                 .subnetIds(subnetIdsOutput)
-                .instanceType("t2.micro")
                 .minSize(1)
                 .maxSize(2)
                 .build());

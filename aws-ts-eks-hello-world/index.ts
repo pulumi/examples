@@ -13,11 +13,11 @@ const vpc = new awsx.ec2.Vpc("vpc", { numberOfAvailabilityZones: 2 });
 const cluster = new eks.Cluster(name, {
     vpcId: vpc.vpcId,
     subnetIds: vpc.publicSubnetIds,
+    authenticationMode: eks.AuthenticationMode.Api,
     desiredCapacity: 2,
     minSize: 1,
     maxSize: 2,
     storageClasses: "gp2",
-    deployDashboard: false,
 });
 
 // Export the clusters' kubeconfig.

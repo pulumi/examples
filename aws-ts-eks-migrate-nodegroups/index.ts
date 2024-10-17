@@ -35,7 +35,6 @@ const myCluster = new eks.Cluster(`${projectName}`, {
     subnetIds: allVpcSubnets,
     nodeAssociatePublicIpAddress: false,
     skipDefaultNodeGroup: true,
-    deployDashboard: false,
     instanceRoles: roles,
     enabledClusterLogTypes: ["api", "audit", "authenticator",
         "controllerManager", "scheduler"],
