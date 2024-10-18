@@ -100,22 +100,22 @@ public class App {
                 .applyValue(a -> a.clusterCaCertificate().orElseThrow());
 
         var yamlTemplate = """
-apiVersion: v1,
-clusters:,
-- cluster:,
-    certificate-authority-data: {2},
-    server: https://{1},
-  name: {0},
-contexts:,
-- context:,
-    cluster: {0},
-    user: {0},
-  name: {0},
-current-context: {0},
-kind: Config,
-preferences: '{}',
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: {2}
+    server: https://{1}
+  name: {0}
+contexts:
+- context:
+    cluster: {0}
+    user: {0}
+  name: {0}
+current-context: {0}
+kind: Config
+preferences: '{}'
 users:,
-- name: {0},
+- name: {0}
   user:
     exec:
       apiVersion: client.authentication.k8s.io/v1beta1
@@ -125,16 +125,17 @@ users:,
       provideClusterInfo: true
             """;
 
-        var kubeconfig = cluster.endpoint()
+        // Renaming the variable kubeConfig to be more in line of other declared variables in camelCase
+        var kubeConfig = cluster.endpoint()
                 .apply(endpoint -> masterAuthClusterCaCertificate.applyValue(
                         caCert -> MessageFormat.format(yamlTemplate, clusterName, endpoint, caCert)));
 
-        ctx.export("kubeconfig", kubeconfig);
+        ctx.export("kubeConfig", kubeConfig);
 
         // Create a Kubernetes provider instance that uses our cluster from above.
         final var clusterProvider = new Provider(name,
                 ProviderArgs.builder()
-                        .kubeconfig(kubeconfig)
+                        .kubeconfig(kubeConfig)
                         .build(),
                 CustomResourceOptions.builder()
                         .dependsOn(nodePool, cluster)
