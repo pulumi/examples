@@ -1,0 +1,21 @@
+name: gcp-ts-static-website-ssl
+description: Pulumi app with a Static Website hosted on GCP with Managed SSL Certificates
+runtime: nodejs
+
+template:
+  description: A static website on Google Cloud
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp-ts-static-website-ssl:domain:
+      description: Your domain that you will use to reach the website
+      default: my.domain.com
+    gcp-ts-static-website-ssl:path:
+      description: The path to the folder containing the website
+      default: ./www
+    indexDocument:
+      description: The file to use for top-level pages
+      default: index.html
+    errorDocument:
+      description: The file to use for error pages
+      default: error.html
