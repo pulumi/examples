@@ -5,7 +5,7 @@ import pulumi
 import pulumi_aws as aws
 
 # The location of the built dotnet3.1 application to deploy
-dotnet_application_publish_folder = "./app/bin/Debug/net6.0/publish"
+dotnet_application_publish_folder = "./app/bin/Debug/net8.0/publish"
 dotnet_application_entry_point = "app::app.Functions::GetAsync"
 # The stage name to use for the API Gateway URL
 custom_stage_name = "api"
@@ -72,7 +72,7 @@ provisioned_concurrent_executions = config.get_float('provisionedConcurrency')
 
 lambda_func = aws.lambda_.Function("mylambda",
     opts=pulumi.ResourceOptions(depends_on=[policy]),
-    runtime="dotnetcore3.1",
+    runtime="dotnet8",
     code=pulumi.AssetArchive({
         ".": pulumi.FileArchive(dotnet_application_publish_folder),
     }),
