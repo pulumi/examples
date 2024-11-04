@@ -13,7 +13,7 @@ const pulumiOrg = pulumi.getOrganization();
 // NOTE: At the time of writing, if you are still using the legacy "default"
 // organization, the format for the audience OIDC claim is different. Best
 // practice is to avoid using the legacy default project.
-const oidcAudience = escProject == "default" ? pulumiOrg : `aws:${pulumiOrg}`;
+const oidcAudience = escProject === "default" ? pulumiOrg : `aws:${pulumiOrg}`;
 
 const oidcIdpUrl: string = "https://api.pulumi.com/oidc";
 
@@ -50,6 +50,7 @@ const role = new aws.iam.Role("pulumi-cloud-admin", {
     assumeRolePolicy: policyDocument.json,
 });
 
+// tslint:disable-next-line:no-unused-expression
 new aws.iam.RolePolicyAttachment("policy", {
     policyArn: "arn:aws:iam::aws:policy/AdministratorAccess",
     role: role.name,
@@ -70,6 +71,7 @@ values:
     AWS_SESSION_TOKEN: \${aws.login.sessionToken}
 `;
 
+// tslint:disable-next-line:no-unused-expression
 new pulumiservice.Environment("aws-esc-oidc-env", {
     organization: pulumiOrg,
     project: escProject,
