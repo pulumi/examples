@@ -49,7 +49,7 @@ const blob = new azure.storage.Blob(`${prefix}-b`, {
     storageContainerName: storageContainer.name,
     type: "Block",
 
-    source: new pulumi.asset.FileArchive("../src/bin/Debug/netcoreapp2.1/publish"),
+    source: new pulumi.asset.FileArchive("../src/bin/Debug/net8.0/publish"),
 });
 
 const codeBlobUrl = azure.storage.signedBlobReadUrl(blob, storageAccount);

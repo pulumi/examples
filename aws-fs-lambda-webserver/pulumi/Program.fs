@@ -94,8 +94,8 @@ let infra () =
         Function(
             "basicLambda",
             FunctionArgs(
-                Runtime = inputUnion2Of2 Pulumi.Aws.Lambda.Runtime.DotnetCore3d1,
-                Code    = input (FileArchive "../LambdaWebServer/bin/Debug/net6.0/publish" :> Archive),
+                Runtime = inputUnion2Of2 Pulumi.Aws.Lambda.Runtime.Dotnet8,
+                Code    = input (FileArchive "../LambdaWebServer/bin/Debug/net8.0/publish" :> Archive),
                 Handler = input "LambdaWebServer::Setup+LambdaEntryPoint::FunctionHandlerAsync",
                 Role    = io lambdaRole.Arn,
                 Timeout = input 30

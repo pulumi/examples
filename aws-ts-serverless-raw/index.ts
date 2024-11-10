@@ -4,7 +4,7 @@ import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
 // The location of the built dotnet3.1 application to deploy
-const dotNetApplicationPublishFolder = "./app/bin/Debug/net6.0/publish";
+const dotNetApplicationPublishFolder = "./app/bin/Debug/net8.0/publish";
 const dotNetApplicationEntryPoint = "app::app.Functions::GetAsync";
 // The stage name to use for the API Gateway URL
 const stageName = "api";
@@ -54,7 +54,7 @@ const provisionedConcurrentExecutions = config.getNumber("provisionedConcurrency
 
 // Create a Lambda function, using code from the `./app` folder.
 const lambda = new aws.lambda.Function("mylambda", {
-    runtime: aws.lambda.DotnetCore3d1Runtime,
+    runtime: "dotnet8",
     code: new pulumi.asset.AssetArchive({
         ".": new pulumi.asset.FileArchive(dotNetApplicationPublishFolder),
     }),

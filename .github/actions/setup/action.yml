@@ -54,7 +54,7 @@ inputs:
     default: 1.21
 
   dotnet-version:
-    default: 6
+    default: 8
 
   gotestfmt-version:
     default: v2.5.0
