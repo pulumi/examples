@@ -13,10 +13,12 @@ class SpokeWorkloadArgs:
 
 
 class SpokeWorkload(pulumi.ComponentResource):
-    '''Comprises a small EC2 instance running Amazon Linux 2 with SSM shell
-    access and security group to verify network connectivity.'''
+    """Comprises a small EC2 instance running Amazon Linux 2 with SSM shell
+    access and security group to verify network connectivity."""
 
-    def __init__(self, name: str, args: SpokeWorkloadArgs, opts: pulumi.ResourceOptions = None) -> None:
+    def __init__(
+        self, name: str, args: SpokeWorkloadArgs, opts: pulumi.ResourceOptions = None
+    ) -> None:
         super().__init__("awsAdvancedNetworking:index:SpokeWorkload", name, None, opts)
 
         sg = aws.ec2.SecurityGroup(
@@ -30,43 +32,39 @@ class SpokeWorkload(pulumi.ComponentResource):
                         description="Allow everything",
                         protocol="-1",
                         from_port=0,
-                        to_port=0
+                        to_port=0,
                     ),
-                ]
+                ],
             ),
-            opts=pulumi.ResourceOptions(
-                parent=self
-            ),
+            opts=pulumi.ResourceOptions(parent=self),
         )
 
         ec2_role = aws.iam.Role(
             f"{name}-instance-role",
             aws.iam.RoleArgs(
-                assume_role_policy=json.dumps({
-                    "Version": "2012-10-17",
-                    "Statement": {
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": "ec2.amazonaws.com",
+                assume_role_policy=json.dumps(
+                    {
+                        "Version": "2012-10-17",
+                        "Statement": {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "ec2.amazonaws.com",
+                            },
+                            "Action": "sts:AssumeRole",
                         },
-                        "Action": "sts:AssumeRole",
-                    },
-                })
+                    }
+                )
             ),
-            opts=pulumi.ResourceOptions(
-                parent=self
-            ),
+            opts=pulumi.ResourceOptions(parent=self),
         )
 
         aws.iam.RolePolicyAttachment(
             f"{name}-role-policy-attachment",
             aws.iam.RolePolicyAttachmentArgs(
                 role=ec2_role.name,
-                policy_arn="arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+                policy_arn="arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
             ),
-            opts=pulumi.ResourceOptions(
-                parent=self
-            ),
+            opts=pulumi.ResourceOptions(parent=self),
         )
 
         instance_profile = aws.iam.InstanceProfile(
@@ -74,9 +72,7 @@ class SpokeWorkload(pulumi.ComponentResource):
             aws.iam.InstanceProfileArgs(
                 role=ec2_role.name,
             ),
-            opts=pulumi.ResourceOptions(
-                parent=self
-            ),
+            opts=pulumi.ResourceOptions(parent=self),
         )
 
         amazon_linux_2 = aws.ec2.get_ami(
@@ -90,7 +86,7 @@ class SpokeWorkload(pulumi.ComponentResource):
                 aws.ec2.GetAmiFilterArgs(
                     name="owner-alias",
                     values=["amazon"],
-                )
+                ),
             ],
         )
 
@@ -106,7 +102,5 @@ class SpokeWorkload(pulumi.ComponentResource):
                 },
                 iam_instance_profile=instance_profile.name,
             ),
-            opts=pulumi.ResourceOptions(
-                parent=self
-            ),
+            opts=pulumi.ResourceOptions(parent=self),
         )

@@ -57,6 +57,32 @@ jobs:
           npm install
           npm test
 
+  format-py:
+      name: Python Code Format and Validation
+      runs-on: pulumi-ubuntu-8core
+
+      steps:
+        # Step 1: Checkout the repository
+        - name: Checkout Code
+          uses: actions/checkout@v3
+
+        # Step 2: Set up Python
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: 3.9  # Adjust the version as needed
+
+        # Step 3: Install Make (already installed on Ubuntu, but explicit just in case)
+        - name: Ensure Make is Installed
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y make
+
+        # Step 4: Run Makefile targets
+        - name: Run Make Targets
+          run: |
+            make check_python_formatting
+
   unit-py:
     name: Python unit tests
     runs-on: pulumi-ubuntu-8core

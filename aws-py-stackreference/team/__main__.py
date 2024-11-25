@@ -18,15 +18,14 @@ ami_id = get_ami(
     filters=[
         GetAmiFilterArgs(
             name="name",
-            values=["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
-        )]
+            values=["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"],
+        )
+    ],
 ).id
 
 instance = ec2.Instance(
-    "tagged",
-    instance_type="t2.medium",
-    ami=ami_id,
-    tags=combines_tags)
+    "tagged", instance_type="t2.medium", ami=ami_id, tags=combines_tags
+)
 
 export("instance_id", instance.id)
 export("instance_tags", instance.tags)

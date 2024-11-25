@@ -8,45 +8,47 @@ from pulumi_aws import appsync, dynamodb, iam
 table = dynamodb.Table(
     "tenants",
     hash_key="id",
-    attributes=[dynamodb.TableAttributeArgs(
-        name="id",
-        type="S"
-    )],
+    attributes=[dynamodb.TableAttributeArgs(name="id", type="S")],
     read_capacity=1,
-    write_capacity=1)
+    write_capacity=1,
+)
 
 ## Create IAM role and policy wiring
 role = iam.Role(
     "iam-role",
-    assume_role_policy=json.dumps({
-        "Version": "2012-10-17",
-        "Statement": [{
-            "Action": "sts:AssumeRole",
-            "Principal": {
-                "Service": "appsync.amazonaws.com"
-            },
-            "Effect": "Allow",
-        }]
-    }))
+    assume_role_policy=json.dumps(
+        {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Action": "sts:AssumeRole",
+                    "Principal": {"Service": "appsync.amazonaws.com"},
+                    "Effect": "Allow",
+                }
+            ],
+        }
+    ),
+)
 
 policy = iam.Policy(
     "iam-policy",
-    policy= Output.json_dumps({
-        "Version": "2012-10-17",
-        "Statement": [{
-            "Action": [
-                "dynamodb:PutItem",
-                "dynamodb:GetItem"
+    policy=Output.json_dumps(
+        {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Action": ["dynamodb:PutItem", "dynamodb:GetItem"],
+                    "Effect": "Allow",
+                    "Resource": [table.arn],
+                }
             ],
-            "Effect": "Allow",
-            "Resource": [table.arn]
-        }]
-    }))
+        }
+    ),
+)
 
 attachment = iam.RolePolicyAttachment(
-    "iam-policy-attachment",
-    role=role.name,
-    policy_arn=policy.arn)
+    "iam-policy-attachment", role=role.name, policy_arn=policy.arn
+)
 
 ## GraphQL Schema
 schema = """
@@ -70,15 +72,9 @@ type Query {
 """
 
 ## Create API accessible with a key
-api = appsync.GraphQLApi(
-    "key",
-    authentication_type="API_KEY",
-    schema=schema
-)
+api = appsync.GraphQLApi("key", authentication_type="API_KEY", schema=schema)
 
-api_key = appsync.ApiKey(
-    "key",
-    api_id=api.id)
+api_key = appsync.ApiKey("key", api_id=api.id)
 
 random_string = random.RandomString(
     "random-datasource-name",
@@ -96,7 +92,8 @@ data_source = appsync.DataSource(
     dynamodb_config=appsync.DataSourceDynamodbConfigArgs(
         table_name=table.name,
     ),
-    service_role_arn=role.arn)
+    service_role_arn=role.arn,
+)
 
 ## A resolver for the [getTenantById] query
 get_resolver = appsync.Resolver(
@@ -113,7 +110,8 @@ get_resolver = appsync.Resolver(
         }
     }
     """,
-    response_template="$util.toJson($ctx.result)")
+    response_template="$util.toJson($ctx.result)",
+)
 
 ## A resolver for the [addTenant] mutation
 add_resolver = appsync.Resolver(
@@ -133,7 +131,8 @@ add_resolver = appsync.Resolver(
         }
     }
     """,
-    response_template="$util.toJson($ctx.result)")
+    response_template="$util.toJson($ctx.result)",
+)
 
 export("endpoint", api.uris["GRAPHQL"])
 export("key", api_key.key)

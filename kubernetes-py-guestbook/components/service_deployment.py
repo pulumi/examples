@@ -35,23 +35,30 @@ class ServiceDeployment(ComponentResource):
     service: Service
     ip_address: Output[str]
 
-    def __init__(self, name: str, image: str,
-                 resources: ResourceRequirementsArgs = None, replicas: int = None,
-                 ports: Sequence[int] = None, allocate_ip_address: bool = None,
-                 is_minikube: bool = None, opts: ResourceOptions = None):
-        super().__init__('k8sx:component:ServiceDeployment', name, {}, opts)
+    def __init__(
+        self,
+        name: str,
+        image: str,
+        resources: ResourceRequirementsArgs = None,
+        replicas: int = None,
+        ports: Sequence[int] = None,
+        allocate_ip_address: bool = None,
+        is_minikube: bool = None,
+        opts: ResourceOptions = None,
+    ):
+        super().__init__("k8sx:component:ServiceDeployment", name, {}, opts)
 
         labels = {"app": name}
         container = ContainerArgs(
             name=name,
             image=image,
-            resources=resources or ResourceRequirementsArgs(
-                requests={
-                    "cpu": "100m",
-                    "memory": "100Mi"
-                },
+            resources=resources
+            or ResourceRequirementsArgs(
+                requests={"cpu": "100m", "memory": "100Mi"},
             ),
-            ports=[ContainerPortArgs(container_port=p) for p in ports] if ports else None,
+            ports=(
+                [ContainerPortArgs(container_port=p) for p in ports] if ports else None
+            ),
         )
         self.deployment = Deployment(
             name,
@@ -63,7 +70,8 @@ class ServiceDeployment(ComponentResource):
                     spec=PodSpecArgs(containers=[container]),
                 ),
             ),
-            opts=pulumi.ResourceOptions(parent=self))
+            opts=pulumi.ResourceOptions(parent=self),
+        )
         self.service = Service(
             name,
             metadata=ObjectMetaArgs(
@@ -71,15 +79,28 @@ class ServiceDeployment(ComponentResource):
                 labels=self.deployment.metadata.apply(lambda m: m.labels),
             ),
             spec=ServiceSpecArgs(
-                ports=[ServicePortArgs(port=p, target_port=p) for p in ports] if ports else None,
-                selector=self.deployment.spec.apply(lambda s: s.template.metadata.labels),
-                type=("ClusterIP" if is_minikube else "LoadBalancer") if allocate_ip_address else None,
+                ports=(
+                    [ServicePortArgs(port=p, target_port=p) for p in ports]
+                    if ports
+                    else None
+                ),
+                selector=self.deployment.spec.apply(
+                    lambda s: s.template.metadata.labels
+                ),
+                type=(
+                    ("ClusterIP" if is_minikube else "LoadBalancer")
+                    if allocate_ip_address
+                    else None
+                ),
             ),
-            opts=pulumi.ResourceOptions(parent=self))
+            opts=pulumi.ResourceOptions(parent=self),
+        )
         if allocate_ip_address:
             if is_minikube:
                 self.ip_address = self.service.spec.apply(lambda s: s.cluster_ip)
             else:
-                ingress=self.service.status.apply(lambda s: s.load_balancer.ingress[0])
+                ingress = self.service.status.apply(
+                    lambda s: s.load_balancer.ingress[0]
+                )
                 self.ip_address = ingress.apply(lambda i: i.ip or i.hostname or "")
         self.register_outputs({})

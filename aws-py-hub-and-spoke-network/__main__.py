@@ -20,10 +20,8 @@ tgw = aws.ec2transitgateway.TransitGateway(
         description=f"Transit Gateway - {project}",
         default_route_table_association="disable",
         default_route_table_propagation="disable",
-        tags={
-            "Name": "Pulumi"
-        }
-    )
+        tags={"Name": "Pulumi"},
+    ),
 )
 
 spoke_tgw_route_table = aws.ec2transitgateway.RouteTable(
@@ -32,7 +30,7 @@ spoke_tgw_route_table = aws.ec2transitgateway.RouteTable(
         transit_gateway_id=tgw.id,
         tags={
             "Name": "spoke-tgw",
-        }
+        },
     ),
     opts=pulumi.ResourceOptions(
         parent=tgw,
@@ -45,7 +43,7 @@ inspection_tgw_route_table = aws.ec2transitgateway.RouteTable(
         transit_gateway_id=tgw.id,
         tags={
             "Name": "insp-tgw-route-table",
-        }
+        },
     ),
     opts=pulumi.ResourceOptions(
         parent=tgw,
@@ -64,7 +62,7 @@ insp_vpc = InspectionVpc(
         inspection_tgw_route_table_id=inspection_tgw_route_table.id,
         spoke_tgw_route_table_id=spoke_tgw_route_table.id,
         firewall_policy_arn=firewall_policy_arn if create_firewall else None,
-    )
+    ),
 )
 
 pulumi.export("nat-gateway-eip", insp_vpc.eip.public_ip)
@@ -83,7 +81,7 @@ aws.ec2transitgateway.RouteTablePropagation(
     aws.ec2transitgateway.RouteTablePropagationArgs(
         transit_gateway_attachment_id=spoke1_vpc.tgw_attachment.id,
         transit_gateway_route_table_id=inspection_tgw_route_table.id,
-    )
+    ),
 )
 
 spoke1_workload = SpokeWorkload(
@@ -91,7 +89,7 @@ spoke1_workload = SpokeWorkload(
     SpokeWorkloadArgs(
         spoke_instance_subnet_id=spoke1_vpc.workload_subnet_ids[0],
         spoke_vpc_id=spoke1_vpc.vpc.vpc_id,
-    )
+    ),
 )
 
 spoke2_vpc = SpokeVpc(
@@ -118,5 +116,5 @@ spoke2_workload = SpokeWorkload(
     SpokeWorkloadArgs(
         spoke_instance_subnet_id=spoke2_vpc.workload_subnet_ids[0],
         spoke_vpc_id=spoke2_vpc.vpc.vpc_id,
-    )
+    ),
 )

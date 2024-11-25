@@ -4,8 +4,7 @@ import asyncpg  # type: ignore[import]
 
 
 class ConnectionHealth(Protocol):
-    async def is_connected(self) -> bool:
-        ...
+    async def is_connected(self) -> bool: ...
 
 
 class PostgresConnectionHealth(NamedTuple):

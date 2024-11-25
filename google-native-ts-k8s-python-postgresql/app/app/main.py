@@ -17,7 +17,7 @@ def create_app(conn_health: ConnectionHealth) -> App:
 
 async def main() -> None:
     config = Config()  # type: ignore  # values are loaded from env vars
-    
+
     async with asyncpg.create_pool(  # type: ignore
         host=config.db_host,
         port=config.db_port,

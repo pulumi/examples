@@ -12,7 +12,8 @@ profile = cdn.Profile(
     resource_group_name=resource_group.name,
     sku=cdn.SkuArgs(
         name=cdn.SkuName.STANDARD_MICROSOFT,
-    ))
+    ),
+)
 
 storage_account = storage.StorageAccount(
     "storageaccount",
@@ -37,10 +38,14 @@ storage_account = storage.StorageAccount(
     resource_group_name=resource_group.name,
     sku=storage.SkuArgs(
         name=storage.SkuName.STANDARD_LRS,
-    ))
+    ),
+)
 
 endpoint_origin = storage_account.primary_endpoints.apply(
-    lambda primary_endpoints: primary_endpoints.web.replace("https://", "").replace("/", ""))
+    lambda primary_endpoints: primary_endpoints.web.replace("https://", "").replace(
+        "/", ""
+    )
+)
 
 endpoint = cdn.Endpoint(
     "endpoint",
@@ -48,14 +53,17 @@ endpoint = cdn.Endpoint(
     is_http_allowed=False,
     is_https_allowed=True,
     origin_host_header=endpoint_origin,
-    origins=[cdn.DeepCreatedOriginArgs(
-        host_name=endpoint_origin,
-        https_port=443,
-        name="origin-storage-account",
-    )],
+    origins=[
+        cdn.DeepCreatedOriginArgs(
+            host_name=endpoint_origin,
+            https_port=443,
+            name="origin-storage-account",
+        )
+    ],
     profile_name=profile.name,
     query_string_caching_behavior=cdn.QueryStringCachingBehavior.NOT_SET,
-    resource_group_name=resource_group.name)
+    resource_group_name=resource_group.name,
+)
 
 # Enable static website support
 static_website = storage.StorageAccountStaticWebsite(
@@ -63,7 +71,8 @@ static_website = storage.StorageAccountStaticWebsite(
     account_name=storage_account.name,
     resource_group_name=resource_group.name,
     index_document="index.html",
-    error404_document="404.html")
+    error404_document="404.html",
+)
 
 # Upload the files
 index_html = storage.Blob(
@@ -72,18 +81,22 @@ index_html = storage.Blob(
     account_name=storage_account.name,
     container_name=static_website.container_name,
     source=pulumi.FileAsset("./wwwroot/index.html"),
-    content_type="text/html")
+    content_type="text/html",
+)
 notfound_html = storage.Blob(
     "notfound_html",
     resource_group_name=resource_group.name,
     account_name=storage_account.name,
     container_name=static_website.container_name,
     source=pulumi.FileAsset("./wwwroot/404.html"),
-    content_type="text/html")
+    content_type="text/html",
+)
 
 # Web endpoint to the website
 pulumi.export("staticEndpoint", storage_account.primary_endpoints.web)
 
 # CDN endpoint to the website.
 # Allow it some time after the deployment to get ready.
-pulumi.export("cdnEndpoint", endpoint.host_name.apply(lambda host_name: f"https://{host_name}"))
+pulumi.export(
+    "cdnEndpoint", endpoint.host_name.apply(lambda host_name: f"https://{host_name}")
+)

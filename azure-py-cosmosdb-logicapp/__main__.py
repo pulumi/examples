@@ -18,20 +18,24 @@ storage_account = storage.StorageAccount(
     sku=storage.SkuArgs(
         name=storage.SkuName.STANDARD_LRS,
     ),
-    kind=storage.Kind.STORAGE_V2)
+    kind=storage.Kind.STORAGE_V2,
+)
 
 # Cosmos DB Account
 cosmosdb_account = documentdb.DatabaseAccount(
     "logicappdemo-cdb",
     resource_group_name=resource_group.name,
     database_account_offer_type=documentdb.DatabaseAccountOfferType.STANDARD,
-    locations=[documentdb.LocationArgs(
-        location_name=resource_group.location,
-        failover_priority=0,
-    )],
+    locations=[
+        documentdb.LocationArgs(
+            location_name=resource_group.location,
+            failover_priority=0,
+        )
+    ],
     consistency_policy=documentdb.ConsistencyPolicyArgs(
         default_consistency_level=documentdb.DefaultConsistencyLevel.SESSION,
-    ))
+    ),
+)
 
 # Cosmos DB Database
 db = documentdb.SqlResourceSqlDatabase(
@@ -40,7 +44,8 @@ db = documentdb.SqlResourceSqlDatabase(
     account_name=cosmosdb_account.name,
     resource=documentdb.SqlDatabaseResourceArgs(
         id="sqldb",
-    ))
+    ),
+)
 
 # Cosmos DB SQL Container
 db_container = documentdb.SqlResourceSqlContainer(
@@ -53,19 +58,23 @@ db_container = documentdb.SqlResourceSqlContainer(
         partition_key=documentdb.ContainerPartitionKeyArgs(
             paths=["/myPartitionKey"],
             kind="Hash",
-        )
-    ))
+        ),
+    ),
+)
 
 account_keys = documentdb.list_database_account_keys_output(
-    account_name=cosmosdb_account.name,
-    resource_group_name=resource_group.name)
+    account_name=cosmosdb_account.name, resource_group_name=resource_group.name
+)
 
 client_config = pulumi.Output.from_input(authorization.get_client_config())
 
 api_id = pulumi.Output.concat(
-    "/subscriptions/", client_config.subscription_id,
-    "/providers/Microsoft.Web/locations/", resource_group.location,
-    "/managedApis/documentdb")
+    "/subscriptions/",
+    client_config.subscription_id,
+    "/providers/Microsoft.Web/locations/",
+    resource_group.location,
+    "/managedApis/documentdb",
+)
 
 # API Connection to be used in a Logic App
 connection = web.Connection(
@@ -80,7 +89,8 @@ connection = web.Connection(
             "databaseAccount": cosmosdb_account.name,
             "access_key": account_keys.primary_master_key,
         },
-    ))
+    ),
+)
 
 # Logic App with an HTTP trigger and Cosmos DB action
 workflow = logic.Workflow(
@@ -123,7 +133,8 @@ workflow = logic.Workflow(
                     },
                     "method": "post",
                     "path": pulumi.Output.all(db.name, db_container.name).apply(
-                        lambda arg: f"/dbs/{arg[0]}/colls/{arg[1]}/docs"),
+                        lambda arg: f"/dbs/{arg[0]}/colls/{arg[1]}/docs"
+                    ),
                 },
             },
         },
@@ -138,13 +149,15 @@ workflow = logic.Workflow(
                 },
             },
         ),
-    })
+    },
+)
 
 
 callback_urls = logic.list_workflow_trigger_callback_url_output(
     resource_group_name=resource_group.name,
     workflow_name=workflow.name,
-    trigger_name="Receive_post")
+    trigger_name="Receive_post",
+)
 
 
 # Export the HTTP endpoint

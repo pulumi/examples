@@ -1,6 +1,6 @@
 all: ensure only_test
 
-ensure:
+ensure: setup_python
 	cd misc/test && go mod tidy
 	cd misc/test && go mod download
 	npm --prefix testing-unit-ts/mocha install
@@ -32,3 +32,32 @@ test_example.%:
 bench_example.%:
 	mkdir -p ./traces
 	cd misc/test && PULUMI_TRACING_DIR=${PWD}/traces go test -test.v -run "^$*$$" -tags all
+
+.PHONY: format setup_python clean
+
+# Create a virtual environment and install black
+setup_python:
+	@if [ ! -d "venv" ]; then \
+		python3 -m venv venv; \
+		venv/bin/pip install --upgrade pip; \
+		venv/bin/pip install black; \
+		echo "Virtual environment created and black installed."; \
+	else \
+		echo "Virtual environment already exists."; \
+	fi
+
+# Validate that all Python files are properly formatted with Black
+check_python_formatting: setup_python
+	@if find . -name "*.py" -not -path "./venv/*" | xargs venv/bin/black --check; then \
+		echo "All Python files are properly formatted."; \
+	else \
+		echo "Some files are not formatted. Run 'make format' to fix."; \
+		exit 1; \
+	fi
+# Run Black against all Python files in the project, excluding venv
+format: setup_python
+	find . -name "*.py" -not -path "./venv/*" | xargs venv/bin/black
+
+# Clean up the virtual environment
+clean:
+	rm -rf venv
