@@ -5,8 +5,8 @@
 	},
 	"dependencies": {
 		"typescript": "^4.0.0",
-		"@pulumi/pulumi": "3.105.0",
-		"@pulumi/aws": "6.19.0",
-		"@pulumi/docker": "4.5.1"
+		"@pulumi/pulumi": "3.142.0",
+		"@pulumi/aws": "6.63.0",
+		"@pulumi/docker": "4.5.7"
 	}
 }

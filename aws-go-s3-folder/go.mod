@@ -4,7 +4,7 @@ go 1.21.12
 
 toolchain go1.23.1
 
-require github.com/pulumi/pulumi/sdk/v3 v3.130.0
+require github.com/pulumi/pulumi/sdk/v3 v3.142.0
 
 require (
 	dario.cat/mergo v1.0.0 // indirect
@@ -67,7 +67,7 @@ require (
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pkg/term v1.1.0 // indirect
-	github.com/pulumi/pulumi-aws/sdk/v6 v6.52.0
+	github.com/pulumi/pulumi-aws/sdk/v6 v6.63.0
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // indirect

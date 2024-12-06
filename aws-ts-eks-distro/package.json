@@ -4,10 +4,10 @@
         "@types/node": "^18.0.0"
     },
     "dependencies": {
-        "@pulumi/aws": "^6.0.0",
-        "@pulumi/awsx": "^2.0.2",
-        "@pulumi/kubernetes": "^4.0.0",
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/aws": "6.63.0",
+        "@pulumi/awsx": "2.19.0",
+        "@pulumi/kubernetes": "4.18.4",
+        "@pulumi/pulumi": "3.142.0",
         "@types/mustache": "^4.0.1",
         "@types/tmp": "^0.2.0",
         "mustache": "^4.0.1",
