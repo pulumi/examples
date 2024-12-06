@@ -4,8 +4,8 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/aws": "5.43.0",
-        "@pulumi/awsx": "0.40.1",
+        "@pulumi/aws": "6.63.0",
+        "@pulumi/awsx": "2.19.0",
         "@pulumi/pulumi": "3.142.0",
         "@slack/webhook": "^5.0.3"
     }
