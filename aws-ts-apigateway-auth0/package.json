@@ -4,10 +4,10 @@
         "@types/node": "^18.0.0"
     },
     "dependencies": {
-        "@pulumi/aws": "^6.0.0",
-        "@pulumi/aws-apigateway": "^2.0.0",
-        "@pulumi/awsx": "^2.0.2",
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/aws": "6.63.0",
+        "@pulumi/aws-apigateway": "2.6.1",
+        "@pulumi/awsx": "2.19.0",
+        "@pulumi/pulumi": "3.142.0",
         "@types/auth0-js": "^9.10.1",
         "@types/jsonwebtoken": "^8.3.2",
         "jsonwebtoken": "^8.5.1",

@@ -4,9 +4,9 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/aws": "^5.0.0",
-        "@pulumi/awsx": "^0.40.0",
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/aws": "5.43.0",
+        "@pulumi/awsx": "0.40.1",
+        "@pulumi/pulumi": "3.142.0",
         "@slack/webhook": "^5.0.3"
     }
 }

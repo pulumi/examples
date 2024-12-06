@@ -5,11 +5,11 @@
   },
   "dependencies": {
     "typescript": "^4.0.0",
-    "@pulumi/pulumi": "^3.0.0",
-    "@pulumi/eks": "^v2.0.0",
-    "@pulumi/aws": "^6.22.2",
-    "@pulumi/docker": "^4.5.1",
-    "@pulumi/kubernetes": "^4.7.1",
+    "@pulumi/pulumi": "3.142.0",
+    "@pulumi/eks": "2.8.1",
+    "@pulumi/aws": "6.63.0",
+    "@pulumi/docker": "4.5.7",
+    "@pulumi/kubernetes": "4.18.4",
     "@pinecone-database/pulumi": "^0.4.0"
   }
 }

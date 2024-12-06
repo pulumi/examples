@@ -2,8 +2,8 @@
     "name": "gcp-policies",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/gcp": "^8.0.0",
-        "@pulumi/policy": "^1.2.0"
+        "@pulumi/gcp": "8.10.0",
+        "@pulumi/policy": "1.13.0"
     },
     "devDependencies": {
         "@types/node": "^10.0.0",

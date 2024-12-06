@@ -6,7 +6,7 @@
     },
     "dependencies": {
         "@pulumi/equinix": "^0.2.1",
-        "@pulumi/random": "^4.0.0"
+        "@pulumi/random": "4.16.7"
     },
     "license": "Apache-2.0"
 }
