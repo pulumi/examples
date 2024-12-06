@@ -10,7 +10,7 @@
         "@pulumi/pulumi": "3.142.0",
         "@types/auth0-js": "^9.10.1",
         "@types/jsonwebtoken": "^8.3.2",
-        "jsonwebtoken": "^8.5.1",
+        "jsonwebtoken": "8.5.1",
         "jwks-rsa": "^1.4.0",
         "typescript": "^4.6.0"
     }
