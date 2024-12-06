@@ -2,7 +2,7 @@
     "name": "pac-ts-eks",
     "devDependencies": {},
     "dependencies": {
-        "@pulumi/aws": "6.63.0",
+        "@pulumi/aws": "6.64.0",
         "@pulumi/awsx": "2.19.0",
         "@pulumi/eks": "3.3.0",
         "@pulumi/pulumi": "3.142.0",

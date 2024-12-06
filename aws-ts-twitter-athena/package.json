@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "dependencies": {
         "@aws-sdk/client-s3": "^3.386.0",
-        "@pulumi/aws": "6.63.0",
+        "@pulumi/aws": "6.64.0",
         "@pulumi/pulumi": "3.142.0",
         "twitter": "^1.7.1"
     },

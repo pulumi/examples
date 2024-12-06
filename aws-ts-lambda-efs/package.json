@@ -2,7 +2,7 @@
     "name": "aws-ts-lambda-efs",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "6.63.0",
+        "@pulumi/aws": "6.64.0",
         "@pulumi/aws-apigateway": "2.6.1",
         "@pulumi/awsx": "2.19.0",
         "@pulumi/pulumi": "3.142.0",

@@ -4,7 +4,7 @@
     "dependencies": {
         "@aws-sdk/client-dynamodb": "^3.423.0",
         "@aws-sdk/lib-dynamodb": "^3.423.0",
-        "@pulumi/aws": "6.63.0",
+        "@pulumi/aws": "6.64.0",
         "@pulumi/aws-apigateway": "2.6.1",
         "@pulumi/pulumi": "3.142.0"
     }
