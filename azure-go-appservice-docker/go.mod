@@ -5,9 +5,9 @@ go 1.21
 toolchain go1.23.4
 
 require (
-	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v2 v2.75.0
-	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.75.0
-	github.com/pulumi/pulumi-azure-native-sdk/web/v2 v2.75.0
+	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v2 v2.76.0
+	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.76.0
+	github.com/pulumi/pulumi-azure-native-sdk/web/v2 v2.76.0
 	github.com/pulumi/pulumi-docker/sdk/v3 v3.6.1
 	github.com/pulumi/pulumi-docker/sdk/v4 v4.5.7
 	github.com/pulumi/pulumi/sdk/v3 v3.142.0
@@ -71,7 +71,7 @@ require (
 	github.com/pkg/term v1.1.0 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
 	github.com/pulumi/esc v0.9.1 // indirect
-	github.com/pulumi/pulumi-azure-native-sdk/v2 v2.75.0 // indirect
+	github.com/pulumi/pulumi-azure-native-sdk/v2 v2.76.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // indirect
