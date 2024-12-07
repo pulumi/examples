@@ -5,6 +5,6 @@
         "@pulumi/cloud": "latest",
         "@pulumi/cloud-aws": "latest",
         "@pulumi/pulumi": "latest",
-        "twitter": "^1.7.1"
+        "twitter": "1.7.1"
     }
 }

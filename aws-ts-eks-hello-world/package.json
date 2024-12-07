@@ -6,6 +6,6 @@
         "@pulumi/eks": "3.3.0",
         "@pulumi/kubernetes": "4.18.4",
         "@pulumi/pulumi": "3.142.0",
-        "@types/node": "^18.0.0"
+        "@types/node": "18.19.67"
     }
 }

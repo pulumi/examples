@@ -1,4 +1,4 @@
-FROM amazon/aws-lambda-nodejs:12
+FROM amazon/aws-lambda-nodejs:12@sha256:1296174701453f63a24c1157c22289b236d92f379d478cc93b00dda2873c2ed4
 ARG FUNCTION_DIR="/var/task"
 
 # Install tar and xz
