@@ -1,16 +1,16 @@
 {
     "name": "testing-unit-ts-mocks-jest",
     "devDependencies": {
-        "@types/jest": "^28.1.1",
-        "@types/node": "^18",
-        "ts-jest": "^28.0.5",
-        "typescript": "^4.6.2"
+        "@types/jest": "28.1.8",
+        "@types/node": "18.19.67",
+        "ts-jest": "28.0.8",
+        "typescript": "4.9.5"
     },
     "dependencies": {
         "@pulumi/aws": "6.64.0",
         "@pulumi/awsx": "2.19.0",
         "@pulumi/pulumi": "3.142.0",
-        "node-fetch": "^2.6.7"
+        "node-fetch": "2.7.0"
     },
     "scripts": {
         "test": "jest"
