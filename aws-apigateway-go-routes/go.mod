@@ -7,7 +7,7 @@ toolchain go1.23.4
 require (
 	github.com/aws/aws-lambda-go v1.27.0
 	github.com/pulumi/pulumi-aws-apigateway/sdk/v2 v2.6.1
-	github.com/pulumi/pulumi-aws/sdk/v6 v6.63.0
+	github.com/pulumi/pulumi-aws/sdk/v6 v6.64.0
 	github.com/pulumi/pulumi/sdk/v3 v3.142.0
 )
 
