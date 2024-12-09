@@ -6,9 +6,9 @@
   },
   "dependencies": {
     "@pulumi/awsx": "2.19.0",
-    "@pulumi/azure": "6.12.0",
+    "@pulumi/azure": "6.13.0",
     "@pulumi/azuread": "6.0.1",
-    "@pulumi/eks": "3.3.0",
+    "@pulumi/eks": "3.4.0",
     "@pulumi/gcp": "8.10.0",
     "@pulumi/kubernetes": "4.18.4",
     "@pulumi/pulumi": "3.142.0",

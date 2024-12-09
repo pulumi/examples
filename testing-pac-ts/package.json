@@ -4,7 +4,7 @@
     "dependencies": {
         "@pulumi/aws": "6.64.0",
         "@pulumi/awsx": "2.19.0",
-        "@pulumi/eks": "3.3.0",
+        "@pulumi/eks": "3.4.0",
         "@pulumi/pulumi": "3.142.0",
         "@types/node": "^13.1.8",
         "ts-node": "^8.6.2"
