@@ -187,7 +187,6 @@ jobs:
           - Gcp
           - Packet
           - EquinixMetal
-          - Cloud
         languages:
           - Cs
           - Js
