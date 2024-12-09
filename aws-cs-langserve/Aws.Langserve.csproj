@@ -8,8 +8,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Pulumi" Version="3.*" />
-		<PackageReference Include="Pulumi.Aws" Version="6.19.0" />
-		<PackageReference Include="Pulumi.Docker" Version="4.5.1" />
+		<PackageReference Include="Pulumi.Aws" Version="6.64.0" />
+		<PackageReference Include="Pulumi.Docker" Version="4.5.7" />
 	</ItemGroup>
 
 </Project>

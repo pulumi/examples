@@ -1,4 +1,4 @@
 pulumi>=3.5.1,<4.0.0
 pulumi-azure-native>=2.0.0,<3.0.0
-pulumi-tls>=4.0.0,<5.0.0
+pulumi-tls>=5.0.9,<5.1.0
 pulumi-libvirt>=0.1.0,<1.0.0
