@@ -1,8 +1,0 @@
-name: cloud-js-httpendpoint
-description: A simple HTTP endpoint that returns the number of times a route has been hit
-runtime: nodejs
-template:
-  config:
-    aws:region:
-      description: The AWS region to deploy into
-      default: us-west-2
