@@ -15,7 +15,7 @@ redis_image = docker.RemoteImage("redis_image",
                         keep_locally=True)
 
 redis_container = docker.Container("redis_container",
-                        image=redis_image.latest,
+                        image=redis_image.name,
                         ports=[docker.ContainerPortArgs(internal=redis_port, external=redis_port)],
                         networks_advanced=[docker.ContainerNetworksAdvancedArgs(
                             name=network.name,
@@ -24,7 +24,7 @@ redis_container = docker.Container("redis_container",
 )
 
 app_image = docker.Image("app_image",
-                        build=docker.DockerBuild(context="./app"),
+                        build=docker.DockerBuildArgs(context="./app"),
                         image_name="app",
                         skip_push=True
 )
