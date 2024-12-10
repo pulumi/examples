@@ -1,7 +1,7 @@
 {
     "name": "aws-ts-webserver",
     "devDependencies": {
-        "@types/node": "^18.0.0"
+        "@types/node": "18.19.67"
     },
     "dependencies": {
         "@pulumi/aws": "6.64.0",

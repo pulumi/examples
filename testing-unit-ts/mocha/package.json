@@ -1,15 +1,15 @@
 {
     "name": "test-unit-ts",
     "devDependencies": {
-        "mocha": "^10.4.0",
-        "ts-node": "^10.9.2",
-        "typescript": "^5.4.5"
+        "mocha": "10.8.2",
+        "ts-node": "10.9.2",
+        "typescript": "5.7.2"
     },
     "dependencies": {
         "@pulumi/aws": "6.64.0",
         "@pulumi/pulumi": "3.142.0",
-        "@types/mocha": "^10.0.6",
-        "@types/node": "^13.1.8"
+        "@types/mocha": "10.0.10",
+        "@types/node": "13.13.52"
     },
     "scripts": {
         "test": "mocha -r ts-node/register ec2tests.ts bucket_pair_test.ts"

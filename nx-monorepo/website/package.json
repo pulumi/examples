@@ -9,8 +9,8 @@
         "astro": "astro"
     },
     "dependencies": {
-        "astro": "^4.5.2",
-        "@astrojs/check": "^0.5.8"
+        "astro": "4.16.17",
+        "@astrojs/check": "0.5.10"
     },
     "nx": {
         "targets": {
