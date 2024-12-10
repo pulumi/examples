@@ -1,15 +1,15 @@
 {
   "name": "civo-navigate",
   "devDependencies": {
-    "@types/node": "^18"
+    "@types/node": "18.19.67"
   },
   "dependencies": {
-    "typescript": "^4.0.0",
+    "typescript": "4.9.5",
     "@pulumi/pulumi": "3.142.0",
     "@pulumi/eks": "3.4.0",
     "@pulumi/aws": "6.64.0",
     "@pulumi/docker": "4.5.7",
     "@pulumi/kubernetes": "4.18.4",
-    "@pinecone-database/pulumi": "^0.4.0"
+    "@pinecone-database/pulumi": "0.4.3"
   }
 }

@@ -4,6 +4,6 @@
     "dependencies": {
         "@pulumi/aws": "6.64.0",
         "@pulumi/pulumi": "3.142.0",
-        "pcloudinit": "^0.1.0"
+        "pcloudinit": "0.1.0"
     }
 }
