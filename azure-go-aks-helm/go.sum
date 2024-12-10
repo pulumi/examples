@@ -289,6 +289,7 @@ github.com/pulumi/pulumi-azuread/sdk/v4 v4.0.0/go.mod h1:E6a7MAO0l3d3nVhFwn65mvm
 github.com/pulumi/pulumi-azuread/sdk/v4 v4.3.0 h1:ZyjeUcDJpmr0kfg7q1uc0IDHfpq3wz3nsn0EZNIO8fM=
 github.com/pulumi/pulumi-azuread/sdk/v4 v4.3.0/go.mod h1:3w2xvps8AJF1AE7+3hrFWNwton3y+Ye7sWsZg7sNoR0=
 github.com/pulumi/pulumi-azuread/sdk/v6 v6.0.1/go.mod h1:4P0ZH8pDU3qoM+Dj1/IIwms0m9lOOEgt4MrOHnwpwwc=
+github.com/pulumi/pulumi-azuread/sdk/v6 v6.0.2/go.mod h1:gELKfJFGR3D2Hkiwn2aYeeMsq5NPMHGbUQZ+rySc7As=
 github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.0.0 h1:Z97mMkrA3pHLpysmhiQGN4O7cxJ4uPIUCiAcm8nGOe8=
 github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.0.0/go.mod h1:Wgy4/LfbBAYwdFDQ1Cin5SUqLHuQ9qOGWV0ECabr+Bw=
 github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.30.2 h1:xJu48+RW+BHHnKtBni6Vj5vKqOEgCzdZAysGbh6tVM0=

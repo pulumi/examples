@@ -287,6 +287,7 @@ github.com/pulumi/pulumi-azuread/sdk/v4 v4.0.0/go.mod h1:E6a7MAO0l3d3nVhFwn65mvm
 github.com/pulumi/pulumi-azuread/sdk/v4 v4.3.0 h1:ZyjeUcDJpmr0kfg7q1uc0IDHfpq3wz3nsn0EZNIO8fM=
 github.com/pulumi/pulumi-azuread/sdk/v4 v4.3.0/go.mod h1:3w2xvps8AJF1AE7+3hrFWNwton3y+Ye7sWsZg7sNoR0=
 github.com/pulumi/pulumi-azuread/sdk/v6 v6.0.1/go.mod h1:4P0ZH8pDU3qoM+Dj1/IIwms0m9lOOEgt4MrOHnwpwwc=
+github.com/pulumi/pulumi-azuread/sdk/v6 v6.0.2/go.mod h1:gELKfJFGR3D2Hkiwn2aYeeMsq5NPMHGbUQZ+rySc7As=
 github.com/pulumi/pulumi-random/sdk/v4 v4.0.0 h1:O1khaUAtKi4uRwaLX/M11C0sZ55mUb+AYeynjqhCxf0=
 github.com/pulumi/pulumi-random/sdk/v4 v4.0.0/go.mod h1:Z0oFSiqdTS5wChe6qZkzViWRgcSHNGWfL5dw3cHcwh0=
 github.com/pulumi/pulumi-random/sdk/v4 v4.16.7 h1:39rhOe/PTUGMYia8pR5T2wbxxMt2pwrlonf0ncYKSzE=
