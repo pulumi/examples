@@ -9,13 +9,13 @@
     "eject": "echo \"react-scripts eject\""
   },
   "dependencies": {
-    "netlify-cms-app": "^2.12.19",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "react-scripts": "^2.1.8"
+    "netlify-cms-app": "2.15.72",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "react-scripts": "2.1.8"
   },
   "devDependencies": {
-    "netlify-cms-backend-fs": "^0.4.3"
+    "netlify-cms-backend-fs": "0.4.4"
   },
   "eslintConfig": {
     "extends": "react-app"
