@@ -1,0 +1,17 @@
+{
+    "name": "aws-cdk",
+    "devDependencies": {
+        "@types/node": "^8.0.0"
+    },
+    "dependencies": {
+        "@aws-cdk/aws-events": "^1.18.0",
+        "@aws-cdk/aws-events-targets": "^1.18.0",
+        "@aws-cdk/aws-lambda": "^1.18.0",
+        "@aws-cdk/core": "^1.18.0",
+        "@pulumi/aws": "^1.12.0",
+        "@pulumi/awsx": "latest",
+        "@pulumi/pulumi": "^1.0.0",
+        "@types/adm-zip": "^0.4.32",
+        "adm-zip": "^0.4.13"
+    }
+}
