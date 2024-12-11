@@ -23,7 +23,7 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "sst": "^2.23.3",
+    "sst": "2.45.1",
     "aws-cdk-lib": "2.84.0",
     "constructs": "10.1.156"
   }
