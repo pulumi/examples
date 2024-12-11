@@ -5,7 +5,7 @@
         "@types/node": "^20.12.11"
     },
     "dependencies": {
-        "@pulumi/docker-build": "0.0.7",
+        "@pulumi/docker-build": "0.0.8",
         "@pulumi/pulumi": "3.142.0"
     }
 }
