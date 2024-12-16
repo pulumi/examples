@@ -3,7 +3,7 @@
     "main": "dist/index.js",
     "version": "1.0.0",
     "dependencies": {
-        "@pulumi/aws": "6.64.0",
+        "@pulumi/aws": "6.65.0",
         "@pulumi/pulumi": "latest",
         "mime": "^2.6.0"
     },
