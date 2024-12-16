@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "dependencies": {
         "@pulumi/pulumi": "latest",
-        "@pulumi/aws": "6.64.0"
+        "@pulumi/aws": "6.65.0"
     },
     "scripts": {
         "build": "tsc"

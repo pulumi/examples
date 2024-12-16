@@ -6,10 +6,10 @@
         "typescript": "^5.6.2"
     },
     "dependencies": {
-        "@pulumi/aws": "6.64.0",
+        "@pulumi/aws": "6.65.0",
         "@pulumi/command": "1.0.1",
-        "@pulumi/pulumi": "3.142.0",
+        "@pulumi/pulumi": "3.143.0",
         "@pulumi/pulumiservice": "0.27.3",
-        "@pulumi/tls": "5.0.9"
+        "@pulumi/tls": "5.0.10"
     }
 }

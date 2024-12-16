@@ -5,16 +5,16 @@ go 1.21
 toolchain go1.23.4
 
 require (
-	github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2 v2.76.0
-	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.76.0
+	github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2 v2.77.0
+	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.77.0
+	github.com/pulumi/pulumi-azuread/sdk/v4 v4.3.0
 	github.com/pulumi/pulumi-azuread/sdk/v6 v6.0.2
-	github.com/pulumi/pulumi-azuread/sdk/v6 v6.0.2
-	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.18.4
-	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.18.4
-	github.com/pulumi/pulumi-random/sdk/v4 v4.16.7
-	github.com/pulumi/pulumi-tls/sdk/v5 v5.0.9
-	github.com/pulumi/pulumi-tls/sdk/v5 v5.0.9
-	github.com/pulumi/pulumi/sdk/v3 v3.142.0
+	github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.30.2
+	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.19.0
+	github.com/pulumi/pulumi-random/sdk/v4 v4.16.8
+	github.com/pulumi/pulumi-tls/sdk/v4 v4.11.1
+	github.com/pulumi/pulumi-tls/sdk/v5 v5.0.10
+	github.com/pulumi/pulumi/sdk/v3 v3.143.0
 )
 
 require (
@@ -75,7 +75,7 @@ require (
 	github.com/pkg/term v1.1.0 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
 	github.com/pulumi/esc v0.10.0 // indirect
-	github.com/pulumi/pulumi-azure-native-sdk/v2 v2.76.0 // indirect
+	github.com/pulumi/pulumi-azure-native-sdk/v2 v2.77.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // indirect
@@ -94,14 +94,14 @@ require (
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	github.com/zclconf/go-cty v1.13.2 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	golang.org/x/crypto v0.26.0 // indirect
+	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/exp v0.0.0-20240604190554-fc45aab8b7f8 // indirect
 	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/net v0.28.0 // indirect
-	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.24.0 // indirect
-	golang.org/x/term v0.23.0 // indirect
-	golang.org/x/text v0.17.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/term v0.27.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/tools v0.22.0 // indirect
 	google.golang.org/genproto v0.0.0-20240311173647-c811ad7063a7 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240814211410-ddb44dafa142 // indirect
