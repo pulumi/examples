@@ -4,7 +4,7 @@
         "@types/node": "^12.0.0"
     },
     "dependencies": {
-        "@pulumi/gcp": "8.10.2",
+        "@pulumi/gcp": "8.11.0",
         "@pulumi/kubernetes": "4.19.0",
         "@pulumi/pulumi": "3.143.0"
     }
