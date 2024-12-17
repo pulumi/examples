@@ -3,7 +3,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pulumi = "==3.142.0"
+pulumi = "==3.143.0"
 pulumi-aws = "==6.65.0"
 pyright = ">=1.1.369,<2.0.0"
 
