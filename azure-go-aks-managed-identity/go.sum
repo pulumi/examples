@@ -165,6 +165,8 @@ github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.76.0 h1:D8EielhAoU
 github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.76.0/go.mod h1:vyF2FgS7llLc9ostzI5g5K5ULNjaqWR8zG+VgNI7Rek=
 github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.77.0 h1:U0iJRWjPAdTwmGxRhiADXWYWlxssSfPA0jbiog+EahM=
 github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.77.0/go.mod h1:FAjI6iYaQbQl23LwqnbNst376kGQb8nii9uo+wd7wmY=
+github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.78.0 h1:wxLGc8oYa4mp54DWFPQQiSm0KVYwCvZVS2pIISw9FDc=
+github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.78.0/go.mod h1:5rEV0ieG1ALJNNIP2csplfgFRJl0e/qRAW4nmWnwueo=
 github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2 v2.17.0 h1:O2kkP/9YCyJMEKUffWaTd9RXXyb+5HXU5eydU5DPqP8=
 github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2 v2.17.0/go.mod h1:ecpSCp/pPVLmko6R+VG4Z7xGLOJI5u1zh8ObNB/blSw=
 github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2 v2.75.0 h1:yjoRtZIHXY9hc2dWvQvVW+AEEVHKf0hYuzQ1itXzjO4=
@@ -193,6 +195,8 @@ github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.76.0 h1:FbHj46EceaqP7E
 github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.76.0/go.mod h1:v6vn0ZJhN6leDMklEDV/fuwLW7w2BdnMIC4Lw1nNzKk=
 github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.77.0 h1:KKIPQ7nZ6smNTWzh6wBgMpa4/4fFaoZtjg6b24DVblQ=
 github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.77.0/go.mod h1:mVSWxTkTa9YsBchb3avPsVeTZWtS2PFj28QnVD5KLUo=
+github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.78.0 h1:s60QyJq0Sp3sPYT8Z57pK3Sjtjo5fmfGQf2Q0xSnvFo=
+github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.78.0/go.mod h1:rAEct/GMxpUJkDD+aQsyIT+soyU66PIHw+XZTePMxPY=
 github.com/pulumi/pulumi-azure-native-sdk/v2 v2.17.0 h1:oX2e2eOa/6bJ4exiD59F7ivz5xAzfnaSeAdqTmEanRw=
 github.com/pulumi/pulumi-azure-native-sdk/v2 v2.17.0/go.mod h1:wJVcJJ+6g6qtRB4c0h3sq5MA2O8w0T4c4zmrmlfR54Y=
 github.com/pulumi/pulumi-azure-native-sdk/v2 v2.75.0 h1:V8PONGq4ZReGeaTrrTQEVDqW4dmIow5t5jH4DL4CUfU=

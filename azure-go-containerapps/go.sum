@@ -294,6 +294,8 @@ github.com/pulumi/pulumi-azure-native-sdk/operationalinsights/v2 v2.76.0 h1:8g2M
 github.com/pulumi/pulumi-azure-native-sdk/operationalinsights/v2 v2.76.0/go.mod h1:qvFiScxQvqCoGFc3MFFbEHvrCqyB48EG6+8EzfiJjHk=
 github.com/pulumi/pulumi-azure-native-sdk/operationalinsights/v2 v2.77.0 h1:CfAzJELR9vj6EVuO4TEuA3MZ2pu+poolK9xWqdoybwA=
 github.com/pulumi/pulumi-azure-native-sdk/operationalinsights/v2 v2.77.0/go.mod h1:7EMODkRZf7FAF+PelLFOJjH+ccjaYodZ/8NeDBmYd9g=
+github.com/pulumi/pulumi-azure-native-sdk/operationalinsights/v2 v2.78.0 h1:cJ6GmVUIcdnml4WNAr1g+mjwKi6MGnLy7acXYSkONUY=
+github.com/pulumi/pulumi-azure-native-sdk/operationalinsights/v2 v2.78.0/go.mod h1:UtOZlLCVrFMpV6cz5CYmDVn5P4Hb3Q+VzmLUFNeUMcc=
 github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.1.1 h1:4eRr2RkMlNjZAcYOhFYVkMJRZDU+c9OTz7WZ5YWoGg0=
 github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.1.1/go.mod h1:8txdknyAwfYwgyAMernKuExlNH9WixArFwIXhdqtY7U=
 github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.75.0 h1:YGHDaZkp/AQvStdGLt22L1yQtJxlHcmx6yJnUfERLQM=
@@ -302,6 +304,8 @@ github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.76.0 h1:FbHj46EceaqP7E
 github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.76.0/go.mod h1:v6vn0ZJhN6leDMklEDV/fuwLW7w2BdnMIC4Lw1nNzKk=
 github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.77.0 h1:KKIPQ7nZ6smNTWzh6wBgMpa4/4fFaoZtjg6b24DVblQ=
 github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.77.0/go.mod h1:mVSWxTkTa9YsBchb3avPsVeTZWtS2PFj28QnVD5KLUo=
+github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.78.0 h1:s60QyJq0Sp3sPYT8Z57pK3Sjtjo5fmfGQf2Q0xSnvFo=
+github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.78.0/go.mod h1:rAEct/GMxpUJkDD+aQsyIT+soyU66PIHw+XZTePMxPY=
 github.com/pulumi/pulumi-azure-native-sdk/v2 v2.1.1 h1:Mr4a72iY4/yDsFUSru8b35xnXinFVCxFYADKdHWYfag=
 github.com/pulumi/pulumi-azure-native-sdk/v2 v2.1.1/go.mod h1:0M4mUmmpe41qj02HAGJnLYLpf8TBkrtdqD6H8J9XPo4=
 github.com/pulumi/pulumi-azure-native-sdk/v2 v2.75.0 h1:V8PONGq4ZReGeaTrrTQEVDqW4dmIow5t5jH4DL4CUfU=
