@@ -1,8 +1,8 @@
 {
   "name": "kubernetes-ts-multicloud",
   "devDependencies": {
-    "@types/node": "^18.0.0",
-    "typescript": "^4.6.2"
+    "@types/node": "18.19.68",
+    "typescript": "4.9.5"
   },
   "dependencies": {
     "@pulumi/awsx": "2.19.0",

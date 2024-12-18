@@ -2,7 +2,7 @@
     "name": "voting-app",
     "version": "0.1.0",
     "devDependencies": {
-        "@types/node": "^18.0.0"
+        "@types/node": "18.19.68"
     },
     "dependencies": {
         "@pulumi/aws": "6.65.0",
