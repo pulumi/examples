@@ -1,7 +1,7 @@
 {
     "name": "aws-synthetics",
     "devDependencies": {
-        "@types/node": "^18"
+        "@types/node": "18.19.68"
     },
     "dependencies": {
         "@pulumi/aws": "6.65.0",

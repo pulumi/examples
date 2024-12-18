@@ -1,7 +1,7 @@
 {
 	"name": "azure-yaml-aks-managed-identity",
 	"devDependencies": {
-		"@types/node": "^14"
+		"@types/node": "14.18.63"
 	},
 	"dependencies": {
 		"typescript": "^4.0.0",

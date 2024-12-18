@@ -8,7 +8,7 @@
     "@pulumi/random": "4.16.8"
   },
   "devDependencies": {
-    "@types/node": "^17.0.17"
+    "@types/node": "17.0.45"
   },
   "name": "xpresso-gke-demo"
 }
