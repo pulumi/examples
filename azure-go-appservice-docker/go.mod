@@ -6,7 +6,7 @@ toolchain go1.23.4
 
 require (
 	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v2 v2.78.0
-	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.77.0
+	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.78.0
 	github.com/pulumi/pulumi-azure-native-sdk/web/v2 v2.78.0
 	github.com/pulumi/pulumi-docker/sdk/v3 v3.6.1
 	github.com/pulumi/pulumi-docker/sdk/v4 v4.5.8
