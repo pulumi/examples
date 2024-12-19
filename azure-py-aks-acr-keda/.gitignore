@@ -1,0 +1,5 @@
+*.pyc
+venv/
+Pulumi.aks.yaml
+.idea
+Pulumi.dev.yaml
