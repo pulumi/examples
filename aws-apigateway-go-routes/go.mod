@@ -8,7 +8,7 @@ require (
 	github.com/aws/aws-lambda-go v1.27.0
 	github.com/pulumi/pulumi-aws-apigateway/sdk/v2 v2.6.1
 	github.com/pulumi/pulumi-aws/sdk/v6 v6.65.0
-	github.com/pulumi/pulumi/sdk/v3 v3.143.0
+	github.com/pulumi/pulumi/sdk/v3 v3.144.0
 )
 
 require (
@@ -84,7 +84,7 @@ require (
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/exp v0.0.0-20240604190554-fc45aab8b7f8 // indirect
 	golang.org/x/mod v0.18.0 // indirect
-	golang.org/x/net v0.26.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/term v0.27.0 // indirect

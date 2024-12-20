@@ -5,7 +5,7 @@
         "@pulumi/aws": "6.65.0",
         "@pulumi/awsx": "2.19.0",
         "@pulumi/eks": "3.5.0",
-        "@pulumi/pulumi": "3.143.0",
+        "@pulumi/pulumi": "3.144.0",
         "@types/node": "^13.1.8",
         "ts-node": "^8.6.2"
     }
