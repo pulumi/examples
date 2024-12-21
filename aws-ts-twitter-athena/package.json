@@ -4,7 +4,7 @@
     "dependencies": {
         "@aws-sdk/client-s3": "^3.386.0",
         "@pulumi/aws": "6.65.0",
-        "@pulumi/pulumi": "3.144.0",
+        "@pulumi/pulumi": "3.144.1",
         "twitter": "^1.7.1"
     },
     "devDependencies": {

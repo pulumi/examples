@@ -7,7 +7,7 @@
     "dependencies": {
         "@pulumi/aws": "6.65.0",
         "@pulumi/awsx": "2.19.0",
-        "@pulumi/pulumi": "3.144.0",
+        "@pulumi/pulumi": "3.144.1",
         "@rediscloud/pulumi-rediscloud": "^1.2.6"
     }
 }

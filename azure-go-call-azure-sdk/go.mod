@@ -11,7 +11,7 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.78.0
 	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v2 v2.78.0
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.78.0
-	github.com/pulumi/pulumi/sdk/v3 v3.144.0
+	github.com/pulumi/pulumi/sdk/v3 v3.144.1
 )
 
 require (

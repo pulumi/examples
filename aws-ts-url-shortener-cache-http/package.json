@@ -17,7 +17,7 @@
         "@pulumi/aws": "6.65.0",
         "@pulumi/awsx": "2.19.0",
         "@pulumi/cloud-aws": "0.40.2",
-        "@pulumi/pulumi": "3.144.0",
+        "@pulumi/pulumi": "3.144.1",
         "express": "^4.16.3",
         "mime-types": "^2.1.20",
         "parseurl": "^1.3.2",

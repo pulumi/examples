@@ -6,6 +6,6 @@
     },
     "dependencies": {
         "@pulumi/docker-build": "0.0.8",
-        "@pulumi/pulumi": "3.144.0"
+        "@pulumi/pulumi": "3.144.1"
     }
 }

@@ -11,7 +11,7 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.78.0
 	github.com/pulumi/pulumi-tls/sdk/v4 v4.11.1
 	github.com/pulumi/pulumi-tls/sdk/v5 v5.0.10
-	github.com/pulumi/pulumi/sdk/v3 v3.144.0
+	github.com/pulumi/pulumi/sdk/v3 v3.144.1
 )
 
 require (
