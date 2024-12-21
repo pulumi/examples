@@ -1,7 +1,7 @@
 {
     "name": "airflow",
     "devDependencies": {
-        "@types/node": "^18.13.0"
+        "@types/node": "18.19.68"
     },
     "dependencies": {
         "@pulumi/aws": "6.65.0",

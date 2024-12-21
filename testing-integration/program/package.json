@@ -12,6 +12,6 @@
         "mime": "^2.2.2"
     },
     "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@types/node": "8.10.66"
     }
 }
