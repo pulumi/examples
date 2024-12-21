@@ -5,10 +5,10 @@
     },
     "dependencies": {
         "@pulumi/docker": "4.5.8",
-        "@pulumi/gcp": "8.12.0",
+        "@pulumi/gcp": "8.12.1",
         "@pulumi/google-native": "0.32.0",
         "@pulumi/kubernetes": "4.19.0",
-        "@pulumi/pulumi": "3.144.0",
+        "@pulumi/pulumi": "3.144.1",
         "@pulumi/random": "4.16.8"
     }
 }

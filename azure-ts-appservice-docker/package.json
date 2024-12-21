@@ -7,6 +7,6 @@
     "dependencies": {
         "@pulumi/azure-native": "2.78.0",
         "@pulumi/docker": "4.5.8",
-        "@pulumi/pulumi": "3.144.0"
+        "@pulumi/pulumi": "3.144.1"
     }
 }
