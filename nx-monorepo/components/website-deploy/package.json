@@ -11,6 +11,6 @@
         "build": "tsc"
     },
     "devDependencies": {
-        "@types/mime": "^3.0.4"
+        "@types/mime": "3.0.4"
     }
 }

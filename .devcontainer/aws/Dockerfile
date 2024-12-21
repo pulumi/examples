@@ -1,4 +1,4 @@
-FROM ghcr.io/pulumi/devcontainer:extra
+FROM ghcr.io/pulumi/devcontainer:extra@sha256:e8534db8f45cfd886f74ce806ab71aaa7b5016a880570dc5d984dc56a0b106f4
 
 ##################################################################################
 # Install AWS CLI v2

@@ -1,7 +1,7 @@
 {
     "name": "aws-ts-apigateway-eventbridge",
     "devDependencies": {
-        "@types/node": "^14"
+        "@types/node": "14.18.63"
     },
     "dependencies": {
         "@pulumi/pulumi": "3.144.1",

@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "main": "index.js",
     "devDependencies": {
-        "@types/node": "^18"
+        "@types/node": "18.19.68"
     },
     "dependencies": {
         "@pulumi/aws": "6.65.0",
