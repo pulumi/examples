@@ -10,7 +10,7 @@
         "@pulumi/awsx": "2.19.0",
         "@pulumi/eks": "3.5.0",
         "@pulumi/postgresql": "3.14.0",
-        "@pulumi/pulumi": "3.143.0",
+        "@pulumi/pulumi": "3.144.0",
         "pg": "^8.3.3"
     }
 }

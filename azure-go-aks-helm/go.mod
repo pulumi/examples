@@ -7,14 +7,14 @@ toolchain go1.23.4
 require (
 	github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2 v2.78.0
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.78.0
+	github.com/pulumi/pulumi-azuread/sdk/v4 v4.3.0
 	github.com/pulumi/pulumi-azuread/sdk/v6 v6.0.2
-	github.com/pulumi/pulumi-azuread/sdk/v6 v6.0.2
-	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.19.0
+	github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.30.2
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.19.0
 	github.com/pulumi/pulumi-random/sdk/v4 v4.16.8
+	github.com/pulumi/pulumi-tls/sdk/v4 v4.11.1
 	github.com/pulumi/pulumi-tls/sdk/v5 v5.0.10
-	github.com/pulumi/pulumi-tls/sdk/v5 v5.0.10
-	github.com/pulumi/pulumi/sdk/v3 v3.143.0
+	github.com/pulumi/pulumi/sdk/v3 v3.144.0
 )
 
 require (
@@ -97,7 +97,7 @@ require (
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/exp v0.0.0-20240604190554-fc45aab8b7f8 // indirect
 	golang.org/x/mod v0.18.0 // indirect
-	golang.org/x/net v0.28.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/term v0.27.0 // indirect
