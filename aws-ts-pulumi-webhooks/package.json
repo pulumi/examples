@@ -4,7 +4,7 @@
         "@types/node": "^8.0.0"
     },
     "dependencies": {
-        "@pulumi/aws": "6.65.0",
+        "@pulumi/aws": "6.66.0",
         "@pulumi/awsx": "2.19.0",
         "@pulumi/pulumi": "3.144.1",
         "@slack/webhook": "^5.0.3"
