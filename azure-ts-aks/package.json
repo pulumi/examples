@@ -1,7 +1,7 @@
 {
     "name": "azure-ts-aks",
     "devDependencies": {
-        "@types/node": "^10.0.0"
+        "@types/node": "10.17.60"
     },
     "dependencies": {
         "@pulumi/azure-native": "2.79.0",

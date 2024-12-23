@@ -1,8 +1,8 @@
 {
     "name": "typescript",
     "devDependencies": {
-        "@types/aws-lambda": "^8.10.85",
-        "@types/node": "^8.0.0"
+        "@types/aws-lambda": "8.10.146",
+        "@types/node": "8.10.66"
     },
     "dependencies": {
         "@pulumi/aws": "6.66.0",

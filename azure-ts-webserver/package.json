@@ -2,7 +2,7 @@
     "name": "azure-ts-webserver",
     "version": "0.1.0",
     "devDependencies": {
-        "@types/node": "^14.11.1"
+        "@types/node": "14.18.63"
     },
     "dependencies": {
         "@pulumi/azure-native": "2.79.0",

@@ -1,9 +1,9 @@
 {
     "name": "test-unit-ts",
     "devDependencies": {
-        "mocha": "^10.4.0",
-        "ts-node": "^10.9.2",
-        "typescript": "^5.4.5"
+        "mocha": "10.8.2",
+        "ts-node": "10.9.2",
+        "typescript": "5.7.2"
     },
     "dependencies": {
         "@pulumi/aws": "6.66.0",

@@ -2,7 +2,7 @@
     "name": "azure-ts-synapse",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@types/node": "8.10.66"
     },
     "dependencies": {
         "@pulumi/azure-native": "2.79.0",
