@@ -1049,6 +1049,8 @@ github.com/pulumi/pulumi-aws/sdk/v6 v6.64.0 h1:O2J/O1MHKykwYCBRPVtSSoK28QfT/miux
 github.com/pulumi/pulumi-aws/sdk/v6 v6.64.0/go.mod h1:dKczi8eHVnlINfyDpds1iqXzojUILHAjUQIjvRlRYx4=
 github.com/pulumi/pulumi-aws/sdk/v6 v6.65.0 h1:OvCLqUueOja9YE2WEGPYAw+lKHFRbLQ7QjwX55+uNsA=
 github.com/pulumi/pulumi-aws/sdk/v6 v6.65.0/go.mod h1:FFzye44v9E0BgaFXVB/9X7KH0S0MapoXEy2YonrQfz4=
+github.com/pulumi/pulumi-aws/sdk/v6 v6.66.1 h1:ZYE8s2lwOroJMaTervPbIJ2p2jS4tDQj/QEdD2rV/Os=
+github.com/pulumi/pulumi-aws/sdk/v6 v6.66.1/go.mod h1:C+L8LtajPSwGsZiGgknkCwClUzXk+ZXzSGkOZTQMp3U=
 github.com/pulumi/pulumi-java/pkg v0.14.0/go.mod h1:VybuJMWJtJc9ZNbt1kcYH4TbpocMx9mEi7YWL2Co99c=
 github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.19.1 h1:GoSbF0gAD6uDVxlVJFsJO8UgSaEEMPqk2r7iK8R5EZY=
 github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.19.1/go.mod h1:w+Y1d8uqc+gv7JYWLF4rfzvTsIIHR1SCL+GG6sX1xMM=

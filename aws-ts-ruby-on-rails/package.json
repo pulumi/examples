@@ -2,7 +2,7 @@
     "name": "aws-ec2-rails",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/aws": "6.66.0",
+        "@pulumi/aws": "6.66.1",
         "@pulumi/pulumi": "3.144.1",
         "pcloudinit": "^0.1.0"
     }

@@ -5,7 +5,7 @@
         "@types/node": "10.17.60"
     },
     "dependencies": {
-        "@pulumi/aws": "6.66.0",
+        "@pulumi/aws": "6.66.1",
         "@pulumi/pulumi": "3.144.1",
         "mime": "^2.5.2"
     }
