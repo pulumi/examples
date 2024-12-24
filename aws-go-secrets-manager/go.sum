@@ -1862,6 +1862,8 @@ github.com/pulumi/pulumi-aws/sdk/v6 v6.64.0 h1:O2J/O1MHKykwYCBRPVtSSoK28QfT/miux
 github.com/pulumi/pulumi-aws/sdk/v6 v6.64.0/go.mod h1:dKczi8eHVnlINfyDpds1iqXzojUILHAjUQIjvRlRYx4=
 github.com/pulumi/pulumi-aws/sdk/v6 v6.65.0 h1:OvCLqUueOja9YE2WEGPYAw+lKHFRbLQ7QjwX55+uNsA=
 github.com/pulumi/pulumi-aws/sdk/v6 v6.65.0/go.mod h1:FFzye44v9E0BgaFXVB/9X7KH0S0MapoXEy2YonrQfz4=
+github.com/pulumi/pulumi-aws/sdk/v6 v6.66.1 h1:ZYE8s2lwOroJMaTervPbIJ2p2jS4tDQj/QEdD2rV/Os=
+github.com/pulumi/pulumi-aws/sdk/v6 v6.66.1/go.mod h1:C+L8LtajPSwGsZiGgknkCwClUzXk+ZXzSGkOZTQMp3U=
 github.com/pulumi/pulumi-java/pkg v0.9.8/go.mod h1:c6rSw/+q4O0IImgJ9axxoC6QesbPYWBaG5gimbHouUQ=
 github.com/pulumi/pulumi-terraform-bridge/testing v0.0.1/go.mod h1:7OeUPH8rpt5ipyj9EFcnXpuzQ8SHL0dyqdfa8nOacdk=
 github.com/pulumi/pulumi-terraform-bridge/v3 v3.48.1-0.20230527113951-a0f92e793f31/go.mod h1:8ufh6u3Pl7/Jl0WHAPyMRG2OXPlELPuNJBvfl23OgGM=

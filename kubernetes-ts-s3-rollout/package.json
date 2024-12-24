@@ -4,7 +4,7 @@
         "@types/node": "12.20.55"
     },
     "dependencies": {
-        "@pulumi/aws": "6.66.0",
+        "@pulumi/aws": "6.66.1",
         "@pulumi/kubernetes": "4.19.0",
         "@pulumi/pulumi": "3.144.1",
         "@types/mime": "^2.0.0",
