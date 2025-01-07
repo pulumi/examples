@@ -109,9 +109,6 @@ After cloning this repo, `cd` into it and run these commands:
     <b>Visits:</b> <i>cannot connect to Redis, counter disabled</i>
     ```
 
-   For more details on how to enable Redis or advanced options, please see the instructions in the
-   [Docker Getting Started guide](https://docs.docker.com/get-started/part6/).
-
 6. Once you are done, you can destroy all of the resources, and the stack:
 
     ```bash
