@@ -1,5 +1,5 @@
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-fs-lambda-webserver/pulumi/Program.fs#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-fs-lambda-webserver/pulumi/Program.fs#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-fs-lambda-webserver/pulumi/Program.fs#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-fs-lambda-webserver/pulumi/Program.fs#gh-dark-mode-only)
 
 # AWS F# Lambda Web Server
 This example creates a web server in AWS lambda using the Giraffe web server

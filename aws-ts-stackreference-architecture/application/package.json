@@ -2,13 +2,13 @@
   "name": "aws-typescript",
   "main": "src/index.ts",
   "devDependencies": {
-    "@types/mime": "^2.0.1",
+    "@types/mime": "2.0.3",
     "@types/node": "latest",
-    "typescript": "^4"
+    "typescript": "4.9.5"
   },
   "dependencies": {
     "@pulumi/aws": "latest",
-    "@pulumi/awsx": "^2.0.2",
+    "@pulumi/awsx": "2.19.0",
     "@pulumi/newrelic": "latest",
     "@pulumi/pulumi": "latest",
     "ip-address": "^5.9.2",

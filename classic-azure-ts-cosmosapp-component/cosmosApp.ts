@@ -58,7 +58,7 @@ export class CosmosApp extends pulumi.ComponentResource {
                 maxIntervalInSeconds: 300,
                 maxStalenessPrefix: 100000,
             },
-            enableMultipleWriteLocations: args.enableMultiMaster,
+            multipleWriteLocationsEnabled: args.enableMultiMaster,
         }, parentOpts);
 
         const database = new azure.cosmosdb.SqlDatabase(`db-${name}`, {
@@ -71,6 +71,7 @@ export class CosmosApp extends pulumi.ComponentResource {
             resourceGroupName: resourceGroup.name,
             accountName: cosmosAccount.name,
             databaseName: database.name,
+            partitionKeyPaths: ["/id"],
         }, { parent: cosmosAccount, ...opts });
 
         // Traffic Manager as a global HTTP endpoint
@@ -95,13 +96,9 @@ export class CosmosApp extends pulumi.ComponentResource {
             const app = buildLocation({ location });
 
             // An endpoint per region for Traffic Manager, link to the corresponding instance
-            return new azure.network.TrafficManagerEndpoint(`tm${name}${location}`.substring(0, 16), {
-                resourceGroupName: resourceGroup.name,
-                profileName: profile.name,
-                type: app.id ? "azureEndpoints" : "externalEndpoints",
-                targetResourceId: app.id,
-                target: app.url,
-                endpointLocation: location,
+            return new azure.network.TrafficManagerAzureEndpoint(`tm${name}${location}`.substring(0, 16), {
+                profileId: profile.id,
+                targetResourceId: app.id!,
             }, { parent: profile, deleteBeforeReplace: true, ...opts });
         }));
 

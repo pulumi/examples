@@ -1,10 +1,10 @@
 {
     "name": "aws-ts-apigatewayv2-quickstart",
     "devDependencies": {
-        "@types/node": "^10.0.0"
+        "@types/node": "10.17.60"
     },
     "dependencies": {
-        "@pulumi/aws": "^6.0.2",
-        "@pulumi/pulumi": "^3.0.0"
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/pulumi": "3.144.1"
     }
 }

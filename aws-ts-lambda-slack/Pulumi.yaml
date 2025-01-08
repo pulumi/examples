@@ -1,0 +1,11 @@
+name: ${PROJECT}
+description: ${DESCRIPTION}
+runtime: nodejs
+
+template:
+  description: Deploy a Slack webhook Lambda function.
+  config:
+    aws:region:
+      description: AWS Region
+      default: us-west-2
+ 

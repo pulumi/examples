@@ -50,6 +50,8 @@ const myImage = new docker.Image(imageName, {
     imageName: pulumi.interpolate`gcr.io/${gcp.config.project}/${imageName}:v1.0.0`,
     build: {
         context: "./app",
+        platform: "linux/amd64",
+
     },
 });
 
@@ -65,6 +67,11 @@ const rubyService = new gcp.cloudrun.Service("ruby", {
                         memory: "1Gi",
                     },
                 },
+                ports: [
+                    {
+                        containerPort: 8080,
+                    },
+                ],
             }],
             containerConcurrency: 50,
         },

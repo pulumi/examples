@@ -6,5 +6,7 @@ template:
     azure:location: 
       description: Azure DC region
       default: North Europe 
+    azure:subscriptionId:
+      description: The Azure Subscription to deploy into
     botName:
       description: Microsoft Azure Bot Name

@@ -1,5 +1,5 @@
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-cs-webserver/README.md#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-cs-webserver/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-cs-webserver/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-cs-webserver/README.md#gh-dark-mode-only)
 
 # Web Server Using Azure Virtual Machine
 
@@ -16,23 +16,24 @@ To deploy your infrastructure, follow the below steps.
 
 ### Steps
 
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
-    ```
-    $ az login
+    ```bash
+    az login
     ```
 
 1. Set an appropriate Azure location like:
 
-    ```
-    $ pulumi config set azure:location westus
+    ```bash
+    pulumi config set azure:location westus
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
 1. Run `pulumi up` to preview and deploy the changes:
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Run `pulumi up` to preview and deploy changes:
 
-    ```
+    ```console
     $ pulumi up
     Previewing changes:
     ...
@@ -45,14 +46,14 @@ To deploy your infrastructure, follow the below steps.
 
 1. Get the IP address of the newly-created instance from the stack's outputs:
 
-    ```
+    ```console
     $ pulumi stack output IpAddress
     137.117.15.111
     ```
 
 1. Check to see that your server is now running:
 
-    ```
+    ```console
     $ curl http://$(pulumi stack output IpAddress)
     Hello, World!
     ```
@@ -62,6 +63,6 @@ To deploy your infrastructure, follow the below steps.
 1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
     ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
+    pulumi destroy --yes
+    pulumi stack rm --yes
     ```

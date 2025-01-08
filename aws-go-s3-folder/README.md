@@ -1,5 +1,5 @@
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-s3-folder/README.md#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-s3-folder/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-s3-folder/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-s3-folder/README.md#gh-dark-mode-only)
 
 # Host a Static Website on Amazon S3
 
@@ -32,7 +32,7 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
 
     #: Resource Type        Name                              Status     Extra Inf
     1: pulumi:pulumi:Stack  website-testing  + created
-    2: aws:s3:Bucket        s3-website-bucket                 + created
+    2: aws:s3:BucketV2      s3-website-bucket                 + created
     3: aws:s3:BucketPolicy  bucketPolicy                      + created
     4: aws:s3:BucketObject  favicon.png                       + created
     5: aws:s3:BucketObject  index.html                        + created

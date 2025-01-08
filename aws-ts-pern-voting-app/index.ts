@@ -75,7 +75,7 @@ const postgresqlRdsServer = new aws.rds.Instance("postgresql-rds-server", {
     engine: "postgres",
     username: sqlAdminName,
     password: sqlAdminPassword,
-    instanceClass: "db.t2.micro",
+    instanceClass: "db.t3.micro",
     allocatedStorage: 20,
     skipFinalSnapshot: true,
     publiclyAccessible: true,

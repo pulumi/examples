@@ -1,5 +1,5 @@
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-js-s3-folder/README.md#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-js-s3-folder/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-js-s3-folder/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-js-s3-folder/README.md#gh-dark-mode-only)
 
 # Host a Static Website on Amazon S3
 
@@ -38,8 +38,8 @@ with `***`.
     Performing changes:
 
         Type                    Name                                   Status      Info
-    +   pulumi:pulumi:Stack     aws-js-s3-folder-website-testing  created
-    +   ├─ aws:s3:Bucket        s3-website-bucket                      created
+    +   pulumi:pulumi:Stack     aws-js-s3-folder-website-testing.      created
+    +   ├─ aws:s3:BucketV2      s3-website-bucket                      created
     +   ├─ aws:s3:BucketPolicy  bucketPolicy                           created
     +   ├─ aws:s3:BucketObject  favicon.png                            created
     +   └─ aws:s3:BucketObject  index.html                             created

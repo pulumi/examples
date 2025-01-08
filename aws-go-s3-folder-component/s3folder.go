@@ -26,11 +26,17 @@ func NewS3Folder(ctx *pulumi.Context, bucketName string, siteDir string, args *F
 		return nil, err
 	}
 	// Create a bucket and expose a website index document
-	siteBucket, err := s3.NewBucket(ctx, bucketName, &s3.BucketArgs{
-		Website: s3.BucketWebsiteArgs{
-			IndexDocument: pulumi.String("index.html"),
+	siteBucket, err := s3.NewBucketV2(ctx, bucketName, &s3.BucketV2Args{}, pulumi.Parent(&resource))
+	if err != nil {
+		return nil, err
+	}
+
+	siteWebsite, err := s3.NewBucketWebsiteConfigurationV2(ctx, "s3-website", &s3.BucketWebsiteConfigurationV2Args{
+		Bucket: siteBucket.Bucket,
+		IndexDocument: s3.BucketWebsiteConfigurationV2IndexDocumentArgs{
+			Suffix: pulumi.String("index.html"),
 		},
-	}, pulumi.Parent(&resource))
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +53,7 @@ func NewS3Folder(ctx *pulumi.Context, bucketName string, siteDir string, args *F
 			}
 
 			if _, err := s3.NewBucketObject(ctx, rel, &s3.BucketObjectArgs{
-				Bucket:      siteBucket.ID(),                                     // reference to the s3.Bucket object
+				Bucket:      siteBucket.Bucket,                                   // reference to the s3.Bucket
 				Source:      pulumi.NewFileAsset(name),                           // use FileAsset to point to a file
 				ContentType: pulumi.String(mime.TypeByExtension(path.Ext(name))), // set the MIME type of the file
 			}, pulumi.Parent(&resource)); err != nil {
@@ -62,7 +68,7 @@ func NewS3Folder(ctx *pulumi.Context, bucketName string, siteDir string, args *F
 
 	// Allow public ACLs for the bucket
 	accessBlock, err := s3.NewBucketPublicAccessBlock(ctx, "public-access-block", &s3.BucketPublicAccessBlockArgs{
-		Bucket:          siteBucket.ID(),
+		Bucket:          siteBucket.Bucket,
 		BlockPublicAcls: pulumi.Bool(false),
 	})
 	if err != nil {
@@ -71,7 +77,7 @@ func NewS3Folder(ctx *pulumi.Context, bucketName string, siteDir string, args *F
 
 	// Set the access policy for the bucket so all objects are readable.
 	if _, err := s3.NewBucketPolicy(ctx, "bucketPolicy", &s3.BucketPolicyArgs{
-		Bucket: siteBucket.ID(), // refer to the bucket created earlier
+		Bucket: siteBucket.Bucket, // refer to the bucket created earlier
 		Policy: pulumi.Any(map[string]interface{}{
 			"Version": "2012-10-17",
 			"Statement": []map[string]interface{}{
@@ -91,10 +97,10 @@ func NewS3Folder(ctx *pulumi.Context, bucketName string, siteDir string, args *F
 		return nil, err
 	}
 	resource.bucketName = siteBucket.ID()
-	resource.websiteUrl = siteBucket.WebsiteEndpoint
+	resource.websiteUrl = siteWebsite.WebsiteEndpoint
 	ctx.RegisterResourceOutputs(&resource, pulumi.Map{
 		"bucketName": siteBucket.ID(),
-		"websiteUrl": siteBucket.WebsiteEndpoint,
+		"websiteUrl": siteWebsite.WebsiteEndpoint,
 	})
 	return &resource, nil
 }

@@ -1,5 +1,5 @@
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-py-exposed-deployment/README.md#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-py-exposed-deployment/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-py-exposed-deployment/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-py-exposed-deployment/README.md#gh-dark-mode-only)
 
 # Exposing a Deployment with a Public IP Address
 
@@ -74,7 +74,7 @@ case `35.226.79.225`. It is exported with a stack output variable, `frontend_ip`
 and `grep` to retrieve the `<title>` of the site the proxy points at.
 
 > _Note_: minikube does not support type `LoadBalancer`; if you are deploying to minikube, make sure
-> to run `kubectl port-forward service/frontend 8080:80` to forward the cluster port to the local
+> to run `kubectl port-forward $(kubectl get service -l app=nginx -o name) 8080:80` to forward the cluster port to the local
 > machine and access the service via `localhost:8080`.
 
 ```sh

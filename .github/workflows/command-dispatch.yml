@@ -1,0 +1,21 @@
+name: Command dispatch for testing
+on:
+  issue_comment:
+    types:
+    - created
+    - edited
+jobs:
+  command-dispatch-for-testing:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+    - name: Run Build
+      uses: peter-evans/slash-command-dispatch@40877f718dce0101edfc7aea2b3800cc192f9ed5 # v2
+      with:
+        commands: run-tests
+        issue-type: pull-request
+        permission: write
+        reaction-token: ${{ secrets.GITHUB_TOKEN }}
+        repository: pulumi/examples
+        token: ${{ secrets.EVENT_PAT }}

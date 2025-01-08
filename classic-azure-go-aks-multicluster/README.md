@@ -1,10 +1,10 @@
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-go-aks-multicluster/README.md#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-go-aks-multicluster/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-go-aks-multicluster/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-go-aks-multicluster/README.md#gh-dark-mode-only)
 
 # Multiple Azure Kubernetes Service (AKS) Clusters
 
 This example demonstrates creating multiple Azure Kubernetes Service (AKS) clusters in different regions and with
-different node counts. Please see https://docs.microsoft.com/en-us/azure/aks/ for more information about AKS.
+different node counts. Please see <https://docs.microsoft.com/en-us/azure/aks/> for more information about AKS.
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ We will be deploying to Azure, so you will need an Azure account. If you don't h
 
 ## Running the Example
 
-> **Note**: Due to an issue in the Azure Terraform Provider (https://github.com/terraform-providers/terraform-provider-azurerm/issues/1635) the
+> **Note**: Due to an issue in the Azure Terraform Provider (<https://github.com/terraform-providers/terraform-provider-azurerm/issues/1635>) the
 > creation of an Azure Service Principal, which is needed to create the Kubernetes cluster (see main.go), is delayed and may not
 > be available when the cluster is created.  If you get a Service Principal not found error, as a work around, you should be able to run `pulumi up`
 > again, at which time the Service Principal should have been created.
@@ -26,29 +26,29 @@ After cloning this repo, `cd` into it and run these commands.
 1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init
+    pulumi stack init
     ```
 
 2. Set the required configuration variables for this program:
 
     ```bash
-    $ pulumi config set azure:environment public
-    $ pulumi config set password --secret [your-cluster-password-here]
-    $ ssh-keygen -t rsa -f key.rsa
-    $ pulumi config set sshPublicKey < key.rsa.pub
+    pulumi config set azure:environment public
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+    ssh-keygen -t rsa -f key.rsa
+    pulumi config set sshPublicKey < key.rsa.pub
     ```
 
 3. Deploy everything with the `pulumi up` command. This provisions all the Azure resources necessary, including
    an Active Directory service principal and AKS clusters:
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
 
 4. After a couple minutes, your AKS clusters will be ready. The AKS cluster names will be printed as output variables
    once `pulumi up` completes.
 
-    ```bash
+    ```console
     $ pulumi up
     ...
 
@@ -67,6 +67,6 @@ After cloning this repo, `cd` into it and run these commands.
 6. Once you are done, you can destroy all of the resources, and the stack:
 
     ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
+    pulumi destroy
+    pulumi stack rm
     ```

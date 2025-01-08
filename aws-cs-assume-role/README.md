@@ -54,7 +54,7 @@ directory, replacing `{YOUR_STACK_PATH/assume-role-create}` with the full name o
 
 ```bash
 $ cd assume-role
-$ npm install
+$ pulumi install
 $ export AWS_ACCESS_KEY_ID="$(pulumi stack output --stack {YOUR_STACK_PATH/assume-role-create} accessKeyId)"
 $ export AWS_SECRET_ACCESS_KEY="$(pulumi stack output --stack {YOUR_STACK_PATH/assume-role-create} --show-secrets secretAccessKey)"
 ```

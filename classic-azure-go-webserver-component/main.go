@@ -5,8 +5,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-azure/sdk/v4/go/azure/core"
-	"github.com/pulumi/pulumi-azure/sdk/v4/go/azure/network"
+	"github.com/pulumi/pulumi-azure/sdk/v6/go/azure/core"
+	"github.com/pulumi/pulumi-azure/sdk/v6/go/azure/network"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
@@ -35,8 +35,8 @@ func main() {
 			AddressSpaces:     pulumi.StringArray{pulumi.String("10.0.0.0/16")},
 			Subnets: network.VirtualNetworkSubnetArray{
 				network.VirtualNetworkSubnetArgs{
-					Name:          pulumi.String("default"),
-					AddressPrefix: pulumi.String("10.0.1.0/24"),
+					Name:            pulumi.String("default"),
+					AddressPrefixes: pulumi.StringArray([]pulumi.StringInput{pulumi.String("10.0.1.0/24")}),
 				},
 			},
 		})

@@ -2,14 +2,14 @@
     "name": "voting-app",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "^18.0.0",
-        "typescript": "^4.6.2"
+        "@types/node": "18.19.68",
+        "typescript": "4.9.5"
     },
     "dependencies": {
-        "@pulumi/aws": "^6.0.0",
-        "@pulumi/awsx": "^2.0.2",
-        "@pulumi/postgresql": "^3.0.0",
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/awsx": "2.19.0",
+        "@pulumi/postgresql": "3.14.0",
+        "@pulumi/pulumi": "3.144.1",
         "pg": "^8.6.0"
     }
 }

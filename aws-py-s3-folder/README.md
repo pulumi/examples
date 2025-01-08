@@ -1,5 +1,5 @@
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-s3-folder/README.md#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-s3-folder/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-s3-folder/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-s3-folder/README.md#gh-dark-mode-only)
 
 # Host a Static Website on Amazon S3
 
@@ -32,7 +32,7 @@ with `***`.
 
         Type                    Name                  Plan
     +   pulumi:pulumi:Stack     aws-py-s3-folder-dev  create
-    +   ├─ aws:s3:Bucket        s3-website-bucket     create
+    +   ├─ aws:s3:BucketV2      s3-website-bucket     create
     +   ├─ aws:s3:BucketObject  index.html            create
     +   ├─ aws:s3:BucketObject  python.png            create
     +   ├─ aws:s3:BucketObject  favicon.png           create

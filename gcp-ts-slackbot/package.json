@@ -4,15 +4,15 @@
     "dependencies": {
         "@google-cloud/firestore": "^4.9.9",
         "@google-cloud/pubsub": "^2.11.0",
-        "@pulumi/gcp": "^7.0.0",
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/gcp": "8.12.1",
+        "@pulumi/pulumi": "3.144.1",
         "body-parser": "^1.19.0",
         "express": "^4.17.1",
         "qs": "^6.10.1",
         "superagent": "^5.1.0"
     },
     "devDependencies": {
-        "@types/qs": "^6.9.6",
-        "@types/superagent": "^4.1.10"
+        "@types/qs": "6.9.17",
+        "@types/superagent": "4.1.24"
     }
 }

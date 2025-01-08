@@ -12,6 +12,13 @@ const siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     },
 });
 
+const siteBucketWebsiteConfig = new aws.s3.BucketWebsiteConfigurationV2("s3-website-bucket-config", {
+    bucket: siteBucket.id,
+    indexDocument: {
+        suffix: "index.html",
+    },
+});
+
 const publicAccessBlock = new aws.s3.BucketPublicAccessBlock("public-access-block", {
     bucket: siteBucket.id,
     blockPublicAcls: false,
@@ -49,4 +56,4 @@ const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
 
 // Stack exports
 export const bucketName = siteBucket.bucket;
-export const websiteUrl = siteBucket.websiteEndpoint;
+export const websiteUrl = siteBucketWebsiteConfig.websiteEndpoint;

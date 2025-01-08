@@ -17,10 +17,10 @@ class WebServerStack : Stack
             new VirtualNetworkArgs
             {
                 ResourceGroupName = resourceGroup.Name,
-                AddressSpaces = {"10.0.0.0/16"},
+                AddressSpaces = { "10.0.0.0/16" },
                 Subnets =
                 {
-                    new VirtualNetworkSubnetArgs {Name = "default", AddressPrefix = "10.0.1.0/24"}
+                    new VirtualNetworkSubnetArgs {Name = "default", AddressPrefixes = {"10.0.1.0/24"}}
                 }
             }
         );
@@ -29,7 +29,8 @@ class WebServerStack : Stack
             new PublicIpArgs
             {
                 ResourceGroupName = resourceGroup.Name,
-                AllocationMethod = "Dynamic"
+                AllocationMethod = "Dynamic",
+                Sku = "Basic",
             });
 
         var networkInterface = new NetworkInterface("server-nic",
@@ -52,7 +53,7 @@ class WebServerStack : Stack
             new VirtualMachineArgs
             {
                 ResourceGroupName = resourceGroup.Name,
-                NetworkInterfaceIds = {networkInterface.Id},
+                NetworkInterfaceIds = { networkInterface.Id },
                 VmSize = "Standard_A0",
                 DeleteDataDisksOnTermination = true,
                 DeleteOsDiskOnTermination = true,
@@ -82,7 +83,7 @@ nohup python -m SimpleHTTPServer 80 &"
                     Sku = "16.04-LTS",
                     Version = "latest"
                 }
-            }, new CustomResourceOptions {DeleteBeforeReplace = true});
+            }, new CustomResourceOptions { DeleteBeforeReplace = true });
 
 
         // The public IP address is not allocated until the VM is running, so wait for that
@@ -93,7 +94,7 @@ nohup python -m SimpleHTTPServer 80 &"
             {
                 (_, string name, string resourceGroupName) = t;
                 var ip = await GetPublicIP.InvokeAsync(new GetPublicIPArgs
-                    {Name = name, ResourceGroupName = resourceGroupName});
+                { Name = name, ResourceGroupName = resourceGroupName });
                 return ip.IpAddress;
             });
     }

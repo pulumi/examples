@@ -1,11 +1,11 @@
-from pulumi_azure import core, storage, sql, appservice, keyvault, authorization
+from pulumi_azure import core, storage, mssql, appservice, keyvault, authorization
 from pulumi import export, Output, asset
 import pulumi_random as random
 
 def createFirewallRules(arg):
     ips = arg.split(",")
     for ip in ips:
-        rule = sql.FirewallRule(
+        rule = mssql.FirewallRule(
             "FR%s" % ip,
             resource_group_name=resource_group.name,
             start_ip_address=ip,
@@ -32,7 +32,7 @@ administrator_login_password = random.RandomPassword(
     special=True,
 ).result
 
-sql_server = sql.SqlServer(
+sql_server = mssql.Server(
     "sqlserver",
     resource_group_name=resource_group.name,
     administrator_login_password=administrator_login_password,
@@ -40,11 +40,10 @@ sql_server = sql.SqlServer(
     version="12.0")
 
 
-database = sql.Database(
+database = mssql.Database(
     "sqldb",
-    resource_group_name=resource_group.name,
-    server_name=sql_server.name,
-    requested_service_objective_name="S0")
+    server_id=sql_server.id,
+    sku_name="S0")
 
 connection_string = Output.all(sql_server.name, database.name) \
     .apply(lambda args: f"Server=tcp:{args[0]}.database.windows.net;Database={args[1]};") or "1111"
@@ -57,14 +56,11 @@ text_blob = storage.Blob(
     source=asset.FileAsset("./README.md")
 )
 
-app_service_plan = appservice.Plan(
+app_service_plan = appservice.ServicePlan(
     "asp",
     resource_group_name=resource_group.name,
-    kind="App",
-    sku=appservice.PlanSkuArgs(
-        tier="Basic",
-        size="B1"
-    )
+    os_type="Linux",
+    sku_name="B1",
 )
 
 blob = storage.Blob(
@@ -87,7 +83,7 @@ vault = keyvault.KeyVault(
     access_policies=[keyvault.KeyVaultAccessPolicyArgs(
         tenant_id=tenant_id,
         object_id=current_principal,
-        secret_permissions=["delete", "get", "list", "set"]
+        secret_permissions=["Delete", "Get", "List", "Set"]
     )]
 )
 
@@ -95,7 +91,7 @@ blob_sas = storage.get_account_blob_container_sas_output(
     connection_string=storage_account.primary_connection_string,
     start="2020-01-01",
     expiry="2030-01-01",
-    container_name=container_storage_account.name,
+    container_name=container.name,
     permissions=storage.GetAccountBlobContainerSASPermissionsArgs(
         read=True,
         write=False,
@@ -118,13 +114,14 @@ secret = keyvault.Secret(
 secret_uri = Output.all(vault.vault_uri, secret.name, secret.version) \
     .apply(lambda args: f"{args[0]}secrets/{args[1]}/{args[2]}")
 
-app = appservice.AppService(
+app = appservice.LinuxWebApp(
     "app",
     resource_group_name=resource_group.name,
-    app_service_plan_id=app_service_plan.id,
+    service_plan_id=app_service_plan.id,
     identity=appservice.AppServiceIdentityArgs(
         type="SystemAssigned",
     ),
+    site_config={},
     app_settings={
         "WEBSITE_RUN_FROM_ZIP": secret_uri.apply(lambda args: "@Microsoft.KeyVault(SecretUri=" + args + ")"),
         "StorageBlobUrl": text_blob.url,
@@ -144,16 +141,7 @@ policy = keyvault.AccessPolicy(
     key_vault_id=vault.id,
     tenant_id=tenant_id,
     object_id=principal_id,
-    secret_permissions=["get"])
-
-sql_admin = sql.ActiveDirectoryAdministrator(
-    "adamin",
-    resource_group_name=resource_group.name,
-    tenant_id=tenant_id,
-    object_id=principal_id,
-    login="adadmin",
-    server_name=sql_server.name)
-
+    secret_permissions=["Get"])
 
 blob_permission = authorization.Assignment(
     "readblob",
@@ -164,6 +152,6 @@ blob_permission = authorization.Assignment(
 
 ips = app.outbound_ip_addresses.apply(createFirewallRules)
 
-export("endpoint", app.default_site_hostname.apply(
+export("endpoint", app.default_hostname.apply(
     lambda endpoint: "https://" + endpoint
 ))

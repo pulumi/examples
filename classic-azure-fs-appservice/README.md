@@ -1,5 +1,5 @@
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-fs-appservice/README.md#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-fs-appservice/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-fs-appservice/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-fs-appservice/README.md#gh-dark-mode-only)
 
 # Azure App Service with SQL Database and Application Insights
 
@@ -19,33 +19,34 @@ To deploy your infrastructure, follow the below steps.
 
 ### Steps
 
-1.  Create a new stack:
+1. Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1.  Configure the location to deploy the resources to:
+1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
+    ```bash
+    az login
     ```
-    $ pulumi config set azure:location <location>
+
+1. Configure the location to deploy the resources to:
+
+    ```bash
+    pulumi config set azure:location <location>
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
 1. Define SQL Server password (make it complex enough to satisfy Azure policy):
 
-    ```
+    ```bash
     pulumi config set --secret sqlPassword <value>
     ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Run `pulumi up` to preview and deploy changes:
 
-    ```
+    ```console
     $ pulumi up
     Previewing changes:
     ...
@@ -57,9 +58,9 @@ To deploy your infrastructure, follow the below steps.
     Update duration: 1m14.59910109s
     ```
 
-1.  Check the deployed website endpoint:
+1. Check the deployed website endpoint:
 
-    ```
+    ```console
     $ pulumi stack output endpoint
     https://azpulumi-as0ef47193.azurewebsites.net
     $ curl "$(pulumi stack output endpoint)"
@@ -70,11 +71,11 @@ To deploy your infrastructure, follow the below steps.
     </html>
     ```
 
-6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
+1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
-7. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
 
     ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
+    pulumi destroy --yes
+    pulumi stack rm --yes
     ```

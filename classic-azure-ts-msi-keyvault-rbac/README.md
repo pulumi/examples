@@ -1,5 +1,5 @@
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-msi-keyvault-rbac/README.md#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-msi-keyvault-rbac/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-msi-keyvault-rbac/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-msi-keyvault-rbac/README.md#gh-dark-mode-only)
 
 # Managing Secrets and Secure Access in Azure Applications
 
@@ -17,39 +17,40 @@ The application consists of several parts:
 
 ## Running the App
 
-1.  Create a new stack:
+1. Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1.  Restore NPM dependencies:
+1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
-    ```
-    $ npm install
-    ```
-
-1.  Build and publish the ASP.NET Core project:
-
-    ```
-    $ dotnet publish webapp
+    ```bash
+    az login
     ```
 
-1. Set an appropriate Azure location like:
+1. Restore NPM dependencies:
 
-    ```
-    $ pulumi config set azure:location westus
+    ```bash
+    npm install
     ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Build and publish the ASP.NET Core project:
 
+    ```bash
+    dotnet publish webapp
     ```
+
+1. Configure target Azure environment:
+
+    ```bash
+    pulumi config set azure:location <location>
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+    ```
+
+1. Run `pulumi up` to preview and deploy changes:
+
+    ```console
     $ pulumi up
     Previewing changes:
     ...
@@ -61,9 +62,9 @@ The application consists of several parts:
     Update duration: 4m16s
     ```
 
-1.  Check the deployed website endpoint:
+1. Check the deployed website endpoint:
 
-    ```
+    ```console
     $ pulumi stack output endpoint
     https://app129968b8.azurewebsites.net/
     $ curl "$(pulumi stack output endpoint)"

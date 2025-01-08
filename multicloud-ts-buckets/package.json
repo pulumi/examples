@@ -1,11 +1,11 @@
 {
     "name": "aws-typescript",
     "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@types/node": "8.10.66"
     },
     "dependencies": {
-        "@pulumi/aws": "^6.0.2",
-        "@pulumi/gcp": "^7.0.0",
-        "@pulumi/pulumi": "^3.0.0"
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/gcp": "8.12.1",
+        "@pulumi/pulumi": "3.144.1"
     }
 }

@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-docker-gcr-cloudrun/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-docker-gcr-cloudrun/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-docker-gcr-cloudrun/README.md#gh-dark-mode-only)
 
 # Docker Build and Push to GCR and Deploy to Google Cloud Run using separate projects
 
@@ -34,22 +35,22 @@ An example of building a custom Docker image and pushing it into a Google Cloud 
 4.  Configure your GCP project and region:
 
     ```
-    $ pulumi config set gcp:project <projectname> 
+    $ pulumi config set gcp:project <projectname>
     $ pulumi config set gcp:region <region>
     ```
 
 5.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing update (dev):
     ...
 
     Updating (dev):
-        Type                   Name                 Status      
-    +   pulumi:pulumi:Stack    gcr-build-image-dev  created     
-    +   └─ docker:image:Image  ruby-app             created     
-    
+        Type                   Name                 Status
+    +   pulumi:pulumi:Stack    gcr-build-image-dev  created
+    +   └─ docker:image:Image  ruby-app             created
+
     Outputs:
         digest: "gcr.io/velvety-rock-274215/ruby-app:latest-fee86d3d35fccf2ad4d86bbfcdd489acf7b1e4db0ebb8166378bd1fb0ca9cee6"
 
@@ -60,7 +61,7 @@ An example of building a custom Docker image and pushing it into a Google Cloud 
     ```
 
 
-## Deploy Cloud Run 
+## Deploy Cloud Run
 
 1. Navigate to the `cloud-run-deploy` directory
 
@@ -80,35 +81,35 @@ An example of building a custom Docker image and pushing it into a Google Cloud 
 4.  Configure your GCP project, region and docker config file:
 
     ```
-    $ pulumi config set gcp:project <projectname> 
+    $ pulumi config set gcp:project <projectname>
     $ pulumi config set gcp:region <region>
     $ pulumi config set docker-config-file <location of ~/.docker/config.json>
     ```
 
 5.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing update (dev):
-        Type                         Name                   Plan       
-    +   pulumi:pulumi:Stack          cloud-run-deploy-dev   create     
-    +   ├─ pulumi:providers:docker   gcr                    create     
-    +   ├─ docker:index:RemoteImage  ruby-app-docker-image  create     
-    +   ├─ gcp:cloudrun:Service      ruby                   create     
-    +   └─ gcp:cloudrun:IamMember    ruby-everyone          create     
-    
+        Type                         Name                   Plan
+    +   pulumi:pulumi:Stack          cloud-run-deploy-dev   create
+    +   ├─ pulumi:providers:docker   gcr                    create
+    +   ├─ docker:index:RemoteImage  ruby-app-docker-image  create
+    +   ├─ gcp:cloudrun:Service      ruby                   create
+    +   └─ gcp:cloudrun:IamMember    ruby-everyone          create
+
     Resources:
         + 5 to create
 
     Do you want to perform this update? yes
     Updating (dev):
-        Type                         Name                   Status      
-    +   pulumi:pulumi:Stack          cloud-run-deploy-dev   created     
-    +   ├─ pulumi:providers:docker   gcr                    created     
-    +   ├─ docker:index:RemoteImage  ruby-app-docker-image  created     
-    +   ├─ gcp:cloudrun:Service      ruby                   created     
-    +   └─ gcp:cloudrun:IamMember    ruby-everyone          created     
-    
+        Type                         Name                   Status
+    +   pulumi:pulumi:Stack          cloud-run-deploy-dev   created
+    +   ├─ pulumi:providers:docker   gcr                    created
+    +   ├─ docker:index:RemoteImage  ruby-app-docker-image  created
+    +   ├─ gcp:cloudrun:Service      ruby                   created
+    +   └─ gcp:cloudrun:IamMember    ruby-everyone          created
+
     Outputs:
         rubyUrl: "https://ruby-app-7a54c5f5e006d5cf33c2-zgms4nzdba-uc.a.run.app"
 

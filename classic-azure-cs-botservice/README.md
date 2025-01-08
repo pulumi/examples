@@ -1,5 +1,5 @@
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-cs-botservice/README.md#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-cs-botservice/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-cs-botservice/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-cs-botservice/README.md#gh-dark-mode-only)
 
 # Azure Bot Service with Application Insights
 
@@ -21,41 +21,42 @@ To deploy your infrastructure, follow the below steps.
 
 ### Publish Bot Steps
 
-1.  Within the **/bot** subfolder, publish the bot to subfolder called publish:
+1. Within the **/bot** subfolder, publish the bot to subfolder called publish:
 
     ```bash
-    $ dotnet publish -o publish
+    dotnet publish -o publish
     ```
 
 ### Pulumi Steps
 
-1.  Within the **azure-cs-botservice** folder, create a new stack:
+1. Within the **azure-cs-botservice** folder, create a new stack:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
-2.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
-    $ az login
+    az login
     ```
 
-3.  Configure the location to deploy the resources to:
+1. Configure the location to deploy the resources to:
 
     ```bash
-    $ pulumi config set azure:location "North Europe"
+    pulumi config set azure:location "North Europe"
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
-4.  Configure the Bot Name:
+1. Configure the Bot Name:
 
     ```bash
-    $ pulumi config set botName PulumiBot1
+    pulumi config set botName PulumiBot1
     ```
 
-5.  Run `pulumi up` to preview and deploy changes:
+1. Run `pulumi up` to preview and deploy changes:
 
-    ```bash
+    ```console
     $ pulumi up
     Previewing changes:
     ...
@@ -67,20 +68,20 @@ To deploy your infrastructure, follow the below steps.
     Update duration: 1m22s
     ```
 
-6.  Check the deployed bot using either:
+1. Check the deployed bot using either:
 
-   * Azure Portal Azure Bot Service - [Test in Webchat feature](https://docs.microsoft.com/en-us/azure/bot-service/abs-quickstart?view=azure-bot-service-4.0#test-the-bot)
-   * [Bot Framework Emulator](https://github.com/Microsoft/BotFramework-Emulator) pointing to the output bot endpoint and Microsoft Application Id and the secret you supplied:
+    * Azure Portal Azure Bot Service - [Test in Webchat feature](https://docs.microsoft.com/en-us/azure/bot-service/abs-quickstart?view=azure-bot-service-4.0#test-the-bot)
+    * [Bot Framework Emulator](https://github.com/Microsoft/BotFramework-Emulator) pointing to the output bot endpoint and Microsoft Application Id and the secret you supplied:
 
-      ```bash
-      $ BotEndpoint: "https://app8asdf.azurewebsites.net/api/messages"
-      $ MicrosoftAppId: "b5e65403-923c-4568-z2f6-a6f41b258azz"
-      $ MicrosoftAppPassword: "<secret>"
-      ```
+        ```yaml
+        BotEndpoint: "https://app8asdf.azurewebsites.net/api/messages"
+        MicrosoftAppId: "b5e65403-923c-4568-z2f6-a6f41b258azz"
+        MicrosoftAppPassword: "<secret>"
+        ```
 
-7.  Once you've finished, you can tear down your stack's resources by destroying and removing it:
+1. Once you've finished, you can tear down your stack's resources by destroying and removing it:
 
     ```bash
-    $ pulumi destroy -y
-    $ pulumi stack rm -y
+    pulumi destroy -y
+    pulumi stack rm -y
     ```

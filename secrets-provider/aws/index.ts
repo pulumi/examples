@@ -10,10 +10,14 @@ const config = new pulumi.Config();
 const bucketName = config.require('bucketName');
 const secretValue = config.requireSecret('secretValue');
 
-// Create a private bucket
-const bucket = new aws.s3.Bucket("bucket", {
+// Create a private bucket.
+//
+// The configuration is kept very simple as the goal of this example is to demonstrate KMS encryption, not storing
+// secrets in buckets securely. In a real-world scenario if you are certain you need to be storing sensitive data in
+// buckets and have eliminated other storage options, consider setting up a custom KMS key, enforcing TLS, and enabling
+// versioning for the bucket.
+const bucket = new aws.s3.BucketV2("bucket", {
     bucket: bucketName,
-    acl: "private",
 });
 
 // Create an object from the secret value

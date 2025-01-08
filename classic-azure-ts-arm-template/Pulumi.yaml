@@ -1,3 +1,0 @@
-name: azure-arm-template
-runtime: nodejs
-description: An example of deploying an Azure Resource Manager (ARM) template using Pulumi.

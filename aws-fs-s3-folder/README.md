@@ -1,5 +1,5 @@
-[![Deploy](../.buttons/deploy-with-pulumi-dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-fs-s3-folder/README.md#gh-light-mode-only)
-[![Deploy](../.buttons/deploy-with-pulumi-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-fs-s3-folder/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-fs-s3-folder/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-fs-s3-folder/README.md#gh-dark-mode-only)
 
 # Host a Static Website on Amazon S3
 
@@ -25,7 +25,7 @@ A static website that uses [S3's website support](https://docs.aws.amazon.com/Am
     Previewing update (dev):
         Type                       Name                  Plan
     +   pulumi:pulumi:Stack        aws-cs-s3-folder-dev  create
-    +   └─ aws:s3:Bucket           my-bucket             create
+    +   └─ aws:s3:BucketV2         my-bucket             create
     +      ├─ aws:s3:BucketObject  index.html            create
     +      └─ aws:s3:BucketObject  favicon.png           create
 
@@ -36,7 +36,7 @@ A static website that uses [S3's website support](https://docs.aws.amazon.com/Am
     Updating (dev):
         Type                       Name                  Status
     +   pulumi:pulumi:Stack        aws-cs-s3-folder-dev  created
-    +   └─ aws:s3:Bucket           my-bucket             created
+    +   └─ aws:s3:BucketV2         my-bucket             created
     +      ├─ aws:s3:BucketObject  index.html            created
     +      └─ aws:s3:BucketObject  favicon.png           created
 
