@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/random-yaml/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/random-yaml/README.md#gh-dark-mode-only)
+
 # Generate secure random passwords to use in deployments
 
 The [Random package](https://www.pulumi.com/registry/packages/random/api-docs/) provides resources with outputs that are random IDs, passwords, or other data.

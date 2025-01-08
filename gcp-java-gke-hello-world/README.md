@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-java-gke-hello-world/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-java-gke-hello-world/README.md#gh-dark-mode-only)
+
 # Google Kubernetes Engine (GKE) Cluster
 
 This example deploys an Google Cloud Platform (GCP) [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) cluster, and deploys a Kubernetes Namespace and Deployment of NGINX
@@ -64,18 +67,18 @@ After cloning this repo, from this working directory, run these commands:
     ```bash
     $ pulumi up --yes
         Previewing update (demo)
-        
+
         View Live: https://app.pulumi.com/***/gcp-java-gke-hello-world/demo/previews/2d73ed89-a034-4d78-8e63-806fdc81a25b
-        
+
              Type                              Name                           Plan       Info
          +   pulumi:pulumi:Stack               gcp-java-gke-hello-world-demo  create     6 messages
-         +   ├─ gcp:container:Cluster          helloworld                     create     
-         +   ├─ gcp:container:NodePool         primary-node-pool              create     
-         +   ├─ pulumi:providers:kubernetes    helloworld                     create     
-         +   ├─ kubernetes:core/v1:Namespace   helloworld                     create     
-         +   ├─ kubernetes:apps/v1:Deployment  helloworld                     create     
-         +   └─ kubernetes:core/v1:Service     helloworld                     create     
-         
+         +   ├─ gcp:container:Cluster          helloworld                     create
+         +   ├─ gcp:container:NodePool         primary-node-pool              create
+         +   ├─ pulumi:providers:kubernetes    helloworld                     create
+         +   ├─ kubernetes:core/v1:Namespace   helloworld                     create
+         +   ├─ kubernetes:apps/v1:Deployment  helloworld                     create
+         +   └─ kubernetes:core/v1:Service     helloworld                     create
+
         Diagnostics:
           pulumi:pulumi:Stack (gcp-java-gke-hello-world-demo):
             > Task :app:compileJava UP-TO-DATE
@@ -84,21 +87,21 @@ After cloning this repo, from this working directory, run these commands:
             > Task :app:run
             BUILD SUCCESSFUL in 2s
             2 actionable tasks: 1 executed, 1 up-to-date
-         
-        
+
+
         Updating (demo)
-        
+
         View Live: https://app.pulumi.com/***/gcp-java-gke-hello-world/demo/updates/1
-        
+
              Type                              Name                           Status      Info
          +   pulumi:pulumi:Stack               gcp-java-gke-hello-world-demo  created     30 messages
-         +   ├─ gcp:container:Cluster          helloworld                     created     
-         +   ├─ gcp:container:NodePool         primary-node-pool              created     
-         +   ├─ pulumi:providers:kubernetes    helloworld                     created     
-         +   ├─ kubernetes:core/v1:Namespace   helloworld                     created     
-         +   ├─ kubernetes:apps/v1:Deployment  helloworld                     created     
-         +   └─ kubernetes:core/v1:Service     helloworld                     created     
-         
+         +   ├─ gcp:container:Cluster          helloworld                     created
+         +   ├─ gcp:container:NodePool         primary-node-pool              created
+         +   ├─ pulumi:providers:kubernetes    helloworld                     created
+         +   ├─ kubernetes:core/v1:Namespace   helloworld                     created
+         +   ├─ kubernetes:apps/v1:Deployment  helloworld                     created
+         +   └─ kubernetes:core/v1:Service     helloworld                     created
+
         Diagnostics:
           pulumi:pulumi:Stack (gcp-java-gke-hello-world-demo):
             > Task :app:compileJava UP-TO-DATE
@@ -107,7 +110,7 @@ After cloning this repo, from this working directory, run these commands:
             > Task :app:run
             BUILD SUCCESSFUL in 11m 17s
             2 actionable tasks: 1 executed, 1 up-to-date
-         
+
         Outputs:
             clusterName    : "helloworld-10e2053"
             deploymentName : "helloworld-krnibosh"
@@ -117,10 +120,10 @@ After cloning this repo, from this working directory, run these commands:
             serviceName    : "helloworld-h7jipvp8"
             servicePublicIP: "***"
             urn            : "urn:pulumi:demo::gcp-java-gke-hello-world::pulumi:pulumi:Stack::gcp-java-gke-hello-world-demo"
-        
+
         Resources:
             + 7 created
-        
+
         Duration: 11m18s
     ```
 

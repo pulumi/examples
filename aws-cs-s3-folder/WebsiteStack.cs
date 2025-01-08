@@ -9,13 +9,16 @@ class WebsiteStack : Stack
     public WebsiteStack()
     {
         // Create an AWS resource (S3 Bucket)
-        var bucket = new Bucket("my-bucket", new BucketArgs
+        var bucket = new BucketV2("my-bucket", new BucketV2Args {});
+
+        var bucketWebsite = new BucketWebsiteConfigurationV2("website-config", new()
         {
-            Website = new BucketWebsiteArgs
+            Bucket = bucket.Id,
+            IndexDocument = new BucketWebsiteConfigurationV2IndexDocumentArgs
             {
-                IndexDocument = "index.html"
-            }
-        });
+                Suffix = "index.html",
+            },
+        }, new CustomResourceOptions {Parent = bucket});
 
         var ownershipControls = new BucketOwnershipControls("ownership-controls", new()
         {
@@ -43,13 +46,13 @@ class WebsiteStack : Stack
             var bucketObject = new BucketObject(name, new BucketObjectArgs
             {
                 Acl = "public-read",
-                Bucket = bucket.BucketName,
+                Bucket = bucket.Bucket,
                 ContentType = contentType,
                 Source = new FileAsset(file)
             }, new CustomResourceOptions {Parent = bucket, DependsOn = new Pulumi.Resource[]{ publicAccessBlock, ownershipControls }});
         }
 
-        this.Endpoint = Output.Format($"http://{bucket.WebsiteEndpoint}");
+        this.Endpoint = Output.Format($"http://{bucketWebsite.WebsiteEndpoint}");
     }
 
     [Output] public Output<string> Endpoint { get; set; }

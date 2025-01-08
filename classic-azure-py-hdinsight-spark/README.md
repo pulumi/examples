@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-hdinsight-spark/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-hdinsight-spark/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-hdinsight-spark/README.md#gh-dark-mode-only)
 
 # Spark on Azure HDInsight
 
@@ -9,31 +10,32 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
 1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
-    $ az login
+    az login
     ```
 
-1. Specify the Azure location to use:
+1. Specify the Azure location and subscription to use:
 
     ```bash
-    $ pulumi config set azure:location WestUS
+    pulumi config set azure:location WestUS
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
 1. Define Spark username and password (make it complex enough to satisfy Azure policy):
 
     ```bash
-    $ pulumi config set username <value>
-    $ pulumi config set --secret password <value>
+    pulumi config set username <value>
+    pulumi config set --secret password <value>
     ```
 
 1. Run `pulumi up` to preview and deploy changes:
 
-    ``` bash
+    ``` console
     $ pulumi up
     Previewing changes:
     ...
@@ -47,7 +49,7 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
 
 1. Check the deployed Spark endpoint:
 
-    ```bash
+    ```console
     $ pulumi stack output endpoint
     https://myspark1234abcd.azurehdinsight.net/
 

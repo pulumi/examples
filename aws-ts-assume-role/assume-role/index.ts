@@ -16,7 +16,7 @@ const provider = new aws.Provider("privileged", {
 });
 
 // Create an AWS resource (S3 Bucket)
-const bucket = new aws.s3.Bucket("my-bucket", {}, {provider: provider});
+const bucket = new aws.s3.BucketV2("my-bucket", {}, {provider: provider});
 
 // Export the DNS name of the bucket
 export const bucketName = bucket.bucketDomainName;

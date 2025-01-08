@@ -6,6 +6,7 @@ open Pulumi.Azure.ContainerService
 open Pulumi.Azure.ContainerService.Inputs
 open Pulumi.Azure.Core
 open Pulumi.Docker
+open Pulumi.Docker.Inputs
 
 [<AutoOpen>]
 module Helpers =
@@ -14,10 +15,10 @@ module Helpers =
 let infra () =
     let resourceGroup = ResourceGroup "aci-rg"
 
-    let registry =
+    let registry: Registry =
         Registry("registry",
-            RegistryArgs
-               (ResourceGroupName = io resourceGroup.Name,
+            Azure.ContainerService.RegistryArgs(
+                ResourceGroupName = io resourceGroup.Name,
                 AdminEnabled = input true,
                 Sku = input "Premium"))
 
@@ -26,9 +27,9 @@ let infra () =
         Image("node-app",
             ImageArgs
                (ImageName = imageName,
-                Build = inputLeft "./app",
+                Build = input (DockerBuildArgs(Dockerfile = "./app")),
                 Registry = input(
-                    ImageRegistry
+                    RegistryArgs
                        (Server = io registry.LoginServer,
                         Username = io registry.AdminUsername,
                         Password = io registry.AdminPassword))))

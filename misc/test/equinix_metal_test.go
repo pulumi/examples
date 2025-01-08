@@ -1,4 +1,4 @@
-// +build equinix_metal all
+// +build equinix all
 
 package test
 
@@ -9,19 +9,19 @@ import (
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 )
 
-func TestAccEquinixMetalPyWebserver(t *testing.T) {
+func TestAccEquinixPyWebserver(t *testing.T) {
 	test := getBaseOptions(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "equinix-metal-py-webserver"),
+			Dir: path.Join(getCwd(t), "..", "..", "equinix-py-webserver"),
 		})
 
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccEquinixMetalTsWebserver(t *testing.T) {
+func TestAccEquinixTsWebserver(t *testing.T) {
 	test := getBaseOptions(t).
 		With(integration.ProgramTestOptions{
-			Dir: path.Join(getCwd(t), "..", "..", "equinix-metal-ts-webserver"),
+			Dir: path.Join(getCwd(t), "..", "..", "equinix-ts-webserver"),
 		})
 
 	integration.ProgramTest(t, &test)

@@ -1,0 +1,230 @@
+name: Test examples
+on:
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: 0 9 * * *
+  repository_dispatch:
+    types:
+      - run-tests-command
+  workflow_dispatch: {}
+
+jobs:
+  lint-ts:
+    name: TypeScript lint checks
+    runs-on: pulumi-ubuntu-8core
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup
+        id: setup
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lint
+        run: |
+          tslint -c tslint.json **/*.ts
+
+  unit-ts:
+    name: TypeScript unit tests
+    runs-on: pulumi-ubuntu-8core
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup
+        id: setup
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: unit tests
+        working-directory: testing-unit-ts/mocha
+        run: |
+          npm install
+          npm test
+
+  unit-py:
+    name: Python unit tests
+    runs-on: pulumi-ubuntu-8core
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup
+        id: setup
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: unit tests
+        working-directory: testing-unit-py
+        run: |
+          pip install -r requirements.txt
+          python -m pytest
+
+  unit-go:
+    name: Go unit tests
+    runs-on: pulumi-ubuntu-8core
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup
+        id: setup
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: unit tests
+        working-directory: testing-unit-go
+        run: go test
+
+  unit-dotnet:
+    name: .NET unit tests
+    runs-on: pulumi-ubuntu-8core
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup
+        id: setup
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: unit tests
+        working-directory: ${{ matrix.source-dir }}
+        run: |
+          dotnet test
+
+    strategy:
+      fail-fast: false
+      matrix:
+        source-dir:
+          - testing-unit-cs
+          - testing-unit-cs-mocks
+          - testing-unit-fs-mocks
+
+  providers:
+    name: ${{ matrix.clouds }}${{ matrix.languages }} integration tests
+    runs-on: pulumi-ubuntu-8core
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup
+        id: setup
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run tests
+        run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ steps.setup.outputs.aws-access-key-id }}
+          AWS_SECRET_ACCESS_KEY: ${{ steps.setup.outputs.aws-secret-access-key }}
+          AWS_SESSION_TOKEN: ${{ steps.setup.outputs.aws-session-token }}
+          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_ENVIRONMENT: public
+          ARM_LOCATION: westus
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          GOOGLE_PROJECT: ${{ steps.setup.outputs.google-project-name }}
+          GOOGLE_REGION: ${{ steps.setup.outputs.google-region }}
+          GOOGLE_ZONE: ${{ steps.setup.outputs.google-zone }}
+          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_API: https://api.pulumi-staging.io
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - pulumi-ubuntu-8core
+        clouds:
+          - DigitalOcean
+          - Aws
+          - Azure
+          - Gcp
+          - Packet
+          - EquinixMetal
+        languages:
+          - Cs
+          - Js
+          - Ts
+          - Py
+          - Fs
+
+  kubernetes:
+    name: Kubernetes integration tests
+    runs-on: pulumi-ubuntu-8core
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup
+        id: setup
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run tests
+        run: |
+          ./misc/scripts/create-ci-cluster.sh "${{ env.INFRA_STACK_NAME }}"
+          mkdir -p "$HOME/.kube/"
+          pulumi stack -s "${{ env.INFRA_STACK_NAME }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
+          make specific_test_set TestSet=Kubernetes
+          ./misc/scripts/destroy-ci-cluster.sh "${{ env.INFRA_STACK_NAME }}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ steps.setup.outputs.aws-access-key-id }}
+          AWS_SECRET_ACCESS_KEY: ${{ steps.setup.outputs.aws-secret-access-key }}
+          AWS_SESSION_TOKEN: ${{ steps.setup.outputs.aws-session-token }}
+          AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_API: https://api.pulumi-staging.io
+          INFRA_STACK_NAME: ${{ github.sha }}-${{ github.run_number }}

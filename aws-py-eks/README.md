@@ -1,3 +1,5 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-eks/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-eks/README.md#gh-dark-mode-only)
 
 # Amazon EKS Cluster
 
@@ -76,7 +78,7 @@ To deploy your infrastructure, follow the below steps.
         Current stack outputs (1):
         OUTPUT                   VALUE
         cluster-name  eks-cluster-96b87e8
-    ```    
+    ```
 
 1.  Verify that the EKS cluster exists, by either using the AWS Console or running `aws eks list-clusters`.
 

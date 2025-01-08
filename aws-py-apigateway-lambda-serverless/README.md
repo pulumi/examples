@@ -1,6 +1,9 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-apigateway-lambda-serverless/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-apigateway-lambda-serverless/README.md#gh-dark-mode-only)
+
 # Lambda-backed API Gateway
 
-This example provides API endpoints which are executed by AWS Lambda using Python. 
+This example provides API endpoints which are executed by AWS Lambda using Python.
 The example sets up up two Lambda-backed API Gateways: an API Gateway V1 (REST) and an API Gateway V2 (HTTP). AWS provides some information on the differences between these two API Gateway types: [Announcing HTTP APIs for Amazon API Gateway](https://aws.amazon.com/blogs/compute/announcing-http-apis-for-amazon-api-gateway/) and [API Gateway V2 FAQs](https://aws.amazon.com/api-gateway/faqs/)
 
 This sample uses the following AWS products:

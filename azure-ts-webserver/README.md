@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-webserver/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-webserver/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-webserver/README.md#gh-dark-mode-only)
 
 # Web Server Using Azure Virtual Machine
 
@@ -27,7 +28,7 @@ These instructions assume you are running all commands in the same folder where 
     ```
     $ pulumi config set azure-native:location westus    # any valid Azure region will do
     $ pulumi config set username webmaster
-    $ pulumi config set password --secret <your-password> 
+    $ pulumi config set password --secret <your-password>
     ```
 
     Note that `--secret` ensures your password is encrypted safely.
@@ -46,7 +47,7 @@ These instructions assume you are running all commands in the same folder where 
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...

@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-js-s3-folder-component/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-js-s3-folder-component/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-js-s3-folder-component/README.md#gh-dark-mode-only)
 
 # Static Website Hosted on AWS S3
 
@@ -38,7 +39,7 @@ with `***`.
         Type                       Name                                                  Status      Info
     +   pulumi:pulumi:Stack        aws-js-s3-folder-component-website-component-testing  created
     +   └─ examples:S3Folder       pulumi-static-site                                    created
-    +      ├─ aws:s3:Bucket        pulumi-static-site                                    created
+    +      ├─ aws:s3:BucketV2      pulumi-static-site                                    created
     +      ├─ aws:s3:BucketPolicy  bucketPolicy                                          created
     +      ├─ aws:s3:BucketObject  favicon.png                                           created
     +      └─ aws:s3:BucketObject  index.html                                            created

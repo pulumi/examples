@@ -19,7 +19,7 @@ const network = new azure.network.VirtualNetwork("server-network", {
     addressSpaces: ["10.0.0.0/16"],
     subnets: [{
         name: "default",
-        addressPrefix: "10.0.1.0/24",
+        addressPrefixes: ["10.0.1.0/24"],
     }],
 });
 

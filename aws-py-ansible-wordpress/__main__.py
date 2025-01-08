@@ -40,7 +40,6 @@ prod_vpc = aws.ec2.Vpc("prod-vpc",
     cidr_block="10.192.0.0/16",
     enable_dns_support=True, # gives you an internal domain name
     enable_dns_hostnames=True, # gives yoiu an internal host name
-    enable_classiclink=False,
     instance_tenancy="default")
 
 # Create public subnets for the EC2 instance.

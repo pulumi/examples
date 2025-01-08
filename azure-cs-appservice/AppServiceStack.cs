@@ -2,6 +2,7 @@
 
 using Pulumi;
 using Pulumi.AzureNative.Insights;
+using Pulumi.AzureNative.OperationalInsights;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Sql;
 using Pulumi.AzureNative.Storage;
@@ -54,11 +55,16 @@ class AppServiceStack : Stack
 
         var codeBlobUrl = SignedBlobReadUrl(blob, container, storageAccount, resourceGroup);
 
+        var workspace = new Workspace("loganalyticsWorkspace", new WorkspaceArgs{
+            ResourceGroupName = resourceGroup.Name,
+        });
+
         var appInsights = new Component("appInsights", new ComponentArgs
         {
             ApplicationType = "web",
             Kind = "web",
             ResourceGroupName = resourceGroup.Name,
+            WorkspaceResourceId = workspace.Id
         });
 
         var config = new Config();

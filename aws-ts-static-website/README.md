@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-static-website/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-static-website/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-static-website/README.md#gh-dark-mode-only)
 
 # Secure Static Website Using Amazon S3, CloudFront, Route53, and Certificate Manager
 
@@ -131,7 +132,7 @@ and delete the bucket to continue.
 
 ## Fail to delete S3 bucket while running pulumi destroy, this bucket is not empty.
 
-The contents of the S3 bucket are not automatically deleted. You can manually delete these contents in the AWS Console or with 
+The contents of the S3 bucket are not automatically deleted. You can manually delete these contents in the AWS Console or with
 the AWS CLI.
 
 ## pulumi up fails when the targetDomain includes a www subdomain and includeWWW is set to true

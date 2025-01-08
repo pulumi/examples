@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-serverless-raw/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-serverless-raw/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-serverless-raw/README.md#gh-dark-mode-only)
 
 # Google Cloud Functions in Python, Go, and TypeScript Deployed with TypeScript
 
@@ -38,4 +39,3 @@ $ pulumi destroy
 ## TypeScript Notes
 
 In the `typescriptfunc` folder you'll notice more than a function. Some configuration is needed to inform GCP how to build TypeScript for the Node.js runtime environment. See [this example from Google for more details](https://github.com/GoogleCloudPlatform/functions-framework-nodejs/blob/master/docs/typescript.md).
-

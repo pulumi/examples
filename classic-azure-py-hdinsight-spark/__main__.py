@@ -37,18 +37,18 @@ spark_cluster = hdinsight.SparkCluster(
     ),
     roles=hdinsight.SparkClusterRolesArgs(
         head_node=hdinsight.SparkClusterRolesHeadNodeArgs(
-            vm_size="Standard_D12_v2",
+            vm_size="Standard_D12_V2",
             username=username,
             password=password
         ),
         worker_node=hdinsight.SparkClusterRolesWorkerNodeArgs(
-            vm_size="Standard_D12_v2",
+            vm_size="Standard_D12_V2",
             username=username,
             password=password,
             target_instance_count=3,
         ),
         zookeeper_node=hdinsight.SparkClusterRolesZookeeperNodeArgs(
-            vm_size="Standard_D12_v2",
+            vm_size="Standard_D12_V2",
             username=username,
             password=password,
         ),

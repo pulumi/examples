@@ -1,4 +1,0 @@
-name: webserver-equinix-metal
-description: A simple server on Equinix Metal.
-runtime: nodejs
-

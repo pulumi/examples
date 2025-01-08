@@ -1,12 +1,12 @@
 {
     "name": "aws-ts-apigateway-lambda-serverless",
     "devDependencies": {
-        "@types/aws-lambda": "^8.10.72",
-        "@types/node": "^10.0.0"
+        "@types/aws-lambda": "8.10.146",
+        "@types/node": "10.17.60"
     },
     "dependencies": {
-        "@pulumi/aws": "^5.0.0",
-        "@pulumi/awsx": "^0.40.0",
-        "@pulumi/pulumi": "^3.0.0"
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/awsx": "2.19.0",
+        "@pulumi/pulumi": "3.144.1"
     }
 }

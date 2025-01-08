@@ -18,12 +18,11 @@ ad_app = ad.Application(
 
 ad_sp = ad.ServicePrincipal(
     "aksSp",
-    application_id=ad_app.application_id)
+    client_id=ad_app.client_id)
 
 ad_sp_password = ad.ServicePrincipalPassword(
     "aksSpPassword",
     service_principal_id=ad_sp.id,
-    value=password,
     end_date="2099-01-01T00:00:00Z")
 
 aks_cluster_config = [
@@ -43,7 +42,7 @@ for config in aks_cluster_config:
             ),
         ),
         service_principal=containerservice.KubernetesClusterServicePrincipalArgs(
-            client_id=ad_app.application_id,
+            client_id=ad_app.client_id,
             client_secret=ad_sp_password.value
         ),
         location=config["location"],

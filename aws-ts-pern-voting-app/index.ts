@@ -75,7 +75,7 @@ const postgresqlRdsServer = new aws.rds.Instance("postgresql-rds-server", {
     engine: "postgres",
     username: sqlAdminName,
     password: sqlAdminPassword,
-    instanceClass: "db.t2.micro",
+    instanceClass: "db.t3.micro",
     allocatedStorage: 20,
     skipFinalSnapshot: true,
     publiclyAccessible: true,
@@ -135,14 +135,18 @@ const postgresqlVotesTable = new Schema("postgresql-votes-schema", {
     postgresUserName: postgresUser.name,
 });
 
-const serversideListener = new awsx.elasticloadbalancingv2.NetworkListener("server-side-listener", { port: 5000 });
+const repo = new awsx.ecr.Repository("repo", {});
+
+const loadbalancer = new awsx.lb.ApplicationLoadBalancer("loadbalancer", {});
+
+const serverImage = new awsx.ecr.Image("server-side-service", { repositoryUrl: repo.repository.repositoryUrl, context: "./serverside" });
 const serversideService = new awsx.ecs.FargateService("server-side-service", {
     taskDefinitionArgs: {
-        containers: {
-            serversideService: {
-                image: awsx.ecs.Image.fromPath("server-side-service", "./serverside"),
+        container: {
+                name: "serversideService",
+                image: serverImage.imageUri,
                 memory: 512,
-                portMappings: [serversideListener],
+                portMappings: [{containerPort: 5000, targetGroup: loadbalancer.defaultTargetGroup}],
                 environment: [
                     { name: "USER_NAME", value: sqlUserName },
                     { name: "USER_PASSWORD", value: sqlUserPassword },
@@ -150,25 +154,24 @@ const serversideService = new awsx.ecs.FargateService("server-side-service", {
                     { name: "RDS_PORT", value: String(2000) },
                     { name: "DATABASE_NAME", value: postgresDatabase.name },
                 ],
-            },
         },
     },
 });
 
-const clientsideListener = new awsx.elasticloadbalancingv2.NetworkListener("client-side-listener", { port: 3000 });
+const clientImage = new awsx.ecr.Image("client-side-service", { repositoryUrl: repo.repository.repositoryUrl, context: "./clientside" });
+const clientLB = new awsx.lb.ApplicationLoadBalancer("client-loadbalancer", {});
 const clientsideService = new awsx.ecs.FargateService("client-side-service", {
     taskDefinitionArgs: {
-        containers: {
-            clientsideService: {
-                image: awsx.ecs.Image.fromPath("client-side-service", "./clientside"),
+        container: {
+                name: "clientsideService",
+                image: clientImage.imageUri,
                 memory: 512,
-                portMappings: [clientsideListener],
+                portMappings: [{containerPort: 3000, targetGroup: clientLB.defaultTargetGroup}],
                 environment: [
-                    { name: "SERVER_HOSTNAME", value: serversideListener.endpoint.hostname },
+                    { name: "SERVER_HOSTNAME", value: loadbalancer.loadBalancer.dnsName },
                 ],
-            },
         },
     },
 });
 
-export let URL = clientsideListener.endpoint.hostname;
+export let URL = clientLB.loadBalancer.dnsName;

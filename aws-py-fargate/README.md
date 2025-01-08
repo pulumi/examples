@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-fargate/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-fargate/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-fargate/README.md#gh-dark-mode-only)
 
 # NGINX on AWS ECS Fargate using Python
 
@@ -97,7 +98,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
     </body>
     </html>
     ```
-   
+
 **Please Note**: It may take a few minutes for the app to start up. Until that point, you may receive a 503 error response code.
 
 1. Try making some changes, and rerunning `pulumi up`. For example, let's scale up to 3 instances:
@@ -123,7 +124,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
     Resources:
         ~ 1 updated
         9 unchanged
-  
+
     Duration: 14s
 
     Permalink: https://app.pulumi.com/acmecorp/aws-python-fargate/dev/updates/2

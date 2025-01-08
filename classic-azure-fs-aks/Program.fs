@@ -5,7 +5,7 @@ open Pulumi.Azure.Core
 open Pulumi.Azure.ContainerService
 open Pulumi.Azure.ContainerService.Inputs
 open Pulumi.Azure.Network
-open Pulumi.Azure.Role
+open Pulumi.Azure.Authorization
 open Pulumi.FSharp
 open Pulumi.Random
 open Pulumi.Tls
@@ -13,14 +13,6 @@ open Pulumi.Tls
 [<RequireQualifiedAccess>]
 module Helpers =
     let createResourceGroup name = ResourceGroup(name)
-
-    let createPassword name =
-        RandomPassword(name, 
-            RandomPasswordArgs(
-                Length = input 20,
-                Special = input true
-            )
-        )
 
     let createPrivateKey name =
         PrivateKey(name,
@@ -37,11 +29,10 @@ module Helpers =
         ServicePrincipal(name,
             ServicePrincipalArgs(ApplicationId = io app.ApplicationId))
 
-    let createServicePrincipalPassword name (password: RandomPassword) (servicePrincipal: ServicePrincipal) =
+    let createServicePrincipalPassword name  (servicePrincipal: ServicePrincipal) =
         ServicePrincipalPassword(name,
             ServicePrincipalPasswordArgs(
                 ServicePrincipalId = io servicePrincipal.Id,
-                Value = io password.Result,
                 EndDate = input "2099-01-01T00:00:00Z"
             ))
 
@@ -64,7 +55,7 @@ module Helpers =
             SubnetArgs(
                 ResourceGroupName = io resourceGroup.Name,
                 VirtualNetworkName = io vnet.Name,
-                AddressPrefix = input "10.2.1.0/24"
+                AddressPrefixes = inputList [input "10.2.1.0/24"]
             ))
 
     let createCluster
@@ -98,15 +89,11 @@ module Helpers =
                 ClientSecret = io servicePrincipalPassword.Value
             )
 
-        let rbacArgs =
-            KubernetesClusterRoleBasedAccessControlArgs(Enabled = input true)
-
         let networkProfileArgs =
             KubernetesClusterNetworkProfileArgs(
                 NetworkPlugin = input "azure",
                 DnsServiceIp = input "10.2.2.254",
-                ServiceCidr = input "10.2.2.0/24",
-                DockerBridgeCidr = input "172.17.0.1/16"
+                ServiceCidr = input "10.2.2.0/24"
             )
 
         KubernetesCluster(name,
@@ -117,17 +104,16 @@ module Helpers =
                 LinuxProfile = input linuxProfileArgs,
                 ServicePrincipal = input servicePrincipalArgs,
                 KubernetesVersion = input kubernetesVersion,
-                RoleBasedAccessControl = input rbacArgs,
+                RoleBasedAccessControlEnabled = input true,
                 NetworkProfile = input networkProfileArgs
             ))
 
 let infra () =
     let resourceGroup = Helpers.createResourceGroup "fsaks"
-    let password = Helpers.createPassword "fsakspassword"
     let privateKey = Helpers.createPrivateKey "fsakssshkey"
     let app = Helpers.createApplication "fsaks"
     let servicePrincipal = Helpers.createServicePrincipal "fsakssp" app
-    let servicePrincipalPassword = Helpers.createServicePrincipalPassword "fsakssppassword" password servicePrincipal
+    let servicePrincipalPassword = Helpers.createServicePrincipalPassword "fsakssppassword" servicePrincipal
     let networkRole = Helpers.assignNetworkContributorRole "role-assignment" servicePrincipal resourceGroup
     let vnet = Helpers.createVnet "fsaksvnet" resourceGroup
     let subnet = Helpers.createSubnet "fsakssubnet" vnet resourceGroup

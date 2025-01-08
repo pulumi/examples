@@ -18,7 +18,8 @@ const repo = new awsx.ecr.Repository("repo", {
 // Build and publish our application's container image from ./app to the ECR repository.
 const image = new awsx.ecr.Image("image", {
     repositoryUrl: repo.url,
-    path: "./app",
+    context: "./app",
+    platform: "linux/amd64",
 });
 
 // Deploy an ECS Service on Fargate to host the application container.

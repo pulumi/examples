@@ -41,7 +41,7 @@ resources:
     properties:
       region: us-east-2
   MyBucket:
-    type: aws:s3:Bucket
+    type: aws:s3:BucketV2
     options:
       provider: ${UsEast2Provider}
 outputs:

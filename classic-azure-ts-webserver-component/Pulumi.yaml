@@ -6,6 +6,8 @@ template:
     azure:location:
       description: The Azure location to use
       default: westus
+    azure:subscriptionId:
+      description: The Azure Subscription to deploy into
     username:
       description: The username used to configure the Virtual Machine
     password:

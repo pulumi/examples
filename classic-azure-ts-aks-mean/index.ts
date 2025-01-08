@@ -18,7 +18,7 @@ const cosmosdb = new azure.cosmosdb.Account("cosmosDb", {
         maxStalenessPrefix: 100000,
     },
     offerType: "Standard",
-    enableAutomaticFailover: true,
+    automaticFailoverEnabled: true,
     geoLocations: [
         { location: config.location, failoverPriority: 0 },
         { location: config.failoverLocation, failoverPriority: 1 },
@@ -30,7 +30,7 @@ const mongoConnStrings = new k8s.core.v1.Secret(
     "mongo-secrets",
     {
         metadata: { name: "mongo-secrets" },
-        data: mongoHelpers.parseConnString(cosmosdb.connectionStrings),
+        data: mongoHelpers.parseConnString(cosmosdb.primaryMongodbConnectionString),
     },
     { provider: k8sProvider },
 );

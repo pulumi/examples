@@ -3,15 +3,15 @@
     "version": "0.0.1",
     "license": "Apache-2.0",
     "dependencies": {
-        "@pulumi/aws": "^5.42.0",
-        "@pulumi/pulumi": "^3.77.1",
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/pulumi": "3.144.1",
         "glob": "^8.0.3",
         "mime": "^2.0.3"
     },
     "devDependencies": {
-        "@types/glob": "^8.0.3",
-        "@types/mime": "^2.0.0",
-        "@types/node": "^10.0.0",
+        "@types/glob": "8.1.0",
+        "@types/mime": "2.0.3",
+        "@types/node": "10.17.60",
         "typescript": "4.7.4"
     }
 }

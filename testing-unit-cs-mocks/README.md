@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-cs-mocks/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-cs-mocks/README.md#gh-dark-mode-only)
+
 # Unit Testing Pulumi programs in C#
 
 An example of writing mock-based unit tests with both infrastructure definition and tests written in C#.

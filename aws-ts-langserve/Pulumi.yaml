@@ -1,0 +1,7 @@
+name: aws-ts-langserve
+runtime: nodejs
+description: A minimal Langserve AWS TypeScript Pulumi program
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: https://github.com/pulumi/templates/tree/dirien/langserve-aws/langserve-aws-typescript

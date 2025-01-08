@@ -1,4 +1,4 @@
-name: New Pull request Open
+name: New pull request
 on:
   pull_request_target: {}
 jobs:
@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
     - name: Comment PR
-      uses: thollander/actions-comment-pull-request@v1
+      uses: thollander/actions-comment-pull-request@8a3fad13c20088e9eb0805666b9fe49509d2fec8 # v1
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         message: >

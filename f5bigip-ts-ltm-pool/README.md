@@ -14,13 +14,13 @@ All of these happen behind a single `pulumi up` command, and are expressed in ju
 
 Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
 
-If you **_already_** have an F5 BigIP appliance available, you only need administrative credentials to it and 
+If you **_already_** have an F5 BigIP appliance available, you only need administrative credentials to it and
 at least one backend HTTP instance to load balance to.
 
-If you **_do not_** already have an F5 BigIP appliance available, you can use the example in [f5bigip-ec2-instance](./f5bigip-ec2-instance) to deploy an F5 BigIP instance on AWS using an F5 BigIP AMI from the AWS Marketplace. 
-Note: you must first subscribe to the AWS Marketplace product [here](https://aws.amazon.com/marketplace/pp/B079C44MFH?qid=1546534998240&sr=0-13). 
+If you **_do not_** already have an F5 BigIP appliance available, you can use the example in [f5bigip-ec2-instance](./f5bigip-ec2-instance) to deploy an F5 BigIP instance on AWS using an F5 BigIP AMI from the AWS Marketplace.
+Note: you must first subscribe to the AWS Marketplace product [here](https://aws.amazon.com/marketplace/pp/B079C44MFH?qid=1546534998240&sr=0-13).
 
-If you _do not_ already have backend HTTP instance available, you can use the example in [nginx-ec2-instance](./nginx-ec2-instance) to deploy multiple NGINX instances on AWS and use them as members of the LTM Pool as 
+If you _do not_ already have backend HTTP instance available, you can use the example in [nginx-ec2-instance](./nginx-ec2-instance) to deploy multiple NGINX instances on AWS and use them as members of the LTM Pool as
 Pool Attachments.
 
 # Running the Example
@@ -48,7 +48,7 @@ If you need to deploy an F5 BigIP appliance or backend HTTP instances as describ
     $ pulumi config set f5BigIpAdminPassword --secret [your-new-bigip-password-here]
     ```
 
-1. Deploy everything with the `pulumi up` command. This provisions the necessary AWS resources, primarily a 
+1. Deploy everything with the `pulumi up` command. This provisions the necessary AWS resources, primarily a
 VPC Security group and EC2 Instance, in a single gesture:
 
     ```bash
@@ -68,14 +68,14 @@ VPC Security group and EC2 Instance, in a single gesture:
     Outputs:
         f5Address  : "https://34.210.83.227:8443"
         f5PrivateIp: "172.31.42.112"
-    
+
     Resources:
         + 3 created
 
     Duration: 40s
     ```
 
-   After this completes, numerous outputs will show up. `f5Address` and `f5PrivateIp` are values you will use in the 
+   After this completes, numerous outputs will show up. `f5Address` and `f5PrivateIp` are values you will use in the
    `f5bigip-pool` example later on.
 
 ## (Optional) Provision Backend NGINX Instances
@@ -98,7 +98,7 @@ VPC Security group and EC2 Instance, in a single gesture:
     $ pulumi config set aws:region us-west-2    # any valid AWS zone works
     ```
 
-1. Deploy everything with the `pulumi up` command. This provisions a VPC security group allowing access to 
+1. Deploy everything with the `pulumi up` command. This provisions a VPC security group allowing access to
 NGINX from anywhere and three EC2 Instances running NGINX:
 
     ```bash
@@ -157,7 +157,7 @@ NGINX from anywhere and three EC2 Instances running NGINX:
     $ pulumi config set f5bigip-pool:f5BigIpPrivateIp <f5PrivateIp>    # the Private IP address of your BigIP appliance
     ```
 
-1. Deploy everything with the `pulumi up` command. This provisions F5 BigIP LTM resources - application monitor, 
+1. Deploy everything with the `pulumi up` command. This provisions F5 BigIP LTM resources - application monitor,
 application pool, pool attachments, and virtual server:
 
     ```bash
@@ -189,7 +189,7 @@ application pool, pool attachments, and virtual server:
 
 ## Clean Up
 
-1. Once you are done, you can destroy all of the resources, and the stack. Repeat this in each directory for each 
+1. Once you are done, you can destroy all of the resources, and the stack. Repeat this in each directory for each
 of the examples from above that you ran `pulumi up` within.
 
     ```bash

@@ -55,7 +55,7 @@ function buildContainerApp({ cosmosAccount, database, container, opts }: GlobalC
                     }],
                     environmentVariables: {
                         ENDPOINT: cosmosAccount.endpoint,
-                        MASTER_KEY: cosmosAccount.primaryMasterKey,
+                        MASTER_KEY: cosmosAccount.primaryKey,
                         DATABASE: database.name,
                         COLLECTION: container.name,
                         LOCATION: location,

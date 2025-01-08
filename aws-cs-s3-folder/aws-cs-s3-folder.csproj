@@ -13,7 +13,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Pulumi" Version="3.*" />
-    <PackageReference Include="Pulumi.Aws" Version="5.*" />
+    <PackageReference Include="Pulumi.Aws" Version="6.*" />
   </ItemGroup>
 
 </Project>

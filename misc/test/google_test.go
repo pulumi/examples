@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/pulumi/examples/misc/test/helpers"
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 	"github.com/stretchr/testify/assert"
 )
@@ -20,7 +21,7 @@ func TestAccGcpGoFunctions(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-functions"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["function"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
 				})
 			},
@@ -35,7 +36,7 @@ func TestAccGcpGoFunctionsRaw(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-functions-raw"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["function"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
 				})
 			},
@@ -50,7 +51,7 @@ func TestAccGcpGoGke(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-gke"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["url"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello Kubernetes bootcamp!")
 				})
 			},
@@ -76,7 +77,7 @@ func TestAccGcpGoWebserver(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-webserver"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["instanceIP"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World!")
 				})
 			},
@@ -91,7 +92,7 @@ func TestAccGcpJsWebserver(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-js-webserver"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["instanceIP"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello, World!")
 				})
 			},
@@ -106,7 +107,7 @@ func TestAccGcpPyFunctions(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-py-functions"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["fxn_url"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Space Needle, Seattle, WA")
 				})
 			},
@@ -121,10 +122,10 @@ func TestAccGcpPyServerlessRaw(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-py-serverless-raw"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["go_endpoint"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
 				})
-				assertHTTPResult(t, stack.Outputs["python_endpoint"].(string), nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, stack.Outputs["python_endpoint"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
 				})
 			},
@@ -141,7 +142,7 @@ func TestAccGcpPyInstanceNginx(t *testing.T) {
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["external_ip"].(string)
 				maxWait := time.Minute * 10
-				assertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+				helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
 					return assert.Contains(t, body, "Test Page for the Nginx HTTP Server on Fedora")
 				})
 			},
@@ -156,7 +157,7 @@ func TestAccGcpTsFunctions(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-ts-functions"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["url"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Greetings from Google Cloud Functions!")
 				})
 			},
@@ -171,10 +172,10 @@ func TestAccGcpTsServerlessRaw(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-ts-serverless-raw"),
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["goEndpoint"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
 				})
-				assertHTTPResult(t, stack.Outputs["pythonEndpoint"].(string), nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, stack.Outputs["pythonEndpoint"].(string), nil, func(body string) bool {
 					return assert.Contains(t, body, "Hello World!")
 				})
 			},
@@ -183,21 +184,21 @@ func TestAccGcpTsServerlessRaw(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
-func TestAccGcpTsCloudRun(t *testing.T) {
-	test := getGoogleBase(t).
-		With(integration.ProgramTestOptions{
-			Dir:           path.Join(getCwd(t), "..", "..", "gcp-ts-cloudrun"),
-			RunUpdateTest: false,
-			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
-				endpoint := stack.Outputs["rubyUrl"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
-					return assert.Contains(t, body, "Hello Pulumi!")
-				})
-			},
-		})
+// Temporarily skipped. See https://github.com/pulumi/pulumi-gcp/issues/2155 for details.
+// func TestAccGcpTsCloudRun(t *testing.T) {
+// 	test := getGoogleBase(t).
+// 		With(integration.ProgramTestOptions{
+// 			Dir: path.Join(getCwd(t), "..", "..", "gcp-ts-cloudrun"),
+// 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+// 				endpoint := stack.Outputs["rubyUrl"].(string)
+// 				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
+// 					return assert.Contains(t, body, "Hello Pulumi!")
+// 				})
+// 			},
+// 		})
 
-	integration.ProgramTest(t, &test)
-}
+// 	integration.ProgramTest(t, &test)
+// }
 
 func getGoogleProject() string {
 	project := os.Getenv("GOOGLE_PROJECT")

@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-eks/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-eks/README.md#gh-dark-mode-only)
+
 # AWS Golang EKS Cluster
 This example creates an AWS EKS Cluster and deploys a sample container application to it
 
@@ -51,7 +54,7 @@ After cloning this repo, run these commands from the working directory:
 6. Ensure that the application is running as expected:
 
     ```bash
-   $ curl $(pulumi stack output url) 
+   $ curl $(pulumi stack output url)
    ```
 
 

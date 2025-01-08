@@ -1,7 +1,7 @@
 # Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
 import pulumi
-from pulumi import Config, Output, export
+from pulumi import Config, FileAsset, Output, export
 import pulumi_azure_native.compute as compute
 import pulumi_azure_native.network as network
 import pulumi_azure_native.resources as resources
@@ -120,10 +120,10 @@ connection = command.remote.ConnectionArgs(
 )
 
 # Copy install script to server.
-cp_config = command.remote.CopyFile(
+cp_config = command.remote.CopyToRemote(
     'config',
     connection=connection,
-    local_path='install.sh',
+    source=FileAsset('install.sh'),
     remote_path='install.sh',
     opts=pulumi.ResourceOptions(depends_on=[server]),
 )

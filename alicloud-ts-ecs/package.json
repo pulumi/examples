@@ -1,10 +1,10 @@
 {
     "name": "alicloud-ts-ecs",
     "devDependencies": {
-        "@types/node": "^14"
+        "@types/node": "14.18.63"
     },
     "dependencies": {
-        "@pulumi/alicloud": "^3.24.0",
-        "@pulumi/pulumi": "^3.0.0"
+        "@pulumi/alicloud": "3.70.0",
+        "@pulumi/pulumi": "3.144.1"
     }
 }

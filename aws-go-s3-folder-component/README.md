@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-s3-folder-component/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-s3-folder-component/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-s3-folder-component/README.md#gh-dark-mode-only)
 
 # Static Website on Amazon S3
 
@@ -21,7 +22,7 @@ with `***`.
     $ pulumi config set aws:region us-west-2
     ```
 
-1.  Run `pulumi up` to preview and deploy changes.  After showing the preview you will be 
+1.  Run `pulumi up` to preview and deploy changes.  After showing the preview you will be
     prompted if you want to continue or not.
 
     ```bash
@@ -36,7 +37,7 @@ with `***`.
         Type                        Name                                                  Status
     +   pulumi:pulumi:Stack         aws-go-s3-folder-component-website-component-testing  created
     +   └─ pulumi:example:S3Folder  pulumi-static-site                                     created
-    +      ├─ aws:s3:Bucket         pulumi-static-site                                     created
+    +      ├─ aws:s3:BucketV2       pulumi-static-site                                     created
     +      ├─ aws:s3:BucketPolicy   bucketPolicy                                          created
     +      ├─ aws:s3:BucketObject   index.html                                            created
     +      └─ aws:s3:BucketObject   favicon.png                                           created
@@ -68,7 +69,7 @@ with `***`.
     ```bash
     $ aws s3 ls $(pulumi stack output bucketName)
     2020-04-20 22:52:15      13731 favicon.png
-    2020-04-20 22:52:15        249 index.html    
+    2020-04-20 22:52:15        249 index.html
     ```
 
 1.  Open the site URL in a browser to see both the rendered HTML and the favicon:

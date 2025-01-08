@@ -67,8 +67,8 @@ my_image = docker.Image(
     custom_image,
     image_name=registry.login_server.apply(
         lambda login_server: f"{login_server}/{custom_image}:v1.0.0"),
-    build=docker.DockerBuild(context=f"./{custom_image}"),
-    registry=docker.ImageRegistry(
+    build=docker.DockerBuildArgs(context=f"./{custom_image}"),
+    registry=docker.RegistryArgs(
         server=registry.login_server,
         username=admin_username,
         password=admin_password

@@ -35,19 +35,16 @@ const loadBalancer = new azure.lb.LoadBalancer("lb", {
 });
 
 const bpepool = new azure.lb.BackendAddressPool("bpepool", {
-    resourceGroupName: resourceGroup.name,
     loadbalancerId: loadBalancer.id,
 });
 
 const sshProbe = new azure.lb.Probe("ssh-probe", {
-    resourceGroupName: resourceGroup.name,
     loadbalancerId: loadBalancer.id,
     port: applicationPort,
 });
 
 const natRule = new azure.lb.Rule("lbnatrule-http", {
-    resourceGroupName: resourceGroup.name,
-    backendAddressPoolId: bpepool.id,
+    backendAddressPoolIds: [bpepool.id],
     backendPort: applicationPort,
     frontendIpConfigurationName: "PublicIPAddress",
     frontendPort: applicationPort,
@@ -62,15 +59,15 @@ const vnet = new azure.network.VirtualNetwork("vnet", {
 });
 
 const subnet = new azure.network.Subnet("subnet", {
-    enforcePrivateLinkEndpointNetworkPolicies: false,
+    privateLinkServiceNetworkPoliciesEnabled: false,
     resourceGroupName: resourceGroup.name,
-    addressPrefix: "10.0.2.0/24",
+    addressPrefixes: ["10.0.2.0/24"],
     virtualNetworkName: vnet.name,
 });
 
-const scaleSet = new azure.compute.ScaleSet("vmscaleset", {
+const scaleSet = new azure.compute.LinuxVirtualMachineScaleSet("vmscaleset", {
     resourceGroupName: resourceGroup.name,
-    networkProfiles: [{
+    networkInterfaces: [{
         ipConfigurations: [{
             loadBalancerBackendAddressPoolIds: [bpepool.id],
             name: "IPConfiguration",
@@ -80,53 +77,37 @@ const scaleSet = new azure.compute.ScaleSet("vmscaleset", {
         name: "networkprofile",
         primary: true,
     }],
-    osProfile: {
-        adminUsername: adminUser,
-        adminPassword,
-        computerNamePrefix: "vmlab",
-        customData:
+    adminUsername: adminUser,
+    adminPassword,
+    computerNamePrefix: "vmlab",
+    customData: Buffer.from(
 `#cloud-config
 packages:
-    - nginx`,
-    },
-    osProfileLinuxConfig: {
-        disablePasswordAuthentication: false,
-    },
-    sku: {
-        capacity: 1,
-        name: "Standard_DS1_v2",
-        tier: "Standard",
-    },
-    storageProfileDataDisks: [{
+    - nginx`).toString("base64"),
+    disablePasswordAuthentication: false,
+    sku: "Standard_DS1_v2",
+    dataDisks: [{
+        storageAccountType: "Standard_LRS",
         caching: "ReadWrite",
         createOption: "Empty",
         diskSizeGb: 10,
         lun: 0,
     }],
-    storageProfileImageReference: {
+    sourceImageReference: {
         offer: "UbuntuServer",
         publisher: "Canonical",
         sku: "16.04-LTS",
         version: "latest",
     },
-    storageProfileOsDisk: {
+    osDisk: {
         caching: "ReadWrite",
-        createOption: "FromImage",
-        managedDiskType: "Standard_LRS",
-        name: "",
+        storageAccountType: "Standard_LRS",
     },
-    upgradePolicyMode: "Manual",
+    upgradeMode: "Manual",
 }, { dependsOn: [bpepool] });
 
 const autoscale = new azure.monitoring.AutoscaleSetting("vmss-autoscale", {
     resourceGroupName: resourceGroup.name,
-    notification: {
-        email: {
-            customEmails: ["admin@contoso.com"],
-            sendToSubscriptionAdministrator: true,
-            sendToSubscriptionCoAdministrator: true,
-        },
-    },
     profiles: [{
         capacity: {
             default: 1,

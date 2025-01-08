@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-fs-aks/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-fs-aks/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-fs-aks/README.md#gh-dark-mode-only)
 
 # Azure Kubernetes Service (AKS) Cluster
 
@@ -13,8 +14,9 @@ Stands up an [Azure Kubernetes Service](https://azure.microsoft.com/en-us/servic
 Configure the environment:
 
 ```bash
-$ pulumi config set azure:location westeurope
-$ az login
+pulumi config set azure:location westeurope
+pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+az login
 ```
 
 ## Deploying the App (short version)
@@ -22,62 +24,61 @@ $ az login
 To make it easier to try out you can use the available [Makefile](Makefile), like:
 
 ```bash
-$ make deploy
+make deploy
 ```
 
 This will build the project and run `pulumi up -y`. If you haven't created a stack you will be prompted to do so.
 
-
 When the deploy is finished you can export the kubernetes config by running
 
 ```bash
-$ make exportconfig
+make exportconfig
 ```
 
 With the config exported you can now test to access the kubernetes cluster
 
 ```bash
-$ KUBECONFIG=./kubeconfig.yaml kubectl get nodes
+KUBECONFIG=./kubeconfig.yaml kubectl get nodes
 ```
 
 If you want to cleanup when you are done you can run
 
 ```bash
-$ make destroy
-$ make rmstack
+make destroy
+make rmstack
 ```
 
 To list all make targets run
 
 ```bash
-$ make help
+make help
 ```
 
 The [Makefile](Makefile) also works as documentation on what commands you need to run to deploy the application.
 
 ## Deploying the app (native version)
 
-If you don't have make installed you will have to run the "native" commands. To deploy you run 
+If you don't have make installed you will have to run the "native" commands. To deploy you run
 
 ```bash
-$ pulumi up --yes
+pulumi up --yes
 ```
 
 This will prompt you to create a stack if you haven't done so already. When the deploy is ready you can export the kubernetes config with
 
 ```bash
-$ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
+pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
 ```
 
 and then test the deployment with
 
 ```bash
-$ KUBECONFIG=./kubeconfig.yaml kubectl get nodes
+KUBECONFIG=./kubeconfig.yaml kubectl get nodes
 ```
 
 If you want to cleanup the cloud resources when you are done you can run
 
 ```bash
-$ pulumi destroy -y
-$ pulumi stack rm -y
+pulumi destroy -y
+pulumi stack rm -y
 ```

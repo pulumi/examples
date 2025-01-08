@@ -1,0 +1,12 @@
+{
+    "name": "s3folder",
+    "main": "dist/index.js",
+    "version": "1.0.0",
+    "dependencies": {
+        "@pulumi/pulumi": "latest",
+        "@pulumi/aws": "6.66.1"
+    },
+    "scripts": {
+        "build": "tsc"
+    }
+}

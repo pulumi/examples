@@ -213,8 +213,8 @@ export function requireElbLogging(name: string, bucketName?: string): ResourceVa
             "logging enabled.",
         enforcementLevel: "mandatory",
         validateResource: [
-            validateResourceOfType(aws.elasticloadbalancing.LoadBalancer, assertElbLogs),
-            validateResourceOfType(aws.elasticloadbalancingv2.LoadBalancer, assertElbLogs),
+            validateResourceOfType(aws.elb.LoadBalancer, assertElbLogs),
+            validateResourceOfType(aws.lb.LoadBalancer, assertElbLogs),
         ],
     };
 }

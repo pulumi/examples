@@ -1,13 +1,13 @@
 {
     "name": "aws-ts-eks-distro",
     "devDependencies": {
-        "@types/node": "^10.0.0"
+        "@types/node": "18.19.68"
     },
     "dependencies": {
-        "@pulumi/aws": "^5.0.0",
-        "@pulumi/awsx": "^0.40.0",
-        "@pulumi/kubernetes": "^3.0.0",
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/awsx": "2.19.0",
+        "@pulumi/kubernetes": "4.19.0",
+        "@pulumi/pulumi": "3.144.1",
         "@types/mustache": "^4.0.1",
         "@types/tmp": "^0.2.0",
         "mustache": "^4.0.1",

@@ -1,0 +1,17 @@
+name: localai-flowise-example
+runtime: nodejs
+description: A TypeScript program to deploy a Kubernetes cluster on AWS
+
+config:
+  aws:region: eu-central-1
+  desiredClusterSize: "3"
+  eksNodeInstanceType: m4.4xlarge
+  maxClusterSize: "6"
+  minClusterSize: "3"
+  vpcNetworkCidr: 10.0.0.0/24
+  publicSubnetCIDRs:
+  - "10.0.0.0/27"
+  - "10.0.0.32/27"
+  availabilityZones:
+  - eu-central-1a
+  - eu-central-1b

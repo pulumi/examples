@@ -3,23 +3,18 @@ package main
 import (
 	"fmt"
 
-	AWS "github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ec2"
-
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws"
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/cloudtrail"
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/cloudwatch"
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/iam"
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/lambda"
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/s3"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/cloudtrail"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/cloudwatch"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/iam"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/lambda"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/s3"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-
 		config := config.New(ctx, "")
 
 		var regions []string
@@ -27,7 +22,7 @@ func main() {
 
 		if len(regions) == 0 {
 			var err error
-			regions, err = getRegions()
+			regions, err = getRegions(ctx)
 			if err != nil {
 				return err
 			}
@@ -44,26 +39,20 @@ func main() {
 	})
 }
 
-func getRegions() ([]string, error) {
-	svc := ec2.New(session.New())
-	result, err := svc.DescribeRegions(&ec2.DescribeRegionsInput{
-		Filters: []*ec2.Filter{
-			{
-				Name:   AWS.String("opt-in-status"),
-				Values: []*string{AWS.String("opt-in-not-required"), AWS.String("opted-in")},
+func getRegions(pctx *pulumi.Context) ([]string, error) {
+	reg, err := aws.GetRegions(pctx, &aws.GetRegionsArgs{
+		Filters: []aws.GetRegionsFilter{
+			aws.GetRegionsFilter{
+				Name:   "opt-in-status",
+				Values: []string{"opt-in-not-required", "opted-in"},
 			},
 		},
-	})
+		AllRegions: pulumi.BoolRef(true),
+	}, nil)
 	if err != nil {
 		return nil, err
 	}
-
-	regions := make([]string, len(result.Regions))
-	for i, region := range result.Regions {
-		regions[i] = *region.RegionName
-	}
-
-	return regions, nil
+	return reg.Names, nil
 }
 
 func upRegion(ctx *pulumi.Context, regionName string) error {
@@ -88,30 +77,33 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 		return err
 	}
 
-	callerIdentity, err := aws.GetCallerIdentity(ctx, pulumi.Provider(awsProvider))
+	callerIdentity, err := aws.GetCallerIdentity(ctx, nil, pulumi.Provider(awsProvider))
 	if err != nil {
 		return err
 	}
 
-	var lifecycleRules s3.BucketLifecycleRuleArray
-	if trailObjectExpirationInDays != 0 {
-		lifecycleRules = s3.BucketLifecycleRuleArray{
-			s3.BucketLifecycleRuleArgs{
-				Enabled: pulumi.Bool(true),
-				Expiration: s3.BucketLifecycleRuleExpirationArgs{
-					Days: pulumi.Int(trailObjectExpirationInDays),
-				},
-			},
-		}
-	}
-
-	bucket, err := s3.NewBucket(ctx, resourceName, &s3.BucketArgs{
-		Acl:            pulumi.String("private"),
-		ForceDestroy:   pulumi.Bool(true),
-		LifecycleRules: lifecycleRules,
+	bucket, err := s3.NewBucketV2(ctx, resourceName, &s3.BucketV2Args{
+		ForceDestroy: pulumi.Bool(true),
 	}, pulumi.Provider(awsProvider))
 	if err != nil {
 		return err
+	}
+
+	if trailObjectExpirationInDays != 0 {
+		_, err := s3.NewBucketLifecycleConfigurationV2(ctx, resourceName, &s3.BucketLifecycleConfigurationV2Args{
+			Bucket: bucket.Bucket,
+			Rules: s3.BucketLifecycleConfigurationV2RuleArray{
+				s3.BucketLifecycleConfigurationV2RuleArgs{
+					Status: pulumi.String("Enabled"),
+					Expiration: s3.BucketLifecycleConfigurationV2RuleExpirationArgs{
+						Days: pulumi.Int(trailObjectExpirationInDays),
+					},
+				},
+			},
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	bucketPolicy, err := s3.NewBucketPolicy(ctx, resourceName, &s3.BucketPolicyArgs{

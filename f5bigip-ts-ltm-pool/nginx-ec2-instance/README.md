@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/f5bigip-ts-ltm-pool/nginx-ec2-instance/)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/f5bigip-ts-ltm-pool/nginx-ec2-instance/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/f5bigip-ts-ltm-pool/nginx-ec2-instance/README.md#gh-dark-mode-only)
 
 # Provision Backend NGINX Instances
 

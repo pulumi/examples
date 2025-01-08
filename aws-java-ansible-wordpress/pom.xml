@@ -10,9 +10,9 @@
 
     <properties>
         <encoding>UTF-8</encoding>
-        <maven.compiler.source>14</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.source>15</maven.compiler.source>
+        <maven.compiler.target>15</maven.compiler.target>
+        <maven.compiler.release>15</maven.compiler.release>
         <mainClass>myproject.App</mainClass>
         <mainArgs/>
     </properties>
@@ -26,12 +26,12 @@
         <dependency>
             <groupId>com.pulumi</groupId>
             <artifactId>aws</artifactId>
-            <version>(,6.0.0]</version>
+            <version>(6.0.2,6.99]</version>
         </dependency>
         <dependency>
             <groupId>com.pulumi</groupId>
             <artifactId>command</artifactId>
-            <version>(,0.3.0]</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

@@ -1,3 +1,5 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-netlify-cms-and-oauth/cms/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-netlify-cms-and-oauth/cms/README.md#gh-dark-mode-only)
 
 ## Background Knowledges
 CMS stands for content management system, which facilitate creation and modification of digital content.
@@ -7,7 +9,7 @@ CMS stands for content management system, which facilitate creation and modifica
 Backends allows Netlify CMS to communicate with a service that stores content. Backends that Netlify CMS provides includes Git Gateway (Connect with Netlify), Github, GitLab, and Bitbucket.
 
 # About CMS Project
-This project is an CMS React App that using Netlify CMS as CMS provider and Github as backend. Orginally it provides a user interface for non-technical employees from Pulumi to edit [Pulumi's website](https://github.com/pulumi/docs) (powered by [Hugo static site generator](https://gohugo.io)). 
+This project is an CMS React App that using Netlify CMS as CMS provider and Github as backend. Orginally it provides a user interface for non-technical employees from Pulumi to edit [Pulumi's website](https://github.com/pulumi/docs) (powered by [Hugo static site generator](https://gohugo.io)).
 It is a good example for how to deploy Netlify CMS as a stand-alone React web application that is reading and make changes to another organization repository and deployed on AWS instead of Netlify.
 Special thanks to the template provided by [@talves](https://github.com/ADARTA/netlify-cms-react-example
 ) for converting the CMS to be a stand-alone React app that is not placed inside the target repository.
@@ -59,7 +61,7 @@ After deploying the cms-oauth web app, we should also put the domain of the oaut
 
 1. App.js then create NetlifyCMS component instance from **src/components/NetlifyCMS** folder.
 
-1. **src/components/NetlifyCMS/index.js** specify the behavior for NetlifyCMS and we could register CMS custom templates, custom widget there. 
+1. **src/components/NetlifyCMS/index.js** specify the behavior for NetlifyCMS and we could register CMS custom templates, custom widget there.
 
 1. `CMS.init()` will initialize CMS using **public/config.yml** which is the core of this app, which contains collection, backend settings, and other settings.
 
@@ -83,13 +85,13 @@ yarn start
 
 It would automatically update if you made another change to `config.yml`
 
-### 
+###
 1. Build the App
 
 ```bash
 yarn build
 ```
-This would build the App and create a build folder under root directory. 
+This would build the App and create a build folder under root directory.
 
 2. Go to infrastructure folder config the Pulumi stack
 
@@ -133,9 +135,9 @@ $ pulumi up
 
     ![entry page](Readme-Screenshots/entery_page.jpg)
 
-4. Click **Save** button at the top of the editing page would 
+4. Click **Save** button at the top of the editing page would
 - Create a new branch in your target repo
-- Open a pull request 
+- Open a pull request
 - Make initial commit to the branch
 - Adds tag to the PR that indicates that it is a "draft"
 - Adds a card in the drafts column on the editorial workflow page (more on the workflow UI below)
@@ -151,12 +153,3 @@ $ pulumi up
 7. Similarly, moving a card from "In Review" to "Ready" columns would change the PR tag to "ready"
 
 8. Hover on the card in "Ready" column would show **Publish change** button, which would merge the PR.
-
-
-
-
-
-
-
-
-

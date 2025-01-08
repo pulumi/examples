@@ -13,7 +13,7 @@ class DbArgs:
                  allocated_storage=20,
                  engine='mysql',
                  engine_version='5.7',
-                 instance_class='db.t2.micro',
+                 instance_class='db.t3.micro',
                  storage_type='gp2',
                  skip_final_snapshot=True,
                  publicly_accessible=False):
