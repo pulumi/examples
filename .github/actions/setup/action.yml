@@ -122,12 +122,23 @@ runs:
         sudo mv kubectl /usr/local/bin
       shell: bash
 
-    - name: Install and configure Helm
+    - name: Install and configure Helm with retry
       run: |
-        curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-        helm init -c
-        helm repo add bitnami https://charts.bitnami.com/bitnami
+        MAX_ATTEMPTS=3
+        ATTEMPT=0
+        until [ $ATTEMPT -ge $MAX_ATTEMPTS ]; do
+          curl -o- -L https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash &&
+          helm repo add bitnami https://repo.broadcom.com/bitnami-files/ && break
+          ATTEMPT=$((ATTEMPT + 1))
+          echo "Attempt $ATTEMPT failed. Retrying in 300 seconds..."
+          sleep 300
+        done
+        if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
+          echo "All attempts failed."
+          exit 1
+        fi
       shell: bash
+
 
     - name: Install testing dependencies
       run: make ensure
