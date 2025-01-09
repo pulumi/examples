@@ -8,7 +8,6 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v2 v2.79.0
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.79.0
 	github.com/pulumi/pulumi-azure-native-sdk/web/v2 v2.79.0
-	github.com/pulumi/pulumi-docker/sdk/v3 v3.6.1
 	github.com/pulumi/pulumi-docker/sdk/v4 v4.6.0-beta.4
 	github.com/pulumi/pulumi/sdk/v3 v3.144.1
 )
@@ -16,7 +15,6 @@ require (
 require (
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/BurntSushi/toml v1.2.1 // indirect
-	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/ProtonMail/go-crypto v1.1.3 // indirect
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
@@ -34,7 +32,6 @@ require (
 	github.com/cyphar/filepath-securejoin v0.2.5 // indirect
 	github.com/djherbis/times v1.5.0 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
-	github.com/fatih/color v1.15.0 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.6.0 // indirect
 	github.com/go-git/go-git/v5 v5.13.0 // indirect
@@ -50,7 +47,6 @@ require (
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
@@ -99,5 +95,4 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	lukechampine.com/frand v1.4.2 // indirect
-	pgregory.net/rapid v0.6.1 // indirect
 )
