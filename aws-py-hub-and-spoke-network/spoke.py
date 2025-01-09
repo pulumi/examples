@@ -56,7 +56,7 @@ class SpokeVpc(pulumi.ComponentResource):
             ),
             pulumi.ResourceOptions(
                 parent=self,
-            )
+            ),
         )
 
         tgw_subnets = aws.ec2.get_subnets_output(
@@ -103,7 +103,7 @@ class SpokeVpc(pulumi.ComponentResource):
                 delete_before_replace=True,
                 depends_on=[self.vpc],
                 parent=self,
-            )
+            ),
         )
 
         aws.ec2transitgateway.RouteTableAssociation(
@@ -114,7 +114,7 @@ class SpokeVpc(pulumi.ComponentResource):
             ),
             pulumi.ResourceOptions(
                 parent=self,
-            )
+            ),
         )
 
         aws.ec2transitgateway.RouteTablePropagation(
@@ -147,10 +147,7 @@ class SpokeVpc(pulumi.ComponentResource):
         private_subnets.apply(lambda x: self._create_vpc_endpoints(x.ids))
         private_subnets.apply(lambda x: self._create_routes(x.ids))
 
-    def _create_vpc_endpoints(
-        self,
-        subnet_ids: Sequence[str]
-    ):
+    def _create_vpc_endpoints(self, subnet_ids: Sequence[str]):
         vpc_endpoint_sg = aws.ec2.SecurityGroup(
             f"{self._name}-vpc-endpoint-sg",
             aws.ec2.SecurityGroupArgs(
@@ -161,7 +158,7 @@ class SpokeVpc(pulumi.ComponentResource):
                         description="Allow everything",
                         protocol="-1",
                         from_port=0,
-                        to_port=0
+                        to_port=0,
                     ),
                 ],
                 egress=[
@@ -170,16 +167,14 @@ class SpokeVpc(pulumi.ComponentResource):
                         description="Allow everything",
                         protocol="-1",
                         from_port=0,
-                        to_port=0
+                        to_port=0,
                     ),
                 ],
-                tags={
-                    'Name': f"{self._name}-vpc-endpoint-sg"
-                }
+                tags={"Name": f"{self._name}-vpc-endpoint-sg"},
             ),
             pulumi.ResourceOptions(
                 parent=self,
-            )
+            ),
         )
 
         for service in ["ec2messages", "ssmmessages", "ssm"]:
@@ -191,14 +186,12 @@ class SpokeVpc(pulumi.ComponentResource):
                     private_dns_enabled=True,
                     security_group_ids=[vpc_endpoint_sg.id],
                     vpc_endpoint_type="Interface",
-                    tags={
-                        "Name": f"{self._name}-{service}"
-                    },
-                    subnet_ids=subnet_ids
+                    tags={"Name": f"{self._name}-{service}"},
+                    subnet_ids=subnet_ids,
                 ),
                 pulumi.ResourceOptions(
                     parent=self,
-                )
+                ),
             )
 
     def _create_routes(
@@ -225,7 +218,4 @@ class SpokeVpc(pulumi.ComponentResource):
                 ),
             )
 
-        self.register_outputs({
-            "vpc": self.vpc,
-            "workload_subnet_ids": self.workload_subnet_ids
-        })
+        self.register_outputs({"vpc": self.vpc, "workload_subnet_ids": self.workload_subnet_ids})

@@ -50,10 +50,8 @@ cluster = azure_native.containerservice.ManagedCluster(
 )
 
 # retrieve the admin credentials for the cluster
-admin_credentials = (
-    azure_native.containerservice.list_managed_cluster_admin_credentials_output(
-        resource_group_name=resource_group.name, resource_name=cluster.name
-    )
+admin_credentials = azure_native.containerservice.list_managed_cluster_admin_credentials_output(
+    resource_group_name=resource_group.name, resource_name=cluster.name
 )
 
 # grant the 'contributor' role to the identity on the resource group
@@ -69,8 +67,6 @@ role_assignment = azure_native.authorization.RoleAssignment(
 pulumi.export(
     "kubeconfig",
     admin_credentials.apply(
-        lambda admin_credentials: base64.b64decode(
-            admin_credentials.kubeconfigs[0].value
-        )
+        lambda admin_credentials: base64.b64decode(admin_credentials.kubeconfigs[0].value)
     ),
 )

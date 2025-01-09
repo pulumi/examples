@@ -1,17 +1,6 @@
-from pulumi import (
-    Config,
-    Output,
-    get_project,
-    export,
-    ResourceOptions
-)
+from pulumi import Config, Output, get_project, export, ResourceOptions
 
-from pulumi_azure_native import (
-    resources,
-    network,
-    compute,
-    authorization
-)
+from pulumi_azure_native import resources, network, compute, authorization
 
 from pulumi_random import random_string
 import base64
@@ -65,12 +54,8 @@ lb_public_ip = network.PublicIPAddress(
     resource_group_name=resource_group.name,
     public_ip_allocation_method=network.IpAllocationMethod.STATIC,
     public_ip_address_version="IPV4",
-    dns_settings=network.PublicIPAddressDnsSettingsArgs(
-        domain_name_label=lb_domain_name_label
-    ),
-    sku=network.PublicIPAddressSkuArgs(
-        name="Standard"
-    )
+    dns_settings=network.PublicIPAddressDnsSettingsArgs(domain_name_label=lb_domain_name_label),
+    sku=network.PublicIPAddressSkuArgs(name="Standard"),
 )
 
 # We are required to create the IDs for these resources due to how the Azure API structures LoadBalancers.
@@ -81,29 +66,17 @@ lb_id = Output.concat(
     "/resourceGroups/",
     resource_group.name,
     "/providers/Microsoft.Network/loadBalancers/",
-    lb_name
+    lb_name,
 )
 
 lb_backend_name = f"{lb_name}-backend"
-lb_backend_id = Output.concat(
-    lb_id,
-    "/backendAddressPools/",
-    lb_backend_name
-)
+lb_backend_id = Output.concat(lb_id, "/backendAddressPools/", lb_backend_name)
 
 lb_frontend_name = f"{lb_name}-frontend"
-lb_frontend_id = Output.concat(
-    lb_id,
-    "/frontendIPConfigurations/",
-    lb_frontend_name
-)
+lb_frontend_id = Output.concat(lb_id, "/frontendIPConfigurations/", lb_frontend_name)
 
 lb_probe_name = f"{lb_name}-probe"
-lb_probe_id = Output.concat(
-    lb_id,
-    "/probes/",
-    lb_probe_name
-)
+lb_probe_id = Output.concat(lb_id, "/probes/", lb_probe_name)
 
 lb = network.LoadBalancer(
     lb_name,
@@ -121,34 +94,38 @@ lb = network.LoadBalancer(
         ),
     ],
     load_balancer_name=lb_name,
-    load_balancing_rules=[network.LoadBalancingRuleArgs(
-        backend_address_pool=network.SubResourceArgs(
-            id=lb_backend_id,
-        ),
-        backend_port=80,
-        disable_outbound_snat=False,
-        enable_floating_ip=False,
-        enable_tcp_reset=True,
-        frontend_ip_configuration=network.SubResourceArgs(
-            id=lb_frontend_id,
-        ),
-        frontend_port=80,
-        idle_timeout_in_minutes=4,
-        load_distribution="Default",
-        name=f"{lb_name}-rule1",
-        probe=network.SubResourceArgs(
-            id=lb_probe_id,
-        ),
-        protocol="TCP",
-    )],
-    probes=[network.ProbeArgs(
-        interval_in_seconds=5,
-        name=lb_probe_name,
-        number_of_probes=1,
-        port=80,
-        protocol="HTTP",
-        request_path="/",
-    )],
+    load_balancing_rules=[
+        network.LoadBalancingRuleArgs(
+            backend_address_pool=network.SubResourceArgs(
+                id=lb_backend_id,
+            ),
+            backend_port=80,
+            disable_outbound_snat=False,
+            enable_floating_ip=False,
+            enable_tcp_reset=True,
+            frontend_ip_configuration=network.SubResourceArgs(
+                id=lb_frontend_id,
+            ),
+            frontend_port=80,
+            idle_timeout_in_minutes=4,
+            load_distribution="Default",
+            name=f"{lb_name}-rule1",
+            probe=network.SubResourceArgs(
+                id=lb_probe_id,
+            ),
+            protocol="TCP",
+        )
+    ],
+    probes=[
+        network.ProbeArgs(
+            interval_in_seconds=5,
+            name=lb_probe_name,
+            number_of_probes=1,
+            port=80,
+            protocol="HTTP",
+            request_path="/",
+        )
+    ],
     resource_group_name=resource_group.name,
     sku=network.LoadBalancerSkuArgs(
         name="Standard",
@@ -194,7 +171,7 @@ nic = network.NetworkInterface(
             ],
         ),
     ],
-    opts=ResourceOptions(depends_on=[lb])
+    opts=ResourceOptions(depends_on=[lb]),
 )
 
 # Define a script to be run when the VM starts up.
@@ -219,8 +196,7 @@ vm = compute.VirtualMachine(
         computer_name="hostname",
         admin_username=username,
         admin_password=password,
-        custom_data=base64.b64encode(
-            init_script.encode("ascii")).decode("ascii"),
+        custom_data=base64.b64encode(init_script.encode("ascii")).decode("ascii"),
         linux_configuration=compute.LinuxConfigurationArgs(
             disable_password_authentication=False,
         ),
@@ -241,5 +217,4 @@ vm = compute.VirtualMachine(
 # Export the LB's public IP address and HTTP URL.
 lb_address = utils.get_ip_address(resource_group.name, lb_public_ip.name)
 export("lb-ip", lb_address.ip_address)
-export("fqdn", lb_address.dns_settings.apply(
-    lambda result: f"http://{result.fqdn}"))
+export("fqdn", lb_address.dns_settings.apply(lambda result: f"http://{result.fqdn}"))

@@ -5,10 +5,14 @@ def handler(event, context):
         "principalId": "my-user",
         "policyDocument": {
             "Version": "2012-10-17",
-            "Statement": [{
-                "Action": "execute-api:Invoke",
-                "Effect": "Allow" if event["headers"]["Authorization"] == "goodToken" else "Deny",
-                "Resource": event["methodArn"],
-            }]
+            "Statement": [
+                {
+                    "Action": "execute-api:Invoke",
+                    "Effect": (
+                        "Allow" if event["headers"]["Authorization"] == "goodToken" else "Deny"
+                    ),
+                    "Resource": event["methodArn"],
+                }
+            ],
         },
     }

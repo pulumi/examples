@@ -20,20 +20,15 @@ from service_deployment import ServiceDeployment
 config = pulumi.Config()
 isMinikube = config.get_bool("isMinikube")
 
-ServiceDeployment(
-    "redis-leader",
-    image="redis",
-    ports=[6379])
-ServiceDeployment(
-    "redis-replica",
-    image="pulumi/guestbook-redis-replica",
-    ports=[6379])
+ServiceDeployment("redis-leader", image="redis", ports=[6379])
+ServiceDeployment("redis-replica", image="pulumi/guestbook-redis-replica", ports=[6379])
 frontend = ServiceDeployment(
     "frontend",
     image="pulumi/guestbook-php-redis",
     replicas=3,
     ports=[80],
     allocate_ip_address=True,
-    is_minikube=isMinikube)
+    is_minikube=isMinikube,
+)
 
 pulumi.export("frontend_ip", frontend.ip_address)

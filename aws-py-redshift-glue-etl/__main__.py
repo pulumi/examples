@@ -155,9 +155,7 @@ glue_crawler = glue.Crawler(
         role=glue_role.arn,
         schedule=every_15_minutes,
         s3_targets=[
-            glue.CrawlerS3TargetArgs(
-                path=events_bucket.bucket.apply(lambda name: f"s3://{name}")
-            ),
+            glue.CrawlerS3TargetArgs(path=events_bucket.bucket.apply(lambda name: f"s3://{name}")),
         ],
     ),
 )
@@ -216,20 +214,14 @@ glue_job = glue.Job(
             "--job-bookmark-option": "job-bookmark-enable",
             "--ConnectionName": glue_redshift_connection.name,
             "--GlueDBName": glue_db_name,
-            "--GlueDBTableName": events_bucket.bucket.apply(
-                lambda name: name.replace("-", "_")
-            ),
+            "--GlueDBTableName": events_bucket.bucket.apply(lambda name: name.replace("-", "_")),
             "--RedshiftDBName": cluster_db_name,
             "--RedshiftDBTableName": "events",
             "--RedshiftRoleARN": redshift_role.arn,
-            "--TempDir": glue_job_bucket.bucket.apply(
-                lambda name: f"s3://{name}/glue-job-temp"
-            ),
+            "--TempDir": glue_job_bucket.bucket.apply(lambda name: f"s3://{name}/glue-job-temp"),
         },
         command=glue.JobCommandArgs(
-            script_location=glue_job_bucket.bucket.apply(
-                lambda name: f"s3://{name}/glue-job.py"
-            ),
+            script_location=glue_job_bucket.bucket.apply(lambda name: f"s3://{name}/glue-job.py"),
             python_version="3",
         ),
     ),
