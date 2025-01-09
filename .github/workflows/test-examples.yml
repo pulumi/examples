@@ -218,12 +218,53 @@ jobs:
         with:
           cluster_name: kind-integration-tests-examples
           node_image: kindest/node:v1.29.2
+          config: |
+            kind: Cluster
+            apiVersion: kind.x-k8s.io/v1alpha4
+            networking:
+              disableDefaultCNI: true
+            nodes:
+            - role: control-plane
+              kubeadmConfigPatches:
+              - |
+                kind: InitConfiguration
+                nodeRegistration:
+                  kubeletExtraArgs:
+                    node-labels: "ingress-ready=true"
+            - role: worker
+            - role: worker
+
+      - name: Install CNI plugin(Calico)
+        run: |
+          kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+
+      - name: Install MetalLB
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.10/manifests/metallb-native.yaml
+
+      - name: Configure MetalLB
+        run: |
+          cat <<EOF | kubectl apply -f -
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            namespace: metallb-system
+            name: config
+          data:
+            config: |
+              address-pools:
+              - name: default
+                protocol: layer2
+                addresses:
+                - 192.168.1.240-192.168.1.250
+          EOF
 
       - name: Run tests
         run: |
           # ./misc/scripts/create-ci-cluster.sh "${{ env.INFRA_STACK_NAME }}"
           # mkdir -p "$HOME/.kube/"
           # pulumi stack -s "${{ env.INFRA_STACK_NAME }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
+          kubectl config use-context kind-kind
           make specific_test_set TestSet=Kubernetes
           # ./misc/scripts/destroy-ci-cluster.sh "${{ env.INFRA_STACK_NAME }}"
         env:
