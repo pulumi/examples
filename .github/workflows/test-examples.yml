@@ -213,13 +213,19 @@ jobs:
           aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup KinD cluster
+        uses: helm/kind-action@a1b0e391336a6ee6713a0583f8c6240d70863de3 # v1.12.0
+        with:
+          cluster_name: kind-integration-tests-examples
+          node_image: kindest/node:v1.29.2
+
       - name: Run tests
         run: |
-          ./misc/scripts/create-ci-cluster.sh "${{ env.INFRA_STACK_NAME }}"
-          mkdir -p "$HOME/.kube/"
-          pulumi stack -s "${{ env.INFRA_STACK_NAME }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
+          # ./misc/scripts/create-ci-cluster.sh "${{ env.INFRA_STACK_NAME }}"
+          # mkdir -p "$HOME/.kube/"
+          # pulumi stack -s "${{ env.INFRA_STACK_NAME }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
           make specific_test_set TestSet=Kubernetes
-          ./misc/scripts/destroy-ci-cluster.sh "${{ env.INFRA_STACK_NAME }}"
+          # ./misc/scripts/destroy-ci-cluster.sh "${{ env.INFRA_STACK_NAME }}"
         env:
           AWS_ACCESS_KEY_ID: ${{ steps.setup.outputs.aws-access-key-id }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.setup.outputs.aws-secret-access-key }}
