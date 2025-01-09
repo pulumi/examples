@@ -12,6 +12,13 @@
         'crd2pulumi-crontabs/kubernetes-go-crontabs/**',
       ],
       enabled: false,
-    },
-  ],
+      },
+    ],
+    schedule: [
+        "before 10am every weekday"
+    ],
+    separateMultipleMajor: true,
+    separateMultipleMinor: true,
+    separateMajorMinor: true,
+    separateMinorPatch: true,
 }
