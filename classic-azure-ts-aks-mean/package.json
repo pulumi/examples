@@ -1,13 +1,13 @@
 {
     "name": "exposed-deployment",
     "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@types/node": "8.10.66"
     },
     "dependencies": {
-        "@pulumi/azure": "^6.0.0",
-        "@pulumi/azuread": "^5.0.0",
-        "@pulumi/kubernetes": "^3.0.0",
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/azure": "6.14.0",
+        "@pulumi/azuread": "6.0.2",
+        "@pulumi/kubernetes": "4.19.0",
+        "@pulumi/pulumi": "3.144.1",
         "@types/mongoose": "^5.2.11",
         "mongoose": "^5.2.13"
     }

@@ -20,7 +20,7 @@ const repo = new awsx.ecr.Repository("repo", {
 // A task which runs a containerized FFMPEG job to extract a thumbnail image.
 const ffmpegThumbnailTask = new awsx.classic.ecs.FargateTaskDefinition("ffmpegThumbTask", {
     container: {
-        image: new awsx.ecr.Image("ffmpegThumbTask", { repositoryUrl: repo.url, path: "./docker-ffmpeg-thumb" }).imageUri,
+        image: new awsx.ecr.Image("ffmpegThumbTask", { repositoryUrl: repo.url, dockerfile: "./docker-ffmpeg-thumb/Dockerfile" }).imageUri,
         memoryReservation: 512,
     },
 });

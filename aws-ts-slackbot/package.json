@@ -5,16 +5,16 @@
         "@aws-sdk/client-dynamodb": "^3.417.0",
         "@aws-sdk/client-sns": "^3.414.0",
         "@aws-sdk/lib-dynamodb": "^3.417.0",
-        "@pulumi/aws": "^6.0.0",
-        "@pulumi/aws-apigateway": "^2.0.0",
-        "@pulumi/awsx": "^2.0.2",
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/aws-apigateway": "2.6.1",
+        "@pulumi/awsx": "2.19.0",
+        "@pulumi/pulumi": "3.144.1",
         "qs": "^6.7.0",
         "superagent": "^8.1.0"
     },
     "devDependencies": {
-        "@types/qs": "^6.5.2",
-        "@types/superagent": "^4.1.0",
-        "typescript": "^4.6.2"
+        "@types/qs": "6.9.17",
+        "@types/superagent": "4.1.24",
+        "typescript": "4.9.5"
     }
 }

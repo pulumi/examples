@@ -78,7 +78,7 @@ connection = web.Connection(
         ),
         parameter_values={
             "databaseAccount": cosmosdb_account.name,
-            "access_key": account_keys.primary_master_key,
+            "accessKey": account_keys.primary_master_key,
         },
     ))
 
@@ -88,10 +88,10 @@ workflow = logic.Workflow(
     resource_group_name=resource_group.name,
     definition={
         "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-        "content_version": "1.0.0.0",
+        "contentVersion": "1.0.0.0",
         "parameters": {
             "$connections": {
-                "default_value": {},
+                "defaultValue": {},
                 "type": "Object",
             },
         },
@@ -132,7 +132,7 @@ workflow = logic.Workflow(
         "$connections": logic.WorkflowParameterArgs(
             value={
                 "documentdb": {
-                    "connection_id": connection.id,
+                    "connectionId": connection.id,
                     "connection_name": "logicapp-cosmosdb-connection",
                     "id": api_id,
                 },

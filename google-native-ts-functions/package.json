@@ -2,11 +2,11 @@
     "name": "google-cloud-ts-functions",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "^8.0.0",
-        "@types/express": "^4.16.0"
+        "@types/node": "8.10.66",
+        "@types/express": "4.17.21"
     },
     "dependencies": {
-        "@pulumi/google-native": "^0.7.0",
-        "@pulumi/pulumi": "^3.0.0"
+        "@pulumi/google-native": "0.32.0",
+        "@pulumi/pulumi": "3.144.1"
     }
 }

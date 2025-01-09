@@ -1,11 +1,11 @@
 {
     "name": "azure-ts-aks-multicluster",
     "devDependencies": {
-        "@types/node": "^10.0.0"
+        "@types/node": "10.17.60"
     },
     "dependencies": {
-        "@pulumi/azure-native": "^2.0.0",
-        "@pulumi/azuread": "^4.0.0",
-        "@pulumi/pulumi": "^3.0.0"
+        "@pulumi/azure-native": "2.79.0",
+        "@pulumi/azuread": "6.0.2",
+        "@pulumi/pulumi": "3.144.1"
     }
 }

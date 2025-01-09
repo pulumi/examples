@@ -2,8 +2,8 @@
     "name": "aws-js-s3-folder-component",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/aws": "^6.0.2",
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/pulumi": "3.144.1",
         "mime": "^2.2.2"
     }
 }

@@ -566,6 +566,7 @@ func TestAccAwsTsTwitterAthena(t *testing.T) {
 }
 
 func TestAccAwsTsLambdaEfs(t *testing.T) {
+	t.Skip("times out https://github.com/pulumi/examples/issues/1728")
 	test := getAWSBase(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-lambda-efs"),

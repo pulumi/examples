@@ -1,12 +1,12 @@
 {
     "name": "aws-static-website-example",
     "devDependencies": {
-        "@types/mime": "^2.0.0",
-        "@types/node": "^8.0.0"
+        "@types/mime": "2.0.3",
+        "@types/node": "8.10.66"
     },
     "dependencies": {
-        "@pulumi/aws": "^6.0.2",
-        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/pulumi": "3.144.1",
         "mime": "^2.0.3"
     }
 }

@@ -1,18 +1,18 @@
 {
   "name": "kubernetes-ts-multicloud",
   "devDependencies": {
-    "@types/node": "^18.0.0",
-    "typescript": "^4.6.2"
+    "@types/node": "18.19.68",
+    "typescript": "4.9.5"
   },
   "dependencies": {
-    "@pulumi/awsx": "^2.0.2",
-    "@pulumi/azure": "^5.0.0",
-    "@pulumi/azuread": "^5.0.0",
-    "@pulumi/eks": "^2.0.0",
-    "@pulumi/gcp": "^8.0.0",
-    "@pulumi/kubernetes": "^4.0.0",
-    "@pulumi/pulumi": "^3.0.0",
-    "@pulumi/random": "^4.0.0",
-    "@pulumi/tls": "^4.0.0"
+    "@pulumi/awsx": "2.19.0",
+    "@pulumi/azure": "6.14.0",
+    "@pulumi/azuread": "6.0.2",
+    "@pulumi/eks": "3.6.0",
+    "@pulumi/gcp": "8.12.1",
+    "@pulumi/kubernetes": "4.19.0",
+    "@pulumi/pulumi": "3.144.1",
+    "@pulumi/random": "4.16.8",
+    "@pulumi/tls": "5.0.10"
   }
 }

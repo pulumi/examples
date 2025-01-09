@@ -88,22 +88,22 @@ runs:
   using: composite
   steps:
     - name: Install .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@3e891b0cb619bf60e2c25674b222b8940e2c1c25 # v4
       with:
         dotnet-version: ${{inputs.dotnet-version}}
 
     - name: Install Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
       with:
         node-version: ${{inputs.node-version}}
 
     - name: Install Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5
       with:
         python-version: ${{inputs.python-version}}
 
     - name: Install Go
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v5
       with:
         go-version: ${{inputs.go-version}}
         cache-dependency-path: "**/go.sum"
@@ -122,12 +122,23 @@ runs:
         sudo mv kubectl /usr/local/bin
       shell: bash
 
-    - name: Install and configure Helm
+    - name: Install and configure Helm with retry
       run: |
-        curl -o- -L https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-        helm init -c
-        helm repo add bitnami https://charts.bitnami.com/bitnami
+        MAX_ATTEMPTS=3
+        ATTEMPT=0
+        until [ $ATTEMPT -ge $MAX_ATTEMPTS ]; do
+          curl -o- -L https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash &&
+          helm repo add bitnami https://repo.broadcom.com/bitnami-files/ && break
+          ATTEMPT=$((ATTEMPT + 1))
+          echo "Attempt $ATTEMPT failed. Retrying in 300 seconds..."
+          sleep 300
+        done
+        if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
+          echo "All attempts failed."
+          exit 1
+        fi
       shell: bash
+
 
     - name: Install testing dependencies
       run: make ensure
@@ -140,7 +151,7 @@ runs:
         token: ${{ inputs.github-token }}
 
     - name: Install Pulumi
-      uses: pulumi/actions@v5
+      uses: pulumi/actions@c7fad9e2f0b79653172b36538b8b34b3c0291952 # v6
       with:
         pulumi-version: ${{ inputs.pulumi-version }}
 
@@ -149,7 +160,7 @@ runs:
 
     - name: Authenticate with AWS
       id: aws-auth
-      uses: aws-actions/configure-aws-credentials@v4
+      uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4
       with:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
@@ -161,13 +172,13 @@ runs:
         output-credentials: true
 
     - name: Authenticate with Google Cloud
-      uses: google-github-actions/auth@v2
+      uses: google-github-actions/auth@6fc4af4b145ae7821d527454aa9bd537d1f2dc5f # v2
       with:
         service_account: ${{ inputs.google-service-account-email }}
         workload_identity_provider: projects/${{ inputs.google-project-number }}/locations/global/workloadIdentityPools/${{ inputs.google-workload-identity-pool }}/providers/${{ inputs.google-workload-identity-provider }}
 
     - name: Install gcloud auth
-      uses: google-github-actions/setup-gcloud@v2
+      uses: google-github-actions/setup-gcloud@6189d56e4096ee891640bb02ac264be376592d6a # v2
       with:
         install_components: gke-gcloud-auth-plugin
 

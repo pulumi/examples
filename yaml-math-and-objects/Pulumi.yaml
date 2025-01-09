@@ -1,0 +1,118 @@
+name: yaml-math-and-objects
+description: A Pulumi YAML program that demonstrates how to do math and manipulate objects in YAML.
+runtime: yaml
+
+## Stack Config
+config:
+  # The length of the string to generate.
+  length: 
+    type: integer
+    default: 16
+  # When this config is set to true, we then want to implement some logic related to the string generation.
+  useLowerCase:
+    type: boolean
+    default: true
+  # An array of key-value pairs as strings used to build the keepers map array.
+  configKeepersArray:
+    type: array
+    items:
+      type: string  
+    default:
+      - "configKey1:configValue1"
+      - "configKey2:configValue2"
+  
+
+## Variables used by the RandomString resource below constructed from the config and functions and a little help from the Command resource.
+variables:
+  # Get the length from the config.
+  stringLength: ${length}
+
+  # Build keepersArrayPart1 using the structured config (which is limited to an array of strings) by leveraging pulumi-std functions 
+  # to build the requisite map array.
+  keepersArrayPart1:
+    # Build the required map array from an array of strings such that each pair of strings is used to create the key-value pair. 
+    fn::invoke:
+      function: std:map
+      arguments:
+        args:
+          # Split the string of strings created by joining the array of strings from the config.
+          # This is needed for the map function to build the array of key-value pairs.
+          fn::invoke:
+            function: std:split
+            arguments:
+              separator: ":"
+              text: 
+                # Build one big string of strings from the array of strings in the config.
+                fn::invoke:
+                  function: std:join
+                  arguments:
+                    # The array of strings from the config.
+                    input: ${configKeepersArray}
+                    separator: ":"
+                  return: result
+            return: result
+      return: result
+
+  # Hard-coded map for the second part of the keepers array to have something to merge.
+  keepersArrayPart2:
+    part2aKey: "part2aValue"
+    part2bKey: "part2bValue"
+
+  # Combine the two parts of the keepers map arrays into a single map array to be used in the RandomString resource.
+  keepersArrayCombined:
+    fn::invoke:
+      function: std:merge
+      arguments:
+        input:
+          - ${keepersArrayPart1}
+          - ${keepersArrayPart2}
+      return: result
+  
+  # Lowercase settings object to use for the RandomString resource.
+  lowerCaseSettings:
+    # Just passing along the config value as part of this variable.
+    uselower: ${useLowerCase}
+    # Want to only set minLower based on length and only set it if useLowerCase is true. 
+    # Since we don't have a way to run logic and math in YAML, we can use the Pulumi Command resource (see below) to do this.
+    # But we need to use the srd-pareint function to convert the string output from the Command resource to an integer for the RandomString resource.
+    minLower: 
+      fn::invoke:
+        function: std:parseint
+        arguments:
+          input: ${calculateMinLower.stdout}
+        return: result
+
+## Resources
+resources:
+  # Creating a RandomString resource (https://www.pulumi.com/registry/packages/random/api-docs/randomstring/) 
+  randomString:
+    type: random:RandomString
+    properties:
+      # Must be a number. Taken from config.
+      length: ${stringLength}
+      # Must be an array of key-value pairs. Built from the config and hard-coded values (see above).
+      keepers: ${keepersArrayCombined}
+      # Must be a boolean. Taken from config.
+      lower: ${lowerCaseSettings.uselower}
+      # Must be a number. Calculated value based on boolean logic and math using the Command provider (see below).
+      minLower: ${lowerCaseSettings.minLower}
+
+  # Since we don't yet have math operations (other than `sum`) in YAML, 
+  # see https://github.com/pulumi/pulumi-std/issues/70
+  # we can use the Pulumi Command resource to do math.
+  # The output is then referenced by the `lowerCaseSettings` variable.
+  calculateMinLower:
+    type: command:local:Command
+    properties:
+      # we want about a quarter of the password to be lowercase letters if useLowerCase is true.
+      create: if ${useLowerCase}; then echo "${stringLength} / 4" | bc; else echo 0; fi
+
+
+# Stack outputs
+outputs:
+  # Generated string
+  randomString: ${randomString.result}
+  # Lowercase settings reflecting the config-based value and the calculated minLower value.
+  lowerCaseSettings: ${lowerCaseSettings}
+  # The keepers array that was built using the config and hard-coded values.
+  keepersArrayCombined: ${keepersArrayCombined}

@@ -11,3 +11,6 @@ template:
     escProject:
       description: The name of the ESC project in which to place a generated environment.
       default: aws
+    escEnvironmentName:
+      description: The name of the ESC environment to generate.
+      default: aws-oidc-admin

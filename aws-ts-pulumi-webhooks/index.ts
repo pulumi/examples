@@ -20,7 +20,7 @@ const stackConfig = {
 };
 
 // Just logs information from an incoming webhook request.
-function logRequest(req: awsx.apigateway.Request) {
+function logRequest(req: awsx.classic.apigateway.Request) {
     const webhookID = req.headers !== undefined ? req.headers["pulumi-webhook-id"] : "";
     const webhookKind = req.headers !== undefined ? req.headers["pulumi-webhook-kind"] : "";
     console.log(`Received webhook from Pulumi ${webhookID} [${webhookKind}]`);
@@ -28,7 +28,7 @@ function logRequest(req: awsx.apigateway.Request) {
 
 // Webhooks can optionally be configured with a shared secret, so that webhook handlers like this app can authenticate
 // message integrity. Rejects any incoming requests that don't have a valid "pulumi-webhook-signature" header.
-function authenticateRequest(req: awsx.apigateway.Request): awsx.apigateway.Response | undefined {
+function authenticateRequest(req: awsx.classic.apigateway.Request): awsx.classic.apigateway.Response | undefined {
     const webhookSig = req.headers !== undefined ? req.headers["pulumi-webhook-signature"] : "";
     if (!stackConfig.sharedSecret || !webhookSig) {
         return undefined;
@@ -50,7 +50,7 @@ function authenticateRequest(req: awsx.apigateway.Request): awsx.apigateway.Resp
 // unsecret the webhook so we can add it to the handler
 (<any>stackConfig.slackWebhook).isSecret = false;
 
-const webhookHandler = new awsx.apigateway.API("pulumi-webhook-handler", {
+const webhookHandler = new awsx.classic.apigateway.API("pulumi-webhook-handler", {
     restApiArgs: {
         binaryMediaTypes: ["application/json"],
     },
