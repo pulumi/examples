@@ -1,0 +1,17 @@
+{
+    "name": "aws-multi-language-lambda-ts",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^18",
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^6.0.0",
+        "@pulumi/awsx": "^2.0.2",
+        "@pulumi/docker-build": "^0.0.4",
+        "@pulumi/pulumi": "^3.113.0"
+    },
+    "scripts": {
+        "deploy": "rm -rf ./dist && pulumi up -f"
+    }
+}
