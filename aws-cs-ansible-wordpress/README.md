@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-ansible-wordpress/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-ansible-wordpress/README.md#gh-dark-mode-only)
+
 # Deploy Wordpress to AWS EC2 using Pulumi and Ansible
 
 This project demonstrates how to use Pulumi and Ansible together. Pulumi handles provisioning the AWS infrastructure
@@ -50,9 +53,9 @@ After cloning this repo, from this working directory, run these commands:
 
     ```bash
     $ pulumi config set aws:region us-east-1 # any valid AWS region
-    $ pulumi config set publicKeyPath wordpress-key.pub # your newly generated public key
-    $ pulumi config set privateKeyPath wordpress-key # your newly generated private key
-    $ pulumi config set dbPassword Sup45ekreT@ --secret # your RDS database password -- keep it safe!
+    $ pulumi config set publicKeyPath wordpress-keypair.pub # your newly generated public key
+    $ pulumi config set privateKeyPath wordpress-keypair # your newly generated private key
+    $ pulumi config set dbPassword Sup45ekreT#123 --secret # your RDS database password -- keep it safe!
     ```
 
     There are some other optional variables you can set if you choose. Feel free to skip these. If you don't

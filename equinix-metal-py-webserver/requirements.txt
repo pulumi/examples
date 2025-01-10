@@ -1,3 +1,0 @@
-pulumi>=3.5.1,<4.0.0
-pulumi-equinix-metal>=2.0.0,<3.0.0
-pulumi-random>=4.2.0,<5.0.0

@@ -1,29 +1,29 @@
 name: azure-container-apps
 runtime: yaml
 description: Azure Container Apps example
-configuration:
+config:
   sqlAdmin:
-    type: String
+    type: string
     default: pulumi
 variables:
   sharedKey:
-    Fn::Invoke:
-      Function: azure-native:operationalinsights:getSharedKeys
-      Arguments:
+    fn::invoke:
+      function: azure-native:operationalinsights:getSharedKeys
+      arguments:
         resourceGroupName: ${resourceGroup.name}
         workspaceName: ${workspace.name}
       Return: primarySharedKey
   adminUsername:
-    Fn::Invoke:
-      Function: azure-native:containerregistry:listRegistryCredentials
-      Arguments:
+    fn::invoke:
+      function: azure-native:containerregistry:listRegistryCredentials
+      arguments:
         resourceGroupName: ${resourceGroup.name}
         registryName: ${registry.name}
       Return: username
   adminPasswords:
-    Fn::Invoke:
-      Function: azure-native:containerregistry:listRegistryCredentials
-      Arguments:
+    fn::invoke:
+      function: azure-native:containerregistry:listRegistryCredentials
+      arguments:
         resourceGroupName: ${resourceGroup.name}
         registryName: ${registry.name}
       Return: passwords

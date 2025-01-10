@@ -1,7 +1,7 @@
 from pulumi_gcp import storage, cloudfunctions
 from pulumi import export, asset
 
-bucket = storage.Bucket("bucket")
+bucket = storage.Bucket("bucket", location="US")
 
 py_bucket_object = storage.BucketObject(
     "python-zip",
@@ -41,7 +41,7 @@ go_bucket_object = storage.BucketObject(
 go_function = cloudfunctions.Function(
     "go-func",
     source_archive_bucket=bucket.name,
-    runtime="go111",
+    runtime="go120",
     source_archive_object=go_bucket_object.name,
     entry_point="Handler",
     trigger_http=True,

@@ -12,6 +12,18 @@ const siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     },
 });
 
+const siteBucketWebsiteConfig = new aws.s3.BucketWebsiteConfigurationV2("s3-website-bucket-config", {
+    bucket: siteBucket.id,
+    indexDocument: {
+        suffix: "index.html",
+    },
+});
+
+const publicAccessBlock = new aws.s3.BucketPublicAccessBlock("public-access-block", {
+    bucket: siteBucket.id,
+    blockPublicAcls: false,
+});
+
 const siteDir = "www"; // directory for content files
 
 // For each file in the directory, create an S3 object stored in `siteBucket`
@@ -27,7 +39,7 @@ for (const item of fs.readdirSync(siteDir)) {
 // Set the access policy for the bucket so all objects are readable
 const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
     bucket: siteBucket.id, // refer to the bucket created earlier
-    policy: siteBucket.arn.apply(bucketArn => JSON.stringify({
+    policy: pulumi.jsonStringify({
         Version: "2012-10-17",
         Statement: [{
             Effect: "Allow",
@@ -36,12 +48,12 @@ const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
                 "s3:GetObject",
             ],
             Resource: [
-                `${bucketArn}/*`, //
+                pulumi.interpolate `${siteBucket.arn}/*`,
             ],
         }],
-    })),
-});
+    }),
+}, { dependsOn: publicAccessBlock });
 
 // Stack exports
 export const bucketName = siteBucket.bucket;
-export const websiteUrl = siteBucket.websiteEndpoint;
+export const websiteUrl = siteBucketWebsiteConfig.websiteEndpoint;

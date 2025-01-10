@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/iam"
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/lambda"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/iam"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/lambda"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -42,6 +42,9 @@ func main() {
                 }]
             }`),
 		})
+		if err != nil {
+			return err
+		}
 
 		// Set arguments for constructing the function resource.
 		args := &lambda.FunctionArgs{

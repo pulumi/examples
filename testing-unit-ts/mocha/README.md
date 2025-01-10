@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-ts/mocha/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-ts/mocha/README.md#gh-dark-mode-only)
+
 # Unit Testing Pulumi programs in TypeScript
 
 An example of writing mock-based unit tests with both infrastructure definition and tests written in TypeScript. The example uses the [Mocha](https://mochajs.org/) test framework to define and run the tests.
@@ -16,7 +19,7 @@ An example of writing mock-based unit tests with both infrastructure definition 
 
 2.  Run the tests, with `mocha` installed locally in `node_modules/`:
 
-    ``` 
+    ```
     $ npx mocha -r ts-node/register ec2tests.ts
 
     Infrastructure

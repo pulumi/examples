@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-apigateway-py-routes/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-apigateway-py-routes/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-apigateway-py-routes/README.md#gh-dark-mode-only)
 
 # Routes in API Gateway
 
@@ -142,15 +143,15 @@ Deploy your stack:
 ```bash
 $ pulumi up
 ...
-     Type                               Name                            Plan       
-     pulumi:pulumi:Stack                aws-apigateway-ts-routes-dev               
- +   ├─ pulumi:providers:aws            usEast1                         create     
- +   ├─ aws:acm:Certificate             ssl-cert                        create     
- +   ├─ aws:route53:Record              ssl-cert-validation-dns-record  create     
- +   ├─ aws:acm:CertificateValidation   ssl-cert-validation             create     
- +   ├─ aws:apigateway:DomainName       api-domain-name                 create     
- +   ├─ aws:route53:Record              api-dns                         create     
- +   └─ aws:apigateway:BasePathMapping  api-domain-mapping              create    
+     Type                               Name                            Plan
+     pulumi:pulumi:Stack                aws-apigateway-ts-routes-dev
+ +   ├─ pulumi:providers:aws            usEast1                         create
+ +   ├─ aws:acm:Certificate             ssl-cert                        create
+ +   ├─ aws:route53:Record              ssl-cert-validation-dns-record  create
+ +   ├─ aws:acm:CertificateValidation   ssl-cert-validation             create
+ +   ├─ aws:apigateway:DomainName       api-domain-name                 create
+ +   ├─ aws:route53:Record              api-dns                         create
+ +   └─ aws:apigateway:BasePathMapping  api-domain-mapping              create
 ```
 
 Test your API is now available on your custom domain:

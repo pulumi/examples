@@ -13,7 +13,7 @@ const username = config.require("username");
 const password = config.requireSecret("password");
 
 // retrieve the ssh publicKey from config
-const publicKey = config.get("publicKey");
+const publicKey = config.require("publicKey");
 
 // The privateKey associated with the selected key must be provided (either directly or base64 encoded).
 const privateKey = config.requireSecret("privateKey").apply(key => {
@@ -33,7 +33,7 @@ const network = new azure.network.VirtualNetwork("server-network", {
     addressSpaces: ["10.0.0.0/16"],
     subnets: [{
         name: "default",
-        addressPrefix: "10.0.1.0/24",
+        addressPrefixes: ["10.0.1.0/24"],
     }],
 });
 
@@ -139,11 +139,12 @@ const connection: command.types.input.remote.ConnectionArgs = {
 };
 
 const changeToken = getFileHash("myapp.conf");
+
 // Copy a config file to our server.
-const cpConfig = new command.remote.CopyFile("config", {
+const cpConfig = new command.remote.CopyToRemote("config", {
     triggers: [changeToken],
     connection,
-    localPath: "myapp.conf",
+    source: new pulumi.asset.FileAsset("myapp.conf"),
     remotePath: `/home/${username}/myapp.conf`,
 }, { dependsOn: [vm, pubIp] });
 

@@ -22,7 +22,7 @@ const storageContainer = new azure.storage.Container("files", {
 
 // Azure SQL Server that we want to access from the application
 const administratorLoginPassword = new random.RandomPassword("password", { length: 16, special: true }).result;
-const sqlServer = new azure.sql.SqlServer("sqlserver", {
+const sqlServer = new azure.mssql.Server("sqlserver", {
     resourceGroupName: resourceGroup.name,
     // The login and password are required but won't be used in our application
     administratorLogin: "manualadmin",
@@ -31,10 +31,8 @@ const sqlServer = new azure.sql.SqlServer("sqlserver", {
 });
 
 // Azure SQL Database that we want to access from the application
-const database = new azure.sql.Database("sqldb", {
-    resourceGroupName: resourceGroup.name,
-    serverName: sqlServer.name,
-    requestedServiceObjectiveName: "S0",
+const database = new azure.mssql.Database("sqldb", {
+    serverId: sqlServer.id,
 });
 
 // The connection string that has no credentials in it: authertication will come through MSI
@@ -64,7 +62,7 @@ const blob = new azure.storage.Blob("zip", {
     storageContainerName: storageContainer.name,
     type: "Block",
 
-    source: new pulumi.asset.FileArchive("./webapp/bin/Debug/netcoreapp3.1/publish"),
+    source: new pulumi.asset.FileArchive("./webapp/bin/Debug/net8.0/publish"),
 });
 
 const clientConfig = azure.core.getClientConfig({ async: true });
@@ -81,7 +79,7 @@ const vault = new azure.keyvault.KeyVault("vault", {
         // The current principal has to be granted permissions to Key Vault so that it can actually add and then remove
         // secrets to/from the Key Vault. Otherwise, 'pulumi up' and 'pulumi destroy' operations will fail.
         objectId: currentPrincipal,
-        secretPermissions: ["delete", "get", "list", "set"],
+        secretPermissions: ["Delete", "Get", "List", "Set"],
     }],
 });
 
@@ -119,27 +117,26 @@ const app = new azure.appservice.AppService("app", {
 });
 
 // Work around a preview issue https://github.com/pulumi/pulumi-azure/issues/192
-const principalId = app.identity.apply(id => id.principalId || "11111111-1111-1111-1111-111111111111");
+const principalId = app.identity.apply(id => id!.principalId || "11111111-1111-1111-1111-111111111111");
 
 // Grant App Service access to KV secrets
 const policy = new azure.keyvault.AccessPolicy("app-policy", {
     keyVaultId: vault.id,
     tenantId: tenantId,
     objectId: principalId,
-    secretPermissions: ["get"],
+    secretPermissions: ["Get"],
 });
 
 // Make the App Service the admin of the SQL Server (double check if you want a more fine-grained security model in your real app)
-const sqlAdmin = new azure.sql.ActiveDirectoryAdministrator("adadmin", {
-    resourceGroupName: resourceGroup.name,
+const sqlAdmin = new azure.mssql.ManagedInstanceActiveDirectoryAdministrator("adadmin", {
+    managedInstanceId: sqlServer.id,
     tenantId: tenantId,
     objectId: principalId,
-    login: "adadmin",
-    serverName: sqlServer.name,
+    loginUsername: "adadmin",
 });
 
 // Grant access from App Service to the container in the storage
-const blobPermission = new azure.role.Assignment("readblob", {
+const blobPermission = new azure.authorization.Assignment("readblob", {
     principalId,
     scope: pulumi.interpolate`${storageAccount.id}/blobServices/default/containers/${storageContainer.name}`,
     roleDefinitionName: "Storage Blob Data Reader",
@@ -148,11 +145,10 @@ const blobPermission = new azure.role.Assignment("readblob", {
 // Add SQL firewall exceptions
 const firewallRules = app.outboundIpAddresses.apply(
     ips => ips.split(",").map(
-        ip => new azure.sql.FirewallRule(`FR${ip}`, {
-            resourceGroupName: resourceGroup.name,
+        ip => new azure.mssql.FirewallRule(`FR${ip}`, {
+            serverId: sqlServer.id,
             startIpAddress: ip,
             endIpAddress: ip,
-            serverName: sqlServer.name,
         }),
     ));
 

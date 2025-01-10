@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-eks-hello-world/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-eks-hello-world/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-eks-hello-world/README.md#gh-dark-mode-only)
 
 # Amazon EKS Cluster: Hello World!
 
@@ -187,7 +188,7 @@ After cloning this repo, from this working directory, run these commands:
                     name: "aws"
                     user: {
                         exec: {
-                            apiVersion: "client.authentication.k8s.io/v1alpha1"
+                            apiVersion: "client.authentication.k8s.io/v1beta1"
                             args      : [
                                 [0]: "token"
                                 [1]: "-i"

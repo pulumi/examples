@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-slackbot/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-slackbot/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-slackbot/README.md#gh-dark-mode-only)
 
 # Create a Slackbot for Posting Mention Notifications
 
@@ -9,7 +10,7 @@ Slack users can subscribe/unsubscribe from notifications easily.  To receive not
 1. We set up an ApiGateway API to receive push notifications from Slack whenever important events happen.
 2. Slack has strict requirements on how quickly the push endpoint must respond with `200` notifications before they consider the message as "not received", triggering back-off and resending of those same messages.  For this reason, our example does not process Slack `event` messages as they come in.  Instead, they are immediately added to an [AWS SNS Topic](https://aws.amazon.com/sns/) to be processed at a later point in time. This allows the ApiGateway call to return quickly, satisfying Slack's requirements.
 3. Two [AWS Lambdas](https://aws.amazon.com/lambda/) are created naturally using simple Python functions.  One function is used to create the Lambda that is called when Slack pushes a notification.  The other is used to specify the Lamdba that will process the messages added to the Topic.  These functions can easily access the other Pulumi resources created, avoiding the need to figure out ways to pass Resource ARNs/IDs/etc. to the Lambdas to ensure they can talk to the right resources.  If these resources are swapped out in the future (for example, using RDS instead of DynamoDB, or SQS instead of SNS), Pulumi will make sure that the Lambdas were updated properly.
-4. [Pulumi Secrets](https://www.pulumi.com/docs/intro/concepts/config/) provides a simple way to pass important credentials (like your Slack tokens) without having to directly embed them in your application code.
+4. [Pulumi Secrets](https://www.pulumi.com/docs/intro/concepts/secrets/) provides a simple way to pass important credentials (like your Slack tokens) without having to directly embed them in your application code.
 
 First, we'll set up the Pulumi App.  Then, we'll go create and configure a Slack App and Bot to interact with our Pulumi App.
 
@@ -35,7 +36,7 @@ $ pulumi config set aws:region us-east-2
 ```bash
 make build
 ```
-		
+
 ### Step 4: Preview and deploy your app
 
 Run `pulumi up` to preview and deploy your AWS resources.
@@ -52,7 +53,7 @@ To create a new Slackbot, first go to https://api.slack.com/apps and create an a
 <p align=center>
 <img src=https://user-images.githubusercontent.com/4564579/55648728-e7127180-5795-11e9-9ddf-849d789ea05b.png>
 </p>
-    
+
 Pick your desired name for the app, and the Workspace the app belongs to.  Here we choose `MentionBot`:
 
 <p align=center>
@@ -66,7 +67,7 @@ Once created, you will need to 'Add features and functionality' to your app. You
 </p>
 
 First, we'll enable 'Incoming Webhooks'.  This allows your Slack bot to post messages into Slack for you:
- 
+
 <p align=center>
 <img src=https://user-images.githubusercontent.com/4564579/55648806-22ad3b80-5796-11e9-8dfd-ba86b7ba9351.png>
 </p>
@@ -96,7 +97,7 @@ Underneath this, we'll set the following Scopes defining the permissions of the 
    <img src=https://user-images.githubusercontent.com/4564579/55647362-55edcb80-5792-11e9-8f60-ae5261fa9c9a.png>
 </p>
 
-Now, we're almost done.  The only thing left to do is supply your Pulumi App with the appropriate secrets/tokens.  We'll need the Bot OAuth token (shown above), and the 'Verification Token' (found under 'Basic Information'): 
+Now, we're almost done.  The only thing left to do is supply your Pulumi App with the appropriate secrets/tokens.  We'll need the Bot OAuth token (shown above), and the 'Verification Token' (found under 'Basic Information'):
 
 <p align=center>
    <img src=https://user-images.githubusercontent.com/4564579/55647507-af55fa80-5792-11e9-80bf-b07b894d996f.png>
@@ -147,4 +148,4 @@ And you're set!  From now on when someone from your team mentions you, you'll ge
 
 1.  Run `pulumi destroy` to tear down all resources.
 
-1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi Console.
+1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi console.

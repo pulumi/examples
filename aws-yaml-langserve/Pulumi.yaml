@@ -1,0 +1,414 @@
+# Copyright 2016-2024, Pulumi Corporation.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: aws-yaml-langserve
+runtime: yaml
+description: A minimal Langserve AWS YAML Pulumi program
+config:
+  container-context:
+    type: string
+    default: .
+  container-file:
+    type: string
+    default: ./Dockerfile
+  open-api-key:
+    type: string
+    secret: true
+  subnet-1-cidr:
+    type: string
+    default: 10.0.0.0/24
+  subnet-2-cidr:
+    type: string
+    default: 10.0.1.0/24
+  vpc-cidr:
+    type: string
+    default: 10.0.0.0/16
+outputs:
+  url: http://${langserve-load-balancer.dnsName}
+resources:
+  langserve-cluster-capacity-providers:
+    properties:
+      capacityProviders:
+        - FARGATE
+        - FARGATE_SPOT
+      clusterName: ${langserve-ecs-cluster.name}
+    type: aws:ecs:ClusterCapacityProviders
+  langserve-ecr-image:
+    properties:
+      build:
+        context: ${container-context}
+        dockerfile: ${container-file}
+        platform: linux/amd64
+      imageName: ${langserve-ecr-repository.repositoryUrl}
+      registry:
+        password:
+          fn::secret: ${token.password}
+        server: ${langserve-ecr-repository.repositoryUrl}
+        username: ${token.userName}
+    type: docker:Image
+  langserve-ecr-life-cycle-policy:
+    properties:
+      policy:
+        fn::toJSON:
+          rules:
+            - action:
+                type: expire
+              description: Expire images when they are more than 10 available
+              rulePriority: 1
+              selection:
+                countNumber: 10
+                countType: imageCountMoreThan
+                tagStatus: any
+      repository: ${langserve-ecr-repository.name}
+    type: aws:ecr:LifecyclePolicy
+  langserve-ecr-repository:
+    properties:
+      forceDelete: true
+      name: ${pulumi-project}-${pulumi-stack}
+    type: aws:ecr:Repository
+  langserve-ecs-cluster:
+    properties:
+      configuration:
+        executeCommandConfiguration:
+          logging: DEFAULT
+      settings:
+        - name: containerInsights
+          value: disabled
+      tags:
+        Name: ${pulumi-project}-${pulumi-stack}
+    type: aws:ecs:Cluster
+  langserve-ecs-security-group:
+    properties:
+      egress:
+        - cidrBlocks:
+            - 0.0.0.0/0
+          fromPort: 0
+          protocol: -1
+          toPort: 0
+      ingress:
+        - cidrBlocks:
+            - 0.0.0.0/0
+          fromPort: 0
+          protocol: -1
+          toPort: 0
+      vpcId: ${langserve-vpc.id}
+    type: aws:ec2:SecurityGroup
+  langserve-execution-role:
+    properties:
+      assumeRolePolicy:
+        fn::toJSON:
+          Statement:
+            - Action: sts:AssumeRole
+              Effect: Allow
+              Principal:
+                Service: ecs-tasks.amazonaws.com
+          Version: '2012-10-17'
+      inlinePolicies:
+        - name: ${pulumi-project}-${pulumi-stack}-service-secrets-policy
+          policy:
+            fn::toJSON:
+              Statement:
+                - Action:
+                    - ssm:GetParameters
+                  Condition:
+                    StringEquals:
+                      ssm:ResourceTag/pulumi-application: ${pulumi-project}
+                      ssm:ResourceTag/pulumi-environment: ${pulumi-stack}
+                  Effect: Allow
+                  Resource:
+                    - ${langserve-ssm-parameter.arn}
+                - Action:
+                    - kms:Decrypt
+                  Condition:
+                    StringEquals:
+                      aws:ResourceTag/pulumi-application: ${pulumi-project}
+                      aws:ResourceTag/pulumi-environment: ${pulumi-stack}
+                  Effect: Allow
+                  Resource:
+                    - ${langserve-key.arn}
+                  Sid: DecryptTaggedKMSKey
+              Version: '2012-10-17'
+      managedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+    type: aws:iam:Role
+  langserve-igw:
+    properties:
+      tags:
+        Name: ${pulumi-project}-${pulumi-stack}
+      vpcId: ${langserve-vpc.id}
+    type: aws:ec2:InternetGateway
+  langserve-key:
+    properties:
+      description: "Key for encrypting secrets"
+      enableKeyRotation: true
+      policy:
+        fn::toJSON:
+          Statement:
+            - Action:
+                - kms:Create*
+                - kms:Describe*
+                - kms:Enable*
+                - kms:List*
+                - kms:Put*
+                - kms:Update*
+                - kms:Revoke*
+                - kms:Disable*
+                - kms:Get*
+                - kms:Delete*
+                - kms:ScheduleKeyDeletion
+                - kms:CancelKeyDeletion
+                - kms:Tag*
+                - kms:UntagResource
+              Effect: Allow
+              Principal:
+                AWS: arn:aws:iam::${accountId}:root
+              Resource: "*"
+            - Action:
+                - kms:Encrypt
+                - kms:Decrypt
+                - kms:ReEncrypt*
+                - kms:GenerateDataKey*
+                - kms:DescribeKey
+              Effect: Allow
+              Principal:
+                AWS: arn:aws:iam::${accountId}:root
+              Resource: "*"
+          Version: '2012-10-17'
+      tags:
+        pulumi-application: ${pulumi-project}
+        pulumi-environment: ${pulumi-stack}
+    type: aws:kms:Key
+  langserve-listener:
+    properties:
+      defaultActions:
+        - targetGroupArn: ${langserve-target-group.arn}
+          type: forward
+      loadBalancerArn: ${langserve-load-balancer.arn}
+      port: 80
+      protocol: HTTP
+    type: aws:lb:Listener
+  langserve-load-balancer:
+    properties:
+      loadBalancerType: application
+      securityGroups:
+        - ${langserve-security-group.id}
+      subnets:
+        - ${langserve-subnet1.id}
+        - ${langserve-subnet2.id}
+    type: aws:lb:LoadBalancer
+  langserve-log-group:
+    properties:
+      retentionInDays: 7
+    type: aws:cloudwatch:LogGroup
+  langserve-route:
+    properties:
+      destinationCidrBlock: 0.0.0.0/0
+      gatewayId: ${langserve-igw.id}
+      routeTableId: ${langserve-rt.id}
+    type: aws:ec2:Route
+  langserve-rt:
+    properties:
+      tags:
+        Name: ${pulumi-project}-${pulumi-stack}
+      vpcId: ${langserve-vpc.id}
+    type: aws:ec2:RouteTable
+  langserve-security-group:
+    properties:
+      egress:
+        - cidrBlocks:
+            - 0.0.0.0/0
+          fromPort: 0
+          protocol: -1
+          toPort: 0
+      ingress:
+        - cidrBlocks:
+            - 0.0.0.0/0
+          fromPort: 80
+          protocol: tcp
+          toPort: 80
+      vpcId: ${langserve-vpc.id}
+    type: aws:ec2:SecurityGroup
+  langserve-service:
+    properties:
+      cluster: ${langserve-ecs-cluster.arn}
+      desiredCount: 1
+      launchType: FARGATE
+      loadBalancers:
+        - containerName: ${pulumi-project}-${pulumi-stack}-service
+          containerPort: 8080
+          targetGroupArn: ${langserve-target-group.arn}
+      networkConfiguration:
+        assignPublicIp: true
+        securityGroups:
+          - ${langserve-ecs-security-group.id}
+        subnets:
+          - ${langserve-subnet1.id}
+          - ${langserve-subnet2.id}
+      schedulingStrategy: REPLICA
+      serviceConnectConfiguration:
+        enabled: true
+        namespace: ${langserve-service-discovery-namespace.arn}
+      tags:
+        Name: ${pulumi-project}-${pulumi-stack}
+      taskDefinition: ${langserve-task-definition.arn}
+    type: aws:ecs:Service
+  langserve-service-discovery-namespace:
+    properties:
+      name: ${pulumi-stack}.${pulumi-project}.local
+      vpc: ${langserve-vpc.id}
+    type: aws:servicediscovery:PrivateDnsNamespace
+  langserve-ssm-parameter:
+    properties:
+      keyId: ${langserve-key.keyId}
+      name: /pulumi/${pulumi-project}/${pulumi-stack}/OPENAI_API_KEY
+      tags:
+        pulumi-application: ${pulumi-project}
+        pulumi-environment: ${pulumi-stack}
+      type: SecureString
+      value: ${open-api-key}
+    type: aws:ssm:Parameter
+  langserve-subnet1:
+    properties:
+      availabilityZone: ${availability-zones[0]}
+      cidrBlock: ${subnet-1-cidr}
+      mapPublicIpOnLaunch: true
+      tags:
+        Name: ${pulumi-project}-${pulumi-stack}-1
+      vpcId: ${langserve-vpc.id}
+    type: aws:ec2:Subnet
+  langserve-subnet1-rt-assoc:
+    properties:
+      routeTableId: ${langserve-rt.id}
+      subnetId: ${langserve-subnet1.id}
+    type: aws:ec2:RouteTableAssociation
+  langserve-subnet2:
+    properties:
+      availabilityZone: ${availability-zones[1]}
+      cidrBlock: ${subnet-2-cidr}
+      mapPublicIpOnLaunch: true
+      tags:
+        Name: ${pulumi-project}-${pulumi-stack}-2
+      vpcId: ${langserve-vpc.id}
+    type: aws:ec2:Subnet
+  langserve-subnet2-rt-assoc:
+    properties:
+      routeTableId: ${langserve-rt.id}
+      subnetId: ${langserve-subnet2.id}
+    type: aws:ec2:RouteTableAssociation
+  langserve-target-group:
+    properties:
+      port: 80
+      protocol: HTTP
+      targetType: ip
+      vpcId: ${langserve-vpc.id}
+    type: aws:lb:TargetGroup
+  langserve-task-definition:
+    properties:
+      containerDefinitions:
+        fn::toJSON:
+          - cpu: 0
+            essential: true
+            image: ${langserve-ecr-image.repoDigest}
+            logConfiguration:
+              logDriver: awslogs
+              options:
+                awslogs-group: ${langserve-log-group.name}
+                awslogs-region: ${region.name}
+                awslogs-stream-prefix: pulumi-langserve
+            name: ${pulumi-project}-${pulumi-stack}-service
+            portMappings:
+              - containerPort: 8080
+                hostPort: 8080
+                name: target
+                protocol: tcp
+            secrets:
+              - name: OPENAI_API_KEY
+                valueFrom: ${langserve-ssm-parameter.name}
+      cpu: 256
+      executionRoleArn: ${langserve-execution-role.arn}
+      family: ${pulumi-project}-${pulumi-stack}
+      memory: 512
+      networkMode: awsvpc
+      requiresCompatibilities:
+        - FARGATE
+      taskRoleArn: ${langserve-task-role.arn}
+    type: aws:ecs:TaskDefinition
+  langserve-task-role:
+    properties:
+      assumeRolePolicy:
+        fn::toJSON:
+          Statement:
+            - Action: sts:AssumeRole
+              Effect: Allow
+              Principal:
+                Service: ecs-tasks.amazonaws.com
+          Version: '2012-10-17'
+      inlinePolicies:
+        - name: ExecuteCommand
+          policy:
+            fn::toJSON:
+              Statement:
+                - Action:
+                    - ssmmessages:CreateControlChannel
+                    - ssmmessages:OpenControlChannel
+                    - ssmmessages:CreateDataChannel
+                    - ssmmessages:OpenDataChannel
+                  Effect: Allow
+                  Resource: "*"
+                - Action:
+                    - logs:CreateLogStream
+                    - logs:DescribeLogGroups
+                    - logs:DescribeLogStreams
+                    - logs:PutLogEvents
+                  Effect: Allow
+                  Resource: "*"
+              Version: '2012-10-17'
+        - name: DenyIAM
+          policy:
+            fn::toJSON:
+              Statement:
+                - Action: iam:*
+                  Effect: Deny
+                  Resource: "*"
+              Version: '2012-10-17'
+    type: aws:iam:Role
+  langserve-vpc:
+    properties:
+      cidrBlock: ${vpc-cidr}
+      enableDnsHostnames: true
+      enableDnsSupport: true
+      instanceTenancy: "default"
+      tags:
+        Name: ${pulumi-project}-${pulumi-stack}
+    type: aws:ec2:Vpc
+variables:
+  region:
+    fn::invoke:
+      arguments: {}
+      function: aws:getRegion
+  accountId: ${current.accountId}
+  availability-zones:
+    - ${region.name}a
+    - ${region.name}b
+  current:
+    fn::invoke:
+      arguments: {}
+      function: aws:getCallerIdentity
+  pulumi-project: ${pulumi.project}
+  pulumi-stack: ${pulumi.stack}
+  token:
+    fn::invoke:
+      arguments:
+        registryId: ${langserve-ecr-repository.registryId}
+      function: aws:ecr:getAuthorizationToken

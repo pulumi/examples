@@ -1,15 +1,15 @@
 name: azure-app-service
 runtime: yaml
 description: A static website hosted on AWS S3
-configuration:
+config:
   sqlAdmin:
-    type: String
+    type: string
     default: pulumi
 variables:
   blobAccessToken:
-    Fn::Invoke:
-      Function: azure-native:storage:listStorageAccountServiceSAS
-      Arguments:
+    fn::invoke:
+      function: azure-native:storage:listStorageAccountServiceSAS
+      arguments:
         accountName: ${sa.name}
         protocols: https
         sharedAccessStartTime: '2022-01-01'

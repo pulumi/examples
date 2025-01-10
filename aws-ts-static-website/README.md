@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-static-website/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-static-website/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-static-website/README.md#gh-dark-mode-only)
 
 # Secure Static Website Using Amazon S3, CloudFront, Route53, and Certificate Manager
 
@@ -55,7 +56,7 @@ const contentFile = new aws.s3.BucketObject(
 
 The Pulumi program then creates an `aws.cloudfront.Distribution` resource, which will serve
 the contents of the S3 bucket. The CloudFront distribution can be configured to handle
-things like custom error pages, cache TTLs, and so on. If includeWWW is set to true both the
+things like custom error pages, cache TTLs, and so on. If `includeWWW` is set to true both the
 cloudfront distribution and any generated certificate will contain an alias for accessing the site
 from the www subdomain.
 
@@ -102,8 +103,8 @@ This is caused by CloudFront confirming the ETag of the resource before applying
 ETag is essentially a "version", and AWS is rejecting any requests that are trying to update
 any version but the "latest".
 
-This error will occur when the state of the ETag get out of sync between the Pulumi Service
-and AWS. (Which can happen when inspecting the CloudFront distribution in the AWS console.)
+This error will occur when the state of the ETag get out of sync between Pulumi Cloud
+and AWS. (This can happen when inspecting the CloudFront distribution in the AWS console.)
 
 You can fix this by running `pulumi refresh` to pickup the newer ETag values.
 
@@ -131,7 +132,7 @@ and delete the bucket to continue.
 
 ## Fail to delete S3 bucket while running pulumi destroy, this bucket is not empty.
 
-The contents of the S3 bucket are not automatically deleted. You can manually delete these contents in the AWS Console or with 
+The contents of the S3 bucket are not automatically deleted. You can manually delete these contents in the AWS Console or with
 the AWS CLI.
 
 ## pulumi up fails when the targetDomain includes a www subdomain and includeWWW is set to true

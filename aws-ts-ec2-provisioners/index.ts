@@ -37,7 +37,7 @@ const amiId = aws.ec2.getAmi({
     mostRecent: true,
     filters: [{
         name: "name",
-        values: ["amzn2-ami-hvm-2.0.????????-x86_64-gp2"],
+        values: ["amzn2-ami-hvm-*-x86_64-gp2"],
     }],
 }, { async: true }).then(ami => ami.id);
 
@@ -64,10 +64,10 @@ const connection: command.types.input.remote.ConnectionArgs = {
 
 const changeToken = getFileHash("myapp.conf");
 // Copy a config file to our server.
-const cpConfig = new command.remote.CopyFile("config", {
+const cpConfig = new command.remote.CopyToRemote("config", {
     triggers: [changeToken],
     connection,
-    localPath: "myapp.conf",
+    source: new pulumi.asset.FileAsset("myapp.conf"),
     remotePath: "myapp.conf",
 }, { dependsOn: server });
 

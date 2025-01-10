@@ -232,7 +232,7 @@ internal class AppStack : Stack
 
         var expiresAt = DateTimeOffset.Now.AddMinutes(1).ToUnixTimeSeconds();
         var secret = new Secret("secret",
-            new SecretArgs
+            new KeyVault.SecretArgs
             {
                 SecretName = secretName,
                 VaultName = keyVault.Name,

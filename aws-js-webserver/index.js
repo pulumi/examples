@@ -8,9 +8,9 @@ let size = "t2.micro";    // t2.micro is available in the AWS free tier
 // Get the id for the latest Amazon Linux AMI
 let ami = aws.ec2.getAmi({
     filters: [
-        { name: "name", values: ["amzn-ami-hvm-*-x86_64-ebs"] },
+        { name: "name", values: ["amzn2-ami-hvm-*"] },
     ],
-    owners: ["137112412989"], // Amazon
+    owners: ["amazon"],
     mostRecent: true,
 }, { async: true }).then(result => result.id);
 

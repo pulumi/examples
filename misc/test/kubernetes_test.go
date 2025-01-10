@@ -1,3 +1,4 @@
+//go:build Kubernetes || all
 // +build Kubernetes all
 
 package test
@@ -7,6 +8,7 @@ import (
 	"testing"
 
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/pulumi/examples/misc/test/helpers"
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 	"github.com/stretchr/testify/assert"
 )
@@ -23,7 +25,7 @@ func TestAccKubernetesGuestbook(t *testing.T) {
 			NoParallel: true,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["frontendIP"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Guestbook")
 				})
 			},
@@ -33,7 +35,7 @@ func TestAccKubernetesGuestbook(t *testing.T) {
 			NoParallel: true,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["frontendIP"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Guestbook")
 				})
 			},
@@ -43,7 +45,7 @@ func TestAccKubernetesGuestbook(t *testing.T) {
 			NoParallel: true,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["FrontendIp"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Guestbook")
 				})
 			},
@@ -53,7 +55,7 @@ func TestAccKubernetesGuestbook(t *testing.T) {
 			NoParallel: true,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["FrontendIp"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Guestbook")
 				})
 			},
@@ -63,7 +65,7 @@ func TestAccKubernetesGuestbook(t *testing.T) {
 			NoParallel: true,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["frontend_ip"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Guestbook")
 				})
 			},
@@ -73,7 +75,7 @@ func TestAccKubernetesGuestbook(t *testing.T) {
 			NoParallel: true,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["frontendIp"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Guestbook")
 				})
 			},
@@ -83,7 +85,7 @@ func TestAccKubernetesGuestbook(t *testing.T) {
 			NoParallel: true,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
 				endpoint := stack.Outputs["frontendIp"].(string)
-				assertHTTPResult(t, endpoint, nil, func(body string) bool {
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
 					return assert.Contains(t, body, "Guestbook")
 				})
 			},

@@ -1,5 +1,8 @@
 name: aws-js-s3-folder
-runtime: nodejs
+runtime:
+  name: nodejs
+  options:
+    typescript: false
 description: A static website hosted on AWS S3
 template:
   config:

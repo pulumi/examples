@@ -11,6 +11,15 @@ const siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     },
 });
 
+// Allow public access policies to be set for the bucket.
+const bucketPublicAccessBlock = new aws.s3.BucketPublicAccessBlock("bucketPublicAccessBlock", {
+    bucket: siteBucket.bucket,
+    blockPublicAcls: true,
+    blockPublicPolicy: false,
+    ignorePublicAcls: false,
+    restrictPublicBuckets: false,
+})
+
 const siteDir = "www"; // directory for content files
 
 // For each file in the directory, create an S3 object stored in `siteBucket`

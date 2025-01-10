@@ -1,9 +1,10 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-pulumi-webhooks/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-pulumi-webhooks/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-pulumi-webhooks/README.md#gh-dark-mode-only)
 
 # Pulumi Webhook Handler
 
 This example creates a Pulumi `cloud.HttpEndpoint` that will receive webhook events delivered
-by the Pulumi Service. It then echos the event to Slack.
+by Pulumi Cloud. It then echos the event to Slack.
 
 ## Prerequisites
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
@@ -87,8 +88,8 @@ After cloning this repo, run these commands from the working directory:
 
 If you aren't seeing webhook deliveries in Slack, there are several places to look for more information.
 
-- The Pulumi Service. If you go to the webhook's page within the Pulumi Service, you can navigate to
-  recent webhook deliveries. If the Pulumi Service has any trouble contacting your webhook handler,
+- Pulumi Cloud: If you go to the webhook's page within the Pulumi console, you can navigate to
+  recent webhook deliveries. If Pulumi Cloud has any trouble contacting your webhook handler,
   you will see the error there.
-- The Pulumi Stack's logs. If the webhooks are being delivered, but aren't showing up in Slack for some
+- The Pulumi stack's logs: If the webhooks are being delivered, but aren't showing up in Slack for some
   reason, you can view the webhook handler's runtime logs by running the `pulumi logs` command.

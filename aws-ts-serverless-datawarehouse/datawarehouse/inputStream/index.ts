@@ -94,8 +94,8 @@ export class InputStream extends pulumi.ComponentResource {
                     },
                     bucketArn: args.destinationBucket.arn,
                     prefix: args.tableName + "/",
-                    bufferInterval,
-                    bufferSize: 64,
+                    bufferingInterval: bufferInterval,
+                    bufferingSize: 64,
                     roleArn: role.arn,
                     dataFormatConversionConfiguration: {
                         inputFormatConfiguration: {
@@ -129,7 +129,7 @@ export class InputStream extends pulumi.ComponentResource {
 export interface InputStreamArgs {
     databaseName: pulumi.Input<string>;
     tableName: pulumi.Input<string>;
-    destinationBucket: aws.s3.Bucket;
+    destinationBucket: aws.s3.BucketV2;
     shardCount: number;
     fileFlushIntervalSeconds?: number;
 }

@@ -6,14 +6,14 @@ from pulumi_kubernetes.core.v1 import ContainerArgs, PodSpecArgs, PodTemplateSpe
 from pulumi_kubernetes.meta.v1 import LabelSelectorArgs, ObjectMetaArgs
 
 config = Config()
-node_count = config.get_float("nodeCount") or 3
+node_count = config.get_float("nodeCount") or 2
 app_replica_count = config.get_float("appReplicaCount") or 5
 domain_name = config.get("domainName")
 
 cluster = do.KubernetesCluster(
     "do-cluster",
     region="nyc3",
-    version="latest",
+    version=do.get_kubernetes_versions().latest_version,
     node_pool=do.KubernetesClusterNodePoolArgs(
         name="default",
         size="s-2vcpu-2gb",

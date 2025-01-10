@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-gcp/sdk/v5/go/gcp/cloudfunctions"
-	"github.com/pulumi/pulumi-gcp/sdk/v5/go/gcp/storage"
+	"github.com/pulumi/pulumi-gcp/sdk/v8/go/gcp/cloudfunctions"
+	"github.com/pulumi/pulumi-gcp/sdk/v8/go/gcp/storage"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -27,7 +27,7 @@ func main() {
 		// Set arguments for creating the function resource.
 		args := &cloudfunctions.FunctionArgs{
 			SourceArchiveBucket: bucket.Name,
-			Runtime:             pulumi.String("go111"),
+			Runtime:             pulumi.String("go120"),
 			SourceArchiveObject: bucketObject.Name,
 			EntryPoint:          pulumi.String("Handler"),
 			TriggerHttp:         pulumi.Bool(true),

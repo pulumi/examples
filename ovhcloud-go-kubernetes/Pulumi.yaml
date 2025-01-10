@@ -1,0 +1,14 @@
+name: ovhcloud-kubernetes
+runtime: go
+description: A Go program to deploy a Kubernetes cluster on OVHcloud
+config:
+  # Cluster info
+  k8s_enabled: true
+  cluster:flavor: d2-4
+  cluster:name: pulumi-cluster
+  cluster:nodepool: pulumi-pool
+  cluster:min_nodes: 1
+  cluster:max_nodes: 2
+  cluster:region: GRA9
+  # OVH info
+  ovh:endpoint: ovh-eu

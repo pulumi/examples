@@ -1,9 +1,9 @@
 name: simple-kubernetes
 runtime: yaml
-configuration:
+config:
   hostname:
     default: example.com
-    type: String
+    type: string
 resources:
   nginx-demo: # namespace name generated based on resource name
     type: kubernetes:core/v1:Namespace

@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-cosmosapp-component/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-cosmosapp-component/README.md#gh-dark-mode-only)
+
 # Reusable Component to Create Globally-distributed Applications with Azure Cosmos DB
 
 This example demonstrates the usage of Pulumi to create globally-distributed applications with Azure Cosmos DB as the backend and pluggable infrastrustructure as the web tier.
@@ -22,36 +25,43 @@ The application has three example of using this component with the following com
 
 ## Prerequisites
 
-1.  [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1.  [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
 
 ## Steps
 
 ### Step 1: Create a new stack
 
-```
-$ pulumi stack init dev
+```bash
+pulumi stack init dev
 ```
 
 ### Step 2: Log in to the Azure CLI
 
 You will be prompted to do this during deployment if you forget this step.
 
-```
-$ az login
+```bash
+az login
 ```
 
 ### Step 3: Install NPM dependencies
 
-```
-$ npm install
+```bash
+npm install
 ```
 
-### Step 4: Deploy your changes
+### Step 4: Configure target Azure environment
+
+```bash
+pulumi config set azure:location <location>
+pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+```
+
+### Step 5: Deploy your changes
 
 Run `pulumi up` to preview and deploy changes:
 
-```
+```console
 $ pulumi up
 Previewing changes:
 +  azure-ts-cosmosapp-component-dev  create
@@ -64,11 +74,11 @@ Previewing changes:
 ...
 ```
 
-### Step 5: Check the deployed website endpoints
+### Step 6: Check the deployed website endpoints
 
 Three endpoints are now available. For example,
 
-```
+```console
 $ pulumi stack output functionsEndpoint
 http://functionscosmosfunc-rgcc15ea50.trafficmanager.net/api/cosmos
 
@@ -82,7 +92,7 @@ Go to the Azure portal and add a document with the ID "cosmos" to receive a non-
 
 The `unittests.ts` file contains two sample unit tests that can be run with Mocha:
 
-```
+```bash
 mocha -r ts-node/register unittests.ts
 ```
 
@@ -90,6 +100,6 @@ mocha -r ts-node/register unittests.ts
 
 The `policy` folder contains two sample policies that can be applied with the `policy-pack` argument:
 
-```
+```bash
 pulumi up --policy-pack policy
 ```

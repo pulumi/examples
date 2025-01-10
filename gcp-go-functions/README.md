@@ -1,6 +1,7 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-go-functions/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-go-functions/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-go-functions/README.md#gh-dark-mode-only)
 
-# Google Cloud Functions in Python deployed with Go
+# Google Cloud Functions in Go deployed with Go
 
 This example deploys a Google Cloud Function implemented in Go. Pulumi program is also implemented in Go.
 
@@ -24,12 +25,12 @@ To deploy your infrastructure, follow the below steps.
 
 1. Set the GCP project and region:
 
-    ```bash 
+    ```bash
     pulumi config set gcp:project <gcp-project>
     pulumi config set gcp:region <gcp-region>
     ```
 
-1. Execute the pulumi program to deploy our function:
+1. Execute the Pulumi program to deploy our function:
 
     ```bash
     pulumi up

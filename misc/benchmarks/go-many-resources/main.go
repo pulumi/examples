@@ -1,8 +1,9 @@
 package main
 
 import (
+	b64 "encoding/base64"
 	"fmt"
-	"strings"
+	"math/rand"
 
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
@@ -15,8 +16,7 @@ func main() {
 		resourcePayloadBytes := conf.RequireInt("resource_payload_bytes")
 
 		for i := 0; i < resourceCount; i++ {
-			deadweight := strings.Repeat(fmt.Sprintf("%08d", i), resourcePayloadBytes/8)
-
+			deadweight := pseudoRandomString(resourcePayloadBytes)
 			dummy, err := NewDummy(ctx, fmt.Sprintf("dummy-%d", i), &DummyArgs{
 				Deadweight: pulumi.String(deadweight),
 			})
@@ -34,4 +34,17 @@ func main() {
 		ctx.Export("ResourceCount", pulumi.Int(resourceCount))
 		return nil
 	})
+}
+
+func pseudoRandomString(desiredLength int) string {
+	fmt.Printf("pseudoRandomString n=%d\n", desiredLength)
+	buf := make([]byte, desiredLength)
+	rand.Read(buf)
+	text := b64.StdEncoding.EncodeToString(buf)
+	text = text[0:desiredLength]
+	if len(text) != desiredLength {
+		panic("assertion failed: len(text) != desiredLength")
+	}
+	fmt.Printf("pseudoRandomString done n=%d\n", len(text))
+	return text
 }

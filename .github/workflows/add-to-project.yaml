@@ -1,0 +1,15 @@
+name: Add issues to project
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+jobs:
+  add-to-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add to DevRel
+        uses: actions/add-to-project@960fbad431afda394cfcf8743445e741acd19e85 # v0.4.0
+        with:
+          project-url: https://github.com/orgs/pulumi/projects/47
+          github-token: ${{ secrets.PULUMI_BOT_GHA_MARKETING }}

@@ -13,22 +13,22 @@ import com.pulumi.gcp.container.inputs.NodePoolNodeConfigArgs;
 import com.pulumi.gcp.container.outputs.GetEngineVersionsResult;
 import com.pulumi.kubernetes.Provider;
 import com.pulumi.kubernetes.ProviderArgs;
-import com.pulumi.kubernetes.apps_v1.Deployment;
-import com.pulumi.kubernetes.apps_v1.DeploymentArgs;
-import com.pulumi.kubernetes.apps_v1.inputs.DeploymentSpecArgs;
-import com.pulumi.kubernetes.core_v1.Namespace;
-import com.pulumi.kubernetes.core_v1.NamespaceArgs;
-import com.pulumi.kubernetes.core_v1.Service;
-import com.pulumi.kubernetes.core_v1.ServiceArgs;
-import com.pulumi.kubernetes.core_v1.enums.ServiceSpecType;
-import com.pulumi.kubernetes.core_v1.inputs.ContainerArgs;
-import com.pulumi.kubernetes.core_v1.inputs.ContainerPortArgs;
-import com.pulumi.kubernetes.core_v1.inputs.PodSpecArgs;
-import com.pulumi.kubernetes.core_v1.inputs.PodTemplateSpecArgs;
-import com.pulumi.kubernetes.core_v1.inputs.ServicePortArgs;
-import com.pulumi.kubernetes.core_v1.inputs.ServiceSpecArgs;
-import com.pulumi.kubernetes.meta_v1.inputs.LabelSelectorArgs;
-import com.pulumi.kubernetes.meta_v1.inputs.ObjectMetaArgs;
+import com.pulumi.kubernetes.apps.v1.Deployment;
+import com.pulumi.kubernetes.apps.v1.DeploymentArgs;
+import com.pulumi.kubernetes.apps.v1.inputs.DeploymentSpecArgs;
+import com.pulumi.kubernetes.core.v1.Namespace;
+import com.pulumi.kubernetes.core.v1.NamespaceArgs;
+import com.pulumi.kubernetes.core.v1.Service;
+import com.pulumi.kubernetes.core.v1.ServiceArgs;
+import com.pulumi.kubernetes.core.v1.enums.ServiceSpecType;
+import com.pulumi.kubernetes.core.v1.inputs.ContainerArgs;
+import com.pulumi.kubernetes.core.v1.inputs.ContainerPortArgs;
+import com.pulumi.kubernetes.core.v1.inputs.PodSpecArgs;
+import com.pulumi.kubernetes.core.v1.inputs.PodTemplateSpecArgs;
+import com.pulumi.kubernetes.core.v1.inputs.ServicePortArgs;
+import com.pulumi.kubernetes.core.v1.inputs.ServiceSpecArgs;
+import com.pulumi.kubernetes.meta.v1.inputs.LabelSelectorArgs;
+import com.pulumi.kubernetes.meta.v1.inputs.ObjectMetaArgs;
 import com.pulumi.resources.CustomResourceOptions;
 
 import java.text.MessageFormat;
@@ -42,12 +42,11 @@ public class App {
     private static void stack(Context ctx) {
         final String name = "helloworld";
 
-        final var masterVersion = ctx.config().get("masterVersion").orElse(
-                ContainerFunctions.getEngineVersions()
-                .thenApply(GetEngineVersionsResult::latestMasterVersion).join()
-        );
+        final var masterVersion = ctx.config().get("masterVersion").map(Output::of)
+            .orElseGet(() -> ContainerFunctions.getEngineVersions()
+                       .applyValue(versions -> versions.latestMasterVersion()));
 
-        ctx.export("masterVersion", Output.of(masterVersion));
+        ctx.export("masterVersion", masterVersion);
 
         // Create a GKE cluster
         // We can't create a cluster with no node pool defined, but we want to only use
@@ -100,35 +99,36 @@ public class App {
         var masterAuthClusterCaCertificate = cluster.masterAuth()
                 .applyValue(a -> a.clusterCaCertificate().orElseThrow());
 
+        var yamlTemplate = """
+apiVersion: v1,
+clusters:,
+- cluster:,
+    certificate-authority-data: {2},
+    server: https://{1},
+  name: {0},
+contexts:,
+- context:,
+    cluster: {0},
+    user: {0},
+  name: {0},
+current-context: {0},
+kind: Config,
+preferences: '{}',
+users:,
+- name: {0},
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      command: gke-gcloud-auth-plugin
+      installHint: Install gke-gcloud-auth-plugin for use with kubectl by following
+        https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
+      provideClusterInfo: true
+            """;
+
         var kubeconfig = cluster.endpoint()
                 .apply(endpoint -> masterAuthClusterCaCertificate.applyValue(
-                        caCert -> MessageFormat.format(String.join("\n",
-                                "apiVersion: v1",
-                                "clusters:",
-                                "- cluster:",
-                                "    certificate-authority-data: {2}",
-                                "    server: https://{1}",
-                                "  name: {0}",
-                                "contexts:",
-                                "- context:",
-                                "    cluster: {0}",
-                                "    user: {0}",
-                                "  name: {0}",
-                                "current-context: {0}",
-                                "kind: Config",
-                                "preferences: '{}'",
-                                "users:",
-                                "- name: {0}",
-                                "  user:",
-                                "    auth-provider:",
-                                "      config:",
-                                "        cmd-args: config config-helper --format=json",
-                                "        cmd-path: gcloud",
-                                "        expiry-key: \"'{.credential.token_expiry}'\"",
-                                "        token-key: \"'{.credential.access_token}'\"",
-                                "      name: gcp"
-                        ), clusterName, endpoint, caCert)
-                ));
+                        caCert -> MessageFormat.format(yamlTemplate, clusterName, endpoint, caCert)));
+
         ctx.export("kubeconfig", kubeconfig);
 
         // Create a Kubernetes provider instance that uses our cluster from above.
@@ -152,7 +152,7 @@ public class App {
 
         // Export the Namespace name
         var namespaceName = ns.metadata()
-                .applyValue(m -> m.orElseThrow().name().orElseThrow());
+                .applyValue(m -> m.name().orElseThrow());
 
         ctx.export("namespaceName", namespaceName);
 
@@ -189,7 +189,7 @@ public class App {
 
         // Export the Deployment name
         ctx.export("deploymentName", deployment.metadata()
-                .applyValue(m -> m.orElseThrow().name().orElseThrow()));
+                .applyValue(m -> m.name().orElseThrow()));
 
         // Create a LoadBalancer Service for the NGINX Deployment
         final var service = new Service(name, ServiceArgs.builder()
@@ -206,7 +206,7 @@ public class App {
 
         // Export the Service name and public LoadBalancer endpoint
         ctx.export("serviceName", service.metadata()
-                .applyValue(m -> m.orElseThrow().name().orElseThrow()));
+                .applyValue(m -> m.name().orElseThrow()));
 
         ctx.export("servicePublicIP", service.status()
                 .applyValue(s -> s.orElseThrow().loadBalancer().orElseThrow())

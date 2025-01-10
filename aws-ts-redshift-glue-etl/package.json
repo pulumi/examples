@@ -1,0 +1,13 @@
+{
+    "name": "aws-ts-redshift-glue-etl",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "18.19.68",
+        "typescript": "4.9.5"
+    },
+    "dependencies": {
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/awsx": "2.19.0",
+        "@pulumi/pulumi": "3.144.1"
+    }
+}

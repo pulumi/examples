@@ -22,7 +22,8 @@ class AssumeRoleStack : Stack
             },
             Region = awsConfig.Require("region"),
         });
-        var bucket = new Aws.S3.Bucket("myBucket", null, new CustomResourceOptions { Provider = provider });
+        var bucket = new Aws.S3.BucketV2("myBucket", null, new CustomResourceOptions { Provider = provider });
+        this.BucketName = bucket.Bucket;
     }
 
     [Output]

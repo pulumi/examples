@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-ec2-provisioners/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-ec2-provisioners/README.md#gh-dark-mode-only)
+
 # AWS WebServer with Manual Provisioning
 
 This demonstrates using the [`@pulumi/command`](https://www.pulumi.com/registry/packages/command/) package to accomplish post-provisioning configuration steps.
@@ -12,7 +15,7 @@ Now, we need to ensure that our dependencies are installed:
 
 ```
 $ npm install
-``` 
+```
 
 Next, generate an OpenSSH keypair for use with your server - as per the AWS [Requirements][1]
 
@@ -30,7 +33,7 @@ $ cat rsa.pub | pulumi config set publicKey --
 $ cat rsa | pulumi config set privateKey --secret --
 ```
 
-Notice that we've used `--secret` for `privateKey`. This ensures their are stored in encrypted form in the Pulumi secrets system.
+Notice that we've used `--secret` for `privateKey`. This ensures the private key is stored as an encrypted [Pulumi secret](https://www.pulumi.com/docs/intro/concepts/secrets/).
 
 Also set your desired AWS region:
 

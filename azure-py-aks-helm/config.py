@@ -14,7 +14,7 @@ from pulumi_tls import PrivateKey
 config = Config()
 
 
-k8s_version = config.get('k8sVersion') or '1.18.14'
+k8s_version = config.get('k8sVersion') or '1.26.3'
 
 
 password = config.get('password') or RandomPassword('pw',

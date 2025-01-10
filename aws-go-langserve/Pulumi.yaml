@@ -1,0 +1,3 @@
+name: aws-go-langserve
+runtime: go
+description: A minimal Langserve AWS Go Pulumi program

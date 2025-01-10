@@ -1,24 +1,43 @@
-const pulumi = require("@pulumi/pulumi");
+// Copyright 2016-2023, Pulumi Corporation.  All rights reserved.
+
+const aws = require("@pulumi/aws");
 const awsx = require("@pulumi/awsx");
+const pulumi = require("@pulumi/pulumi");
 
-// Create an elastic network listener to listen for requests and route them to the container.
-// See https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html
-// for more details.
-let listener = new awsx.elasticloadbalancingv2.NetworkListener("nginx", { port: 80 });
+// An ECS cluster to deploy into.
+const cluster = new aws.ecs.Cluster("cluster", {});
 
-// Define the service to run.  We pass in the listener to hook up the network load balancer
-// to the containers the service will launch.
-let service = new awsx.ecs.FargateService("nginx", {
-    desiredCount: 2,
+// An ALB to serve the container endpoint to the internet.
+const loadbalancer = new awsx.lb.ApplicationLoadBalancer("loadbalancer", {});
+
+// An ECR repository to store our application's container image.
+const repo = new awsx.ecr.Repository("repo", {
+    forceDelete: true,
+});
+
+// Build and publish our application's container image from ./app to the ECR repository.
+const image = new awsx.ecr.Image("image", {
+    repositoryUrl: repo.url,
+    context: "./app",
+});
+
+// Deploy an ECS Service on Fargate to host the application container.
+const service = new awsx.ecs.FargateService("service", {
+    cluster: cluster.arn,
+    assignPublicIp: true,
     taskDefinitionArgs: {
-        containers: {
-            nginx: {
-                image: awsx.ecs.Image.fromPath("nginx", "./app"),
-                memory: 512,
-                portMappings: [listener],
-            },
+        container: {
+            image: image.imageUri,
+            cpu: 128,
+            memory: 512,
+            essential: true,
+            portMappings: [{
+                containerPort: 80,
+                targetGroup: loadbalancer.defaultTargetGroup,
+            }],
         },
     },
 });
 
-exports.frontendURL = pulumi.interpolate `http://${listener.endpoint.hostname}/`;
+// The URL at which the container's HTTP endpoint will be available.
+exports.frontendURL = pulumi.interpolate`http://${loadbalancer.loadBalancer.dnsName}`;

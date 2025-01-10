@@ -18,16 +18,9 @@ const adSp = new azuread.ServicePrincipal("aksSp", {
     applicationId: adApp.applicationId,
 });
 
-// Generate random password
-const password = new random.RandomPassword("password", {
-    length: 20,
-    special: true,
-});
-
 // Create the Service Principal Password
 const adSpPassword = new azuread.ServicePrincipalPassword("aksSpPassword", {
     servicePrincipalId: adSp.id,
-    value: password.result,
     endDate: "2099-01-01T00:00:00Z",
 });
 
@@ -36,7 +29,6 @@ const sshKey = new tls.PrivateKey("ssh-key", {
     algorithm: "RSA",
     rsaBits: 4096,
 });
-
 
 const config = new pulumi.Config();
 const managedClusterName = config.get("managedClusterName") || "azure-aks";
@@ -55,7 +47,7 @@ const cluster = new containerservice.ManagedCluster(managedClusterName, {
     }],
     dnsPrefix: resourceGroup.name,
     enableRBAC: true,
-    kubernetesVersion: "1.18.14",
+    kubernetesVersion: "1.24.0",
     linuxProfile: {
         adminUsername: "testuser",
         ssh: {
@@ -77,4 +69,4 @@ const creds = containerservice.listManagedClusterUserCredentialsOutput({
 });
 
 const encoded = creds.kubeconfigs[0].value;
-export const kubeconfig = encoded.apply(enc => Buffer.from(enc, "base64").toString());
+export const kubeconfig = pulumi.secret(encoded.apply(enc => Buffer.from(enc, "base64").toString()));

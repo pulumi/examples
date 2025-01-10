@@ -5,31 +5,31 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/ec2"
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/ecr"
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/ecs"
-	elb "github.com/pulumi/pulumi-aws/sdk/v5/go/aws/elasticloadbalancingv2"
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/iam"
-	"github.com/pulumi/pulumi-docker/sdk/v3/go/docker"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ec2"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ecr"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ecs"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/iam"
+	elb "github.com/pulumi/pulumi-aws/sdk/v6/go/aws/lb"
+	awsx "github.com/pulumi/pulumi-awsx/sdk/v2/go/awsx/ec2"
+	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		// Read back the default VPC and public subnets, which we will use.
-		t := true
-		vpc, err := ec2.LookupVpc(ctx, &ec2.LookupVpcArgs{Default: &t})
-		if err != nil {
-			return err
-		}
-		subnet, err := ec2.GetSubnetIds(ctx, &ec2.GetSubnetIdsArgs{VpcId: vpc.Id})
+		// Create a new VPC and subnets using AWS Crosswalk
+		vpcCidrBlock := "10.0.0.0/16"
+		vpc, err := awsx.NewVpc(ctx, "vpc", &awsx.VpcArgs{
+			EnableDnsHostnames: pulumi.Bool(true),
+			CidrBlock:          &vpcCidrBlock,
+		})
 		if err != nil {
 			return err
 		}
 
 		// Create a SecurityGroup that permits HTTP ingress and unrestricted egress.
 		webSg, err := ec2.NewSecurityGroup(ctx, "web-sg", &ec2.SecurityGroupArgs{
-			VpcId: pulumi.String(vpc.Id),
+			VpcId: vpc.VpcId,
 			Egress: ec2.SecurityGroupEgressArray{
 				ec2.SecurityGroupEgressArgs{
 					Protocol:   pulumi.String("-1"),
@@ -84,7 +84,8 @@ func main() {
 
 		// Create a load balancer to listen for HTTP traffic on port 80.
 		webLb, err := elb.NewLoadBalancer(ctx, "web-lb", &elb.LoadBalancerArgs{
-			Subnets:        toPulumiStringArray(subnet.Ids),
+			// Subnets:        toPulumiStringArray(subnet.Ids),
+			Subnets:        vpc.PublicSubnetIds,
 			SecurityGroups: pulumi.StringArray{webSg.ID().ToStringOutput()},
 		})
 		if err != nil {
@@ -94,7 +95,7 @@ func main() {
 			Port:       pulumi.Int(80),
 			Protocol:   pulumi.String("HTTP"),
 			TargetType: pulumi.String("ip"),
-			VpcId:      pulumi.String(vpc.Id),
+			VpcId:      vpc.VpcId,
 		})
 		if err != nil {
 			return err
@@ -113,11 +114,15 @@ func main() {
 			return err
 		}
 
-		repo, err := ecr.NewRepository(ctx, "foo", &ecr.RepositoryArgs{})
+		// Create an ECR repository to store the container image
+		repo, err := ecr.NewRepository(ctx, "foo", &ecr.RepositoryArgs{
+			ForceDelete: pulumi.Bool(true),
+		})
 		if err != nil {
 			return err
 		}
 
+		// Get credentials for the new ECR repository
 		repoCreds := repo.RegistryId.ApplyT(func(rid string) ([]string, error) {
 			creds, err := ecr.GetCredentials(ctx, &ecr.GetCredentialsArgs{
 				RegistryId: rid,
@@ -136,18 +141,24 @@ func main() {
 		repoUser := repoCreds.Index(pulumi.Int(0))
 		repoPass := repoCreds.Index(pulumi.Int(1))
 
+		// Build the container image (requires local Docker daemon)
 		image, err := docker.NewImage(ctx, "my-image", &docker.ImageArgs{
 			Build: docker.DockerBuildArgs{
-				Context: pulumi.String("./app"),
+				Context:  pulumi.String("./app"),
+				Platform: pulumi.String("linux/amd64"),
 			},
 			ImageName: repo.RepositoryUrl,
-			Registry: docker.ImageRegistryArgs{
+			Registry: docker.RegistryArgs{
 				Server:   repo.RepositoryUrl,
 				Username: repoUser,
 				Password: repoPass,
 			},
 		})
+		if err != nil {
+			return err
+		}
 
+		// Create the container definition
 		containerDef := image.ImageName.ApplyT(func(name string) (string, error) {
 			fmtstr := `[{
 				"name": "my-app",
@@ -161,7 +172,7 @@ func main() {
 			return fmt.Sprintf(fmtstr, name), nil
 		}).(pulumi.StringOutput)
 
-		// Spin up a load balanced service running NGINX.
+		// Spin up a load balanced service running the container image created earlier
 		appTask, err := ecs.NewTaskDefinition(ctx, "app-task", &ecs.TaskDefinitionArgs{
 			Family:                  pulumi.String("fargate-task-definition"),
 			Cpu:                     pulumi.String("256"),
@@ -181,7 +192,7 @@ func main() {
 			TaskDefinition: appTask.Arn,
 			NetworkConfiguration: &ecs.ServiceNetworkConfigurationArgs{
 				AssignPublicIp: pulumi.Bool(true),
-				Subnets:        toPulumiStringArray(subnet.Ids),
+				Subnets:        vpc.PublicSubnetIds,
 				SecurityGroups: pulumi.StringArray{webSg.ID().ToStringOutput()},
 			},
 			LoadBalancers: ecs.ServiceLoadBalancerArray{
@@ -192,17 +203,12 @@ func main() {
 				},
 			},
 		}, pulumi.DependsOn([]pulumi.Resource{webListener}))
+		if err != nil {
+			return err
+		}
 
 		// Export the resulting web address.
 		ctx.Export("url", webLb.DnsName)
 		return nil
 	})
-}
-
-func toPulumiStringArray(a []string) pulumi.StringArrayInput {
-	var res []pulumi.StringInput
-	for _, s := range a {
-		res = append(res, pulumi.String(s))
-	}
-	return pulumi.StringArray(res)
 }

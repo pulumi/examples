@@ -1,4 +1,4 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
 import {
@@ -213,8 +213,8 @@ export function requireElbLogging(name: string, bucketName?: string): ResourceVa
             "logging enabled.",
         enforcementLevel: "mandatory",
         validateResource: [
-            validateResourceOfType(aws.elasticloadbalancing.LoadBalancer, assertElbLogs),
-            validateResourceOfType(aws.elasticloadbalancingv2.LoadBalancer, assertElbLogs),
+            validateResourceOfType(aws.elb.LoadBalancer, assertElbLogs),
+            validateResourceOfType(aws.lb.LoadBalancer, assertElbLogs),
         ],
     };
 }

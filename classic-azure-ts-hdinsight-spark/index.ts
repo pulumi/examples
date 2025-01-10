@@ -36,24 +36,23 @@ const sparkCluster = new azure.hdinsight.SparkCluster("myspark", {
         storageContainerId: storageContainer.id,
     }],
     gateway: {
-        enabled: true,
         username,
         password,
     },
     roles: {
         headNode: {
-            vmSize: "Standard_D12_v2",
+            vmSize: "Standard_D12_V2",
             username,
             password,
         },
         workerNode: {
             targetInstanceCount: 3,
-            vmSize: "Standard_D12_v2",
+            vmSize: "Standard_D12_V2",
             username,
             password,
         },
         zookeeperNode: {
-            vmSize: "Standard_D12_v2",
+            vmSize: "Standard_D12_V2",
             username,
             password,
         },

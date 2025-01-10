@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/ec2"
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/eks"
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/iam"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ec2"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/eks"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/iam"
+	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes"
 	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/apps/v1"
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/core/v1"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/meta/v1"
-	"github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -21,7 +21,12 @@ func main() {
 		if err != nil {
 			return err
 		}
-		subnet, err := ec2.GetSubnetIds(ctx, &ec2.GetSubnetIdsArgs{VpcId: vpc.Id})
+
+		subnet, err := ec2.GetSubnets(ctx, &ec2.GetSubnetsArgs{
+			Filters: []ec2.GetSubnetsFilter{
+				{Name: "vpc-id", Values: []string{vpc.Id}},
+			},
+		})
 		if err != nil {
 			return err
 		}
@@ -181,7 +186,8 @@ func main() {
 							corev1.ContainerArgs{
 								Name:  pulumi.String("iac-workshop"),
 								Image: pulumi.String("jocatalin/kubernetes-bootcamp:v2"),
-							}},
+							},
+						},
 					},
 				},
 			},
@@ -222,7 +228,7 @@ func main() {
 	})
 }
 
-//Create the KubeConfig Structure as per https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
+// Create the KubeConfig Structure as per https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
 func generateKubeconfig(clusterEndpoint pulumi.StringOutput, certData pulumi.StringOutput, clusterName pulumi.StringOutput) pulumi.StringOutput {
 	return pulumi.Sprintf(`{
         "apiVersion": "v1",
@@ -246,7 +252,7 @@ func generateKubeconfig(clusterEndpoint pulumi.StringOutput, certData pulumi.Str
             "name": "aws",
             "user": {
                 "exec": {
-                    "apiVersion": "client.authentication.k8s.io/v1alpha1",
+                    "apiVersion": "client.authentication.k8s.io/v1beta1",
                     "command": "aws-iam-authenticator",
                     "args": [
                         "token",

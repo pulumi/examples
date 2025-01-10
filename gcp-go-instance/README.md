@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-go-instance/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-go-instance/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-go-instance/README.md#gh-dark-mode-only)
 
 # GCP Instance
 
@@ -21,16 +22,16 @@ Create a GCP instance using Pulumi + Go.
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing update (gcp-instance):
     ...
 
     Updating (gcp-instance):
-        Type                     Name       Status      
-    +   pulumi:pulumi:Stack      gcp-instance  created     
-    +   └─ gcp:compute:Instance  instance   created     
-    
+        Type                     Name       Status
+    +   pulumi:pulumi:Stack      gcp-instance  created
+    +   └─ gcp:compute:Instance  instance   created
+
     Outputs:
         instanceName: "instance-6beb431"
 

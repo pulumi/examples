@@ -3,24 +3,27 @@ runtime: yaml
 description: An EKS cluster
 variables:
   vpcId:
-    Fn::Invoke:
-      Function: aws:ec2:getVpc
-      Arguments:
+    fn::invoke:
+      function: aws:ec2:getVpc
+      arguments:
         default: true
       Return: id
   subnetIds:
-    Fn::Invoke:
-      Function: aws:ec2:getSubnetIds
-      Arguments:
-        vpcId: ${vpcId}
+    fn::invoke:
+      function: aws:ec2:getSubnets
+      arguments:
+        filters:
+          - name: vpc-id
+            values:
+              - ${vpcId}
       Return: ids
 resources:
   cluster:
     type: eks:Cluster
     properties:
+      authenticationMode: API_AND_CONFIG_MAP
       vpcId: ${vpcId}
       subnetIds: ${subnetIds}
-      instanceType: "t2.medium"
       desiredCapacity: 2
       minSize: 1
       maxSize: 2

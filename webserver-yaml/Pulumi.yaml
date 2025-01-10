@@ -1,15 +1,15 @@
 name: webserver
 runtime: yaml
 description: Basic example of an AWS web server accessible over HTTP
-configuration:
+config:
   InstanceType:
-    type: String
+    type: string
     default: t3.micro
 variables:
   ec2ami:
-    Fn::Invoke:
-      Function: aws:getAmi
-      Arguments:
+    fn::invoke:
+      function: aws:getAmi
+      arguments:
         filters:
           - name: name
             values: ["amzn-ami-hvm-*-x86_64-ebs"]
@@ -41,7 +41,7 @@ resources:
     properties:
       region: us-east-2
   MyBucket:
-    type: aws:s3:Bucket
+    type: aws:s3:BucketV2
     options:
       provider: ${UsEast2Provider}
 outputs:

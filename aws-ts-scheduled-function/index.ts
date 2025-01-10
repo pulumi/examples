@@ -5,7 +5,7 @@ import { ObjectIdentifier } from "aws-sdk/clients/s3";
 
 
 // Create an AWS resource (S3 Bucket)
-const trashBucket = new aws.s3.Bucket("trash");
+const trashBucket = new aws.s3.BucketV2("trash");
 
 // A handler function that will list objects in the bucket and bulk delete them
 const emptyTrash: aws.cloudwatch.EventRuleEventHandler = async (

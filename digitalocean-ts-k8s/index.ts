@@ -6,7 +6,7 @@ import * as pulumi from "@pulumi/pulumi";
 
 // Enable some configurable parameters.
 const config = new pulumi.Config();
-const nodeCount = config.getNumber("nodeCount") || 3;
+const nodeCount = config.getNumber("nodeCount") || 2;
 const appReplicaCount = config.getNumber("appReplicaCount") || 5;
 const domainName = config.get("domainName");
 

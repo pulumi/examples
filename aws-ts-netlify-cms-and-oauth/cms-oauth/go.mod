@@ -7,6 +7,6 @@ require (
 	github.com/gorilla/pat v1.0.1
 	github.com/markbates/goth v1.64.2
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/net v0.0.0-20200707034311-ab3426394381 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	google.golang.org/appengine v1.6.6 // indirect
 )

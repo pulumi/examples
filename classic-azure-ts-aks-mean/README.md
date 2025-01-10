@@ -1,10 +1,11 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-aks-mean/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-aks-mean/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-aks-mean/README.md#gh-dark-mode-only)
 
 # Azure Kubernetes Service (AKS) App Using CosmosDB
 
 Stands up an [Azure Kubernetes Service][aks] (AKS) cluster and a MongoDB-flavored instance of
-[CosmosDB][cosmos]. On top of the AKS cluster, we also deploy [Helm][helm] Chart with a simple
-Node.js TODO app ([`bitnami/node`][sample-mean]), swapping out the usual in-cluster MongoDB instance
+[CosmosDB][cosmos]. On top of the AKS cluster, we also deploy a [Helm][helm] Chart with a simple
+Node.js TODO app ([`bitnami/node`][bitnami-node]), swapping out the usual in-cluster MongoDB instance
 with our managed CosmosDB instance.
 
 ## Prerequisites
@@ -12,10 +13,10 @@ with our managed CosmosDB instance.
 Ensure you have downloaded and installed the [Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
 
 We will be deploying to Azure, so you will need an Azure account. If you don't have an account,
-sign up for [free Azure ccount](https://azure.microsoft.com/en-us/free/). Follow the instructions to 
-[connect Pulumi to Azure account](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/).
+sign up for a [free Azure account](https://azure.microsoft.com/en-us/free/). Follow the instructions to
+[connect Pulumi to your Azure account](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/).
 
-This example deploys a Helm Chart from [Bitnami's Helm chart repository](https://github.com/bitnami/charts)
+This example deploys a Helm Chart from [Bitnami's Helm chart repository](https://github.com/bitnami/charts).
 
 Install dependencies:
 
@@ -27,7 +28,7 @@ npm install
 
 1. Create a new stack:
 
-    ```sh
+    ```console
     $ pulumi stack init
     Enter a stack name: azure-mean
     ```
@@ -35,23 +36,17 @@ npm install
 1. Set the required configuration variables for this program:
 
     ```bash
-    $ pulumi config set azure:environment public
-    $ pulumi config set password --secret [your-cluster-password-here]
-    $ ssh-keygen -t rsa -f key.rsa
-    $ pulumi config set sshPublicKey < key.rsa.pub
-    $ az login
+    pulumi config set azure:environment public
+    pulumi config set password --secret <your-cluster-password-here>
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+    ssh-keygen -t rsa -f key.rsa
+    pulumi config set sshPublicKey < key.rsa.pub
+    az login
     ```
 
 1. Perform the deployment:
 
-    > **Note**: Due to an [issue in Azure Terraform Provider](https://github.com/terraform-providers/terraform-provider-azuread/issues/156), the
-    > creation of an Azure Service Principal, which is needed to create the Kubernetes cluster (see cluster.ts), is delayed and may not
-    > be available when the cluster is created.  If you get a "Service Principal not found" error, as a work around, you should be able to run `pulumi up`
-    > again, at which time the Service Principal replication should have been completed. See [Azure AKS issue](https://github.com/Azure/AKS/issues/1206) and
-    > this [troubleshooting doc](https://docs.microsoft.com/en-us/azure/aks/troubleshooting#im-receiving-errors-that-my-service-principal-was-not-found-when-i-try-to-create-a-new-cluster-without-passing-in-an-existing-one)
-    > for further details.
-
-    ```sh
+    ```console
     $ pulumi up
     Updating stack 'azure-mean'
     Performing changes:
@@ -72,7 +67,7 @@ npm install
 
     ---outputs:---
     cluster        : "aksclusterbfb9388b"
-    frontendAddress: "40.76.25.71"
+    kubeconfig     : "[secret]"
 
     info: 12 changes performed:
         + 12 resources created
@@ -81,11 +76,11 @@ npm install
     Permalink: https://app.pulumi.com/hausdorff/azure-mean/updates/1
     ```
 
-    We can see here in the `---outputs:---` section that our Node.js appwas allocated a public IP,
+    We can see here in the `---outputs:---` section that our Node.js app was allocated a public IP,
     in this case `40.76.25.71`. It is exported with a stack output variable, `frontendAddress`. We
     can use `curl` and `grep` to retrieve the `<title>` of the site the proxy points at.
 
-    ```sh
+    ```console
     $ curl -sL $(pulumi stack output frontendAddress) | grep "<title>"
         <title>Node/Angular Todo App</title>>
     ```
@@ -94,8 +89,7 @@ npm install
 
 One of the interesting aspects of this example is the way it demonstrates how easy it is to use
 Azure resources to configure Kubernetes resources, without the need for intermediate APIs such as
-[Open Service Broker for Azure](https://github.com/Azure/open-service-broker-azure). In particular, this example uses the connection strings exposed by the
-CosmosDB instance to configure the `bitnami/node` Helm Chart to connect to CosmosDB, instead of
+[Open Service Broker for Azure](https://github.com/Azure/open-service-broker-azure). In particular, this example uses the connection strings exposed by the CosmosDB instance to configure the `bitnami/node` Helm Chart to connect to CosmosDB, instead of
 creating and connecting to an in-cluster MongoDB instance.
 
 In `index.ts`, we see the MongoDB-flavored CosmosDB resource definition:
@@ -105,11 +99,17 @@ In `index.ts`, we see the MongoDB-flavored CosmosDB resource definition:
 const cosmosdb = new azure.cosmosdb.Account("cosmosDb", {
     kind: "MongoDB",
     resourceGroupName: config.resourceGroup.name,
-    location: config.location,
-    consistencyPolicy: { ... },
+    consistencyPolicy: {
+        consistencyLevel: "BoundedStaleness",
+        maxIntervalInSeconds: 300,
+        maxStalenessPrefix: 100000,
+    },
     offerType: "Standard",
     enableAutomaticFailover: true,
-    geoLocations: [ ... ]
+    geoLocations: [
+        { location: config.location, failoverPriority: 0 },
+        { location: config.failoverLocation, failoverPriority: 1 },
+    ],
 });
 ```
 
@@ -123,29 +123,31 @@ const mongoConnStrings = new k8s.core.v1.Secret(
     "mongo-secrets",
     {
         metadata: { name: "mongo-secrets" },
-        data: mongoHelpers.parseConnString(cosmosdb.connectionStrings)
+        data: mongoHelpers.parseConnString(cosmosdb.connectionStrings),
     },
-    { provider: k8sProvider }
+    { provider: k8sProvider },
 );
 
-// Boot up nodejs Helm chart example using CosmosDB in place of in-cluster MongoDB.
-const node = new k8s.helm.v2.Chart(
+// Boot up Node.js Helm chart example using CosmosDB in place of in-cluster MongoDB.
+const node = new k8s.helm.v3.Chart(
     "node",
     {
-        repo: "bitnami",
         chart: "node",
-        version: "4.0.1",
+        version: "19.0.2",
+        fetchOpts: {
+            repo: "https://charts.bitnami.com/bitnami",
+        },
         values: {
             serviceType: "LoadBalancer",
             mongodb: { install: false },
-            externaldb: { ssl: true, secretName: "mongo-secrets" }
-        }
+            externaldb: { ssl: true, secretName: "mongo-secrets" },
+        },
     },
-    { providers: { kubernetes: k8sProvider }, dependsOn: mongoConnStrings }
+    { providers: { kubernetes: k8sProvider }, dependsOn: mongoConnStrings },
 );
 ```
 
-[sample-mean]: https://github.com/bitnami/sample-mean
+[bitnami-node]: https://artifacthub.io/packages/helm/bitnami/node/19.0.2/
 [aks]: https://azure.microsoft.com/en-us/services/kubernetes-service/
 [cosmos]: https://azure.microsoft.com/en-us/services/cosmos-db/
 [helm]: https://www.helm.sh/

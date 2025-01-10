@@ -40,7 +40,7 @@ ami = aws.ec2.get_ami(
     most_recent=True,
     filters=[aws.ec2.GetAmiFilterArgs(
         name='name',
-        values=['amzn2-ami-hvm-2.0.????????-x86_64-gp2'],
+        values=['amzn2-ami-hvm-*-x86_64-gp2'],
     )],
 )
 
@@ -62,9 +62,9 @@ connection = command.remote.ConnectionArgs(
 )
 
 # Copy a config file to our server.
-cp_config = command.remote.CopyFile('config',
+cp_config = command.remote.CopyToRemote('config',
     connection=connection,
-    local_path='myapp.conf',
+    source=pulumi.FileAsset('myapp.conf'),
     remote_path='myapp.conf',
     opts=pulumi.ResourceOptions(depends_on=[server]),
 )

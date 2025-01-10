@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-aks-cosmos-helm/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-aks-cosmos-helm/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-aks-cosmos-helm/README.md#gh-dark-mode-only)
 
 # A Helm chart deployed to AKS that stores TODOs in an Azure Cosmos DB MongoDB API
 
@@ -54,23 +55,23 @@ done.
 
          Type                                                          Name                          Status      Info
     +   pulumi:pulumi:Stack                                           azure-cs-aks-cosmos-helm-dev  created     1 warning
-    +   ├─ kubernetes:helm.sh/v3:Chart                                node                          created     
-    +   │  ├─ kubernetes:core/v1:Service                              node                          created     
-    +   │  └─ kubernetes:apps/v1:Deployment                           node                          created     
-    +   ├─ example:component:CosmosDBMongoDB                          mongo-todos                   created     
-    +   │  ├─ azure-native:documentdb:DatabaseAccount                 cosmos-mongodb                created     
-    +   │  └─ azure-native:documentdb:MongoDBResourceMongoDBDatabase  todos                         created     
-    +   ├─ example:component:AksCluster                               demoaks                       created     
-    +   │  ├─ azuread:index:Application                               app                           created     
-    +   │  ├─ random:index:RandomPassword                             pw                            created     
-    +   │  ├─ tls:index:PrivateKey                                    ssh-key                       created     
-    +   │  ├─ azuread:index:ServicePrincipal                          service-principal             created     
-    +   │  ├─ azuread:index:ServicePrincipalPassword                  sp-password                   created     
-    +   │  ├─ azure-native:containerservice:ManagedCluster            demoaks                       created     
-    +   │  └─ pulumi:providers:kubernetes                             k8s-provider                  created     
-    +   ├─ azure-native:resources:ResourceGroup                       cosmosrg                      created     
-    +   └─ kubernetes:core/v1:Secret                                  mongo-secrets                 created     
-    
+    +   ├─ kubernetes:helm.sh/v3:Chart                                node                          created
+    +   │  ├─ kubernetes:core/v1:Service                              node                          created
+    +   │  └─ kubernetes:apps/v1:Deployment                           node                          created
+    +   ├─ example:component:CosmosDBMongoDB                          mongo-todos                   created
+    +   │  ├─ azure-native:documentdb:DatabaseAccount                 cosmos-mongodb                created
+    +   │  └─ azure-native:documentdb:MongoDBResourceMongoDBDatabase  todos                         created
+    +   ├─ example:component:AksCluster                               demoaks                       created
+    +   │  ├─ azuread:index:Application                               app                           created
+    +   │  ├─ random:index:RandomPassword                             pw                            created
+    +   │  ├─ tls:index:PrivateKey                                    ssh-key                       created
+    +   │  ├─ azuread:index:ServicePrincipal                          service-principal             created
+    +   │  ├─ azuread:index:ServicePrincipalPassword                  sp-password                   created
+    +   │  ├─ azure-native:containerservice:ManagedCluster            demoaks                       created
+    +   │  └─ pulumi:providers:kubernetes                             k8s-provider                  created
+    +   ├─ azure-native:resources:ResourceGroup                       cosmosrg                      created
+    +   └─ kubernetes:core/v1:Secret                                  mongo-secrets                 created
+
     Outputs:
         Endpoint: "http://20.73.205.163"
     ```
@@ -90,7 +91,7 @@ done.
         <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
 
         <title>Node/Angular Todo App</title>
-    ...    
+    ...
     ```
 
 6.  Once you are done, you can destroy all of the resources, and the

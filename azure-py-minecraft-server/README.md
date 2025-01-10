@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-minecraft-server/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-minecraft-server/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-minecraft-server/README.md#gh-dark-mode-only)
 
 # Minecraft Server Using an Azure Virtual Machine
 
@@ -17,7 +18,7 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
     ```bash
     $ pulumi stack init dev
     ```
-   
+
 1. Create a Python virtualenv, activate it, and install dependencies:
 
    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
@@ -43,7 +44,7 @@ This example deploys an Azure Virtual Machine and provisions a Minecraft server.
     $ cat rsa | pulumi config set privateKey --secret --
     ```
 
-    Notice that we've used `--secret` for `privateKey`. This ensures they are stored in encrypted form in the Pulumi secrets system.
+    Notice that we've used `--secret` for `privateKey`. This ensures the private key is stored as an encrypted [Pulumi secret](https://www.pulumi.com/docs/intro/concepts/secrets/).
 
 1. Set the required configuration for this example. This example requires you to supply a username, password, location, and the public and private keys to the virtual machine that we are going to create. Check the Azure virtual machine [password requirements](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/faq#what-are-the-password-requirements-when-creating-a-vm) before creating a password.
 

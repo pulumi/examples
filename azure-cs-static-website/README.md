@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-static-website/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-static-website/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-static-website/README.md#gh-dark-mode-only)
 
 # Static Website Using Azure Blob Storage and CDN
 
@@ -20,14 +21,14 @@ In addition to the Storage itself, a CDN is configured to serve files from the B
     $ az login
     ```
 1. Set the Azure region location to use:
-    
+
     ```
     $ pulumi config set azure-native:location westus
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ``` 
+    ```
     $ pulumi up
     Previewing changes:
     ...

@@ -1,0 +1,33 @@
+{
+    "name": "infra",
+    "main": "dist/index.js",
+    "version": "1.0.0",
+    "dependencies": {
+        "@pulumi/pulumi": "latest",
+        "s3folder": "*",
+        "website": "*",
+        "website-deploy": "*"
+    },
+    "scripts": {
+        "build": "tsc",
+        "deploy": "pulumi up --stack dev",
+        "destroy": "pulumi destroy --stack dev",
+        "refresh": "pulumi refresh --stack dev"
+    },
+    "nx": {
+        "targets": {
+            "deploy": {
+                "cache": true,
+                "dependsOn": [
+                    "build",
+                    "website:generate"
+                ]
+            },
+            "destroy": {
+                "dependsOn": [
+                    "build"
+                ]
+            }
+        }
+    }
+}

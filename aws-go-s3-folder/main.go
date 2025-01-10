@@ -6,16 +6,22 @@ import (
 	"path"
 	"path/filepath"
 
-	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/s3"
+	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/s3"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Create a bucket and expose a website index document
-		siteBucket, err := s3.NewBucket(ctx, "s3-website-bucket", &s3.BucketArgs{
-			Website: s3.BucketWebsiteArgs{
-				IndexDocument: pulumi.String("index.html"),
+		siteBucket, err := s3.NewBucketV2(ctx, "s3-website-bucket", &s3.BucketV2Args{})
+		if err != nil {
+			return err
+		}
+
+		siteWebsite, err := s3.NewBucketWebsiteConfigurationV2(ctx, "s3-website", &s3.BucketWebsiteConfigurationV2Args{
+			Bucket: siteBucket.Bucket,
+			IndexDocument: s3.BucketWebsiteConfigurationV2IndexDocumentArgs{
+				Suffix: pulumi.String("index.html"),
 			},
 		})
 		if err != nil {
@@ -36,7 +42,7 @@ func main() {
 				}
 
 				if _, err := s3.NewBucketObject(ctx, rel, &s3.BucketObjectArgs{
-					Bucket:      siteBucket.ID(),                                     // reference to the s3.Bucket object
+					Bucket:      siteBucket.Bucket,                                   // reference to the s3.Bucket
 					Source:      pulumi.NewFileAsset(name),                           // use FileAsset to point to a file
 					ContentType: pulumi.String(mime.TypeByExtension(path.Ext(name))), // set the MIME type of the file
 				}); err != nil {
@@ -49,9 +55,18 @@ func main() {
 			return err
 		}
 
+		// Allow public ACLs for the bucket
+		accessBlock, err := s3.NewBucketPublicAccessBlock(ctx, "public-access-block", &s3.BucketPublicAccessBlockArgs{
+			Bucket:          siteBucket.Bucket,
+			BlockPublicAcls: pulumi.Bool(false),
+		})
+		if err != nil {
+			return err
+		}
+
 		// Set the access policy for the bucket so all objects are readable.
 		if _, err := s3.NewBucketPolicy(ctx, "bucketPolicy", &s3.BucketPolicyArgs{
-			Bucket: siteBucket.ID(), // refer to the bucket created earlier
+			Bucket: siteBucket.Bucket, // refer to the bucket created earlier
 			Policy: pulumi.Any(map[string]interface{}{
 				"Version": "2012-10-17",
 				"Statement": []map[string]interface{}{
@@ -62,18 +77,19 @@ func main() {
 							"s3:GetObject",
 						},
 						"Resource": []interface{}{
-							pulumi.Sprintf("arn:aws:s3:::%s/*", siteBucket.ID()), // policy refers to bucket name explicitly
+							// policy refers to bucket name explicitly
+							pulumi.Sprintf("arn:aws:s3:::%s/*", siteBucket.Bucket),
 						},
 					},
 				},
 			}),
-		}); err != nil {
+		}, pulumi.DependsOn([]pulumi.Resource{accessBlock})); err != nil {
 			return err
 		}
 
 		// Stack exports
-		ctx.Export("bucketName", siteBucket.ID())
-		ctx.Export("websiteUrl", siteBucket.WebsiteEndpoint)
+		ctx.Export("bucketName", siteBucket.Bucket)
+		ctx.Export("websiteUrl", siteWebsite.WebsiteEndpoint)
 		return nil
 	})
 }

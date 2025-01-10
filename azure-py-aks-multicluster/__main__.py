@@ -74,7 +74,7 @@ for cluster_config in aks_cluster_configs:
             vm_size=cluster_config["node_size"],
         )],
         dns_prefix="{}-kube".format(pulumi.get_stack()),
-        kubernetes_version="1.18.14"
+        kubernetes_version="1.26.3"
     )
     cluster_names.append(cluster.name)
 

@@ -1,0 +1,192 @@
+name: Set up the environment
+description: Sets up the current environment by installing tools and dependencies and authenticating with cloud providers.
+
+inputs:
+  aws-access-key-id:
+    required: true
+
+  aws-secret-access-key:
+    required: true
+
+  aws-role-to-assume:
+    required: true
+
+  aws-region:
+    default: us-west-2
+
+  aws-role-duration-seconds:
+    default: 7200
+
+  aws-role-session-name:
+    default: examples@github-actions
+
+  google-service-account-email:
+    default: pulumi-ci@pulumi-ci-gcp-provider.iam.gserviceaccount.com
+
+  google-project-name:
+    default: pulumi-ci-gcp-provider
+
+  google-project-number:
+    default: 895284651812
+
+  google-workload-identity-pool:
+    default: pulumi-ci
+
+  google-workload-identity-provider:
+    default: pulumi-ci
+
+  google-region:
+    default: us-central1
+
+  google-zone:
+    default: us-central1-a
+
+  github-token:
+    required: true
+
+  node-version:
+    default: 18
+
+  python-version:
+    default: 3.8
+
+  go-version:
+    default: 1.21
+
+  dotnet-version:
+    default: 8
+
+  gotestfmt-version:
+    default: v2.5.0
+
+  pulumi-version:
+    default: dev
+
+outputs:
+  aws-access-key-id:
+    value: ${{ steps.aws-auth.outputs.aws-access-key-id }}
+
+  aws-secret-access-key:
+    value: ${{ steps.aws-auth.outputs.aws-secret-access-key }}
+
+  aws-session-token:
+    value: ${{ steps.aws-auth.outputs.aws-session-token }}
+
+  aws-region:
+    value: ${{ inputs.aws-region }}
+
+  google-project-name:
+    value: ${{ inputs.google-project-name }}
+
+  google-region:
+    value: ${{ inputs.google-region }}
+
+  google-zone:
+    value: ${{ inputs.google-zone}}
+
+runs:
+  using: composite
+  steps:
+    - name: Install .NET
+      uses: actions/setup-dotnet@3e891b0cb619bf60e2c25674b222b8940e2c1c25 # v4
+      with:
+        dotnet-version: ${{inputs.dotnet-version}}
+
+    - name: Install Node.js
+      uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+      with:
+        node-version: ${{inputs.node-version}}
+
+    - name: Install Python
+      uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5
+      with:
+        python-version: ${{inputs.python-version}}
+
+    - name: Install Go
+      uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v5
+      with:
+        go-version: ${{inputs.go-version}}
+        cache-dependency-path: "**/go.sum"
+
+    - name: Install aws-iam-authenticator
+      run: |
+        curl https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator -o aws-iam-authenticator
+        chmod +x ./aws-iam-authenticator
+        sudo mv aws-iam-authenticator /usr/local/bin
+      shell: bash
+
+    - name: Install Kubectl
+      run: |
+        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+        chmod +x ./kubectl
+        sudo mv kubectl /usr/local/bin
+      shell: bash
+
+    - name: Install and configure Helm with retry
+      run: |
+        MAX_ATTEMPTS=3
+        ATTEMPT=0
+        until [ $ATTEMPT -ge $MAX_ATTEMPTS ]; do
+          curl -o- -L https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash &&
+          helm repo add bitnami https://repo.broadcom.com/bitnami-files/ && break
+          ATTEMPT=$((ATTEMPT + 1))
+          echo "Attempt $ATTEMPT failed. Retrying in 300 seconds..."
+          sleep 300
+        done
+        if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
+          echo "All attempts failed."
+          exit 1
+        fi
+      shell: bash
+
+
+    - name: Install testing dependencies
+      run: make ensure
+      shell: bash
+
+    - name: Install gotestfmt
+      uses: GoTestTools/gotestfmt-action@v2
+      with:
+        version: ${{ inputs.gotestfmt-version }}
+        token: ${{ inputs.github-token }}
+
+    - name: Install Pulumi
+      uses: pulumi/actions@c7fad9e2f0b79653172b36538b8b34b3c0291952 # v6
+      with:
+        pulumi-version: ${{ inputs.pulumi-version }}
+
+    - run: echo "Pulumi $(pulumi version) is installed"
+      shell: bash
+
+    - name: Authenticate with AWS
+      id: aws-auth
+      uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4
+      with:
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: ${{ inputs.aws-region }}
+        role-to-assume: ${{ inputs.aws-role-to-assume }}
+        role-duration-seconds: ${{ inputs.role-duration-seconds }}
+        role-session-name: ${{ inputs.role-session-name }}
+        unset-current-credentials: true
+        output-credentials: true
+
+    - name: Authenticate with Google Cloud
+      uses: google-github-actions/auth@6fc4af4b145ae7821d527454aa9bd537d1f2dc5f # v2
+      with:
+        service_account: ${{ inputs.google-service-account-email }}
+        workload_identity_provider: projects/${{ inputs.google-project-number }}/locations/global/workloadIdentityPools/${{ inputs.google-workload-identity-pool }}/providers/${{ inputs.google-workload-identity-provider }}
+
+    - name: Install gcloud auth
+      uses: google-github-actions/setup-gcloud@6189d56e4096ee891640bb02ac264be376592d6a # v2
+      with:
+        install_components: gke-gcloud-auth-plugin
+
+    - name: Configure gcloud CLI
+      run: |
+        gcloud config set disable_prompts true
+      shell: bash
+
+    - name: Authenticate with Google Cloud Registry
+      run: gcloud --quiet auth configure-docker
+      shell: bash

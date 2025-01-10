@@ -8,7 +8,7 @@ using Pulumi.Azure.Authorization;
 using Pulumi.Azure.Core;
 using Pulumi.Azure.KeyVault;
 using Pulumi.Azure.KeyVault.Inputs;
-using Pulumi.Azure.Sql;
+using Pulumi.Azure.MSSql;
 using Pulumi.Azure.Storage;
 using Pulumi.Random;
 
@@ -35,8 +35,8 @@ class AppStack : Stack
 
         // Azure SQL Server that we want to access from the application
         var administratorLoginPassword = new RandomPassword("password",
-            new RandomPasswordArgs {Length = 16, Special = true}).Result;
-        var sqlServer = new SqlServer("sqlserver", new SqlServerArgs
+            new RandomPasswordArgs { Length = 16, Special = true }).Result;
+        var sqlServer = new Server("sqlserver", new ServerArgs
         {
             ResourceGroupName = resourceGroup.Name,
             // The login and password are required but won't be used in our application
@@ -48,9 +48,8 @@ class AppStack : Stack
         // Azure SQL Database that we want to access from the application
         var database = new Database("db", new DatabaseArgs
         {
-            ResourceGroupName = resourceGroup.Name,
-            ServerName = sqlServer.Name,
-            RequestedServiceObjectiveName = "S0",
+            ServerId = sqlServer.Id,
+            SkuName = "S0",
         });
 
         // The connection string that has no credentials in it: authertication will come through MSI
@@ -67,15 +66,11 @@ class AppStack : Stack
         });
 
         // A plan to host the App Service
-        var appServicePlan = new Plan("asp", new PlanArgs
+        var appServicePlan = new ServicePlan("asp", new ServicePlanArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            Kind = "App",
-            Sku = new PlanSkuArgs
-            {
-                Tier = "Basic",
-                Size = "B1",
-            },
+            OsType = "Linux",
+            SkuName = "B1",
         });
 
         // ASP.NET deployment package
@@ -84,7 +79,7 @@ class AppStack : Stack
             StorageAccountName = storageAccount.Name,
             StorageContainerName = storageContainer.Name,
             Type = "Block",
-            Source = new FileArchive("./webapp/bin/Debug/netcoreapp3.1/publish"),
+            Source = new FileArchive("./webapp/bin/Debug/net8.0/publish"),
         });
 
         var clientConfig = Output.Create(GetClientConfig.InvokeAsync());
@@ -105,7 +100,7 @@ class AppStack : Stack
                     // The current principal has to be granted permissions to Key Vault so that it can actually add and then remove
                     // secrets to/from the Key Vault. Otherwise, 'pulumi up' and 'pulumi destroy' operations will fail.
                     ObjectId = currentPrincipal,
-                    SecretPermissions = {"delete", "get", "list", "set"},
+                    SecretPermissions = {"Delete", "Get", "List", "Set"},
                 }
             },
         });
@@ -120,13 +115,13 @@ class AppStack : Stack
 
 
         // The application hosted in App Service
-        var app = new AppService("app", new AppServiceArgs
+        var app = new LinuxWebApp("app", new LinuxWebAppArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            AppServicePlanId = appServicePlan.Id,
+            ServicePlanId = appServicePlan.Id,
             // A system-assigned managed service identity to be used for authentication and authorization to the SQL Database and the Blob Storage
-            Identity = new AppServiceIdentityArgs {Type = "SystemAssigned"},
-
+            Identity = new LinuxWebAppIdentityArgs { Type = "SystemAssigned" },
+            SiteConfig = new LinuxWebAppSiteConfigArgs { },
             AppSettings =
             {
                 // Website is deployed from a URL read from the Key Vault
@@ -137,7 +132,7 @@ class AppStack : Stack
             },
             ConnectionStrings =
             {
-                new AppServiceConnectionStringArgs
+                new LinuxWebAppConnectionStringArgs
                 {
                     Name = "db",
                     Type = "SQLAzure",
@@ -155,17 +150,7 @@ class AppStack : Stack
             KeyVaultId = vault.Id,
             TenantId = tenantId,
             ObjectId = principalId,
-            SecretPermissions = {"get"},
-        });
-
-        // Make the App Service the admin of the SQL Server (double check if you want a more fine-grained security model in your real app)
-        var sqlAdmin = new ActiveDirectoryAdministrator("adadmin", new ActiveDirectoryAdministratorArgs
-        {
-            ResourceGroupName = resourceGroup.Name,
-            TenantId = tenantId,
-            ObjectId = principalId,
-            Login = "adadmin",
-            ServerName = sqlServer.Name,
+            SecretPermissions = { "Get" },
         });
 
         // Grant access from App Service to the container in the storage
@@ -181,14 +166,13 @@ class AppStack : Stack
             ips => ips.Split(",").Select(
                 ip => new FirewallRule($"FR{ip}", new FirewallRuleArgs
                 {
-                    ResourceGroupName = resourceGroup.Name,
+                    ServerId = sqlServer.Id,
                     StartIpAddress = ip,
                     EndIpAddress = ip,
-                    ServerName = sqlServer.Name,
                 })
             ).ToList());
 
-        this.Endpoint = Output.Format($"https://{app.DefaultSiteHostname}");
+        this.Endpoint = Output.Format($"https://{app.DefaultHostname}");
     }
 
     [Output] public Output<string> Endpoint { get; set; }

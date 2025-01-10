@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-virtual-data-center/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-virtual-data-center/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-virtual-data-center/README.md#gh-dark-mode-only)
 
 # Azure Virtual Data Center (VDC)
 
@@ -181,7 +182,7 @@ After cloning this repo, `cd` into the `azure-py-virtual-data-center` directory 
     ```bash
     $ pulumi config set azure_bastion            true
     $ pulumi config set forced_tunnel            10.0.200.1
-    $ pulumi config set separator                _    
+    $ pulumi config set separator                _
     $ pulumi config set suffix                   ase
     ```
 

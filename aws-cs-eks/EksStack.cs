@@ -38,7 +38,7 @@ class EksStack : Stack
             ""name"": ""aws"",
             ""user"": {{
                 ""exec"": {{
-                    ""apiVersion"": ""client.authentication.k8s.io/v1alpha1"",
+                    ""apiVersion"": ""client.authentication.k8s.io/v1beta1"",
                     ""command"": ""aws-iam-authenticator"",
                     ""args"": [
                         ""token"",
@@ -57,8 +57,12 @@ class EksStack : Stack
         var vpcId = Ec2.GetVpc.Invoke(new Ec2.GetVpcInvokeArgs { Default = true })
             .Apply(vpc => vpc.Id);
 
-        var subnetIds = Ec2.GetSubnetIds.Invoke(new Ec2.GetSubnetIdsInvokeArgs { VpcId = vpcId })
-            .Apply(s => s.Ids);
+        var subnetIds = Ec2.GetSubnets.Invoke(new Ec2.GetSubnetsInvokeArgs
+        {
+            Filters = {
+                new Ec2.Inputs.GetSubnetsFilterInputArgs { Name = "vpc-id", Values = {vpcId} }
+            },
+        }).Apply(s => s.Ids);
 
         // Create an IAM role that can be used by our service's task.
         var eksRole = new Iam.Role("eks-iam-eksRole", new Iam.RoleArgs

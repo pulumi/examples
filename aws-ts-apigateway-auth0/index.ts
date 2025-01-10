@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import * as apigateway from "@pulumi/aws-apigateway";
 import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
-
 import * as jwt from "jsonwebtoken";
 import * as jwksClient from "jwks-rsa";
 import * as util from "util";
@@ -23,7 +23,7 @@ const jwksUri = config.require("jwksUri");
 const audience = config.require("audience");
 const issuer = config.require("issuer");
 
-const authorizerLambda = async (event: awsx.apigateway.AuthorizerEvent) => {
+const authorizerLambda = async (event: apigateway.AuthorizerEvent) => {
     try {
         return await authenticate(event);
     }
@@ -45,7 +45,7 @@ const api = new awsx.apigateway.API("myapi", {
                 body: "<h1>Hello world!</h1>",
             };
         },
-        authorizers: awsx.apigateway.getTokenLambdaAuthorizer({
+        authorizers: apigateway.getTokenLambdaAuthorizer({
             authorizerName: "jwt-rsa-custom-authorizer",
             header: "Authorization",
             handler: authorizerLambda,

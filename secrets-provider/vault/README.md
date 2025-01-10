@@ -68,7 +68,7 @@ pulumi up --yes
 Previewing update (vault-kms):
      Type                    Name                    Plan
  +   pulumi:pulumi:Stack     pulumi-vault-kms-vault-kms  create
- +   ├─ aws:s3:Bucket        bucket                  create
+ +   ├─ aws:s3:BucketV2      bucket                  create
  +   └─ aws:s3:BucketObject  secret                  create
 
 Resources:
@@ -77,7 +77,7 @@ Resources:
 Updating (aws-kms):
      Type                    Name                    Status
  +   pulumi:pulumi:Stack     pulumi-vault-kms-vault-kms  created
- +   ├─ aws:s3:Bucket        bucket                  created
+ +   ├─ aws:s3:BucketV2      bucket                  created
  +   └─ aws:s3:BucketObject  secret                  created
 
 Outputs:
@@ -99,7 +99,7 @@ You'll notice the secret value is also omitted from the output!
 A quick way to verify if the encryption is using the Vault key is to remove your `VAULT_SERVER_TOKEN` environment variable setting:
 
 ```bash
-unset 
+unset
 pulumi up --yes
 error: getting secrets manager: secrets (code=Unknown): Error making API request.
 
@@ -108,8 +108,3 @@ Code: 400. Errors:
 
 * missing client token
 ```
-
-
-
-
-

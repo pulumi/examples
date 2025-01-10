@@ -1,0 +1,12 @@
+name: ${PROJECT}
+description: ${DESCRIPTION}
+runtime: nodejs
+
+template:
+  description: An example that builds a Docker image in DBC and deploys a container to AWS Fargate.
+  config:
+    builder:
+      description: Your existing Docker Build Cloud builder. (e.g., cloud-pulumi-my-cool-builder)
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2

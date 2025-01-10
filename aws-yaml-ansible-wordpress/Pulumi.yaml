@@ -2,47 +2,44 @@ name: pulumi-ansible-wordpress
 runtime: yaml
 description: Deploy an EC2 Wordpress server using Pulumi and Ansible.
 
-configuration:
+config:
   # A path to the EC2 keypair's public key:
   publicKeyPath:
-    type: String
-    required: true
+    type: string
   # A path to the EC2 keypair's private key:
   privateKeyPath:
-    type: String
-    required: true
+    type: string
   # The WordPress database size:
   dbInstanceSize:
-    type: String
+    type: string
     default: db.t3.small
   # The WordPress database name:
   dbName:
-    type: String
+    type: string
     default: wordpressdb
   # The WordPress database user's name:
   dbUsername:
-    type: String
+    type: string
     default: admin
   # The WordPress database user's password:
   dbPassword:
-    type: String
-    required: true
+    type: string
     secret: true
   # The WordPress EC2 instance's size:
   ec2InstanceSize:
-    type: String
+    type: string
     default: t3.small
 
 variables:
   # Dynamically fetch AZs so we can spread across them.
   availabilityZones:
-    Fn::Invoke:
-      Function: aws:getAvailabilityZones
+    fn::invoke:
+      function: aws:getAvailabilityZones
   # Dynamically query for the Amazon Linux 2 AMI in this region.
   awsLinuxAmi:
-    Fn::Invoke:
-      Function: aws:ec2:getAmi
-      Arguments:
+    fn::invoke:
+      function: aws:ec2:getAmi
+      arguments:
         owners: ["amazon"]
         filters:
           - name: name
@@ -64,7 +61,6 @@ resources:
       cidrBlock: 10.192.0.0/16
       enableDnsSupport: true # gives you an internal domain name
       enableDnsHostnames: true # gives you an internal host name
-      enableClassiclink: false
       instanceTenancy: default
   # Create public subnets for the EC2 instance.
   prod-subnet-public-1:

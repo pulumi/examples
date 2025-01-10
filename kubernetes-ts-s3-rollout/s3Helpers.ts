@@ -9,24 +9,24 @@ import * as pulumi from "@pulumi/pulumi";
 
 export interface FileBucketOpts {
     files: string[];
-    policy?: (bucket: aws.s3.Bucket) => pulumi.Output<string>;
+    policy?: (bucket: aws.s3.BucketV2) => pulumi.Output<string>;
 }
 
 export class FileBucket {
-    public readonly bucket: aws.s3.Bucket;
+    public readonly bucket: aws.s3.BucketV2;
     public readonly files: { [key: string]: aws.s3.BucketObject };
     public readonly policy: aws.s3.BucketPolicy;
 
     private readonly fileContents: { [key: string]: string };
 
     constructor(bucketName: string, opts: FileBucketOpts) {
-        this.bucket = new aws.s3.Bucket(bucketName);
+        this.bucket = new aws.s3.BucketV2(bucketName);
         this.fileContents = {};
         this.files = {};
         for (const file of opts.files) {
             this.fileContents[file] = fs.readFileSync(file).toString();
             this.files[file] = new aws.s3.BucketObject(file, {
-                bucket: this.bucket,
+                bucket: this.bucket.bucket,
                 source: new pulumi.asset.FileAsset(file),
                 contentType: mime.getType(file) || undefined,
             });
@@ -64,19 +64,17 @@ export class FileBucket {
 
 // Create an S3 Bucket Policy to allow public read of all objects in bucket
 export function publicReadPolicy(bucket: aws.s3.Bucket): pulumi.Output<string> {
-    return bucket.bucket.apply(bucketName =>
-        JSON.stringify({
-            Version: "2012-10-17",
-            Statement: [
-                {
-                    Effect: "Allow",
-                    Principal: "*",
-                    Action: ["s3:GetObject"],
-                    Resource: [
-                        `arn:aws:s3:::${bucketName}/*`, // policy refers to bucket name explicitly
-                    ],
-                },
-            ],
-        }),
-    );
+    return pulumi.jsonStringify({
+        Version: "2012-10-17",
+        Statement: [
+            {
+                Effect: "Allow",
+                Principal: "*",
+                Action: ["s3:GetObject"],
+                Resource: [
+                    pulumi.interpolate `arn:aws:s3:::${bucket.bucket}/*`, // policy refers to bucket name explicitly
+                ],
+            },
+        ],
+    });
 }

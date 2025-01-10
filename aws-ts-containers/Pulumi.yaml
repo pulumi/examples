@@ -1,4 +1,4 @@
-name: container-quickstart
+name: aws-ts-containers
 description: NGINX container example
 runtime: nodejs
 template:

@@ -1,0 +1,30 @@
+name: aws-py-redshift-glue-etl
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: An ETL pipeline with Amazon Redshift and AWS Glue
+template:
+  description: An ETL pipeline with Amazon Redshift and AWS Glue
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    clusterIdentifier:
+      description: The name of the Redshift cluster
+      default: my-redshift-cluster
+    clusterNodeType:
+      description: The node type to use for the Redshift cluster
+      default: ra3.xlplus
+    clusterDBName:
+      description: The name of the initial Redshift database
+      default: dev
+    clusterDBUsername:
+      description: The username of the administrative user
+      default: admin
+    clusterDBPassword:
+      description: the password of the administrative user
+      secret: true
+    glueDBName:
+      description: The name of the Glue catalog database
+      default: my-glue-db

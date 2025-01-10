@@ -11,11 +11,19 @@ class S3Folder extends pulumi.ComponentResource {
         super("pulumi:examples:S3Folder", bucketName, {}, opts); // Register this component with name pulumi:examples:S3Folder
 
         // Create a bucket and expose a website index document
-        let siteBucket = new aws.s3.Bucket(bucketName, {
-            website: {
-                indexDocument: "index.html",
+        let siteBucket = new aws.s3.BucketV2(bucketName, {}, { parent: this }); // specify resource parent
+
+        let websiteConfig = new aws.s3.BucketWebsiteConfigurationV2("s3-website-bucket-config", {
+            bucket: siteBucket.id,
+            indexDocument: {
+                suffix: "index.html",
             },
-        }, { parent: this }); // specify resource parent
+        }, { parent: this });
+
+        const publicAccessBlock = new aws.s3.BucketPublicAccessBlock("public-access-block", {
+            bucket: siteBucket.id,
+            blockPublicAcls: false,
+        }, { parent: this });
 
         // For each file in the directory, create an S3 object stored in `siteBucket`
         for (let item of require("fs").readdirSync(path)) {
@@ -31,10 +39,10 @@ class S3Folder extends pulumi.ComponentResource {
         let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
             bucket: siteBucket.bucket,
             policy: siteBucket.bucket.apply(this.publicReadPolicyForBucket),
-        }, { parent: this }); // specify resource parent
+        }, { parent: this, dependsOn: publicAccessBlock }); // specify resource parent
 
         this.bucketName = siteBucket.bucket;
-        this.websiteUrl = siteBucket.websiteEndpoint;
+        this.websiteUrl = websiteConfig.websiteEndpoint;
 
         // Register output properties for this component
         this.registerOutputs({

@@ -5,8 +5,8 @@ package main
 import (
 	"encoding/base64"
 
-	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/containerservice"
-	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
+	"github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2"
+	"github.com/pulumi/pulumi-azure-native-sdk/resources/v2"
 	"github.com/pulumi/pulumi-azuread/sdk/v4/go/azuread"
 	"github.com/pulumi/pulumi-random/sdk/v4/go/random"
 	"github.com/pulumi/pulumi-tls/sdk/v4/go/tls"
@@ -93,7 +93,7 @@ func main() {
 				ClientId: adApp.ApplicationId,
 				Secret:   adSpPassword.Value,
 			},
-			KubernetesVersion: pulumi.String("1.22.2"),
+			KubernetesVersion: pulumi.String("1.26.3"),
 		})
 		if err != nil {
 			return err

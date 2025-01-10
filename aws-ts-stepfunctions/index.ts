@@ -62,26 +62,23 @@ const worldFunction = new aws.lambda.CallbackFunction(
 
 const stateMachine = new aws.sfn.StateMachine("stateMachine", {
   roleArn: sfnRole.arn,
-  definition: pulumi.all([helloFunction.arn, worldFunction.arn])
-    .apply(([helloArn, worldArn]) => {
-      return JSON.stringify({
-        "Comment": "A Hello World example of the Amazon States Language using two AWS Lambda Functions",
-        "StartAt": "Hello",
-        "States": {
-          "Hello": {
-            "Type": "Task",
-            "Resource": helloArn,
-            "Next": "World",
-          },
-          "World": {
-            "Type": "Task",
-            "Resource": worldArn,
-            "End": true,
-          },
+  definition: pulumi.jsonStringify({
+      "Comment": "A Hello World example of the Amazon States Language using two AWS Lambda Functions",
+      "StartAt": "Hello",
+      "States": {
+        "Hello": {
+          "Type": "Task",
+          "Resource": helloFunction.arn,
+          "Next": "World",
         },
-      });
-    }),
-});
+        "World": {
+          "Type": "Task",
+          "Resource": worldFunction.arn,
+          "End": true,
+        },
+      },
+    },
+  )});
 
 export const stateMachineArn = stateMachine.id;
 export const readme = readFileSync("./Pulumi.README.md").toString();

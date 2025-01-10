@@ -1,7 +1,7 @@
 import pulumi_digitalocean as do
 from pulumi import export, get_stack
 
-droplet_count = 3
+droplet_count = 2
 region = "nyc3"
 
 user_data = """#!/bin/bash
@@ -17,9 +17,9 @@ for x in range(0, droplet_count):
     name_tag = do.Tag(instance_name)
     droplet = do.Droplet(
         instance_name,
-        image="ubuntu-18-04-x64",
+        image="ubuntu-20-04-x64",
         region=region,
-        size="512mb",
+        size="s-1vcpu-1gb",
         tags=[name_tag.id, droplet_type_tag.id],
         user_data=user_data
     )

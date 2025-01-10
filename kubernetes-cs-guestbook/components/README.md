@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-cs-guestbook/components/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-cs-guestbook/components/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-cs-guestbook/components/README.md#gh-dark-mode-only)
 
 # Kubernetes Guestbook (Components Variant)
 
@@ -32,14 +33,14 @@ $ pulumi up
 Updating stack 'testbook'
 Performing changes:
 
-     Type                           Name                       Status      
- +   pulumi:pulumi:Stack            guestbook-csharp-testbook  created     
- +   ├─ kubernetes:apps:Deployment  redis-replica              created     
- +   ├─ kubernetes:apps:Deployment  frontend                   created     
- +   ├─ kubernetes:apps:Deployment  redis-leader               created     
- +   ├─ kubernetes:core:Service     redis-leader               created     
- +   ├─ kubernetes:core:Service     redis-replica              created     
- +   └─ kubernetes:core:Service     frontend                   created     
+     Type                           Name                       Status
+ +   pulumi:pulumi:Stack            guestbook-csharp-testbook  created
+ +   ├─ kubernetes:apps:Deployment  redis-replica              created
+ +   ├─ kubernetes:apps:Deployment  frontend                   created
+ +   ├─ kubernetes:apps:Deployment  redis-leader               created
+ +   ├─ kubernetes:core:Service     redis-leader               created
+ +   ├─ kubernetes:core:Service     redis-replica              created
+ +   └─ kubernetes:core:Service     frontend                   created
 
 Outputs:
   + FrontendIp: "35.232.147.18"

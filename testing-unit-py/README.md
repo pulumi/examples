@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-py/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-py/README.md#gh-dark-mode-only)
+
 # Unit Testing Pulumi programs in Python
 
 An example of writing mock-based unit tests with both infrastructure definition and tests written in Python. The example uses the [unittest](https://docs.python.org/3/library/unittest.html) test framework to define and run the tests.
@@ -19,7 +22,7 @@ An example of writing mock-based unit tests with both infrastructure definition 
     $ python -m pytest --disable-pytest-warnings # or simply `pytest --disable-pytest-warnings`
 
     ====================================================================================================== 3 passed, 6 warnings in 0.76s =======================================================================================================
-    
+
     ```
 
 ## Further steps

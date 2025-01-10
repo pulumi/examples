@@ -5,10 +5,18 @@ const pulumi = require("@pulumi/pulumi");
 const mime = require("mime");
 
 // Create a bucket and expose a website index document
-let siteBucket = new aws.s3.Bucket("s3-website-bucket", {
-    website: {
-        indexDocument: "index.html",
+let siteBucket = new aws.s3.BucketV2("s3-website-bucket", {});
+
+let siteBucketWebsiteConfig = new aws.s3.BucketWebsiteConfigurationV2("s3-website-bucket-config", {
+    bucket: siteBucket.id,
+    indexDocument: {
+        suffix: "index.html",
     },
+});
+
+const publicAccessBlock = new aws.s3.BucketPublicAccessBlock("public-access-block", {
+    bucket: siteBucket.id,
+    blockPublicAcls: false,
 });
 
 let siteDir = "www"; // directory for content files
@@ -44,8 +52,8 @@ function publicReadPolicyForBucket(bucketName) {
 let bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
     bucket: siteBucket.bucket, // refer to the bucket created earlier
     policy: siteBucket.bucket.apply(publicReadPolicyForBucket) // use output property `siteBucket.bucket`
-});
+}, { dependsOn: publicAccessBlock });
 
 // Stack exports
 exports.bucketName = siteBucket.bucket;
-exports.websiteUrl = siteBucket.websiteEndpoint;
+exports.websiteUrl = siteBucketWebsiteConfig.websiteEndpoint;

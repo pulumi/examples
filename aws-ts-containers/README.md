@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-containers/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-containers/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-containers/README.md#gh-dark-mode-only)
 
 # Easy container example
 
@@ -19,7 +20,7 @@ with `***`.
     $ pulumi stack init containers-dev
     ```
 
-1.  Configure Pulumi to use an AWS region that supports Fargate. This is currently only available in `us-east-1`, `us-east-2`, `us-west-2`, and `eu-west-1`:
+1.  Configure Pulumi to use an AWS region that supports Fargate (you can view a list of supported regions in the [AWS documentation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate-Regions.html)):
 
     ```
     $ pulumi config set aws:region us-west-2
@@ -55,11 +56,10 @@ with `***`.
 
     ```
     $ pulumi logs --follow
-    Collecting logs for stack container-quickstart-dev since 2018-05-22T14:25:46.000-07:00.
+    Collecting logs for stack aws-ts-containers-dev since 2018-05-22T14:25:46.000-07:00.
     2018-05-22T15:33:22.057-07:00[                  pulumi-nginx] 172.31.13.248 - - [22/May/2018:22:33:22 +0000] "GET / HTTP/1.1" 200 189 "-" "curl/7.54.0" "-"
     ```
 
 ## Clean up
 
 To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
-

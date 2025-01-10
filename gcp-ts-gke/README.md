@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-gke/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-gke/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-gke/README.md#gh-dark-mode-only)
 
 # Google Kubernetes Engine (GKE) with a Canary Deployment
 
@@ -82,7 +83,7 @@ After cloning this repo, `cd` into it and run these commands. A GKE Kubernetes c
    For instance:
 
    ```bash
-   $ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
+   $ pulumi stack output kubeConfig --show-secrets > kubeconfig.yaml
    $ KUBECONFIG=./kubeconfig.yaml kubectl get po
    NAME                              READY     STATUS    RESTARTS   AGE
    canary-n7wfhtrp-fdbfd897b-lrm58   1/1       Running   0          58s

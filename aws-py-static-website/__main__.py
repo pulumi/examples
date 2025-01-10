@@ -10,6 +10,33 @@ import pulumi_aws.config
 import pulumi_aws.route53
 import pulumi_aws.s3
 
+
+def setup_acl(bucket_name, bucket, acl):
+    bucket_ownership_controls = pulumi_aws.s3.BucketOwnershipControls(
+        bucket_name,
+        bucket=bucket.bucket,
+        rule={
+            "object_ownership": "BucketOwnerPreferred",
+        })
+
+    public_access_block = pulumi_aws.s3.BucketPublicAccessBlock(
+        bucket_name,
+        bucket=bucket.bucket,
+        block_public_acls=False,
+        block_public_policy=False,
+        ignore_public_acls=False,
+        restrict_public_buckets=False)
+
+    content_bucket_acl = pulumi_aws.s3.BucketAclV2(
+        bucket_name,
+        bucket=content_bucket.bucket,
+        acl=acl,
+        opts = ResourceOptions(depends_on=[
+            bucket_ownership_controls,
+            public_access_block,
+        ]))
+
+
 def get_domain_and_subdomain(domain):
     """
     Returns the subdomain and the parent domain.
@@ -24,6 +51,7 @@ def get_domain_and_subdomain(domain):
     parts.pop(0)
     return subdomain, '.'.join(parts) + '.'
 
+
 # Read the configuration for this stack.
 stack_config = Config()
 target_domain = stack_config.require('targetDomain')
@@ -31,13 +59,14 @@ path_to_website_contents = stack_config.require('pathToWebsiteContents')
 certificate_arn = stack_config.get('certificateArn')
 
 # Create an S3 bucket configured as a website bucket.
-content_bucket = pulumi_aws.s3.Bucket('contentBucket',
-    bucket=target_domain,
-    acl='public-read',
-    website=pulumi_aws.s3.BucketWebsiteArgs(
-        index_document='index.html',
-        error_document='404.html'
-    ))
+content_bucket = pulumi_aws.s3.BucketV2(f'{target_domain}-content')
+
+
+content_bucket_website = pulumi_aws.s3.BucketWebsiteConfigurationV2('content-bucket',
+    bucket=content_bucket.bucket,
+    index_document={"suffix": "index.html"},
+    error_document={"key": "404.html"})
+
 
 def crawl_directory(content_dir, f):
     """
@@ -62,7 +91,6 @@ def bucket_object_converter(filepath):
     content_file = pulumi_aws.s3.BucketObject(
         relative_path,
         key=relative_path,
-        acl='public-read',
         bucket=content_bucket.id,
         content_type=mime_type,
         source=FileAsset(filepath),
@@ -109,7 +137,8 @@ if certificate_arn is None:
     certificate_arn = cert_validation.certificate_arn
 
 # Create a logs bucket for the CloudFront logs
-logs_bucket = pulumi_aws.s3.Bucket('requestLogs', bucket=f'{target_domain}-logs', acl='private')
+logs_bucket = pulumi_aws.s3.BucketV2(f'{target_domain}-logs')
+setup_acl('requestLogs', logs_bucket, 'private')
 
 # Create the CloudFront distribution
 cdn = pulumi_aws.cloudfront.Distribution('cdn',
@@ -119,7 +148,7 @@ cdn = pulumi_aws.cloudfront.Distribution('cdn',
     ],
     origins=[pulumi_aws.cloudfront.DistributionOriginArgs(
         origin_id=content_bucket.arn,
-        domain_name=content_bucket.website_endpoint,
+        domain_name=content_bucket_website.website_endpoint,
         custom_origin_config=pulumi_aws.cloudfront.DistributionOriginCustomOriginConfigArgs(
             origin_protocol_policy='http-only',
             http_port=80,
@@ -191,6 +220,6 @@ alias_a_record = create_alias_record(target_domain, cdn)
 
 # Export the bucket URL, bucket website endpoint, and the CloudFront distribution information.
 export('content_bucket_url', Output.concat('s3://', content_bucket.bucket))
-export('content_bucket_website_endpoint', content_bucket.website_endpoint)
+export('content_bucket_website_endpoint', content_bucket_website.website_endpoint)
 export('cloudfront_domain', cdn.domain_name)
 export('target_domain_endpoint', f'https://{target_domain}/')

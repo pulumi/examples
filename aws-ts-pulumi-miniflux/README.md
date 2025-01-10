@@ -2,7 +2,8 @@
 
 [Miniflux](https://miniflux.app/) is an open-source RSS service written in Go and backed by PostgreSQL. This example demonstrates how to stand up a Miniflux service using AWS Fargate and RDS.
 
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-pulumi-miniflux/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-pulumi-miniflux/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-pulumi-miniflux/README.md#gh-dark-mode-only)
 
 ## Prerequisites
 
@@ -18,7 +19,7 @@
     pulumi stack init
     ```
 
-1. Apply the required configuration properties, making adjustments as you like, and taking care to choose strong passwords for the database user and service administrator (which will be stored as encrypted [Pulumi secrets](https://www.pulumi.com/docs/intro/concepts/config/):
+1. Apply the required configuration properties, making adjustments as you like, and taking care to choose strong passwords for the database user and service administrator (which will be stored as encrypted [Pulumi secrets](https://www.pulumi.com/docs/intro/concepts/secrets/):
 
     ```bash
     pulumi config set aws:region us-west-2

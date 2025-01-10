@@ -3,7 +3,7 @@
 import * as pulumi from "@pulumi/pulumi";
 
 export function parseConnString(
-    conns: pulumi.Output<string[]>,
+    conn: pulumi.Output<string>,
 ): pulumi.Output<{ [key: string]: string }> {
     // Per the official docs[1], the format of this connection string is:
     //
@@ -37,19 +37,21 @@ export function parseConnString(
         return Buffer.from(s).toString("base64");
     }
 
-    return conns.apply(conns => {
-        const conn = conns[0];
+    const retVal: pulumi.Output<{ [key: string]: string }>  = conn.apply(conn => {
+
         const noProtocol = conn.replace(/^mongodb\:\/\//, "");
         const [username, rest1, rest2] = noProtocol.split(":", 3);
         const [password, host] = rest1.split("@", 2);
         const [port, rest3] = rest2.split("/", 2);
         const database = rest3.replace(/\?ssl=true$/, "");
-        return {
+        const connector: { [key: string]: string } = {
             host: toBase64(host),
             port: toBase64(port),
             username: toBase64(username),
             password: toBase64(encodeURIComponent(password)),
             database: toBase64(database === "" ? "test" : database),
         };
+        return connector;
     });
+    return retVal;
 }

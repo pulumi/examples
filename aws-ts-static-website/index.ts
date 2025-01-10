@@ -5,12 +5,12 @@ import * as pulumi from "@pulumi/pulumi";
 import * as fs from "fs";
 import * as mime from "mime";
 import * as path from "path";
-
+import { configureACL } from "./acl";
 
 // Load the Pulumi program configuration. These act as the "parameters" to the Pulumi program,
 // so that different Pulumi Stacks can be brought up using the same code.
 
-const stackConfig = new pulumi.Config("static-website");
+const stackConfig = new pulumi.Config();
 
 const config = {
     // pathToWebsiteContents is a relativepath to the website's contents.
@@ -26,16 +26,13 @@ const config = {
 };
 
 // contentBucket is the S3 bucket that the website's contents will be stored in.
-const contentBucket = new aws.s3.Bucket("contentBucket",
-    {
-        bucket: config.targetDomain,
-        // Configure S3 to serve bucket contents as a website. This way S3 will automatically convert
-        // requests for "foo/" to "foo/index.html".
-        website: {
-            indexDocument: "index.html",
-            errorDocument: "404.html",
-        },
-    });
+const contentBucket = new aws.s3.BucketV2(`${config.targetDomain}-content`);
+
+const contentBucketWebsite = new aws.s3.BucketWebsiteConfigurationV2("contentBucketWebsite", {
+    bucket: contentBucket.bucket,
+    indexDocument: {suffix: "index.html"},
+    errorDocument: {key: "404.html"},
+});
 
 // crawlDirectory recursive crawls the provided directory, applying the provided function
 // to every file it contains. Doesn't handle cycles from symlinks.
@@ -64,9 +61,7 @@ crawlDirectory(
             relativeFilePath,
             {
                 key: relativeFilePath,
-
-                acl: "public-read",
-                bucket: contentBucket,
+                bucket: contentBucket.bucket,
                 contentType: mime.getType(filePath) || undefined,
                 source: new pulumi.asset.FileAsset(filePath),
             },
@@ -76,11 +71,8 @@ crawlDirectory(
     });
 
 // logsBucket is an S3 bucket that will contain the CDN's request logs.
-const logsBucket = new aws.s3.Bucket("requestLogs",
-    {
-        bucket: `${config.targetDomain}-logs`,
-        acl: "private",
-    });
+const logsBucket = new aws.s3.BucketV2(`${config.targetDomain}-logs`);
+configureACL("requestLogs", logsBucket, "private");
 
 const tenMinutes = 60 * 10;
 
@@ -89,7 +81,7 @@ let certificateArn: pulumi.Input<string> = config.certificateArn!;
 /**
  * Only provision a certificate (and related resources) if a certificateArn is _not_ provided via configuration.
  */
-if (config.certificateArn === undefined) {
+if (!config.certificateArn) {
 
     const eastRegion = new aws.Provider("east", {
         profile: aws.config.profile,
@@ -155,7 +147,7 @@ if (config.certificateArn === undefined) {
 
 // Generate Origin Access Identity to access the private s3 bucket.
 const originAccessIdentity = new aws.cloudfront.OriginAccessIdentity("originAccessIdentity", {
-  comment: "this is needed to setup s3 polices and make s3 not public.",
+    comment: "this is needed to setup s3 polices and make s3 not public.",
 });
 
 // if config.includeWWW include an alias for the www subdomain
@@ -174,7 +166,7 @@ const distributionArgs: aws.cloudfront.DistributionArgs = {
     origins: [
         {
             originId: contentBucket.arn,
-            domainName: contentBucket.websiteEndpoint,
+            domainName: contentBucket.bucketRegionalDomainName,
             s3OriginConfig: {
                 originAccessIdentity: originAccessIdentity.cloudfrontAccessIdentityPath,
             },
@@ -297,20 +289,20 @@ function createWWWAliasRecord(targetDomain: string, distribution: aws.cloudfront
 
 const bucketPolicy = new aws.s3.BucketPolicy("bucketPolicy", {
     bucket: contentBucket.id, // refer to the bucket created earlier
-    policy: pulumi.all([originAccessIdentity.iamArn, contentBucket.arn]).apply(([oaiArn, bucketArn]) =>JSON.stringify({
+    policy: pulumi.jsonStringify({
         Version: "2012-10-17",
         Statement: [
             {
             Effect: "Allow",
             Principal: {
-                AWS: oaiArn,
+                AWS: originAccessIdentity.iamArn,
             }, // Only allow Cloudfront read access.
             Action: ["s3:GetObject"],
-            Resource: [`${bucketArn}/*`], // Give Cloudfront access to the entire bucket.
+            Resource: [pulumi.interpolate `${contentBucket.arn}/*`], // Give Cloudfront access to the entire bucket.
             },
         ],
-    })),
-});
+    },
+)});
 
 const aRecord = createAliasRecord(config.targetDomain, cdn);
 if (config.includeWWW) {
@@ -318,8 +310,8 @@ if (config.includeWWW) {
 }
 
 // Export properties from this stack. This prints them at the end of `pulumi up` and
-// makes them easier to access from the pulumi.com.
+// makes them easier to access from pulumi.com.
 export const contentBucketUri = pulumi.interpolate`s3://${contentBucket.bucket}`;
-export const contentBucketWebsiteEndpoint = contentBucket.websiteEndpoint;
+export const contentBucketWebsiteEndpoint = contentBucketWebsite.websiteEndpoint;
 export const cloudFrontDomain = cdn.domainName;
 export const targetDomainEndpoint = `https://${config.targetDomain}/`;

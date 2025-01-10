@@ -2,18 +2,16 @@
     "name": "aws-s3-website",
     "version": "0.0.1",
     "license": "Apache-2.0",
-    "main": "bin/index.js",
-    "typings": "bin/index.d.ts",
     "scripts": {
         "build": "tsc"
     },
     "dependencies": {
-        "@pulumi/aws": "^3.0.0",
-        "@pulumi/pulumi": "^2.0.0",
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/pulumi": "3.144.1",
         "@types/mime": "^2.0.1",
         "mime": "^2.2.2"
     },
     "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@types/node": "8.10.66"
     }
 }

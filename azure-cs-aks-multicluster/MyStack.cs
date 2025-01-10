@@ -6,10 +6,10 @@ using Pulumi;
 using Pulumi.AzureAD;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.ContainerService;
-using Pulumi.AzureNative.ContainerService.V20190201;
 using Pulumi.AzureNative.ContainerService.Inputs;
 using ManagedCluster = Pulumi.AzureNative.ContainerService.ManagedCluster;
 using ManagedClusterArgs = Pulumi.AzureNative.ContainerService.ManagedClusterArgs;
+using Pulumi.AzureNative.ContainerService.V20190601;
 
 class MyStack : Stack
 {
@@ -97,7 +97,7 @@ class MyStack : Stack
                     }
                 },
                 DnsPrefix = $"{Pulumi.Deployment.Instance.StackName}-kube",
-                KubernetesVersion = "1.18.14",
+                KubernetesVersion = "1.26.3",
             });
 
             aksClusterNames.Add(cluster.Name);

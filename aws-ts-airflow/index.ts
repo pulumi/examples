@@ -7,10 +7,10 @@ import * as pulumi from "@pulumi/pulumi";
 const config = new pulumi.Config("airflow");
 const dbPassword = config.requireSecret("dbPassword");
 
-const vpc = awsx.ec2.Vpc.getDefault();
+const vpc = awsx.classic.ec2.Vpc.getDefault();
 
 // Create a basic cluster and autoscaling group
-const cluster = new awsx.ecs.Cluster("airflow", { vpc });
+const cluster = new awsx.classic.ecs.Cluster("airflow", { vpc });
 const autoScalingGroup = cluster.createAutoScalingGroup("airflow", {
     subnetIds: vpc.publicSubnetIds,
     templateParameters: {
@@ -65,19 +65,23 @@ const environment = hosts.apply(([postgresHost, redisHost]) => [
     { name: "EXECUTOR", value: "Celery" },
 ]);
 
-const airflowControllerListener = new awsx.elasticloadbalancingv2.ApplicationListener("airflowcontroller", {
+const airflowControllerListener = new awsx.classic.lb.ApplicationListener("airflowcontroller", {
     external: true,
     port: 8080,
     protocol: "HTTP",
 });
 
-const airflowController = new awsx.ecs.EC2Service("airflowcontroller", {
+const repo = new awsx.ecr.Repository("repo", {
+    forceDelete: true,
+});
+
+const airflowController = new awsx.classic.ecs.EC2Service("airflowcontroller", {
     cluster,
     desiredCount: 1,
     taskDefinitionArgs: {
         containers: {
             "webserver": {
-                image: awsx.ecs.Image.fromPath("webserver", "./airflow-container"),
+                image: new awsx.ecr.Image("webserver", { repositoryUrl: repo.url, context: "./airflow-container" }).imageUri,
                 portMappings: [airflowControllerListener],
                 environment: environment,
                 command: [ "webserver" ],
@@ -85,7 +89,7 @@ const airflowController = new awsx.ecs.EC2Service("airflowcontroller", {
             },
 
             "scheduler": {
-                image: awsx.ecs.Image.fromPath("scheduler", "./airflow-container"),
+                image: new awsx.ecr.Image("scheduler", { repositoryUrl: repo.url, context: "./airflow-container" }).imageUri,
                 environment: environment,
                 command: [ "scheduler" ],
                 memory: 128,
@@ -94,20 +98,20 @@ const airflowController = new awsx.ecs.EC2Service("airflowcontroller", {
     },
 });
 
-const airflowerListener = new awsx.elasticloadbalancingv2.ApplicationListener("airflower", {
+const airflowerListener = new awsx.classic.lb.ApplicationListener("airflower", {
     port: 5555,
     external: true,
     protocol: "HTTP",
 });
 
-const airflower = new awsx.ecs.EC2Service("airflower", {
+const airflower = new awsx.classic.ecs.EC2Service("airflower", {
     cluster,
     taskDefinitionArgs: {
         containers: {
             // If the container is named "flower", we create environment variables that start
             // with `FLOWER_` and Flower tries and fails to parse them as configuration.
             "notflower": {
-                image: awsx.ecs.Image.fromPath("notflower", "./airflow-container"),
+                image: new awsx.ecr.Image("notflower", { repositoryUrl: repo.url, context: "./airflow-container" }).imageUri,
                 portMappings: [airflowerListener],
                 environment: environment,
                 command: [ "flower" ],
@@ -117,13 +121,13 @@ const airflower = new awsx.ecs.EC2Service("airflower", {
     },
 });
 
-const airflowWorkers = new awsx.ecs.EC2Service("airflowworkers", {
+const airflowWorkers = new awsx.classic.ecs.EC2Service("airflowworkers", {
     cluster,
     desiredCount: 3,
     taskDefinitionArgs: {
         containers: {
             "worker": {
-                image: awsx.ecs.Image.fromPath("worker", "./airflow-container"),
+                image: new awsx.ecr.Image("worker", { repositoryUrl: repo.url, context: "./airflow-container" }).imageUri,
                 environment: environment,
                 command: [ "worker" ],
                 memory: 1024,

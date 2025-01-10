@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/crd2pulumi-crontabs/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/crd2pulumi-crontabs/kubernetes-ts-crontabs/index.ts#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/crd2pulumi-crontabs/kubernetes-ts-crontabs/index.ts#gh-dark-mode-only)
 
 # Generating CronTab CustomResources with `crd2pulumi`
 
@@ -110,11 +111,11 @@ Let's destroy the CRD and CustomResource object so we can re-create them in Go.
 ```bash
 $ pulumi destroy
 Previewing destroy (dev):
-     Type                                                         Name                        Plan       
- -   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  delete     
- -   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          delete     
- -   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  delete     
- 
+     Type                                                         Name                        Plan
+ -   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  delete
+ -   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          delete
+ -   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  delete
+
 Outputs:
   - urn: "urn:pulumi:dev::kubernetes-go-crontabs::kubernetes:stable.example.com/v1:CronTab::my-new-cron-object"
 
@@ -123,11 +124,11 @@ Resources:
 
 Do you want to perform this destroy? yes
 Destroying (dev):
-     Type                                                         Name                        Status      
- -   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  deleted     
- -   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          deleted     
- -   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  deleted     
- 
+     Type                                                         Name                        Status
+ -   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  deleted
+ -   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          deleted
+ -   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  deleted
+
 Outputs:
   - urn: "urn:pulumi:dev::kubernetes-go-crontabs::kubernetes:stable.example.com/v1:CronTab::my-new-cron-object"
 
@@ -136,7 +137,7 @@ Resources:
 
 Duration: 5s
 
-The resources in the stack have been deleted, but the history and configuration associated with the stack are still maintained. 
+The resources in the stack have been deleted, but the history and configuration associated with the stack are still maintained.
 If you want to remove the stack completely, run 'pulumi stack rm dev'.
 ```
 
@@ -155,7 +156,7 @@ Like before, `main.go` shouldn't compile since we haven't generated the `crontab
 $ ../crd2pulumi go ../crontabs.yaml .
 ```
 
-This creates a `crontabs/v1` module in the current directory, which contains the useful constructor `NewCronTab()`. 
+This creates a `crontabs/v1` module in the current directory, which contains the useful constructor `NewCronTab()`.
 
 > If you're curious, the commented code is what we would've had to write without `crd2pulumi`. Previously we would have had to input the `Spec` arguments into a generic `map[string]interface{}` with zero type-checking.
 
@@ -164,20 +165,20 @@ Perform the deployment:
 ```bash
 $ pulumi up --yes
 Previewing update (dev):
-     Type                                                         Name                        Plan       
- +   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  create     
- +   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          create     
- +   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  create     
- 
+     Type                                                         Name                        Plan
+ +   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  create
+ +   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          create
+ +   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  create
+
 Resources:
     + 3 to create
 
 Updating (dev):
-     Type                                                         Name                        Status      
- +   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  created     
- +   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          created     
- +   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  created     
- 
+     Type                                                         Name                        Status
+ +   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  created
+ +   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          created
+ +   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  created
+
 Outputs:
     urn: "urn:pulumi:dev::kubernetes-go-crontabs::kubernetes:stable.example.com/v1:CronTab::my-new-cron-object"
 
@@ -192,11 +193,11 @@ Like before, you can run `kubectl get ct -o yaml` to verify that the CronTab obj
 ```bash
 $ pulumi destroy --yes
 Previewing destroy (dev):
-     Type                                                         Name                        Plan       
- -   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  delete     
- -   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          delete     
- -   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  delete     
- 
+     Type                                                         Name                        Plan
+ -   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  delete
+ -   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          delete
+ -   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  delete
+
 Outputs:
   - urn: "urn:pulumi:dev::kubernetes-go-crontabs::kubernetes:stable.example.com/v1:CronTab::my-new-cron-object"
 
@@ -204,11 +205,11 @@ Resources:
     - 3 to delete
 
 Destroying (dev):
-     Type                                                         Name                        Status      
- -   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  deleted     
- -   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          deleted     
- -   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  deleted     
- 
+     Type                                                         Name                        Status
+ -   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  deleted
+ -   ├─ kubernetes:stable.example.com:CronTab                     my-new-cron-object          deleted
+ -   └─ kubernetes:apiextensions.k8s.io:CustomResourceDefinition  cronTabDef                  deleted
+
 Outputs:
   - urn: "urn:pulumi:dev::kubernetes-go-crontabs::kubernetes:stable.example.com/v1:CronTab::my-new-cron-object"
 

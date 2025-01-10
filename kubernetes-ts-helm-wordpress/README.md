@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-helm-wordpress/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-helm-wordpress/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-helm-wordpress/README.md#gh-dark-mode-only)
 
 # WordPress Helm Chart
 
@@ -68,7 +69,7 @@ View Live: https://app.pulumi.com/example/wordpress/ts-helm-wordpress/updates/7
  +      └─ kubernetes:apps:Deployment             wpdev-wordpress              created
 
 Outputs:
-    frontendIp: "35.193.210.254"
+    wordpressIP: "35.193.210.254"
 
 Resources:
     + 10 created
@@ -108,7 +109,7 @@ View Live: https://app.pulumi.com/example/wordpress/ts-helm-wordpress/updates/8
  -      └─ kubernetes:apps:Deployment             wpdev-wordpress              deleted
 
 Outputs:
-  - frontendIp: "35.193.210.254"
+  - wordpressIP: "35.193.210.254"
 
 Resources:
     - 10 deleted

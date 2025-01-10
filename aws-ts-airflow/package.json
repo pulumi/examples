@@ -1,11 +1,12 @@
 {
     "name": "airflow",
     "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@types/node": "18.19.68"
     },
     "dependencies": {
-        "@pulumi/aws": "^5.0.0",
-        "@pulumi/awsx": "^0.30.0",
-        "@pulumi/pulumi": "^3.0.0"
+        "@pulumi/aws": "6.66.1",
+        "@pulumi/awsx": "2.19.0",
+        "@pulumi/pulumi": "3.144.1",
+        "typescript": "^4.6.0"
     }
 }

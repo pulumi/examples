@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-pac-ts/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-pac-ts/README.md#gh-dark-mode-only)
+
 # Writing Policies for Testing Pulumi Programs
 
 An example of writing tests based on [Policy as Code ("CrossGuard")](https://www.pulumi.com/docs/guides/crossguard/) with both infrastructure definition and tests written in TypeScript.
@@ -33,7 +36,7 @@ The tests will run while Pulumi deploys the code, right before the deployment of
 
 4.  Run `pulumi up` with `tests` folder as policy:
 
-    ``` 
+    ```
     $ pulumi up --policy-pack tests
     ```
 

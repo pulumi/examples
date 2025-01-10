@@ -11,6 +11,7 @@ const secretValue = config.requireSecret('secretValue');
 // Create a GCP resource (Storage Bucket)
 const bucket = new gcp.storage.Bucket("bucket", {
     name: bucketName,
+    location: "US",
 });
 
 

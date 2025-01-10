@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-twitter-athena/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-twitter-athena/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-twitter-athena/README.md#gh-dark-mode-only)
 
 # Twitter Search in Athena
 
@@ -6,7 +7,7 @@ A sample project that queries Twitter every 2 minutes and stores the results in 
 
 ## Setup
 
-Register a new [Twitter app](https://apps.twitter.com/). 
+Register a new [Twitter app](https://apps.twitter.com/).
 
 ## Deploy and run the program
 
@@ -20,7 +21,7 @@ Register a new [Twitter app](https://apps.twitter.com/).
 
     ```
     pulumi config set twitterAccessTokenKey <Value for Consumer Key (API Key)>
-    pulumi config set --secret twitterAccessTokenSecret <Value for Consumer Secret (API Secret)> 
+    pulumi config set --secret twitterAccessTokenSecret <Value for Consumer Secret (API Secret)>
     pulumi config set twitterConsumerKey <Value for Access Token>
     pulumi config set --secret twitterConsumerSecret <Value for Access Token Secret>
     ```
@@ -30,7 +31,7 @@ Register a new [Twitter app](https://apps.twitter.com/).
     ```
     pulumi config set twitterQuery "Amazon Web Services"
     ```
-  
+
 1.  Set the AWS region:
 
     ```bash
@@ -63,5 +64,3 @@ Register a new [Twitter app](https://apps.twitter.com/).
 ## Clean up
 
 To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
-
-

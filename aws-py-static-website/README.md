@@ -1,4 +1,5 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-static-website/README.md)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-static-website/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-static-website/README.md#gh-dark-mode-only)
 
 # Secure Static Website Using Amazon S3, CloudFront, Route53, and Certificate Manager
 
@@ -47,8 +48,8 @@ with `***`.
         Type                              Name                                      Plan
     +   pulumi:pulumi:Stack               static-website-example                    create
     +   ├─ pulumi:providers:aws           east                                      create
-    +   ├─ aws:s3:Bucket                  requestLogs                               create
-    +   ├─ aws:s3:Bucket                  contentBucket                             create
+    +   ├─ aws:s3:BucketV2                requestLogs                               create
+    +   ├─ aws:s3:BucketV2                contentBucket                             create
     +   │  ├─ aws:s3:BucketObject         404.html                                  create
     +   │  └─ aws:s3:BucketObject         index.html                                create
     +   ├─ aws:acm:Certificate            certificate                               create
@@ -106,8 +107,8 @@ This is caused by CloudFront confirming the ETag of the resource before applying
 ETag is essentially a "version", and AWS is rejecting any requests that are trying to update
 any version but the "latest".
 
-This error will occur when the state of the ETag gets out of sync between the Pulumi Service
-and AWS. (Which can happen when inspecting the CloudFront distribution in the AWS console.)
+This error will occur when the state of the ETag gets out of sync between Pulumi Cloud
+and AWS. (This can happen when inspecting the CloudFront distribution in the AWS console.)
 
 You can fix this by running `pulumi refresh` to pickup the newer ETag values.
 

@@ -30,7 +30,7 @@ export class EksCluster extends pulumi.ComponentResource {
 
         // Create the EKS cluster itself, including a "gp2"-backed StorageClass and a deployment of the Kubernetes dashboard.
         this.cluster = new eks.Cluster("cluster", {
-            vpcId: vpc.id,
+            vpcId: vpc.vpcId,
             subnetIds: vpc.publicSubnetIds,
             instanceType: "t2.medium",
             desiredCapacity: 2,

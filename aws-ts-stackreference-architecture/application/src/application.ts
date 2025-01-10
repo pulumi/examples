@@ -34,7 +34,7 @@ export interface ApplicationArgs {
      */
     appSecurityGroupIds?: Input<string>[];
 
-    appImage: Input<string> | awsx.ecs.ContainerImageProvider;
+    appImage: Input<string> | aws.ecs.ContainerImageProvider;
     appResources?: ApplicationResources;
 }
 
@@ -45,9 +45,9 @@ export interface ApplicationResources {
 }
 
 export class Application extends ComponentResource {
-    applicationLoadBalancer: awsx.elasticloadbalancingv2.ApplicationLoadBalancer;
-    applicationListener: awsx.elasticloadbalancingv2.ApplicationListener;
-    cluster: awsx.ecs.Cluster;
+    applicationLoadBalancer: awsx.lb.ApplicationLoadBalancer;
+    applicationListener: aws.lb.Listener;
+    cluster: aws.ecs.Cluster;
     fargateService: awsx.ecs.FargateService;
 
     /**
@@ -60,21 +60,19 @@ export class Application extends ComponentResource {
     constructor(name: string, args: ApplicationArgs, opts?: ComponentResourceOptions) {
         super("application", name, {}, opts);
 
-        const vpc = awsx.ec2.Vpc.fromExistingIds(`${name}-service-vpc`, {
-            vpcId: args.vpcId,
-        }, { parent: this });
+        const vpc = aws.ec2.Vpc.get(`${name}-service-vpc`, args.vpcId, {}, { parent: this });
 
         // Use the provided pre-existing security group or create a new one.
         const albSecGroup = args.albSecurityGroupIds || [
-            new awsx.ec2.SecurityGroup(`${name}-service-alb-sg`, {
-                vpc: vpc,
-            }, { parent: vpc }),
+            new aws.ec2.SecurityGroup(`${name}-service-alb-sg`, {
+                vpcId: vpc.id,
+            }, { parent: vpc }).id,
         ];
 
-        this.applicationLoadBalancer = new awsx.elasticloadbalancingv2.ApplicationLoadBalancer(`${name}-service-alb`, {
-            vpc: vpc,
+        this.applicationLoadBalancer = new awsx.lb.ApplicationLoadBalancer(`${name}-service-alb`, {
+            vpc: vpc.id,
             external: true,
-            subnets: args.albSubnetIds,
+            subnetIds: args.albSubnetIds,
             securityGroups: albSecGroup,
             tags: {
                 ...args.baseTags,
@@ -82,13 +80,13 @@ export class Application extends ComponentResource {
             },
         }, { parent: this });
 
-        this.applicationListener = new awsx.elasticloadbalancingv2.ApplicationListener(`${name}-service-alb-listener`, {
+        this.applicationListener = new aws.lb.Listener(`${name}-service-alb-listener`, {
             vpc: vpc,
             loadBalancer: this.applicationLoadBalancer,
             port: args.appPort,
         }, { parent: this.applicationLoadBalancer });
 
-        this.cluster = new awsx.ecs.Cluster(`${name}-cluster`, {
+        this.cluster = new aws.ecs.Cluster(`${name}-cluster`, {
             vpc: vpc,
             /**
              * Prevent default security groups with `[]`. Instead
@@ -103,8 +101,8 @@ export class Application extends ComponentResource {
 
         // Use the provided pre-existing security group or create a new one.
         const appSecGroup = args.appSecurityGroupIds || [
-            new awsx.ec2.SecurityGroup(`${name}-service-sg`, {
-                vpc: vpc,
+            new aws.ec2.SecurityGroup(`${name}-service-sg`, {
+                vpcId: vpc.id,
                 ingress: [
                     {
                         fromPort: args.appPort,
@@ -118,40 +116,39 @@ export class Application extends ComponentResource {
         ];
 
         this.fargateService = new awsx.ecs.FargateService(`${name}-service`, {
-            cluster: this.cluster,
+            cluster: this.cluster.arn,
             assignPublicIp: false,
             subnets: args.appSubnetIds,
             securityGroups: appSecGroup,
             desiredCount: (args.appResources || {}).desiredCount,
             taskDefinitionArgs: {
-                containers: {
-                    [name]: {
-                        ...args.appResources, // cpu, memory, etc.
-                        image: args.appImage,
-                        portMappings: [this.applicationListener],
-                        environment: [
-                            {
-                                name: "DB_HOST",
-                                value: args.dbHost,
-                            },
-                            {
-                                name: "DB_USERNAME",
-                                value: args.dbUsername,
-                            },
-                            {
-                                name: "DB_PASSWORD",
-                                value: args.dbPassword,
-                            },
-                            {
-                                name: "DB_PORT",
-                                value: args.dbPort,
-                            },
-                            {
-                                name: "DB_NAME",
-                                value: args.dbName,
-                            },
-                        ],
-                    },
+                container: {
+                    name: name,
+                    ...args.appResources, // cpu, memory, etc.
+                    image: args.appImage,
+                    portMappings: [this.applicationListener],
+                    environment: [
+                        {
+                            name: "DB_HOST",
+                            value: args.dbHost,
+                        },
+                        {
+                            name: "DB_USERNAME",
+                            value: args.dbUsername,
+                        },
+                        {
+                            name: "DB_PASSWORD",
+                            value: args.dbPassword,
+                        },
+                        {
+                            name: "DB_PORT",
+                            value: args.dbPort,
+                        },
+                        {
+                            name: "DB_NAME",
+                            value: args.dbName,
+                        },
+                    ],
                 },
             },
         }, { parent: this.cluster });
