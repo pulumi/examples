@@ -4,8 +4,8 @@
         "@types/node": "10.17.60"
     },
     "dependencies": {
-        "@pulumi/azure-native": "2.79.0",
+        "@pulumi/azure-native": "2.82.0",
         "@pulumi/azuread": "6.0.2",
-        "@pulumi/pulumi": "3.144.1"
+        "@pulumi/pulumi": "3.145.0"
     }
 }

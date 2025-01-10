@@ -5,10 +5,10 @@ go 1.21.12
 toolchain go1.23.4
 
 require (
-	github.com/pulumi/pulumi-aws/sdk/v6 v6.66.1
+	github.com/pulumi/pulumi-aws/sdk/v6 v6.66.2
 	github.com/pulumi/pulumi-awsx/sdk/v2 v2.19.0
 	github.com/pulumi/pulumi-docker/sdk/v4 v4.6.0-beta.4
-	github.com/pulumi/pulumi/sdk/v3 v3.144.1
+	github.com/pulumi/pulumi/sdk/v3 v3.145.0
 )
 
 require (
