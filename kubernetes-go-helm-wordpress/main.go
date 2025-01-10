@@ -1,18 +1,18 @@
 package main
 
 import (
-	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/core/v1"
-	helmv2 "github.com/pulumi/pulumi-kubernetes/sdk/v3/go/kubernetes/helm/v2"
+	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/core/v1"
+	helmv3 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/helm/v3"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Deploy the bitnami/wordpress chart.
-		wordpress, err := helmv2.NewChart(ctx, "wpdev", helmv2.ChartArgs{
+		wordpress, err := helmv3.NewChart(ctx, "wpdev", helmv3.ChartArgs{
 			Version: pulumi.String("9.6.0"),
 			Chart:   pulumi.String("wordpress"),
-			FetchArgs: &helmv2.FetchArgs{
+			FetchArgs: &helmv3.FetchArgs{
 				Repo: pulumi.String("https://charts.bitnami.com/bitnami"),
 			},
 		})
