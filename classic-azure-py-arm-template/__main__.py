@@ -7,7 +7,7 @@ from pulumi import export, get_project, get_stack
 
 
 # Create a resource group to deploy all ARM template resources into.
-resource_group = azure.core.ResourceGroup('test')
+resource_group = azure.core.ResourceGroup("test")
 
 # Specifies an ordinary JSON ARM template.
 template = {
@@ -66,16 +66,16 @@ template = {
 }
 
 # Create an ARM template deployment using the ordinary JSON ARM template as specified above. This could be read from disk, of course.
-arm_deployment = azure.core.ResourceGroupTemplateDeployment('test-dep',
+arm_deployment = azure.core.ResourceGroupTemplateDeployment(
+    "test-dep",
     resource_group_name=resource_group.name,
     template_content=json.dumps(template),
-    parameters_content=json.dumps({
-        'storageAccountType': {
-            'value': 'Standard_GRS'
-        }
-    }),
-    deployment_mode='Incremental',
+    parameters_content=json.dumps({"storageAccountType": {"value": "Standard_GRS"}}),
+    deployment_mode="Incremental",
 )
 
 # Finally, export the allocated storage account name.
-export('storageAccountName', arm_deployment.output_content.apply(lambda j: json.loads(j)['storageAccountName']['value']))
+export(
+    "storageAccountName",
+    arm_deployment.output_content.apply(lambda j: json.loads(j)["storageAccountName"]["value"]),
+)

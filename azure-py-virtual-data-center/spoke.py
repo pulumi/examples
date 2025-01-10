@@ -6,19 +6,19 @@ import vdc
 
 class SpokeProps:
     def __init__(
-            self,
-            azure_bastion: bool,
-            fw_rt_name: str,
-            hub: Hub,
-            location: str,
-            peer: str,
-            reference: StackReference,
-            resource_group_name: str,
-            separator: str,
-            spoke_address_space: str,
-            subnets: [str, str, str],
-            suffix: str,
-            tags: [str, str],
+        self,
+        azure_bastion: bool,
+        fw_rt_name: str,
+        hub: Hub,
+        location: str,
+        peer: str,
+        reference: StackReference,
+        resource_group_name: str,
+        separator: str,
+        spoke_address_space: str,
+        subnets: [str, str, str],
+        suffix: str,
+        tags: [str, str],
     ):
         self.azure_bastion = azure_bastion
         self.fw_rt_name = fw_rt_name
@@ -35,9 +35,8 @@ class SpokeProps:
 
 
 class Spoke(ComponentResource):
-    def __init__(self, name: str, props: SpokeProps,
-                 opts: ResourceOptions = None):
-        super().__init__('vdc:network:Spoke', name, {}, opts)
+    def __init__(self, name: str, props: SpokeProps, opts: ResourceOptions = None):
+        super().__init__("vdc:network:Spoke", name, {}, opts)
 
         # set required vdc variables before calling functions
         vdc.location = props.location
@@ -87,7 +86,7 @@ class Spoke(ComponentResource):
 
         # Route Table to be associated with all ordinary spoke subnets
         spoke_rt = vdc.route_table(
-            stem=f'{name}',
+            stem=f"{name}",
             disable_bgp_route_propagation=True,
         )
         # it is very important to ensure that there is never a route with an
@@ -95,12 +94,12 @@ class Spoke(ComponentResource):
         # Peering may not be specified as next_hop_type, a separate address
         # space for the firewall in the hub makes for simpler routes
         for route in [
-            (f'dmz{s}{name}', props.hub.dmz_rt_name, props.spoke_address_space),
-            (f'gw{s}{name}', props.hub.gw_rt_name, props.spoke_address_space),
-            (f'ss{s}{name}', props.hub.ss_rt_name, props.spoke_address_space),
-            (f'{name}{s}dg', spoke_rt.name, '0.0.0.0/0'),
-            (f'{name}{s}dmz', spoke_rt.name, props.hub.dmz_ar),
-            (f'{name}{s}hub', spoke_rt.name, props.hub.address_space),
+            (f"dmz{s}{name}", props.hub.dmz_rt_name, props.spoke_address_space),
+            (f"gw{s}{name}", props.hub.gw_rt_name, props.spoke_address_space),
+            (f"ss{s}{name}", props.hub.ss_rt_name, props.spoke_address_space),
+            (f"{name}{s}dg", spoke_rt.name, "0.0.0.0/0"),
+            (f"{name}{s}dmz", spoke_rt.name, props.hub.dmz_ar),
+            (f"{name}{s}hub", spoke_rt.name, props.hub.address_space),
         ]:
             vdc.route_to_virtual_appliance(
                 stem=route[0],
@@ -112,7 +111,7 @@ class Spoke(ComponentResource):
         for subnet in props.subnets:
             next_sn = next(subnets)
             spoke_sn = vdc.subnet(
-                stem=f'{name}{s}{subnet[0]}',
+                stem=f"{name}{s}{subnet[0]}",
                 virtual_network_name=spoke.name,
                 address_prefix=str(next_sn),
                 route_table_id=spoke_rt.id,
@@ -130,10 +129,10 @@ class Spoke(ComponentResource):
 
         # add route from firewall to corresponding spoke in peered stack
         if props.peer:
-            peer_fw_ip = props.reference.get_output('fw_ip')
-            peer_spoke_as = props.reference.get_output(f'{name}_as')
+            peer_fw_ip = props.reference.get_output("fw_ip")
+            peer_spoke_as = props.reference.get_output(f"{name}_as")
             fw_peer_spoke = vdc.route_to_virtual_appliance(
-                stem=f'fw{s}{props.peer}{s}{name}',
+                stem=f"fw{s}{props.peer}{s}{name}",
                 route_table_name=props.fw_rt_name,
                 address_prefix=peer_spoke_as,
                 next_hop_ip_address=peer_fw_ip,

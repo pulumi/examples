@@ -217,7 +217,5 @@ else:
             else None
         )
     )
-    frontend_ip = ingress.apply(
-        lambda ingress: ingress and (ingress.ip or ingress.hostname) or ""
-    )
+    frontend_ip = ingress.apply(lambda ingress: ingress and (ingress.ip or ingress.hostname) or "")
 pulumi.export("frontend_ip", frontend_ip)

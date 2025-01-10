@@ -6,11 +6,17 @@ from pulumi_policy import (
     ResourceValidationPolicy,
 )
 
-def storage_bucket_no_public_read_validator(args: ResourceValidationArgs, report_violation: ReportViolation):
+
+def storage_bucket_no_public_read_validator(
+    args: ResourceValidationArgs, report_violation: ReportViolation
+):
     if args.resource_type == "gcp:storage/bucketACL:BucketACL" and "predefinedAcl" in args.props:
         acl = args.props["predefinedAcl"]
         if acl == "public-read" or acl == "public-read-write":
-            report_violation("Storage buckets acl cannot be set to public-read or public-read-write.")
+            report_violation(
+                "Storage buckets acl cannot be set to public-read or public-read-write."
+            )
+
 
 storage_bucket_no_public_read = ResourceValidationPolicy(
     name="storage-bucket-no-public-read",
