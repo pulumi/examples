@@ -7,17 +7,14 @@ toolchain go1.23.4
 require (
 	github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2 v2.79.0
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.79.0
-	github.com/pulumi/pulumi-azuread/sdk/v4 v4.3.0
-	github.com/pulumi/pulumi-kubernetes/sdk/v3 v3.30.2
+	github.com/pulumi/pulumi-azuread/sdk/v6 v6.0.2
+	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.19.0
 	github.com/pulumi/pulumi-random/sdk/v4 v4.16.8
-	github.com/pulumi/pulumi-tls/sdk/v4 v4.11.1
+	github.com/pulumi/pulumi-tls/sdk/v5 v5.0.10
 	github.com/pulumi/pulumi/sdk/v3 v3.144.1
 )
 
-require (
-	github.com/stretchr/objx v0.5.2 // indirect
-	pgregory.net/rapid v0.6.1 // indirect
-)
+require github.com/stretchr/objx v0.5.2 // indirect
 
 require (
 	dario.cat/mergo v1.0.0 // indirect
@@ -40,7 +37,6 @@ require (
 	github.com/cyphar/filepath-securejoin v0.2.5 // indirect
 	github.com/djherbis/times v1.5.0 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
-	github.com/fatih/color v1.16.0 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.6.0 // indirect
 	github.com/go-git/go-git/v5 v5.13.0 // indirect
