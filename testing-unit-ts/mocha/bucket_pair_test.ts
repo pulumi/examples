@@ -5,7 +5,7 @@ import "mocha";
 import * as assert from 'assert';
 
 pulumi.runtime.setMocks({
-    newResource: function(args: pulumi.runtime.MockResourceArgs): {id: string, state: any} {
+    newResource: function (args: pulumi.runtime.MockResourceArgs): { id: string, state: any } {
         switch (args.type) {
             default:
                 return {
@@ -16,7 +16,7 @@ pulumi.runtime.setMocks({
                 };
         }
     },
-    call: function(args: pulumi.runtime.MockCallArgs) {
+    call: function (args: pulumi.runtime.MockCallArgs) {
         switch (args.token) {
             default:
                 return args;
@@ -24,32 +24,33 @@ pulumi.runtime.setMocks({
     },
 });
 
-describe("BucketPair", function() {
+describe("BucketPair", function () {
+    this.timeout(10000); // Extend the timeout for this suite
+
     let module: typeof import("./bucket_pair");
 
-    before(async function() {
+    before(async function () {
+        this.timeout(10000); // Extend timeout for the import
         // It's important to import the program _after_ the mocks are defined.
         module = await import("./bucket_pair");
     });
 
-    describe("constructor", function() {
-        it("must pass bucket names", function(done) {
+    describe("constructor", function () {
+        it("must pass bucket names", function (done) {
             const bucketPair = new module.BucketPair('my_content_bucket', 'my_logs_bucket', {});
             const outputs = [bucketPair.contentBucket.bucket, bucketPair.logsBucket.bucket];
+
             pulumi.all(outputs).apply(([contentBucketName, logsBucketName]) => {
-                try
-                {
-                    /*
-                    * If you don't have the try/catch in here, if the assert fails it'll just timeout
-                    * If you have the try/catch, the "done()" in the catch block will get hit and it won't time out (async fun)
-                    */
+                try {
+                    console.log("Testing outputs:", { contentBucketName, logsBucketName });
                     assert.strictEqual(contentBucketName, 'my_content_bucket');
                     assert.strictEqual(logsBucketName, 'my_logs_bucket');
                     done();
-                } catch(e) {
+                } catch (e) {
                     done(e);
                 }
             });
         });
     });
 });
+

@@ -16,9 +16,7 @@ class TestS3(unittest.TestCase):
         cls.WORK_DIR = os.path.join(os.path.dirname(__file__))
         cls.FILE_NAME = "bucket.txt"
 
-        cls.stack = auto.create_or_select_stack(
-            stack_name=cls.STACK_NAME, work_dir=cls.WORK_DIR
-        )
+        cls.stack = auto.create_or_select_stack(stack_name=cls.STACK_NAME, work_dir=cls.WORK_DIR)
         cls.stack.set_config("aws:region", auto.ConfigValue(value=cls.REGION_NAME))
         cls.stack.up(on_output=print)
         cls.outputs = cls.stack.outputs()
