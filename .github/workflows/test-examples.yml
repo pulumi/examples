@@ -213,13 +213,35 @@ jobs:
           aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up Minikube
+        uses: manusa/actions-setup-minikube@v2.13.0
+        with:
+          minikube version: 'v1.34.0'
+          kubernetes version: 'v1.31.1'
+          driver: docker
+          start args: --cpus 2 --memory 4096 --addons metallb --wait all
+
+      - name: Configure MetalLB
+        run: |
+          cat <<EOF | kubectl apply -f -
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            namespace: metallb-system
+            name: config
+          data:
+            config: |
+              address-pools:
+              - name: default
+                protocol: layer2
+                addresses:
+                - 192.168.49.240-192.168.49.250
+          EOF
+
       - name: Run tests
         run: |
-          ./misc/scripts/create-ci-cluster.sh "${{ env.INFRA_STACK_NAME }}"
-          mkdir -p "$HOME/.kube/"
-          pulumi stack -s "${{ env.INFRA_STACK_NAME }}" -C misc/scripts/testinfra/ output --show-secrets kubeconfig >~/.kube/config
           make specific_test_set TestSet=Kubernetes
-          ./misc/scripts/destroy-ci-cluster.sh "${{ env.INFRA_STACK_NAME }}"
+
         env:
           AWS_ACCESS_KEY_ID: ${{ steps.setup.outputs.aws-access-key-id }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.setup.outputs.aws-secret-access-key }}
