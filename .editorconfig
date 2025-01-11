@@ -1,0 +1,44 @@
+# Root editorconfig file for pulumi/examples
+root = true
+
+# Apply to all files
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Python-specific settings based on black.toml
+[*.py]
+indent_size = 4
+max_line_length = 100
+
+# JSON files
+[*.json]
+indent_style = space
+indent_size = 2
+
+# YAML files
+[*.yml]
+indent_style = space
+indent_size = 2
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+
+# TypeScript files
+[*.ts]
+indent_style = space
+indent_size = 2
+
+# Go files
+[*.go]
+indent_style = tab
+tab_width = 4
+
+# Ignore venv folders
+[**/venv/**]
+indent_style = ignore
