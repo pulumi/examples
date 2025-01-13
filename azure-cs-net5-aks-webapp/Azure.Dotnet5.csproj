@@ -10,7 +10,7 @@
     <PackageReference Include="Pulumi" Version="3.*" />
     <PackageReference Include="Pulumi.AzureAD" Version="4.*" />
     <PackageReference Include="Pulumi.AzureNative" Version="2.*" />
-    <PackageReference Include="Pulumi.Docker" Version="2.*" />
+    <PackageReference Include="Pulumi.Docker" Version="4.*" />
     <PackageReference Include="Pulumi.Kubernetes" Version="3.*" />
     <PackageReference Include="Pulumi.Random" Version="3.*" />
     <PackageReference Include="Pulumi.Tls" Version="3.*" />
