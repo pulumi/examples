@@ -48,7 +48,7 @@ inputs:
     default: 18
 
   python-version:
-    default: 3.8
+    default: 3.9
 
   go-version:
     default: 1.21
