@@ -1,7 +1,7 @@
+# Continuous Integration with Jenkins
+
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-jenkins/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-jenkins/README.md#gh-dark-mode-only)
-
-# Continuous Integration with Jenkins
 
 This example deploys a container running the Jenkins continuous integration system onto a running
 Kubernetes cluster using Pulumi and `@pulumi/kubernetes`.
@@ -14,35 +14,41 @@ Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
 > _Note_: The code in this repo assumes you are deploying to a cluster that supports the
 > [`LoadBalancer`](https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer) service type.
 > This includes most cloud providers as well as [Docker for Mac Edge w/
-> Kubernetes](https://docs.docker.com/docker-for-mac/kubernetes/). If not (for example if you are targeting `minikube`
-> or your own custom Kubernetes cluster), replace `type: "LoadBalancer"` with `type: "ClusterIP"` in `jenkins.ts`. See
-> the Kubernetes [Services
-> docs](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types) for more
-> details.
+> Kubernetes](https://docs.docker.com/docker-for-mac/kubernetes/).
 
 Install dependencies:
 
-```
-$ npm install
+```bash
+
+npm install
 ```
 
 Create a new stack:
 
-```
-$ pulumi stack init dev
+```bash
+pulumi stack init dev
 ```
 
 Create configuration keys for the root username and password for the Jenkins instance we are
 about to create:
 
+```bash
+pulumi config set username <your desired username>
+pulumi config set password <your desired password> --secret
 ```
-$ pulumi config set username <your desired username>
-$ pulumi config set password <your desired password> --secret
+
+Setting the minikube values:
+>_Note_: [MetalLb](https://metallb.io/) is required for minikube. You will either need to enable it yourself with:
+>`minikube addons enable metallb` or set `enableMetalLB` to true.
+
+```bash
+pulumi config set isMinikube true #set to false if you are not using minikube
+pulumi config set enableMetalLB true
 ```
 
 Preview the deployment of the application:
 
-```
+```bash
 $ pulumi preview
 Previewing update (dev):
      Type                                         Name                       Plan
@@ -59,7 +65,8 @@ Resources:
 
 Perform the deployment:
 
-```
+```bash
+
 $ pulumi up --skip-preview
 Updating (dev):
      Type                                         Name                       Status
@@ -81,7 +88,8 @@ Duration: 1m58s
 
 The deployment is complete! Use `pulumi stack output externalIp` to see the IP of the Service that we just deployed:
 
-```
+```bash
+
 $ pulumi stack output externalIp
 35.184.131.21
 ```
@@ -96,7 +104,8 @@ You can use the username and password that you saved in your Pulumi config to lo
 
 When you're ready to be done with Jenkins, you can destroy the instance:
 
-```
+```bash
+
 $ pulumi destroy
 Do you want to perform this destroy? yes
 Destroying (dev):
