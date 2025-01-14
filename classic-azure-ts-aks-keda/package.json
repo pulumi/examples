@@ -6,7 +6,7 @@
     },
     "dependencies": {
         "@pulumi/azure": "6.15.0",
-        "@pulumi/azuread": "6.0.2",
+        "@pulumi/azuread": "6.1.0",
         "@pulumi/docker": "4.6.0",
         "@pulumi/kubernetes": "4.19.0",
         "@pulumi/pulumi": "3.145.0",
