@@ -1,0 +1,6 @@
+name: aws-ts-zookeeper
+runtime:
+  name: nodejs
+  options:
+    packagemanager: yarn
+description: Zookeeper on AWS with managed node group, launch template, and load balancer
