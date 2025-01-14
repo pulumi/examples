@@ -151,7 +151,7 @@ runs:
         token: ${{ inputs.github-token }}
 
     - name: Install Pulumi
-      uses: pulumi/actions@c7fad9e2f0b79653172b36538b8b34b3c0291952 # v6
+      uses: pulumi/actions@13b8b7177d6fb736766875dac9b78aab07bd785f # v6
       with:
         pulumi-version: ${{ inputs.pulumi-version }}
 
