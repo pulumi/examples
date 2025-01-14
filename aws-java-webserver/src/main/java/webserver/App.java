@@ -53,7 +53,7 @@ public class App {
         final var server = new Instance("web-server-www", InstanceArgs.builder()
                 .tags(Map.of("Name", "web-server-www"))
                 .instanceType(Output.ofRight(com.pulumi.aws.ec2.enums.InstanceType.T2_Micro))
-                .vpcSecurityGroupIds(group.getId().applyValue(List::of))
+                .vpcSecurityGroupIds(group.id().applyValue(List::of))
                 .ami(ami)
                 .userData(userData)
                 .build()

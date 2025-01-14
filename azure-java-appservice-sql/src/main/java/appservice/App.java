@@ -99,7 +99,7 @@ public class App {
 
         var app = new WebApp("webapp",
                 WebAppArgs.builder().resourceGroupName(resourceGroup.name())
-                        .serverFarmId(appServicePlan.getId())
+                        .serverFarmId(appServicePlan.id())
                         .siteConfig(SiteConfigArgs.builder()
                                 .appSettings(
                                         NameValuePairArgs.builder()
