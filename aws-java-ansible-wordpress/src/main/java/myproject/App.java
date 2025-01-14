@@ -55,54 +55,54 @@ public class App {
         // Read in the private key for easy use below (and to ensure it's marked a secret!)
         final var privateKey = Output.of(Files.readString(Path.of(privateKeyPath))).asSecret();
 
-        var prodVpc = new Vpc("prodVpc", VpcArgs.builder()        
+        var prodVpc = new Vpc("prodVpc", VpcArgs.builder()
             .cidrBlock("10.192.0.0/16")
             .enableDnsSupport(true)
             .enableDnsHostnames(true)
             .instanceTenancy("default")
             .build());
 
-        var prodSubnetPublic1 = new Subnet("prodSubnetPublic1", SubnetArgs.builder()        
-            .vpcId(prodVpc.getId())
+        var prodSubnetPublic1 = new Subnet("prodSubnetPublic1", SubnetArgs.builder()
+            .vpcId(prodVpc.id())
             .cidrBlock("10.192.0.0/24")
             .mapPublicIpOnLaunch(true)
             .availabilityZone(Output.of(availabilityZones.thenApply(azs -> azs.names().get(0))))
             .build());
 
-        var prodSubnetPrivate1 = new Subnet("prodSubnetPrivate1", SubnetArgs.builder()        
-            .vpcId(prodVpc.getId())
+        var prodSubnetPrivate1 = new Subnet("prodSubnetPrivate1", SubnetArgs.builder()
+            .vpcId(prodVpc.id())
             .cidrBlock("10.192.20.0/24")
             .mapPublicIpOnLaunch(false)
             .availabilityZone(Output.of(availabilityZones.thenApply(azs -> azs.names().get(1))))
             .build());
 
-        var prodSubnetPrivate2 = new Subnet("prodSubnetPrivate2", SubnetArgs.builder()        
-            .vpcId(prodVpc.getId())
+        var prodSubnetPrivate2 = new Subnet("prodSubnetPrivate2", SubnetArgs.builder()
+            .vpcId(prodVpc.id())
             .cidrBlock("10.192.21.0/24")
             .mapPublicIpOnLaunch(false)
             .availabilityZone(Output.of(availabilityZones.thenApply(azs -> azs.names().get(2))))
             .build());
 
-        var prodIgw = new InternetGateway("prodIgw", InternetGatewayArgs.builder()        
-            .vpcId(prodVpc.getId())
+        var prodIgw = new InternetGateway("prodIgw", InternetGatewayArgs.builder()
+            .vpcId(prodVpc.id())
             .build());
 
-        var prodPublicCrt = new RouteTable("prodPublicCrt", RouteTableArgs.builder()        
-            .vpcId(prodVpc.getId())
+        var prodPublicCrt = new RouteTable("prodPublicCrt", RouteTableArgs.builder()
+            .vpcId(prodVpc.id())
             .routes(RouteTableRouteArgs.builder()
                 .cidrBlock("0.0.0.0/0")
-                .gatewayId(prodIgw.getId())
+                .gatewayId(prodIgw.id())
                 .build())
             .build());
 
-        var prodCrtaPublicSubnet1 = new RouteTableAssociation("prodCrtaPublicSubnet1", RouteTableAssociationArgs.builder()        
-            .subnetId(prodSubnetPublic1.getId())
-            .routeTableId(prodPublicCrt.getId())
+        var prodCrtaPublicSubnet1 = new RouteTableAssociation("prodCrtaPublicSubnet1", RouteTableAssociationArgs.builder()
+            .subnetId(prodSubnetPublic1.id())
+            .routeTableId(prodPublicCrt.id())
             .build());
 
-        var ec2AllowRule = new SecurityGroup("ec2AllowRule", SecurityGroupArgs.builder()        
-            .vpcId(prodVpc.getId())
-            .ingress(            
+        var ec2AllowRule = new SecurityGroup("ec2AllowRule", SecurityGroupArgs.builder()
+            .vpcId(prodVpc.id())
+            .ingress(
                 SecurityGroupIngressArgs.builder()
                     .description("ANY")
                     .fromPort(0)
@@ -147,13 +147,13 @@ public class App {
             .tags(Map.of("Name", "allow ssh,http,https"))
             .build());
 
-        var rdsAllowRule = new SecurityGroup("rdsAllowRule", SecurityGroupArgs.builder()        
-            .vpcId(prodVpc.getId())
+        var rdsAllowRule = new SecurityGroup("rdsAllowRule", SecurityGroupArgs.builder()
+            .vpcId(prodVpc.id())
             .ingress(SecurityGroupIngressArgs.builder()
                 .fromPort(3306)
                 .toPort(3306)
                 .protocol("tcp")
-                .securityGroups(ec2AllowRule.getId())
+                .securityGroups(ec2AllowRule.id())
                 .build())
             .egress(SecurityGroupEgressArgs.builder()
                 .fromPort(0)
@@ -164,10 +164,10 @@ public class App {
             .tags(Map.of("Name", "allow ec2"))
             .build());
 
-        var rdsSubnetGrp = new SubnetGroup("rdsSubnetGrp", SubnetGroupArgs.builder()        
-            .subnetIds(            
-                prodSubnetPrivate1.getId(),
-                prodSubnetPrivate2.getId())
+        var rdsSubnetGrp = new SubnetGroup("rdsSubnetGrp", SubnetGroupArgs.builder()
+            .subnetIds(
+                prodSubnetPrivate1.id(),
+                prodSubnetPrivate2.id())
             .build());
 
         var wordpressdb = new com.pulumi.aws.rds.Instance("wordpressdb",
@@ -176,15 +176,15 @@ public class App {
                 .engine("mysql")
                 .engineVersion("5.7")
                 .instanceClass(dbInstanceSize)
-                .dbSubnetGroupName(rdsSubnetGrp.getId())
-                .vpcSecurityGroupIds(rdsAllowRule.getId())
+                .dbSubnetGroupName(rdsSubnetGrp.id())
+                .vpcSecurityGroupIds(rdsAllowRule.id())
                 .dbName(dbName)
                 .username(dbUsername)
                 .password(dbPassword)
                 .skipFinalSnapshot(true)
                 .build());
 
-        var wordpressKeypair = new KeyPair("wordpressKeypair", KeyPairArgs.builder()        
+        var wordpressKeypair = new KeyPair("wordpressKeypair", KeyPairArgs.builder()
             .publicKey(publicKey)
             .build());
 
@@ -192,20 +192,20 @@ public class App {
             com.pulumi.aws.ec2.InstanceArgs.builder()
                 .ami(Output.of(awsLinuxAmi.thenApply(amiResult -> amiResult.id())))
                 .instanceType(ec2InstanceSize)
-                .subnetId(prodSubnetPublic1.getId())
-                .vpcSecurityGroupIds(c2AllowRule.getId())
-                .keyName(wordpressKeypair.getId())
+                .subnetId(prodSubnetPublic1.id())
+                .vpcSecurityGroupIds(c2AllowRule.id())
+                .keyName(wordpressKeypair.id())
                 .tags(Map.of("Name", "Wordpress.web"))
                 .build(),
             CustomResourceOptions.builder()
                 .dependsOn(wordpressdb)
                 .build());
 
-        var wordpressEip = new Eip("wordpressEip", EipArgs.builder()        
-            .instance(wordpressInstance.getId())
+        var wordpressEip = new Eip("wordpressEip", EipArgs.builder()
+            .instance(wordpressInstance.id())
             .build());
 
-        var renderPlaybookCmd = new Command("renderPlaybookCmd", CommandArgs.builder()        
+        var renderPlaybookCmd = new Command("renderPlaybookCmd", CommandArgs.builder()
             .create("cat playbook.yml | envsubst > playbook_rendered.yml")
             .environment(Map.ofEntries(
                 Map.entry("DB_RDS", wordpressdb.endpoint()),
@@ -215,7 +215,7 @@ public class App {
             ))
             .build());
 
-        var updatePythonCmd = new Command("updatePythonCmd", CommandArgs.builder()        
+        var updatePythonCmd = new Command("updatePythonCmd", CommandArgs.builder()
             .connection(ConnectionArgs.builder()
                 .host(wordpressEip.publicIp())
                 .port(22)
@@ -227,10 +227,10 @@ public class App {
             """)
             .build());
 
-        var playAnsiblePlaybookCmd = new Command("playAnsiblePlaybookCmd", CommandArgs.builder()        
+        var playAnsiblePlaybookCmd = new Command("playAnsiblePlaybookCmd", CommandArgs.builder()
             .create(wordpressEip.publicIp().apply(publicIp -> String.format("ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '%s,' --private-key %s playbook_rendered.yml", publicIp,privateKeyPath)))
             .build(), CustomResourceOptions.builder()
-                .dependsOn(                
+                .dependsOn(
                     renderPlaybookCmd,
                     updatePythonCmd)
                 .build());

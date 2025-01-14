@@ -87,7 +87,7 @@ public class Main {
         var app = storageConnectionString.applyValue(
                 conn -> new WebApp("function", WebAppArgs.builder()
                         .resourceGroupName(resourceGroup.name())
-                        .serverFarmId(plan.getId())
+                        .serverFarmId(plan.id())
                         .kind("functionapp,linux,container")
                         .httpsOnly(true)
                         .siteConfig(SiteConfigArgs.builder()
