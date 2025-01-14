@@ -7,11 +7,11 @@
     "dependencies": {
         "@pulumi/azure": "6.15.0",
         "@pulumi/azuread": "6.1.0",
-        "@pulumi/docker": "4.6.0",
         "@pulumi/kubernetes": "4.19.0",
         "@pulumi/pulumi": "3.145.0",
         "@pulumi/random": "4.16.8",
-        "@pulumi/tls": "5.0.10"
+        "@pulumi/tls": "5.0.10",
+        "@pulumi/docker-build": "^0.0.8"
     },
     "license": "Apache-2.0"
 }

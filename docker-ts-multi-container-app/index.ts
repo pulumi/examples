@@ -1,6 +1,6 @@
 // Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
 
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/docker-build";
 import * as pulumi from "@pulumi/pulumi";
 
 // Set defaults for redis
@@ -30,11 +30,9 @@ const redisContainer = new docker.Container("redisContainer", {
 });
 
 // Create image from local app
-const appImage = new docker.Image("appImage", {
-    build: {
-        context: "./app",
-    },
-    imageName: "app",
+const appImage = new dockerbuild.Image("appImage", {
+    context: { location: "./app" },
+    tags: ["app"],
     skipPush: true,
 });
 

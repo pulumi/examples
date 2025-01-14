@@ -1,6 +1,6 @@
 // Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
 
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/docker-build";
 import * as gcp from "@pulumi/gcp";
 import * as pulumi from "@pulumi/pulumi";
 
@@ -46,13 +46,10 @@ export const helloUrl = helloService.statuses[0].url;
 // Build a Docker image from our sample Ruby app and put it to Google Container Registry.
 // Note: Run `gcloud auth configure-docker` in your command line to configure auth to GCR.
 const imageName = "ruby-app";
-const myImage = new docker.Image(imageName, {
+const myImage = new dockerbuild.Image(imageName, {
     imageName: pulumi.interpolate`gcr.io/${gcp.config.project}/${imageName}:v1.0.0`,
-    build: {
-        context: "./app",
-        platform: "linux/amd64",
-
-    },
+    context: { location: "./app" },
+    platforms: ["linux/amd64"],
 });
 
 // Deploy to Cloud Run. Some extra parameters like concurrency and memory are set for illustration purpose.

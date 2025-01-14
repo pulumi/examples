@@ -1,7 +1,7 @@
 // Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/docker-build";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 
@@ -87,16 +87,14 @@ export class KedaStorageQueueHandler extends pulumi.ComponentResource {
         const registry = args.service.registry;
 
         // Deploy the docker image of the Function App
-        const dockerImage = new docker.Image("image", {
+        const dockerImage = new dockerbuild.Image("image", {
             imageName: pulumi.interpolate`${registry.loginServer}/${args.queue.name}:v1.0.0`,
-            build: {
-                context: args.path,
-            },
-            registry: {
-                server: registry.loginServer,
-                username: registry.adminUsername,
-                password: registry.adminPassword,
-            },
+            context: { location: "." },
+            registries: [{
+                                address: "",
+                                username: "",
+                                password: registry.adminPassword
+                            }],
         }, { parent: this });
 
         // Put the storage account connection string into a secret
