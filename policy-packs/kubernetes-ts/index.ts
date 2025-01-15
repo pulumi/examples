@@ -1,4 +1,4 @@
-// Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as k8s from "@pulumi/kubernetes";
 import { EnforcementLevel, PolicyPack, ResourceValidationPolicy, validateResourceOfType } from "@pulumi/policy";

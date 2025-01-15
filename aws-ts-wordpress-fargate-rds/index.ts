@@ -1,4 +1,4 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 // Deploys:
 // - Network: VPC, Subnets, Security Groups
 // - DB Backend: MySQL RDS

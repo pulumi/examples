@@ -1,4 +1,4 @@
-// Copyright 2016-2021, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as containerservice from "@pulumi/azure-native/containerservice";
 import * as resources from "@pulumi/azure-native/resources";
