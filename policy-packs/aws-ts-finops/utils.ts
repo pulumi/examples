@@ -1,4 +1,4 @@
-// Copyright 2016-2022, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 export function toStringSet(ss: string | Iterable<string>): Set<string>;
 export function toStringSet(

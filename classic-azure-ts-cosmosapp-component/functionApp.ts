@@ -1,4 +1,4 @@
-// Copyright 2016-2020, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import { CosmosClient } from "@azure/cosmos";
 import * as azure from "@pulumi/azure";

@@ -1,4 +1,4 @@
-// Copyright 2016-2019, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as dynamoClient from "@aws-sdk/client-dynamodb";
 import * as dynamoLib from "@aws-sdk/lib-dynamodb";
