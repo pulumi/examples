@@ -1,6 +1,6 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/docker-build";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as cluster from "./cluster";
@@ -8,7 +8,7 @@ import * as config from "./config";
 import * as db from "./db";
 
 // Get the GCR repository for our app container, and build and publish the app image.
-const appImage = new docker.Image("rails-app", {
+const appImage = new dockerbuild.Image("rails-app", {
     imageName: `${config.dockerUsername}/${pulumi.getProject()}_${pulumi.getStack()}`,
     build: "../app",
     registry: {

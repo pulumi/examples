@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as aws from "@pulumi/aws";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/docker-build";
 import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
@@ -58,12 +58,9 @@ const langserveEcrLifeCyclePolicy = new aws.ecr.LifecyclePolicy("langserve-ecr-l
         }],
     }),
 });
-const langserveEcrImage = new docker.Image("langserve-ecr-image", {
-    build: {
-        platform: "linux/amd64",
-        context: containerContext,
-        dockerfile: containerFile,
-    },
+const langserveEcrImage = new dockerbuild.Image("langserve-ecr-image", {
+    context: { location: "." },
+    platforms: ["linux/amd64"],
     imageName: langserveEcrRepository.repositoryUrl,
     registry: {
         server: langserveEcrRepository.repositoryUrl,

@@ -1,6 +1,6 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/docker-build";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as cluster from "./cluster";
@@ -11,11 +11,9 @@ import * as db from "./db";
 // Make sure docker is configured to use docker registry by running
 // > gcloud auth configure-docker
 // before running pulumi up
-const appImage = new docker.Image("rails-app", {
+const appImage = new dockerbuild.Image("rails-app", {
     imageName: pulumi.interpolate`gcr.io/${config.project}/rails-app:latest`,
-    build: {
-        context: "../app",
-    },
+    context: { location: "../app" },
 });
 
 // Deploy the app container as a Kubernetes load balanced service.

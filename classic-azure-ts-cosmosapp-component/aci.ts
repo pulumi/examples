@@ -1,7 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/docker-build";
 import * as pulumi from "@pulumi/pulumi";
 import { CosmosApp, GlobalContext, RegionalContext } from "./cosmosApp";
 
@@ -21,16 +21,14 @@ function buildContainerApp({ cosmosAccount, database, container, opts }: GlobalC
         sku: "Premium",
     }, opts);
 
-    const dockerImage = new docker.Image("node-app", {
+    const dockerImage = new dockerbuild.Image("node-app", {
         imageName: pulumi.interpolate`${registry.loginServer}/mynodeapp:v1.0.0`,
-        build: {
-            context: "./container",
-        },
-        registry: {
-            server: registry.loginServer,
-            username: registry.adminUsername,
-            password: registry.adminPassword,
-        },
+        context: { location: "./container" },
+        registries: [{
+                                address: "",
+                                username: "",
+                                password: registry.adminPassword
+                            }],
     }, opts);
 
     return ({ location }: RegionalContext) => {

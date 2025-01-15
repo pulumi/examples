@@ -1,6 +1,6 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/docker-build";
 import * as pulumi from "@pulumi/pulumi";
 
 import * as containerregistry from "@pulumi/azure-native/containerregistry";
@@ -62,14 +62,14 @@ const credentials = containerregistry.listRegistryCredentialsOutput({
 const adminUsername = credentials.apply(credentials => credentials.username!);
 const adminPassword = credentials.apply(credentials => credentials.passwords![0].value!);
 
-const myImage = new docker.Image(customImage, {
+const myImage = new dockerbuild.Image(customImage, {
     imageName: pulumi.interpolate`${registry.loginServer}/${customImage}:v1.0.0`,
-    build: { context: `./${customImage}` },
-    registry: {
-        server: registry.loginServer,
-        username: adminUsername,
-        password: adminPassword,
-    },
+    context: { location: "." }` },
+    registries: [{
+                                address: "",
+                                username: "",
+                                password: adminPassword
+                            }],
 });
 
 const getStartedApp = new web.WebApp("getStartedApp", {

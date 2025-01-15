@@ -2,7 +2,7 @@
 
 import * as pulumi from "@pulumi/pulumi";
 import * as gcp from "@pulumi/gcp";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/docker-build";
 
 const location = gcp.config.region || "us-central1";
 

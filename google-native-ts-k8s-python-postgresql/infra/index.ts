@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/docker-build";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as cluster from "./cluster";
@@ -18,18 +18,12 @@ const projectVersion = readFileSync("../app/VERSION.txt", "utf8").trim();
 // Make sure docker is configured to use docker registry by running
 // > gcloud auth configure-docker
 // before running pulumi up
-const appImage = new docker.Image(
-  "app",
-  {
+const appImage = new dockerbuild.Image("app", {
     imageName: pulumi.interpolate`us-docker.pkg.dev/${config.projectId}/${dockerRegistryId}/api:${projectVersion}-${gitHash}`,
-    build: {
-      context: "../app",
-      dockerfile: "../app/Dockerfile",
-      extraOptions: ["--platform", "amd64"], // for compatibility with running on ARM MacBooks
-    },
+    context: { location: "../app" },
+    dockerfile: { location: "../app/Dockerfile" },
   },
-  { dependsOn: [dockerRegistry] }
-);
+  { dependsOn: [dockerRegistry] });
 
 // Create a k8s service account that binds our GCP service account
 const kubernetesServiceAccount = new k8s.core.v1.ServiceAccount(
