@@ -7,7 +7,7 @@
     "dependencies": {
         "@pulumi/pulumi": "3.145.0",
         "@pulumi/random": "4.16.8",
-        "@pulumi/kubernetes": "4.19.0",
+        "@pulumi/kubernetes": "4.20.0",
         "@pulumi/google-native": "0.32.0"
     }
 }
