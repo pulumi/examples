@@ -5,6 +5,6 @@
     },
     "dependencies": {
         "@pulumi/docker": "4.6.0",
-        "@pulumi/pulumi": "3.145.0"
+        "@pulumi/pulumi": "3.146.0"
     }
 }

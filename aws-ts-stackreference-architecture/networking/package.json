@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@pulumi/aws": "latest",
-    "@pulumi/awsx": "2.20.1",
+    "@pulumi/awsx": "2.21.0",
     "@pulumi/newrelic": "latest",
     "@pulumi/pulumi": "latest",
     "ip-address": "^5.9.2",
