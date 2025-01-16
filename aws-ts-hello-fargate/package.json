@@ -6,8 +6,8 @@
     },
     "dependencies": {
         "@pulumi/aws": "6.66.3",
-        "@pulumi/awsx": "2.20.1",
+        "@pulumi/awsx": "2.21.0",
         "@pulumi/docker": "4.6.0",
-        "@pulumi/pulumi": "3.145.0"
+        "@pulumi/pulumi": "3.146.0"
     }
 }

@@ -5,7 +5,7 @@
         "@types/node": "20.17.10"
     },
     "dependencies": {
-        "@pulumi/docker-build": "0.0.8",
-        "@pulumi/pulumi": "3.145.0"
+        "@pulumi/docker-build": "0.0.9",
+        "@pulumi/pulumi": "3.146.0"
     }
 }

@@ -7,7 +7,7 @@
     "dependencies": {
         "@pulumi/aws": "6.66.3",
         "@pulumi/aws-apigateway": "2.6.1",
-        "@pulumi/pulumi": "3.145.0",
+        "@pulumi/pulumi": "3.146.0",
         "aws-lambda": "^1.0.7"
     }
 }
