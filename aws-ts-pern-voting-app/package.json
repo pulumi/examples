@@ -8,7 +8,7 @@
     "dependencies": {
         "@pulumi/aws": "6.66.3",
         "@pulumi/awsx": "2.21.0",
-        "@pulumi/postgresql": "3.14.0",
+        "@pulumi/postgresql": "3.15.0",
         "@pulumi/pulumi": "3.146.0",
         "pg": "^8.6.0"
     }
