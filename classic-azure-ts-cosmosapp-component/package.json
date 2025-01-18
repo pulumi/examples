@@ -10,8 +10,8 @@
     "dependencies": {
         "@azure/cosmos": "latest",
         "@pulumi/azure": "6.15.0",
-        "@pulumi/docker": "4.6.0",
+        "@pulumi/docker": "4.6.1",
         "@pulumi/pulumi": "3.146.0",
-        "@pulumi/random": "4.16.8"
+        "@pulumi/random": "4.17.0"
     }
 }
