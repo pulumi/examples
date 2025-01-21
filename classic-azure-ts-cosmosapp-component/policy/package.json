@@ -2,7 +2,7 @@
     "name": "pac-ts-azure-tests",
     "version": "1.0.0",
     "dependencies": {
-        "@pulumi/azure": "6.15.0",
+        "@pulumi/azure": "6.16.0",
         "@pulumi/policy": "latest",
         "@pulumi/pulumi": "3.146.0"
     },
