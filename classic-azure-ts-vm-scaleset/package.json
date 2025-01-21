@@ -2,7 +2,7 @@
     "name": "azure-ts-vm-scaleset",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/azure": "6.15.0",
+        "@pulumi/azure": "6.16.0",
         "@pulumi/pulumi": "3.146.0",
         "@pulumi/random": "4.17.0"
     }
