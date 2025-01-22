@@ -1,14 +1,14 @@
 module github.com/pulumi/examples/aws-apigateway-go-routes
 
-go 1.21.12
+go 1.22
 
-toolchain go1.23.4
+toolchain go1.23.5
 
 require (
 	github.com/aws/aws-lambda-go v1.27.0
-	github.com/pulumi/pulumi-aws-apigateway/sdk/v2 v2.6.1
+	github.com/pulumi/pulumi-aws-apigateway/sdk/v2 v2.6.2-alpha.6
 	github.com/pulumi/pulumi-aws/sdk/v6 v6.66.3
-	github.com/pulumi/pulumi/sdk/v3 v3.146.0
+	github.com/pulumi/pulumi/sdk/v3 v3.147.0
 )
 
 require (

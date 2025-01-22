@@ -1,8 +1,8 @@
 module github.com/pulumi/examples/azure-go-containerapps
 
-go 1.21
+go 1.22
 
-toolchain go1.23.4
+toolchain go1.23.5
 
 require (
 	github.com/pulumi/pulumi-azure-native-sdk/app/v2 v2.84.0-alpha.1737449106
@@ -10,7 +10,7 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/operationalinsights/v2 v2.84.0-alpha.1737449106
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.84.0-alpha.1737449106
 	github.com/pulumi/pulumi-docker/sdk/v4 v4.6.1
-	github.com/pulumi/pulumi/sdk/v3 v3.146.0
+	github.com/pulumi/pulumi/sdk/v3 v3.147.0
 )
 
 require (

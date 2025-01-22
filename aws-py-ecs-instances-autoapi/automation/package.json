@@ -7,7 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "@pulumi/aws": "6.66.3",
-    "@pulumi/pulumi": "3.146.0",
+    "@pulumi/pulumi": "3.147.0",
     "@types/node": "^14.14.20",
     "ts-node": "^9.0.0",
     "upath": "^2.0.0"

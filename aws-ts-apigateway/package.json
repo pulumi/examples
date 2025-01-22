@@ -6,6 +6,6 @@
         "@aws-sdk/lib-dynamodb": "^3.423.0",
         "@pulumi/aws": "6.66.3",
         "@pulumi/aws-apigateway": "2.6.1",
-        "@pulumi/pulumi": "3.146.0"
+        "@pulumi/pulumi": "3.147.0"
     }
 }
