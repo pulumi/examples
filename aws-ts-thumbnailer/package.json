@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "main": "index.ts",
     "dependencies": {
-        "@pulumi/aws": "6.66.3",
+        "@pulumi/aws": "6.67.0",
         "@pulumi/awsx": "2.21.0",
         "@pulumi/pulumi": "3.147.0"
     }

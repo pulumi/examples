@@ -4,8 +4,8 @@
         "@types/node": "18.19.68"
     },
     "dependencies": {
-        "@pulumi/aws": "6.66.3",
-        "@pulumi/aws-apigateway": "2.6.1",
+        "@pulumi/aws": "6.67.0",
+        "@pulumi/aws-apigateway": "2.6.2",
         "@pulumi/awsx": "2.21.0",
         "@pulumi/pulumi": "3.147.0",
         "@types/auth0-js": "^9.10.1",
