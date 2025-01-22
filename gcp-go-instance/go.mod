@@ -1,12 +1,12 @@
 module qsgcp
 
-go 1.21
+go 1.22
 
-toolchain go1.21.3
+toolchain go1.23.5
 
 require (
 	github.com/pulumi/pulumi-gcp/sdk/v8 v8.14.0
-	github.com/pulumi/pulumi/sdk/v3 v3.146.0
+	github.com/pulumi/pulumi/sdk/v3 v3.147.0
 )
 
 require (

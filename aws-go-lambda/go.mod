@@ -5,7 +5,7 @@ go 1.23.2
 require (
 	github.com/aws/aws-lambda-go v1.47.0
 	github.com/pulumi/pulumi-aws/sdk/v6 v6.66.3
-	github.com/pulumi/pulumi/sdk/v3 v3.146.0
+	github.com/pulumi/pulumi/sdk/v3 v3.147.0
 )
 
 require (

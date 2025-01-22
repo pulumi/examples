@@ -1,15 +1,15 @@
 module github.com/pulumi/examples/misc/test
 
-go 1.21
+go 1.22
 
-toolchain go1.21.5
+toolchain go1.23.5
 
 require (
 	github.com/aws/aws-sdk-go v1.50.36
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pulumi/pulumi-trace-tool v0.0.1
-	github.com/pulumi/pulumi/pkg/v3 v3.146.0
-	github.com/pulumi/pulumi/sdk/v3 v3.146.0
+	github.com/pulumi/pulumi/pkg/v3 v3.147.0
+	github.com/pulumi/pulumi/sdk/v3 v3.147.0
 	github.com/stretchr/testify v1.10.0
 )
 
