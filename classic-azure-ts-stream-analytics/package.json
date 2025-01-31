@@ -7,7 +7,7 @@
     },
     "dependencies": {
         "@pulumi/azure": "6.17.0",
-        "@pulumi/pulumi": "3.147.0",
+        "@pulumi/pulumi": "3.148.0",
         "crypto": "^1.0.1",
         "utf8": "^3.0.0"
     }
