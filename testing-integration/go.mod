@@ -5,7 +5,7 @@ go 1.22
 toolchain go1.23.5
 
 require (
-	github.com/pulumi/pulumi/pkg/v3 v3.147.0
+	github.com/pulumi/pulumi/pkg/v3 v3.148.0
 	github.com/stretchr/testify v1.10.0
 )
 
@@ -128,7 +128,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
 	github.com/pulumi/esc v0.10.0 // indirect
-	github.com/pulumi/pulumi/sdk/v3 v3.147.0 // indirect
+	github.com/pulumi/pulumi/sdk/v3 v3.148.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
