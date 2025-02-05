@@ -1,6 +1,6 @@
 # ETL pipeline with Amazon Redshift and AWS Glue
 
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-redshift-glue-etl/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-redshift-glue-etl/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-redshift-glue-etl/README.md#gh-dark-mode-only)
 
 This example creates an ETL pipeline using Amazon Redshift and AWS Glue. The pipeline extracts data from an S3 bucket with a Glue crawler, transforms it with a Python script wrapped in a Glue job, and loads it into a Redshift database deployed in a VPC.
