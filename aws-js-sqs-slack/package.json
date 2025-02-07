@@ -1,7 +1,7 @@
 {
     "name": "aws-js-sqs-slack",
     "dependencies": {
-        "@pulumi/aws": "6.67.0",
+        "@pulumi/aws": "6.68.0",
         "@pulumi/pulumi": "3.148.0",
         "@slack/client": "^4.3.1"
     }
