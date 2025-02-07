@@ -4,6 +4,6 @@
     "main": "index.js",
     "dependencies": {
         "@pulumi/pulumi": "3.148.0",
-        "@pulumi/gcp": "8.17.0"
+        "@pulumi/gcp": "8.18.0"
     }
 }

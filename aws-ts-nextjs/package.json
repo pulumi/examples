@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "license": "Apache-2.0",
     "dependencies": {
-        "@pulumi/aws": "6.67.0",
+        "@pulumi/aws": "6.68.0",
         "@pulumi/pulumi": "3.148.0",
         "glob": "^8.0.3",
         "mime": "^2.0.3"
