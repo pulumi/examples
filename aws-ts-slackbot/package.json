@@ -8,7 +8,7 @@
         "@pulumi/aws": "6.68.0",
         "@pulumi/aws-apigateway": "2.6.2",
         "@pulumi/awsx": "2.21.0",
-        "@pulumi/pulumi": "3.148.0",
+        "@pulumi/pulumi": "3.149.0",
         "qs": "^6.7.0",
         "superagent": "^8.1.0"
     },

@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "dependencies": {
         "@pulumi/aws": "6.68.0",
-        "@pulumi/pulumi": "3.148.0",
+        "@pulumi/pulumi": "3.149.0",
         "pcloudinit": "^0.1.0"
     }
 }

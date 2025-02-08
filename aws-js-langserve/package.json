@@ -2,7 +2,7 @@
     "name": "aws-js-langserve",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/pulumi": "3.148.0",
+        "@pulumi/pulumi": "3.149.0",
         "@pulumi/aws": "6.68.0",
         "@pulumi/docker": "4.6.1"
     }
