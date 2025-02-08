@@ -10,7 +10,7 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/operationalinsights/v2 v2.87.0-alpha.1738679760
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.87.0-alpha.1738679760
 	github.com/pulumi/pulumi-docker/sdk/v4 v4.6.1
-	github.com/pulumi/pulumi/sdk/v3 v3.148.0
+	github.com/pulumi/pulumi/sdk/v3 v3.149.0
 )
 
 require (

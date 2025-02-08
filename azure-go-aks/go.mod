@@ -10,7 +10,7 @@ require (
 	github.com/pulumi/pulumi-azuread/sdk/v6 v6.2.0
 	github.com/pulumi/pulumi-random/sdk/v4 v4.17.0
 	github.com/pulumi/pulumi-tls/sdk/v5 v5.1.0
-	github.com/pulumi/pulumi/sdk/v3 v3.148.0
+	github.com/pulumi/pulumi/sdk/v3 v3.149.0
 )
 
 require github.com/stretchr/objx v0.5.2 // indirect

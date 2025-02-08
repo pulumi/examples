@@ -8,7 +8,7 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2 v2.87.0-alpha.1738679760
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.87.0-alpha.1738679760
 	github.com/pulumi/pulumi-azuread/sdk/v6 v6.2.0
-	github.com/pulumi/pulumi/sdk/v3 v3.148.0
+	github.com/pulumi/pulumi/sdk/v3 v3.149.0
 )
 
 require github.com/stretchr/objx v0.5.2 // indirect
