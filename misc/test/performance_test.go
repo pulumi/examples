@@ -219,11 +219,15 @@ func programTestAsBenchmark(
 	bench traces.Benchmark,
 	test integration.ProgramTestOptions,
 ) {
+	// Run all the tests with the same PULUMI_HOME so that plugins can be reused.
+	pulumiHome := t.TempDir()
+
 	// Run preview only to make sure all needed plugins are
 	// downloaded so that these downloads do not skew
 	// measurements.
 	t.Run("prewarm", func(t *testing.T) {
 		prewarmOptions := test.With(integration.ProgramTestOptions{
+			PulumiHomeDir:            pulumiHome,
 			RequireService:           true,
 			SkipRefresh:              true,
 			SkipEmptyPreviewUpdate:   true,
@@ -240,6 +244,7 @@ func programTestAsBenchmark(
 	// Run with --tracing to record measured data.
 	t.Run("benchmark", func(t *testing.T) {
 		finalOptions := test.With(bench.ProgramTestOptions()).With(integration.ProgramTestOptions{
+			PulumiHomeDir:  pulumiHome,
 			RequireService: true,
 			NoParallel:     true,
 		})
@@ -253,6 +258,7 @@ func programTestAsBenchmark(
 		renamedBench := bench
 		renamedBench.Name += "-filestate"
 		finalOptions := test.With(renamedBench.ProgramTestOptions()).With(integration.ProgramTestOptions{
+			PulumiHomeDir:  pulumiHome,
 			RequireService: false, // use filestate instead
 			NoParallel:     true,
 		})
