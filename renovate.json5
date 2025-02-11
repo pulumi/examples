@@ -1,0 +1,13 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["github>pulumi/renovate-config//default.json5"],
+  ignorePaths: [
+    "crd2pulumi-crontabs/kubernetes-go-crontabs/**"
+  ],
+  packageRules: [
+    {
+      "matchPaths": ["crd2pulumi-crontabs/kubernetes-go-crontabs/**"],
+      "enabled": false
+    }
+  ]
+}
