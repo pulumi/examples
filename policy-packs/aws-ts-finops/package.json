@@ -5,7 +5,7 @@
     "@pulumi/aws": "6.68.0",
     "@pulumi/awsguard": "latest",
     "@pulumi/policy": "1.13.0",
-    "@pulumi/pulumi": "3.149.0"
+    "@pulumi/pulumi": "3.150.0"
   },
   "devDependencies": {
     "@types/node": "10.17.60"

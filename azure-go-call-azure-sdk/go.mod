@@ -11,7 +11,7 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.87.0
 	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v2 v2.87.0
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.87.0
-	github.com/pulumi/pulumi/sdk/v3 v3.149.0
+	github.com/pulumi/pulumi/sdk/v3 v3.150.0
 )
 
 require github.com/stretchr/objx v0.5.2 // indirect
