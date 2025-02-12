@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@pulumi/docker": "4.6.1",
-    "@pulumi/gcp": "8.18.0",
+    "@pulumi/gcp": "8.19.0",
     "@pulumi/google-native": "0.32.0",
     "@pulumi/kubernetes": "4.21.1",
     "@pulumi/pulumi": "3.150.0",
