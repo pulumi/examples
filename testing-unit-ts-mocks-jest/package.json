@@ -1,9 +1,9 @@
 {
     "name": "testing-unit-ts-mocks-jest",
     "devDependencies": {
-        "@types/jest": "28.1.8",
+        "@types/jest": "29.5.14",
         "@types/node": "18.19.68",
-        "ts-jest": "28.0.8",
+        "ts-jest": "29.2.5",
         "typescript": "4.9.5"
     },
     "dependencies": {
