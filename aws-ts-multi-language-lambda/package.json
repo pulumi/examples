@@ -2,8 +2,8 @@
     "name": "aws-multi-language-lambda-ts",
     "main": "index.ts",
     "devDependencies": {
-        "@types/node": "^18",
-        "typescript": "^5.0.0"
+        "@types/node": "18.19.75",
+        "typescript": "5.7.3"
     },
     "dependencies": {
         "@pulumi/aws": "^6.0.0",
