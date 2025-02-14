@@ -1,7 +1,7 @@
 {
     "name": "typescript",
     "devDependencies": {
-        "@types/aws-lambda": "8.10.146",
+        "@types/aws-lambda": "8.10.147",
         "@types/node": "8.10.66"
     },
     "dependencies": {
