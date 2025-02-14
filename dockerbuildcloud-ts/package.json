@@ -2,7 +2,7 @@
     "name": "dockerbuildcloud-ts",
     "main": "index.ts",
     "devDependencies": {
-        "@types/node": "20.17.10"
+        "@types/node": "20.17.19"
     },
     "dependencies": {
         "@pulumi/docker-build": "0.0.10",
