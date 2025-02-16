@@ -1,4 +1,4 @@
-FROM python:3.10-slim@sha256:61912260e578182d00b5e163eb4cfb13b35fb8782c98d1df9ed584cec8939097
+FROM python:3.10-slim@sha256:66aad90b231f011cb80e1966e03526a7175f0586724981969b23903abac19081
 RUN mkdir /opt/project
 WORKDIR /opt/project
 COPY ./requirements.txt .
