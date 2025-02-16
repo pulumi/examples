@@ -1,5 +1,5 @@
 # Use the official lightweight Ruby image.
-FROM ruby:2.7-slim@sha256:39f68389fd3fe8c04ed896b10cc90ba4553a42e555ae18b37b41ea8c3ce965fd
+FROM ruby:3.4-slim@sha256:2864c6bfcf8fec6aecbdbf5bd7adcb8abe9342e28441a77704428decf59930fd
 
 # Install production dependencies.
 WORKDIR /usr/src/app

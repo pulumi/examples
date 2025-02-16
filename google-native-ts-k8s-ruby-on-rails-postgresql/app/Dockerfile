@@ -1,4 +1,4 @@
-FROM ruby:2.5@sha256:ecc3e4f5da13d881a415c9692bb52d2b85b090f38f4ad99ae94f932b3598444b
+FROM ruby:3.4@sha256:b6c3947ee95eb6bea5e331ac288beb2a48b98bb30d15353b6c5ffe2482828572
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs bundler
 RUN mkdir /myapp
 WORKDIR /myapp
