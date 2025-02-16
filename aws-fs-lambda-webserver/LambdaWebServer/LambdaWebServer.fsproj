@@ -9,8 +9,8 @@
     <AWSProjectType>Lambda</AWSProjectType>
   </PropertyGroup>
    <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore" Version="2.3.0" />
+      <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.3.0" />
       <PackageReference Include="Giraffe" Version="4.0.1" />
       <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="4.1" />
     </ItemGroup>
