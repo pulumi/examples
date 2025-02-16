@@ -10,7 +10,7 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
     - name: Comment PR
-      uses: thollander/actions-comment-pull-request@8a3fad13c20088e9eb0805666b9fe49509d2fec8 # v1
+      uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         message: >
