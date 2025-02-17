@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@azure/cosmos": "^3.1.1",
+    "@azure/cosmos": "^4.0.0",
     "express": "^4.14.0",
     "morgan": "^1.8.2"
   },
