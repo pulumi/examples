@@ -10,7 +10,7 @@
         "@pulumi/aws": "6.68.0",
         "@pulumi/awsx": "2.21.0",
         "@pulumi/pulumi": "3.150.0",
-        "node-fetch": "^2.6.7"
+        "node-fetch": "^3.0.0"
     },
     "scripts": {
         "test": "jest"
