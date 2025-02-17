@@ -5,7 +5,7 @@ go 1.22
 toolchain go1.24.0
 
 require (
-	github.com/aws/aws-lambda-go v1.15.0
+	github.com/aws/aws-lambda-go v1.47.0
 	github.com/pulumi/pulumi-aws/sdk/v6 v6.68.0
 	github.com/pulumi/pulumi/sdk/v3 v3.150.0
 )
