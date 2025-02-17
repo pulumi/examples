@@ -1,5 +1,5 @@
   
-FROM golang:1.13-alpine3.12@sha256:e74b83b94d499cb34c7edf55fbdff9d3cfabd238a35f9cb1b59d0e74f50b1ddd as buildenv
+FROM golang:1.16-alpine3.12@sha256:db2475a1dbb2149508e5db31d7d77a75e6600d54be645f37681f03f2762169ba as buildenv
 RUN apk add --no-cache build-base git
 
 WORKDIR /go/src/github.com/pulumi/aws-ts-netlify-cms-and-oauth/cms-oauth
