@@ -2,7 +2,7 @@ module github.com/pulumi/examples/testing-integration
 
 go 1.22
 
-toolchain go1.23.5
+toolchain go1.24.0
 
 require (
 	github.com/pulumi/pulumi/pkg/v3 v3.150.0

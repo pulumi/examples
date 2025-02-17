@@ -2,7 +2,7 @@ module github.com/pulumi/examples/misc/test
 
 go 1.22
 
-toolchain go1.23.5
+toolchain go1.24.0
 
 require (
 	github.com/aws/aws-sdk-go v1.50.36

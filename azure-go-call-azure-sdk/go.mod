@@ -2,7 +2,7 @@ module azure-go-call-azure-sdk
 
 go 1.22
 
-toolchain go1.23.5
+toolchain go1.24.0
 
 require (
 	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible

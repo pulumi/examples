@@ -2,7 +2,7 @@ module kubernetes-go-configmap-rollout
 
 go 1.22
 
-toolchain go1.23.5
+toolchain go1.24.0
 
 require (
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.21.1

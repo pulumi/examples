@@ -2,7 +2,7 @@ module gcp-go-gke
 
 go 1.22
 
-toolchain go1.23.5
+toolchain go1.24.0
 
 require (
 	github.com/pulumi/pulumi-gcp/sdk/v8 v8.19.1

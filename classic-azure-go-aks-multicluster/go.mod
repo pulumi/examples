@@ -2,7 +2,7 @@ module github.com/pulumi/examples/azure-go-aks
 
 go 1.22
 
-toolchain go1.23.5
+toolchain go1.24.0
 
 require (
 	github.com/pulumi/pulumi-azure/sdk/v6 v6.19.0
