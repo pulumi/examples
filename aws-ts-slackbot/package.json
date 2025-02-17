@@ -14,7 +14,7 @@
     },
     "devDependencies": {
         "@types/qs": "6.9.18",
-        "@types/superagent": "4.1.24",
+        "@types/superagent": "8.1.9",
         "typescript": "4.9.5"
     }
 }
