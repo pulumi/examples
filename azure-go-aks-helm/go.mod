@@ -2,7 +2,7 @@ module azure-go-aks-helm
 
 go 1.22
 
-toolchain go1.23.5
+toolchain go1.24.0
 
 require (
 	github.com/pulumi/pulumi-azure-native-sdk/containerservice/v2 v2.88.0

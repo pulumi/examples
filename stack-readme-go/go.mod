@@ -2,7 +2,7 @@ module stack-readme-go
 
 go 1.22
 
-toolchain go1.23.5
+toolchain go1.24.0
 
 require github.com/pulumi/pulumi/sdk/v3 v3.150.0
 
