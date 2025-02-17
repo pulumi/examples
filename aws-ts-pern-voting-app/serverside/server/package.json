@@ -10,7 +10,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "pg": "^8.3.3",
-    "postgres": "^1.0.2",
+    "postgres": "^3.0.0",
     "postgresql": "0.0.1"
   }
 }
