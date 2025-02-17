@@ -5,7 +5,7 @@ cffi==1.15.1
 charset-normalizer==3.3.0
 cryptography==44.0.1
 idna==3.7
-pycparser==2.21
+pycparser==2.22
 pyOpenSSL==23.2.0
 requests==2.32.2
 pulumi-tls>=5.0.0,<6.0.0
