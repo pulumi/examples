@@ -1,7 +1,7 @@
 {
   "name": "civo-navigate",
   "devDependencies": {
-    "@types/node": "18.19.68"
+    "@types/node": "18.19.76"
   },
   "dependencies": {
     "typescript": "^4.0.0",
