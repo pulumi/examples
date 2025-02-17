@@ -3,7 +3,7 @@ module ovhcloud-go-kubernetes
 go 1.22
 
 require (
-	github.com/ovh/pulumi-ovh/sdk v0.40.1
+	github.com/ovh/pulumi-ovh/sdk v1.6.0
 	github.com/pulumi/pulumi/sdk/v3 v3.150.0
 )
 
