@@ -7,7 +7,7 @@ toolchain go1.23.5
 require (
 	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible
 	github.com/Azure/go-autorest/autorest v0.11.28
-	github.com/Azure/go-autorest/autorest/adal v0.9.21
+	github.com/Azure/go-autorest/autorest/adal v0.9.24
 	github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.88.0
 	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v2 v2.88.0
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.88.0
