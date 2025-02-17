@@ -1,7 +1,7 @@
 pulumi>=3.0.0,<4.0.0
 pulumi-aws>=6.0.2,<7.0.0
 certifi==2024.7.4
-cffi==1.15.1
+cffi==1.17.1
 charset-normalizer==3.3.0
 cryptography==44.0.1
 idna==3.7
