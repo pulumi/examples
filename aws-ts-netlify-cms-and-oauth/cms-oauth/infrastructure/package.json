@@ -1,7 +1,7 @@
 {
     "name": "netlify-cms-oauth-provider-infrastructure",
     "devDependencies": {
-        "@types/node": "18.19.68"
+        "@types/node": "18.19.76"
     },
     "dependencies": {
         "@pulumi/aws": "6.68.0",
