@@ -1,6 +1,6 @@
 Click==7.0
 dnspython==2.6.1
-Flask==2.2.5
+Flask==2.3.3
 itsdangerous==0.24
 Jinja2==3.1.5
 MarkupSafe>=1.0
