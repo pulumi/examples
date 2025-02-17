@@ -1,0 +1,3 @@
+name: aws-go-ec2-loadbalancer-static-web
+description: A AWS Go Pulumi program with ec2 instances and a load balancer to serve a static web
+runtime: go
