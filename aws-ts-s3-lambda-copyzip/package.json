@@ -7,6 +7,6 @@
         "@aws-sdk/client-s3": "^3.386.0",
         "@pulumi/aws": "6.68.0",
         "@pulumi/pulumi": "3.150.0",
-        "adm-zip": "^0.4.13"
+        "adm-zip": "^0.5.0"
     }
 }
