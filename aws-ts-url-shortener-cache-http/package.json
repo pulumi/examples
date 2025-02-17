@@ -11,7 +11,7 @@
         "@types/mime-types": "2.1.4",
         "@types/node": "8.10.66",
         "@types/parseurl": "1.3.3",
-        "@types/send": "0.14.7"
+        "@types/send": "0.17.4"
     },
     "dependencies": {
         "@pulumi/aws": "6.68.0",
