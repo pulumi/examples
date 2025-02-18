@@ -4,7 +4,7 @@ certifi==2024.12.14
 cffi==1.17.1
 charset-normalizer==3.4.1
 cryptography==44.0.1
-idna==3.7
+idna==3.10
 pycparser==2.22
 pyOpenSSL==23.2.0
 requests==2.32.3
