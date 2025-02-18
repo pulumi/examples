@@ -9,8 +9,8 @@
         "@pulumi/awsx": "2.21.0",
         "@pulumi/pulumi": "3.150.0",
         "@types/auth0-js": "^9.10.1",
-        "@types/jsonwebtoken": "^8.3.2",
-        "jsonwebtoken": "9.0.0",
+        "@types/jsonwebtoken": "^9.0.0",
+        "jsonwebtoken": "9.0.2",
         "jwks-rsa": "^1.4.0",
         "typescript": "^4.6.0"
     }
