@@ -9,5 +9,5 @@ pycparser==2.22
 pyOpenSSL==23.2.0
 requests==2.32.2
 pulumi-tls>=5.0.0,<6.0.0
-urllib3==1.26.20
+urllib3==2.3.0
 PyYAML
