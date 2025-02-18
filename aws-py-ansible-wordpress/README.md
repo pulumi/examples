@@ -53,7 +53,7 @@ After cloning this repo, from this working directory, run these commands:
 
     ```bash
     $ pulumi config set aws:region us-east-1 # any valid AWS region
-    $ pulumi config set publicKeyPath wordpress-keyipair.pub # your newly generated public key
+    $ pulumi config set publicKeyPath wordpress-keypair.pub # your newly generated public key
     $ pulumi config set privateKeyPath wordpress-keypair # your newly generated private key
     $ pulumi config set dbPassword Sup45ekreT#123 --secret # your RDS database password -- keep it safe!
     ```
