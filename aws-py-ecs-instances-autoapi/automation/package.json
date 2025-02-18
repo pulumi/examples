@@ -9,7 +9,7 @@
     "@pulumi/aws": "6.68.0",
     "@pulumi/pulumi": "3.150.0",
     "@types/node": "^14.14.20",
-    "ts-node": "^9.0.0",
+    "ts-node": "^10.0.0",
     "upath": "^2.0.0"
   },
   "scripts": {
