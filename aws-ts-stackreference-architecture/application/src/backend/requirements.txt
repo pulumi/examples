@@ -1,4 +1,4 @@
-Click==7.0
+Click==7.1.2
 dnspython==2.7.0
 Flask==2.3.3
 itsdangerous==2.2.0
