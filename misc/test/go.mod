@@ -5,7 +5,7 @@ go 1.22
 toolchain go1.24.0
 
 require (
-	github.com/aws/aws-sdk-go v1.50.36
+	github.com/aws/aws-sdk-go v1.55.6
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pulumi/pulumi-trace-tool v0.0.1
 	github.com/pulumi/pulumi/pkg/v3 v3.150.0
