@@ -2,7 +2,7 @@
     "name": "gcp-ts-functions",
     "version": "2.0.0",
     "devDependencies": {
-        "@types/express": "4.17.21",
+        "@types/express": "5.0.0",
         "@types/node": "12.20.55"
     },
     "dependencies": {
