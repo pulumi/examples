@@ -6,4 +6,4 @@ Jinja2==3.1.5
 MarkupSafe>=1.0
 Werkzeug==3.0.6
 requests==2.32.3
-pg8000==1.13.2
+pg8000==1.31.2
