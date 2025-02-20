@@ -240,7 +240,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Minikube
-        uses: manusa/actions-setup-minikube@0e8062ceff873bd77979f39cf8fd3621416afe4d # v2.13.0
+        uses: manusa/actions-setup-minikube@5d9440a1b535e8b4f541eaac559681a9022df29d # v2.13.1
         with:
           minikube version: 'v1.34.0'
           kubernetes version: 'v1.31.1'
