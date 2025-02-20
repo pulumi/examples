@@ -12,7 +12,7 @@ packages = [
 python = "^3.11"
 uvicorn = "^0.34.0"
 langserve = {extras = ["server"], version = ">=0.0.30"}
-pydantic = "<2"
+pydantic = "<3"
 openai = "^1.10.0"
 langchain-openai = "^0.0.5"
 
