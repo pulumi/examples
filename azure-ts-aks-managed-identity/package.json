@@ -5,7 +5,7 @@
 	},
 	"dependencies": {
 		"typescript": "^5.0.0",
-		"@pulumi/pulumi": "3.150.0",
+		"@pulumi/pulumi": "3.151.0",
 		"@pulumi/azure-native": "2.88.0",
 		"@pulumi/tls": "5.1.0"
 	}

@@ -3,7 +3,7 @@
     "version": "0.2.0",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/pulumi": "3.150.0",
+        "@pulumi/pulumi": "3.151.0",
         "@pulumi/gcp": "8.20.0"
     }
 }
