@@ -4,7 +4,7 @@
     "devDependencies": {
         "@types/mocha": "10.0.10",
         "@types/node": "22.13.5",
-        "mocha": "7.2.0",
+        "mocha": "11.1.0",
         "ts-node": "10.9.2"
     },
     "dependencies": {
