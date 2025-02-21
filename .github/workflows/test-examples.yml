@@ -13,7 +13,7 @@ on:
 jobs:
   lint-ts:
     name: TypeScript lint checks
-    runs-on: pulumi-ubuntu-8core
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
@@ -35,7 +35,7 @@ jobs:
 
   unit-ts:
     name: TypeScript unit tests
-    runs-on: pulumi-ubuntu-8core
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
@@ -59,7 +59,7 @@ jobs:
 
   format-py:
       name: Python Code Format and Validation
-      runs-on: pulumi-ubuntu-8core
+      runs-on: ubuntu-latest
 
       steps:
         # Step 1: Checkout the repository
@@ -85,7 +85,7 @@ jobs:
 
   unit-py:
     name: Python unit tests
-    runs-on: pulumi-ubuntu-8core
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
@@ -109,7 +109,7 @@ jobs:
 
   unit-go:
     name: Go unit tests
-    runs-on: pulumi-ubuntu-8core
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
@@ -131,7 +131,7 @@ jobs:
 
   unit-dotnet:
     name: .NET unit tests
-    runs-on: pulumi-ubuntu-8core
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
@@ -162,12 +162,20 @@ jobs:
 
   providers:
     name: ${{ matrix.clouds }}${{ matrix.languages }} integration tests
-    runs-on: pulumi-ubuntu-8core
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
 
     steps:
+      # Run as first step so we don't delete things that have just been installed
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: false
+          swap-storage: false
+          dotnet: false
+      
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Set up the environment
@@ -222,7 +230,7 @@ jobs:
 
   kubernetes:
     name: Kubernetes integration tests
-    runs-on: pulumi-ubuntu-8core
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
