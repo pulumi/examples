@@ -7,6 +7,6 @@
     },
     "devDependencies": {
         "@types/node": "10.17.60",
-        "typescript": "3.9.10"
+        "typescript": "5.7.3"
     }
 }

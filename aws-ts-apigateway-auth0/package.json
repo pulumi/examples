@@ -12,6 +12,6 @@
         "@types/jsonwebtoken": "^9.0.0",
         "jsonwebtoken": "9.0.2",
         "jwks-rsa": "^1.4.0",
-        "typescript": "^4.6.0"
+        "typescript": "^5.0.0"
     }
 }
