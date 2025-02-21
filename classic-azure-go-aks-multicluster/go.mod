@@ -7,7 +7,7 @@ toolchain go1.24.0
 require (
 	github.com/pulumi/pulumi-azure/sdk/v6 v6.20.0
 	github.com/pulumi/pulumi-azuread/sdk/v6 v6.2.0
-	github.com/pulumi/pulumi/sdk/v3 v3.150.0
+	github.com/pulumi/pulumi/sdk/v3 v3.151.0
 )
 
 require (

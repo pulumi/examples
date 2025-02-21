@@ -7,6 +7,6 @@
     },
     "dependencies": {
         "@pulumi/google-native": "0.32.0",
-        "@pulumi/pulumi": "3.150.0"
+        "@pulumi/pulumi": "3.151.0"
     }
 }

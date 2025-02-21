@@ -4,7 +4,7 @@ go 1.22
 
 toolchain go1.24.0
 
-require github.com/pulumi/pulumi/sdk/v3 v3.150.0
+require github.com/pulumi/pulumi/sdk/v3 v3.151.0
 
 require (
 	dario.cat/mergo v1.0.0 // indirect

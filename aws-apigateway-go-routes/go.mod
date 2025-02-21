@@ -8,7 +8,7 @@ require (
 	github.com/aws/aws-lambda-go v1.47.0
 	github.com/pulumi/pulumi-aws-apigateway/sdk/v2 v2.6.2
 	github.com/pulumi/pulumi-aws/sdk/v6 v6.69.0
-	github.com/pulumi/pulumi/sdk/v3 v3.150.0
+	github.com/pulumi/pulumi/sdk/v3 v3.151.0
 )
 
 require (
