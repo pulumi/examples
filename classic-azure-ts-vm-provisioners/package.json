@@ -2,7 +2,7 @@
     "name": "azure-vm-provisioners",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/azure": "6.19.0",
+        "@pulumi/azure": "6.20.0",
         "@pulumi/command": "1.0.2",
         "@pulumi/pulumi": "3.150.0",
         "@pulumi/tls": "5.1.0"

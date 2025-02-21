@@ -4,9 +4,9 @@
     "@types/node": "18.19.76"
   },
   "dependencies": {
-    "@pulumi/aws": "6.68.0",
+    "@pulumi/aws": "6.69.0",
     "@pulumi/awsx": "2.21.0",
-    "@pulumi/digitalocean": "4.39.1",
+    "@pulumi/digitalocean": "4.40.0",
     "@pulumi/pulumi": "3.150.0"
   }
 }
