@@ -2,7 +2,7 @@
     "name": "google-cloud-ts-functions",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "8.10.66",
+        "@types/node": "22.13.5",
         "@types/express": "5.0.0"
     },
     "dependencies": {

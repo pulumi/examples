@@ -1,7 +1,7 @@
 {
     "name": "docker-ts-multi-container-app",
     "devDependencies": {
-        "@types/node": "10.17.60"
+        "@types/node": "22.13.5"
     },
     "dependencies": {
         "@pulumi/docker": "4.6.1",

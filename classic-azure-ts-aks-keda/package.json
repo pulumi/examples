@@ -2,7 +2,7 @@
     "name": "azure-ts-aks-keda",
     "version": "0.1.0",
     "devDependencies": {
-        "@types/node": "8.10.66"
+        "@types/node": "22.13.5"
     },
     "dependencies": {
         "@pulumi/azure": "6.20.0",

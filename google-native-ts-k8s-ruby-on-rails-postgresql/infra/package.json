@@ -1,7 +1,7 @@
 {
     "name": "google-rails",
     "devDependencies": {
-        "@types/node": "8.10.66"
+        "@types/node": "22.13.5"
     },
     "dependencies": {
         "@pulumi/docker": "4.6.1",
