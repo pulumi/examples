@@ -1,4 +1,4 @@
-slack-sdk==3.5.0
+slack-sdk==3.34.0
 pulumi>=3.5.1,<4.0.0
 pulumi-aws>=6.0.2,<7.0.0
 boto3==1.36.22
