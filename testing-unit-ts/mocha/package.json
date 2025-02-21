@@ -3,7 +3,7 @@
     "devDependencies": {
         "mocha": "10.8.2",
         "ts-node": "10.9.2",
-        "typescript": "5.7.2"
+        "typescript": "5.7.3"
     },
     "dependencies": {
         "@pulumi/aws": "6.69.0",

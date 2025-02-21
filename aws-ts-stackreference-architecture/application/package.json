@@ -4,7 +4,7 @@
   "devDependencies": {
     "@types/mime": "2.0.3",
     "@types/node": "latest",
-    "typescript": "4.9.5"
+    "typescript": "5.7.3"
   },
   "dependencies": {
     "@pulumi/aws": "latest",
