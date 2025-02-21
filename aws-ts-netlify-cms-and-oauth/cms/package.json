@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "netlify-cms-app": "^2.12.19",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-scripts": "^2.1.8"
   },
   "devDependencies": {
