@@ -5,7 +5,7 @@ go 1.22
 toolchain go1.24.0
 
 require (
-	github.com/pulumi/pulumi-gcp/sdk/v8 v8.19.1
+	github.com/pulumi/pulumi-gcp/sdk/v8 v8.20.0
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.21.1
 	github.com/pulumi/pulumi/sdk/v3 v3.150.0
 )

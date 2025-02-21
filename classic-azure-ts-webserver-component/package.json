@@ -2,7 +2,7 @@
     "name": "ws-ts-azure-comp",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/azure": "6.19.0",
+        "@pulumi/azure": "6.20.0",
         "@pulumi/pulumi": "3.150.0"
     }
 }
