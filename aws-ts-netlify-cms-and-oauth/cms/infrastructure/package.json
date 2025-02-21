@@ -2,7 +2,7 @@
     "name": "pulumi-website-cms",
     "devDependencies": {
         "@types/mime": "3.0.4",
-        "@types/node": "18.19.76"
+        "@types/node": "22.13.5"
     },
     "dependencies": {
         "@pulumi/aws": "6.69.0",

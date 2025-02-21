@@ -2,7 +2,7 @@
     "name": "redis-cloud-aws-ts",
     "main": "index.ts",
     "devDependencies": {
-        "@types/node": "16.18.126"
+        "@types/node": "22.13.5"
     },
     "dependencies": {
         "@pulumi/aws": "6.69.0",

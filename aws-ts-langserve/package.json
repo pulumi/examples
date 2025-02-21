@@ -1,7 +1,7 @@
 {
 	"name": "aws-ts-langserve",
 	"devDependencies": {
-		"@types/node": "14.18.63"
+		"@types/node": "22.13.5"
 	},
 	"dependencies": {
 		"typescript": "^5.0.0",

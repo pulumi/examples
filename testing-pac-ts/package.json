@@ -6,7 +6,7 @@
         "@pulumi/awsx": "2.21.0",
         "@pulumi/eks": "3.8.1",
         "@pulumi/pulumi": "3.151.0",
-        "@types/node": "^13.1.8",
+        "@types/node": "^22.0.0",
         "ts-node": "^10.0.0"
     }
 }

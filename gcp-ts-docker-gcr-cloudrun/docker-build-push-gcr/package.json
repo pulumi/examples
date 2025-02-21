@@ -1,7 +1,7 @@
 {
     "name": "gcr-build-image",
     "devDependencies": {
-        "@types/node": "12.20.55"
+        "@types/node": "22.13.5"
     },
     "dependencies": {
         "@pulumi/docker": "4.6.1",

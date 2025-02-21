@@ -1,7 +1,7 @@
 {
     "name": "aws-organizations",
     "devDependencies": {
-        "@types/node": "18.19.76",
+        "@types/node": "22.13.5",
         "typescript": "5.7.3"
     },
     "dependencies": {

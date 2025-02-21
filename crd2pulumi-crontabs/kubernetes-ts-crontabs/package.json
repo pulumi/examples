@@ -1,7 +1,7 @@
 {
     "name": "kubernetes-ts-crontabs",
     "devDependencies": {
-        "@types/node": "10.17.60"
+        "@types/node": "22.13.5"
     },
     "dependencies": {
         "@pulumi/pulumi": "3.151.0",

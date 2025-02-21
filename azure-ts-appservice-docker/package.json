@@ -2,7 +2,7 @@
     "name": "azure-ts-appservice-docker",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "8.10.66"
+        "@types/node": "22.13.5"
     },
     "dependencies": {
         "@pulumi/azure-native": "2.88.0",
