@@ -1,8 +1,8 @@
-FROM amazon/aws-lambda-nodejs:12@sha256:1296174701453f63a24c1157c22289b236d92f379d478cc93b00dda2873c2ed4
+FROM amazon/aws-lambda-nodejs:22@sha256:5121ae7070aa4b374309e4a07b8ed6962df7b34b71953425b01b55fa99ff40e9
 ARG FUNCTION_DIR="/var/task"
 
 # Install tar and xz
-RUN yum install tar xz unzip -y
+RUN dnf install tar xz unzip -y
 
 # Install awscli
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" -s
