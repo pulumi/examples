@@ -9,7 +9,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pulumi/pulumi-trace-tool v0.0.1
 	github.com/pulumi/pulumi/pkg/v3 v3.151.0
-	github.com/pulumi/pulumi/sdk/v3 v3.151.0
+	github.com/pulumi/pulumi/sdk/v3 v3.152.0
 	github.com/stretchr/testify v1.10.0
 )
 
