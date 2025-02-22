@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0@sha256:3ff465d940de3e2c727794d92fd7bb649c498d4abd91bc9213ea7831ebf01f1e as build
+FROM mcr.microsoft.com/dotnet/sdk:9.0@sha256:7f8e8b1514a2eeccb025f1e9dd554e191b21afa7f43f8321b7bd2009cdd59a1d as build
 WORKDIR /app
 
 COPY *.csproj .
@@ -7,7 +7,7 @@ RUN dotnet restore
 COPY . .
 RUN dotnet publish -c Debug -o out
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0@sha256:1a7d811242f001673d5d25283b3af03da526de1ee8d3bb5aa295f480b7844d44
+FROM mcr.microsoft.com/dotnet/aspnet:9.0@sha256:adc89f84d53514cdc17677f3334775879d80d08ac8997a4b3fba8d20a6d6de9d
 WORKDIR /app
 COPY --from=build /app/out .
 ENTRYPOINT ["dotnet", "App.dll"]
