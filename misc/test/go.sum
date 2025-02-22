@@ -758,8 +758,8 @@ github.com/pulumi/pulumi-trace-tool v0.0.1 h1:9RAMkTtYSgxtp/2zS3NgjfDujs094Uo11Q
 github.com/pulumi/pulumi-trace-tool v0.0.1/go.mod h1:7eWp3A4NZWpptV/pL/HR+Fz8k0ln37/cWwrie8Mz3ko=
 github.com/pulumi/pulumi/pkg/v3 v3.151.0 h1:8xBcmADZ/BJfURncYWMwylwW9JpJbnrxxcwN2hlHAiE=
 github.com/pulumi/pulumi/pkg/v3 v3.151.0/go.mod h1:fplPbb0mp4iiVAli3x2F9iEyK1yamK/EIZqqIqszCWg=
-github.com/pulumi/pulumi/sdk/v3 v3.151.0 h1:mZjecj51+t3STyxoRuMW9QgZc+6ws4k4aFH/pFdJTRw=
-github.com/pulumi/pulumi/sdk/v3 v3.151.0/go.mod h1:+WC9aIDo8fMgd2g0jCHuZU2S/VYNLRAZ3QXt6YVgwaA=
+github.com/pulumi/pulumi/sdk/v3 v3.152.0 h1:sPstmYhbf/ArkREjkPYRgFUf+iv1llskLY2/4aASdxc=
+github.com/pulumi/pulumi/sdk/v3 v3.152.0/go.mod h1:+WC9aIDo8fMgd2g0jCHuZU2S/VYNLRAZ3QXt6YVgwaA=
 github.com/rivo/uniseg v0.1.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/rivo/uniseg v0.4.6 h1:Sovz9sDSwbOz9tgUy8JpT+KgCkPYJEN/oYzlJiYTNLg=

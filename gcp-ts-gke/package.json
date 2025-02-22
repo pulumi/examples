@@ -6,7 +6,7 @@
     "dependencies": {
         "@pulumi/gcp": "8.20.0",
         "@pulumi/kubernetes": "4.21.1",
-        "@pulumi/pulumi": "3.151.0",
+        "@pulumi/pulumi": "3.152.0",
         "@pulumi/random": "4.17.0"
     }
 }

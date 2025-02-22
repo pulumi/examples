@@ -7,6 +7,6 @@
     "@pulumi/aws": "6.69.0",
     "@pulumi/awsx": "2.21.0",
     "@pulumi/digitalocean": "4.40.0",
-    "@pulumi/pulumi": "3.151.0"
+    "@pulumi/pulumi": "3.152.0"
   }
 }
