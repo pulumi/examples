@@ -9,15 +9,15 @@
     <PackageReference Include="Microsoft.AspNetCore" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.3.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.3.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.3.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="2.2.5" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
