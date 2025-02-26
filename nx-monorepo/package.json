@@ -4,8 +4,8 @@
   "scripts": {},
   "private": true,
   "devDependencies": {
-    "@nx/js": "20.4.4",
-    "nx": "20.4.4",
+    "@nx/js": "20.4.6",
+    "nx": "20.4.6",
     "typescript": "5.7.3"
   },
   "workspaces": [
