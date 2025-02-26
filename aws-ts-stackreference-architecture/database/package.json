@@ -10,7 +10,7 @@
     "@pulumi/aws": "latest",
     "@pulumi/pulumi": "latest",
     "@pulumi/random": "latest",
-    "ip-address": "^5.9.2",
+    "ip-address": "^10.0.0",
     "jsbn": "^1.1.0",
     "mime": "^2.4.4"
   },
