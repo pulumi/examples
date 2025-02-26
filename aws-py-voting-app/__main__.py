@@ -6,6 +6,7 @@ import json
 import pulumi
 import pulumi_aws as aws
 import pulumi_docker as docker
+import pulumi_docker_build as docker_build
 
 # Get the password to use for Redis from the pulumi config
 config = pulumi.Config()
@@ -143,10 +144,6 @@ redis_targetgroup = aws.lb.TargetGroup(
     port=redis_port,
     protocol="TCP",
     target_type="ip",
-    stickiness=aws.lb.TargetGroupStickinessArgs(
-        enabled=False,
-        type="lb_cookie",
-    ),
     vpc_id=app_vpc.id,
 )
 
@@ -235,10 +232,6 @@ flask_targetgroup = aws.lb.TargetGroup(
     port=80,
     protocol="TCP",
     target_type="ip",
-    stickiness=aws.lb.TargetGroupStickinessArgs(
-        enabled=False,
-        type="lb_cookie",
-    ),
     vpc_id=app_vpc.id,
 )
 
@@ -271,17 +264,23 @@ def get_registry_info(rid):
     parts = decoded.split(":")
     if len(parts) != 2:
         raise Exception("Invalid credentials")
-    return docker.ImageRegistry(creds.proxy_endpoint, parts[0], parts[1])
+    return docker_build.RegistryArgs(
+        address=creds.proxy_endpoint, username=parts[0], password=parts[1]
+    )
 
 
 app_registry = app_ecr_repo.registry_id.apply(get_registry_info)
 
-flask_image = docker.Image(
+flask_image_dockerbuild = docker_build.Image(
     "flask-dockerimage",
-    image_name=app_ecr_repo.repository_url,
-    build="./frontend",
-    skip_push=False,
-    registry=app_registry,
+    tags=[
+        app_ecr_repo.repository_url.apply(lambda repository_url: f"{repository_url}:latest"),
+    ],
+    context=docker_build.BuildContextArgs(
+        location="./frontend",
+    ),
+    push=True,
+    registries=[app_registry],
 )
 
 # Creating a task definition for the Flask instance.
@@ -298,7 +297,7 @@ flask_task_definition = aws.ecs.TaskDefinition(
         [
             {
                 "name": "flask-container",
-                "image": flask_image.image_name,
+                "image": flask_image_dockerbuild.ref,
                 "memory": 512,
                 "essential": True,
                 "portMappings": [{"containerPort": 80, "hostPort": 80, "protocol": "tcp"}],
@@ -306,7 +305,7 @@ flask_task_definition = aws.ecs.TaskDefinition(
                     {"name": "REDIS", "value": redis_endpoint["host"]},
                     {
                         "name": "REDIS_PORT",
-                        "value": redis_endpoint["port"].apply(lambda x: str(x)),
+                        "value": pulumi.Output.concat(str(redis_endpoint["port"])),
                     },
                     {"name": "REDIS_PWD", "value": redis_password},
                 ],
