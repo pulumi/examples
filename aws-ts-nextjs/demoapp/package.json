@@ -24,7 +24,7 @@
     "@aws-cdk/cloud-assembly-schema": "40.2.0"
   },
   "devDependencies": {
-    "sst": "3.9.10",
+    "sst": "3.9.15",
     "aws-cdk-lib": "2.180.0",
     "constructs": "10.4.2"
   }
