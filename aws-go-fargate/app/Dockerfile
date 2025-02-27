@@ -1,6 +1,6 @@
 # Start from a Debian image with the latest version of Go installed
 # and a workspace (GOPATH) configured at /go.
-FROM golang@sha256:2b1cbf278ce05a2a310a3d695ebb176420117a8cfcfcc4e5e68a1bef5f6354da
+FROM golang@sha256:44b186e06a8596405ab90557930b2024994045cf20939688809b49af0d245692
 
 # Copy the local package files to the container's workspace.
 ADD . /go/src/foo
