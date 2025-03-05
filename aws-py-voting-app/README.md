@@ -1,11 +1,14 @@
+# AWS Python Voting App
+
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-voting-app/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-voting-app/README.md#gh-dark-mode-only)
 
-# Voting app Using Redis and Flask
+## Voting app Using Redis and Flask
 
-A simple voting app that uses Redis for a data store and a Python Flask app for the frontend. The example has been ported from https://github.com/Azure-Samples/azure-voting-app-redis.
+A simple voting app that uses Redis for a data store and a Python Flask app for the frontend. The example has been ported from <https://github.com/Azure-Samples/azure-voting-app-redis>.
 
 The example shows how easy it is to deploy containers into production and to connect them to one another. Since the example defines a custom container, Pulumi does the following:
+
 - Builds the Docker image
 - Provisions AWS Container Registry (ECR) instance
 - Pushes the image to the ECR instance
@@ -23,22 +26,23 @@ The example shows how easy it is to deploy containers into production and to con
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init aws-py-voting-app
+    pulumi stack init aws-py-voting-app
     ```
 
 1. Set the AWS region and Redis password:
 
     ```bash
-    $ pulumi config set aws:region us-west-2
-    $ pulumi config set redis-password <PASSWORD> --secret
+    pulumi config set aws:region us-west-2
+    pulumi config set redis-password <PASSWORD> --secret
     ```
 
 1. Run `pulumi up -y` to deploy changes:
+
     ```bash
     Updating (aws-py-voting-app):
         Type                                  Name                            Status      Info
     +   pulumi:pulumi:Stack                   webserver-py-aws-py-voting-app  created
-    +   ├─ docker:image:Image                 flask-dockerimage               created
+    +   ├─ docker-build:image:Image           flask-dockerimage               created
     +   ├─ aws:ec2:Vpc                        app-vpc                         created
     +   ├─ aws:ecs:Cluster                    app-cluster                     created
     +   ├─ aws:iam:Role                       app-exec-role                   created
@@ -83,7 +87,7 @@ The example shows how easy it is to deploy containers into production and to con
 
     ```
 
-1.  Verify that the EC2 instance exists, by connecting to it in a browser window.
+1. Verify that the EC2 instance exists, by connecting to it in a browser window.
 
 ## Clean up
 
