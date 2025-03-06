@@ -7,6 +7,6 @@
         "@pulumi/pulumi": "3.152.0"
     },
     "devDependencies": {
-        "typescript": "5.7.3"
+        "typescript": "5.8.2"
     }
 }
