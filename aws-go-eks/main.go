@@ -145,12 +145,11 @@ func main() {
 			return err
 		}
 
-		ctx.Export("kubeconfig", generateKubeconfig(eksCluster.Endpoint,
-			eksCluster.CertificateAuthority.Data().Elem(), eksCluster.Name))
+		kubeconfig := generateKubeconfig(eksCluster.Endpoint, eksCluster.CertificateAuthority.Data().Elem(), eksCluster.Name)
 
+		ctx.Export("kubeconfig", kubeconfig)
 		k8sProvider, err := kubernetes.NewProvider(ctx, "k8sprovider", &kubernetes.ProviderArgs{
-			Kubeconfig: generateKubeconfig(eksCluster.Endpoint,
-				eksCluster.CertificateAuthority.Data().Elem(), eksCluster.Name),
+			Kubeconfig: kubeconfig,
 		}, pulumi.DependsOn([]pulumi.Resource{nodeGroup}))
 		if err != nil {
 			return err
@@ -170,7 +169,7 @@ func main() {
 		}
 		_, err = appsv1.NewDeployment(ctx, "app-dep", &appsv1.DeploymentArgs{
 			Metadata: &metav1.ObjectMetaArgs{
-				Namespace: namespace.Metadata.Elem().Name(),
+				Namespace: namespace.Metadata.Name(),
 			},
 			Spec: appsv1.DeploymentSpecArgs{
 				Selector: &metav1.LabelSelectorArgs{
@@ -198,7 +197,7 @@ func main() {
 
 		service, err := corev1.NewService(ctx, "app-service", &corev1.ServiceArgs{
 			Metadata: &metav1.ObjectMetaArgs{
-				Namespace: namespace.Metadata.Elem().Name(),
+				Namespace: namespace.Metadata.Name(),
 				Labels:    appLabels,
 			},
 			Spec: &corev1.ServiceSpecArgs{
@@ -253,10 +252,11 @@ func generateKubeconfig(clusterEndpoint pulumi.StringOutput, certData pulumi.Str
             "user": {
                 "exec": {
                     "apiVersion": "client.authentication.k8s.io/v1beta1",
-                    "command": "aws-iam-authenticator",
+                    "command": "aws",
                     "args": [
-                        "token",
-                        "-i",
+                        "eks",
+                        "get-token",
+                        "--cluster-name",
                         "%s",
                     ],
                 },

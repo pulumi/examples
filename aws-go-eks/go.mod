@@ -1,8 +1,6 @@
 module aws-go-eks
 
-go 1.22
-
-toolchain go1.24.0
+go 1.24
 
 require (
 	github.com/pulumi/pulumi-aws/sdk/v6 v6.69.0
