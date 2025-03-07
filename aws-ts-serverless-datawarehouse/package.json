@@ -9,8 +9,8 @@
         "ts-jest": "29.2.6"
     },
     "dependencies": {
-        "@pulumi/aws": "6.69.0",
-        "@pulumi/pulumi": "3.152.0",
+        "@pulumi/aws": "6.70.1",
+        "@pulumi/pulumi": "3.153.1",
         "athena-client": "^2.5.1",
         "aws-sdk": "^2.606.0",
         "moment-timezone": "^0.5.27",

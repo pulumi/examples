@@ -3,8 +3,8 @@
     "version": "0.1.0",
     "dependencies": {
         "@aws-sdk/client-s3": "^3.386.0",
-        "@pulumi/aws": "6.69.0",
-        "@pulumi/pulumi": "3.152.0",
+        "@pulumi/aws": "6.70.1",
+        "@pulumi/pulumi": "3.153.1",
         "twitter": "^1.7.1"
     },
     "devDependencies": {

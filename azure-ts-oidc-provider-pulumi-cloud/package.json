@@ -6,9 +6,9 @@
         "typescript": "5.8.2"
     },
     "dependencies": {
-        "@pulumi/azure-native": "2.88.0",
+        "@pulumi/azure-native": "2.89.1",
         "@pulumi/azuread": "6.2.0",
-        "@pulumi/pulumi": "3.152.0",
+        "@pulumi/pulumi": "3.153.1",
         "yaml": "^2.3.4"
     }
 }
