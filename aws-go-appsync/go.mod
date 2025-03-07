@@ -5,9 +5,9 @@ go 1.22
 toolchain go1.24.0
 
 require (
-	github.com/pulumi/pulumi-aws/sdk/v6 v6.69.0
-	github.com/pulumi/pulumi-random/sdk/v4 v4.17.0
-	github.com/pulumi/pulumi/sdk/v3 v3.152.0
+	github.com/pulumi/pulumi-aws/sdk/v6 v6.70.1
+	github.com/pulumi/pulumi-random/sdk/v4 v4.18.0
+	github.com/pulumi/pulumi/sdk/v3 v3.153.1
 )
 
 require (

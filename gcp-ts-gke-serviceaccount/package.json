@@ -4,8 +4,8 @@
         "@types/node": "22.13.5"
     },
     "dependencies": {
-        "@pulumi/gcp": "8.20.0",
+        "@pulumi/gcp": "8.21.0",
         "@pulumi/kubernetes": "4.21.1",
-        "@pulumi/pulumi": "3.152.0"
+        "@pulumi/pulumi": "3.153.1"
     }
 }
