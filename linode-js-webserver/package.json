@@ -4,6 +4,6 @@
     "main": "index.js",
     "dependencies": {
         "@pulumi/linode": "4.34.2",
-        "@pulumi/pulumi": "3.153.1"
+        "@pulumi/pulumi": "3.154.0"
     }
 }
