@@ -5,9 +5,9 @@
         "@types/node": "22.13.5"
     },
     "dependencies": {
-        "@pulumi/aws": "6.70.1",
+        "@pulumi/aws": "6.71.0",
         "@pulumi/awsx": "2.21.0",
-        "@pulumi/pulumi": "3.153.1",
+        "@pulumi/pulumi": "3.154.0",
         "@rediscloud/pulumi-rediscloud": "^1.2.6"
     }
 }
