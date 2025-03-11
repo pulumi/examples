@@ -123,6 +123,7 @@ Example   | Description |
 [Static Website](aws-ts-static-website) | Serve a static website using S3, CloudFront, Route53, and Certificate Manager.
 [Step Functions](aws-ts-stepfunctions) | Use Step Functions with a Lambda function.
 [Thumbnailer](aws-ts-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
+[Toolbox](aws-ts-toolbox) | A demo app that shows how to easily deploy web apps to AWS using Lambda, S3, and CloudFront, powered by components from Pulumi-AWS-Toolbox.
 [Twitter](aws-ts-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
 [URL Shortener](aws-ts-url-shortener-cache-http) | Create a serverless URL shortener that uses high-level components.
 [Voting App](aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
