@@ -5,7 +5,7 @@ RUN cd /src/dotnet-function-app && \
     mkdir -p /home/site/wwwroot && \
     dotnet publish *.csproj --output /home/site/wwwroot
 
-FROM mcr.microsoft.com/azure-functions/dotnet:4.0@sha256:891d44d0685b0a7a829000bcb94f95f6859b5581f0e542f6134e629babede2a8
+FROM mcr.microsoft.com/azure-functions/dotnet:4.0@sha256:afde22c6a8966c652fc56420535a24dd4775d02f8e56991134f221946f46e1b7
 ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
     AzureFunctionsJobHost__Logging__Console__IsEnabled=true
 
