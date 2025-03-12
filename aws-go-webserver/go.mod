@@ -2,7 +2,7 @@ module github.com/pulumi/examples/aws-go-webserver
 
 go 1.22
 
-toolchain go1.24.0
+toolchain go1.24.1
 
 require (
 	github.com/pulumi/pulumi-aws/sdk/v6 v6.70.1

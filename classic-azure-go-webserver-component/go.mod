@@ -2,7 +2,7 @@ module github.com/pulumi/examples/azure-go-webserver-component
 
 go 1.22
 
-toolchain go1.24.0
+toolchain go1.24.1
 
 require (
 	github.com/pulumi/pulumi-azure/sdk/v6 v6.20.0
