@@ -2,7 +2,7 @@
     "name": "azure-ts-aci",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "22.13.5"
+        "@types/node": "22.13.10"
     },
     "dependencies": {
         "@pulumi/azure-native": "2.89.1",

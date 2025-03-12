@@ -11,7 +11,7 @@
     "devDependencies": {
         "@types/glob": "8.1.0",
         "@types/mime": "2.0.3",
-        "@types/node": "22.13.5",
+        "@types/node": "22.13.10",
         "typescript": "5.8.2"
     }
 }

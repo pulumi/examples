@@ -2,7 +2,7 @@
     "name": "aws-ts-s3-folder",
     "devDependencies": {
         "@types/mime": "2.0.3",
-        "@types/node": "22.13.5"
+        "@types/node": "22.13.10"
     },
     "dependencies": {
         "@pulumi/aws": "6.70.1",
