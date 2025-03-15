@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/ovh/pulumi-ovh/sdk v1.6.0
-	github.com/pulumi/pulumi/sdk/v3 v3.153.1
+	github.com/pulumi/pulumi/sdk/v3 v3.156.0
 )
 
 require (

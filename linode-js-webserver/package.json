@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/linode": "4.34.2",
-        "@pulumi/pulumi": "3.153.1"
+        "@pulumi/linode": "4.35.0",
+        "@pulumi/pulumi": "3.156.0"
     }
 }

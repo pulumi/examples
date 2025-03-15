@@ -4,10 +4,10 @@
         "@types/node": "22.13.5"
     },
     "dependencies": {
-        "@pulumi/azure": "6.20.0",
+        "@pulumi/azure": "6.21.0",
         "@pulumi/azuread": "6.2.0",
-        "@pulumi/kubernetes": "4.21.1",
-        "@pulumi/pulumi": "3.153.1",
+        "@pulumi/kubernetes": "4.22.1",
+        "@pulumi/pulumi": "3.156.0",
         "@types/mongoose": "^5.2.11",
         "mongoose": "^8.0.0"
     }
