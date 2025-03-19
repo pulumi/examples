@@ -24,7 +24,7 @@ class CreateRoleStack : Stack
         new CustomResourceOptions { AdditionalSecretOutputs = { "secret" } });
 
         AssumeRolePolicyArgs policyArgs = new AssumeRolePolicyArgs(unprivilegedUser.Arn);
-        var tempPolicy = Output.JsonSerialize<AssumeRolePolicyArgs>(policyArgs);
+         var tempPolicy = Output.Create(policyArgs).Apply(args => JsonSerializer.Serialize(args));
 
         var allowS3ManagementRole = new Iam.Role("allow-s3-management", new Iam.RoleArgs
         {
