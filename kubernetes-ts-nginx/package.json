@@ -5,8 +5,8 @@
     "@types/node": "22.13.5"
   },
   "dependencies": {
-    "@pulumi/kubernetes": "4.21.1",
-    "@pulumi/pulumi": "3.153.1"
+    "@pulumi/kubernetes": "4.22.1",
+    "@pulumi/pulumi": "3.156.0"
   },
   "license": "MIT"
 }

@@ -4,8 +4,8 @@
     "dependencies": {
         "@google-cloud/firestore": "^7.0.0",
         "@google-cloud/pubsub": "^4.0.0",
-        "@pulumi/gcp": "8.21.0",
-        "@pulumi/pulumi": "3.153.1",
+        "@pulumi/gcp": "8.22.0",
+        "@pulumi/pulumi": "3.156.0",
         "body-parser": "^1.19.0",
         "express": "^4.17.1",
         "qs": "^6.10.1",

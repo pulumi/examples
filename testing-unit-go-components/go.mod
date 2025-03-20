@@ -3,8 +3,8 @@ module github.com/pulumi/examples/testing-unit-go-components
 go 1.22
 
 require (
-	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.21.1
-	github.com/pulumi/pulumi/sdk/v3 v3.153.1
+	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.22.1
+	github.com/pulumi/pulumi/sdk/v3 v3.156.0
 	github.com/stretchr/testify v1.10.0
 )
 
@@ -62,7 +62,7 @@ require (
 	github.com/pkg/term v1.1.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
-	github.com/pulumi/esc v0.10.0 // indirect
+	github.com/pulumi/esc v0.13.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // indirect

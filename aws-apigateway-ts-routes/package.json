@@ -5,9 +5,9 @@
         "@types/node": "22.13.5"
     },
     "dependencies": {
-        "@pulumi/aws": "6.70.1",
+        "@pulumi/aws": "6.72.0",
         "@pulumi/aws-apigateway": "2.6.2",
-        "@pulumi/pulumi": "3.153.1",
+        "@pulumi/pulumi": "3.156.0",
         "aws-lambda": "^1.0.7"
     }
 }

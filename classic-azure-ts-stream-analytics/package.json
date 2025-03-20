@@ -6,8 +6,8 @@
         "@types/utf8": "3.0.3"
     },
     "dependencies": {
-        "@pulumi/azure": "6.20.0",
-        "@pulumi/pulumi": "3.153.1",
+        "@pulumi/azure": "6.21.0",
+        "@pulumi/pulumi": "3.156.0",
         "crypto": "^1.0.1",
         "utf8": "^3.0.0"
     }

@@ -4,7 +4,7 @@
         "@types/node": "22.13.5"
     },
     "dependencies": {
-        "@pulumi/alicloud": "3.74.0",
-        "@pulumi/pulumi": "3.153.1"
+        "@pulumi/alicloud": "3.75.0",
+        "@pulumi/pulumi": "3.156.0"
     }
 }
