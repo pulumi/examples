@@ -2,6 +2,8 @@ using Pulumi;
 using Iam = Pulumi.Aws.Iam;
 using Log = Pulumi.Log;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 class CreateRoleStack : Stack
 {
