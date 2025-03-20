@@ -26,12 +26,32 @@ class CreateRoleStack : Stack
         new CustomResourceOptions { AdditionalSecretOutputs = { "secret" } });
 
         AssumeRolePolicyArgs policyArgs = new AssumeRolePolicyArgs(unprivilegedUser.Arn);
-         var tempPolicy = Output.Create(policyArgs).Apply(args => JsonSerializer.Serialize(args));
+        var tempPolicy = Output.Create(policyArgs).Apply(args => JsonSerializer.Serialize(args,
+            new JsonSerializerOptions
+            {
+                WriteIndented = false,
+                PropertyNamingPolicy = null // Remove camelCase policy
+            }));
+
+        // Alternative approach using a direct string-based policy document
+        var directPolicy = unprivilegedUser.Arn.Apply(arn => @$"{{
+            ""Version"": ""2012-10-17"",
+            ""Statement"": [
+                {{
+                    ""Sid"": ""AllowAssumeRole"",
+                    ""Effect"": ""Allow"",
+                    ""Principal"": {{
+                        ""AWS"": ""{arn}""
+                    }},
+                    ""Action"": ""sts:AssumeRole""
+                }}
+            ]
+        }}");
 
         var allowS3ManagementRole = new Iam.Role("allow-s3-management", new Iam.RoleArgs
         {
             Description = "Allow management of S3 buckets",
-            AssumeRolePolicy = tempPolicy
+            AssumeRolePolicy = directPolicy // Use the direct string approach instead
         });
 
         var rolePolicy = new Iam.RolePolicy("allow-s3-management-policy", new Iam.RolePolicyArgs
@@ -57,21 +77,30 @@ class CreateRoleStack : Stack
 
     public class AssumeRolePolicyArgs
     {
+        [JsonPropertyName("Version")]
         public string Version => "2012-10-17";
-        public StatementArgs Statement { get; private set; }
+
+        [JsonPropertyName("Statement")]
+        public StatementArgs[] Statement { get; private set; }
 
         public AssumeRolePolicyArgs(Input<string> arn)
         {
-            Statement = new StatementArgs(arn);
+            Statement = new StatementArgs[] { new StatementArgs(arn) };
         }
-
     }
 
     public class StatementArgs
     {
+        [JsonPropertyName("Sid")]
         public string Sid => "AllowAssumeRole";
+
+        [JsonPropertyName("Effect")]
         public string Effect => "Allow";
+
+        [JsonPropertyName("Principal")]
         public PrincipalArgs Principal { get; private set; }
+
+        [JsonPropertyName("Action")]
         public string Action => "sts:AssumeRole";
 
         public StatementArgs(Input<string> arn)
@@ -82,6 +111,7 @@ class CreateRoleStack : Stack
 
     public class PrincipalArgs
     {
+        [JsonPropertyName("AWS")]
         public Input<string> AWS { get; private set; }
 
         public PrincipalArgs(Input<string> arn)
