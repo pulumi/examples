@@ -12,7 +12,7 @@ py_bucket_object = storage.BucketObject(
 py_function = cloudfunctions.Function(
     "python-func",
     source_archive_bucket=bucket.name,
-    runtime="python37",
+    runtime="python312",
     source_archive_object=py_bucket_object.name,
     entry_point="handler",
     trigger_http=True,
