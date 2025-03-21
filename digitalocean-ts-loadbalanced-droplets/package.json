@@ -3,6 +3,6 @@
     "version": "0.1.0",
     "dependencies": {
         "@pulumi/digitalocean": "4.40.1",
-        "@pulumi/pulumi": "3.156.0"
+        "@pulumi/pulumi": "3.157.0"
     }
 }

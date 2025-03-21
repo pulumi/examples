@@ -10,7 +10,7 @@
     },
     "dependencies": {
         "@pulumi/aws": "6.72.0",
-        "@pulumi/pulumi": "3.156.0",
+        "@pulumi/pulumi": "3.157.0",
         "athena-client": "^2.5.1",
         "aws-sdk": "^2.606.0",
         "moment-timezone": "^0.5.27",

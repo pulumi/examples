@@ -3,6 +3,6 @@
     "version": "2.0.0",
     "dependencies": {
         "@pulumi/gcp": "8.22.0",
-        "@pulumi/pulumi": "3.156.0"
+        "@pulumi/pulumi": "3.157.0"
     }
 }
