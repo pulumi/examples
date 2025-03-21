@@ -8,9 +8,9 @@ require (
 	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible
 	github.com/Azure/go-autorest/autorest v0.11.30
 	github.com/Azure/go-autorest/autorest/adal v0.9.24
-	github.com/pulumi/pulumi-azure-native-sdk/authorization/v2 v2.90.0-alpha.1742483016
-	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v2 v2.90.0-alpha.1742483016
-	github.com/pulumi/pulumi-azure-native-sdk/resources/v2 v2.90.0-alpha.1742483016
+	github.com/pulumi/pulumi-azure-native-sdk/authorization/v3 v3.0.0-alpha.2
+	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v3 v3.0.0-alpha.2
+	github.com/pulumi/pulumi-azure-native-sdk/resources/v3 v3.0.0-alpha.2
 	github.com/pulumi/pulumi/sdk/v3 v3.157.0
 )
 
