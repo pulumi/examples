@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk@sha256:1025bed126a7b85c56b960215ab42a99db97a319a72b5d902383ebf6c6e62bbe AS base
+FROM mcr.microsoft.com/dotnet/sdk@sha256:d7f4691d11f610d9b94bb75517c9e78ac5799447b5b3e82af9e4625d8c8d1d53 AS base
 
 WORKDIR /app
 
