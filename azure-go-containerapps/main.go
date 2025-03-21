@@ -2,10 +2,10 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-azure-native-sdk/app/v2"
-	"github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v2"
-	"github.com/pulumi/pulumi-azure-native-sdk/operationalinsights/v2"
-	"github.com/pulumi/pulumi-azure-native-sdk/resources/v2"
+	"github.com/pulumi/pulumi-azure-native-sdk/app/v3"
+	"github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v3"
+	"github.com/pulumi/pulumi-azure-native-sdk/operationalinsights/v3"
+	"github.com/pulumi/pulumi-azure-native-sdk/resources/v3"
 	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
