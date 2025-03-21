@@ -8,6 +8,6 @@
     "dependencies": {
         "@pulumi/docker": "4.6.2",
         "@pulumi/gcp": "8.22.0",
-        "@pulumi/pulumi": "3.156.0"
+        "@pulumi/pulumi": "3.157.0"
     }
 }
