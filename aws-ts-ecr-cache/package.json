@@ -1,0 +1,13 @@
+{
+  "name": "aws-ts-ecr-cache",
+  "description": "a Pulumi program that creates ECR repositories with pull-through cache rules for Docker Hub and Google Container Registry.",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "dependencies": {
+    "@pulumi/pulumi": "^3.157.0",
+    "@pulumi/aws": "^6.73.0"
+  }
+}
