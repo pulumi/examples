@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Pulumi" Version="3.*" />
-    <PackageReference Include="Pulumi.Aws" Version="6.72.0" />
+    <PackageReference Include="Pulumi.Aws" Version="6.73.0" />
     <PackageReference Include="Pulumi.Kubernetes" Version="3.*" />
   </ItemGroup>
 
