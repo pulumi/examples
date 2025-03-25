@@ -1,13 +1,14 @@
 module azure-go-aks-multicluster
 
-go 1.22
+go 1.23.0
+
 toolchain go1.24.1
 
 require (
 	github.com/pulumi/pulumi-azure-native-sdk/containerservice/v3 v3.0.0-alpha.2
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v3 v3.0.0-alpha.2
 	github.com/pulumi/pulumi-azuread/sdk/v6 v6.2.0
-	github.com/pulumi/pulumi/sdk/v3 v3.157.0
+	github.com/pulumi/pulumi/sdk/v3 v3.158.0
 )
 
 require github.com/stretchr/objx v0.5.2 // indirect

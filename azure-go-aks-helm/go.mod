@@ -1,6 +1,7 @@
 module azure-go-aks-helm
 
-go 1.22
+go 1.23.0
+
 toolchain go1.24.1
 
 require (
@@ -10,7 +11,7 @@ require (
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.22.1
 	github.com/pulumi/pulumi-random/sdk/v4 v4.18.0
 	github.com/pulumi/pulumi-tls/sdk/v5 v5.1.1
-	github.com/pulumi/pulumi/sdk/v3 v3.157.0
+	github.com/pulumi/pulumi/sdk/v3 v3.158.0
 )
 
 require github.com/stretchr/objx v0.5.2 // indirect

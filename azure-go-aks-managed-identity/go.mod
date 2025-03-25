@@ -1,6 +1,7 @@
 module azure-go-aks-managed-identity
 
-go 1.22
+go 1.23.0
+
 toolchain go1.24.1
 
 require (
@@ -9,7 +10,7 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/managedidentity/v3 v3.0.0-alpha.2
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v3 v3.0.0-alpha.2
 	github.com/pulumi/pulumi-tls/sdk/v5 v5.1.1
-	github.com/pulumi/pulumi/sdk/v3 v3.157.0
+	github.com/pulumi/pulumi/sdk/v3 v3.158.0
 )
 
 require (
