@@ -2,7 +2,7 @@
     "name": "aws-ts-lambda-secrets",
     "main": "index.ts",
     "devDependencies": {
-        "@types/node": "^22.0.0"
+        "@types/node": "22.13.13"
     },
     "dependencies": {
         "@pulumi/pulumi": "^3.0.0",
