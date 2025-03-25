@@ -1,10 +1,11 @@
 module gcp-go-gke
 
-go 1.22
+go 1.23.0
+
 toolchain go1.24.1
 
 require (
-	github.com/pulumi/pulumi-gcp/sdk/v8 v8.22.0
+	github.com/pulumi/pulumi-gcp/sdk/v8 v8.23.0
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.22.1
 	github.com/pulumi/pulumi/sdk/v3 v3.157.0
 )
