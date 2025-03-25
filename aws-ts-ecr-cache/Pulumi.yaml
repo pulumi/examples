@@ -1,0 +1,6 @@
+name: aws-ts-ecr-cache
+runtime:
+  name: nodejs
+  options:
+    packagemanager: yarn
+description: a Pulumi program that creates ECR repositories with pull-through cache rules for Docker Hub and Google Container Registry.
