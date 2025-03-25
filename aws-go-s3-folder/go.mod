@@ -1,9 +1,10 @@
 module github.com/pulumi/examples/aws-go-s3-folder
 
-go 1.22
+go 1.23.0
+
 toolchain go1.24.1
 
-require github.com/pulumi/pulumi/sdk/v3 v3.157.0
+require github.com/pulumi/pulumi/sdk/v3 v3.158.0
 
 require (
 	dario.cat/mergo v1.0.0 // indirect

@@ -1,6 +1,7 @@
 module github.com/pulumi/examples/azure-go-appservice
 
-go 1.22
+go 1.23.0
+
 toolchain go1.24.1
 
 require (
@@ -8,7 +9,7 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v3 v3.0.0-alpha.2
 	github.com/pulumi/pulumi-azure-native-sdk/web/v3 v3.0.0-alpha.2
 	github.com/pulumi/pulumi-docker/sdk/v4 v4.6.2
-	github.com/pulumi/pulumi/sdk/v3 v3.157.0
+	github.com/pulumi/pulumi/sdk/v3 v3.158.0
 )
 
 require (

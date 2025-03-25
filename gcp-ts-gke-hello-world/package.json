@@ -3,7 +3,7 @@
     "dependencies": {
         "@pulumi/gcp": "8.23.0",
         "@pulumi/kubernetes": "4.22.1",
-        "@pulumi/pulumi": "3.157.0",
+        "@pulumi/pulumi": "3.158.0",
         "@types/node": "^22.0.0"
     }
 }
