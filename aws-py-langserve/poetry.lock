@@ -234,13 +234,13 @@ test = ["coverage[toml]", "ddt (>=1.1.1,!=1.4.3)", "mock", "mypy", "pre-commit",
 
 [[package]]
 name = "gritql"
-version = "0.1.5"
+version = "0.2.0"
 description = "Python bindings for GritQL"
 optional = false
 python-versions = "*"
 files = [
-    {file = "gritql-0.1.5-py2.py3-none-any.whl", hash = "sha256:b17b314d995a11b8e06839280b079ffc8a30bdfb0d2beebcb4332186a0b2cdf0"},
-    {file = "gritql-0.1.5.tar.gz", hash = "sha256:7568ee2d7c7457000374c91289bacb05e92524c77a5d5f63fe777b29622bff4c"},
+    {file = "gritql-0.2.0-py2.py3-none-any.whl", hash = "sha256:6a37f4a6388c09801c25de8753546ca11d4b8a3ad527742821eb032ad069cd13"},
+    {file = "gritql-0.2.0.tar.gz", hash = "sha256:09e26e3d3152d3ec2e4fa80c0af4f2fe1436c82a2c6343cec6ab74ae61474bae"},
 ]
 
 [[package]]
@@ -425,21 +425,21 @@ files = [
 
 [[package]]
 name = "langchain-cli"
-version = "0.0.35"
+version = "0.0.36"
 description = "CLI for interacting with LangChain"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "langchain_cli-0.0.35-py3-none-any.whl", hash = "sha256:3bb7f8f3d0c2a584100c7947a9b7fae566acd9a22158935fe343a740c2985a51"},
-    {file = "langchain_cli-0.0.35.tar.gz", hash = "sha256:5386a97102872312d12201940595741338e3aed18ed8fa3baca242cf3bc75fda"},
+    {file = "langchain_cli-0.0.36-py3-none-any.whl", hash = "sha256:3c0981cc2931a55b6e7b95b1234425df75c19376b9540081d56472d474f8dd24"},
+    {file = "langchain_cli-0.0.36.tar.gz", hash = "sha256:67784fdef1fad9ff841cbc5a670cb54f56f0618fca79b9f5c3776c7eee8efe09"},
 ]
 
 [package.dependencies]
 gitpython = ">=3,<4"
-gritql = ">=0.1.1,<0.2.0"
+gritql = ">=0.2.0,<1.0.0"
 langserve = {version = ">=0.0.51", extras = ["all"]}
 tomlkit = ">=0.12"
-typer = {version = ">=0.9.0,<0.10.0", extras = ["all"]}
+typer = {version = ">=0.9.0,<1.0.0", extras = ["all"]}
 uvicorn = ">=0.23,<1.0"
 
 [[package]]
