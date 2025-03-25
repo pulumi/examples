@@ -3,7 +3,7 @@ pulumi-aws>=6.0.2,<7.0.0
 certifi==2025.1.31
 cffi==1.17.1
 charset-normalizer==3.4.1
-cryptography==44.0.1
+cryptography==44.0.2
 idna==3.10
 pycparser==2.22
 pyOpenSSL==25.0.0
