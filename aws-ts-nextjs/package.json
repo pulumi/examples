@@ -5,7 +5,7 @@
     "dependencies": {
         "@pulumi/aws": "6.73.0",
         "@pulumi/pulumi": "3.158.0",
-        "glob": "^8.0.3",
+        "glob": "^9.0.0",
         "mime": "^2.0.3"
     },
     "devDependencies": {
