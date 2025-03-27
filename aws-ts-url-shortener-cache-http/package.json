@@ -7,7 +7,7 @@
         "build": "tsc"
     },
     "devDependencies": {
-        "@types/express": "5.0.0",
+        "@types/express": "5.0.1",
         "@types/mime-types": "2.1.4",
         "@types/node": "22.13.14",
         "@types/parseurl": "1.3.3",
