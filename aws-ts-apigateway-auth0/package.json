@@ -1,7 +1,7 @@
 {
     "name": "aws-typescript",
     "devDependencies": {
-        "@types/node": "22.13.5"
+        "@types/node": "22.13.14"
     },
     "dependencies": {
         "@pulumi/aws": "6.73.0",

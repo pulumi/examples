@@ -11,7 +11,7 @@
   "dependencies": {
     "@aws-cdk/cloud-assembly-schema": "41.2.0",
     "@tailwindcss/postcss": "^4.0.15",
-    "@types/node": "22.13.5",
+    "@types/node": "22.13.14",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
     "autoprefixer": "10.4.20",

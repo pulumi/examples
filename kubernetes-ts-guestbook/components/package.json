@@ -2,7 +2,7 @@
   "name": "guestbook-easy",
   "version": "0.1.0",
   "devDependencies": {
-    "@types/node": "22.13.5"
+    "@types/node": "22.13.14"
   },
   "dependencies": {
     "@pulumi/kubernetes": "4.22.1",

@@ -2,7 +2,7 @@
     "name": "equinix-ts-webserver",
     "version": "0.1.0",
     "devDependencies": {
-        "@types/node": "22.13.5"
+        "@types/node": "22.13.14"
     },
     "dependencies": {
         "@pulumi/equinix": "^0.2.1",
