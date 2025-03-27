@@ -3,7 +3,7 @@
     "devDependencies": {
         "@types/jest": "29.5.14",
         "@types/node": "22.13.14",
-        "ts-jest": "29.2.6",
+        "ts-jest": "29.3.0",
         "typescript": "5.8.2"
     },
     "dependencies": {
