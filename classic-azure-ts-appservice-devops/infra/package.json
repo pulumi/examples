@@ -4,7 +4,7 @@
         "build": "tsc"
     },
     "devDependencies": {
-        "@types/node": "22.13.5"
+        "@types/node": "22.13.14"
     },
     "dependencies": {
         "@pulumi/pulumi": "3.158.0",
