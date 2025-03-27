@@ -2,7 +2,7 @@
   "name": "aws-typescript",
   "main": "src/index.ts",
   "devDependencies": {
-    "@types/mime": "3.0.4",
+    "@types/mime": "4.0.0",
     "@types/node": "latest",
     "typescript": "5.8.2"
   },
@@ -12,7 +12,7 @@
     "@pulumi/random": "latest",
     "ip-address": "^10.0.0",
     "jsbn": "^1.1.0",
-    "mime": "^3.0.0"
+    "mime": "^4.0.0"
   },
   "scripts": {
     "tslint-fix": "tslint --fix -p tsconfig.json"
