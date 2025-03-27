@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "devDependencies": {
         "@types/node": "22.13.14",
-        "@types/express": "5.0.0"
+        "@types/express": "5.0.1"
     },
     "dependencies": {
         "@pulumi/google-native": "0.32.0",
