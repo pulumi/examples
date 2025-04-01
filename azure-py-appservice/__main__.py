@@ -1,4 +1,4 @@
-import pulumi_azure_native.insights as insights
+import pulumi_azure_native.applicationinsights as insights
 import pulumi_azure_native.resources as resource
 import pulumi_azure_native.sql as sql
 import pulumi_azure_native.storage as storage

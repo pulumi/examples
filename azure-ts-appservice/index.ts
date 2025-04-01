@@ -1,6 +1,6 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as insights from "@pulumi/azure-native/insights";
+import * as insights from "@pulumi/azure-native/applicationinsights";
 import * as resource from "@pulumi/azure-native/resources";
 import * as sql from "@pulumi/azure-native/sql";
 import * as storage from "@pulumi/azure-native/storage";
