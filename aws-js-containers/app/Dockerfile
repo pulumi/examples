@@ -1,2 +1,2 @@
-FROM nginx@sha256:9d6b58feebd2dbd3c56ab5853333d627cc6e281011cfd6050fa4bcf2072c9496
+FROM nginx@sha256:2df6f48759eaaa5bbcc2ce33cb939618fd77da846a9f50648b6fe56324a3a49c
 COPY content /usr/share/nginx/html
