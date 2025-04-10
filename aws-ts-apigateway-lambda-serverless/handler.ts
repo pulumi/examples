@@ -1,16 +1,20 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 
 /**
  * A simple function that returns the request.
  *
- * @param {APIGatewayProxyEvent} event -
- * @returns returns a confirmation to the message to the
+ * @param {APIGatewayProxyEvent} event - API Gateway event
+ * @param {Context} context - Lambda context
+ * @returns returns a confirmation to the message
  */
-export const handler: aws.lambda.EventHandler<APIGatewayProxyEvent, APIGatewayProxyResult> = async (event) => {
-  const route = event.pathParameters!["route"];
+export const handler = async (
+  event: APIGatewayProxyEvent,
+  context: Context,
+): Promise<APIGatewayProxyResult> => {
+  const route = event.pathParameters?.["route"] || "default";
   const body = event.body ? JSON.parse(event.body) : null;
 
   console.log("Received body: ", body);
