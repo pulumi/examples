@@ -22,13 +22,13 @@ func main() {
 			return err
 		}
 
-		// Get the ID for the latest Amazon Linux AMI.
+		// Get the ID for the latest Amazon Linux 2023 AMI.
 		mostRecent := true
 		ami, err := ec2.LookupAmi(ctx, &ec2.LookupAmiArgs{
 			Filters: []ec2.GetAmiFilter{
 				{
 					Name:   "name",
-					Values: []string{"amzn-ami-hvm-*-x86_64-ebs"},
+					Values: []string{"al2023-ami-*-x86_64"},
 				},
 			},
 			Owners:     []string{"137112412989"},

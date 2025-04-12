@@ -3,10 +3,10 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
-// Get the id for the latest Amazon Linux AMI
+// Get the id for the latest Amazon Linux 2023 AMI
 const ami = aws.ec2.getAmi({
     filters: [
-        { name: "name", values: ["amzn-ami-hvm-*-x86_64-ebs"] },
+        { name: "name", values: ["al2023-ami-*-x86_64"] },
     ],
     owners: ["137112412989"], // Amazon
     mostRecent: true,
