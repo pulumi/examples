@@ -31,8 +31,7 @@ Each example has a two-part prefix, `<cloud>-<language>`, to indicate which `<cl
  - `azure` for [Microsoft Azure](https://github.com/pulumi/pulumi-azure)
  - `gcp` for [Google Cloud Platform](https://github.com/pulumi/pulumi-gcp) 
  - `kubernetes` for [Kubernetes](https://github.com/pulumi/pulumi-kubernetes) 
- - `cloud` for [Pulumi's cross-cloud programming framework](https://github.com/pulumi/pulumi-cloud).
-
+ 
 See the [Pulumi documentation](https://www.pulumi.com/docs/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) for more details on getting started with Pulumi.
 
 ## Checking out a single example
