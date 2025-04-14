@@ -19,7 +19,7 @@ const amiId = aws.ec2.getAmi({
     filters: [
         {
             name: "name",
-            values: ["amzn-ami-hvm-2018.03*"],
+            values: ["al2023-ami-*-x86_64"],
         },
         {
             name: "virtualization-type",

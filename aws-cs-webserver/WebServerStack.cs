@@ -12,7 +12,7 @@ class WebServerStack : Stack
         {
             MostRecent = true,
             Owners = {"137112412989"},
-            Filters = {new GetAmiFilterInputArgs {Name = "name", Values = "amzn-ami-hvm-*"}}
+            Filters = {new GetAmiFilterInputArgs {Name = "name", Values = "al2023-ami-*-x86_64"}}
         });
 
         var group = new SecurityGroup("web-secgrp", new SecurityGroupArgs
