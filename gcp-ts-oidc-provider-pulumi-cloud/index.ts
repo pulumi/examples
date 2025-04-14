@@ -1,7 +1,9 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2025, Pulumi Corporation.  All rights reserved.
+
 import * as gcp from "@pulumi/gcp";
-import * as random from "@pulumi/random";
+import * as pulumi from "@pulumi/pulumi";
 import * as pcloud from "@pulumi/pulumiservice";
+import * as random from "@pulumi/random";
 
 const config = new pulumi.Config();
 const gcpConfig = new pulumi.Config("gcp");
@@ -27,14 +29,14 @@ const randomSuffix = new random.RandomString(`random-suffix`, {
   length: 5,
   lower: true,
   upper: false,
-  special: false
+  special: false,
 });
 
 // The Workload Identity Pool id uses a random suffix so that this stack can be
 // brought up and down repeatably: Workload Identity Pools only soft deletes and
 // will auto-purge after 30 days. It is not possible to force a hard delete:
 const identityPool = new gcp.iam.WorkloadIdentityPool(`identity-pool`, {
-  workloadIdentityPoolId: pulumi.interpolate`${workloadIdentityPoolId}-${randomSuffix.result}`
+  workloadIdentityPoolId: pulumi.interpolate`${workloadIdentityPoolId}-${randomSuffix.result}`,
 });
 
 const oidcProvider = new gcp.iam.WorkloadIdentityPoolProvider(`identity-pool-provider`, {
@@ -42,33 +44,35 @@ const oidcProvider = new gcp.iam.WorkloadIdentityPoolProvider(`identity-pool-pro
   workloadIdentityPoolProviderId: `pulumi-cloud-${pulumi.getOrganization()}-oidc`,
   oidc: {
     issuerUri: "https://api.pulumi.com/oidc",
-    allowedAudiences: [`gcp:${pulumi.getOrganization()}`]
+    allowedAudiences: [`gcp:${pulumi.getOrganization()}`],
   },
   attributeMapping: {
-    "google.subject": "assertion.sub"
-  }
+    "google.subject": "assertion.sub",
+  },
 });
 
 const serviceAccount = new gcp.serviceaccount.Account("service-account", {
   accountId: serviceAccountId,
-  project: gcpProjectName
+  project: gcpProjectName,
 });
 
+// tslint:disable-next-line:no-unused-expression
 new gcp.projects.IAMMember("service-account", {
   member: pulumi.interpolate`serviceAccount:${serviceAccount.email}`,
   role: "roles/admin",
-  project: gcpProjectName
+  project: gcpProjectName,
 });
 
+// tslint:disable-next-line:no-unused-expression
 new gcp.serviceaccount.IAMBinding("service-account", {
   serviceAccountId: serviceAccount.id,
   role: "roles/iam.workloadIdentityUser",
-  members: [pulumi.interpolate`principalSet://iam.googleapis.com/${identityPool.name}/*`]
+  members: [pulumi.interpolate`principalSet://iam.googleapis.com/${identityPool.name}/*`],
 });
 
 // fn::open::gcp-login requires project number instead of project name:
 const projectNumber = gcp.projects.getProjectOutput({
-  filter: `name:${gcpProjectName}`
+  filter: `name:${gcpProjectName}`,
 }).projects[0].number
   .apply(projectNumber => +projectNumber); // this casts it from string to a number
 
@@ -103,5 +107,6 @@ const environment = new pcloud.Environment("environment", {
   name: escEnvName,
   yaml: envYaml,
 });
+
 
 export const escEnvId = environment.id;
