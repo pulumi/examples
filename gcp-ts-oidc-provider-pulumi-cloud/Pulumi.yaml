@@ -1,5 +1,5 @@
 name: gcp-ts-oidc-provider-pulumi-cloud
-description: A minimal TypeScript Pulumi program
+description: Enables Pulumi Cloud to authenticate with an OIDC provider in Google Cloud
 runtime:
   name: nodejs
   options:
