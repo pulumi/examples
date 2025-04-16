@@ -3,8 +3,6 @@ package appservice;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.asset.FileArchive;
-import com.pulumi.azurenative.insights.Component;
-import com.pulumi.azurenative.insights.ComponentArgs;
 import com.pulumi.azurenative.insights.enums.ApplicationType;
 import com.pulumi.azurenative.resources.ResourceGroup;
 import com.pulumi.azurenative.sql.Database;
@@ -67,12 +65,6 @@ public class App {
 
         var codeBlobUrl = getSASToken(storageAccount.name(), storageContainer.name(), blob.name(), resourceGroup.name());
 
-        var appInsights = new Component("ai",
-                ComponentArgs.builder().resourceGroupName(resourceGroup.name())
-                        .kind("web")
-                        .applicationType(ApplicationType.Web)
-                        .build());
-
         var username = "pulumi";
 
         // Get the password to use for SQL from config.
@@ -102,14 +94,6 @@ public class App {
                         .serverFarmId(appServicePlan.id())
                         .siteConfig(SiteConfigArgs.builder()
                                 .appSettings(
-                                        NameValuePairArgs.builder()
-                                                .name("APPINSIGHTS_INSTRUMENTATIONKEY")
-                                                .value(appInsights.instrumentationKey())
-                                                .build(),
-                                        NameValuePairArgs.builder()
-                                                .name("APPLICATIONINSIGHTS_CONNECTION_STRING")
-                                                .value(Output.format("InstrumentationKey=%s", appInsights.instrumentationKey()))
-                                                .build(),
                                         NameValuePairArgs.builder()
                                                 .name("ApplicationInsightsAgent_EXTENSION_VERSION")
                                                 .value("~2")
