@@ -1,6 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 using Pulumi;
+using Pulumi.AzureNative.ApplicationInsights;
 using Pulumi.AzureNative.OperationalInsights;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Sql;
