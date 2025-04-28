@@ -5,7 +5,7 @@ import "mocha";
 import * as assert from 'assert';
 
 pulumi.runtime.setMocks({
-    newResource: function (args: pulumi.runtime.MockResourceArgs): { id: string, state: any } {
+    newResource: function (args: pulumi.runtime.MockResourceArgs): { id: string, state: any; } {
         switch (args.type) {
             default:
                 return {
@@ -27,12 +27,12 @@ pulumi.runtime.setMocks({
 describe("BucketPair", function () {
     this.timeout(10000); // Extend the timeout for this suite
 
-    let module: typeof import("./bucket_pair");
+    let module: typeof import("./bucket_pair.ts");
 
     before(async function () {
         this.timeout(10000); // Extend timeout for the import
         // It's important to import the program _after_ the mocks are defined.
-        module = await import("./bucket_pair");
+        module = await import("./bucket_pair.ts");
     });
 
     describe("constructor", function () {
