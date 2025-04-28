@@ -4,7 +4,7 @@ import * as pulumi from "@pulumi/pulumi";
 import "mocha";
 
 pulumi.runtime.setMocks({
-    newResource: function(args: pulumi.runtime.MockResourceArgs): {id: string, state: any} {
+    newResource: function (args: pulumi.runtime.MockResourceArgs): { id: string, state: any; } {
         switch (args.type) {
             case "aws:ec2/securityGroup:SecurityGroup":
                 return {
@@ -39,7 +39,7 @@ pulumi.runtime.setMocks({
                 };
         }
     },
-    call: function(args: pulumi.runtime.MockCallArgs) {
+    call: function (args: pulumi.runtime.MockCallArgs) {
         switch (args.token) {
             case "aws:ec2/getAmi:getAmi":
                 return {
@@ -52,17 +52,17 @@ pulumi.runtime.setMocks({
     },
 });
 
-describe("Infrastructure", function() {
-    let infra: typeof import("./index");
+describe("Infrastructure", function () {
+    let infra: typeof import("./index.ts");
 
-    before(async function() {
+    before(async function () {
         // It's important to import the program _after_ the mocks are defined.
-        infra = await import("./index");
+        infra = await import("./index.ts");
     });
 
-    describe("#server", function() {
+    describe("#server", function () {
         // check 1: Instances have a Name tag.
-        it("must have a name tag", function(done) {
+        it("must have a name tag", function (done) {
             pulumi.all([infra.server.urn, infra.server.tags]).apply(([urn, tags]) => {
                 if (!tags || !tags["Name"]) {
                     done(new Error(`Missing a name tag on server ${urn}`));
@@ -73,7 +73,7 @@ describe("Infrastructure", function() {
         });
 
         // check 2: Instances must not use an inline userData script.
-        it("must not use userData (use an AMI instead)", function(done) {
+        it("must not use userData (use an AMI instead)", function (done) {
             pulumi.all([infra.server.urn, infra.server.userData]).apply(([urn, userData]) => {
                 if (userData) {
                     done(new Error(`Illegal use of userData on server ${urn}`));
@@ -84,13 +84,13 @@ describe("Infrastructure", function() {
         });
     });
 
-    describe("#group", function() {
+    describe("#group", function () {
         // check 3: Instances must not have SSH open to the Internet.
-        it("must not open port 22 (SSH) to the Internet", function(done) {
-            pulumi.all([infra.group.urn, infra.group.ingress]).apply(([ urn, ingress ]) => {
+        it("must not open port 22 (SSH) to the Internet", function (done) {
+            pulumi.all([infra.group.urn, infra.group.ingress]).apply(([urn, ingress]) => {
                 if (ingress.find(rule =>
                     rule.fromPort === 22 && (rule.cidrBlocks || []).find(block => block === "0.0.0.0/0"))) {
-                        done(new Error(`Illegal SSH port 22 open to the Internet (CIDR 0.0.0.0/0) on group ${urn}`));
+                    done(new Error(`Illegal SSH port 22 open to the Internet (CIDR 0.0.0.0/0) on group ${urn}`));
                 } else {
                     done();
                 }

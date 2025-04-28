@@ -12,7 +12,9 @@
         "pretty": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitReturns": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "allowImportingTsExtensions": true,
+        "noEmit": true
     },
     "files": [
         "index.ts",
@@ -21,4 +23,3 @@
         "bucket_pair_test.ts",
     ]
 }
-
