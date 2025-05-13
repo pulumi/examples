@@ -10,7 +10,7 @@ import (
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		account, err := aws.GetCallerIdentity(ctx)
+		account, err := aws.GetCallerIdentity(ctx, &aws.GetCallerIdentityArgs{}, nil)
 		if err != nil {
 			return err
 		}
@@ -57,9 +57,9 @@ func main() {
 
 		// Set arguments for constructing the function resource.
 		args := &lambda.FunctionArgs{
-			Handler: pulumi.String("handler"),
+			Handler: pulumi.String("bootstrap"),
 			Role:    role.Arn,
-			Runtime: pulumi.String("go1.x"),
+			Runtime: pulumi.String("provided.al2"),
 			Code:    pulumi.NewFileArchive("./handler/handler.zip"),
 		}
 
