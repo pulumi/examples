@@ -3,12 +3,12 @@
 const pulumi = require("@pulumi/pulumi");
 const aws = require("@pulumi/aws");
 
-// Get the id for the latest Amazon Linux AMI
+// Get the id for the latest Amazon Linux 2023 AMI
 let ami = aws.ec2.getAmi({
     filters: [
-        { name: "name", values: ["amzn2-ami-hvm-*"] },
+        { name: "name", values: ["al2023-ami-*-x86_64"] },
     ],
-    owners: ["amazon"],
+    owners: ["137112412989"],
     mostRecent: true,
 }, { async: true }).then(result => result.id);
 
