@@ -7,8 +7,8 @@ size = "t2.micro"
 
 ami = aws.ec2.get_ami(
     most_recent=True,
-    owners=["amazon"],
-    filters=[{"name": "name", "values": ["amzn2-ami-hvm-*"]}],
+    owners=["137112412989"],
+    filters=[{"name": "name", "values": ["al2023-ami-*-x86_64"]}],
 )
 
 group = aws.ec2.SecurityGroup(
