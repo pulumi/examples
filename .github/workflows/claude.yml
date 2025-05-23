@@ -1,0 +1,94 @@
+name: Claude Assistant
+
+# Apply the principle of least privilege - only request permissions actually needed
+permissions:
+  # Required for commenting on issues and PRs
+  issues: write
+  pull-requests: write
+  # Required for creating branches and commits
+  contents: write
+  # Required for OIDC authentication
+  id-token: write
+
+on:
+  # Only trigger on specific events to avoid unnecessary runs
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened]
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# Define environment variables for all jobs
+env:
+  # Improve Go module download reliability
+  GOPROXY: "https://proxy.golang.org,direct"
+  # Avoid warning messages and improve stability
+  NODE_OPTIONS: "--max-old-space-size=4096"
+
+jobs:
+  claude-response:
+    # Use a specific version for better reliability
+    runs-on: ubuntu-22.04
+    # Skip running on forks for security and to avoid unnecessary resource usage
+    if: |
+      github.repository == 'pulumi/pulumi-afp' && 
+      (contains(github.event.comment.body, '@claude') || github.event_name == 'issues' || github.event_name == 'pull_request')
+    
+    # Timeout to prevent hung jobs
+    timeout-minutes: 15
+    
+    steps:
+      # Use specific version of checkout action for better reliability
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Need full history for proper context
+          fetch-depth: 0
+          # Needed for operations across branches
+          persist-credentials: true
+      
+      # Setup Go environment to ensure Claude has proper context
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          cache: true
+      
+      # Setup caching for better performance
+      - name: Setup cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('provider/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      
+      # Main Claude action
+      - name: Claude Code Action
+        uses: anthropics/claude-code-action@beta
+        with:
+          # Use secrets for sensitive information
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Configuration options
+          trigger_phrase: "@claude"
+          model: "claude-opus-4-20250514"
+          
+          # Explicitly define allowed tools for better security control
+          allowed_tools: >-
+            Bash,Glob,Grep,LS,Read,Edit,MultiEdit,Write,NotebookRead,
+            NotebookEdit,WebFetch,Batch,TodoRead,TodoWrite,WebSearch
+          
+          # Explicitly define tools that should not be allowed
+          disallowed_tools: "KillTask"
+          
+          # Maximum duration for Claude to run in minutes (10 min)
+          timeout_minutes: 10
