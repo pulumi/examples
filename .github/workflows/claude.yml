@@ -42,6 +42,11 @@ jobs:
     # Timeout to prevent hung jobs
     timeout-minutes: 15
     
+    # Prevent overlapping runs for multiple triggers
+    concurrency:
+      group: claude-response
+      cancel-in-progress: true
+    
     steps:
       # Use specific version of checkout action for better reliability
       - name: Checkout repository
