@@ -7,16 +7,16 @@ const config = new pulumi.Config();
 const roleToAssumeARN = config.require("roleToAssumeARN");
 
 const provider = new aws.Provider("privileged", {
-    assumeRole: {
+    assumeRoles: [{
         roleArn: roleToAssumeARN,
         sessionName: "PulumiSession",
         externalId: "PulumiApplication",
-    },
+    }],
     region: aws.config.requireRegion(),
 });
 
 // Create an AWS resource (S3 Bucket)
-const bucket = new aws.s3.BucketV2("my-bucket", {}, {provider: provider});
+const bucket = new aws.s3.Bucket("my-bucket", {}, {provider: provider});
 
 // Export the DNS name of the bucket
 export const bucketName = bucket.bucketDomainName;

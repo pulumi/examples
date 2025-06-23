@@ -22,7 +22,6 @@ const eksCluster = new eks.Cluster("eksCluster", {
     desiredCapacity: 3,
     minSize: 2,
     maxSize: 4,
-    deployDashboard: false,
     enabledClusterLogTypes: [
         "api",
         "audit",

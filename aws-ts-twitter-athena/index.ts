@@ -4,11 +4,11 @@ import * as s3sdk from "@aws-sdk/client-s3";
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
-const bucket = new aws.s3.BucketV2("tweet-bucket", {
+const bucket = new aws.s3.Bucket("tweet-bucket", {
     forceDestroy: true, // We require this in the example as we are not managing the contents of the bucket via Pulumi
 });
 
-const myBucketSseConfig = new aws.s3.BucketServerSideEncryptionConfigurationV2("my-bucket-sse-config", {
+const myBucketSseConfig = new aws.s3.BucketServerSideEncryptionConfiguration("my-bucket-sse-config", {
     bucket: bucket.bucket,
     rules: [{
         applyServerSideEncryptionByDefault: {

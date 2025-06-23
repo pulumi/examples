@@ -1,23 +1,23 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import { ObjectIdentifier } from "aws-sdk/clients/s3";
+import * as awsSdk from "aws-sdk";
 
 
 // Create an AWS resource (S3 Bucket)
-const trashBucket = new aws.s3.BucketV2("trash");
+const trashBucket = new aws.s3.Bucket("trash");
 
 // A handler function that will list objects in the bucket and bulk delete them
 const emptyTrash: aws.cloudwatch.EventRuleEventHandler = async (
   event: aws.cloudwatch.EventRuleEvent,
 ) => {
-  const s3Client = new aws.sdk.S3();
+  const s3Client = new awsSdk.S3();
   const bucket = trashBucket.id.get();
 
   const { Contents = [] } = await s3Client
     .listObjects({ Bucket: bucket })
     .promise();
-  const objects: ObjectIdentifier[] = Contents.map(object => {
+  const objects: awsSdk.S3.ObjectIdentifier[] = Contents.map(object => {
     return { Key: object.Key! };
   });
 

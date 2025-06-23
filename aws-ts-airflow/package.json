@@ -4,9 +4,9 @@
         "@types/node": "22.13.14"
     },
     "dependencies": {
-        "@pulumi/aws": "6.73.0",
+        "@pulumi/aws": "^7.0.0-alpha.1",
         "@pulumi/awsx": "2.21.1",
         "@pulumi/pulumi": "3.158.0",
-        "typescript": "^5.0.0"
+        "typescript": "^5.8.3"
     }
 }

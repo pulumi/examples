@@ -7,7 +7,7 @@
     "typescript": "5.8.2"
   },
   "dependencies": {
-    "@pulumi/aws": "latest",
+    "@pulumi/aws": "^7.0.0-alpha.1",
     "@pulumi/pulumi": "latest",
     "@pulumi/random": "latest",
     "ip-address": "^10.0.0",

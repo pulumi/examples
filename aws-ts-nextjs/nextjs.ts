@@ -38,7 +38,7 @@ export class NextJsSite extends pulumi.ComponentResource {
             pulumi.log.warn("Could not build Next.js site.");
         }
 
-        const bucket = new aws.s3.BucketV2(`${name}-bucket`, {
+        const bucket = new aws.s3.Bucket(`${name}-bucket`, {
             forceDestroy: true,
         }, { parent: this });
 
@@ -183,7 +183,7 @@ export class NextJsSite extends pulumi.ComponentResource {
 
         const serverFunctionRole = new aws.iam.Role(`${name}-server-function-role`, {
             assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: "lambda.amazonaws.com" }),
-            managedPolicyArns: [aws.iam.ManagedPolicies.AWSLambdaBasicExecutionRole],
+            managedPolicyArns: [aws.iam.ManagedPolicy.AWSLambdaBasicExecutionRole],
         }, { parent: this });
 
         const serverFunctionPolicy = new aws.iam.RolePolicy(`${name}-server-function-policy`, {
@@ -245,7 +245,7 @@ export class NextJsSite extends pulumi.ComponentResource {
 
         const imageFunctionRole = new aws.iam.Role(`${name}-image-function-role`, {
             assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({ Service: "lambda.amazonaws.com" }),
-            managedPolicyArns: [aws.iam.ManagedPolicies.AWSLambdaBasicExecutionRole],
+            managedPolicyArns: [aws.iam.ManagedPolicy.AWSLambdaBasicExecutionRole],
         }, { parent: this });
 
         const imageFunctionPolicy = new aws.iam.RolePolicy(`${name}-image-function-policy`, {

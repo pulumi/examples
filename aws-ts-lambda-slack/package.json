@@ -3,10 +3,10 @@
     "main": "index.ts",
     "devDependencies": {
         "@types/node": "22.13.14",
-        "typescript": "5.8.2"
+        "typescript": "^5.8.2"
     },
     "dependencies": {
-        "@pulumi/aws": "6.73.0",
+        "@pulumi/aws": "^7.0.0-alpha.1",
         "@pulumi/pulumi": "3.158.0"
     }
 }

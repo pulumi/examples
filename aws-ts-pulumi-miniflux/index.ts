@@ -28,11 +28,11 @@ const cluster = new aws.ecs.Cluster("cluster", {});
 // Create a new database, using the subnet and cluster groups.
 const db = new aws.rds.Instance("db", {
     engine: "postgres",
-    instanceClass: aws.rds.InstanceTypes.T3_Micro,
+    instanceClass: aws.rds.InstanceType.T3_Micro,
     allocatedStorage: 5,
     dbSubnetGroupName: subnetGroup.id,
     // vpcSecurityGroupIds: cluster.securityGroups.map(g => g.id),
-    name: dbName,
+    dbName: dbName,
     username: dbUsername,
     password: dbPassword,
     skipFinalSnapshot: true,

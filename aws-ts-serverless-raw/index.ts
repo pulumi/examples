@@ -116,8 +116,6 @@ const restApi = new aws.apigateway.RestApi("api", {
 // Create a deployment of the Rest API.
 const deployment = new aws.apigateway.Deployment("api-deployment", {
     restApi: restApi,
-    // Note: Set to empty to avoid creating an implicit stage, we'll create it explicitly below instead.
-    stageName: "",
 });
 
 // Create a stage, which is an addressable instance of the Rest API. Set it to point at the latest deployment.
@@ -132,8 +130,8 @@ const invokePermission = new aws.lambda.Permission("api-lambda-permission", {
     action: "lambda:invokeFunction",
     function: lambda,
     principal: "apigateway.amazonaws.com",
-    sourceArn: pulumi.interpolate `${deployment.executionArn}*/*`,
+    sourceArn: pulumi.interpolate `${stage.executionArn}/*/*`,
 });
 
 // Export the https endpoint of the running Rest API
-export let endpoint = pulumi.interpolate `${deployment.invokeUrl}${stageName}`;
+export let endpoint = pulumi.interpolate `${stage.invokeUrl}${stageName}`;

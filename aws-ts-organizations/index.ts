@@ -114,9 +114,9 @@ const userPolicy = new aws.iam.UserPolicy("automationUserPolicy", {
 // created.
 const devAccountProvider = new aws.Provider("devAccountProvider", {
     allowedAccountIds: [devAccount.id],
-    assumeRole: {
+    assumeRoles: [{
         roleArn: pulumi.interpolate`arn:aws:iam::${devAccount.id}:role/${initialRoleName}`,
-    },
+    }],
 });
 
 // Create the permissions in the target account so that developers
@@ -148,7 +148,7 @@ const tagPolicies = new TagPolicies("tagPolicies", {
 const backupPolicy = new BackupPolicy("developmentBackupPolicy", {
     assumeRoleName: initialRoleName,
     accounts: { devAccount },
-    backupRegion: aws.USEast1Region,
-    primaryRegions: [aws.USWest2Region],
+    backupRegion: aws.Region.USEast1,
+    primaryRegions: [aws.Region.USWest2],
     orgUnitId: devOrgUnit.id,
 });
