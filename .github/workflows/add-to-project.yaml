@@ -1,3 +1,10 @@
+permissions: write-all # Equivalent to default permissions plus id-token: write
+env:
+  ESC_ACTION_OIDC_AUTH: true
+  ESC_ACTION_OIDC_ORGANIZATION: pulumi
+  ESC_ACTION_OIDC_REQUESTED_TOKEN_TYPE: urn:pulumi:token-type:access_token:organization
+  ESC_ACTION_ENVIRONMENT: imports/github-secrets
+  ESC_ACTION_EXPORT_ENVIRONMENT_VARIABLES: false
 name: Add issues to project
 on:
   issues:
@@ -8,8 +15,11 @@ jobs:
   add-to-project:
     runs-on: ubuntu-latest
     steps:
+      - name: Fetch secrets from ESC
+        id: esc-secrets
+        uses: pulumi/esc-action@v1
       - name: Add to DevRel
         uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e # v1.0.2
         with:
           project-url: https://github.com/orgs/pulumi/projects/47
-          github-token: ${{ secrets.PULUMI_BOT_GHA_MARKETING }}
+          github-token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_GHA_MARKETING }}
