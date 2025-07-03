@@ -264,7 +264,7 @@ Example   | Description |
 [Azure Kubernetes Service](azure-go-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [Azure App Service with Docker](azure-go-appservice-docker) | Build a web application hosted in App Service from Docker images.
 [Static Website](azure-go-static-website) | Configure static website hosting in Azure Storage.
-[Azure SDK integration](azure-go-call-azure-sdk) | Call Azure SDK functions from a Pulumi program in Go Go.
+[Azure SDK integration](azure-go-call-azure-sdk) | Call Azure SDK functions from a Pulumi program in Go.
 
 [Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
 
