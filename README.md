@@ -140,7 +140,7 @@ Example   | Description |
 [Containers](aws-js-containers) | Provision containers on Fargate.
 [S3 Folder Component](aws-js-s3-folder-component) | Serve a static website on S3 from a component.
 [S3 Folder](aws-js-s3-folder) | Serve a static website on S3.
-[Servless SQS to Slack](aws-js-sqs-slack) | Wire up a serverless AWS Lambda to an AWS SQS queue and post a message to Slack.
+[Serverless SQS to Slack](aws-js-sqs-slack) | Wire up a serverless AWS Lambda to an AWS SQS queue and post a message to Slack.
 [Web Server - Component](aws-js-webserver-component) | Deploy an EC2 instance using a common module for creating an instance.
 [Web Server](aws-js-webserver) | Deploy an EC2 Virtual machine running a Python web server.
 [LangServe - Hello OpenAI](aws-js-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
@@ -264,7 +264,7 @@ Example   | Description |
 [Azure Kubernetes Service](azure-go-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [Azure App Service with Docker](azure-go-appservice-docker) | Build a web application hosted in App Service from Docker images.
 [Static Website](azure-go-static-website) | Configure static website hosting in Azure Storage.
-[Azure SDK integration](azure-go-call-azure-sdk) | Call Azure SDK functions from a Pulumi programin Go.
+[Azure SDK integration](azure-go-call-azure-sdk) | Call Azure SDK functions from a Pulumi program in Go Go.
 
 [Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
 
