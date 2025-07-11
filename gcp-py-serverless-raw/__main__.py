@@ -39,7 +39,7 @@ go_bucket_object = storage.BucketObject(
 go_function = cloudfunctions.Function(
     "go-func",
     source_archive_bucket=bucket.name,
-    runtime="go120",
+    runtime="go123",
     source_archive_object=go_bucket_object.name,
     entry_point="Handler",
     trigger_http=True,

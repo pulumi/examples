@@ -45,7 +45,7 @@ inputs:
     required: true
 
   node-version:
-    default: 18
+    default: 20
 
   python-version:
     default: 3.9
