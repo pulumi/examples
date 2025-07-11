@@ -27,7 +27,7 @@ func main() {
 		// Set arguments for creating the function resource.
 		args := &cloudfunctions.FunctionArgs{
 			SourceArchiveBucket: bucket.Name,
-			Runtime:             pulumi.String("go120"),
+			Runtime:             pulumi.String("go123"),
 			SourceArchiveObject: bucketObject.Name,
 			EntryPoint:          pulumi.String("Handler"),
 			TriggerHttp:         pulumi.Bool(true),
