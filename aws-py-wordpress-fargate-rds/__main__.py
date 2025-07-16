@@ -53,7 +53,7 @@ fe = frontend.WebService(
     frontend.WebServiceArgs(
         db_host=be.db.address,
         db_port="3306",
-        db_name=be.db.name,
+        db_name=be.db.db_name,
         db_user=be.db.username,
         db_password=be.db.password,
         vpc_id=network.vpc.id,
