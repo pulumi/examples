@@ -89,8 +89,14 @@ const lambdaPermission = new aws.lambda.Permission("apiGatewayPermission", {
 // Deploy the API
 const deployment = new aws.apigateway.Deployment("myDeployment", {
   restApi: api.id,
-  stageName: "dev",
 }, { dependsOn: [rootIntegration] });
 
+// Create explicit stage
+const stage = new aws.apigateway.Stage("dev", {
+  stageName: "dev",
+  restApi: api.id,
+  deployment: deployment.id,
+});
+
 // Export the URL of the API
-export const url = pulumi.interpolate`${deployment.invokeUrl}`;
+export const url = stage.invokeUrl;
