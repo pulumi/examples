@@ -193,7 +193,7 @@ const stage = new aws.apigateway.Stage("stage", {
 
 // Create a Lambda function handler with permission to log to CloudWatch.
 const lambda = new aws.lambda.CallbackFunction("lambda", {
-    policies: [aws.iam.ManagedPolicies.CloudWatchLogsFullAccess],
+    policies: [aws.iam.ManagedPolicy.CloudWatchLogsFullAccess],
     callback: async (event: any) => {
 
         // For now, just log the event, including the uploaded document.

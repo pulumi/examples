@@ -220,8 +220,8 @@ const aggregationFunction = async (event: EventRuleEvent) => {
 };
 
 const policyARNsToAttach: pulumi.Input<ARN>[] = [
-    aws.iam.ManagedPolicies.AmazonAthenaFullAccess,
-    aws.iam.ManagedPolicies.AmazonS3FullAccess
+    aws.iam.ManagedPolicy.AmazonAthenaFullAccess,
+    aws.iam.ManagedPolicy.AmazonS3FullAccess
 ];
 
 const aggregateTableArgs: BatchInputTableArgs = {

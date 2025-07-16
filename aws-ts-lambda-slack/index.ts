@@ -24,7 +24,7 @@ const lambdaRole = new aws.iam.Role("lambdaRole", {
 // Attach a policy to the role to allow Lambda to log to CloudWatch
 const rpa = new aws.iam.RolePolicyAttachment("lambdaRolePolicy", {
   role: lambdaRole.name,
-  policyArn: aws.iam.ManagedPolicies.AWSLambdaBasicExecutionRole,
+  policyArn: aws.iam.ManagedPolicy.AWSLambdaBasicExecutionRole,
 });
 
 // Create the Lambda function

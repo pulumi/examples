@@ -43,7 +43,7 @@ export class EventGenerator extends pulumi.ComponentResource {
             jobFn: eventGenCallback,
             scheduleExpression: "rate(1 minute)",
             policyARNsToAttach: [
-                aws.iam.ManagedPolicies.AmazonKinesisFullAccess,
+                aws.iam.ManagedPolicy.AmazonKinesisFullAccess,
             ],
         };
 
