@@ -265,7 +265,9 @@ def get_registry_info(creds):
     return docker.ImageRegistry(server=creds.proxy_endpoint, username=username, password=password)
 
 
-app_registry = aws.ecr.get_authorization_token_output(app_ecr_repo.registry_id).apply(get_registry_info)
+app_registry = aws.ecr.get_authorization_token_output(app_ecr_repo.registry_id).apply(
+    get_registry_info
+)
 
 django_image = docker.Image(
     "django-dockerimage",
