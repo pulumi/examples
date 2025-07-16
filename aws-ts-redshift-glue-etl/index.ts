@@ -17,7 +17,7 @@ const providerConfig = new pulumi.Config("aws");
 const awsRegion = providerConfig.require("region");
 
 // Create an S3 bucket to store some raw data.
-const eventsBucket = new aws.s3.BucketV2("events", {
+const eventsBucket = new aws.s3.Bucket("events", {
     forceDestroy: true,
 });
 
@@ -145,7 +145,7 @@ const glueRedshiftConnection = new aws.glue.Connection("glue-redshift-connection
 });
 
 // Create an S3 bucket for Glue scripts and temporary storage.
-const glueJobBucket = new aws.s3.BucketV2("glue-job-bucket", {
+const glueJobBucket = new aws.s3.Bucket("glue-job-bucket", {
     forceDestroy: true,
 });
 
@@ -168,7 +168,7 @@ const glueJob = new aws.glue.Job("glue-job", {
 
         "--ConnectionName": glueRedshiftConnection.name,
         "--GlueDBName": glueDBName,
-        "--GlueDBTableName": eventsBucket.bucket.apply(name => name.replace("-", "_")),
+        "--GlueDBTableName": eventsBucket.bucket.apply((name: string) => name.replace("-", "_")),
         "--RedshiftDBName": clusterDBName,
         "--RedshiftDBTableName": "events",
         "--RedshiftRoleARN": redshiftRole.arn,

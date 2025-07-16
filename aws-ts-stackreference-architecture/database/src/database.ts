@@ -127,7 +127,7 @@ export class RdsInstance extends ComponentResource {
             parameterGroupName: args.parameterGroupName || "",
             password: args.password,
             username: args.username,
-            name: args.initalDbName,
+            dbName: args.initalDbName,
             storageType: args.storageType,
             finalSnapshotIdentifier: args.finalSnapshotIdentifier || "",
             skipFinalSnapshot: args.skipFinalSnapshot || false,

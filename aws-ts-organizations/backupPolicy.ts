@@ -56,9 +56,9 @@ export class BackupPolicy extends pulumi.ComponentResource {
             const accountProvider = new aws.Provider(
                 `${accountName}Provider`,
                 {
-                    assumeRole: {
+                    assumeRoles: [{
                         roleArn: pulumi.interpolate`arn:aws:iam::${account.id}:role/${this.assumeRoleName}`,
-                    },
+                    }],
                     allowedAccountIds: [account.id],
                 },
                 { parent: this },

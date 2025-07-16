@@ -9,18 +9,18 @@ import * as pulumi from "@pulumi/pulumi";
 
 export interface FileBucketOpts {
     files: string[];
-    policy?: (bucket: aws.s3.BucketV2) => pulumi.Output<string>;
+    policy?: (bucket: aws.s3.Bucket) => pulumi.Output<string>;
 }
 
 export class FileBucket {
-    public readonly bucket: aws.s3.BucketV2;
+    public readonly bucket: aws.s3.Bucket;
     public readonly files: { [key: string]: aws.s3.BucketObject };
     public readonly policy: aws.s3.BucketPolicy;
 
     private readonly fileContents: { [key: string]: string };
 
     constructor(bucketName: string, opts: FileBucketOpts) {
-        this.bucket = new aws.s3.BucketV2(bucketName);
+        this.bucket = new aws.s3.Bucket(bucketName);
         this.fileContents = {};
         this.files = {};
         for (const file of opts.files) {

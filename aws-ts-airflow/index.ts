@@ -36,7 +36,7 @@ const db = new aws.rds.Instance("postgresdb", {
     dbSubnetGroupName: dbSubnets.id,
     vpcSecurityGroupIds: securityGroupIds,
 
-    name: "airflow",
+    dbName: "airflow",
     username: "airflow",
     password: dbPassword,
 
@@ -138,3 +138,4 @@ const airflowWorkers = new awsx.classic.ecs.EC2Service("airflowworkers", {
 
 export let airflowEndpoint = airflowControllerListener.endpoint.hostname;
 export let flowerEndpoint = airflowerListener.endpoint.hostname;
+

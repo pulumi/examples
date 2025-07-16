@@ -26,9 +26,9 @@ const config = {
 };
 
 // contentBucket is the S3 bucket that the website's contents will be stored in.
-const contentBucket = new aws.s3.BucketV2(`${config.targetDomain}-content`);
+const contentBucket = new aws.s3.Bucket(`${config.targetDomain}-content`);
 
-const contentBucketWebsite = new aws.s3.BucketWebsiteConfigurationV2("contentBucketWebsite", {
+const contentBucketWebsite = new aws.s3.BucketWebsiteConfiguration("contentBucketWebsite", {
     bucket: contentBucket.bucket,
     indexDocument: {suffix: "index.html"},
     errorDocument: {key: "404.html"},
@@ -71,7 +71,7 @@ crawlDirectory(
     });
 
 // logsBucket is an S3 bucket that will contain the CDN's request logs.
-const logsBucket = new aws.s3.BucketV2(`${config.targetDomain}-logs`);
+const logsBucket = new aws.s3.Bucket(`${config.targetDomain}-logs`);
 configureACL("requestLogs", logsBucket, "private");
 
 const tenMinutes = 60 * 10;

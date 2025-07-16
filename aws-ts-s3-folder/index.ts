@@ -12,7 +12,7 @@ const siteBucket = new aws.s3.Bucket("s3-website-bucket", {
     },
 });
 
-const siteBucketWebsiteConfig = new aws.s3.BucketWebsiteConfigurationV2("s3-website-bucket-config", {
+const siteBucketWebsiteConfig = new aws.s3.BucketWebsiteConfiguration("s3-website-bucket-config", {
     bucket: siteBucket.id,
     indexDocument: {
         suffix: "index.html",
