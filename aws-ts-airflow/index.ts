@@ -36,7 +36,7 @@ const db = new aws.rds.Instance("postgresdb", {
     dbSubnetGroupName: dbSubnets.id,
     vpcSecurityGroupIds: securityGroupIds,
 
-    name: "airflow",
+    dbName: "airflow",
     username: "airflow",
     password: dbPassword,
 

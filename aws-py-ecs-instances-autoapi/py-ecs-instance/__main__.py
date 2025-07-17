@@ -137,7 +137,6 @@ cp = aws.ecs.CapacityProvider(
 cluster = aws.ecs.Cluster(
     "cluster",
     name=cluster_name,  # Use explicit name property so that we know the cluster name - this is required for the user data above.
-    capacity_providers=[cp.name],
 )
 
 # Application load balancer and related bits

@@ -116,9 +116,6 @@ rest_api = aws.apigateway.RestApi(
 deployment = aws.apigateway.Deployment(
     "api-deployment",
     rest_api=rest_api.id,
-    # Note: Set to empty to avoid creating an implicit stage, we'll create it
-    # explicitly below instead.
-    stage_name="",
 )
 
 # Create a stage, which is an addressable instance of the Rest API. Set it to point at the latest deployment.
@@ -135,5 +132,5 @@ invoke_permission = aws.lambda_.Permission(
     action="lambda:invokeFunction",
     function=lambda_func.name,
     principal="apigateway.amazonaws.com",
-    source_arn=deployment.execution_arn.apply(lambda arn: arn + "*/*"),
+    source_arn=stage.execution_arn.apply(lambda arn: arn + "*/*"),
 )

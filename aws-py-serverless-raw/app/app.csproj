@@ -15,8 +15,4 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="5.12.4" />
-  </ItemGroup>
-
 </Project>

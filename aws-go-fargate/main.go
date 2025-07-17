@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ec2"
-	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ecr"
-	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ecs"
-	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/iam"
-	elb "github.com/pulumi/pulumi-aws/sdk/v6/go/aws/lb"
+	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/ec2"
+	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/ecr"
+	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/ecs"
+	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/iam"
+	elb "github.com/pulumi/pulumi-aws/sdk/v7/go/aws/lb"
 	awsx "github.com/pulumi/pulumi-awsx/sdk/v2/go/awsx/ec2"
 	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
@@ -124,8 +124,8 @@ func main() {
 
 		// Get credentials for the new ECR repository
 		repoCreds := repo.RegistryId.ApplyT(func(rid string) ([]string, error) {
-			creds, err := ecr.GetCredentials(ctx, &ecr.GetCredentialsArgs{
-				RegistryId: rid,
+			creds, err := ecr.GetAuthorizationToken(ctx, &ecr.GetAuthorizationTokenArgs{
+				RegistryId: &rid,
 			})
 			if err != nil {
 				return nil, err

@@ -3,8 +3,8 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws"
-	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/s3"
+	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws"
+	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/s3"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
@@ -16,10 +16,12 @@ func main() {
 		roleToAssumeARN := config.Require("roleToAssumeARN")
 
 		provider, err := aws.NewProvider(ctx, "privileged", &aws.ProviderArgs{
-			AssumeRole: &aws.ProviderAssumeRoleArgs{
-				RoleArn:     pulumi.StringPtr(roleToAssumeARN),
-				SessionName: pulumi.String("PulumiSession"),
-				ExternalId:  pulumi.String("PulumiApplication"),
+			AssumeRoles: aws.ProviderAssumeRoleArray{
+				&aws.ProviderAssumeRoleArgs{
+					RoleArn:     pulumi.StringPtr(roleToAssumeARN),
+					SessionName: pulumi.String("PulumiSession"),
+					ExternalId:  pulumi.String("PulumiApplication"),
+				},
 			},
 			Region: pulumi.String(region),
 		})

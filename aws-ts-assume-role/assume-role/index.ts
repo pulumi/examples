@@ -7,11 +7,11 @@ const config = new pulumi.Config();
 const roleToAssumeARN = config.require("roleToAssumeARN");
 
 const provider = new aws.Provider("privileged", {
-    assumeRole: {
+    assumeRoles: [{
         roleArn: roleToAssumeARN,
         sessionName: "PulumiSession",
         externalId: "PulumiApplication",
-    },
+    }],
     region: aws.config.requireRegion(),
 });
 

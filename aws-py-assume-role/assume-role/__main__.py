@@ -9,14 +9,16 @@ aws_config = Config("aws")
 
 provider = aws.Provider(
     "privileged",
-    assume_role={
-        "role_arn": role_to_assume_arn,
-        # session name can contain only the following special characters =,.@-
-        # if any other special character is used, an error stating that the role
-        # cannot be assumed will be returned
-        "session_name": "PulumiSession",
-        "externalId": "PulumiApplication",
-    },
+    assume_roles=[
+        {
+            "role_arn": role_to_assume_arn,
+            # session name can contain only the following special characters =,.@-
+            # if any other special character is used, an error stating that the role
+            # cannot be assumed will be returned
+            "session_name": "PulumiSession",
+            "externalId": "PulumiApplication",
+        }
+    ],
     region=aws_config.require("region"),
 )
 

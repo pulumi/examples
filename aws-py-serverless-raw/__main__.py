@@ -5,8 +5,8 @@ import json
 import pulumi
 import pulumi_aws as aws
 
-# The location of the built dotnet3.1 application to deploy
-dotnet_application_publish_folder = "./app/bin/Debug/net6.0/publish"
+# The location of the built dotnet8.0 application to deploy
+dotnet_application_publish_folder = "./app/bin/Release/net8.0/publish"
 dotnet_application_entry_point = "app::app.Functions::GetAsync"
 # The stage name to use for the API Gateway URL
 custom_stage_name = "api"
@@ -160,9 +160,6 @@ rest_api = aws.apigateway.RestApi(
 deployment = aws.apigateway.Deployment(
     "api-deployment",
     rest_api=rest_api.id,
-    # Note: Set to empty to avoid creating an implicit stage, we'll create it
-    # explicitly below instead.
-    stage_name="",
 )
 
 # Create a stage, which is an addressable instance of the Rest API. Set it to point at the latest deployment.
@@ -179,8 +176,8 @@ invoke_permission = aws.lambda_.Permission(
     action="lambda:invokeFunction",
     function=lambda_func.name,
     principal="apigateway.amazonaws.com",
-    source_arn=deployment.execution_arn.apply(lambda arn: arn + "*/*"),
+    source_arn=stage.execution_arn.apply(lambda arn: arn + "*/*"),
 )
 
 # Export the https endpoint of the running Rest API
-pulumi.export("endpoint", deployment.invoke_url.apply(lambda url: url + custom_stage_name))
+pulumi.export("endpoint", stage.invoke_url.apply(lambda url: url + custom_stage_name))

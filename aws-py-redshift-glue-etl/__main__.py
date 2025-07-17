@@ -15,14 +15,6 @@ glue_db_name = config.require("glueDBName")
 provider_config = pulumi.Config("aws")
 aws_region = provider_config.require("region")
 
-# Create an S3 bucket to store some raw data.
-events_bucket = s3.BucketV2(
-    "events",
-    s3.BucketArgs(
-        force_destroy=True,
-    ),
-)
-
 # Create a VPC.
 vpc = ec2.Vpc(
     "vpc",
@@ -146,6 +138,12 @@ glue_role = iam.Role(
     ),
 )
 
+# Create an S3 bucket to store some raw data.
+events_bucket = s3.BucketV2(
+    "events",
+    force_destroy=True,
+)
+
 # Create a Glue crawler to process the contents of the data bucket on a schedule.
 # https://docs.aws.amazon.com/glue/latest/dg/monitor-data-warehouse-schedule.html
 glue_crawler = glue.Crawler(
@@ -183,9 +181,7 @@ glue_redshift_connection = glue.Connection(
 # Create an S3 bucket for Glue scripts and temporary storage.
 glue_job_bucket = s3.BucketV2(
     "glue-job-bucket",
-    s3.BucketArgs(
-        force_destroy=True,
-    ),
+    force_destroy=True,
 )
 
 # Upload a Glue job script.

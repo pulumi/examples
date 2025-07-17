@@ -14,11 +14,14 @@ class AssumeRoleStack : Stack
         var roleToAssumeARN = config.Require("roleToAssumeARN");
         var provider = new Aws.Provider("privileged", new Aws.ProviderArgs
         {
-            AssumeRole = new Aws.Inputs.ProviderAssumeRoleArgs
+            AssumeRoles = new Aws.Inputs.ProviderAssumeRoleArgs[]
             {
-                RoleArn = roleToAssumeARN,
-                SessionName = "PulumiSession",
-                ExternalId = "PulumiApplication"
+                new Aws.Inputs.ProviderAssumeRoleArgs
+                {
+                    RoleArn = roleToAssumeARN,
+                    SessionName = "PulumiSession",
+                    ExternalId = "PulumiApplication"
+                }
             },
             Region = awsConfig.Require("region"),
         });

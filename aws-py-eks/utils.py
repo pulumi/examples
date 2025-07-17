@@ -12,7 +12,7 @@ def generate_kube_config(eks_cluster):
                 {
                     "cluster": {
                         "server": eks_cluster.endpoint,
-                        "certificate-authority-data": eks_cluster.certificate_authority.apply(
+                        "certificate-authority-data": eks_cluster.certificate_authorities.apply(
                             lambda v: v.data
                         ),
                     },
