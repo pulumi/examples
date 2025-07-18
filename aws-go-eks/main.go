@@ -145,7 +145,7 @@ func main() {
 			return err
 		}
 
-		kubeconfig := generateKubeconfig(eksCluster.Endpoint, eksCluster.CertificateAuthorities.Data().Elem(), eksCluster.Name)
+		kubeconfig := generateKubeconfig(eksCluster.Endpoint, eksCluster.CertificateAuthority.Data().Elem(), eksCluster.Name)
 
 		ctx.Export("kubeconfig", kubeconfig)
 		k8sProvider, err := kubernetes.NewProvider(ctx, "k8sprovider", &kubernetes.ProviderArgs{
