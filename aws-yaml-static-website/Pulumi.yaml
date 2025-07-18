@@ -12,7 +12,7 @@ resources:
     properties:
       bucket: ${site-bucket}
       source:
-        Fn::FileAsset: ./www/index.html
+        fn::fileAsset: ./www/index.html
       acl: public-read
       contentType: text/html
   favicon.png:
@@ -20,7 +20,7 @@ resources:
     properties:
       bucket: ${site-bucket}
       source:
-        Fn::FileAsset: ./www/favicon.png
+        fn::fileAsset: ./www/favicon.png
       acl: public-read
       contentType: image/png
   bucketPolicy:
@@ -41,4 +41,4 @@ resources:
         }
 outputs:
   bucketName: ${site-bucket.bucketName}
-  websiteUrl: ${site-bucket.websiteURL}
+  websiteUrl: ${site-bucket.websiteUrl}

@@ -47,11 +47,11 @@ variables:
         mostRecent: true
   # Read in the public key for easy use below.
   publicKey:
-    Fn::ReadFile: ${publicKeyPath}
+    fn::readFile: ${publicKeyPath}
   # Read in the private key for easy use below (and to ensure it's marked a secret!)
   privateKey:
-    Fn::Secret:
-      Fn::ReadFile: ${privateKeyPath}
+    fn::secret:
+      fn::readFile: ${privateKeyPath}
 
 resources:
   # Set up a Virtual Private Cloud to deploy our EC2 instance and RDS datbase into.
