@@ -2,7 +2,7 @@
     "name": "aws-typescript",
     "version": "0.0.1",
     "dependencies": {
-        "@pulumi/aws": "7.0.0-rc.1",
+        "@pulumi/aws": "7.0.0",
         "@pulumi/pulumi": "3.158.0",
         "@pulumi/policy": "1.14.0"
     },
