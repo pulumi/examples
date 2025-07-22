@@ -7,7 +7,7 @@ variables:
       function: aws:ec2:getVpc
       arguments:
         default: true
-      Return: id
+      return: id
   subnetIds:
     fn::invoke:
       function: aws:ec2:getSubnets
@@ -16,7 +16,7 @@ variables:
           - name: vpc-id
             values:
               - ${vpcId}
-      Return: ids
+      return: ids
 resources:
   cluster:
     type: eks:Cluster

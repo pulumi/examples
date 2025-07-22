@@ -32,7 +32,7 @@ const rds = new RdsInstance("db-instance", {
 
     allocatedStorage: 40,
     engineVersion: "11.4",
-    instanceClass: aws.rds.InstanceTypes.R3_Large,
+    instanceClass: aws.rds.InstanceType.R3_Large,
     storageType: "gp2",
 
     finalSnapshotIdentifier: finalSnapshotIdentifier,

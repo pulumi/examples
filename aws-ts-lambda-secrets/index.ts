@@ -11,7 +11,7 @@ interface LambdaConfig {
 const config = new pulumi.Config();
 const lambdaconfig = config.requireObject<LambdaConfig>("lambdawithsecrets");
 
-const secretsArnArray: pulumi.Output<string>[] = new Array();
+const secretsArnArray: Record<string, pulumi.Output<string>> = {};
 const secretArray: aws.secretsmanager.Secret[] = new Array();
 for (const key in lambdaconfig.secrets) {
     if (lambdaconfig.secrets.hasOwnProperty(key)) {

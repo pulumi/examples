@@ -10,7 +10,7 @@ export = async () => {
     const role = new aws.iam.Role("lambdarole", {
         assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal(aws.iam.Principals.LambdaPrincipal),
         managedPolicyArns: [
-            aws.iam.ManagedPolicies.AWSLambdaBasicExecutionRole,
+            aws.iam.ManagedPolicy.AWSLambdaBasicExecutionRole,
         ],
     });
 

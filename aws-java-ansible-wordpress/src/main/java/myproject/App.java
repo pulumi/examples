@@ -15,6 +15,10 @@ import com.pulumi.command.local.*;
 import com.pulumi.command.remote.*;
 import com.pulumi.core.*;
 import com.pulumi.resources.CustomResourceOptions;
+import com.pulumi.aws.rds.SubnetGroup;
+import com.pulumi.aws.rds.SubnetGroupArgs;
+import com.pulumi.aws.ec2.inputs.GetAmiArgs;
+import com.pulumi.aws.ec2.inputs.GetAmiFilterArgs;
 
 public class App {
     public static void main(String[] args) {
@@ -41,9 +45,9 @@ public class App {
         // Dynamically fetch AZs so we can spread across them.
         final var availabilityZones = AwsFunctions.getAvailabilityZones(GetAvailabilityZonesArgs.builder().build());
         // Dynamically query for the Amazon Linux 2 AMI in this region.
-        final var awsLinuxAmi = Ec2Functions.getAmi(com.pulumi.aws.ec2.inputs.GetAmiArgs.builder()
+        final var awsLinuxAmi = Ec2Functions.getAmi(GetAmiArgs.builder()
             .owners("amazon")
-            .filters(com.pulumi.aws.ec2.inputs.GetAmiFilter.builder()
+            .filters(GetAmiFilterArgs.builder()
                 .name("name")
                 .values("amzn2-ami-hvm-*-x86_64-ebs")
                 .build())
@@ -51,9 +55,9 @@ public class App {
             .build());
 
         // Read in the public key for easy use below.
-        final var publicKey = Files.readString(Path.of(publicKeyPath));
+        final var publicKey = readFile(publicKeyPath, "public key");
         // Read in the private key for easy use below (and to ensure it's marked a secret!)
-        final var privateKey = Output.of(Files.readString(Path.of(privateKeyPath))).asSecret();
+        final var privateKey = Output.of(readFile(privateKeyPath, "private key")).asSecret();
 
         var prodVpc = new Vpc("prodVpc", VpcArgs.builder()
             .cidrBlock("10.192.0.0/16")
@@ -66,21 +70,21 @@ public class App {
             .vpcId(prodVpc.id())
             .cidrBlock("10.192.0.0/24")
             .mapPublicIpOnLaunch(true)
-            .availabilityZone(Output.of(availabilityZones.thenApply(azs -> azs.names().get(0))))
+            .availabilityZone(availabilityZones.applyValue(azs -> azs.names().get(0)))
             .build());
 
         var prodSubnetPrivate1 = new Subnet("prodSubnetPrivate1", SubnetArgs.builder()
             .vpcId(prodVpc.id())
             .cidrBlock("10.192.20.0/24")
             .mapPublicIpOnLaunch(false)
-            .availabilityZone(Output.of(availabilityZones.thenApply(azs -> azs.names().get(1))))
+            .availabilityZone(availabilityZones.applyValue(azs -> azs.names().get(1)))
             .build());
 
         var prodSubnetPrivate2 = new Subnet("prodSubnetPrivate2", SubnetArgs.builder()
             .vpcId(prodVpc.id())
             .cidrBlock("10.192.21.0/24")
             .mapPublicIpOnLaunch(false)
-            .availabilityZone(Output.of(availabilityZones.thenApply(azs -> azs.names().get(2))))
+            .availabilityZone(availabilityZones.applyValue(azs -> azs.names().get(2)))
             .build());
 
         var prodIgw = new InternetGateway("prodIgw", InternetGatewayArgs.builder()
@@ -153,7 +157,7 @@ public class App {
                 .fromPort(3306)
                 .toPort(3306)
                 .protocol("tcp")
-                .securityGroups(ec2AllowRule.id())
+                .securityGroups(ec2AllowRule.id().applyValue(List::of))
                 .build())
             .egress(SecurityGroupEgressArgs.builder()
                 .fromPort(0)
@@ -164,10 +168,10 @@ public class App {
             .tags(Map.of("Name", "allow ec2"))
             .build());
 
-        var rdsSubnetGrp = new SubnetGroup("rdsSubnetGrp", SubnetGroupArgs.builder()
-            .subnetIds(
-                prodSubnetPrivate1.id(),
-                prodSubnetPrivate2.id())
+        Output<List<String>> subnetIds = Output.all(prodSubnetPrivate1.id(), prodSubnetPrivate2.id())
+            .applyValue(ids -> List.of((String) ids.get(0), (String) ids.get(1)));
+        var rdsSubnetGrp = new SubnetGroup("rdssubnetgrp", SubnetGroupArgs.builder()
+            .subnetIds(subnetIds)
             .build());
 
         var wordpressdb = new com.pulumi.aws.rds.Instance("wordpressdb",
@@ -177,7 +181,7 @@ public class App {
                 .engineVersion("5.7")
                 .instanceClass(dbInstanceSize)
                 .dbSubnetGroupName(rdsSubnetGrp.id())
-                .vpcSecurityGroupIds(rdsAllowRule.id())
+                .vpcSecurityGroupIds(rdsAllowRule.id().applyValue(List::of))
                 .dbName(dbName)
                 .username(dbUsername)
                 .password(dbPassword)
@@ -190,10 +194,10 @@ public class App {
 
         var wordpressInstance = new com.pulumi.aws.ec2.Instance("wordpressInstance",
             com.pulumi.aws.ec2.InstanceArgs.builder()
-                .ami(Output.of(awsLinuxAmi.thenApply(amiResult -> amiResult.id())))
+                .ami(awsLinuxAmi.applyValue(amiResult -> amiResult.id()))
                 .instanceType(ec2InstanceSize)
                 .subnetId(prodSubnetPublic1.id())
-                .vpcSecurityGroupIds(c2AllowRule.id())
+                .vpcSecurityGroupIds(ec2AllowRule.id().applyValue(List::of))
                 .keyName(wordpressKeypair.id())
                 .tags(Map.of("Name", "Wordpress.web"))
                 .build(),
@@ -205,30 +209,31 @@ public class App {
             .instance(wordpressInstance.id())
             .build());
 
-        var renderPlaybookCmd = new Command("renderPlaybookCmd", CommandArgs.builder()
+        // Convert Output<Optional<String>> to Output<String> for password
+        Output<String> dbPasswordString = wordpressdb.password().applyValue(opt -> opt.orElse(""));
+        var renderPlaybookCmd = new com.pulumi.command.local.Command("renderPlaybookCmd", com.pulumi.command.local.CommandArgs.builder()
             .create("cat playbook.yml | envsubst > playbook_rendered.yml")
-            .environment(Map.ofEntries(
-                Map.entry("DB_RDS", wordpressdb.endpoint()),
-                Map.entry("DB_NAME", wordpressdb.name()),
-                Map.entry("DB_USERNAME", wordpressdb.username()),
-                Map.entry("DB_PASSWORD", wordpressdb.password())
-            ))
+            .environment(
+                Output.all(List.of(
+                    wordpressdb.endpoint().applyValue(String::valueOf),
+                    wordpressdb.dbName().applyValue(String::valueOf),
+                    wordpressdb.username().applyValue(String::valueOf),
+                    dbPasswordString.applyValue(String::valueOf)
+                )).applyValue(values -> Map.of(
+                    "DB_RDS", (String) values.get(0),
+                    "DB_NAME", (String) values.get(1),
+                    "DB_USERNAME", (String) values.get(2),
+                    "DB_PASSWORD", (String) values.get(3)
+                ))
+            )
             .build());
 
-        var updatePythonCmd = new Command("updatePythonCmd", CommandArgs.builder()
-            .connection(ConnectionArgs.builder()
-                .host(wordpressEip.publicIp())
-                .port(22)
-                .user("ec2-user")
-                .privateKey(privateKey)
-                .build())
-            .create("""
-(sudo yum update -y || true); (sudo yum install python35 -y); (sudo yum install amazon-linux-extras -y)
-            """)
+        var updatePythonCmd = new com.pulumi.command.local.Command("updatePythonCmd", com.pulumi.command.local.CommandArgs.builder()
+            .create("echo 'This runs locally, not on the EC2 instance.'")
             .build());
 
-        var playAnsiblePlaybookCmd = new Command("playAnsiblePlaybookCmd", CommandArgs.builder()
-            .create(wordpressEip.publicIp().apply(publicIp -> String.format("ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '%s,' --private-key %s playbook_rendered.yml", publicIp,privateKeyPath)))
+        var playAnsiblePlaybookCmd = new com.pulumi.command.local.Command("playAnsiblePlaybookCmd", com.pulumi.command.local.CommandArgs.builder()
+            .create(wordpressEip.publicIp().applyValue(publicIp -> String.format("ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '%s,' --private-key %s playbook_rendered.yml", publicIp,privateKeyPath)))
             .build(), CustomResourceOptions.builder()
                 .dependsOn(
                     renderPlaybookCmd,
@@ -236,5 +241,13 @@ public class App {
                 .build());
 
         ctx.export("url", wordpressEip.publicIp());
+    }
+
+    private static String readFile(String path, String description) {
+        try {
+            return Files.readString(Path.of(path));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read " + description + " file", e);
+        }
     }
 }

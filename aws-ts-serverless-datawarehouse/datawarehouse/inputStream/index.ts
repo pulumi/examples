@@ -39,7 +39,7 @@ export class InputStream extends pulumi.ComponentResource {
         const kinesisAttachment = new aws.iam.RolePolicyAttachment(`${name}-kinesis-access`,
             {
                 role,
-                policyArn: aws.iam.ManagedPolicies.AmazonKinesisFullAccess,
+                policyArn: aws.iam.ManagedPolicy.AmazonKinesisFullAccess,
             },
             { parent: this },
         );
@@ -47,7 +47,7 @@ export class InputStream extends pulumi.ComponentResource {
         const s3Attachment = new aws.iam.RolePolicyAttachment(`${name}-s3-access`,
             {
                 role,
-                policyArn: aws.iam.ManagedPolicies.AmazonS3FullAccess,
+                policyArn: aws.iam.ManagedPolicy.AmazonS3FullAccess,
             },
             { parent: this },
         );

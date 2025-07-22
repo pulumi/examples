@@ -3,14 +3,14 @@
 
 # Create a Slackbot for Posting Mention Notifications
 
-This is an example of a simple Slackbot (called '@mentionbot') that posts a notification to a specific channel any time you're @mentioned anywhere, whether in various channels or via direct message. This bot is useful for when you need a time-ordered list of @mentions to go through at a later point.
+This is an example of a Slackbot (called '@mentionbot') that posts a notification to a specific channel any time you're @mentioned anywhere, whether in various channels or via direct message. This bot is useful for when you need a time-ordered list of @mentions to go through at a later point.
 
 Slack users can subscribe/unsubscribe from notifications easily.  To receive notifications, add `@mentionbot` to a channel you want to be notified in.  Then send any message to `@mentionbot` to subscribe.  To stop getting messages, send a message to `@mentionbot` containing the word `unsubscribe`.
 
 1. We set up an ApiGateway API to receive push notifications from Slack whenever important events happen.
-2. Slack has strict requirements on how quickly the push endpoint must respond with `200` notifications before they consider the message as "not received", triggering back-off and resending of those same messages.  For this reason, our example does not process Slack `event` messages as they come in.  Instead, they are immediately added to an [AWS SNS Topic](https://aws.amazon.com/sns/) to be processed at a later point in time. This allows the ApiGateway call to return quickly, satisfying Slack's requirements.
-3. Two [AWS Lambdas](https://aws.amazon.com/lambda/) are created naturally using simple Python functions.  One function is used to create the Lambda that is called when Slack pushes a notification.  The other is used to specify the Lamdba that will process the messages added to the Topic.  These functions can easily access the other Pulumi resources created, avoiding the need to figure out ways to pass Resource ARNs/IDs/etc. to the Lambdas to ensure they can talk to the right resources.  If these resources are swapped out in the future (for example, using RDS instead of DynamoDB, or SQS instead of SNS), Pulumi will make sure that the Lambdas were updated properly.
-4. [Pulumi Secrets](https://www.pulumi.com/docs/intro/concepts/secrets/) provides a simple way to pass important credentials (like your Slack tokens) without having to directly embed them in your application code.
+2. The API Gateway forwards these notifications to our Lambda function, which processes the Slack events and manages subscriptions using DynamoDB.
+3. The[AWS Lambda](https://aws.amazon.com/lambda/) function is created in our code. This function is called when Slack pushes a notification. The Lambda can access the other Pulumi resources created, such as DynamoDB for subscription management. If these resources are swapped out in the future (for example, using RDS instead of DynamoDB), Pulumi will make sure that the Lambda is updated properly.
+4. [Pulumi Secrets](https://www.pulumi.com/docs/intro/concepts/secrets/) provides a safe way to pass important credentials (like your Slack tokens) without having to directly embed them in your application code.
 
 First, we'll set up the Pulumi App.  Then, we'll go create and configure a Slack App and Bot to interact with our Pulumi App.
 
@@ -132,7 +132,7 @@ Invite the bot to the channel:
 <img src=https://user-images.githubusercontent.com/4564579/55647722-40c56c80-5793-11e9-8a97-5ce087d2bfe3.png>
 </p>
 
-Then send it a message.  Note that it may take several seconds for the bot to respond due to Slack push notification delays, SNS Topic delays, and Slack incoming message delays.
+Then send it a message.  Note that it may take several seconds for the bot to respond due to Slack push notification delays.
 
 <p align=center>
 <img src=https://user-images.githubusercontent.com/4564579/55648466-3e641200-5795-11e9-9917-e64cdf45b63e.png>

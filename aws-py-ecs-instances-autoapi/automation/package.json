@@ -6,7 +6,7 @@
   "author": "EvanBoyle",
   "license": "MIT",
   "dependencies": {
-    "@pulumi/aws": "6.73.0",
+    "@pulumi/aws": "7.0.0",
     "@pulumi/pulumi": "3.158.0",
     "@types/node": "^22.0.0",
     "ts-node": "^10.0.0",
