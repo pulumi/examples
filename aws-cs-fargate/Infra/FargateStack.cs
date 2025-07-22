@@ -122,13 +122,7 @@ class FargateStack : Stack
 
         // Create a private ECR registry and build and publish our app's container image to it.
         var appRepo = new Ecr.Repository("app-repo");
-        var appRepoCredentials = Ecr.GetAuthorizationToken
-            .Invoke(new Ecr.GetAuthorizationTokenInvokeArgs { RegistryId = appRepo.RegistryId })
-            .Apply(credentials =>
-            {
-                var data = Convert.FromBase64String(credentials.AuthorizationToken);
-                return Encoding.UTF8.GetString(data).Split(":").ToImmutableArray();
-            });
+        var appRepoCredentials = Ecr.GetAuthorizationToken.Invoke(new Ecr.GetAuthorizationTokenInvokeArgs { RegistryId = appRepo.RegistryId });
 
         var image = new Docker.Image("app-img", new Docker.ImageArgs
         {
@@ -140,8 +134,8 @@ class FargateStack : Stack
             Registry = new Docker.Inputs.RegistryArgs
             {
                 Server = appRepo.RepositoryUrl,
-                Username = appRepoCredentials.GetAt(0),
-                Password = appRepoCredentials.GetAt(1)
+                Username = appRepoCredentials.Apply(credentials => credentials.UserName),
+                Password = appRepoCredentials.Apply(credentials => credentials.Password)
             }
         });
 

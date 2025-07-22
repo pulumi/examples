@@ -151,7 +151,7 @@ func main() {
 		}
 
 		// Create a new deployment
-		_, err = apigateway.NewDeployment(ctx, "APIDeployment", &apigateway.DeploymentArgs{
+		deployment, err := apigateway.NewDeployment(ctx, "APIDeployment", &apigateway.DeploymentArgs{
 			Description: pulumi.String("UpperCase API deployment"),
 			RestApi:     gateway.ID(),
 		}, pulumi.DependsOn([]pulumi.Resource{apiresource, function, permission}))
@@ -159,7 +159,17 @@ func main() {
 			return err
 		}
 
-		ctx.Export("invocation URL", pulumi.Sprintf("https://%s.execute-api.%s.amazonaws.com/prod/{message}", gateway.ID(), region.Name))
+		// Create a new stage referencing the deployment
+		stage, err := apigateway.NewStage(ctx, "prod", &apigateway.StageArgs{
+			StageName:  pulumi.String("prod"),
+			RestApi:    gateway.ID(),
+			Deployment: deployment.ID(),
+		})
+		if err != nil {
+			return err
+		}
+
+		ctx.Export("invocation URL", stage.InvokeUrl)
 
 		return nil
 	})

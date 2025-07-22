@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/base64"
 	"fmt"
-	"strings"
 
 	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/ec2"
 	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/ecr"
@@ -14,6 +12,28 @@ import (
 	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
+
+// Define a struct to hold ECR credentials
+type RepoCreds struct {
+	Username string
+	Password string
+}
+
+// Helper function to get ECR credentials as a Pulumi Output
+func getRepoCreds(ctx *pulumi.Context, rid pulumi.StringInput) pulumi.Output {
+	return rid.ToStringOutput().ApplyT(func(rid string) (RepoCreds, error) {
+		creds, err := ecr.GetAuthorizationToken(ctx, &ecr.GetAuthorizationTokenArgs{
+			RegistryId: &rid,
+		})
+		if err != nil {
+			return RepoCreds{}, err
+		}
+		return RepoCreds{
+			Username: creds.UserName,
+			Password: creds.Password,
+		}, nil
+	})
+}
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
@@ -122,24 +142,13 @@ func main() {
 			return err
 		}
 
-		// Get credentials for the new ECR repository
-		repoCreds := repo.RegistryId.ApplyT(func(rid string) ([]string, error) {
-			creds, err := ecr.GetAuthorizationToken(ctx, &ecr.GetAuthorizationTokenArgs{
-				RegistryId: &rid,
-			})
-			if err != nil {
-				return nil, err
-			}
-			data, err := base64.StdEncoding.DecodeString(creds.AuthorizationToken)
-			if err != nil {
-				fmt.Println("error:", err)
-				return nil, err
-			}
-
-			return strings.Split(string(data), ":"), nil
-		}).(pulumi.StringArrayOutput)
-		repoUser := repoCreds.Index(pulumi.Int(0))
-		repoPass := repoCreds.Index(pulumi.Int(1))
+		repoCreds := getRepoCreds(ctx, repo.RegistryId)
+		repoUser := repoCreds.ApplyT(func(c interface{}) string {
+			return c.(RepoCreds).Username
+		}).(pulumi.StringOutput)
+		repoPass := repoCreds.ApplyT(func(c interface{}) string {
+			return c.(RepoCreds).Password
+		}).(pulumi.StringOutput)
 
 		// Build the container image (requires local Docker daemon)
 		image, err := docker.NewImage(ctx, "my-image", &docker.ImageArgs{
