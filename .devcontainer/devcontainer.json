@@ -1,0 +1,38 @@
+{
+	"name": "Pulumi Examples Environment",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
+	"features": {
+		"ghcr.io/devcontainers/features/dotnet:2": {
+			"version": "lts"
+		},
+		"ghcr.io/devcontainers/features/go:1": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/python:1": {
+			"installTools": true,
+			"version": "os-provided"
+		},
+		"ghcr.io/devcontainers/features/github-cli:1": {
+			"installDirectlyFromGitHubRelease": true,
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/aws-cli:1": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/azure-cli:1": {
+			"version": "latest",
+			"bicepVersion": "latest"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"pulumi.pulumi-lsp-client",
+				"redhat.vscode-yaml",
+				"github.vscode-pull-request-github"
+			]
+		}
+	},
+
+	"postCreateCommand":  "./.devcontainer/scripts/post-create.sh"
+}
