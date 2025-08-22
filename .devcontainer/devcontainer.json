@@ -27,7 +27,7 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"pulumi.pulumi-lsp-client",
+				"pulumi.pulumi",
 				"redhat.vscode-yaml",
 				"github.vscode-pull-request-github"
 			]
