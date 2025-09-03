@@ -10,7 +10,9 @@ aws_config = Config("aws")
 is_preview = runtime.is_dry_run()
 # Apply-time guard: prevent using preview placeholder on apply
 if not is_preview and role_to_assume_arn.startswith("arn:aws:iam::123456789012:role/preview-"):
-    raise Exception("Configure a real roleToAssumeARN before 'pulumi up'. Example: pulumi config set aws-py-assume-role:roleToAssumeARN arn:aws:iam::<account>:role/<roleName>")
+    raise Exception(
+        "Configure a real roleToAssumeARN before 'pulumi up'. Example: pulumi config set aws-py-assume-role:roleToAssumeARN arn:aws:iam::<account>:role/<roleName>"
+    )
 if is_preview:
     provider = aws.Provider(
         "privileged",

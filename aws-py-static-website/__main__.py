@@ -65,8 +65,12 @@ path_to_website_contents = stack_config.require("pathToWebsiteContents")
 certificate_arn = stack_config.get("certificateArn")
 
 # Apply-time guard: prevent using placeholder domain on apply
-if not runtime.is_dry_run() and ("preview-" in target_domain or target_domain.endswith("example.com")):
-    raise Exception("Configure a real targetDomain before 'pulumi up'. Example: pulumi config set aws-py-static-website:targetDomain <your-domain>")
+if not runtime.is_dry_run() and (
+    "preview-" in target_domain or target_domain.endswith("example.com")
+):
+    raise Exception(
+        "Configure a real targetDomain before 'pulumi up'. Example: pulumi config set aws-py-static-website:targetDomain <your-domain>"
+    )
 
 # Create an S3 bucket configured as a website bucket.
 content_bucket = pulumi_aws.s3.Bucket(f"{target_domain}-content")
