@@ -4,7 +4,6 @@ import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import { S3 } from "aws-sdk";
 
-// '@pulumi/aws' no longer exports 'ARN' type; use string outputs instead.
 import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
 import * as moment from "moment-timezone";
 
