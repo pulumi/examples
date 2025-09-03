@@ -9,13 +9,13 @@ open Pulumi.Aws.S3
 let infra () =
 
     // Create an AWS resource (S3 Bucket)
-    let bucket = BucketV2("my-bucket", BucketV2Args())
+    let bucket = Bucket("my-bucket", BucketArgs())
 
     let website =
-        BucketWebsiteConfigurationV2("website",
-                                     BucketWebsiteConfigurationV2Args
-                                         (Bucket = bucket.Bucket,
-                                          IndexDocument = new BucketWebsiteConfigurationV2IndexDocumentArgs(Suffix = "index.html")),
+        BucketWebsiteConfiguration("website",
+                                     BucketWebsiteConfigurationArgs
+                                         (Bucket = bucket.Id,
+                                          IndexDocument = new BucketWebsiteConfigurationIndexDocumentArgs(Suffix = "index.html")),
                                      CustomResourceOptions (Parent = bucket))
 
     let ownershipControls =
@@ -44,7 +44,7 @@ let infra () =
             BucketObject(name,
                          BucketObjectArgs
                             (Acl = input "public-read",
-                             Bucket = io bucket.Bucket,
+                             Bucket = io bucket.Id,
                              ContentType = input contentType,
                              Source = input (FileAsset file :> AssetOrArchive)),
                          CustomResourceOptions (Parent = bucket, DependsOn = inputList [input ownershipControls; input publicAccessBlock])))

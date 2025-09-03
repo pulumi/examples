@@ -9,12 +9,12 @@ class WebsiteStack : Stack
     public WebsiteStack()
     {
         // Create an AWS resource (S3 Bucket)
-        var bucket = new BucketV2("my-bucket", new BucketV2Args {});
+        var bucket = new Bucket("my-bucket", new BucketArgs {});
 
-        var bucketWebsite = new BucketWebsiteConfigurationV2("website-config", new()
+        var bucketWebsite = new BucketWebsiteConfiguration("website-config", new()
         {
             Bucket = bucket.Id,
-            IndexDocument = new BucketWebsiteConfigurationV2IndexDocumentArgs
+            IndexDocument = new BucketWebsiteConfigurationIndexDocumentArgs
             {
                 Suffix = "index.html",
             },
@@ -46,7 +46,7 @@ class WebsiteStack : Stack
             var bucketObject = new BucketObject(name, new BucketObjectArgs
             {
                 Acl = "public-read",
-                Bucket = bucket.Bucket,
+                Bucket = bucket.Id,
                 ContentType = contentType,
                 Source = new FileAsset(file)
             }, new CustomResourceOptions {Parent = bucket, DependsOn = new Pulumi.Resource[]{ publicAccessBlock, ownershipControls }});

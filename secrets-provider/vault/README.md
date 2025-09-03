@@ -68,7 +68,7 @@ pulumi up --yes
 Previewing update (vault-kms):
      Type                    Name                    Plan
  +   pulumi:pulumi:Stack     pulumi-vault-kms-vault-kms  create
- +   ├─ aws:s3:BucketV2      bucket                  create
+ +   ├─ aws:s3:Bucket      bucket                  create
  +   └─ aws:s3:BucketObject  secret                  create
 
 Resources:
@@ -77,7 +77,7 @@ Resources:
 Updating (aws-kms):
      Type                    Name                    Status
  +   pulumi:pulumi:Stack     pulumi-vault-kms-vault-kms  created
- +   ├─ aws:s3:BucketV2      bucket                  created
+ +   ├─ aws:s3:Bucket      bucket                  created
  +   └─ aws:s3:BucketObject  secret                  created
 
 Outputs:

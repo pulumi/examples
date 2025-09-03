@@ -39,7 +39,7 @@ with `***`.
 
         Type                    Name                                   Status      Info
     +   pulumi:pulumi:Stack     aws-js-s3-folder-website-testing       created
-    +   ├─ aws:s3:BucketV2      s3-website-bucket                      created
+    +   ├─ aws:s3:Bucket        s3-website-bucket                      created
     +   ├─ aws:s3:BucketPolicy  bucketPolicy                           created
     +   ├─ aws:s3:BucketObject  favicon.png                            created
     +   └─ aws:s3:BucketObject  index.html                             created

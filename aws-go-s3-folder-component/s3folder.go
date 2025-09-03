@@ -26,14 +26,14 @@ func NewS3Folder(ctx *pulumi.Context, bucketName string, siteDir string, args *F
 		return nil, err
 	}
 	// Create a bucket and expose a website index document
-	siteBucket, err := s3.NewBucketV2(ctx, bucketName, &s3.BucketV2Args{}, pulumi.Parent(&resource))
+	siteBucket, err := s3.NewBucket(ctx, bucketName, &s3.BucketArgs{}, pulumi.Parent(&resource))
 	if err != nil {
 		return nil, err
 	}
 
-	siteWebsite, err := s3.NewBucketWebsiteConfigurationV2(ctx, "s3-website", &s3.BucketWebsiteConfigurationV2Args{
+	siteWebsite, err := s3.NewBucketWebsiteConfiguration(ctx, "s3-website", &s3.BucketWebsiteConfigurationArgs{
 		Bucket: siteBucket.Bucket,
-		IndexDocument: s3.BucketWebsiteConfigurationV2IndexDocumentArgs{
+		IndexDocument: s3.BucketWebsiteConfigurationIndexDocumentArgs{
 			Suffix: pulumi.String("index.html"),
 		},
 	})

@@ -13,14 +13,14 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Create a bucket and expose a website index document
-		siteBucket, err := s3.NewBucketV2(ctx, "s3-website-bucket", &s3.BucketV2Args{})
+		siteBucket, err := s3.NewBucket(ctx, "s3-website-bucket", &s3.BucketArgs{})
 		if err != nil {
 			return err
 		}
 
-		siteWebsite, err := s3.NewBucketWebsiteConfigurationV2(ctx, "s3-website", &s3.BucketWebsiteConfigurationV2Args{
+		siteWebsite, err := s3.NewBucketWebsiteConfiguration(ctx, "s3-website", &s3.BucketWebsiteConfigurationArgs{
 			Bucket: siteBucket.Bucket,
-			IndexDocument: s3.BucketWebsiteConfigurationV2IndexDocumentArgs{
+			IndexDocument: s3.BucketWebsiteConfigurationIndexDocumentArgs{
 				Suffix: pulumi.String("index.html"),
 			},
 		})

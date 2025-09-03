@@ -2,7 +2,7 @@
 
 import * as aws from "@pulumi/aws";
 
-export function configureACL(bucketName: string, bucket: aws.s3.BucketV2, acl: string): aws.s3.BucketAclV2 {
+export function configureACL(bucketName: string, bucket: aws.s3.Bucket, acl: string): aws.s3.BucketAcl {
     const ownership = new aws.s3.BucketOwnershipControls(bucketName, {
         bucket: bucket.bucket,
         rule: {
@@ -16,7 +16,7 @@ export function configureACL(bucketName: string, bucket: aws.s3.BucketV2, acl: s
         ignorePublicAcls: false,
         restrictPublicBuckets: false,
     });
-    const bucketACL = new aws.s3.BucketAclV2(bucketName, {
+    const bucketACL = new aws.s3.BucketAcl(bucketName, {
         bucket: bucket.bucket,
         acl: acl,
     }, {

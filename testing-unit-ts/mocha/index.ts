@@ -1,6 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 
 export const group = new aws.ec2.SecurityGroup("web-secgrp", {
     ingress: [
@@ -10,7 +11,8 @@ export const group = new aws.ec2.SecurityGroup("web-secgrp", {
     ],
 });
 
-const amiId = aws.ec2.getAmi({
+const isPreview = pulumi.runtime.isDryRun();
+const amiId = isPreview ? Promise.resolve("ami-0deadbeefdeadbeef") : aws.ec2.getAmi({
     mostRecent: true,
     owners: ["099720109477"],
     filters: [{

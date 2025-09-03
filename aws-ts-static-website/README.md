@@ -139,3 +139,14 @@ the AWS CLI.
 
 This will fail because the program will attempt to create an alias record and certificate for both the targetDomain
 and `www.${targetDomain}` when includeWWW is set to true.
+
+## Preview behavior and apply checklist
+
+This repo includes `Pulumi.preview.yaml` with safe preview defaults so you can run `pulumi preview` without real domains or secrets. During preview, some values are stubbed and DNS lookups may be skipped. Before running `pulumi up`, set real config values:
+
+```
+pulumi config set aws-ts-static-website:targetDomain <your-domain>
+pulumi config set aws:region us-west-2
+```
+
+If you don’t host the domain in Route53, remove or skip the DNS records section.

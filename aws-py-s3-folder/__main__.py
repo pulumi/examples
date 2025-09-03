@@ -5,9 +5,9 @@ import os
 from pulumi import FileAsset, Output, export, ResourceOptions
 from pulumi_aws import s3
 
-web_bucket = s3.BucketV2("s3-website-bucket")
+web_bucket = s3.Bucket("s3-website-bucket")
 
-web_site = s3.BucketWebsiteConfigurationV2(
+web_site = s3.BucketWebsiteConfiguration(
     "s3-website", bucket=web_bucket.bucket, index_document={"suffix": "index.html"}
 )
 

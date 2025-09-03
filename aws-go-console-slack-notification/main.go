@@ -82,7 +82,7 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 		return err
 	}
 
-	bucket, err := s3.NewBucketV2(ctx, resourceName, &s3.BucketV2Args{
+	bucket, err := s3.NewBucket(ctx, resourceName, &s3.BucketArgs{
 		ForceDestroy: pulumi.Bool(true),
 	}, pulumi.Provider(awsProvider))
 	if err != nil {
@@ -90,12 +90,12 @@ func upRegion(ctx *pulumi.Context, regionName string) error {
 	}
 
 	if trailObjectExpirationInDays != 0 {
-		_, err := s3.NewBucketLifecycleConfigurationV2(ctx, resourceName, &s3.BucketLifecycleConfigurationV2Args{
+		_, err := s3.NewBucketLifecycleConfiguration(ctx, resourceName, &s3.BucketLifecycleConfigurationArgs{
 			Bucket: bucket.Bucket,
-			Rules: s3.BucketLifecycleConfigurationV2RuleArray{
-				s3.BucketLifecycleConfigurationV2RuleArgs{
+			Rules: s3.BucketLifecycleConfigurationRuleArray{
+				s3.BucketLifecycleConfigurationRuleArgs{
 					Status: pulumi.String("Enabled"),
-					Expiration: s3.BucketLifecycleConfigurationV2RuleExpirationArgs{
+					Expiration: s3.BucketLifecycleConfigurationRuleExpirationArgs{
 						Days: pulumi.Int(trailObjectExpirationInDays),
 					},
 				},

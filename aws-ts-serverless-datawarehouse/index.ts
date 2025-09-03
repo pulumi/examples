@@ -4,7 +4,7 @@ import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import { S3 } from "aws-sdk";
 
-import { ARN } from "@pulumi/aws";
+// '@pulumi/aws' no longer exports 'ARN' type; use string outputs instead.
 import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
 import * as moment from "moment-timezone";
 
@@ -116,7 +116,7 @@ const aggregationFunction = async (event: EventRuleEvent) => {
     }).promise();
 };
 
-const policyARNsToAttach: pulumi.Input<ARN>[] = [
+const policyARNsToAttach: pulumi.Input<string>[] = [
     aws.iam.ManagedPolicy.AmazonAthenaFullAccess,
     aws.iam.ManagedPolicy.AmazonS3FullAccess,
 ];
