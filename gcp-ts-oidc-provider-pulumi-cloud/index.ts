@@ -17,6 +17,7 @@ const gcpProjectName = gcpConfig.require("project");
 const escEnvOrg = config.get("escEnvOrg") || pulumi.getOrganization();
 const escEnvProject = config.get("escEnvProject") || `gcloud`;
 const escEnvName = config.get("escEnvName") || `${gcpProjectName}-admin`;
+const issuer = config.get("issuer") || "https://api.pulumi.com/oidc";
 
 // We use a shorter name for the Workload Identity Pool and Service Account IDs
 // because they have character limits of 30 and 32 respectively, and the Google
@@ -43,12 +44,17 @@ const oidcProvider = new gcp.iam.WorkloadIdentityPoolProvider(`identity-pool-pro
   workloadIdentityPoolId: identityPool.workloadIdentityPoolId,
   workloadIdentityPoolProviderId: `pulumi-cloud-${pulumi.getOrganization()}-oidc`,
   oidc: {
-    issuerUri: "https://api.pulumi.com/oidc",
+    issuerUri: issuer,
     allowedAudiences: [`gcp:${pulumi.getOrganization()}`],
   },
   attributeMapping: {
     "google.subject": "assertion.sub",
   },
+});
+
+const enableIamCredsApi = new gcp.projects.Service("enableIamCredentialsApi", {
+    service: "iamcredentials.googleapis.com",
+    project: gcpProjectName,
 });
 
 const serviceAccount = new gcp.serviceaccount.Account("service-account", {
