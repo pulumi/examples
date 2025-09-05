@@ -1,91 +1,55 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-oidc-provider-pulumi-cloud/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-oidc-provider-pulumi-cloud/README.md#gh-dark-mode-only)
 
-# Provisioning an OIDC Provider in Azure for Pulumi Cloud
+# Azure OIDC Pulumi program in TypeScript
 
 This example will create OIDC configuration between Pulumi Cloud and Azure, specifically demonstrating connectivity with [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/). The program automates the process detailed in the Azure documentation for the following activities:
 
 - [Create a Microsoft Entra application and service principal that can access resources](https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
 - [Create federated credentials](https://azure.github.io/azure-workload-identity/docs/topics/federated-identity-credential.html#federated-identity-credential-for-an-azure-ad-application-1)
 
-## Prerequisites
+Last update: September 2025
 
-* [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-* [Configure Pulumi to Use Azure](https://www.pulumi.com/docs/clouds/azure/get-started/begin/)
+## 📋 Pre-requisites
 
-## Running the Example
+- [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+- [Configure Pulumi to Use Azure](https://www.pulumi.com/docs/clouds/azure/get-started/begin/)
+- [Pulumi Cloud account](https://app.pulumi.com/signup)
+- [npm](https://www.npmjs.com/get-npm)
 
-Clone [the examples repo](https://github.com/pulumi/examples) and navigate to the folder for this example.
+## 👩‍🏫 Get started
 
-```bash
-git clone https://github.com/pulumi/examples.git
-cd examples/azure-ts-oidc-provider-pulumi-cloud
-```
-
-Next, to deploy the application and its infrastructure, follow these steps:
-
-1. Create a new stack, which is an isolated deployment target for this example:
-
-    ```bash
-    pulumi stack init dev
-    ```
-
-1. Set your Pulumi ESC environment name and desired Azure region:
-
-    ```bash
-    pulumi config set environmentName <your-environment-name> # replace with your environment name
-    pulumi config set azure-native:location WestUS2 # any valid Azure region will work
-    ```
-
-1. Install requirements.
-
-    ```bash
-    npm install
-    ```
-
-1. Run `pulumi up -y`. Once the program completes, it will output a YAML template for you to use in the next step.
-
-## Validating the OIDC Configuration
-
-This next section will walk you through validating your OIDC configuration using [Pulumi ESC](https://www.pulumi.com/docs/pulumi-cloud/esc/).
-
-1. Start by [creating a new Pulumi ESC environment](https://www.pulumi.com/docs/pulumi-cloud/esc/get-started/#create-an-environment).
-2. Then, copy the template definition from the output in the CLI and paste it into your environment.
-3. Save your environment file and run the `pulumi env open <your-pulumi-org>/<your-environment>` command in the CLI. You should see output similar to the following:
+This Pulumi example is written as a template. It is meant to be copied via `pulumi new`
 
 ```bash
-$ pulumi env open myOrg/myEnvironment
-{
-  "azure": {
-    "login": {
-      "clientId": "b537....",
-      "oidc": {
-        "token": "eyJh...."
-      },
-      "subscriptionId": "0282....",
-      "tenantId": "7061...."
-    }
-  },
-  "environmentVariables": {
-    "ARM_CLIENT_ID": "b537....",
-    "ARM_OIDC_TOKEN": "eyJh....",
-    "ARM_SUBSCRIPTION_ID": "0282....",
-    "ARM_TENANT_ID": "7061....",
-    "ARM_USE_OIDC": "true"
-  }
-}
+# login to your Pulumi Cloud if you haven't already
+pulumi login
+
+# pick a name for your output directory (--dir is optional. will use current directory if omitted)
+my_dir=my-azure-oidc
+pulumi new https://github.com/pulumi/examples/azure-ts-oidc-provider-pulumi-cloud --dir ${my_dir}
+cd ${my_dir}
 ```
 
-If your identity provider does not offer an ID token directly but it does offer a way to exchange a local bearer token for an ID token, you will need to replace the `ARM_OIDC_TOKEN` environment variable with both of the following:
+Once copied to your machine, feel free to edit as needed.
 
-- `ARM_OIDC_REQUEST_TOKEN`
-- `ARM_OIDC_REQUEST_URL`
+## 🎬 How to run
 
-## Clean-Up Resources
+This template will pick up the thumbprint from the URL that you set in the stack configuration. By default it will use the OIDC IDP URL for Pulumi Cloud.
 
-Once you are done, you can destroy all of the resources as well as the stack:
+To deploy your infrastructure, run:
+
+```bash
+$ pulumi up
+# select 'yes' to confirm the expected changes
+# 🎉 Ta-Da!
+```
+
+## 🧹 Clean up
+
+To clean up your infrastructure, run:
 
 ```bash
 $ pulumi destroy
-$ pulumi stack rm
+# select 'yes' to confirm the expected changes
 ```
