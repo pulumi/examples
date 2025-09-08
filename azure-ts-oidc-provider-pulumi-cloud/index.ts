@@ -30,7 +30,7 @@ const application = new azuread.Application(`pulumi-oidc-app-reg-${randomNumber}
     signInAudience: "AzureADMyOrg",
 });
 
-// Create Federated Credentials
+// Create Federated Credentials - one for ESC and one for IAC
 // Known issue with the value of the subject identifier
 // Refer to: https://github.com/pulumi/pulumi/issues/14509
 const subject = pulumi.interpolate`pulumi:environments:org:${orgName}:env:${projectName}/${envName}`;
@@ -42,6 +42,17 @@ const federatedIdentityCredential = new azuread.ApplicationFederatedIdentityCred
     audiences: [audience],
     issuer: issuer,
     subject: subject,
+});
+
+const subjectIac = pulumi.interpolate`pulumi:environments:org:${orgName}:env:<yaml>`;
+
+const federatedIdentityCredentialIac = new azuread.ApplicationFederatedIdentityCredential("federatedIdentityCredentialIac", {
+    applicationId: application.objectId.apply(objectId => `/applications/${objectId}`),
+    displayName: `pulumi-env-oidc-fic-${randomNumber}-2`,
+    description: "Federated credentials for Pulumi ESC",
+    audiences: [audience],
+    issuer: issuer,
+    subject: subjectIac,
 });
 
 // Create a Service Principal
