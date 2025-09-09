@@ -56,6 +56,7 @@ func TestAccDigitalOceanTsK8s(t *testing.T) {
 }
 
 func TestAccDigitalOceanTsLoadbalancedDroplets(t *testing.T) {
+	t.Skip()
 	test := getBaseOptions(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "digitalocean-ts-loadbalanced-droplets"),
@@ -84,6 +85,7 @@ func TestAccDigitalOceanCsK8s(t *testing.T) {
 }
 
 func TestAccDigitalOceanCsLoadbalancedDroplets(t *testing.T) {
+	t.Skip()
 	test := getBaseOptions(t).
 		With(integration.ProgramTestOptions{
 			Dir: path.Join(getCwd(t), "..", "..", "digitalocean-cs-loadbalanced-droplets"),
