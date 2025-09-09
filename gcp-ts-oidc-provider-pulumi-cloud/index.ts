@@ -55,7 +55,7 @@ const oidcProvider = new gcp.iam.WorkloadIdentityPoolProvider(`identity-pool-pro
 const enableIamCredsApi = new gcp.projects.Service("enableIamCredentialsApi", {
     service: "iamcredentials.googleapis.com",
     project: gcpProjectName,
-});
+}, { retainOnDelete: true });
 
 const serviceAccount = new gcp.serviceaccount.Account("service-account", {
   accountId: serviceAccountId,
