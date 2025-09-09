@@ -1,3 +1,13 @@
 name: azure-ts-oidc-provider-pulumi
 runtime: nodejs
 description: An Azure Native TypeScript Pulumi program to setup OIDC
+
+template:
+  description: Azure OIDC setup for Pulumi ESC
+  config:
+    projectName:
+      description: The name of the ESC project in which to place a generated environment.
+      default: azure
+    environmentName:
+      description: The name of the ESC environment to generate.
+      default: azure-oidc-admin
