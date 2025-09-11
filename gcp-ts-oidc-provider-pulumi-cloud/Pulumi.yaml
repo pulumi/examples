@@ -8,3 +8,15 @@ config:
   pulumi:tags:
     value:
       pulumi:template: typescript
+
+template:
+  description: GCP OIDC setup for Pulumi ESC
+  config:
+    gcp:project:
+      description: The name of your GCP project
+    escEnvProject:
+      description: The name of the ESC project in which to place a generated environment.
+      default: gcp
+    escEnvName:
+      description: The name of the ESC environment to generate.
+      default: gcp-oidc-admin

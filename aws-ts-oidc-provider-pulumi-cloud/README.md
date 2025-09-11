@@ -5,7 +5,7 @@ A Pulumi template to:
 - Create AWS resources for AWS OIDC (IdP + Role)
 - Create a new Pulumi Cloud ESC Environment
 
-Last update: September 2024
+Last update: September 2025
 
 ## 📋 Pre-requisites
 
@@ -22,10 +22,10 @@ This Pulumi example is written as a template. It is meant to be copied via `pulu
 # login to your Pulumi Cloud if you haven't already
 pulumi login
 
-# pick a name for your output directory (--dir is optional, omit for pwd)
-D=my-aws-oidc
-pulumi new https://github.com/pulumi/examples/aws-ts-oidc-provider-pulumi-cloud --dir ${D}
-cd ${D}
+# pick a name for your output directory (--dir is optional. will use current directory if omitted)
+my_dir=my-aws-oidc
+pulumi new https://github.com/pulumi/examples/aws-ts-oidc-provider-pulumi-cloud --dir ${my_dir}
+cd ${my_dir}
 ```
 
 Once copied to your machine, feel free to edit as needed.
