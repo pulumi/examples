@@ -48,8 +48,8 @@ with `***`.
         Type                              Name                                      Plan
     +   pulumi:pulumi:Stack               static-website-example                    create
     +   ├─ pulumi:providers:aws           east                                      create
-    +   ├─ aws:s3:BucketV2                requestLogs                               create
-    +   ├─ aws:s3:BucketV2                contentBucket                             create
+    +   ├─ aws:s3:Bucket                  requestLogs                               create
+    +   ├─ aws:s3:Bucket                  contentBucket                             create
     +   │  ├─ aws:s3:BucketObject         404.html                                  create
     +   │  └─ aws:s3:BucketObject         index.html                                create
     +   ├─ aws:acm:Certificate            certificate                               create
@@ -128,3 +128,14 @@ using the AWS CLI.
 ```bash
 aws s3 sync ./www/ s3://example-bucket/
 ```
+
+## Preview behavior and apply checklist
+
+This repo includes `Pulumi.preview.yaml` with safe preview defaults so you can run `pulumi preview` without a real domain. During preview, some values are stubbed and DNS lookups may be skipped. Before running `pulumi up`, set real config values:
+
+```
+pulumi config set aws-py-static-website:targetDomain <your-domain>
+pulumi config set aws:region us-west-2
+```
+
+If you don’t manage the domain in Route53, remove or skip creating DNS records.

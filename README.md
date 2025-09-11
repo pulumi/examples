@@ -49,6 +49,23 @@ $ git pull origin master
 
 Don't see an example listed? [Try Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) and use natural-language prompts to generate Pulumi infrastructure-as-code programs in _any_ language.
 
+## PR Preview Validation
+
+When making changes to examples, either individual or in bulk, it's useful to validate those changes before submitting a pull request. This repository includes a `make pr_preview` target that provides preview-only sanity checks for changed examples in pull requests. This helps ensure examples remain functional without requiring full deployments.
+
+```bash
+# Run preview checks on all changed examples
+make pr_preview
+
+# Check what examples would be tested without running previews
+DRY_LIST=1 make pr_preview
+
+# Use a custom base branch for comparison
+BASE_REF=origin/mybranch make pr_preview
+```
+
+The script assumes you have credentials for various providers configured. Examples that fail preview due to missing live resources or complex configuration requirements are expected and don't necessarily indicate problems.
+
 ## All Pulumi examples
 
 - [AWS](#aws)

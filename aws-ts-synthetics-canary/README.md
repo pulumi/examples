@@ -46,8 +46,8 @@ There are some prebaked canary scripts for doing things like checking an API or 
 
         Type                      Name                       Status
     +   pulumi:pulumi:Stack       aws-synthetics-canary-dev  created
-    +   ├─ aws:s3:BucketV2        canary-results             created
-    +   ├─ aws:s3:BucketV2        canary-scripts             created
+    +   ├─ aws:s3:Bucket          canary-results             created
+    +   ├─ aws:s3:Bucket          canary-scripts             created
     +   ├─ aws:iam:Role           canary-exec-role           created
     +   ├─ aws:iam:RolePolicy     canary-exec-policy         created
     +   ├─ aws:s3:BucketObjectv2  canary-simple-canary       created

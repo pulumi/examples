@@ -38,7 +38,7 @@ export class NextJsSite extends pulumi.ComponentResource {
             pulumi.log.warn("Could not build Next.js site.");
         }
 
-        const bucket = new aws.s3.BucketV2(`${name}-bucket`, {
+        const bucket = new aws.s3.Bucket(`${name}-bucket`, {
             forceDestroy: true,
         }, { parent: this });
 

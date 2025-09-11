@@ -8,14 +8,14 @@ config:
 variables:
   ec2ami:
     fn::invoke:
-      function: aws:getAmi
+      function: aws:ec2/getAmi:getAmi
       arguments:
         filters:
           - name: name
-            values: ["amzn-ami-hvm-*-x86_64-ebs"]
+            values: ["amzn2-ami-hvm-*-x86_64-gp2"]
         owners: ["137112412989"]
         mostRecent: true
-      Return: id
+      return: id
 resources:
   WebSecGrp:
     type: aws:ec2:SecurityGroup
@@ -41,7 +41,7 @@ resources:
     properties:
       region: us-east-2
   MyBucket:
-    type: aws:s3:BucketV2
+    type: aws:s3:Bucket
     options:
       provider: ${UsEast2Provider}
 outputs:

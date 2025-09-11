@@ -2,7 +2,7 @@ import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
 export class S3Folder extends pulumi.ComponentResource {
-  readonly bucket: pulumi.Output<aws.s3.BucketV2>;
+  readonly bucket: pulumi.Output<aws.s3.Bucket>;
   readonly websiteUrl: pulumi.Output<string>;
 
   /**
@@ -14,9 +14,9 @@ export class S3Folder extends pulumi.ComponentResource {
     super("pulumi:examples:S3Folder", bucketName, {}, opts);
 
     // Create a bucket and expose a website index document
-    const siteBucket = new aws.s3.BucketV2(bucketName, {}, { parent: this }); // specify resource parent
+    const siteBucket = new aws.s3.Bucket(bucketName, {}, { parent: this }); // specify resource parent
 
-    const siteBucketWebsite = new aws.s3.BucketWebsiteConfigurationV2(bucketName, {
+    const siteBucketWebsite = new aws.s3.BucketWebsiteConfiguration(bucketName, {
         bucket: siteBucket.bucket,
         indexDocument: {suffix: "index.html"}
     }, { parent: this});

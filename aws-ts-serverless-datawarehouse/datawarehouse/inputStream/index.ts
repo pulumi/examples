@@ -129,7 +129,7 @@ export class InputStream extends pulumi.ComponentResource {
 export interface InputStreamArgs {
     databaseName: pulumi.Input<string>;
     tableName: pulumi.Input<string>;
-    destinationBucket: aws.s3.BucketV2;
+    destinationBucket: aws.s3.Bucket;
     shardCount: number;
     fileFlushIntervalSeconds?: number;
 }

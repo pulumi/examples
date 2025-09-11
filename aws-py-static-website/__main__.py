@@ -3,6 +3,7 @@ import mimetypes
 import os
 
 from pulumi import export, FileAsset, ResourceOptions, Config, Output
+from pulumi import runtime
 import pulumi_aws
 import pulumi_aws.acm
 import pulumi_aws.cloudfront
@@ -29,7 +30,7 @@ def setup_acl(bucket_name, bucket, acl):
         restrict_public_buckets=False,
     )
 
-    content_bucket_acl = pulumi_aws.s3.BucketAclV2(
+    content_bucket_acl = pulumi_aws.s3.BucketAcl(
         bucket_name,
         bucket=content_bucket.bucket,
         acl=acl,
@@ -63,11 +64,19 @@ target_domain = stack_config.require("targetDomain")
 path_to_website_contents = stack_config.require("pathToWebsiteContents")
 certificate_arn = stack_config.get("certificateArn")
 
+# Apply-time guard: prevent using placeholder domain on apply
+if not runtime.is_dry_run() and (
+    "preview-" in target_domain or target_domain.endswith("example.com")
+):
+    raise Exception(
+        "Configure a real targetDomain before 'pulumi up'. Example: pulumi config set aws-py-static-website:targetDomain <your-domain>"
+    )
+
 # Create an S3 bucket configured as a website bucket.
-content_bucket = pulumi_aws.s3.BucketV2(f"{target_domain}-content")
+content_bucket = pulumi_aws.s3.Bucket(f"{target_domain}-content")
 
 
-content_bucket_website = pulumi_aws.s3.BucketWebsiteConfigurationV2(
+content_bucket_website = pulumi_aws.s3.BucketWebsiteConfiguration(
     "content-bucket",
     bucket=content_bucket.bucket,
     index_document={"suffix": "index.html"},
@@ -153,7 +162,7 @@ if certificate_arn is None:
     certificate_arn = cert_validation.certificate_arn
 
 # Create a logs bucket for the CloudFront logs
-logs_bucket = pulumi_aws.s3.BucketV2(f"{target_domain}-logs")
+logs_bucket = pulumi_aws.s3.Bucket(f"{target_domain}-logs")
 setup_acl("requestLogs", logs_bucket, "private")
 
 # Create the CloudFront distribution

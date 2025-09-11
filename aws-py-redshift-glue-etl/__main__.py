@@ -139,7 +139,7 @@ glue_role = iam.Role(
 )
 
 # Create an S3 bucket to store some raw data.
-events_bucket = s3.BucketV2(
+events_bucket = s3.Bucket(
     "events",
     force_destroy=True,
 )
@@ -179,7 +179,7 @@ glue_redshift_connection = glue.Connection(
 )
 
 # Create an S3 bucket for Glue scripts and temporary storage.
-glue_job_bucket = s3.BucketV2(
+glue_job_bucket = s3.Bucket(
     "glue-job-bucket",
     force_destroy=True,
 )

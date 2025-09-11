@@ -25,10 +25,15 @@ const config = {
     includeWWW: stackConfig.getBoolean("includeWWW") ?? true,
 };
 
-// contentBucket is the S3 bucket that the website's contents will be stored in.
-const contentBucket = new aws.s3.BucketV2(`${config.targetDomain}-content`);
+// Apply-time guard to prevent placeholder domain usage
+if (!pulumi.runtime.isDryRun() && (config.targetDomain.includes("preview-") || config.targetDomain.endsWith("example.com"))) {
+    throw new Error("Configure a real targetDomain before 'pulumi up'. Example: pulumi config set aws-ts-static-website:targetDomain <your-domain>");
+}
 
-const contentBucketWebsite = new aws.s3.BucketWebsiteConfigurationV2("contentBucketWebsite", {
+// contentBucket is the S3 bucket that the website's contents will be stored in.
+const contentBucket = new aws.s3.Bucket(`${config.targetDomain}-content`);
+
+const contentBucketWebsite = new aws.s3.BucketWebsiteConfiguration("contentBucketWebsite", {
     bucket: contentBucket.bucket,
     indexDocument: {suffix: "index.html"},
     errorDocument: {key: "404.html"},
@@ -71,7 +76,7 @@ crawlDirectory(
     });
 
 // logsBucket is an S3 bucket that will contain the CDN's request logs.
-const logsBucket = new aws.s3.BucketV2(`${config.targetDomain}-logs`);
+const logsBucket = new aws.s3.Bucket(`${config.targetDomain}-logs`);
 configureACL("requestLogs", logsBucket, "private");
 
 const tenMinutes = 60 * 10;
@@ -98,7 +103,9 @@ if (!config.certificateArn) {
     const certificate = new aws.acm.Certificate("certificate", certificateConfig, { provider: eastRegion });
 
     const domainParts = getDomainAndSubdomain(config.targetDomain);
-    const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
+    const hostedZoneId: pulumi.Input<string> = pulumi.runtime.isDryRun()
+        ? pulumi.output("Z000000")
+        : aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
 
     /**
      *  Create a DNS record to prove that we _own_ the domain we're requesting a certificate for.
@@ -249,7 +256,9 @@ function getDomainAndSubdomain(domain: string): { subdomain: string, parentDomai
 function createAliasRecord(
     targetDomain: string, distribution: aws.cloudfront.Distribution): aws.route53.Record {
     const domainParts = getDomainAndSubdomain(targetDomain);
-    const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
+    const hostedZoneId: pulumi.Input<string> = pulumi.runtime.isDryRun()
+        ? pulumi.output("Z000000")
+        : aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
     return new aws.route53.Record(
         targetDomain,
         {
@@ -268,7 +277,9 @@ function createAliasRecord(
 
 function createWWWAliasRecord(targetDomain: string, distribution: aws.cloudfront.Distribution): aws.route53.Record {
     const domainParts = getDomainAndSubdomain(targetDomain);
-    const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
+    const hostedZoneId: pulumi.Input<string> = pulumi.runtime.isDryRun()
+        ? pulumi.output("Z000000")
+        : aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
 
     return new aws.route53.Record(
         `${targetDomain}-www-alias`,

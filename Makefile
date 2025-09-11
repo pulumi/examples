@@ -33,6 +33,11 @@ bench_example.%:
 	mkdir -p ./traces
 	cd misc/test && PULUMI_TRACING_DIR=${PWD}/traces go test -test.v -run "^$*$$" -tags all
 
+.PHONY: pr_preview
+# PR-mode: run previews only for examples changed vs BASE_REF (default: origin/main|origin/master)
+pr_preview:
+	bash scripts/pr-preview-changed.sh
+
 .PHONY: format setup_python clean
 
 # Create a virtual environment and install black

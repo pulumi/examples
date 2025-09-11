@@ -8,7 +8,7 @@ import { generateCanaryPolicy } from "./canaryPolicy";
 const baseName = "canary";
 
 // Bucket for storing canary RESULTS
-const canaryResultsS3Bucket = new aws.s3.BucketV2(`${baseName}-results`, {
+const canaryResultsS3Bucket = new aws.s3.Bucket(`${baseName}-results`, {
   // This allows the bucket to be destroyed even if it contains canary results.
   forceDestroy: true,
 });
@@ -38,9 +38,9 @@ const canaryExecutionPolicy = new aws.iam.RolePolicy(`${baseName}-exec-policy`, 
 });
 
 // Bucket for storing the canary SCRIPTS
-const canaryScriptsBucket = new aws.s3.BucketV2(`${baseName}-scripts`);
+const canaryScriptsBucket = new aws.s3.Bucket(`${baseName}-scripts`);
 // Enable versioning so that as new scripts are uploaded the canary will be updated as well.
-const canaryScriptBucketVersioning = new aws.s3.BucketVersioningV2(`${baseName}-scripts-versioning`, {
+const canaryScriptBucketVersioning = new aws.s3.BucketVersioning(`${baseName}-scripts-versioning`, {
   bucket: canaryScriptsBucket.id,
   versioningConfiguration: {
     status: "Enabled",
