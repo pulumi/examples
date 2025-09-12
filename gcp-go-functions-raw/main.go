@@ -9,7 +9,9 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Create a bucket.
-		bucket, err := storage.NewBucket(ctx, "bucket", nil)
+		bucket, err := storage.NewBucket(ctx, "bucket", &storage.BucketArgs{
+			Location: pulumi.String("US"),
+		})
 		if err != nil {
 			return err
 		}
@@ -27,7 +29,7 @@ func main() {
 		// Set arguments for creating the function resource.
 		args := &cloudfunctions.FunctionArgs{
 			SourceArchiveBucket: bucket.Name,
-			Runtime:             pulumi.String("python37"),
+			Runtime:             pulumi.String("python310"),
 			SourceArchiveObject: bucketObject.Name,
 			EntryPoint:          pulumi.String("handler"),
 			TriggerHttp:         pulumi.Bool(true),

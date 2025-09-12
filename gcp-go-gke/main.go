@@ -59,7 +59,7 @@ func main() {
 		}
 		_, err = appsv1.NewDeployment(ctx, "app-dep", &appsv1.DeploymentArgs{
 			Metadata: &metav1.ObjectMetaArgs{
-				Namespace: namespace.Metadata.Elem().Name(),
+				Namespace: namespace.Metadata.Name(),
 			},
 			Spec: appsv1.DeploymentSpecArgs{
 				Selector: &metav1.LabelSelectorArgs{
@@ -86,7 +86,7 @@ func main() {
 
 		service, err := corev1.NewService(ctx, "app-service", &corev1.ServiceArgs{
 			Metadata: &metav1.ObjectMetaArgs{
-				Namespace: namespace.Metadata.Elem().Name(),
+				Namespace: namespace.Metadata.Name(),
 				Labels:    appLabels,
 			},
 			Spec: &corev1.ServiceSpecArgs{

@@ -18,6 +18,9 @@ func main() {
 
 		computeFirewall, err := compute.NewFirewall(ctx, "firewall",
 			&compute.FirewallArgs{
+				SourceTags: pulumi.StringArray{
+					pulumi.String("web"),
+				},
 				Network: computeNetwork.SelfLink,
 				Allows: &compute.FirewallAllowArray{
 					&compute.FirewallAllowArgs{
