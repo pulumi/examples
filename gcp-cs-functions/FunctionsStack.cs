@@ -8,7 +8,10 @@ class FunctionsStack : Stack
 {
     public FunctionsStack()
     {
-        var bucket = new Bucket("bucket");
+        var bucket = new Bucket("bucket", new BucketArgs
+        {
+            Location = "US"
+        });
 
         var bucketObject = new BucketObject("python-zip", new BucketObjectArgs
         {
