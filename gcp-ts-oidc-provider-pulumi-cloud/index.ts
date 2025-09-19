@@ -45,7 +45,7 @@ const oidcProvider = new gcp.iam.WorkloadIdentityPoolProvider(`identity-pool-pro
   workloadIdentityPoolProviderId: `pulumi-cloud-${pulumi.getOrganization()}-oidc`,
   oidc: {
     issuerUri: issuer,
-    allowedAudiences: [`gcp:${pulumi.getOrganization()}`],
+    allowedAudiences: [`gcp:${escEnvOrg}`],
   },
   attributeMapping: {
     "google.subject": "assertion.sub",
