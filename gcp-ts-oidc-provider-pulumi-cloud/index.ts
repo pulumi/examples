@@ -95,7 +95,7 @@ values:
           subjectAttributes:
             - currentEnvironment.name
   pulumiConfig:
-    gpc:project: \${gcp.login.project}
+    gcp:project: \${gcp.login.project}
   environmentVariables:
     # The Google Cloud SDK (which is used by the Pulumi provider) requires the project to be set by number:
     GOOGLE_CLOUD_PROJECT: \${gcp.login.project}
