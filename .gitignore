@@ -30,3 +30,4 @@ Gopkg.lock
 .classpath
 target/
 *-test/
+PR_MESSAGE.md
