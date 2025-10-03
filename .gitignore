@@ -31,3 +31,4 @@ Gopkg.lock
 target/
 *-test/
 .claude/settings.local.json
+PR_MESSAGE.md
