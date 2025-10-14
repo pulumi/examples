@@ -30,3 +30,4 @@ Gopkg.lock
 .classpath
 target/
 *-test/
+.claude/settings.local.json
