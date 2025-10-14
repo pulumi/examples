@@ -27,16 +27,17 @@ Pulumi is open source under the [Apache 2.0 license](https://github.com/pulumi/p
 This repository contains examples of using Pulumi to build and deploy cloud applications and infrastructure across major programming languages.
 
 Each example has a two-part prefix, `<cloud>-<language>`, to indicate which `<cloud>` and `<language>` it pertains to. For example, `<cloud>` could be:
- - `aws` for [Amazon Web Services](https://github.com/pulumi/pulumi-aws) 
- - `azure` for [Microsoft Azure](https://github.com/pulumi/pulumi-azure)
- - `gcp` for [Google Cloud Platform](https://github.com/pulumi/pulumi-gcp) 
- - `kubernetes` for [Kubernetes](https://github.com/pulumi/pulumi-kubernetes) 
- 
+
+- `aws` for [Amazon Web Services](https://github.com/pulumi/pulumi-aws) 
+- `azure` for [Microsoft Azure](https://github.com/pulumi/pulumi-azure)
+- `gcp` for [Google Cloud Platform](https://github.com/pulumi/pulumi-gcp) 
+- `kubernetes` for [Kubernetes](https://github.com/pulumi/pulumi-kubernetes) 
+
 See the [Pulumi documentation](https://www.pulumi.com/docs/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) for more details on getting started with Pulumi.
 
 ## Checking out a single example
 
-You can checkout only the example(s) you want by using a [sparse checkout](https://git-scm.com/docs/git-sparse-checkout). The following commands show how checkout only the `aws-go-fargate` example. Replace `aws-go-fargate` with your example of interest. 
+You can checkout only the example(s) you want by using a [sparse checkout](https://git-scm.com/docs/git-sparse-checkout). The following commands show how checkout only the `aws-go-fargate` example. Replace `aws-go-fargate` with your example of interest.
 
 ```bash
 $ mkdir examples && cd examples
@@ -69,33 +70,32 @@ The script assumes you have credentials for various providers configured. Exampl
 ## All Pulumi examples
 
 - [AWS](#aws)
-    - [TypeScript](#typescript)
-    - [JavaScript](#javascript)
-    - [Python](#python)
-    - [Go](#go)
-    - [C#](#c)
-    - [F#](#f)
+  - [TypeScript](#typescript)
+  - [JavaScript](#javascript)
+  - [Python](#python)
+  - [Go](#go)
+  - [C#](#c)
+  - [F#](#f)
 - [Azure](#azure)
-    - [TypeScript](#typescript-1)
-    - [Python](#python-1)
-    - [Go](#go-1)
-    - [C#](#c-1)
-    - [F#](#f-1)
+  - [TypeScript](#typescript-1)
+  - [Python](#python-1)
+  - [Go](#go-1)
+  - [C#](#c-1)
+  - [F#](#f-1)
 - [GCP](#gcp)
-    - [TypeScript](#typescript-2)
-    - [JavaScript](#javascript-1)
-    - [Python](#python-2)
-    - [Go](#go-2)
-    - [C#](#c-2)
+  - [TypeScript](#typescript-2)
+  - [JavaScript](#javascript-1)
+  - [Python](#python-2)
+  - [Go](#go-2)
+  - [C#](#c-2)
 - [Kubernetes](#kubernetes)
-    - [TypeScript](#typescript-3)
-    - [JavaScript](#javascript-2)
-    - [Python](#python-3)
-    - [Go](#go-3)
-    - [C#](#c-3)
+  - [TypeScript](#typescript-3)
+  - [JavaScript](#javascript-2)
+  - [Python](#python-3)
+  - [Go](#go-3)
+  - [C#](#c-3)
 - [Openstack](#openstack)
 - [OVHCloud](#ovhcloud)
-- [Cloud](#cloud)
 - [DigitalOcean](#digitalocean)
 - [Multicloud](#multicloud)
 - [F5](#f5)
@@ -140,7 +140,6 @@ Example   | Description |
 [Step Functions](aws-ts-stepfunctions) | Use Step Functions with a Lambda function.
 [Thumbnailer](aws-ts-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
 [Twitter](aws-ts-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
-[URL Shortener](aws-ts-url-shortener-cache-http) | Create a serverless URL shortener that uses high-level components.
 [Voting App](aws-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
 [Web Server](aws-ts-webserver) | Deploy an EC2 Virtual machine using TypeScript to run a Python web server.
 [Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
@@ -444,36 +443,6 @@ Example   | Description |
 | Example                              | Description |
 |--------------------------------------| --------- |
 | [Kubernetes](ovhcloud-go-kubernetes) | A sample to deploy a managed Kubernetes cluster on OVHcloud |
-
-[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
-
-## Cloud
-
-### TypeScript
-
-[🔝 Back to the list](#all-pulumi-examples)
-
-Example   | Description |
---------- | --------- |
-[URL Shortener - Cache and HttpServer](cloud-ts-url-shortener-cache-http) | Create a simple URL shortener SPA that uses the high-level `cloud.Table` and `cloud.HttpServer` components.
-[URL Shortener - Cache](cloud-ts-url-shortener-cache) | Create a simple URL shortener SPA that uses the high-level `cloud.Table` and `cloud.API` components.
-[URL Shortener](cloud-ts-url-shortener) | Create a complete URL shortener web application that uses the high-level `cloud.Table` and `cloud.HttpServer` components.
-[Voting App](cloud-ts-voting-app) | Create a simple voting app using Redis and Python Flask.
-
-[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
-
-### JavaScript
-
-[🔝 Back to the list](#all-pulumi-examples)
-
-Example   | Description |
---------- | --------- |
-[API on AWS](cloud-js-api) | Create a simple REST API that counts the number of times a route has been hit.
-[Containers](cloud-js-containers) | Provision containers on Fargate.
-[HttpServer](cloud-js-httpserver) | Create a simple REST API that counts the number of times a route has been hit.
-[Thumbnailer - Machine Learning](cloud-js-thumbnailer-machine-learning) | Create a video thumbnail extractor using serverless functions, containers, and AWS Rekognition.
-[Thumbnailer](cloud-js-thumbnailer) | Create a video thumbnail extractor using serverless functions and containers.
-[Twitter](cloud-js-twitter-athena) | Query Twitter every 2 minutes, store the results in S3, and set up an Athena table and query.
 
 [Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
 

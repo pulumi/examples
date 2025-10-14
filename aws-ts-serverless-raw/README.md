@@ -1,12 +1,10 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-serverless-raw/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-serverless-raw/README.md#gh-dark-mode-only)
 
-# Serverless C# App
+# Serverless TypeScript App
 
-This example deploys a complete serverless C# application using raw `aws.apigateway.RestAPI`, `aws.lambda.Function` and
-`aws.dynamodb.Table` resources from `@pulumi/aws`.  Although this doesn't feature any of the higher-level abstractions
-from the `@pulumi/cloud` package, it demonstrates that you can program the raw resources directly available in AWS
-to accomplish all of the same things this higher-level package offers.
+This example deploys a complete serverless TypeScript application using raw `aws.apigateway.RestAPI`, `aws.lambda.Function` and
+`aws.dynamodb.Table` resources from `@pulumi/aws`. It demonstrates how to program AWS resources directly to build serverless applications.
 
 The deployed Lambda function is a simple C# application, highlighting the ability to manage existing application code
 in a Pulumi application, even if your Pulumi code is written in a different language like JavaScript or Python.
