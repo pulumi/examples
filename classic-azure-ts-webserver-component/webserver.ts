@@ -38,7 +38,7 @@ export class WebServer extends pulumi.ComponentResource {
         this.vm = new azure.compute.VirtualMachine(`${name}-vm`, {
             resourceGroupName: args.resourceGroupName,
             networkInterfaceIds: [this.networkInterface.id],
-            vmSize: args.vmSize || "Standard_A0",
+            vmSize: args.vmSize || "Standard_A1_v2",
             deleteDataDisksOnTermination: true,
             deleteOsDiskOnTermination: true,
             osProfile: {
@@ -87,7 +87,7 @@ export interface WebServerArgs {
      */
     bootScript?: pulumi.Input<string>;
     /**
-     * An optional VM size; if unspecified, Standard_A0 (micro) will be used.
+     * An optional VM size; if unspecified, Standard_A1_v2 (micro) will be used.
      */
     vmSize?: pulumi.Input<string>;
     /**

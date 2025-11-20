@@ -59,7 +59,7 @@ vm = compute.VirtualMachine(
         ],
     ),
     hardware_profile=compute.HardwareProfileArgs(
-        vm_size=compute.VirtualMachineSizeTypes.STANDARD_A0,
+        vm_size=compute.VirtualMachineSizeTypes.STANDARD_A1_V2,
     ),
     os_profile=compute.OSProfileArgs(
         computer_name="hostname",

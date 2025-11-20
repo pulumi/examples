@@ -54,7 +54,7 @@ class WebServer(ComponentResource):
             resource_group_name=args.resource_group.name,
             location=args.resource_group.location,
             network_interface_ids=[network_iface.id],
-            vm_size="Standard_A0",
+            vm_size="Standard_A1_v2",
             delete_data_disks_on_termination=True,
             delete_os_disk_on_termination=True,
             os_profile=compute.VirtualMachineOsProfileArgs(

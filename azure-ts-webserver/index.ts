@@ -51,7 +51,7 @@ const vm = new compute.VirtualMachine("server-vm", {
         networkInterfaces: [{ id: networkInterface.id }],
     },
     hardwareProfile: {
-        vmSize: compute.VirtualMachineSizeTypes.Standard_A0,
+        vmSize: compute.VirtualMachineSizeTypes.Standard_A1_v2,
     },
     osProfile: {
         computerName: "hostname",

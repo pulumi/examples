@@ -27,7 +27,7 @@ type WebserverArgs struct {
 	// An optional boot script that the VM will use.
 	BootScript pulumi.StringInput
 
-	// An optional VM size; if unspecified, Standard_A0 (micro) will be used.
+	// An optional VM size; if unspecified, Standard_A1_v2 (micro) will be used.
 	VMSize pulumi.StringInput
 
 	// A required Resource Group in which to create the VM
@@ -70,7 +70,7 @@ func NewWebserver(ctx *pulumi.Context, name string, args *WebserverArgs, opts ..
 
 	vmSize := args.VMSize
 	if vmSize == nil {
-		vmSize = pulumi.String("Standard_A0")
+		vmSize = pulumi.String("Standard_A1_v2")
 	}
 
 	// Now create the VM, using the resource group and NIC allocated above.
