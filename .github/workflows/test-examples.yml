@@ -10,6 +10,9 @@ on:
       - run-tests-command
   workflow_dispatch: {}
 
+env:
+  PULUMI_ENABLE_JOURNALING: "true"
+
 jobs:
   lint-ts:
     name: TypeScript lint checks
@@ -175,7 +178,7 @@ jobs:
           tool-cache: false
           swap-storage: false
           dotnet: false
-      
+
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Set up the environment
