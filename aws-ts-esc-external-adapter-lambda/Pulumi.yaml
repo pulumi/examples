@@ -1,0 +1,3 @@
+name: aws-ts-esc-external-adapter-lambda
+runtime: nodejs
+description: External secrets adapter for Pulumi ESC using AWS Lambda with JWT authentication
