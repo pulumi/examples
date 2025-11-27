@@ -1,3 +1,5 @@
+// Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
 import * as apigateway from "@pulumi/aws-apigateway";
 import * as pulumi from "@pulumi/pulumi";
@@ -97,9 +99,9 @@ class ESCRequestValidator {
                     complete: false,
                 },
                 (err, decoded) => {
-                    if (err) reject(err);
-                    else resolve(decoded as jwt.JwtPayload);
-                }
+                    if (err) { reject(err); }
+                    else { resolve(decoded as jwt.JwtPayload); }
+                },
             );
         });
     }
