@@ -32,4 +32,4 @@ type Mocks() =
         member this.CallAsync(args: MockCallArgs): Task<obj> =
             // We don't use this method in this particular test suite.
             // Default to returning whatever we got as input.
-            Task.FromResult(null :> obj)
+            Task.FromResult(null)
