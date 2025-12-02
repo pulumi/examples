@@ -54,7 +54,7 @@ class WebServerStack : Stack
             {
                 ResourceGroupName = resourceGroup.Name,
                 NetworkInterfaceIds = { networkInterface.Id },
-                VmSize = "Standard_A0",
+                VmSize = "Standard_A1_v2",
                 DeleteDataDisksOnTermination = true,
                 DeleteOsDiskOnTermination = true,
                 OsProfile = new VirtualMachineOsProfileArgs

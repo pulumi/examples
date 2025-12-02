@@ -91,7 +91,7 @@ const sga = new azure.network.NetworkInterfaceSecurityGroupAssociation("assoc", 
 const vm = new azure.compute.VirtualMachine("server-vm", {
     resourceGroupName,
     networkInterfaceIds: [networkInterface.id],
-    vmSize: "Standard_A0",
+    vmSize: "Standard_A1_v2",
     deleteDataDisksOnTermination: true,
     deleteOsDiskOnTermination: true,
     osProfile: {
