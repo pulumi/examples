@@ -126,8 +126,8 @@ pulumi stack rm dev
 
 ## Additional resources
 
-- [Blog: Introducing ESC Connect](/blog/esc-connect/)
-- [External Provider Documentation](/docs/esc/integrations/dynamic-secrets/external/)
-- [External Rotator Documentation](/docs/esc/integrations/rotated-secrets/external/)
-- [Pulumi ESC Documentation](/docs/esc/)
+- [Blog: Introducing ESC Connect](https://www.pulumi.com/blog/esc-connect/)
+- [External Provider Documentation](https://www.pulumi.com/docs/esc/integrations/dynamic-secrets/external/)
+- [External Rotator Documentation](https://www.pulumi.com/docs/esc/integrations/rotated-secrets/external/)
+- [Pulumi ESC Documentation](https://www.pulumi.com/docs/esc/)
 - [Pulumi Community Slack](https://slack.pulumi.com/)
