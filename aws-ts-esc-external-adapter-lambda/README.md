@@ -6,7 +6,7 @@
 A reference implementation showing how to build a secure external secrets adapter for Pulumi ESC.
 This example validates JWT authentication and request integrity, making it easy to integrate custom or proprietary secret sources with ESC.
 
-For complete documentation on ESC Connect, see the [external provider documentation](/docs/esc/integrations/dynamic-secrets/external/).
+For complete documentation on ESC Connect, see the [external provider documentation](https://www.pulumi.com/docs/esc/integrations/dynamic-secrets/external/).
 
 ## Deploying the adapter
 
@@ -99,7 +99,7 @@ The `ESCRequestValidator` class in `index.ts` handles request integrity validati
    };
    ```
 
-See the [external provider documentation](/docs/esc/integrations/dynamic-secrets/external/) for complete implementation guidance and examples in other languages.
+See the [external provider documentation](https://www.pulumi.com/docs/esc/integrations/dynamic-secrets/external/) for complete implementation guidance and examples in other languages.
 
 ## Monitoring
 
