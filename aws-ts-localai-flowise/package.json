@@ -9,7 +9,7 @@
     "@pulumi/eks": "3.8.1",
     "@pulumi/aws": "7.0.0",
     "@pulumi/docker": "4.6.2",
-    "@pulumi/kubernetes": "4.22.1",
+    "@pulumi/kubernetes": "4.22.2",
     "@pinecone-database/pulumi": "^0.4.0"
   }
 }
