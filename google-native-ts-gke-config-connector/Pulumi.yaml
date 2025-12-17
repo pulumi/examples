@@ -1,3 +1,0 @@
-name: gke-config-connector
-runtime: nodejs
-description: GKE config-connector example
