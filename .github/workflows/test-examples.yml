@@ -207,7 +207,6 @@ jobs:
           GOOGLE_REGION: ${{ steps.setup.outputs.google-region }}
           GOOGLE_ZONE: ${{ steps.setup.outputs.google-zone }}
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           PULUMI_API: https://api.pulumi-staging.io
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -222,7 +221,6 @@ jobs:
           - Aws
           - Azure
           - Gcp
-          - Packet
         languages:
           - Cs
           - Ts

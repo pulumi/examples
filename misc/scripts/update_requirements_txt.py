@@ -13,7 +13,6 @@ DESIRED_DEPS = {
     "pulumi-libvirt": "pulumi-libvirt>=0.1.0,<1.0.0",
     "pulumi-mysql": "pulumi-mysql>=3.0.0,<4.0.0",
     "pulumi-openstack": "pulumi-openstack>=3.2.0,<4.0.0",
-    "pulumi-packet": "pulumi-packet>=3.2.2,<4.0.0",
     "pulumi-policy": "pulumi-policy>=1.3.0,<2.0.0",
     "pulumi-random": "pulumi-random>=4.2.0,<5.0.0",
     "pulumi-tls": "pulumi-tls>=4.0.0,<5.0.0",
