@@ -1,2 +1,0 @@
-FROM nginx@sha256:2df6f48759eaaa5bbcc2ce33cb939618fd77da846a9f50648b6fe56324a3a49c
-COPY content /usr/share/nginx/html

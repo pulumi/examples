@@ -71,7 +71,6 @@ The script assumes you have credentials for various providers configured. Exampl
 
 - [AWS](#aws)
   - [TypeScript](#typescript)
-  - [JavaScript](#javascript)
   - [Python](#python)
   - [Go](#go)
   - [C#](#c)
@@ -84,13 +83,11 @@ The script assumes you have credentials for various providers configured. Exampl
   - [F#](#f-1)
 - [GCP](#gcp)
   - [TypeScript](#typescript-2)
-  - [JavaScript](#javascript-1)
   - [Python](#python-2)
   - [Go](#go-2)
   - [C#](#c-2)
 - [Kubernetes](#kubernetes)
   - [TypeScript](#typescript-3)
-  - [JavaScript](#javascript-2)
   - [Python](#python-3)
   - [Go](#go-3)
   - [C#](#c-3)
@@ -144,22 +141,6 @@ Example   | Description |
 [Web Server](aws-ts-webserver) | Deploy an EC2 Virtual machine using TypeScript to run a Python web server.
 [Web Server with Manual Provisioning](aws-ts-ec2-provisioners) | Use Pulumi dynamic providers to accomplish post-provisioning configuration steps.
 [LangServe - Hello OpenAI](aws-ts-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
-
-[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
-
-### JavaScript
-
-[🔝 Back to the list](#all-pulumi-examples)
-
-Example   | Description |
---------- | --------- |
-[Containers](aws-js-containers) | Provision containers on Fargate.
-[S3 Folder Component](aws-js-s3-folder-component) | Serve a static website on S3 from a component.
-[S3 Folder](aws-js-s3-folder) | Serve a static website on S3.
-[Servless SQS to Slack](aws-js-sqs-slack) | Wire up a serverless AWS Lambda to an AWS SQS queue and post a message to Slack.
-[Web Server - Component](aws-js-webserver-component) | Deploy an EC2 instance using a common module for creating an instance.
-[Web Server](aws-js-webserver) | Deploy an EC2 Virtual machine running a Python web server.
-[LangServe - Hello OpenAI](aws-js-langserve) | Deploy a LangServe app that uses OpenAI's on AWS ECS.
 
 [Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
 
@@ -322,16 +303,6 @@ Example   | Description |
 [GKE](gcp-ts-gke) | Provision a Google Kubernetes Engine (GKE) cluster, then a Kubernetes Deployment.
 [Ruby on Rails](gcp-ts-k8s-ruby-on-rails-postgresql) | Deliver a containerized Ruby on Rails application.
 [Slackbot](gcp-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
-
-[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
-
-### JavaScript
-
-[🔝 Back to the list](#all-pulumi-examples)
-
-Example   | Description |
---------- | --------- |
-[Web Server](gcp-js-webserver) | Build a web server in Google Cloud.
 
 [Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
 
