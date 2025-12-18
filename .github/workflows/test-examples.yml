@@ -226,7 +226,6 @@ jobs:
           - EquinixMetal
         languages:
           - Cs
-          - Js
           - Ts
           - Py
           - Fs
