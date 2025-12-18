@@ -1,4 +1,0 @@
-name: webserver-equinix
-description: A simple server on Equinix.
-runtime: nodejs
-

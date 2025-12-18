@@ -223,7 +223,6 @@ jobs:
           - Azure
           - Gcp
           - Packet
-          - EquinixMetal
         languages:
           - Cs
           - Ts
