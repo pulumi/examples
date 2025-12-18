@@ -1,3 +1,10 @@
+permissions: write-all # Equivalent to default permissions plus id-token: write
+env:
+  ESC_ACTION_OIDC_AUTH: true
+  ESC_ACTION_OIDC_ORGANIZATION: pulumi
+  ESC_ACTION_OIDC_REQUESTED_TOKEN_TYPE: urn:pulumi:token-type:access_token:organization
+  ESC_ACTION_ENVIRONMENT: imports/github-secrets
+  ESC_ACTION_EXPORT_ENVIRONMENT_VARIABLES: false
 name: Test examples
 on:
   pull_request:
@@ -21,6 +28,9 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Fetch secrets from ESC
+        id: esc-secrets
+        uses: pulumi/esc-action@v1
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Set up the environment
@@ -29,7 +39,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint
@@ -43,6 +53,9 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Fetch secrets from ESC
+        id: esc-secrets
+        uses: pulumi/esc-action@v1
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Set up the environment
@@ -51,7 +64,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: unit tests
@@ -73,7 +86,7 @@ jobs:
         - name: Set up Python
           uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
           with:
-            python-version: 3.9  # Adjust the version as needed
+            python-version: 3.9 # Adjust the version as needed
 
         # Step 3: Install Make (already installed on Ubuntu, but explicit just in case)
         - name: Ensure Make is Installed
@@ -93,6 +106,9 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Fetch secrets from ESC
+        id: esc-secrets
+        uses: pulumi/esc-action@v1
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Set up the environment
@@ -101,7 +117,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: unit tests
@@ -117,6 +133,9 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Fetch secrets from ESC
+        id: esc-secrets
+        uses: pulumi/esc-action@v1
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Set up the environment
@@ -125,7 +144,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: unit tests
@@ -139,6 +158,9 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Fetch secrets from ESC
+        id: esc-secrets
+        uses: pulumi/esc-action@v1
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Set up the environment
@@ -147,7 +169,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: unit tests
@@ -172,6 +194,9 @@ jobs:
 
     steps:
       # Run as first step so we don't delete things that have just been installed
+      - name: Fetch secrets from ESC
+        id: esc-secrets
+        uses: pulumi/esc-action@v1
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
         with:
@@ -187,7 +212,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run tests
@@ -197,20 +222,20 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ steps.setup.outputs.aws-secret-access-key }}
           AWS_SESSION_TOKEN: ${{ steps.setup.outputs.aws-session-token }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_CLIENT_ID: ${{ steps.esc-secrets.outputs.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ steps.esc-secrets.outputs.ARM_CLIENT_SECRET }}
           ARM_ENVIRONMENT: public
           ARM_LOCATION: westus
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ steps.esc-secrets.outputs.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ steps.esc-secrets.outputs.ARM_TENANT_ID }}
           GOOGLE_PROJECT: ${{ steps.setup.outputs.google-project-name }}
           GOOGLE_REGION: ${{ steps.setup.outputs.google-region }}
           GOOGLE_ZONE: ${{ steps.setup.outputs.google-zone }}
-          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          PACKET_AUTH_TOKEN: ${{ secrets.PACKET_AUTH_TOKEN }}
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          DIGITALOCEAN_TOKEN: ${{ steps.esc-secrets.outputs.DIGITALOCEAN_TOKEN }}
+          PACKET_AUTH_TOKEN: ${{ steps.esc-secrets.outputs.PACKET_AUTH_TOKEN }}
+          PULUMI_ACCESS_TOKEN: ${{ steps.esc-secrets.outputs.PULUMI_ACCESS_TOKEN }}
           PULUMI_API: https://api.pulumi-staging.io
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ steps.esc-secrets.outputs.SLACK_WEBHOOK_URL }}
 
     strategy:
       fail-fast: false
@@ -239,6 +264,9 @@ jobs:
       contents: read
 
     steps:
+      - name: Fetch secrets from ESC
+        id: esc-secrets
+        uses: pulumi/esc-action@v1
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Set up the environment
@@ -247,7 +275,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-role-to-assume: ${{ secrets.AWS_CI_ROLE_ARN }}
+          aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Minikube
@@ -284,6 +312,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ steps.setup.outputs.aws-secret-access-key }}
           AWS_SESSION_TOKEN: ${{ steps.setup.outputs.aws-session-token }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_ACCESS_TOKEN: ${{ steps.esc-secrets.outputs.PULUMI_ACCESS_TOKEN }}
           PULUMI_API: https://api.pulumi-staging.io
           INFRA_STACK_NAME: ${{ github.sha }}-${{ github.run_number }}
