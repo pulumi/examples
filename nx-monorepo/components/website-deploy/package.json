@@ -5,12 +5,12 @@
     "dependencies": {
         "@pulumi/aws": "7.0.0",
         "@pulumi/pulumi": "latest",
-        "mime": "^3.0.0"
+        "mime": "^4.0.0"
     },
     "scripts": {
         "build": "tsc"
     },
     "devDependencies": {
-        "@types/mime": "3.0.4"
+        "@types/mime": "4.0.0"
     }
 }
