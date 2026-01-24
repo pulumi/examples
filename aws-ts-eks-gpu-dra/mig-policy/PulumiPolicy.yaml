@@ -1,0 +1,4 @@
+name: mig-policy
+runtime:
+  name: nodejs
+description: Policy pack to enforce small MIG profiles for GPU cost optimization

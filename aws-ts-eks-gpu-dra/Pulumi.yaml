@@ -1,0 +1,6 @@
+name: aws-ts-eks-gpu-dra
+description: Amazon EKS with Dynamic Resource Allocation (DRA) and NVIDIA MIG for GPU workloads
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm

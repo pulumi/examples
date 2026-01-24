@@ -1,0 +1,13 @@
+{
+    "name": "mig-policy",
+    "version": "1.0.0",
+    "description": "CrossGuard policy pack to enforce small MIG profiles",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^18"
+    },
+    "dependencies": {
+        "@pulumi/policy": "^1.13.0",
+        "@pulumi/pulumi": "^3.0.0"
+    }
+}
