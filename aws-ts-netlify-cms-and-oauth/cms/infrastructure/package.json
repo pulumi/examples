@@ -1,13 +1,13 @@
 {
     "name": "pulumi-website-cms",
     "devDependencies": {
-        "@types/mime": "3.0.4",
+        "@types/mime": "4.0.0",
         "@types/node": "22.13.14"
     },
     "dependencies": {
         "@pulumi/aws": "7.0.0",
         "@pulumi/awsx": "2.21.1",
         "@pulumi/pulumi": "3.158.0",
-        "mime": "^3.0.0"
+        "mime": "^4.0.0"
     }
 }
