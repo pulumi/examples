@@ -1,16 +1,16 @@
 import * as policy from "@pulumi/policy";
 
 // Define which MIG profiles are allowed (small profiles only)
-const allowedMigProfiles = ["1g.5gb", "1g.10gb"];
+const allowedMigProfiles = ["1g.5gb", "1g.10gb", "2g.10gb", "2g.20gb", "3g.20gb"];
 
 // Large profiles that waste GPU resources for inference workloads
-const blockedMigProfiles = ["2g.10gb", "3g.20gb", "4g.20gb", "7g.40gb", "7g.80gb"];
+const blockedMigProfiles = ["3g.40gb", "4g.20gb", "4g.40gb", "7g.40gb"];
 
 new policy.PolicyPack("mig-policy", {
     policies: [
         {
             name: "enforce-small-mig-profiles",
-            description: "Prevents using large MIG profiles (2g.10gb and above) to maximize GPU utilization for inference workloads",
+            description: "Prevents using large MIG profiles (3g.40gb and above) to maximize GPU utilization for inference workloads",
             enforcementLevel: "mandatory",
             validateResource: (args, reportViolation) => {
                 const resource = args.props as any;

@@ -104,11 +104,12 @@ const gpuNodeGroup = new eks.ManagedNodeGroup("gpu-nodes", {
         minSize: 0,
         maxSize: 2,
     },
+    diskSize: 100,
     amiType: "AL2023_x86_64_NVIDIA",
     labels: {
         "node-role": "gpu",
         "nvidia.com/gpu.present": "true",
-        "nvidia.com/mig.config": "all-1g.5gb",
+        "nvidia.com/mig.config": "all-balanced",
     },
     taints: [{
         key: "nvidia.com/gpu",
@@ -221,7 +222,7 @@ const gpuOperator = new k8s.helm.v3.Release("gpu-operator", {
         },
         nfd: { enabled: true },
         mig: {
-            strategy: "single",
+            strategy: "mixed",
         },
         migManager: {
             enabled: true,
@@ -286,17 +287,8 @@ const draDriver = new k8s.helm.v3.Release("nvidia-dra-driver", {
 }, { provider: k8sProvider, dependsOn: [gpuOperator] });
 
 // DeviceClass for MIG-enabled GPUs
-// NOTE: When resources.gpus.enabled=true, the NVIDIA DRA driver Helm chart creates this DeviceClass automatically
-// const migDeviceClass = new k8s.apiextensions.CustomResource("mig-device-class", {
-//     apiVersion: "resource.k8s.io/v1",
-//     kind: "DeviceClass",
-//     metadata: { name: "mig.nvidia.com" },
-//     spec: {
-//         selectors: [{
-//             cel: { expression: 'device.driver == "gpu.nvidia.com"' },
-//         }],
-//     },
-// }, { provider: k8sProvider, dependsOn: [draDriver] });
+// The NVIDIA DRA driver Helm chart creates mig.nvidia.com DeviceClass automatically
+// when resources.gpus.enabled=true (see deviceclass-mig.yaml template)
 
 // Monitoring namespace
 const monitoringNamespace = new k8s.core.v1.Namespace("monitoring-ns", {
@@ -360,58 +352,202 @@ const inferenceNamespace = new k8s.core.v1.Namespace("ml-inference", {
     metadata: { name: "ml-inference" },
 }, { provider: k8sProvider });
 
-// ResourceClaimTemplate for 1g.5gb MIG profile (A100 GPUs)
-const migClaimTemplate = new k8s.apiextensions.CustomResource("inference-mig-template", {
-    apiVersion: "resource.k8s.io/v1",
-    kind: "ResourceClaimTemplate",
-    metadata: {
-        name: "inference-mig-1g5gb",
-        namespace: inferenceNamespace.metadata.name,
-    },
-    spec: {
-        spec: {
-            devices: {
-                requests: [{
-                    name: "mig-gpu",
-                    exactly: {
-                        deviceClassName: "mig.nvidia.com",
-                        count: 1,
-                        selectors: [{
-                            cel: {
-                                expression: 'device.attributes["gpu.nvidia.com"].profile == "1g.5gb"',
-                            },
-                        }],
-                    },
-                }],
-            },
-        },
-    },
-}, { provider: k8sProvider, dependsOn: [draDriver] });
 
 // MIG Test Namespace
 const migTestNamespace = new k8s.core.v1.Namespace("mig-test-ns", {
     metadata: { name: "mig-test" },
 }, { provider: k8sProvider });
 
-// ResourceClaimTemplate for MIG 1g.5gb profile (test workloads)
-const migTestClaimTemplate = new k8s.apiextensions.CustomResource("mig-test-claim-template", {
+// ConfigMap with Fashion-MNIST training and inference scripts
+const fashionMnistScripts = new k8s.core.v1.ConfigMap("fashion-mnist-scripts", {
+    metadata: {
+        name: "fashion-mnist-scripts",
+        namespace: migTestNamespace.metadata.name,
+    },
+    data: {
+        "large-training-script.py": `import torch
+import torch.nn as nn
+import torch.optim as optim
+from torchvision import datasets, transforms, models
+
+print("Starting Large Training Workload (3g.20gb MIG)")
+print(f"PyTorch version: {torch.__version__}")
+print(f"CUDA available: {torch.cuda.is_available()}")
+print(f"CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'N/A'}")
+
+transform = transforms.Compose([
+    transforms.Resize(224),
+    transforms.Grayscale(3),
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
+
+train_dataset = datasets.FashionMNIST('./data', train=True, download=True, transform=transform)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=256, shuffle=True)
+
+model = models.resnet18(pretrained=False, num_classes=10).cuda()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+criterion = nn.CrossEntropyLoss()
+
+print("Starting training loop...")
+for epoch in range(20):
+    model.train()
+    total_loss = 0
+    correct = 0
+    total = 0
+
+    for batch_idx, (data, target) in enumerate(train_loader):
+        data, target = data.cuda(), target.cuda()
+        optimizer.zero_grad()
+        output = model(data)
+        loss = criterion(output, target)
+        loss.backward()
+        optimizer.step()
+
+        total_loss += loss.item()
+        pred = output.argmax(dim=1)
+        correct += pred.eq(target).sum().item()
+        total += target.size(0)
+
+    accuracy = 100. * correct / total
+    avg_loss = total_loss / len(train_loader)
+    print(f"Epoch {epoch+1}/20 | Loss: {avg_loss:.4f} | Accuracy: {accuracy:.2f}% | GPU Mem: {torch.cuda.memory_allocated()/1e9:.2f}GB")
+
+print("Training complete!")
+`,
+        "medium-training-script.py": `import torch
+import torch.nn as nn
+import torch.optim as optim
+from torchvision import datasets, transforms
+
+print("Starting Medium Training Workload (2g.10gb MIG)")
+print(f"PyTorch version: {torch.__version__}")
+print(f"CUDA available: {torch.cuda.is_available()}")
+print(f"CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'N/A'}")
+
+transform = transforms.Compose([
+    transforms.Resize(32),
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
+
+train_dataset = datasets.FashionMNIST('./data', train=True, download=True, transform=transform)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=128, shuffle=True)
+
+# Custom CNN with 4 conv layers + 2 FC
+model = nn.Sequential(
+    nn.Conv2d(1, 64, kernel_size=3, padding=1),
+    nn.ReLU(),
+    nn.MaxPool2d(2),
+    nn.Conv2d(64, 128, kernel_size=3, padding=1),
+    nn.ReLU(),
+    nn.MaxPool2d(2),
+    nn.Conv2d(128, 256, kernel_size=3, padding=1),
+    nn.ReLU(),
+    nn.MaxPool2d(2),
+    nn.Conv2d(256, 512, kernel_size=3, padding=1),
+    nn.ReLU(),
+    nn.AdaptiveAvgPool2d(1),
+    nn.Flatten(),
+    nn.Linear(512, 256),
+    nn.ReLU(),
+    nn.Dropout(0.5),
+    nn.Linear(256, 10)
+).cuda()
+
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+criterion = nn.CrossEntropyLoss()
+
+print("Starting training loop...")
+for epoch in range(15):
+    model.train()
+    total_loss = 0
+    correct = 0
+    total = 0
+
+    for batch_idx, (data, target) in enumerate(train_loader):
+        data, target = data.cuda(), target.cuda()
+        optimizer.zero_grad()
+        output = model(data)
+        loss = criterion(output, target)
+        loss.backward()
+        optimizer.step()
+
+        total_loss += loss.item()
+        pred = output.argmax(dim=1)
+        correct += pred.eq(target).sum().item()
+        total += target.size(0)
+
+    accuracy = 100. * correct / total
+    avg_loss = total_loss / len(train_loader)
+    print(f"Epoch {epoch+1}/15 | Loss: {avg_loss:.4f} | Accuracy: {accuracy:.2f}% | GPU Mem: {torch.cuda.memory_allocated()/1e9:.2f}GB")
+
+print("Training complete!")
+`,
+        "small-inference-script.py": `import torch
+import torch.nn as nn
+from torchvision import datasets, transforms
+
+print("Starting Small Inference Workload (1g.5gb MIG)")
+print(f"PyTorch version: {torch.__version__}")
+print(f"CUDA available: {torch.cuda.is_available()}")
+print(f"CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'N/A'}")
+
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
+
+test_dataset = datasets.FashionMNIST('./data', train=False, download=True, transform=transform)
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=32, shuffle=False)
+
+model = nn.Sequential(
+    nn.Flatten(),
+    nn.Linear(28*28, 512),
+    nn.ReLU(),
+    nn.Linear(512, 256),
+    nn.ReLU(),
+    nn.Linear(256, 10)
+).cuda()
+
+model.eval()
+
+print("Starting continuous inference loop...")
+iteration = 0
+while True:
+    for data, target in test_loader:
+        data, target = data.cuda(), target.cuda()
+        with torch.no_grad():
+            output = model(data)
+            pred = output.argmax(dim=1)
+
+        if iteration % 50 == 0:
+            print(f"Iteration {iteration} | GPU Mem: {torch.cuda.memory_allocated()/1e9:.2f}GB")
+
+        iteration += 1
+`,
+    },
+}, { provider: k8sProvider, dependsOn: [migTestNamespace] });
+
+// ResourceClaimTemplate for 3g.20gb MIG profile (large training)
+const migLargeClaimTemplate = new k8s.apiextensions.CustomResource("mig-large-template", {
     apiVersion: "resource.k8s.io/v1",
     kind: "ResourceClaimTemplate",
     metadata: {
-        name: "mig-1g5gb-template",
+        name: "mig-large-template",
         namespace: migTestNamespace.metadata.name,
     },
     spec: {
         spec: {
             devices: {
                 requests: [{
-                    name: "mig-gpu",
+                    name: "mig-large",
                     exactly: {
                         deviceClassName: "mig.nvidia.com",
                         count: 1,
                         selectors: [{
                             cel: {
-                                expression: 'device.attributes["gpu.nvidia.com"].profile == "1g.5gb"',
+                                expression: 'device.attributes["gpu.nvidia.com"].type == "mig" && device.attributes["gpu.nvidia.com"].profile == "3g.20gb"',
                             },
                         }],
                     },
@@ -421,26 +557,25 @@ const migTestClaimTemplate = new k8s.apiextensions.CustomResource("mig-test-clai
     },
 }, { provider: k8sProvider, dependsOn: [draDriver] });
 
-// ResourceClaimTemplate for LARGE MIG profile (7g.40gb) - THIS SHOULD BE BLOCKED BY POLICY
-// This demonstrates a policy violation: using the full GPU defeats the purpose of MIG
-const migLargeClaimTemplate = new k8s.apiextensions.CustomResource("mig-large-claim-template", {
+// ResourceClaimTemplate for 2g.10gb MIG profile (medium training)
+const migMediumClaimTemplate = new k8s.apiextensions.CustomResource("mig-medium-template", {
     apiVersion: "resource.k8s.io/v1",
     kind: "ResourceClaimTemplate",
     metadata: {
-        name: "mig-7g40gb-template",
+        name: "mig-medium-template",
         namespace: migTestNamespace.metadata.name,
     },
     spec: {
         spec: {
             devices: {
                 requests: [{
-                    name: "mig-gpu",
+                    name: "mig-medium",
                     exactly: {
                         deviceClassName: "mig.nvidia.com",
                         count: 1,
                         selectors: [{
                             cel: {
-                                expression: 'device.attributes["gpu.nvidia.com"].profile == "7g.40gb"',
+                                expression: 'device.attributes["gpu.nvidia.com"].type == "mig" && device.attributes["gpu.nvidia.com"].profile == "2g.10gb"',
                             },
                         }],
                     },
@@ -450,47 +585,234 @@ const migLargeClaimTemplate = new k8s.apiextensions.CustomResource("mig-large-cl
     },
 }, { provider: k8sProvider, dependsOn: [draDriver] });
 
-// MIG Inference Test Deployment
-const migInferenceDeployment = new k8s.apps.v1.Deployment("mig-inference-test", {
+// ResourceClaimTemplate for 1g.5gb MIG profile (small inference)
+const migSmallClaimTemplate = new k8s.apiextensions.CustomResource("mig-small-template", {
+    apiVersion: "resource.k8s.io/v1",
+    kind: "ResourceClaimTemplate",
     metadata: {
-        name: "mig-inference-test",
+        name: "mig-small-template",
         namespace: migTestNamespace.metadata.name,
     },
     spec: {
-        replicas: 2,
-        selector: {
-            matchLabels: { app: "mig-inference-test" },
-        },
-        template: {
-            metadata: {
-                labels: { app: "mig-inference-test" },
-            },
-            spec: {
-                tolerations: [{
-                    key: "nvidia.com/gpu",
-                    operator: "Exists",
-                    effect: "NoSchedule",
-                }],
-                nodeSelector: {
-                    "node-role": "gpu",
-                    "nvidia.com/gpu.present": "true",
-                },
-                containers: [{
-                    name: "cuda-test",
-                    image: "nvidia/cuda:13.1.1-base-ubuntu24.04",
-                    command: ["sh", "-c", "while true; do nvidia-smi; sleep 30; done"],
-                    resources: {
-                        claims: [{ name: "mig-gpu" }],
+        spec: {
+            devices: {
+                requests: [{
+                    name: "mig-small",
+                    exactly: {
+                        deviceClassName: "mig.nvidia.com",
+                        count: 1,
+                        selectors: [{
+                            cel: {
+                                expression: 'device.attributes["gpu.nvidia.com"].type == "mig" && device.attributes["gpu.nvidia.com"].profile == "1g.5gb"',
+                            },
+                        }],
                     },
-                }],
-                resourceClaims: [{
-                    name: "mig-gpu",
-                    resourceClaimTemplateName: "mig-1g5gb-template",
                 }],
             },
         },
     },
-}, { provider: k8sProvider, dependsOn: [migTestClaimTemplate, gpuNodeGroup] });
+}, { provider: k8sProvider, dependsOn: [draDriver] });
+
+// Pod for large training workload (3g.20gb MIG)
+const migLargeTrainingPod = new k8s.core.v1.Pod("mig-large-training", {
+    metadata: {
+        name: "mig-large-training-pod",
+        namespace: migTestNamespace.metadata.name,
+    },
+    spec: {
+        restartPolicy: "Never",
+        tolerations: [{
+            key: "nvidia.com/gpu",
+            operator: "Exists",
+            effect: "NoSchedule",
+        }],
+        nodeSelector: {
+            "node-role": "gpu",
+            "nvidia.com/gpu.present": "true",
+        },
+        containers: [{
+            name: "training",
+            image: "nvcr.io/nvidia/pytorch:25.12-py3",
+            command: ["python", "/scripts/large-training-script.py"],
+            volumeMounts: [{
+                name: "scripts",
+                mountPath: "/scripts",
+                readOnly: true,
+            }],
+            resources: {
+                claims: [{ name: "mig-large" }],
+            },
+        }],
+        resourceClaims: [{
+            name: "mig-large",
+            resourceClaimTemplateName: "mig-large-template",
+        }],
+        volumes: [{
+            name: "scripts",
+            configMap: {
+                name: fashionMnistScripts.metadata.name,
+            },
+        }],
+    },
+}, { provider: k8sProvider, dependsOn: [migLargeClaimTemplate, fashionMnistScripts] });
+
+// Pod for medium training workload (2g.10gb MIG)
+const migMediumTrainingPod = new k8s.core.v1.Pod("mig-medium-training", {
+    metadata: {
+        name: "mig-medium-training-pod",
+        namespace: migTestNamespace.metadata.name,
+    },
+    spec: {
+        restartPolicy: "Never",
+        tolerations: [{
+            key: "nvidia.com/gpu",
+            operator: "Exists",
+            effect: "NoSchedule",
+        }],
+        nodeSelector: {
+            "node-role": "gpu",
+            "nvidia.com/gpu.present": "true",
+        },
+        containers: [{
+            name: "training",
+            image: "nvcr.io/nvidia/pytorch:25.12-py3",
+            command: ["python", "/scripts/medium-training-script.py"],
+            volumeMounts: [{
+                name: "scripts",
+                mountPath: "/scripts",
+                readOnly: true,
+            }],
+            resources: {
+                claims: [{ name: "mig-medium" }],
+            },
+        }],
+        resourceClaims: [{
+            name: "mig-medium",
+            resourceClaimTemplateName: "mig-medium-template",
+        }],
+        volumes: [{
+            name: "scripts",
+            configMap: {
+                name: fashionMnistScripts.metadata.name,
+            },
+        }],
+    },
+}, { provider: k8sProvider, dependsOn: [migMediumClaimTemplate, fashionMnistScripts] });
+
+// Pod for small inference workload (1g.5gb MIG)
+const migSmallInferencePod = new k8s.core.v1.Pod("mig-small-inference", {
+    metadata: {
+        name: "mig-small-inference-pod",
+        namespace: migTestNamespace.metadata.name,
+    },
+    spec: {
+        restartPolicy: "Never",
+        tolerations: [{
+            key: "nvidia.com/gpu",
+            operator: "Exists",
+            effect: "NoSchedule",
+        }],
+        nodeSelector: {
+            "node-role": "gpu",
+            "nvidia.com/gpu.present": "true",
+        },
+        containers: [{
+            name: "inference",
+            image: "nvcr.io/nvidia/pytorch:25.12-py3",
+            command: ["python", "/scripts/small-inference-script.py"],
+            volumeMounts: [{
+                name: "scripts",
+                mountPath: "/scripts",
+                readOnly: true,
+            }],
+            resources: {
+                claims: [{ name: "mig-small" }],
+            },
+        }],
+        resourceClaims: [{
+            name: "mig-small",
+            resourceClaimTemplateName: "mig-small-template",
+        }],
+        volumes: [{
+            name: "scripts",
+            configMap: {
+                name: fashionMnistScripts.metadata.name,
+            },
+        }],
+    },
+}, { provider: k8sProvider, dependsOn: [migSmallClaimTemplate, fashionMnistScripts] });
+
+/*
+const migInvalidClaimTemplate = new k8s.apiextensions.CustomResource("mig-invalid-template", {
+    apiVersion: "resource.k8s.io/v1",
+    kind: "ResourceClaimTemplate",
+    metadata: {
+        name: "mig-invalid-template",
+        namespace: migTestNamespace.metadata.name,
+    },
+    spec: {
+        spec: {
+            devices: {
+                requests: [{
+                    name: "invalid-mig",
+                    exactly: {
+                        deviceClassName: "mig.nvidia.com",
+                        count: 1,
+                        selectors: [{
+                            cel: {
+                                expression: 'device.attributes["gpu.nvidia.com"].type == "mig" && device.attributes["gpu.nvidia.com"].profile == "7g.40gb"',
+                            },
+                        }],
+                    },
+                }],
+            },
+        },
+    },
+}, { provider: k8sProvider, dependsOn: [draDriver] });
+
+
+const migInvalidInferencePod = new k8s.core.v1.Pod("mig-invalid-inference", {
+    metadata: {
+        name: "mig-invalid-inference-pod",
+        namespace: migTestNamespace.metadata.name,
+    },
+    spec: {
+        restartPolicy: "Never",
+        tolerations: [{
+            key: "nvidia.com/gpu",
+            operator: "Exists",
+            effect: "NoSchedule",
+        }],
+        nodeSelector: {
+            "node-role": "gpu",
+            "nvidia.com/gpu.present": "true",
+        },
+        containers: [{
+            name: "inference",
+            image: "nvcr.io/nvidia/pytorch:25.12-py3",
+            command: ["python", "/scripts/small-inference-script.py"],
+            volumeMounts: [{
+                name: "scripts",
+                mountPath: "/scripts",
+                readOnly: true,
+            }],
+            resources: {
+                claims: [{ name: "invalid-mig" }],
+            },
+        }],
+        resourceClaims: [{
+            name: "invalid-mig",
+            resourceClaimTemplateName: "mig-invalid-template",
+        }],
+        volumes: [{
+            name: "scripts",
+            configMap: {
+                name: fashionMnistScripts.metadata.name,
+            },
+        }],
+    },
+}, { provider: k8sProvider, dependsOn: [migInvalidClaimTemplate, fashionMnistScripts] });
+*/
 
 // Export outputs
 export const kubeconfig = pulumi.secret(cluster.kubeconfig);
