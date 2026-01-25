@@ -1,6 +1,10 @@
-name: aws-ts-eks-gpu-dra
-description: Amazon EKS with Dynamic Resource Allocation (DRA) and NVIDIA MIG for GPU workloads
+name: gpu-dra-blog-test
+description: A minimal AWS TypeScript Pulumi program
 runtime:
   name: nodejs
   options:
     packagemanager: npm
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-typescript
