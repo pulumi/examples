@@ -1,0 +1,12 @@
+{
+    "name": "clawdbot-aws-typescript",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^22"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^7.16.0",
+        "@pulumi/pulumi": "^3.217.0",
+        "@pulumi/tls": "^5.2.3"
+    }
+}
