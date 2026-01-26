@@ -1,9 +1,12 @@
 {
+    "ts-node": {
+        "esm": true
+    },
     "compilerOptions": {
         "outDir": "bin",
-        "target": "es6",
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "target": "es2020",
+        "module": "node16",
+        "moduleResolution": "node16",
         "sourceMap": true,
         "experimentalDecorators": true,
         "pretty": true,

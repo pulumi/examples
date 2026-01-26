@@ -2,7 +2,7 @@
 
 import * as crypto from "crypto";
 import * as fs from "fs";
-import * as mime from "mime";
+import mime from "mime";
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";

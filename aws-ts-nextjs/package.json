@@ -2,16 +2,17 @@
     "name": "nextjs-example",
     "version": "0.0.1",
     "license": "Apache-2.0",
+    "type": "module",
     "dependencies": {
         "@pulumi/aws": "7.0.0",
-        "@pulumi/pulumi": "3.183.0",
+        "@pulumi/pulumi": "3.217.0",
         "glob": "^10.0.0",
         "mime": "^4.0.0"
     },
     "devDependencies": {
         "@types/glob": "8.1.0",
-        "@types/mime": "4.0.0",
         "@types/node": "22.13.14",
-        "typescript": "5.8.2"
+        "ts-node": "^10.9.2",
+        "typescript": "^5.9.3"
     }
 }
