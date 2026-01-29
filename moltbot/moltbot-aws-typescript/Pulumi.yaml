@@ -1,0 +1,3 @@
+name: moltbot-aws-typescript
+runtime: nodejs
+description: Deploy Moltbot AI assistant to AWS with VPC, security groups, and EC2 instance using a reusable ComponentResource.

@@ -1,8 +1,9 @@
 {
-    "name": "clawdbot-aws-typescript",
+    "name": "moltbot-aws-typescript",
     "main": "index.ts",
     "devDependencies": {
-        "@types/node": "^22"
+        "@types/node": "^22",
+        "typescript": "^5.9.3"
     },
     "dependencies": {
         "@pulumi/aws": "^7.16.0",
