@@ -1,8 +1,9 @@
 {
-    "name": "clawdbot-hetzner-typescript",
+    "name": "moltbot-hetzner-typescript",
     "main": "index.ts",
     "devDependencies": {
-        "@types/node": "^22"
+        "@types/node": "^22",
+        "typescript": "^5.9.3"
     },
     "dependencies": {
         "@pulumi/hcloud": "^1.31.0",
