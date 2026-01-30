@@ -1,3 +1,0 @@
-name: moltbot-hetzner-typescript
-runtime: nodejs
-description: Deploy Moltbot AI assistant to Hetzner Cloud with firewall and server using a reusable ComponentResource.
