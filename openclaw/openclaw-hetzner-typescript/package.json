@@ -1,12 +1,12 @@
 {
-    "name": "moltbot-aws-typescript",
+    "name": "openclaw-hetzner-typescript",
     "main": "index.ts",
     "devDependencies": {
         "@types/node": "^22",
         "typescript": "^5.9.3"
     },
     "dependencies": {
-        "@pulumi/aws": "^7.16.0",
+        "@pulumi/hcloud": "^1.31.0",
         "@pulumi/pulumi": "^3.217.0",
         "@pulumi/tls": "^5.2.3"
     }
