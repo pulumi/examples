@@ -4,7 +4,7 @@
   "dependencies": {
     "@pulumi/aws": "7.0.0",
     "@pulumi/awsguard": "latest",
-    "@pulumi/policy": "1.16.0",
+    "@pulumi/policy": "1.17.0",
     "@pulumi/pulumi": "3.158.0"
   },
   "devDependencies": {
