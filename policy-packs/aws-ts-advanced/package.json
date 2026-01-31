@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "dependencies": {
         "@pulumi/aws": "7.0.0",
-        "@pulumi/policy": "1.15.0"
+        "@pulumi/policy": "1.16.0"
     },
     "devDependencies": {
         "@types/node": "22.13.14",
