@@ -83,6 +83,10 @@ systemctl start docker
 # Create ubuntu user (Hetzner uses root by default)
 useradd -m -s /bin/bash -G docker ubuntu || true
 
+# Configure passwordless sudo for ubuntu user
+echo "ubuntu ALL=(ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/ubuntu-nopasswd
+chmod 440 /etc/sudoers.d/ubuntu-nopasswd
+
 # Install NVM and Node.js for ubuntu user
 sudo -u ubuntu bash << 'UBUNTU_SCRIPT'
 set -e
