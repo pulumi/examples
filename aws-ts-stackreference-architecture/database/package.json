@@ -1,10 +1,11 @@
 {
   "name": "aws-typescript",
   "main": "src/index.ts",
+  "type": "module",
   "devDependencies": {
-    "@types/mime": "4.0.0",
     "@types/node": "latest",
-    "typescript": "5.8.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@pulumi/aws": "latest",

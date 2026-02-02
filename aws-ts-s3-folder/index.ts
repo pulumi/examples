@@ -3,14 +3,11 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import * as fs from "fs";
-import * as mime from "mime";
+import * as path from "path";
+import mime from "mime";
 
 // Create a bucket and expose a website index document
-const siteBucket = new aws.s3.Bucket("s3-website-bucket", {
-    website: {
-        indexDocument: "index.html",
-    },
-});
+const siteBucket = new aws.s3.Bucket("s3-website-bucket");
 
 const siteBucketWebsiteConfig = new aws.s3.BucketWebsiteConfiguration("s3-website-bucket-config", {
     bucket: siteBucket.id,
@@ -28,7 +25,7 @@ const siteDir = "www"; // directory for content files
 
 // For each file in the directory, create an S3 object stored in `siteBucket`
 for (const item of fs.readdirSync(siteDir)) {
-    const filePath = require("path").join(siteDir, item);
+    const filePath = path.join(siteDir, item);
     const siteObject = new aws.s3.BucketObject(item, {
         bucket: siteBucket,                               // reference the s3.Bucket object
         source: new pulumi.asset.FileAsset(filePath),     // use FileAsset to point to a file
