@@ -7,7 +7,7 @@
     "dependencies": {
         "@azure/arm-authorization": "^8.3.3",
         "@azure/ms-rest-js": "^2.4.0",
-        "@pulumi/azure-native": "2.89.3",
+        "@pulumi/azure-native": "2.91.0",
         "@pulumi/pulumi": "3.158.0"
     }
 }
