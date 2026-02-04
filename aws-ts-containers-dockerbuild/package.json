@@ -5,7 +5,7 @@
         "@pulumi/aws": "7.0.0",
         "@pulumi/awsx": "2.22.0",
         "@pulumi/docker-build": "0.0.15",
-        "@pulumi/pulumi": "3.161.0"
+        "@pulumi/pulumi": "3.162.0"
     },
     "devDependencies": {
         "@types/node": "22.13.14"
