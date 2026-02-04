@@ -4,7 +4,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "@pulumi/aws": "7.0.0",
-        "@pulumi/pulumi": "3.159.0",
+        "@pulumi/pulumi": "3.160.0",
         "glob": "^10.0.0",
         "mime": "^4.0.0"
     },
