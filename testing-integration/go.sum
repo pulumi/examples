@@ -347,10 +347,10 @@ github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 h1:vkHw5I/plNdTr435
 github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231/go.mod h1:murToZ2N9hNJzewjHBgfFdXhZKjY3z5cYC1VXk+lbFE=
 github.com/pulumi/esc v0.13.2 h1:ad5JdG8yQG5yipWNUuY+TrrV/mvonYmPBg5A8d1+j8U=
 github.com/pulumi/esc v0.13.2/go.mod h1:Om2CLbvd3itRuyH8C4GW/PuWiWlW3xhRr4GAY3OT+vI=
-github.com/pulumi/pulumi/pkg/v3 v3.163.0 h1:b9cwzffrRTWgawIkUdKfRqIyajAm4gdwHbYTJrpisms=
-github.com/pulumi/pulumi/pkg/v3 v3.163.0/go.mod h1:/wRipYO0ZGehdQqTcT2t32gfYO95QvJCgN/hC0VXeGQ=
-github.com/pulumi/pulumi/sdk/v3 v3.163.0 h1:yiT1nPelxXILVrN0yRn0I3NO8Yybba2IvWArYBstZJ8=
-github.com/pulumi/pulumi/sdk/v3 v3.163.0/go.mod h1:GAaHrdv3kWJHbzkFFFflGbTBQXUYu6SF1ZCo+O9jo44=
+github.com/pulumi/pulumi/pkg/v3 v3.165.0 h1:a0UOxhM+yUi5NH+SP5lv0YHxac3JOaeaZ/VINVkK+bM=
+github.com/pulumi/pulumi/pkg/v3 v3.165.0/go.mod h1:wJDlCqph9G1OCX8BYfjRp8yOtqBXZLij57fGbn1lXsM=
+github.com/pulumi/pulumi/sdk/v3 v3.165.0 h1:cglplKZOJDpqH8wa/2J250G9az/sE9eKp9fS2bC+vi8=
+github.com/pulumi/pulumi/sdk/v3 v3.165.0/go.mod h1:GAaHrdv3kWJHbzkFFFflGbTBQXUYu6SF1ZCo+O9jo44=
 github.com/redis/go-redis/v9 v9.7.0 h1:HhLSs+B6O021gwzl+locl0zEDnyNkxMtf/Z3NNBMa9E=
 github.com/redis/go-redis/v9 v9.7.0/go.mod h1:f6zhXITC7JUJIlPEiBOTXxJgPLdZcA93GewI7inzyWw=
 github.com/rivo/uniseg v0.1.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
