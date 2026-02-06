@@ -7,7 +7,7 @@
         "@pulumi/azure-native": "2.92.0",
         "@pulumi/azuread": "6.2.0",
         "@pulumi/kubernetes": "4.22.2",
-        "@pulumi/pulumi": "3.165.0",
+        "@pulumi/pulumi": "3.166.0",
         "@pulumi/random": "4.19.1",
         "@pulumi/tls": "5.1.1"
     }
