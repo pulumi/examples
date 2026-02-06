@@ -8,7 +8,7 @@
     "dependencies": {
         "@pulumi/azure-native": "3.13.0",
         "@pulumi/azuread": "6.6.0",
-        "@pulumi/pulumi": "3.167.0",
+        "@pulumi/pulumi": "3.168.0",
         "@pulumi/pulumiservice": "0.34.0",
         "yaml": "^2.3.4"
     }
