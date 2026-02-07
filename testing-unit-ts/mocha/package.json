@@ -7,7 +7,7 @@
     },
     "dependencies": {
         "@pulumi/aws": "7.0.0",
-        "@pulumi/pulumi": "3.171.0",
+        "@pulumi/pulumi": "3.172.0",
         "@types/mocha": "^10.0.6",
         "@types/node": "^22.0.0"
     },
