@@ -8,8 +8,8 @@ require (
 	github.com/aws/aws-sdk-go v1.55.6
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pulumi/pulumi-trace-tool v0.0.1
-	github.com/pulumi/pulumi/pkg/v3 v3.172.0
-	github.com/pulumi/pulumi/sdk/v3 v3.172.0
+	github.com/pulumi/pulumi/pkg/v3 v3.173.0
+	github.com/pulumi/pulumi/sdk/v3 v3.173.0
 	github.com/stretchr/testify v1.10.0
 )
 
