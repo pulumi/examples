@@ -6,7 +6,7 @@
     "dependencies": {
         "@aws-sdk/client-s3": "^3.386.0",
         "@pulumi/aws": "7.0.0",
-        "@pulumi/pulumi": "3.177.0",
+        "@pulumi/pulumi": "3.178.0",
         "adm-zip": "^0.5.0"
     }
 }
