@@ -7,7 +7,7 @@
     "dependencies": {
         "@pulumi/aws": "7.0.0",
         "@pulumi/awsx": "2.22.0",
-        "@pulumi/pulumi": "3.178.0",
+        "@pulumi/pulumi": "3.180.0",
         "mime": "^4.0.0"
     }
 }
