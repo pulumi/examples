@@ -5,7 +5,7 @@
         "@pulumi/awsx": "2.22.0",
         "@pulumi/eks": "3.9.1",
         "@pulumi/kubernetes": "4.22.2",
-        "@pulumi/pulumi": "3.175.0",
+        "@pulumi/pulumi": "3.176.0",
         "@types/node": "^22.0.0"
     }
 }
