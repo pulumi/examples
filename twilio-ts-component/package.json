@@ -4,7 +4,7 @@
         "@types/node": "22.13.14"
     },
     "dependencies": {
-        "@pulumi/pulumi": "3.182.0",
+        "@pulumi/pulumi": "3.187.0",
         "@pulumi/aws-serverless": "latest",
         "twilio": "latest"
     }
