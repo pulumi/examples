@@ -1,8 +1,10 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
+
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import * as eks from "@pulumi/eks";
 import * as k8s from "@pulumi/kubernetes";
+import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
 const clusterName = config.get("clusterName") || "gpu-dra-cluster";
@@ -64,7 +66,7 @@ const nodeRolePolicies = [
 ];
 
 nodeRolePolicies.forEach((policyArn, index) => {
-    new aws.iam.RolePolicyAttachment(`system-node-policy-${index}`, {
+    const _attachment = new aws.iam.RolePolicyAttachment(`system-node-policy-${index}`, {
         role: nodeRole.name,
         policyArn: policyArn,
     });
@@ -155,7 +157,7 @@ const ebsCsiRole = new aws.iam.Role("ebs-csi-role", {
     }),
 });
 
-new aws.iam.RolePolicyAttachment("ebs-csi-policy-attachment", {
+const ebsCsiPolicyAttachment = new aws.iam.RolePolicyAttachment("ebs-csi-policy-attachment", {
     role: ebsCsiRole.name,
     policyArn: "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
 });

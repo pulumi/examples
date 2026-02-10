@@ -1,6 +1,6 @@
 import * as awsx from "@pulumi/awsx";
 import { Config, getStack, StackReference } from "@pulumi/pulumi";
-import {Application} from "./application";
+import {Application} from "./application.js";
 
 const config = new Config();
 
@@ -11,6 +11,12 @@ const baseTags = {
     Project: "Pulumi Demo",
     PulumiStack: getStack(),
 };
+
+const repo = new awsx.ecr.Repository("app-repo");
+const image = new awsx.ecr.Image("app-image", {
+    repositoryUrl: repo.url,
+    context: "./src/backend",
+});
 
 const app = new Application("app", {
     description: `${baseTags.Project} Application`,
@@ -24,7 +30,7 @@ const app = new Application("app", {
     // App resources in private subnets
     appSubnetIds:  networkingStack.getOutput("appVpcPrivateSubnetIds"),
 
-    appImage: awsx.ecs.Image.fromPath("app", "./src/backend"),
+    appImage: image.imageUri,
     appPort: 80,
 
     dbName: databaseStack.getOutput("dbName"),

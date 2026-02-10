@@ -1,5 +1,5 @@
 import { Config, getStack, StackReference } from "@pulumi/pulumi";
-import {RdsInstance} from "./database";
+import {RdsInstance} from "./database.js";
 import * as aws from "@pulumi/aws";
 import * as random from "@pulumi/random";
 

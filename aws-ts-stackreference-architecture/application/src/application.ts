@@ -34,7 +34,7 @@ export interface ApplicationArgs {
      */
     appSecurityGroupIds?: Input<string>[];
 
-    appImage: Input<string> | aws.ecs.ContainerImageProvider;
+    appImage: Input<string>;
     appResources?: ApplicationResources;
 }
 
@@ -70,8 +70,6 @@ export class Application extends ComponentResource {
         ];
 
         this.applicationLoadBalancer = new awsx.lb.ApplicationLoadBalancer(`${name}-service-alb`, {
-            vpc: vpc.id,
-            external: true,
             subnetIds: args.albSubnetIds,
             securityGroups: albSecGroup,
             tags: {
@@ -80,24 +78,28 @@ export class Application extends ComponentResource {
             },
         }, { parent: this });
 
-        this.applicationListener = new aws.lb.Listener(`${name}-service-alb-listener`, {
-            vpc: vpc,
-            loadBalancer: this.applicationLoadBalancer,
+        const targetGroup = new aws.lb.TargetGroup(`${name}-service-tg`, {
             port: args.appPort,
+            protocol: "HTTP",
+            targetType: "ip",
+            vpcId: vpc.id,
+        }, { parent: this });
+
+        this.applicationListener = new aws.lb.Listener(`${name}-service-alb-listener`, {
+            loadBalancerArn: this.applicationLoadBalancer.loadBalancer.arn,
+            port: args.appPort,
+            defaultActions: [{
+                type: "forward",
+                targetGroupArn: targetGroup.arn,
+            }],
         }, { parent: this.applicationLoadBalancer });
 
         this.cluster = new aws.ecs.Cluster(`${name}-cluster`, {
-            vpc: vpc,
-            /**
-             * Prevent default security groups with `[]`. Instead
-             * provide security groups to the service directly.
-             */
-            securityGroups: [],
             tags: {
                 ...args.baseTags,
                 Name: `${args.description} Cluster`,
             },
-        }, { parent: vpc });
+        }, { parent: this });
 
         // Use the provided pre-existing security group or create a new one.
         const appSecGroup = args.appSecurityGroupIds || [
@@ -112,21 +114,23 @@ export class Application extends ComponentResource {
                     },
                 ],
                 egress: [{ fromPort: 0, toPort: 0, protocol: "-1", cidrBlocks: ["0.0.0.0/0"] }],
-            }, { parent: vpc }),
+            }, { parent: vpc }).id,
         ];
 
         this.fargateService = new awsx.ecs.FargateService(`${name}-service`, {
             cluster: this.cluster.arn,
             assignPublicIp: false,
-            subnets: args.appSubnetIds,
-            securityGroups: appSecGroup,
+            networkConfiguration: {
+                subnets: args.appSubnetIds,
+                securityGroups: appSecGroup,
+            },
             desiredCount: (args.appResources || {}).desiredCount,
             taskDefinitionArgs: {
                 container: {
                     name: name,
                     ...args.appResources, // cpu, memory, etc.
                     image: args.appImage,
-                    portMappings: [this.applicationListener],
+                    portMappings: [{ containerPort: args.appPort, targetGroup: targetGroup }],
                     environment: [
                         {
                             name: "DB_HOST",

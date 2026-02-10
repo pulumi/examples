@@ -1,13 +1,15 @@
 {
     "name": "exposed-deployment",
+    "type": "module",
     "devDependencies": {
-        "@types/node": "22.13.14"
+        "@types/node": "22.13.14",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.9.3"
     },
     "dependencies": {
         "@pulumi/aws": "7.0.0",
         "@pulumi/kubernetes": "4.22.2",
-        "@pulumi/pulumi": "3.183.0",
-        "@types/mime": "^4.0.0",
+        "@pulumi/pulumi": "3.217.0",
         "mime": "^4.0.0"
     }
 }

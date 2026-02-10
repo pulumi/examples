@@ -138,7 +138,7 @@ export class Vpc extends ComponentResource {
             const publicSubnet = this.publicSubnets[index];
 
             this.natElasticIpAddresses.push(new aws.ec2.Eip(`${name}-nat-${index + 1}`, {
-                vpc: true,
+                domain: "vpc",
                 tags: {
                     ...args.baseTags,
                     Name: `${args.description} NAT Gateway EIP ${index + 1}`,

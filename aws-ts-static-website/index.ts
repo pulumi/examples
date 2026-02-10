@@ -3,9 +3,9 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import * as fs from "fs";
-import * as mime from "mime";
+import mime from "mime";
 import * as path from "path";
-import { configureACL } from "./acl";
+import { configureACL } from "./acl.js";
 
 // Load the Pulumi program configuration. These act as the "parameters" to the Pulumi program,
 // so that different Pulumi Stacks can be brought up using the same code.
