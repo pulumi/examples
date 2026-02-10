@@ -3,8 +3,8 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import * as fs from "fs";
-import * as path from "path";
 import mime from "mime";
+import * as path from "path";
 
 // Create a bucket and expose a website index document
 const siteBucket = new aws.s3.Bucket("s3-website-bucket");

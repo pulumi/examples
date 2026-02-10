@@ -1,6 +1,6 @@
 import { Config, getStack } from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
-import {Vpc} from "./vpc";
+import {Vpc} from "./vpc.js";
 
 const config = new Config();
 
