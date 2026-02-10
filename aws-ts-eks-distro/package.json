@@ -7,7 +7,7 @@
         "@pulumi/aws": "7.0.0",
         "@pulumi/awsx": "2.22.0",
         "@pulumi/kubernetes": "4.22.2",
-        "@pulumi/pulumi": "3.181.0",
+        "@pulumi/pulumi": "3.182.0",
         "@types/mustache": "^4.0.1",
         "@types/tmp": "^0.2.0",
         "mustache": "^4.0.1",
