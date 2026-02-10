@@ -11,7 +11,7 @@
     "@pulumi/eks": "3.9.1",
     "@pulumi/gcp": "8.41.1",
     "@pulumi/kubernetes": "4.22.2",
-    "@pulumi/pulumi": "3.182.0",
+    "@pulumi/pulumi": "3.184.0",
     "@pulumi/random": "4.19.1",
     "@pulumi/tls": "5.1.1"
   }
