@@ -6,7 +6,7 @@
     },
     "dependencies": {
         "@pulumi/azure": "6.21.0",
-        "@pulumi/pulumi": "3.183.0",
+        "@pulumi/pulumi": "3.188.0",
         "@pulumi/random": "4.19.1"
     }
 }
