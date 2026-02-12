@@ -7,6 +7,6 @@
     "dependencies": {
         "@azure/cosmos": "^4.0.0",
         "@pulumi/azure": "6.21.0",
-        "@pulumi/pulumi": "3.190.0"
+        "@pulumi/pulumi": "3.191.0"
     }
 }
