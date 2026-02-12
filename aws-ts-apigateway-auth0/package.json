@@ -7,7 +7,7 @@
         "@pulumi/aws": "7.0.0",
         "@pulumi/aws-apigateway": "2.6.3",
         "@pulumi/awsx": "2.22.0",
-        "@pulumi/pulumi": "3.190.0",
+        "@pulumi/pulumi": "3.191.0",
         "@types/auth0-js": "^9.10.1",
         "@types/jsonwebtoken": "^9.0.0",
         "jsonwebtoken": "9.0.2",
