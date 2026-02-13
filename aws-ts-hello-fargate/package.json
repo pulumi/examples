@@ -8,6 +8,6 @@
         "@pulumi/aws": "7.0.0",
         "@pulumi/awsx": "2.22.0",
         "@pulumi/docker": "4.6.2",
-        "@pulumi/pulumi": "3.195.0"
+        "@pulumi/pulumi": "3.196.0"
     }
 }
