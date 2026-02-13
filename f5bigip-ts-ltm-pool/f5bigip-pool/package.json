@@ -5,6 +5,6 @@
     },
     "dependencies": {
         "@pulumi/f5bigip": "3.19.3",
-        "@pulumi/pulumi": "3.195.0"
+        "@pulumi/pulumi": "3.196.0"
     }
 }
