@@ -1,8 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as k8s from "@pulumi/kubernetes";
-import * as s3Helpers from "./s3Helpers";
-import * as util from "./util";
+import * as s3Helpers from "./s3Helpers.js";
+import * as util from "./util.js";
 
 // Generate S3 bucket; put the local file `default.conf` inside it.
 const nginxConfigBucket = new s3Helpers.FileBucket("nginx-configs", {

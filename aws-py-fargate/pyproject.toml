@@ -3,8 +3,8 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pulumi = "==3.158.0"
-pulumi-aws = "==6.73.0"
+pulumi = "==3.198.0"
+pulumi-aws = "==6.83.2"
 pyright = ">=1.1.369,<2.0.0"
 
 [build-system]

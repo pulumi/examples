@@ -7,7 +7,7 @@ import { execSync } from "child_process";
 import * as crypto from "crypto";
 import * as fs from "fs";
 import * as glob from "glob";
-import * as mime from "mime";
+import mime from "mime";
 import * as path from "path";
 
 export interface NexJsSiteArgs {
