@@ -1,0 +1,6 @@
+name: openclaw-azure-typescript
+runtime:
+  name: nodejs
+  options:
+    typescript: true
+description: Deploy OpenClaw AI assistant on Azure with Tailscale security

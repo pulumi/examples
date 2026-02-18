@@ -1,0 +1,12 @@
+config:
+  openclaw-azure-typescript:vmSize: Standard_B2s
+  openclaw-azure-typescript:location: eastus
+  openclaw-azure-typescript:anthropicApiKey:
+    secure: <your-anthropic-api-key>
+  openclaw-azure-typescript:tailscaleAuthKey:
+    secure: <your-tailscale-auth-key>
+  openclaw-azure-typescript:tailnetDnsName: tailxxxxx.ts.net
+  openclaw-azure-typescript:model: anthropic/claude-sonnet-4
+  openclaw-azure-typescript:gatewayPort: 18789
+  openclaw-azure-typescript:browserPort: 18791
+  openclaw-azure-typescript:enableSandbox: true
