@@ -36,7 +36,7 @@ return await Deployment.RunAsync(() =>
                 identity.Id,
             },
         },
-        KubernetesVersion = "1.26.3",
+        KubernetesVersion = "1.34.0",
         DnsPrefix = "dns-prefix",
         EnableRBAC = true,
         AgentPoolProfiles = new[]
