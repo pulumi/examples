@@ -4,7 +4,7 @@ ensure: setup_python
 	cd misc/test && go mod tidy
 	cd misc/test && go mod download
 	npm --prefix testing-unit-ts/mocha install
-	npm install --global tslint
+	npm install
 
 only_test:
 	bash -c 'set -o pipefail && cd misc/test && go test -json ./... --timeout 4h -v -count=1 -short -parallel 40 --tags=all | gotestfmt'
@@ -38,7 +38,14 @@ bench_example.%:
 pr_preview:
 	bash scripts/pr-preview-changed.sh
 
-.PHONY: format setup_python clean
+.PHONY: lint lint_ts format setup_python clean
+
+# Run all linting checks
+lint: lint_ts check_python_formatting
+
+# Lint all TypeScript/JavaScript files with ESLint
+lint_ts:
+	npx eslint .
 
 # Create a virtual environment and install black
 setup_python:
