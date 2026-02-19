@@ -90,7 +90,6 @@ values:
     ARM_SUBSCRIPTION_ID: \${azure.login.subscriptionId}
     `;
 
-    // tslint:disable-next-line:no-unused-expression
     new pulumiservice.Environment("aws-esc-oidc-env", {
         organization: orgName,
         project: projectName,
