@@ -48,7 +48,7 @@ func main() {
 					identity.ID(),
 				},
 			},
-			KubernetesVersion: pulumi.String("1.26.3"),
+			KubernetesVersion: pulumi.String("1.34.0"),
 			DnsPrefix:         pulumi.String("dns-prefix"),
 			EnableRBAC:        pulumi.Bool(true),
 			AgentPoolProfiles: containerservice.ManagedClusterAgentPoolProfileArray{

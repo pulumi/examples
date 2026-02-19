@@ -26,7 +26,7 @@ class CosmosStack : Stack
         var myCluster = new AksCluster("demoaks", new AksClusterArgs
         {
             ResourceGroupName = resourceGroup.Name,
-            KubernetesVersion = "1.26.3",
+            KubernetesVersion = "1.34.0",
             NodeCount = 1,
             NodeSize = "Standard_D2_v2"
         });

@@ -71,7 +71,7 @@ class AksCluster : ComponentResource
             DnsPrefix = "demoapppulumiaks",
             EnableRBAC = true,
             Identity = new ManagedClusterIdentityArgs { Type = ResourceIdentityType.SystemAssigned },
-            KubernetesVersion = args?.KubernetesVersion ?? "1.26.23",
+            KubernetesVersion = args?.KubernetesVersion ?? "1.34.0",
             LinuxProfile = new ContainerServiceLinuxProfileArgs
             {
                 AdminUsername = "testuser",
