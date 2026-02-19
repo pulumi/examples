@@ -41,7 +41,6 @@ export function configureDns(domain: string, zoneId: pulumi.Input<string>) {
     });
 
     // Create DNS record
-    // tslint:disable-next-line:no-unused-expression
     new aws.route53.Record("api-dns", {
         zoneId: zoneId,
         type: "A",
