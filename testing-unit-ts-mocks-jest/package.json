@@ -9,7 +9,7 @@
     "dependencies": {
         "@pulumi/aws": "7.0.0",
         "@pulumi/awsx": "2.22.0",
-        "@pulumi/pulumi": "3.213.0",
+        "@pulumi/pulumi": "3.214.1",
         "node-fetch": "^3.0.0"
     },
     "scripts": {

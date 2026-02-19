@@ -5,6 +5,6 @@
     },
     "dependencies": {
         "@pulumi/alicloud": "3.95.0",
-        "@pulumi/pulumi": "3.213.0"
+        "@pulumi/pulumi": "3.214.1"
     }
 }
