@@ -9,6 +9,6 @@
         "@pulumi/aws": "7.0.0",
         "@pulumi/awsx": "2.22.0",
         "@pulumi/eks": "3.9.1",
-        "@pulumi/pulumi": "3.216.0"
+        "@pulumi/pulumi": "3.217.1"
     }
 }
