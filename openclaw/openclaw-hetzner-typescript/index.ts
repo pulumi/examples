@@ -117,6 +117,12 @@ UBUNTU_SCRIPT
 # Set environment variables for ubuntu user
 echo 'export ANTHROPIC_API_KEY="${apiKey}"' >> /home/ubuntu/.bashrc
 
+# Write API key to .openclaw/.env so the daemon can read it
+mkdir -p /home/ubuntu/.openclaw
+echo 'ANTHROPIC_API_KEY=${apiKey}' > /home/ubuntu/.openclaw/.env
+chown -R ubuntu:ubuntu /home/ubuntu/.openclaw
+chmod 600 /home/ubuntu/.openclaw/.env
+
 # Install and configure Tailscale
 echo "Installing Tailscale..."
 curl -fsSL https://tailscale.com/install.sh | sh
@@ -138,6 +144,7 @@ export NVM_DIR="$HOME/.nvm"
 openclaw onboard --non-interactive --accept-risk \
     --mode local \
     --auth-choice apiKey \
+    --anthropic-api-key "$ANTHROPIC_API_KEY" \
     --gateway-port $GATEWAY_PORT \
     --gateway-bind loopback \
     --skip-daemon \
