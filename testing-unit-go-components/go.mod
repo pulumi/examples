@@ -3,7 +3,7 @@ module github.com/pulumi/examples/testing-unit-go-components
 go 1.24.0
 
 require (
-	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.22.1
+	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.22.2
 	github.com/pulumi/pulumi/sdk/v3 v3.158.0
 	github.com/stretchr/testify v1.10.0
 )
