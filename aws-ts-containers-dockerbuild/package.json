@@ -2,7 +2,7 @@
     "name": "aws-ts-containers-dockerbuildcloud",
     "main": "index.ts",
     "dependencies": {
-        "@pulumi/aws": "7.5.0",
+        "@pulumi/aws": "7.6.0",
         "@pulumi/awsx": "2.22.0",
         "@pulumi/docker-build": "0.0.15",
         "@pulumi/pulumi": "3.220.0"
