@@ -150,8 +150,8 @@ github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 h1:vkHw5I/plNdTr435
 github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231/go.mod h1:murToZ2N9hNJzewjHBgfFdXhZKjY3z5cYC1VXk+lbFE=
 github.com/pulumi/esc v0.14.3 h1:Zli+9LiSDT/W+Fsfr8tITxCo+5wn969tLrE4KLv44G8=
 github.com/pulumi/esc v0.14.3/go.mod h1:XnSxlt5NkmuAj304l/gK4pRErFbtqq6XpfX1tYT9Jbc=
-github.com/pulumi/pulumi-aws/sdk/v7 v7.5.0 h1:YYHOTPh9ct6QZ1MCWx1dohnCil4GGcb6h0znQNxv/3U=
-github.com/pulumi/pulumi-aws/sdk/v7 v7.5.0/go.mod h1:od9x4x3RWuqTpd4MQ7temdMT3MWr3kR4c78JSenxxPc=
+github.com/pulumi/pulumi-aws/sdk/v7 v7.6.0 h1:Q8mMGH8I5MFwxH52e3W2z5QuHpHpGGIt7xx0of4nwsA=
+github.com/pulumi/pulumi-aws/sdk/v7 v7.6.0/go.mod h1:od9x4x3RWuqTpd4MQ7temdMT3MWr3kR4c78JSenxxPc=
 github.com/pulumi/pulumi/sdk/v3 v3.185.0 h1:+pEMQxo2VvZFjSNw5EkpOdEUu87WflApTK9X/Zej8/Y=
 github.com/pulumi/pulumi/sdk/v3 v3.185.0/go.mod h1:YS7uQ+eoIV/Fco804Upv3jmz5pwo/MkLYmbGH3VgA9c=
 github.com/rivo/uniseg v0.1.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
