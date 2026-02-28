@@ -6,7 +6,7 @@
         "typescript": "5.8.2"
     },
     "dependencies": {
-        "@pulumi/aws": "7.10.0",
+        "@pulumi/aws": "7.11.1",
         "@pulumi/pulumi": "3.220.0",
         "@types/mocha": "^10.0.6",
         "@types/node": "^22.0.0"
