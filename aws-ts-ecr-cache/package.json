@@ -8,6 +8,6 @@
   "author": "",
   "dependencies": {
     "@pulumi/pulumi": "^3.157.0",
-    "@pulumi/aws": "7.11.1"
+    "@pulumi/aws": "7.12.0"
   }
 }
