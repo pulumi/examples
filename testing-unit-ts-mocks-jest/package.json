@@ -7,7 +7,7 @@
         "typescript": "5.8.2"
     },
     "dependencies": {
-        "@pulumi/aws": "7.15.0",
+        "@pulumi/aws": "7.19.0",
         "@pulumi/awsx": "2.22.0",
         "@pulumi/pulumi": "3.220.0",
         "node-fetch": "^3.0.0"
