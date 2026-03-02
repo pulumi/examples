@@ -6,7 +6,7 @@
 	"dependencies": {
 		"typescript": "^5.0.0",
 		"@pulumi/pulumi": "3.220.0",
-		"@pulumi/aws": "7.15.0",
+		"@pulumi/aws": "7.16.0",
 		"@pulumi/docker": "4.6.2"
 	}
 }
