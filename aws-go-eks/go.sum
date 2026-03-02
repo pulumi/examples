@@ -1,7 +1,5 @@
 dario.cat/mergo v1.0.0 h1:AGCNq9Evsj31mOgNPcLyXc+4PNABt905YmuqPYYpBWk=
 dario.cat/mergo v1.0.0/go.mod h1:uNxQE+84aUszobStD9th8a29P2fMDhsBdgRYvZOxGmk=
-github.com/BurntSushi/toml v1.2.1 h1:9F2/+DoOYIOksmaJFPw1tGFy1eDnIJXg+UHjuD8lTak=
-github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/HdrHistogram/hdrhistogram-go v1.1.2 h1:5IcZpTvzydCQeHzK4Ef/D5rrSqwxob0t8PQPMybUNFM=
 github.com/HdrHistogram/hdrhistogram-go v1.1.2/go.mod h1:yDgFjdqOqDEKOvasDdhWNXYg9BVp4O+o5f6V/ehm6Oo=
 github.com/Microsoft/go-winio v0.5.2/go.mod h1:WpS1mjBmmwHBEWmogvA2mj8546UReBk4v8QkMxJ6pZY=
@@ -158,12 +156,12 @@ github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 h1:vkHw5I/plNdTr435
 github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231/go.mod h1:murToZ2N9hNJzewjHBgfFdXhZKjY3z5cYC1VXk+lbFE=
 github.com/pulumi/esc v0.17.0 h1:oaVOIyFTENlYDuqc3pW75lQT9jb2cd6ie/4/Twxn66w=
 github.com/pulumi/esc v0.17.0/go.mod h1:XnSxlt5NkmuAj304l/gK4pRErFbtqq6XpfX1tYT9Jbc=
-github.com/pulumi/pulumi-aws/sdk/v7 v7.12.0 h1:B9xevRSAXTYpQPCYcVLFwreEex7d8IPrhiOALzXr4dE=
-github.com/pulumi/pulumi-aws/sdk/v7 v7.12.0/go.mod h1:rFnXEloYqM41yvlxphPjJ0wL4cM+JPwr9qWt/8VI4Q4=
+github.com/pulumi/pulumi-aws/sdk/v7 v7.13.0 h1:LGjbBqbTcfufcPCPHvlG8wQsfdKFDLhrDjFj43WLU+U=
+github.com/pulumi/pulumi-aws/sdk/v7 v7.13.0/go.mod h1:hsOxQjCl7ASsYWRVC8UtbFaR+xx9S0QwNFnbo0Kzg1I=
 github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.22.2 h1:TJ1JnD/U21SD7DV8MS525Qv4/mSCANdxrRWUWuNJZOs=
 github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.22.2/go.mod h1:jOdpeNeRvY4iN+W8aDP5+HyqrM7hXsxa9paPsmjQFfY=
-github.com/pulumi/pulumi/sdk/v3 v3.207.0 h1:D6EpTYN65Cmt/Qx50GzDgpK9g3TXS3Tq6mnsx7C7Li8=
-github.com/pulumi/pulumi/sdk/v3 v3.207.0/go.mod h1:UsBMdaUQ+WoKoQtF2PYbQIbo8ZRJuAo1axkyit9IQVE=
+github.com/pulumi/pulumi/sdk/v3 v3.209.0 h1:Ti0FohAset2HEgogTxTOWoyvQd2N2+pkTSIn5DW3W7s=
+github.com/pulumi/pulumi/sdk/v3 v3.209.0/go.mod h1:qBMg01woyYVNqNDJXpFL1e5gdN7oQQvCNNNtfq1gsEo=
 github.com/rivo/uniseg v0.1.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/rivo/uniseg v0.4.4 h1:8TfxU8dW6PdqD27gjM8MVNuicgxIjxpm4K7x4jp8sis=

@@ -3,15 +3,14 @@ module github.com/pulumi/examples/aws-go-fargate
 go 1.24.1
 
 require (
-	github.com/pulumi/pulumi-aws/sdk/v7 v7.12.0
+	github.com/pulumi/pulumi-aws/sdk/v7 v7.13.0
 	github.com/pulumi/pulumi-awsx/sdk/v2 v2.21.1
 	github.com/pulumi/pulumi-docker/sdk/v4 v4.6.2
-	github.com/pulumi/pulumi/sdk/v3 v3.207.0
+	github.com/pulumi/pulumi/sdk/v3 v3.209.0
 )
 
 require (
 	dario.cat/mergo v1.0.1 // indirect
-	github.com/BurntSushi/toml v1.5.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ProtonMail/go-crypto v1.2.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
