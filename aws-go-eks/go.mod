@@ -3,9 +3,9 @@ module aws-go-eks
 go 1.24.0
 
 require (
-	github.com/pulumi/pulumi-aws/sdk/v7 v7.19.0
+	github.com/pulumi/pulumi-aws/sdk/v7 v7.20.0
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.22.2
-	github.com/pulumi/pulumi/sdk/v3 v3.218.0
+	github.com/pulumi/pulumi/sdk/v3 v3.220.0
 )
 
 require (
