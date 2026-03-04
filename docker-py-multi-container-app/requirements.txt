@@ -1,2 +1,2 @@
 pulumi>=3.5.1,<4.0.0
-pulumi-docker>=4.8.2,<4.9.0
+pulumi-docker>=4.9.0,<4.10.0
