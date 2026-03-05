@@ -165,8 +165,8 @@ github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 h1:vkHw5I/plNdTr435
 github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231/go.mod h1:murToZ2N9hNJzewjHBgfFdXhZKjY3z5cYC1VXk+lbFE=
 github.com/pulumi/esc v0.17.0 h1:oaVOIyFTENlYDuqc3pW75lQT9jb2cd6ie/4/Twxn66w=
 github.com/pulumi/esc v0.17.0/go.mod h1:XnSxlt5NkmuAj304l/gK4pRErFbtqq6XpfX1tYT9Jbc=
-github.com/pulumi/pulumi-aws/sdk/v7 v7.20.0 h1:lUkhos4MN016kNr4Qk3c3bo021/2eoDj8YLMryqplhw=
-github.com/pulumi/pulumi-aws/sdk/v7 v7.20.0/go.mod h1:roeZielU3NuaZyTQWeW1jHV1JB2r3oV9a2sZbU8WeQs=
+github.com/pulumi/pulumi-aws/sdk/v7 v7.21.0 h1:r9BtOd8R5Y8uHjx8xJJRQuNP5U2YZevyeuZqFT4Rwyw=
+github.com/pulumi/pulumi-aws/sdk/v7 v7.21.0/go.mod h1:ZfWMh9R4tKLJadncyFVPIhaEr4mqLcS84jF9r3YtXkE=
 github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.27.0 h1:l33vcOD62jlEIiD/POknlKrVF4JG2ZV87khzavYwkR0=
 github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.27.0/go.mod h1:B998wofejDKAvvpLwsi4UMfWDFHHBnzYiM8mZ9e7OSo=
 github.com/pulumi/pulumi/sdk/v3 v3.223.0 h1:RFV3/fft/D/TWj9fuu4KJ1YauYV7mmcIHfZoysr1irk=
