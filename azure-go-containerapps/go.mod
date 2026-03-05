@@ -9,7 +9,7 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v3 v3.0.1
 	github.com/pulumi/pulumi-azure-native-sdk/operationalinsights/v3 v3.0.1
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v3 v3.0.1
-	github.com/pulumi/pulumi-docker/sdk/v4 v4.10.0
+	github.com/pulumi/pulumi-docker/sdk/v4 v4.11.0
 	github.com/pulumi/pulumi/sdk/v3 v3.210.0
 )
 
