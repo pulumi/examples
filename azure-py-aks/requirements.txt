@@ -1,5 +1,5 @@
 pulumi>=3.5.1,<4.0.0
-pulumi-azuread>=6.4.0,<6.5.0
+pulumi-azuread>=6.5.2,<6.6.0
 pulumi-azure-native>=2.0.0,<3.0.0
 pulumi-random>=4.2.0,<5.0.0
 pulumi-tls>=5.2.3,<5.3.0
