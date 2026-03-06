@@ -9,7 +9,7 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/containerservice/v3 v3.0.1
 	github.com/pulumi/pulumi-azure-native-sdk/managedidentity/v3 v3.0.1
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v3 v3.0.1
-	github.com/pulumi/pulumi-tls/sdk/v5 v5.1.1
+	github.com/pulumi/pulumi-tls/sdk/v5 v5.2.3
 	github.com/pulumi/pulumi/sdk/v3 v3.210.0
 )
 
