@@ -8,7 +8,7 @@ require (
 	github.com/pulumi/pulumi-azuread/sdk/v6 v6.5.2
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.27.0
 	github.com/pulumi/pulumi-random/sdk/v4 v4.18.5
-	github.com/pulumi/pulumi-tls/sdk/v5 v5.2.3
+	github.com/pulumi/pulumi-tls/sdk/v5 v5.3.0
 	github.com/pulumi/pulumi/sdk/v3 v3.223.0
 )
 
