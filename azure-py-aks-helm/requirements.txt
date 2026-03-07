@@ -1,4 +1,4 @@
-pulumi-azuread>=6.6.0,<6.7.0
+pulumi-azuread>=6.7.0,<6.8.0
 pulumi-azure-native>=2.0.0,<3.0.0
 pulumi-kubernetes>=4.27.0,<4.28.0
 pulumi-random>=4.2.0,<5.0.0
