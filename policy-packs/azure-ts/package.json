@@ -2,7 +2,7 @@
     "name": "azure-policies",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/azure": "6.23.0",
+        "@pulumi/azure": "6.24.0",
         "@pulumi/policy": "1.20.0"
     },
     "devDependencies": {
