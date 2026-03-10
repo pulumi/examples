@@ -5,7 +5,7 @@
         "@types/node": "22.13.14"
     },
     "dependencies": {
-        "@pulumi/azure": "6.27.2",
+        "@pulumi/azure": "6.30.0",
         "@pulumi/azuread": "6.8.1",
         "@pulumi/docker": "4.11.0",
         "@pulumi/kubernetes": "4.27.0",
