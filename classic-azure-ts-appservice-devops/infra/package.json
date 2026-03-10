@@ -8,6 +8,6 @@
     },
     "dependencies": {
         "@pulumi/pulumi": "3.220.0",
-        "@pulumi/azure": "6.32.0"
+        "@pulumi/azure": "6.33.0"
     }
 }
