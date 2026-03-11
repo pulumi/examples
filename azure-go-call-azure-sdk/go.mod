@@ -8,9 +8,9 @@ require (
 	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible
 	github.com/Azure/go-autorest/autorest v0.11.30
 	github.com/Azure/go-autorest/autorest/adal v0.9.24
-	github.com/pulumi/pulumi-azure-native-sdk/authorization/v3 v3.7.1
-	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v3 v3.7.1
-	github.com/pulumi/pulumi-azure-native-sdk/resources/v3 v3.7.1
+	github.com/pulumi/pulumi-azure-native-sdk/authorization/v3 v3.8.0
+	github.com/pulumi/pulumi-azure-native-sdk/containerregistry/v3 v3.8.0
+	github.com/pulumi/pulumi-azure-native-sdk/resources/v3 v3.8.0
 	github.com/pulumi/pulumi/sdk/v3 v3.210.0
 )
 
@@ -75,7 +75,7 @@ require (
 	github.com/pkg/term v1.1.0 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
 	github.com/pulumi/esc v0.17.0 // indirect
-	github.com/pulumi/pulumi-azure-native-sdk/v3 v3.7.1 // indirect
+	github.com/pulumi/pulumi-azure-native-sdk/v3 v3.8.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/santhosh-tekuri/jsonschema/v5 v5.0.0 // indirect
