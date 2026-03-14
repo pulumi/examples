@@ -1,2 +1,2 @@
 pulumi>=3.5.1,<4.0.0
-pulumi-kubernetes>=4.27.0,<4.28.0
+pulumi-kubernetes>=4.28.0,<4.29.0
