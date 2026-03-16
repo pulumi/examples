@@ -5,6 +5,6 @@
   },
   "dependencies": {
     "@pulumi/aws": "7.23.0",
-    "@pulumi/pulumi": "3.222.0"
+    "@pulumi/pulumi": "3.223.0"
   }
 }

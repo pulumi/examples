@@ -3,7 +3,7 @@ module github.com/pulumi/examples/testing-integration
 go 1.25.0
 
 require (
-	github.com/pulumi/pulumi/pkg/v3 v3.222.0
+	github.com/pulumi/pulumi/pkg/v3 v3.223.0
 	github.com/stretchr/testify v1.11.1
 )
 
@@ -140,7 +140,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
 	github.com/pulumi/esc v0.17.0 // indirect
-	github.com/pulumi/pulumi/sdk/v3 v3.222.0 // indirect
+	github.com/pulumi/pulumi/sdk/v3 v3.223.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
