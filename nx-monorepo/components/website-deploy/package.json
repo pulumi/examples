@@ -5,7 +5,7 @@
     "type": "module",
     "dependencies": {
         "@pulumi/aws": "7.23.0",
-        "@pulumi/pulumi": "3.224.0",
+        "@pulumi/pulumi": "3.225.1",
         "mime": "^4.0.0"
     },
     "scripts": {
