@@ -4,7 +4,7 @@
     "dependencies": {
         "@pulumi/azure": "6.33.0",
         "@pulumi/policy": "latest",
-        "@pulumi/pulumi": "3.221.0"
+        "@pulumi/pulumi": "3.222.0"
     },
     "devDependencies": {
         "@types/node": "22.13.14"
