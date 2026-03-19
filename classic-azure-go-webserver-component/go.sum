@@ -154,8 +154,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 h1:vkHw5I/plNdTr435cARxCW6q9gc0S/Yxz7Mkd38pOb0=
 github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231/go.mod h1:murToZ2N9hNJzewjHBgfFdXhZKjY3z5cYC1VXk+lbFE=
-github.com/pulumi/esc v0.19.0 h1:Qc7Yb6Owivwai5WCGsHJpnzOPBtN/95Zbrvdv8f4vas=
-github.com/pulumi/esc v0.19.0/go.mod h1:Ny5pRVlRwdoVQvtUffTrwgXU91t+wcaAarvB2fRbnAc=
+github.com/pulumi/esc v0.20.0 h1:LZn4sjAsI76x10ZuZXXyh2ExGcP7AHmjOzCi/p3/fpQ=
+github.com/pulumi/esc v0.20.0/go.mod h1:h1VjdedI0K84MhMzaR9ZKbEpU6SfZMOZF4ZrVgQyNLY=
 github.com/pulumi/pulumi-azure/sdk/v6 v6.33.0 h1:p+a17svgua6RySnn1dg4b8P6F6kOwrTIHdEB3W3Aw18=
 github.com/pulumi/pulumi-azure/sdk/v6 v6.33.0/go.mod h1:UwLgAGBSR1edv8mTp/H2KAyeuJmDB676muFi3tDNRqk=
 github.com/pulumi/pulumi/sdk/v3 v3.220.0 h1:TtdlW2VfvBWhFZSvaDN9lSUlSS4gGSdNWdca3RGPsBQ=
