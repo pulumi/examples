@@ -4,7 +4,7 @@
         "@types/node": "latest"
     },
     "dependencies": {
-        "@pulumi/digitalocean": "4.61.0",
+        "@pulumi/digitalocean": "4.62.0",
         "@pulumi/kubernetes": "4.28.0",
         "@pulumi/pulumi": "3.226.0"
     }
