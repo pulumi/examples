@@ -4,7 +4,7 @@
         "@types/node": "22.13.14"
     },
     "dependencies": {
-        "@pulumi/f5bigip": "3.20.0",
+        "@pulumi/f5bigip": "3.20.1",
         "@pulumi/pulumi": "3.227.0"
     }
 }
