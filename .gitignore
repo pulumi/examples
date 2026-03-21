@@ -31,3 +31,5 @@ Gopkg.lock
 target/
 *-test/
 .claude/settings.local.json
+.claude
+.mcp.json
