@@ -3,7 +3,7 @@ module github.com/pulumi/examples/gcp-go-functions
 go 1.24.7
 
 require (
-	github.com/pulumi/pulumi-gcp/sdk/v8 v8.26.0
+	github.com/pulumi/pulumi-gcp/sdk/v8 v8.27.1
 	github.com/pulumi/pulumi/sdk/v3 v3.209.0
 )
 
