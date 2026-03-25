@@ -7,7 +7,7 @@
   "dependencies": {
     "@pulumi/awsx": "2.22.0",
     "@pulumi/azure": "6.33.0",
-    "@pulumi/azuread": "6.8.1",
+    "@pulumi/azuread": "6.9.0",
     "@pulumi/eks": "3.9.1",
     "@pulumi/gcp": "8.41.1",
     "@pulumi/kubernetes": "4.28.0",
