@@ -3,7 +3,7 @@ module qsgcp
 go 1.24.7
 
 require (
-	github.com/pulumi/pulumi-gcp/sdk/v8 v8.35.0
+	github.com/pulumi/pulumi-gcp/sdk/v8 v8.36.0
 	github.com/pulumi/pulumi/sdk/v3 v3.209.0
 )
 
