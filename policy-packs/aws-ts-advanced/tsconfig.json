@@ -2,8 +2,8 @@
     "compilerOptions": {
         "outDir": "bin",
         "target": "es6",
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "declaration": true,
         "sourceMap": false,
         "stripInternal": true,

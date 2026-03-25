@@ -5,8 +5,8 @@
     "lib": [
       "es6"
     ],
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "declaration": true,
     "sourceMap": true,
     "stripInternal": true,

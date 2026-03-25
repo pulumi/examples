@@ -2,8 +2,8 @@
     "compilerOptions": {
         "outDir": "bin",
         "target": "es2016",
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "sourceMap": true,
         "experimentalDecorators": true,
         "pretty": true,
