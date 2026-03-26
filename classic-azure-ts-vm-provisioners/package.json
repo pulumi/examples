@@ -4,7 +4,7 @@
     "dependencies": {
         "@pulumi/azure": "6.33.0",
         "@pulumi/command": "1.2.1",
-        "@pulumi/pulumi": "3.227.0",
+        "@pulumi/pulumi": "3.228.0",
         "@pulumi/tls": "5.3.0"
     }
 }
