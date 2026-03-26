@@ -9,7 +9,7 @@
     },
     "dependencies": {
         "@pulumi/pulumi": "^3.100.0",
-        "@pulumi/aws": "^6.0.0",
+        "@pulumi/aws": "^7.0.0",
         "@pulumi/aws-apigateway": "^2.0.0",
         "jsonwebtoken": "^9.0.0",
         "jwks-rsa": "^3.0.0"
