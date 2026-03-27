@@ -1,12 +1,12 @@
 {
-		"name": "pulumi-ansible-wordpress",
-		"devDependencies": {
-				"@types/node": "22.13.14"
-		},
-		"dependencies": {
-				"@pulumi/aws": "7.23.0",
-				"@pulumi/command": "1.2.1",
-				"@pulumi/pulumi": "3.228.0",
-				"typescript": "^5.0.0"
-		}
+  "name": "pulumi-ansible-wordpress",
+  "devDependencies": {
+    "@types/node": "22.13.14",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@pulumi/aws": "7.23.0",
+    "@pulumi/command": "1.2.1",
+    "@pulumi/pulumi": "3.228.0"
+  }
 }

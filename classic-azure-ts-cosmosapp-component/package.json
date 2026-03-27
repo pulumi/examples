@@ -5,7 +5,8 @@
         "@types/mocha": "10.0.10",
         "@types/node": "22.13.14",
         "mocha": "11.1.0",
-        "ts-node": "10.9.2"
+        "ts-node": "10.9.2",
+        "typescript": "^5.0.0"
     },
     "dependencies": {
         "@azure/cosmos": "latest",

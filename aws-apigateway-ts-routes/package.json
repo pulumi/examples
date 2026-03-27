@@ -2,7 +2,8 @@
     "name": "typescript",
     "devDependencies": {
         "@types/aws-lambda": "8.10.148",
-        "@types/node": "22.13.14"
+        "@types/node": "22.13.14",
+        "typescript": "^5.0.0"
     },
     "dependencies": {
         "@pulumi/aws": "7.23.0",

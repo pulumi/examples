@@ -1,7 +1,8 @@
 {
     "name": "aws-typescript",
     "devDependencies": {
-        "@types/node": "22.13.14"
+        "@types/node": "22.13.14",
+        "typescript": "^5.0.0"
     },
     "dependencies": {
         "@pulumi/aws": "7.23.0",
@@ -11,7 +12,6 @@
         "@types/auth0-js": "^9.10.1",
         "@types/jsonwebtoken": "^9.0.0",
         "jsonwebtoken": "9.0.2",
-        "jwks-rsa": "^3.0.0",
-        "typescript": "^5.0.0"
+        "jwks-rsa": "^3.0.0"
     }
 }

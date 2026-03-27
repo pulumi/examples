@@ -1,20 +1,21 @@
 {
     "compilerOptions": {
+        // Output
         "outDir": "bin",
-        "target": "es6",
-        "lib": [
-            "es6"
-        ],
+        "sourceMap": true,
+        // Environment
+        "target": "ES2022",
         "module": "nodenext",
         "moduleResolution": "nodenext",
-        "esModuleInterop": true,
-        "sourceMap": true,
-        "experimentalDecorators": true,
-        "pretty": true,
+        "moduleDetection": "force",
+        "types": ["node"],
+        "lib": ["es6"],
+        // Type Checking
         "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": false,
         "noImplicitReturns": true,
-        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "noImplicitAny": false,
         "strictNullChecks": true
     },
     "files": [

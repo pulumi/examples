@@ -1,12 +1,12 @@
 {
-	"name": "aws-ts-langserve",
-	"devDependencies": {
-		"@types/node": "22.13.14"
-	},
-	"dependencies": {
-		"typescript": "^5.0.0",
-		"@pulumi/pulumi": "3.228.0",
-		"@pulumi/aws": "7.23.0",
-		"@pulumi/docker": "4.11.1"
-	}
+ "name": "aws-ts-langserve",
+ "devDependencies": {
+  "@types/node": "22.13.14",
+  "typescript": "^5.0.0"
+ },
+ "dependencies": {
+  "@pulumi/pulumi": "3.228.0",
+  "@pulumi/aws": "7.23.0",
+  "@pulumi/docker": "4.11.1"
+ }
 }

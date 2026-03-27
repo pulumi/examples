@@ -3,17 +3,20 @@
         "esm": true
     },
     "compilerOptions": {
-        "strict": true,
+        // Output
         "outDir": "bin",
-        "target": "es2020",
-        "module": "node16",
-        "moduleResolution": "node16",
         "sourceMap": true,
-        "experimentalDecorators": true,
-        "pretty": true,
+        // Environment
+        "target": "ES2022",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "moduleDetection": "force",
+        "types": ["node"],
+        // Type Checking
+        "strict": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitReturns": true,
-        "forceConsistentCasingInFileNames": true
+        "skipLibCheck": true
     },
     "files": [
         "index.ts"

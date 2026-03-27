@@ -9,5 +9,9 @@
   "dependencies": {
     "@pulumi/pulumi": "^3.157.0",
     "@pulumi/aws": "7.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5.0.0"
   }
 }

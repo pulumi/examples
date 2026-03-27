@@ -5,5 +5,9 @@
         "@pulumi/aws": "7.23.0",
         "@pulumi/pulumi": "3.228.0",
         "pcloudinit": "^0.1.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "typescript": "^5.0.0"
     }
 }

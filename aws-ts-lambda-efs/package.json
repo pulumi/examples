@@ -6,10 +6,11 @@
         "@pulumi/aws-apigateway": "2.6.1",
         "@pulumi/awsx": "2.19.0",
         "@pulumi/pulumi": "3.145.0",
-        "@pulumiverse/time": "^0.0.17",
-
+        "@pulumiverse/time": "^0.0.17"
     },
     "devDependencies": {
-        "@types/aws-lambda": "^8.10.137"
+        "@types/aws-lambda": "^8.10.137",
+        "@types/node": "^20",
+        "typescript": "^5.0.0"
     }
 }

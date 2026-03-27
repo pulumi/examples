@@ -4,7 +4,8 @@
     "description": "CrossGuard policy pack to enforce small MIG profiles",
     "main": "index.ts",
     "devDependencies": {
-        "@types/node": "^18"
+        "@types/node": "^18",
+        "typescript": "^5.0.0"
     },
     "dependencies": {
         "@pulumi/policy": "^1.13.0",

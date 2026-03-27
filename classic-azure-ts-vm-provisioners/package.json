@@ -6,5 +6,9 @@
         "@pulumi/command": "1.2.1",
         "@pulumi/pulumi": "3.228.0",
         "@pulumi/tls": "5.3.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "typescript": "^5.0.0"
     }
 }

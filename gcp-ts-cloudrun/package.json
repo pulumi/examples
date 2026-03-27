@@ -3,7 +3,8 @@
     "version": "2.0.0",
     "devDependencies": {
         "@types/express": "5.0.1",
-        "@types/node": "22.13.14"
+        "@types/node": "22.13.14",
+        "typescript": "^5.0.0"
     },
     "dependencies": {
         "@pulumi/docker": "4.11.1",

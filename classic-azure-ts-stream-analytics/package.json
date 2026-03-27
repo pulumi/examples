@@ -3,7 +3,8 @@
     "version": "0.1.0",
     "devDependencies": {
         "@types/node": "22.13.14",
-        "@types/utf8": "3.0.3"
+        "@types/utf8": "3.0.3",
+        "typescript": "^5.0.0"
     },
     "dependencies": {
         "@pulumi/azure": "6.33.0",

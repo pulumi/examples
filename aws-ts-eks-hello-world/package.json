@@ -5,7 +5,10 @@
         "@pulumi/awsx": "2.22.0",
         "@pulumi/eks": "4.2.0",
         "@pulumi/kubernetes": "4.28.0",
-        "@pulumi/pulumi": "3.228.0",
-        "@types/node": "^22.0.0"
+        "@pulumi/pulumi": "3.228.0"
+    },
+    "devDependencies": {
+        "@types/node": "^22.0.0",
+        "typescript": "^5.0.0"
     }
 }

@@ -1,19 +1,21 @@
 {
     "compilerOptions": {
+        // Output
         "outDir": "bin",
-        "target": "es6",
+        "declaration": true,
+        "sourceMap": true,
+        "stripInternal": true,
+        // Environment
+        "target": "ES2022",
         "module": "nodenext",
         "moduleResolution": "nodenext",
-        "declaration": true,
-        "sourceMap": false,
-        "stripInternal": true,
-        "experimentalDecorators": true,
-        "pretty": true,
+        "moduleDetection": "force",
+        "types": ["node"],
+        // Type Checking
+        "strict": true,
         "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": true,
         "noImplicitReturns": true,
-        "forceConsistentCasingInFileNames": true,
-        "strictNullChecks": true,
+        "skipLibCheck": true
     },
     "files": [
         "compute.ts",

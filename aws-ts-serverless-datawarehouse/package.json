@@ -6,7 +6,8 @@
         "@types/node": "22.13.14",
         "jest": "29.7.0",
         "jest-circus": "29.7.0",
-        "ts-jest": "29.3.0"
+        "ts-jest": "29.3.0",
+        "typescript": "^5.0.0"
     },
     "dependencies": {
         "@pulumi/aws": "7.23.0",
