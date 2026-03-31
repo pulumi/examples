@@ -1,12 +1,12 @@
 {
     "name": "airflow",
     "devDependencies": {
-        "@types/node": "22.13.14"
+        "@types/node": "22.13.14",
+        "typescript": "^5.0.0"
     },
     "dependencies": {
         "@pulumi/aws": "7.23.0",
         "@pulumi/awsx": "2.22.0",
-        "@pulumi/pulumi": "3.228.0",
-        "typescript": "^5.0.0"
+        "@pulumi/pulumi": "3.228.0"
     }
 }

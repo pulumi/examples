@@ -1,7 +1,8 @@
 {
     "name": "slss-tps",
     "devDependencies": {
-        "@types/node": "22.13.14"
+        "@types/node": "22.13.14",
+        "typescript": "^5.0.0"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.386.0",

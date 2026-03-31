@@ -1,17 +1,19 @@
 {
     "compilerOptions": {
+        // Output
         "outDir": "bin",
-        "target": "es2016",
-        "module": "commonjs",
-        "moduleResolution": "node",
         "sourceMap": true,
-        "experimentalDecorators": true,
-        "pretty": true,
+        // Environment
+        "target": "ES2022",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "moduleDetection": "force",
+        "types": ["node","twitter"],
+        // Type Checking
+        "strict": true,
         "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": true,
         "noImplicitReturns": true,
-        "forceConsistentCasingInFileNames": true,
-        "strictNullChecks": true
+        "skipLibCheck": true
     },
     "files": [
         "index.ts"

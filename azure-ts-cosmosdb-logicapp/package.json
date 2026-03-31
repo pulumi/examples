@@ -1,7 +1,8 @@
 {
     "name": "azure-cosmosdb-logicapp",
     "devDependencies": {
-        "@types/node": "latest"
+        "@types/node": "latest",
+        "typescript": "^5.0.0"
     },
     "dependencies": {
         "@pulumi/azure-native": "2.92.0",

@@ -2,7 +2,8 @@
     "name": "azure-ts-serverless-url-shortener-global",
     "version": "1.0.0",
     "devDependencies": {
-        "@types/node": "22.13.14"
+        "@types/node": "22.13.14",
+        "typescript": "^5.0.0"
     },
     "dependencies": {
         "@azure/cosmos": "^4.0.0",

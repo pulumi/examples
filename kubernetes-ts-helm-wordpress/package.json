@@ -1,7 +1,8 @@
 {
   "name": "wordpress",
   "devDependencies": {
-    "@types/node": "22.13.14"
+    "@types/node": "22.13.14",
+    "typescript": "^5.0.0"
   },
   "dependencies": {
     "@pulumi/kubernetes": "4.28.0",

@@ -1,19 +1,20 @@
 {
     "compilerOptions": {
+        // Output
         "outDir": "bin",
-        "target": "es6",
-        "lib": [
-            "es6"
-        ],
-        "module": "commonjs",
-        "moduleResolution": "node",
         "sourceMap": true,
-        "experimentalDecorators": true,
-        "pretty": true,
+        // Environment
+        "target": "ES2022",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "moduleDetection": "force",
+        "types": ["node"],
+        "lib": ["es6"],
+        // Type Checking
         "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": false,
         "noImplicitReturns": true,
-        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+        "noImplicitAny": false,
         "strictNullChecks": true
     },
     "files": [

@@ -8,6 +8,8 @@
         "twitter": "^1.7.1"
     },
     "devDependencies": {
-        "@types/twitter": "1.7.4"
+        "@types/node": "^20",
+        "@types/twitter": "1.7.4",
+        "typescript": "^5.0.0"
     }
 }
