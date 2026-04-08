@@ -1,0 +1,20 @@
+name: azure-ts-sentinel-audit-logs
+runtime: nodejs
+description: Deploy a Sentinel connector that continuously exports Pulumi Cloud audit logs to Log Analytics
+template:
+  config:
+    orgName:
+      description: Pulumi Cloud organization name
+    accessToken:
+      description: Pulumi access token (org-scoped service token recommended)
+      secret: true
+    workspaceName:
+      description: Log Analytics workspace name (must already exist with Sentinel enabled)
+    resourceGroupName:
+      description: Azure resource group containing the Sentinel workspace
+    enableAnalyticRules:
+      description: Deploy pre-built Sentinel analytic rules (auth failures, stack deletions, membership changes)
+      default: "true"
+    azure-native:location:
+      description: Azure region (e.g. eastus, westus2)
+      default: eastus
