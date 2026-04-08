@@ -1,7 +1,7 @@
 // Copyright 2026, Pulumi Corporation. All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as azure_native from "@pulumi/azure-native";
+import * as pulumi from "@pulumi/pulumi";
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -404,7 +404,7 @@ const enableAnalyticRules = config.getBoolean("enableAnalyticRules") ?? true;
 
 if (enableAnalyticRules) {
 
-    new azure_native.securityinsights.ScheduledAlertRule("authFailureRule", {
+    const authFailureRule = new azure_native.securityinsights.ScheduledAlertRule("authFailureRule", {
         resourceGroupName,
         workspaceName,
         kind: "Scheduled",
@@ -436,7 +436,7 @@ if (enableAnalyticRules) {
         }],
     }, { dependsOn: [dataCollectionRule] });
 
-    new azure_native.securityinsights.ScheduledAlertRule("stackDeletionRule", {
+    const stackDeletionRule = new azure_native.securityinsights.ScheduledAlertRule("stackDeletionRule", {
         resourceGroupName,
         workspaceName,
         kind: "Scheduled",
@@ -476,7 +476,7 @@ if (enableAnalyticRules) {
         ],
     }, { dependsOn: [table, dataCollectionRule] });
 
-    new azure_native.securityinsights.ScheduledAlertRule("orgMemberChangeRule", {
+    const orgMemberChangeRule = new azure_native.securityinsights.ScheduledAlertRule("orgMemberChangeRule", {
         resourceGroupName,
         workspaceName,
         kind: "Scheduled",
