@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from typing import Sequence
 
-import json
-
 import pulumi
 import pulumi_aws as aws
 import pulumi_awsx as awsx
@@ -53,43 +51,33 @@ class SpokeVpc(pulumi.ComponentResource):
                 ),
                 enable_dns_hostnames=True,
                 enable_dns_support=True,
+                subnet_strategy=awsx.ec2.SubnetAllocationStrategy.AUTO,
             ),
             pulumi.ResourceOptions(
                 parent=self,
             ),
         )
 
-        tgw_subnets = aws.ec2.get_subnets_output(
-            filters=[
-                aws.ec2.GetSubnetFilterArgs(
-                    name="tag:Name",
-                    values=[f"{name}-vpc-tgw-*"],
-                ),
-                aws.ec2.GetSubnetFilterArgs(
-                    name="vpc-id",
-                    values=[self.vpc.vpc_id],
-                ),
-            ]
-        )
-
-        tgw_subnets = aws.ec2.get_subnets_output(
-            filters=[
-                aws.ec2.GetSubnetFilterArgs(
-                    name="tag:Name",
-                    values=[f"{self._name}-vpc-tgw-*"],
-                ),
-                aws.ec2.GetSubnetFilterArgs(
-                    name="vpc-id",
-                    values=[self.vpc.vpc_id],
-                ),
-            ]
-        )
+        # The AWSX VPC creates subnets in the order of subnet_specs, with
+        # one subnet per AZ for each spec. Since we have 3 AZs (the default)
+        # and two specs ("private" then "tgw"), isolated_subnet_ids contains
+        # 6 IDs: indices 0-2 are "private" subnets, indices 3-5 are "tgw".
+        #
+        # We extract them into lists of known length so that we can create
+        # resources without using apply(), which is bad practice because the
+        # pulumi preview output would not necessarily match the pulumi up
+        # behavior.
+        tgw_subnet_ids = [
+            self.vpc.isolated_subnet_ids.apply(lambda x: x[3]),
+            self.vpc.isolated_subnet_ids.apply(lambda x: x[4]),
+            self.vpc.isolated_subnet_ids.apply(lambda x: x[5]),
+        ]
 
         self.tgw_attachment = aws.ec2transitgateway.VpcAttachment(
             f"{name}-tgw-vpc-attachment",
             aws.ec2transitgateway.VpcAttachmentArgs(
                 transit_gateway_id=args.tgw_id,
-                subnet_ids=tgw_subnets.apply(lambda x: x.ids),
+                subnet_ids=tgw_subnet_ids,
                 vpc_id=self.vpc.vpc_id,
                 transit_gateway_default_route_table_association=False,
                 transit_gateway_default_route_table_propagation=False,
@@ -128,26 +116,17 @@ class SpokeVpc(pulumi.ComponentResource):
             ),
         )
 
-        # Using get_subnets rather than vpc.isolated_subnet_ids because it's more
-        # stable (in case we change the subnet type above) and descriptive:
-        private_subnets = aws.ec2.get_subnets_output(
-            filters=[
-                aws.ec2.GetSubnetFilterArgs(
-                    name="tag:Name",
-                    values=[f"{self._name}-vpc-private-*"],
-                ),
-                aws.ec2.GetSubnetFilterArgs(
-                    name="vpc-id",
-                    values=[self.vpc.vpc_id],
-                ),
-            ]
-        )
-        self.workload_subnet_ids = private_subnets.ids
+        private_subnet_ids = [
+            self.vpc.isolated_subnet_ids.apply(lambda x: x[0]),
+            self.vpc.isolated_subnet_ids.apply(lambda x: x[1]),
+            self.vpc.isolated_subnet_ids.apply(lambda x: x[2]),
+        ]
+        self.workload_subnet_ids = private_subnet_ids
 
-        private_subnets.apply(lambda x: self._create_vpc_endpoints(x.ids))
-        private_subnets.apply(lambda x: self._create_routes(x.ids))
+        self._create_vpc_endpoints(private_subnet_ids)
+        self._create_routes(private_subnet_ids)
 
-    def _create_vpc_endpoints(self, subnet_ids: Sequence[str]):
+    def _create_vpc_endpoints(self, subnet_ids: Sequence[pulumi.Input[str]]):
         vpc_endpoint_sg = aws.ec2.SecurityGroup(
             f"{self._name}-vpc-endpoint-sg",
             aws.ec2.SecurityGroupArgs(
@@ -196,17 +175,17 @@ class SpokeVpc(pulumi.ComponentResource):
 
     def _create_routes(
         self,
-        private_subnet_ids: Sequence[str],
+        private_subnet_ids: Sequence[pulumi.Input[str]],
     ):
 
-        for subnet_id in private_subnet_ids:
-            route_table = aws.ec2.get_route_table(
+        for i, subnet_id in enumerate(private_subnet_ids):
+            route_table = aws.ec2.get_route_table_output(
                 subnet_id=subnet_id,
             )
 
             # Direct egress for anything outside this VPC to the Transit Gateway:
             aws.ec2.Route(
-                f"spoke{self._name}-tgw-route-{subnet_id}",
+                f"spoke{self._name}-tgw-route-{i}",
                 aws.ec2.RouteArgs(
                     route_table_id=route_table.id,
                     destination_cidr_block="0.0.0.0/0",

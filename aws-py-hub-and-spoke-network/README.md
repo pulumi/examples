@@ -25,7 +25,7 @@ A hub-and-spoke network is a common architecture for creating a network topology
 
 ### Step 1: Initialize the Project
 
-For Pulumi examples, we typically start by creating a directory and changing into it. Then, we create a new Pulumi project from a template. For example, `azure-javascript`.
+For Pulumi examples, we typically start by creating a directory and changing into it. Then, we create a new Pulumi project from a template. For example, `aws-python`.
 
 1. Install packages:
 
