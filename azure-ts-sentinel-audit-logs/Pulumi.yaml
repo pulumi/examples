@@ -1,7 +1,9 @@
-name: azure-ts-sentinel-audit-logs
+name: ${PROJECT}
+description: ${DESCRIPTION}
 runtime: nodejs
-description: Deploy a Sentinel connector that continuously exports Pulumi Cloud audit logs to Log Analytics
 template:
+  displayName: Pulumi Audit Log Export to Azure Sentinel
+  description: Deploy a Sentinel connector that continuously exports Pulumi Cloud audit logs to Log Analytics
   config:
     orgName:
       description: Pulumi Cloud organization name
