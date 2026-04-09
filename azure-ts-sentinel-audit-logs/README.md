@@ -101,22 +101,18 @@ The easiest path — no CLI install needed.
 
 1. Ensure you have Azure CLI installed and authenticated (`az login`).
 
-2. Clone this example and install dependencies:
+2. Create a new project from the example:
    ```bash
-   git clone https://github.com/pulumi/examples.git
-   cd examples/azure-ts-sentinel-audit-logs
-   npm install
+   mkdir sentinel-connector && cd sentinel-connector
+   pulumi new https://github.com/pulumi/examples/tree/master/azure-ts-sentinel-audit-logs
    ```
 
-3. Create a new stack and set the required config:
-   ```bash
-   pulumi stack init dev
-   pulumi config set orgName <your-pulumi-org>
-   pulumi config set --secret accessToken <your-pulumi-access-token>
-   pulumi config set workspaceName <your-log-analytics-workspace>
-   pulumi config set resourceGroupName <your-resource-group>
-   pulumi config set azure-native:location <azure-region>  # defaults to eastus
-   ```
+3. When prompted, enter the config values:
+   - **orgName**: Your Pulumi Cloud organization name
+   - **accessToken**: Your Pulumi access token (masked input, stored encrypted in stack config)
+   - **workspaceName**: Name of your existing Log Analytics workspace
+   - **resourceGroupName**: Azure resource group containing the workspace
+   - **azure-native:location**: Azure region (defaults to `eastus`)
 
 4. Deploy:
    ```bash
