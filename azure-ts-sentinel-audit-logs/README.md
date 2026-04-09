@@ -48,13 +48,17 @@ The poller authenticates to the Pulumi Cloud API using an access token and handl
   az sentinel onboarding-state create -g <resource-group> -w <workspace-name> -n default --customer-managed-key false
   ```
 
-## Setup Option 1: Pulumi Cloud Deployment Wizard (Recommended)
+## Setup
+
+For full setup instructions, see the [Azure Sentinel audit log export documentation](https://www.pulumi.com/docs/administration/security-compliance/audit-logs/azure-sentinel/).
+
+In Pulumi Cloud, go to **Settings** > **Audit Log Export** and click **"Connect to Azure Sentinel"** to be guided through the setup process.
+
+### Option 1: Pulumi Cloud Deployment Wizard (Recommended)
 
 The easiest path — no CLI install needed.
 
-1. In Pulumi Cloud, go to **Settings** > **Audit Log Export** and click **"Connect to Azure Sentinel"**. This opens the New Project Wizard with the example pre-selected.
-
-   Or navigate directly to:
+1. Open the deployment wizard directly:
    ```
    https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/azure-ts-sentinel-audit-logs
    ```
@@ -97,7 +101,7 @@ The easiest path — no CLI install needed.
    | take 10
    ```
 
-## Setup Option 2: CLI
+### Option 2: CLI
 
 1. Ensure you have Azure CLI installed and authenticated (`az login`).
 
