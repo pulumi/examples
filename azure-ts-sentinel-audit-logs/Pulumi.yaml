@@ -14,6 +14,9 @@ template:
       description: Log Analytics workspace name (must already exist with Sentinel enabled)
     resourceGroupName:
       description: Azure resource group containing the Sentinel workspace
+    apiUrl:
+      description: Pulumi Cloud API URL (override for other environments, i.e. api.eu.pulumi.com)
+      default: https://api.pulumi.com
     enableAnalyticRules:
       description: Deploy pre-built Sentinel analytic rules (auth failures, stack deletions, membership changes)
       default: "true"
