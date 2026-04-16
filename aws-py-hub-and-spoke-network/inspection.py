@@ -5,7 +5,12 @@ import pulumi
 import pulumi_aws as aws
 import pulumi_awsx as awsx
 
-from pprint import pprint
+
+def _find_endpoint_for_az(az: str, statuses) -> str:
+    for sync_state in statuses[0]["sync_states"]:
+        if sync_state["availability_zone"] == az:
+            return sync_state["attachments"][0]["endpoint_id"]
+    raise Exception(f"No firewall endpoint found for AZ '{az}'")
 
 
 @dataclass
@@ -25,7 +30,6 @@ class InspectionVpc(pulumi.ComponentResource):
     ) -> None:
         super().__init__("awsAdvancedNetworking:index:InspectionVpc", name, None, opts)
 
-        # So we can reference later in our apply handler:
         self.name = name
         self.args = args
 
@@ -51,6 +55,7 @@ class InspectionVpc(pulumi.ComponentResource):
                 nat_gateways=awsx.ec2.NatGatewayConfigurationArgs(
                     strategy=awsx.ec2.NatGatewayStrategy.NONE
                 ),
+                subnet_strategy=awsx.ec2.SubnetAllocationStrategy.AUTO,
             ),
             opts=pulumi.ResourceOptions(
                 *(opts or {}),
@@ -124,17 +129,35 @@ class InspectionVpc(pulumi.ComponentResource):
             pulumi.ResourceOptions(parent=self),
         )
 
+        # We know that there are 3 AZs in our VPC because that is the default
+        # for the AWSX VPC component and we don't specify an argument and we
+        # also do not allow the input to be configurable in this component.
+        #
+        # Because we know there are 3 AZs, we can extract the 3 subnet IDs into
+        # a list of known length, which in turn allows us to avoid creating
+        # resources in an apply(), which is bad practice because the pulumi
+        # preview output would not necessarily match the pulumi up behavior.
+        #
+        # If we did not know the length of the list in advance, we would have to
+        # call apply on the list of unknown length and then loop through its
+        # values to create the necessary routes.
+        public_subnet_ids = [
+            self.vpc.public_subnet_ids.apply(lambda x: x[0]),
+            self.vpc.public_subnet_ids.apply(lambda x: x[1]),
+            self.vpc.public_subnet_ids.apply(lambda x: x[2]),
+        ]
+
+        isolated_subnet_ids = [
+            self.vpc.isolated_subnet_ids.apply(lambda x: x[0]),
+            self.vpc.isolated_subnet_ids.apply(lambda x: x[1]),
+            self.vpc.isolated_subnet_ids.apply(lambda x: x[2]),
+        ]
+
         if args.firewall_policy_arn:
             self.create_firewall()
-            pulumi.Output.all(
-                self.firewall.firewall_statuses,
-                self.vpc.public_subnet_ids,
-                self.vpc.isolated_subnet_ids,
-            ).apply(lambda args: self.create_firewall_routes(args[0], args[1], args[2]))
+            self.create_firewall_routes(public_subnet_ids, isolated_subnet_ids)
         else:
-            pulumi.Output.all(self.vpc.public_subnet_ids, self.vpc.isolated_subnet_ids).apply(
-                lambda args: self.create_direct_nat_routes(args[0], args[1])
-            )
+            self.create_direct_nat_routes(public_subnet_ids, isolated_subnet_ids)
 
         self.register_outputs(
             {
@@ -145,16 +168,18 @@ class InspectionVpc(pulumi.ComponentResource):
         )
 
     def create_direct_nat_routes(
-        self, public_subnet_ids: Sequence[str], isolated_subnet_ids: Sequence[str]
+        self,
+        public_subnet_ids: Sequence[pulumi.Input[str]],
+        isolated_subnet_ids: Sequence[pulumi.Input[str]],
     ):
         # Create routes for the supernet (a CIDR block that encompasses all
         # spoke VPCs) from the public subnets in the inspection VPC (where the
         # NAT Gateways for centralized egress live) to the TGW.
-        for subnet_id in public_subnet_ids:
-            route_table = aws.ec2.get_route_table(subnet_id=subnet_id)
+        for i, subnet_id in enumerate(public_subnet_ids):
+            route_table = aws.ec2.get_route_table_output(subnet_id=subnet_id)
 
             aws.ec2.Route(
-                f"{self.name}-route-{subnet_id}-to-tgw",
+                f"{self.name}-public-route-{i}-to-tgw",
                 aws.ec2.RouteArgs(
                     route_table_id=route_table.id,
                     destination_cidr_block=self.args.supernet_cidr_block,
@@ -168,11 +193,11 @@ class InspectionVpc(pulumi.ComponentResource):
             )
 
         # Create routes from the TGW subnet to the NAT Gateway.
-        for subnet_id in isolated_subnet_ids:
-            route_table = aws.ec2.get_route_table(subnet_id=subnet_id)
+        for i, subnet_id in enumerate(isolated_subnet_ids):
+            route_table = aws.ec2.get_route_table_output(subnet_id=subnet_id)
 
             aws.ec2.Route(
-                f"{self.name}-route-{subnet_id}-to-tgw",
+                f"{self.name}-isolated-route-{i}-to-nat",
                 aws.ec2.RouteArgs(
                     route_table_id=route_table.id,
                     destination_cidr_block="0.0.0.0/0",
@@ -273,40 +298,27 @@ class InspectionVpc(pulumi.ComponentResource):
             ),
         )
 
-    def create_firewall_routes(self, statuses, public_subnet_ids, tgw_subnet_ids):
-        # Map the output of the Firewall attachments to a structure more
-        # suitable structure:
-        attachments = []
-        for sync_state in statuses[0]["sync_states"]:
-            attachment = {
-                "az": sync_state["availability_zone"],
-                "subnet_id": sync_state["attachments"][0]["subnet_id"],
-                "endpoint_id": sync_state["attachments"][0]["endpoint_id"],
-            }
-            attachments.append(attachment)
-
+    def create_firewall_routes(
+        self,
+        public_subnet_ids: Sequence[pulumi.Input[str]],
+        tgw_subnet_ids: Sequence[pulumi.Input[str]],
+    ):
         # Add routes from public subnets to the firewall for incoming packets.
-        for subnet_id in public_subnet_ids:
-            subnet = aws.ec2.get_subnet(id=subnet_id)
-            route_table = aws.ec2.get_route_table(subnet_id=subnet_id)
+        for i, subnet_id in enumerate(public_subnet_ids):
+            subnet = aws.ec2.get_subnet_output(id=subnet_id)
+            route_table = aws.ec2.get_route_table_output(subnet_id=subnet_id)
 
-            # Find the attachment in our availability zone
-            subnet_attachments = [
-                attachment
-                for attachment in attachments
-                if attachment["az"] == subnet.availability_zone
-            ]
-            if len(subnet_attachments) != 1:
-                raise Exception(
-                    f"Expected exactly 1 firewall subnet attachment for AZ '{subnet.availability_zone}'. Found {len(subnet_attachments)} instead."
-                )
+            endpoint_id = pulumi.Output.all(
+                subnet.availability_zone,
+                self.firewall.firewall_statuses,
+            ).apply(lambda args: _find_endpoint_for_az(args[0], args[1]))
 
             aws.ec2.Route(
-                f"{self.name}-{subnet_id}-to-firewall",
+                f"{self.name}-public-{i}-to-firewall",
                 aws.ec2.RouteArgs(
                     route_table_id=route_table.id,
                     destination_cidr_block=self.args.supernet_cidr_block,
-                    vpc_endpoint_id=subnet_attachments[0]["endpoint_id"],
+                    vpc_endpoint_id=endpoint_id,
                 ),
                 pulumi.ResourceOptions(
                     parent=self,
@@ -315,27 +327,21 @@ class InspectionVpc(pulumi.ComponentResource):
             )
 
         # Add routes from the TGW subnets to the firewall for outgoing packets.
-        for subnet_id in tgw_subnet_ids:
-            subnet = aws.ec2.get_subnet(id=subnet_id)
-            route_table = aws.ec2.get_route_table(subnet_id=subnet_id)
+        for i, subnet_id in enumerate(tgw_subnet_ids):
+            subnet = aws.ec2.get_subnet_output(id=subnet_id)
+            route_table = aws.ec2.get_route_table_output(subnet_id=subnet_id)
 
-            # Find the attachment in our availability zone
-            subnet_attachments = [
-                attachment
-                for attachment in attachments
-                if attachment["az"] == subnet.availability_zone
-            ]
-            if len(subnet_attachments) != 1:
-                raise Exception(
-                    f"Expected exactly 1 firewall subnet attachment for AZ '{subnet.availability_zone}'. Found {len(subnet_attachments)} instead."
-                )
+            endpoint_id = pulumi.Output.all(
+                subnet.availability_zone,
+                self.firewall.firewall_statuses,
+            ).apply(lambda args: _find_endpoint_for_az(args[0], args[1]))
 
             aws.ec2.Route(
-                f"{self.name}-{subnet_id}-to-firewall",
+                f"{self.name}-tgw-{i}-to-firewall",
                 aws.ec2.RouteArgs(
                     route_table_id=route_table.id,
                     destination_cidr_block="0.0.0.0/0",
-                    vpc_endpoint_id=subnet_attachments[0]["endpoint_id"],
+                    vpc_endpoint_id=endpoint_id,
                 ),
                 pulumi.ResourceOptions(
                     parent=self,
