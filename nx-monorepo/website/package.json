@@ -9,7 +9,7 @@
         "astro": "astro"
     },
     "dependencies": {
-        "astro": "^5.0.0",
+        "astro": "^6.0.0",
         "@astrojs/check": "^0.9.0"
     },
     "nx": {
