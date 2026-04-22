@@ -177,12 +177,10 @@ github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 h1:vkHw5I/plNdTr435
 github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231/go.mod h1:murToZ2N9hNJzewjHBgfFdXhZKjY3z5cYC1VXk+lbFE=
 github.com/pulumi/esc v0.23.0 h1:5lOXO+5vvXOEQxXw7cTuYhjg9lVng23f9XNLWDR9EP4=
 github.com/pulumi/esc v0.23.0/go.mod h1:mkghIFn/TvN3XnP4jmCB4U5BG1I4UjGluARi39ckrCE=
-github.com/pulumi/pulumi-aws/sdk/v6 v6.73.0 h1:HFDRwK8Ov/6FPMNcwvIpsGM33xK3w9Pp5FjT9xfvNtY=
-github.com/pulumi/pulumi-aws/sdk/v6 v6.73.0/go.mod h1:xglzyWetVFeJKy0ZlPlIzjKfkm/Aq3n8q/1rANEPVhQ=
 github.com/pulumi/pulumi-aws/sdk/v7 v7.23.0 h1:G4x1vd3JgtuEmzWF8h6Yoo2wYDB3ydZT/XxNaPxJ8PU=
 github.com/pulumi/pulumi-aws/sdk/v7 v7.23.0/go.mod h1:XDXYVcBL20h4r2kXzpD34pB6gVcyb7MSG1DQP91gzFE=
-github.com/pulumi/pulumi-awsx/sdk/v2 v2.22.0 h1:ptZzrwFjDJKGbc01sKMESSHZqywXmoN8QxUrT52190s=
-github.com/pulumi/pulumi-awsx/sdk/v2 v2.22.0/go.mod h1:S8ZM/InFR8LLUh6QXOdYtm/LOCPDS7Xo9KqMRGo/amQ=
+github.com/pulumi/pulumi-awsx/sdk/v3 v3.5.0 h1:4yNWM2R0VrF7nG2D6BjBkrxZcR2XHz3M/tYUwOS/5OY=
+github.com/pulumi/pulumi-awsx/sdk/v3 v3.5.0/go.mod h1:2/RMtCM6nOYsWHV0rFZRze7PdSMIKM61ZHbDGEwMaOs=
 github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild v0.0.15 h1:K6F/3o44gGj+ljRS4spCGvAXMSwECHITjaCccfjXNyE=
 github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild v0.0.15/go.mod h1:cZyHs6q34kbQZJYaBjWUJhPsgwUFoL6xyjo7sRqBcv4=
 github.com/pulumi/pulumi-docker/sdk/v4 v4.11.1 h1:ZLhod/vxak+FxWn3GZIWgWpVyp7nhH0JuN7yb7z6RK4=

@@ -8,7 +8,7 @@ import (
 	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/ecs"
 	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/iam"
 	elb "github.com/pulumi/pulumi-aws/sdk/v7/go/aws/lb"
-	awsx "github.com/pulumi/pulumi-awsx/sdk/v2/go/awsx/ec2"
+	awsx "github.com/pulumi/pulumi-awsx/sdk/v3/go/awsx/ec2"
 	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
