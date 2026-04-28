@@ -15,7 +15,7 @@
         "athena-client": "^2.5.1",
         "aws-sdk": "^2.606.0",
         "moment-timezone": "^0.5.27",
-        "uuid": "^12.0.0"
+        "uuid": "^13.0.0"
     },
     "scripts": {
         "test": "jest",
