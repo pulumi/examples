@@ -4,7 +4,7 @@ go 1.25.6
 
 require (
 	github.com/aws/aws-lambda-go v1.47.0
-	github.com/pulumi/pulumi-aws-apigateway/sdk/v2 v2.6.3
+	github.com/pulumi/pulumi-aws-apigateway/sdk/v3 v3.0.0
 	github.com/pulumi/pulumi-aws/sdk/v7 v7.23.0
 	github.com/pulumi/pulumi/sdk/v3 v3.225.0
 )
@@ -72,7 +72,6 @@ require (
 	github.com/pkg/term v1.1.0 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
 	github.com/pulumi/esc v0.23.0 // indirect
-	github.com/pulumi/pulumi-aws/sdk/v6 v6.73.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/santhosh-tekuri/jsonschema/v5 v5.0.0 // indirect

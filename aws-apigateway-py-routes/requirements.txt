@@ -1,3 +1,3 @@
 pulumi>=3.0.0,<4.0.0
 pulumi-aws>=7.23.0,<7.24.0
-pulumi-aws-apigateway>=2.0.0,<3.0.0
+pulumi-aws-apigateway>=3.0.0,<3.1.0

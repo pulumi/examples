@@ -5,7 +5,7 @@
     "typescript": "5.8.2"
   },
   "dependencies": {
-    "@pulumi/awsx": "2.22.0",
+    "@pulumi/awsx": "3.5.0",
     "@pulumi/azure": "6.33.0",
     "@pulumi/azuread": "6.9.0",
     "@pulumi/eks": "4.2.0",

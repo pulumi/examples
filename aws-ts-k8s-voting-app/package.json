@@ -7,7 +7,7 @@
     },
     "dependencies": {
         "@pulumi/aws": "7.23.0",
-        "@pulumi/awsx": "2.22.0",
+        "@pulumi/awsx": "3.5.0",
         "@pulumi/eks": "4.2.0",
         "@pulumi/postgresql": "3.16.2",
         "@pulumi/pulumi": "3.228.0",

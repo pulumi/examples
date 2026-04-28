@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@pulumi/pulumi": "^3.100.0",
-    "@pulumi/azure-native": "^2.25.0",
+    "@pulumi/azure-native": "^3.0.0",
     "@pulumi/tls": "^5.0.0"
   }
 }

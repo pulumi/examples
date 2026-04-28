@@ -4,7 +4,7 @@ go 1.25.6
 
 require (
 	github.com/pulumi/pulumi-aws/sdk/v7 v7.23.0
-	github.com/pulumi/pulumi-awsx/sdk/v2 v2.22.0
+	github.com/pulumi/pulumi-awsx/sdk/v3 v3.5.0
 	github.com/pulumi/pulumi-docker/sdk/v4 v4.11.1
 	github.com/pulumi/pulumi/sdk/v3 v3.225.0
 )
@@ -73,7 +73,6 @@ require (
 	github.com/pkg/term v1.1.0 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
 	github.com/pulumi/esc v0.23.0 // indirect
-	github.com/pulumi/pulumi-aws/sdk/v6 v6.73.0 // indirect
 	github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild v0.0.15 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
