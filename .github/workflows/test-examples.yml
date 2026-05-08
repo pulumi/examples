@@ -5,6 +5,7 @@ env:
   ESC_ACTION_OIDC_REQUESTED_TOKEN_TYPE: urn:pulumi:token-type:access_token:organization
   ESC_ACTION_ENVIRONMENT: imports/github-secrets
   ESC_ACTION_EXPORT_ENVIRONMENT_VARIABLES: false
+  PULUMI_ENABLE_JOURNALING: "true"
 name: Test examples
 on:
   pull_request:
@@ -16,9 +17,6 @@ on:
     types:
       - run-tests-command
   workflow_dispatch: {}
-
-env:
-  PULUMI_ENABLE_JOURNALING: "true"
 
 jobs:
   lint-ts:
