@@ -29,8 +29,8 @@ class WebServerStack : Stack
             new PublicIpArgs
             {
                 ResourceGroupName = resourceGroup.Name,
-                AllocationMethod = "Dynamic",
-                Sku = "Basic",
+                AllocationMethod = "Static",
+                Sku = "Standard",
             });
 
         var networkInterface = new NetworkInterface("server-nic",

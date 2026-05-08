@@ -41,7 +41,8 @@ class VmScalesetStack : Stack
             new PublicIpArgs
             {
                 ResourceGroupName = resourceGroup.Name,
-                AllocationMethod = "Dynamic"
+                AllocationMethod = "Static",
+                Sku = "Standard",
             });
 
         var lb = new LoadBalancer("lb",

@@ -230,7 +230,7 @@ jobs:
           GOOGLE_REGION: ${{ steps.setup.outputs.google-region }}
           GOOGLE_ZONE: ${{ steps.setup.outputs.google-zone }}
           DIGITALOCEAN_TOKEN: ${{ steps.esc-secrets.outputs.DIGITALOCEAN_TOKEN }}
-          PULUMI_ACCESS_TOKEN: ${{ steps.esc-secrets.outputs.PULUMI_ACCESS_TOKEN }}
+          PULUMI_ACCESS_TOKEN: ${{ steps.esc-secrets.outputs.PULUMI_ACCESS_TOKEN_STAGING }}
           PULUMI_API: https://api.pulumi-staging.io
           SLACK_WEBHOOK_URL: ${{ steps.esc-secrets.outputs.SLACK_WEBHOOK_URL }}
 
@@ -306,6 +306,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ steps.setup.outputs.aws-secret-access-key }}
           AWS_SESSION_TOKEN: ${{ steps.setup.outputs.aws-session-token }}
           AWS_REGION: ${{ steps.setup.outputs.aws-region }}
-          PULUMI_ACCESS_TOKEN: ${{ steps.esc-secrets.outputs.PULUMI_ACCESS_TOKEN }}
+          PULUMI_ACCESS_TOKEN: ${{ steps.esc-secrets.outputs.PULUMI_ACCESS_TOKEN_STAGING }}
           PULUMI_API: https://api.pulumi-staging.io
           INFRA_STACK_NAME: ${{ github.sha }}-${{ github.run_number }}
