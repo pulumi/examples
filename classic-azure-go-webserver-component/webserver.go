@@ -47,7 +47,8 @@ func NewWebserver(ctx *pulumi.Context, name string, args *WebserverArgs, opts ..
 
 	webserver.PublicIP, err = network.NewPublicIp(ctx, name+"-ip", &network.PublicIpArgs{
 		ResourceGroupName: args.ResourceGroupName,
-		AllocationMethod:  pulumi.String("Dynamic"),
+		AllocationMethod:  pulumi.String("Static"),
+		Sku:               pulumi.String("Standard"),
 	}, pulumi.Parent(webserver))
 	if err != nil {
 		return nil, err
