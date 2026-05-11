@@ -3,8 +3,13 @@
         "strict": true,
         "outDir": "bin",
         "target": "es2016",
-        "module": "nodenext",
-        "moduleResolution": "nodenext",
+        // module/moduleResolution are pinned to the values accepted by the
+        // ts-node@7.0.1 vendored inside @pulumi/pulumi's Node SDK, which the
+        // cli-performance-metrics perf cron exercises against `pulumi-version: dev`.
+        // The vendored ts-node rejects `nodenext` (TS6046). See
+        // https://github.com/pulumi/cli-performance-metrics/issues/95.
+        "module": "commonjs",
+        "moduleResolution": "node",
         "sourceMap": true,
         "experimentalDecorators": true,
         "pretty": true,
