@@ -1,17 +1,16 @@
 {
+    "ts-node": {
+        "esm": true
+    },
     "compilerOptions": {
         // Output
         "outDir": "bin",
         "sourceMap": true,
         // Environment
         "target": "ES2022",
-        // module/moduleResolution are pinned to the values accepted by the
-        // ts-node@7.0.1 vendored inside @pulumi/pulumi's Node SDK, which the
-        // cli-performance-metrics perf cron exercises against `pulumi-version: dev`.
-        // The vendored ts-node rejects `nodenext` (TS6046). See
-        // https://github.com/pulumi/cli-performance-metrics/issues/95.
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "moduleDetection": "force",
         "types": ["node"],
         // Type Checking
         "strict": true,
