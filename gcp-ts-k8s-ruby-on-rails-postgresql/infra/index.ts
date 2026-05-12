@@ -52,13 +52,13 @@ const appService = new k8s.core.v1.Service("rails-service", {
 }, { provider: cluster.provider });
 
 // Export the app deployment name so we can easily access it.
-export let appName = appDeployment.metadata.name;
+export const appName = appDeployment.metadata.name;
 
 // Export the service's IP address.
-export let appAddress = appService.status.apply(s => `http://${s.loadBalancer.ingress[0].ip}:${appPort}`);
+export const appAddress = appService.status.apply(s => `http://${s.loadBalancer.ingress[0].ip}:${appPort}`);
 
 // Export the database address for client connections.
-export let dbAddress = db.instance.firstIpAddress;
+export const dbAddress = db.instance.firstIpAddress;
 
 // Also export the Kubeconfig so that clients can easily access our cluster.
-export let kubeConfig = cluster.config;
+export const kubeConfig = cluster.config;

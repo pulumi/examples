@@ -23,6 +23,6 @@ const dummy0 = newDummy(0);
 
 export const ResourcePayloadBytes = dummy0.deadweight.apply(x => x.length);
 
-for (var i = 1;  i < resourceCount; i++) {
+for (let i = 1;  i < resourceCount; i++) {
     newDummy(i);
 }

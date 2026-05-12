@@ -13,13 +13,13 @@ app.get("/", (req, res) => {
 
         if(redisData) {
             console.log(redisData);
-            let jsonData = JSON.parse(redisData);
-            let currentVisits = jsonData.num;
-            let data = {num: currentVisits + 1};
+            const jsonData = JSON.parse(redisData);
+            const currentVisits = jsonData.num;
+            const data = {num: currentVisits + 1};
             redisClient.set(redisKey, JSON.stringify(data));
             res.send(`I have been viewed ${currentVisits} times.`);
         } else {
-            let data = {num: 1};
+            const data = {num: 1};
             redisClient.set(redisKey, JSON.stringify(data));
             res.send(`I have been viewed ${data.num} time.`);
         }

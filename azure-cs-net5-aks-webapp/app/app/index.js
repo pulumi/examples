@@ -12,6 +12,6 @@ app.get("/", (req, res) => {
     res.send(`<html><body><h1>Your custom docker image is running in ${place}!</h1></body></html>`);
 });
 
-var listener = app.listen(process.env.PORT || 80, function() {
+const listener = app.listen(process.env.PORT || 80, function() {
  console.log("listening on port " + listener.address().port);
 });

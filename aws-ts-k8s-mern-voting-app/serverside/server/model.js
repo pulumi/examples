@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-let Choice = new mongoose.Schema({
+const Choice = new mongoose.Schema({
     _id: Number,
     text: {
         type: String,

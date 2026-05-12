@@ -174,4 +174,4 @@ const clientsideService = new awsx.ecs.FargateService("client-side-service", {
     },
 });
 
-export let URL = clientLB.loadBalancer.dnsName;
+export const URL = clientLB.loadBalancer.dnsName;

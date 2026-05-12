@@ -23,4 +23,4 @@ const frontend = new k8sjs.ServiceDeployment("frontend", {
     isMinikube: config.getBoolean("isMinikube"),
 });
 
-export let frontendIp = frontend.ipAddress;
+export const frontendIp = frontend.ipAddress;

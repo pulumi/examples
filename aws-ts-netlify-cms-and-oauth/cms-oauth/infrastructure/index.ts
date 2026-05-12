@@ -144,7 +144,7 @@ const sessionSecretRandomString = new random.RandomPassword("random", {
 }, { additionalSecretOutputs: ["result"] });
 
 
-let inputGithubScope: pulumi.Input<string> = cmsStackConfig.githubScope!;
+const inputGithubScope: pulumi.Input<string> = cmsStackConfig.githubScope!;
 
 // Create a Fargate service task that can scale out.
 const appService = new awsx.ecs.FargateService("app-svc", {
