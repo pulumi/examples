@@ -71,7 +71,7 @@ const redisReplicaDeployment = new k8s.apps.v1.Deployment("redis-replica", {
 const redisReplicaService = new k8s.core.v1.Service("redis-replica", {
     metadata: {
         name: "redis-replica",
-        labels: redisReplicaDeployment.metadata.labels
+        labels: redisReplicaDeployment.metadata.labels,
     },
     spec: {
         ports: [{ port: 6379, targetPort: 6379 }],

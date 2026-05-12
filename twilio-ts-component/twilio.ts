@@ -10,7 +10,7 @@ const accountSid = config.require("accountSid");
 const authToken = config.require("authToken");
 
 export class IncomingPhoneNumber extends pulumi.ComponentResource {
-    public /*out*/ readonly smsUrl: pulumi.Output<string>;
+    public /* out*/ readonly smsUrl: pulumi.Output<string>;
 
     constructor(name: string, args: IncomingPhoneNumberArgs, opts?: pulumi.ResourceOptions) {
         super("twilio:rest:IncomingPhoneNumber", name, {}, opts);

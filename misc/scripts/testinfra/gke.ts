@@ -46,7 +46,7 @@ export class GkeCluster extends pulumi.ComponentResource {
             deletionProtection:false,
         }, {parent: this});
 
-        const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
+        const nodePool = new gcp.container.NodePool("primary-node-pool", {
             cluster: k8sCluster.name,
             initialNodeCount: config.nodeCount,
             location: k8sCluster.location,
@@ -57,16 +57,16 @@ export class GkeCluster extends pulumi.ComponentResource {
                     "https://www.googleapis.com/auth/compute",
                     "https://www.googleapis.com/auth/devstorage.read_only",
                     "https://www.googleapis.com/auth/logging.write",
-                    "https://www.googleapis.com/auth/monitoring"
-                ]
+                    "https://www.googleapis.com/auth/monitoring",
+                ],
             },
             version: engineVersion,
             management: {
                 autoRepair: true,
                 autoUpgrade: true,
-            }
+            },
         }, {
-            dependsOn: [k8sCluster]
+            dependsOn: [k8sCluster],
         });
 
         this.cluster = k8sCluster;

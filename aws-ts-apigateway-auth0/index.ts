@@ -26,8 +26,7 @@ const issuer = config.require("issuer");
 const authorizerLambda = async (event: apigateway.AuthorizerEvent) => {
     try {
         return await authenticate(event);
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err);
         // Tells API Gateway to return a 401 Unauthorized response
         throw new Error("Unauthorized");

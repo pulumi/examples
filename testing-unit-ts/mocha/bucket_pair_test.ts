@@ -2,7 +2,7 @@
 
 import * as pulumi from "@pulumi/pulumi";
 import "mocha";
-import * as assert from 'assert';
+import * as assert from "assert";
 
 pulumi.runtime.setMocks({
     newResource: function (args: pulumi.runtime.MockResourceArgs): { id: string, state: any; } {
@@ -37,14 +37,14 @@ describe("BucketPair", function () {
 
     describe("constructor", function () {
         it("must pass bucket names", function (done) {
-            const bucketPair = new module.BucketPair('my_content_bucket', 'my_logs_bucket', {});
+            const bucketPair = new module.BucketPair("my_content_bucket", "my_logs_bucket", {});
             const outputs = [bucketPair.contentBucket.bucket, bucketPair.logsBucket.bucket];
 
             pulumi.all(outputs).apply(([contentBucketName, logsBucketName]) => {
                 try {
                     console.log("Testing outputs:", { contentBucketName, logsBucketName });
-                    assert.strictEqual(contentBucketName, 'my_content_bucket');
-                    assert.strictEqual(logsBucketName, 'my_logs_bucket');
+                    assert.strictEqual(contentBucketName, "my_content_bucket");
+                    assert.strictEqual(logsBucketName, "my_logs_bucket");
                     done();
                 } catch (e) {
                     done(e);

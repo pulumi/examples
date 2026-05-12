@@ -22,7 +22,7 @@ export class HourlyPartitionRegistrar extends pulumi.ComponentResource {
         ];
 
 
-        const schedule = scheduleExpression ? scheduleExpression : `rate(1 hour)`;
+        const schedule = scheduleExpression ? scheduleExpression : "rate(1 hour)";
 
         const partitionRegistrarFn = (event: EventRuleEvent) => {
             const athena = require("athena-client");

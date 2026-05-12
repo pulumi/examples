@@ -19,20 +19,23 @@ export const execCommand = async (cmd: string, args: string[], onStdErr?: (msg: 
 
         proc.stderr.on("data", (chunk) => {
             console.error(chunk);
-            if (onStdErr) { onStdErr(chunk.toString()); }
+            if (onStdErr) {
+                onStdErr(chunk.toString());
+            }
             err.push(chunk.toString());
         });
 
         proc.stdout.on("data", (chunk) => {
             console.log(chunk);
-            if (onStdOut) { onStdOut(chunk.toString()); }
+            if (onStdOut) {
+                onStdOut(chunk.toString());
+            }
         });
 
         proc.on("close", (code) => {
             if (code === 0) {
                 resolve({ success: true });
-            }
-            else {
+            } else {
                 resolve({ success: true, error: err.join("\n") });
             }
         });

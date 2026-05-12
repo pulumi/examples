@@ -8,7 +8,7 @@ app.use(express.json());
 
 connection.once("open", function() {
   console.log("Connection opened to database!");
-})
+});
 
 let Choice = require("./model");
 
@@ -17,7 +17,7 @@ app.get("/voting", async (request, response) => {
   Choice.find(function(error, result) {
     if (error) {
         console.log(error);
-    } else {      
+    } else {
       response.json(result);
     }
   });
@@ -26,7 +26,7 @@ app.get("/voting", async (request, response) => {
 app.post("/voting/:id", async (request, response) => {
   const { id } = request.params;
   console.log("Casting vote for: " + id);
-  
+
   Choice.findById(id, function(error, result) {
     if (!result) {
       response.status(404).send("Choice not found");

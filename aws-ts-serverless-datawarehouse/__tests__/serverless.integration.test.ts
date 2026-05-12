@@ -67,8 +67,7 @@ const verifyRecordsInTable = async (db: string, table: string, bucket: string) =
         if (result.records.length > 0) {
             didFindResults = true;
             break;
-        }
-        else {
+        } else {
             retry++;
             await new Promise(resolve => setTimeout(resolve, 30000));
         }

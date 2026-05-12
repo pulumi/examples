@@ -12,7 +12,7 @@ const unprivilegedUser = new aws.iam.User("unprivileged-user", {
 
 const unprivilegedUserCreds = new aws.iam.AccessKey("unprivileged-user-key", {
     user: unprivilegedUser.name,
-}, 
+},
 // additional_secret_outputs specify properties that must be encrypted as secrets
 // https://www.pulumi.com/docs/intro/concepts/resources/#additionalsecretoutputs
 { additionalSecretOutputs: ["secret"] });

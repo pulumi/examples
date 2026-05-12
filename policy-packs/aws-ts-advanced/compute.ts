@@ -109,17 +109,17 @@ export function requireInstanceType(
         validateResource: [
             validateResourceOfType(aws.ec2.Instance, (instance, args, reportViolation) => {
                 if (!types.has(instance.instanceType)) {
-                    reportViolation("EC2 Instance should use the approved instance types.")
+                    reportViolation("EC2 Instance should use the approved instance types.");
                 }
             }),
             validateResourceOfType(aws.ec2.LaunchConfiguration, (lc, args, reportViolation) => {
                 if (!types.has(lc.instanceType)) {
-                    reportViolation("EC2 LaunchConfiguration should use the approved instance types.")
+                    reportViolation("EC2 LaunchConfiguration should use the approved instance types.");
                 }
             }),
             validateResourceOfType(aws.ec2.LaunchTemplate, (lt, args, reportViolation) => {
                 if (!lt.instanceType || !types.has(lt.instanceType)) {
-                    reportViolation("EC2 LaunchTemplate should use the approved instance types.")
+                    reportViolation("EC2 LaunchTemplate should use the approved instance types.");
                 }
             }),
         ],

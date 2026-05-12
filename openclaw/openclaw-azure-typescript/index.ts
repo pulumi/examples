@@ -296,7 +296,7 @@ export const publicIpAddress = vm.id.apply(_ =>
     network.getPublicIPAddressOutput({
         resourceGroupName: resourceGroup.name,
         publicIpAddressName: publicIp.name,
-    }).ipAddress
+    }).ipAddress,
 );
 
 export const privateKey = sshKey.privateKeyOpenssh;

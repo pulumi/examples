@@ -34,7 +34,7 @@ export class FileBucket {
 
         if (opts.policy !== undefined) {
             // Set the access policy for the bucket so all objects are readable
-            this.policy = new aws.s3.BucketPolicy(`bucketPolicy`, {
+            this.policy = new aws.s3.BucketPolicy("bucketPolicy", {
                 bucket: this.bucket.bucket,
                 // policy: this.bucket.bucket.apply(publicReadPolicyForBucket)
                 policy: opts.policy(this.bucket),

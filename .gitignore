@@ -32,3 +32,4 @@ target/
 .claude/settings.local.json
 .claude
 .mcp.json
+PR_MESSAGE.md

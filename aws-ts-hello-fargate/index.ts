@@ -24,8 +24,8 @@ const appService = new awsx.classic.ecs.FargateService("app-svc", {
     taskDefinitionArgs: {
         container: {
             image: img.imageUri,
-            cpu: 102 /*10% of 1024*/,
-            memory: 50 /*MB*/,
+            cpu: 102 /* 10% of 1024*/,
+            memory: 50 /* MB*/,
             portMappings: [ web ],
         },
     },

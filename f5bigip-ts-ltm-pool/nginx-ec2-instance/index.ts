@@ -31,7 +31,7 @@ const nginxSecGroup = new aws.ec2.SecurityGroup("nginx", {
     egress: [
         { protocol: "-1", fromPort: 0, toPort: 0, cidrBlocks: ["0.0.0.0/0"] },
     ],
-    tags: Object.assign({ Name: `nginx` }, baseTags),
+    tags: Object.assign({ Name: "nginx" }, baseTags),
 });
 
 const nginxInstances = [];

@@ -48,7 +48,7 @@ const policyPackArgs: PolicyPackArgs = {
     ],
 };
 
-//Example of instance types as strings
+// Example of instance types as strings
 const requiredInstanceTypes: aws.ec2.InstanceType[] = [
     "t4g.nano",
     "t4g.micro",
@@ -59,7 +59,7 @@ const requiredInstanceTypes: aws.ec2.InstanceType[] = [
     "t4g.2xlarge",
 ];
 
-//Example of instance types as type
+// Example of instance types as type
 const requiredRdsBurstTypes: aws.rds.InstanceType[] = [
     aws.rds.InstanceType.T4G_Micro,
     aws.rds.InstanceType.T4G_Small,
@@ -77,42 +77,42 @@ if (stack == "dev") {
             // This is cheapest option sharing the physical hardware
             ec2Compute.requireInstanceTenancy(
                 "host-instance-tenancy",
-                "DEFAULT"
+                "DEFAULT",
             ),
             ec2Compute.requireSpotInstance(
                 "require-spot-instance",
-                "mandatory"
+                "mandatory",
             ),
             ec2Compute.requireInstanceType(
                 "t4g-instance-types",
                 requiredInstanceTypes,
-                "mandatory"
+                "mandatory",
             ),
             ec2Compute.requireEbsVolumeTypeGP3("gp3-volume-types", "mandatory"),
             cloudWatch.requireCloudWatchLogRetention(
                 "cloudwatch-retention",
                 30,
-                "mandatory"
+                "mandatory",
             ),
             rds.requireRdsInstanceType(
                 "required-instance-types",
                 [aws.rds.InstanceType.T4G_Medium],
-                "mandatory"
+                "mandatory",
             ),
             rds.requireRdsVolumesGp2("rds-gp2-volume", "mandatory"),
             rds.requireRdsLicenseModel(
                 "rds-license-model",
                 ["license-included", "general-public-license"],
-                "mandatory"
+                "mandatory",
             ),
             s3.requireBucketLifecycleRules("s3-require-lifecycle", "mandatory"),
             s3.requireSpecificBucketExpirationDays(
                 "s3-expire-at-30-days",
                 30,
-                "advisory"
+                "advisory",
             ),
             vpc.requireSingleNatGateway("single-nat-gateway", "mandatory"),
-        ]
+        ],
     );
 } else if (stack == "uat") {
     policyPackArgs.policies.push(
@@ -120,46 +120,46 @@ if (stack == "dev") {
             // This is cheapest option sharing the physical hardware
             ec2Compute.requireInstanceTenancy(
                 "host-instance-tenancy",
-                "DEFAULT"
+                "DEFAULT",
             ),
             ec2Compute.requireSpotInstance("require-spot-instance", "advisory"),
             ec2Compute.requireInstanceType(
                 "t4g-instance-types",
-                requiredInstanceTypes
+                requiredInstanceTypes,
             ),
-            //Advisory because there may be performance testing
+            // Advisory because there may be performance testing
             ec2Compute.requireEbsVolumeTypeGP3("gp3-volume-types", "mandatory"),
             cloudWatch.requireCloudWatchLogRetention(
                 "cloudwatch-retention",
                 60,
-                "mandatory"
+                "mandatory",
             ),
             rds.requireRdsInstanceType(
                 "required-instance-types",
                 requiredRdsBurstTypes,
-                "mandatory"
+                "mandatory",
             ),
             s3.requireBucketLifecycleRules("s3-require-lifecycle", "mandatory"),
             s3.requireSpecificBucketExpirationDays(
                 "s3-expire-at-30-days",
                 30,
-                "advisory"
+                "advisory",
             ),
-        ]
+        ],
     );
 } else if (stack == "production") {
     policyPackArgs.policies.push(
         ...[
             ec2Compute.requireInstanceType(
                 "savings-plan-instances",
-                instanceTypesWithSavingsPlans
+                instanceTypesWithSavingsPlans,
             ),
-        ]
+        ],
     );
     cloudWatch.requireCloudWatchLogRetention(
         "cloudwatch-retention",
         90,
-        "mandatory"
+        "mandatory",
     );
 }
 new PolicyPack("aws-typescript", policyPackArgs);

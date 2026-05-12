@@ -2,7 +2,7 @@
 
 export function toStringSet(ss: string | Iterable<string>): Set<string>;
 export function toStringSet(
-    ss?: string | Iterable<string>
+    ss?: string | Iterable<string>,
 ): Set<string> | undefined;
 export function toStringSet(ss: any): Set<string> | undefined {
     return ss === undefined

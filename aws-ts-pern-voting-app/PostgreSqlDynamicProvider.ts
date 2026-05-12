@@ -61,9 +61,15 @@ export class SchemaProvider implements pulumi.dynamic.ResourceProvider {
             (oldArgs.deletionScript !== newArgs.deletionScript));
 
         const replaces: string[] = [];
-        if (oldArgs.serverAddress !== newArgs.serverAddress) { replaces.push("serverAddress"); }
-        if (oldArgs.databaseName !== newArgs.databaseName) { replaces.push("databaseName"); }
-        if (oldArgs.creationScript !== newArgs.creationScript) { replaces.push("creationScript"); }
+        if (oldArgs.serverAddress !== newArgs.serverAddress) {
+            replaces.push("serverAddress");
+        }
+        if (oldArgs.databaseName !== newArgs.databaseName) {
+            replaces.push("databaseName");
+        }
+        if (oldArgs.creationScript !== newArgs.creationScript) {
+            replaces.push("creationScript");
+        }
 
         return {
             // If the old and new inputs don't match, the resource needs to be updated/replaced

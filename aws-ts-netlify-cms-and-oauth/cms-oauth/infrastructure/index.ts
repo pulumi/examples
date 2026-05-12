@@ -1,7 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as awsx from "@pulumi/awsx";
-import * as pulumi from "@pulumi/pulumi"
+import * as pulumi from "@pulumi/pulumi";
 import { config } from "process";
 import * as random from "@pulumi/random";
 import * as aws from "@pulumi/aws";
@@ -19,8 +19,8 @@ const cmsStackConfig = {
     // You can also specify multiple scopes and separate by comma
     githubScope: pulumiConfig.get("githubScope"),
     // (Optional) Port number of the target group if not specified use port 80
-    targetGroupPort : pulumiConfig.getNumber("targetGroupPort")
-}
+    targetGroupPort : pulumiConfig.getNumber("targetGroupPort"),
+};
 
 
 // ---- Creating certificate and domain for the oauth provider ---- //
@@ -108,7 +108,7 @@ const web = alb.createListener("web", {
     port: 443,
     external: true,
     protocol: "HTTPS",
-    certificateArn: certificate.arn
+    certificateArn: certificate.arn,
 });
 
 let inputTargetGroupPort: pulumi.Input<number> = cmsStackConfig.targetGroupPort!;
@@ -120,7 +120,7 @@ if (inputTargetGroupPort === undefined) {
 // when Listener Rule is satisfied then traffic is route to this target group.
 const tg = alb.createTargetGroup("oauth-tg", {
     port: inputTargetGroupPort,
-    loadBalancer: alb
+    loadBalancer: alb,
 });
 
 // when the request are forwarded then every requests are send to the target group we created
@@ -130,7 +130,7 @@ new awsx.lb.ListenerRule("oauth-listener-rule", web, {
         targetGroupArn: tg.targetGroup.arn,
     }],
     conditions: [{
-        pathPattern: {values: ["/*"]} //wildcard says every request would be send
+        pathPattern: {values: ["/*"]}, // wildcard says every request would be send
     }],
 });
 
@@ -152,35 +152,35 @@ const appService = new awsx.ecs.FargateService("app-svc", {
     taskDefinitionArgs: {
         container: {
             image: img,
-            memory: 128 /*MB*/,
+            memory: 128 /* MB*/,
             portMappings: [ tg ],
             environment: [
                 {
                     name: "HOST",
                     // The target domain which would concatenate with callbacks in main.go
-                    value: pulumi.interpolate `https://${cmsStackConfig.targetDomain}`
+                    value: pulumi.interpolate `https://${cmsStackConfig.targetDomain}`,
                 },
                 {
                     name: "SESSION_SECRET",
-                    value: sessionSecretRandomString.result
+                    value: sessionSecretRandomString.result,
                 },
                 {
                     name: "GITHUB_KEY",
-                    value: cmsStackConfig.githubKey
+                    value: cmsStackConfig.githubKey,
                 },
                 {
                     name: "GITHUB_SECRET",
-                    value: cmsStackConfig.githubSecret
+                    value: cmsStackConfig.githubSecret,
                 },
                 {
                     name: "TARGET_PORT",
-                    value: pulumi.interpolate `${inputTargetGroupPort}`
+                    value: pulumi.interpolate `${inputTargetGroupPort}`,
                 },
                 {
                     name: "GITHUB_SCOPE",
-                    value: inputGithubScope
+                    value: inputGithubScope,
                 },
-            ]
+            ],
         },
     },
     desiredCount: 1,

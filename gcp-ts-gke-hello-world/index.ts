@@ -21,7 +21,7 @@ const cluster = new gcp.container.Cluster(name, {
     minMasterVersion: masterVersion,
 });
 
-const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
+const nodePool = new gcp.container.NodePool("primary-node-pool", {
     cluster: cluster.name,
     initialNodeCount: 2,
     location: cluster.location,

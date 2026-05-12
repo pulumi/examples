@@ -5,7 +5,7 @@ const pool = new Pool({
   password: process.env["USER_PASSWORD"],
   host: process.env["RDS_ADDRESS"],
   port: process.env["RDS_PORT"],
-  database: process.env["DATABASE_NAME"]
+  database: process.env["DATABASE_NAME"],
 });
 
 module.exports = pool;

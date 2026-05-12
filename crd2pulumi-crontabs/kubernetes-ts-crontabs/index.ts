@@ -61,7 +61,7 @@ const cronTabDefinition = new k8s.apiextensions.v1.CustomResourceDefinition(
 //        kind: "CronTab",
 //        metadata: {
 //            name: "my-new-cron-object",
-//        },  
+//        },
 //        spec: {
 //            cronSpec: "* * * * */5",
 //            image: "my-awesome-cron-image"
@@ -69,7 +69,7 @@ const cronTabDefinition = new k8s.apiextensions.v1.CustomResourceDefinition(
 //    }
 // )
 
-const cronTabDefinition = new crontabs.CronTabDefinition("my-crontab-definition")
+const cronTabDefinition = new crontabs.CronTabDefinition("my-crontab-definition");
 
 const myCronTab = new crontabs.v1.CronTab("my-new-cron-object",
 {
@@ -79,7 +79,7 @@ const myCronTab = new crontabs.v1.CronTab("my-new-cron-object",
     spec: {
         cronSpec: "* * * * */5",
         image: "my-awesome-cron-image",
-    }
+    },
 });
 
 export const urn = myCronTab.urn;

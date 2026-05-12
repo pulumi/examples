@@ -49,7 +49,7 @@ const image = new dockerBuild.Image("image", {
     // Other parameters
     //
     // Tag our image
-    tags: [`nginx:latest`],
+    tags: ["nginx:latest"],
     // The Dockerfile resides in the app directory for this example.
     context: {
         location: "app",

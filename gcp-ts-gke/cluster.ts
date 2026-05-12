@@ -16,7 +16,7 @@ export const k8sCluster = new gcp.container.Cluster("gke-cluster", {
     minMasterVersion: masterVersion,
 });
 
-const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
+const nodePool = new gcp.container.NodePool("primary-node-pool", {
     cluster: k8sCluster.name,
     initialNodeCount: nodeCount,
     location: k8sCluster.location,

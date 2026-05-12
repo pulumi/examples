@@ -7,7 +7,7 @@ export function configureACL(bucketName: string, bucket: aws.s3.Bucket, acl: str
         bucket: bucket.bucket,
         rule: {
             objectOwnership: "BucketOwnerPreferred",
-        }
+        },
     });
     const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(bucketName, {
         bucket: bucket.bucket,
@@ -20,7 +20,7 @@ export function configureACL(bucketName: string, bucket: aws.s3.Bucket, acl: str
         bucket: bucket.bucket,
         acl: acl,
     }, {
-        dependsOn: [ownership, publicAccessBlock]
+        dependsOn: [ownership, publicAccessBlock],
     });
     return bucketACL;
 }

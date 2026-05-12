@@ -97,7 +97,7 @@ export class RdsInstance extends ComponentResource {
                 },
             }, { parent: this });
 
-            new aws.iam.RolePolicyAttachment(`enhanced-policy-attachment`, {
+            new aws.iam.RolePolicyAttachment("enhanced-policy-attachment", {
                 role: this.enhancedMonitoringRole.name,
                 policyArn: "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole",
             }, { parent: this });

@@ -1,4 +1,4 @@
-const https = require('https');
+const https = require("https");
 
 exports.handler = async (event) => {
     // Get the Slack webhook URL from environment variables
@@ -6,7 +6,7 @@ exports.handler = async (event) => {
 
     // Define the message payload
     const slackMessage = JSON.stringify({
-        text: event.body
+        text: event.body,
     });
 
     // Slack Webhook URL parsed
@@ -15,34 +15,34 @@ exports.handler = async (event) => {
     const options = {
         hostname: url.hostname,
         path: url.pathname,
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': slackMessage.length
-        }
+            "Content-Type": "application/json",
+            "Content-Length": slackMessage.length,
+        },
     };
 
     // Create a promise to post the message
     return new Promise((resolve, reject) => {
         const req = https.request(options, (res) => {
-            let response = '';
+            let response = "";
 
-            res.on('data', (chunk) => {
+            res.on("data", (chunk) => {
                 response += chunk;
             });
 
-            res.on('end', () => {
+            res.on("end", () => {
                 resolve({
                     statusCode: res.statusCode,
-                    body: response
+                    body: response,
                 });
             });
         });
 
-        req.on('error', (error) => {
+        req.on("error", (error) => {
             reject({
                 statusCode: 500,
-                body: JSON.stringify(error)
+                body: JSON.stringify(error),
             });
         });
 

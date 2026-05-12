@@ -6,8 +6,8 @@ import * as awsx from "@pulumi/awsx";
 const config = new pulumi.Config();
 
 // Make the bucketName configurable
-const bucketName = config.require('bucketName');
-const secretValue = config.requireSecret('secretValue');
+const bucketName = config.require("bucketName");
+const secretValue = config.requireSecret("secretValue");
 
 // Apply-time guard: prevent using preview placeholder names on apply
 if (!pulumi.runtime.isDryRun() && bucketName.startsWith("preview-")) {
@@ -29,7 +29,7 @@ const superSecretObject = new aws.s3.BucketObject("secret", {
     bucket: bucket.id,
     key: "secret",
     content: secretValue,
-})
+});
 
 // Export the name of the bucket and the secretValue
 export const bucketId = bucket.id;

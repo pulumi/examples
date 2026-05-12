@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import NetlifyCMS from './components/NetlifyCMS';
+import NetlifyCMS from "./components/NetlifyCMS";
 
 class App extends Component {
   render() {

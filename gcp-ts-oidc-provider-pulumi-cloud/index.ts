@@ -15,7 +15,7 @@ const gcpProjectName = gcpConfig.require("project");
 // escEnvOrg config to the name of the org where the environment is going to be
 // configured.
 const escEnvOrg = config.get("escEnvOrg") || pulumi.getOrganization();
-const escEnvProject = config.get("escEnvProject") || `gcloud`;
+const escEnvProject = config.get("escEnvProject") || "gcloud";
 const escEnvName = config.get("escEnvName") || `${gcpProjectName}-admin`;
 const issuer = config.get("issuer") || "https://api.pulumi.com/oidc";
 
@@ -26,7 +26,7 @@ const issuer = config.get("issuer") || "https://api.pulumi.com/oidc";
 const workloadIdentityPoolId = `${escEnvOrg}-admin`;
 const serviceAccountId = workloadIdentityPoolId.replace("-", "");
 
-const randomSuffix = new random.RandomString(`random-suffix`, {
+const randomSuffix = new random.RandomString("random-suffix", {
   length: 5,
   lower: true,
   upper: false,
@@ -36,11 +36,11 @@ const randomSuffix = new random.RandomString(`random-suffix`, {
 // The Workload Identity Pool id uses a random suffix so that this stack can be
 // brought up and down repeatably: Workload Identity Pools only soft deletes and
 // will auto-purge after 30 days. It is not possible to force a hard delete:
-const identityPool = new gcp.iam.WorkloadIdentityPool(`identity-pool`, {
+const identityPool = new gcp.iam.WorkloadIdentityPool("identity-pool", {
   workloadIdentityPoolId: pulumi.interpolate`${workloadIdentityPoolId}-${randomSuffix.result}`,
 });
 
-const oidcProvider = new gcp.iam.WorkloadIdentityPoolProvider(`identity-pool-provider`, {
+const oidcProvider = new gcp.iam.WorkloadIdentityPoolProvider("identity-pool-provider", {
   workloadIdentityPoolId: identityPool.workloadIdentityPoolId,
   workloadIdentityPoolProviderId: `pulumi-cloud-${escEnvOrg}-oidc`,
   oidc: {

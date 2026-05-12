@@ -99,8 +99,11 @@ class ESCRequestValidator {
                     complete: false,
                 },
                 (err, decoded) => {
-                    if (err) { reject(err); }
-                    else { resolve(decoded as jwt.JwtPayload); }
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(decoded as jwt.JwtPayload);
+                    }
                 },
             );
         });

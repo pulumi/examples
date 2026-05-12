@@ -14,7 +14,7 @@ const finalSnapshotIdentifier = config.get("finalSnapshotIdentifier")
     length: 10,
     special: false,
 }).result;
-const networkingStack = new StackReference(config.require("networkingStack"))
+const networkingStack = new StackReference(config.require("networkingStack"));
 const baseTags = {
     Project: "Pulumi Demo",
     PulumiStack: getStack(),

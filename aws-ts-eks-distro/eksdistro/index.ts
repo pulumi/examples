@@ -17,14 +17,14 @@ const authenticatorYamlTemplate = fs.readFileSync(path.join(__dirname, "aws-iam-
 
 const clusterprovider: pulumi.dynamic.ResourceProvider = {
     async create(inputs: ClusterProviderArgs): Promise<pulumi.dynamic.CreateResult> {
-        const clusterYaml = mustache.render(clusterYamlTemplate, { 
+        const clusterYaml = mustache.render(clusterYamlTemplate, {
             CLUSTER_NAME: inputs.name,
             STATE_STORE: inputs.state,
         });
-        console.log("kops create")
+        console.log("kops create");
         const createOut = cp.execSync(`kops create --name ${inputs.name} --state ${inputs.state} -f -`, { input: clusterYaml });
         console.log(createOut.toString());
-        console.log("kops create secret")
+        console.log("kops create secret");
         const createSecretOut = cp.execSync(`kops create secret --name ${inputs.name} --state ${inputs.state} sshpublickey admin -i ~/.ssh/id_rsa.pub`);
         console.log(createSecretOut.toString());
 
@@ -35,26 +35,26 @@ const clusterprovider: pulumi.dynamic.ResourceProvider = {
         } catch (err) {
             console.log(err);
         }
-        
-        return { 
-            id: inputs.name, 
+
+        return {
+            id: inputs.name,
             outs,
         };
     },
     async update(id: pulumi.ID, olds: any, inputs: any): Promise<pulumi.dynamic.UpdateResult> {
-        const clusterYaml = mustache.render(clusterYamlTemplate, { 
+        const clusterYaml = mustache.render(clusterYamlTemplate, {
             CLUSTER_NAME: inputs.name,
             STATE_STORE: inputs.state,
         });
-        const authenticatorYaml = mustache.render(authenticatorYamlTemplate, { 
+        const authenticatorYaml = mustache.render(authenticatorYamlTemplate, {
             CLUSTER_NAME: inputs.name,
         });
 
-        console.log("kops update cluster")
+        console.log("kops update cluster");
         const updateOut = cp.execSync(`kops update cluster --name ${inputs.name} --state ${inputs.state} --yes`);
         console.log(updateOut.toString());
 
-        console.log("kops export kubecfg")
+        console.log("kops export kubecfg");
         const kubeConfigName = tmp.tmpNameSync();
         const exportKubeconfigOut = cp.execSync(`kops export kubecfg --name ${inputs.name} --state ${inputs.state} --kubeconfig ${kubeConfigName}`);
         const kubeconfig = fs.readFileSync(kubeConfigName).toString();
@@ -62,34 +62,34 @@ const clusterprovider: pulumi.dynamic.ResourceProvider = {
 
         // Needed to allow cluster to come available and DNS to propagate
         try {
-            console.log("kops validate cluster")
+            console.log("kops validate cluster");
             const validateOut = cp.execSync(`kops validate cluster --wait 2m --name ${inputs.name} --state ${inputs.state}`);
             console.log(validateOut.toString());
 
             console.log("kubectl apply -f aws-iam-authenticator.yaml");
-            const authApplyOut = cp.execSync(`kubectl apply -f -`, { input: authenticatorYaml });
+            const authApplyOut = cp.execSync("kubectl apply -f -", { input: authenticatorYaml });
             console.log(authApplyOut.toString());
         } catch (err) {
             console.log(err);
         }
-        
+
         return {
             outs: {
                 ...inputs,
                 kubeconfig,
             },
-        }
+        };
     },
     async delete(id: pulumi.ID, inputs: any) {
-        const clusterYaml = mustache.render(clusterYamlTemplate, { 
+        const clusterYaml = mustache.render(clusterYamlTemplate, {
             CLUSTER_NAME: inputs.name,
             STATE_STORE: inputs.state,
         });
-        console.log("kops delete")
+        console.log("kops delete");
         const deleteOut = cp.execSync(`kops delete --name ${inputs.name} --state ${inputs.state} --yes -f -`, { input: clusterYaml });
         console.log(deleteOut.toString());
     },
-}
+};
 
 export interface ClusterArgs {
         // KOPS_STATE_STORE
@@ -103,7 +103,7 @@ export class Cluster extends pulumi.dynamic.Resource {
     kubeconfig!: pulumi.Output<string>;
     constructor(name: string, args: ClusterArgs, opts?: pulumi.CustomResourceOptions) {
         super(clusterprovider, name, {
-            ... args, 
+            ... args,
             kubeconfig: undefined,
         }, opts);
     }

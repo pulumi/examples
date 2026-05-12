@@ -3,7 +3,7 @@ import * as pulumi from "@pulumi/pulumi";
 
 // importing local configs
 const config = new pulumi.Config();
-const env = pulumi.getStack()
+const env = pulumi.getStack();
 const vpc_name = config.require("vpc_name");
 const zone_number = config.requireNumber("zone_number");
 const vpc_cidr = config.require("vpc_cidr");
@@ -17,7 +17,7 @@ const baseTags = {
   "pulumi:Project": pulumi.getProject(),
   "pulumi:Stack": pulumi.getStack(),
   "cost_center": "1234",
-}
+};
 
 // Allocate a new VPC with the CIDR range from config file:
 const vpc = new awsx.ec2.Vpc(vpc_name, {

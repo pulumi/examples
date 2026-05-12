@@ -44,7 +44,7 @@ new policy.PolicyPack("mig-policy", {
                                     `ResourceClaimTemplate '${resource.metadata?.name}' requests ` +
                                     `blocked MIG profile '${blockedProfile}'. ` +
                                     `Only small profiles are allowed: ${allowedMigProfiles.join(", ")}. ` +
-                                    `Large profiles waste GPU resources for inference workloads.`
+                                    "Large profiles waste GPU resources for inference workloads.",
                                 );
                             }
                         }
@@ -90,8 +90,8 @@ new policy.PolicyPack("mig-policy", {
                     if (!hasMigTypeSelector) {
                         reportViolation(
                             `ResourceClaimTemplate '${resource.metadata?.name}' does not explicitly ` +
-                            `request MIG devices. Consider adding 'device.attributes["gpu.nvidia.com"].type == "mig"' ` +
-                            `to your CEL expression to ensure you get a MIG partition instead of a full GPU.`
+                            "request MIG devices. Consider adding 'device.attributes[\"gpu.nvidia.com\"].type == \"mig\"' " +
+                            "to your CEL expression to ensure you get a MIG partition instead of a full GPU.",
                         );
                     }
                 }

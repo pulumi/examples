@@ -18,11 +18,11 @@ const outputs = availabilityZones.then(zones => {
 	const appVpc = new Vpc("app-vpc", {
 		description: `${baseTags.ManagedBy} App VPC`,
 		baseTags: baseTags,
-	
+
 		baseCidr: "172.28.0.0/16",
 		availabilityZoneNames: zones.names.slice(0, azCount),
 		enableFlowLogs: true,
-	
+
 		endpoints: {
 			s3: true,
 			dynamodb: true,
@@ -32,11 +32,11 @@ const outputs = availabilityZones.then(zones => {
 	const dataVpc = new Vpc("data-vpc", {
 		description: `${baseTags.ManagedBy} Data VPC`,
 		baseTags: baseTags,
-	
+
 		baseCidr: "172.18.0.0/16",
 		availabilityZoneNames: zones.names.slice(0, azCount),
 		enableFlowLogs: true,
-	
+
 		endpoints: {
 			s3: true,
 			dynamodb: true,
@@ -48,7 +48,7 @@ const outputs = availabilityZones.then(zones => {
 		nameTag: `${baseTags.ManagedBy} Peer App to Data`,
 		routeSubnets: "private",
 	});
-	
+
 	const peeredSg = dataVpc.createPeeredSecurityGroup({
 		peeredVpc: appVpc,
 	});
@@ -60,8 +60,8 @@ const outputs = availabilityZones.then(zones => {
 		dataVpcId: dataVpc.vpcId(),
 		dataVpcPrivateSubnetIds: dataVpc.privateSubnetIds(),
 		dataVpcPublicSubnetIds: dataVpc.publicSubnetIds(),
-		peeredSecurityGroupId: peeredSg
-	}
+		peeredSecurityGroupId: peeredSg,
+	};
 });
 
 
