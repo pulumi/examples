@@ -37,14 +37,13 @@ export default tseslint.config(
 
             // Formatting (via @stylistic — these were in TSLint core)
             // Note: no indent size rule — TSLint only enforced spaces-not-tabs
-            // TODO(#2709): Re-enable after the auto-fixable formatting follow-up cleanup.
-            "@stylistic/quotes": "off",
-            "@stylistic/semi": "off",
-            "@stylistic/comma-dangle": "off",
-            "@stylistic/eol-last": "off",
-            "@stylistic/no-trailing-spaces": "off",
-            "@stylistic/spaced-comment": "off",
-            "@stylistic/brace-style": "off",
+            "@stylistic/quotes": ["error", "double", { "avoidEscape": true }],
+            "@stylistic/semi": ["error", "always"],
+            "@stylistic/comma-dangle": ["error", "always-multiline"],
+            "@stylistic/eol-last": ["error", "always"],
+            "@stylistic/no-trailing-spaces": "error",
+            "@stylistic/spaced-comment": ["error", "always"],
+            "@stylistic/brace-style": ["error", "1tbs"],
             "@stylistic/type-annotation-spacing": "error",
 
             // ESLint core rules (1:1 TSLint mappings)

@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import "./App.css";
 
-//components
+// components
 
 import VotingComponent from "./components/VotingComponent";
 

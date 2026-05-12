@@ -43,7 +43,7 @@ const stackPolicy: policy.StackValidationPolicy = {
             reportViolation(`EKS Cluster '${cluster.name}' should not use the default VPC`);
         }
     },
-}
+};
 
 const tests = new policy.PolicyPack("tests-pack", {
     policies: [stackPolicy],

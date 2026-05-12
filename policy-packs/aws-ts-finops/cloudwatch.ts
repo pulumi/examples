@@ -13,7 +13,7 @@ import {
 export function requireCloudWatchLogRetention(
     name: string,
     numDays: number,
-    enforcementLevel: EnforcementLevel
+    enforcementLevel: EnforcementLevel,
 ): ResourceValidationPolicy {
     return {
         name: name,
@@ -28,10 +28,10 @@ export function requireCloudWatchLogRetention(
                         logGroup.retentionInDays <= numDays)
                 ) {
                     reportViolation(
-                        `Log Group Retention must be set, and less than ${numDays.toString()}`
+                        `Log Group Retention must be set, and less than ${numDays.toString()}`,
                     );
                 }
-            }
+            },
         ),
     };
 }

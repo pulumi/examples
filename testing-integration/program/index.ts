@@ -18,7 +18,7 @@ const bucketPublicAccessBlock = new aws.s3.BucketPublicAccessBlock("bucketPublic
     blockPublicPolicy: false,
     ignorePublicAcls: false,
     restrictPublicBuckets: false,
-})
+});
 
 const siteDir = "www"; // directory for content files
 

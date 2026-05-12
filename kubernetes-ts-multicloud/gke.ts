@@ -46,7 +46,7 @@ export class GkeCluster extends pulumi.ComponentResource {
             minMasterVersion: engineVersion,
         }, {parent: this});
 
-        const nodePool = new gcp.container.NodePool(`primary-node-pool`, {
+        const nodePool = new gcp.container.NodePool("primary-node-pool", {
             cluster: k8sCluster.name,
             initialNodeCount: 2,
             location: k8sCluster.location,

@@ -8,7 +8,7 @@ const resourceCount: number = config.requireNumber("resource_count");
 const resourcePayloadBytes: number = config.requireNumber("resource_payload_bytes");
 
 function pad8(num: number): string {
-    return ('00000000' + num).slice(-8);
+    return ("00000000" + num).slice(-8);
 }
 
 function newDummy(i: number): Dummy {
@@ -23,5 +23,5 @@ const dummy0 = newDummy(0);
 export const ResourcePayloadBytes = dummy0.deadweight.apply(x => x.length);
 
 for (var i = 1;  i < resourceCount; i++) {
-    newDummy(i)
+    newDummy(i);
 }

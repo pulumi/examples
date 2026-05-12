@@ -13,10 +13,10 @@ const policies = new PolicyPack("awsSecRules", {
         compute.requireInstanceTenancy(
             "dedicated-instance-tenancy",
             "DEDICATED",
-            /*amis:*/ ["amzn-ami-2018.03.u-amazon-ecs-optimized"],
-            /*host IDs:*/ [],
+            /* amis:*/ ["amzn-ami-2018.03.u-amazon-ecs-optimized"],
+            /* host IDs:*/ [],
         ),
-        compute.requireInstanceType("desired-instance-type", /*instanceTypes:*/ []),
+        compute.requireInstanceType("desired-instance-type", /* instanceTypes:*/ []),
         compute.requireEbsOptimization("ebs-optimized-instance"),
         compute.requireDetailedMonitoring("ec2-instance-detailed-monitoring-enabled"),
         compute.requireEbsVolumesOnEc2Instances("ec2-volume-inuse-check"),

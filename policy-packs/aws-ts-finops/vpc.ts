@@ -13,7 +13,7 @@ import * as utils from "./utils";
 
 export function requireSingleNatGateway(
     name: string,
-    enforcementLevel: EnforcementLevel
+    enforcementLevel: EnforcementLevel,
 ): StackValidationPolicy {
     return {
         name: name,

@@ -15,14 +15,14 @@ if (config.require("isMinikube") === "true") {
   if (config.require("enableMetalLB") === "true") {
     // Enable MetalLB in Minikube with wait
     metalLB = new command.local.Command("MetalLB", {
-      create: `minikube addons enable metallb && minikube addons list | grep metallb | grep -q enabled`,
-      delete: `minikube addons disable metallb`,
+      create: "minikube addons enable metallb && minikube addons list | grep metallb | grep -q enabled",
+      delete: "minikube addons disable metallb",
     }, {
       deleteBeforeReplace: true,
     });
   }
   checkMetalLB = new command.local.Command("MetalLB", {
-    create: `minikube addons list --output json`,
+    create: "minikube addons list --output json",
   }, { deleteBeforeReplace: true, dependsOn: metalLB ? [metalLB] : [] });
   pulumi.jsonParse(checkMetalLB.stdout).apply(json => {
     if (json["metallb"]["Status"] !== "enabled") {

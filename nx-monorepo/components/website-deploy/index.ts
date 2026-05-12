@@ -11,7 +11,7 @@ export class WebsiteDeploy extends pulumi.ComponentResource {
    * @param name The name of the resource.
    * @param bucket The S3 bucket to upload files to.
    * @param directory The directory to upload files from.
-   * @param opts 
+   * @param opts
    */
   constructor(name: string, bucketId: pulumi.Input<string>, directory: string, opts: pulumi.ComponentResourceOptions) {
     super("pulumi:examples:WebsiteDeploy", name, {}, opts);
@@ -24,7 +24,7 @@ export class WebsiteDeploy extends pulumi.ComponentResource {
         source: new pulumi.asset.FileAsset(filePath),     // use FileAsset to point to a file
         contentType: mime.getType(filePath) || undefined, // set the MIME type of the file
       }, { parent: this });                               // specify resource parent
-    })
+    });
   }
 }
 

@@ -119,7 +119,7 @@ function pollP8s(url: string, opts: CheckLatencyOpts): Promise<string> {
             const body = JSON.parse(bodyText);
             if (body.data.result.length === 0) {
                 if (timedOut) {
-                    throw new Error(`Failed metrics check: no HTTP latency measurements returned`);
+                    throw new Error("Failed metrics check: no HTTP latency measurements returned");
                 }
                 // No data yet. Return.
                 return kontinue();

@@ -3,10 +3,10 @@ const mongoose = require("mongoose");
 let Choice = new mongoose.Schema({
     _id: Number,
     text: {
-        type: String
+        type: String,
     },
     vote_count: {
-        type: Number
+        type: Number,
     },
 });
 

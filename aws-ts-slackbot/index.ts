@@ -82,8 +82,7 @@ const handler = new aws.lambda.CallbackFunction("handler", {
             if (!event.isBase64Encoded || event.body == null) {
                 console.log("Unexpected content received");
                 console.log(JSON.stringify(event));
-            }
-            else {
+            } else {
                 const parsed = JSON.parse(Buffer.from(event.body, "base64").toString());
 
                 switch (parsed.type) {
@@ -111,8 +110,7 @@ const handler = new aws.lambda.CallbackFunction("handler", {
                         break;
                 }
             }
-        }
-        catch (err) {
+        } catch (err) {
             console.log("Error: " + err.message);
             // Fall through. Even in the event of an error, we want to return '200' so that slack
             // doesn't just repeat the message, causing the same error.
@@ -162,8 +160,7 @@ messageTopic.onEvent("processTopicMessage", async ev => {
                 default:
                     console.log("Unknown event type: " + request.event.type);
             }
-        }
-        catch (err) {
+        } catch (err) {
             console.log("Error: " + (err.stack || err.message));
         }
     }

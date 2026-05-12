@@ -151,7 +151,7 @@ const factTableArgs: TableArgs = {
 dataWarehouse.withTable("facts", factTableArgs);
 
 // Load a static facts file into the facts table.
-const data = `{"thing": "sky", "color": "blue"}\n{ "thing": "seattle sky", "color": "grey"}\n{ "thing": "oranges", "color": "orange"}`;
+const data = "{\"thing\": \"sky\", \"color\": \"blue\"}\n{ \"thing\": \"seattle sky\", \"color\": \"grey\"}\n{ \"thing\": \"oranges\", \"color\": \"orange\"}";
 
 const factJSON = new aws.s3.BucketObject("factsFile", {
     bucket: dataWarehouse.dataWarehouseBucket.bucket,

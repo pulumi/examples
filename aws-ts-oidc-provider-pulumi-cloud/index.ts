@@ -40,7 +40,7 @@ const policyDocument = provider.arn.apply(arn => aws.iam.getPolicyDocument({
         }],
         conditions: [{
             test: "StringEquals",
-            variable: `api.pulumi.com/oidc:aud`,
+            variable: "api.pulumi.com/oidc:aud",
             values: [oidcAudience],
         }],
     }],

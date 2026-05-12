@@ -113,8 +113,7 @@ async function handleIncomingHttpRequest(req: express.Request, res: express.Resp
                 console.log("Unknown event type: " + req.body.type);
                 break;
         }
-    }
-    catch (err) {
+    } catch (err) {
         console.log("Error: " + err.message);
         // Fall through. Even in the event of an error, we want to return '200' so that slack
         // doesn't just repeat the message, causing the same error.
@@ -151,8 +150,7 @@ messageTopic.onMessagePublished("processTopicMessage", async (data) => {
             default:
                 console.log("Unknown event type: " + request.event.type);
         }
-    }
-    catch (err) {
+    } catch (err) {
         console.log("Error: " + (err.stack || err.message));
     }
 });

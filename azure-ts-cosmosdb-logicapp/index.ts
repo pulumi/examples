@@ -115,7 +115,7 @@ const workflow = new logic.Workflow("httpToCosmos", {
                     },
                     host: {
                         connection: {
-                            name: `@parameters('$connections')['documentdb']['connectionId']`,
+                            name: "@parameters('$connections')['documentdb']['connectionId']",
                         },
                     },
                     method: "post",

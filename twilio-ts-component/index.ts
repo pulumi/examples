@@ -14,7 +14,7 @@ const handler = new twilo.IncomingPhoneNumber("twilio-example", {
             headers: {
                 "Content-Type": "text/plain",
             },
-            body: `Made with \u2764 and Pulumi.`,
+            body: "Made with \u2764 and Pulumi.",
         };
     },
 });

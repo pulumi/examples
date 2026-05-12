@@ -18,7 +18,7 @@ export class S3Folder extends pulumi.ComponentResource {
 
     const siteBucketWebsite = new aws.s3.BucketWebsiteConfiguration(bucketName, {
         bucket: siteBucket.bucket,
-        indexDocument: {suffix: "index.html"}
+        indexDocument: {suffix: "index.html"},
     }, { parent: this});
 
     const publicAccessBlock = new aws.s3.BucketPublicAccessBlock("public-access-block", {
@@ -49,12 +49,12 @@ export class S3Folder extends pulumi.ComponentResource {
         Effect: "Allow",
         Principal: "*",
         Action: [
-          "s3:GetObject"
+          "s3:GetObject",
         ],
         Resource: [
-          `arn:aws:s3:::${bucketName}/*`
-        ]
-      }]
+          `arn:aws:s3:::${bucketName}/*`,
+        ],
+      }],
     });
   }
 }

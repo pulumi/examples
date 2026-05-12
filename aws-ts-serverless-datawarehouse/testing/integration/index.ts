@@ -83,7 +83,9 @@ export class PulumiRunner {
                 result.push(output);
             };
             const outputResult = await execCommand("pulumi", ["stack", "output", "--cwd", this.pulumiProjDir, "--json"], undefined, onStdOut);
-            if (!outputResult.success) { throw new Error("Failed to get stack outputs: ${outputResult.error}"); }
+            if (!outputResult.success) {
+                throw new Error("Failed to get stack outputs: ${outputResult.error}");
+            }
 
             const json = result.join();
             const parsedOutput = JSON.parse(json);

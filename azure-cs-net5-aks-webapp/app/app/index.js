@@ -1,10 +1,10 @@
-const express = require('express');
-const morgan = require('morgan');
+const express = require("express");
+const morgan = require("morgan");
 
 const app = express();
-app.use(morgan('combined'));
+app.use(morgan("combined"));
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
     let place = "Kubernetes"; // this toy example assumes Kubernetes by default
     if (process.env.WEBSITE_HOSTNAME) {
         place = "Azure App Service";
@@ -13,5 +13,5 @@ app.get('/', (req, res) => {
 });
 
 var listener = app.listen(process.env.PORT || 80, function() {
- console.log('listening on port ' + listener.address().port);
+ console.log("listening on port " + listener.address().port);
 });

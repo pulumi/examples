@@ -1,4 +1,4 @@
-import * as aws from "@pulumi/aws"
+import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
 export class BucketPair extends pulumi.ComponentResource {
@@ -20,7 +20,7 @@ export class BucketPair extends pulumi.ComponentResource {
         // Register output properties for this component
         this.registerOutputs({
             contentBucket: this.contentBucket,
-            logsBucket: this.logsBucket
+            logsBucket: this.logsBucket,
         });
     }
 }

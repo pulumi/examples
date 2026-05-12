@@ -18,10 +18,10 @@ function noPublicServices(enforcementLevel: EnforcementLevel): ResourceValidatio
         enforcementLevel: enforcementLevel,
         validateResource: validateResourceOfType(k8s.core.v1.Service, (svc, _, reportViolation) => {
             if (svc.spec?.type === "LoadBalancer") {
-                reportViolation(`Kubernetes Services that have .type === "LoadBalancer" are exposed to ` +
-                    `anything that can reach the Kubernetes cluster, likely including the ` +
-                    `public Internet. The security team has disallowed this to prevent ` +
-                    `unauthorized access.`);
+                reportViolation("Kubernetes Services that have .type === \"LoadBalancer\" are exposed to " +
+                    "anything that can reach the Kubernetes cluster, likely including the " +
+                    "public Internet. The security team has disallowed this to prevent " +
+                    "unauthorized access.");
             }
         }),
     };

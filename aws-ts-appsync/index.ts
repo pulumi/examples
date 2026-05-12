@@ -74,7 +74,7 @@ const getResolver = new aws.appsync.Resolver("get-resolver", {
             "id": $util.dynamodb.toDynamoDBJson($ctx.args.id),
         }
     }`,
-    responseTemplate: `$util.toJson($ctx.result)`,
+    responseTemplate: "$util.toJson($ctx.result)",
 });
 
 // A resolver for the [addTenant] mutation
@@ -93,7 +93,7 @@ const addResolver = new aws.appsync.Resolver("add-resolver", {
             "name": $util.dynamodb.toDynamoDBJson($ctx.args.name)
         }
     }`,
-    responseTemplate: `$util.toJson($ctx.result)`,
+    responseTemplate: "$util.toJson($ctx.result)",
 });
 
 export const endpoint = api.uris["GRAPHQL"];

@@ -61,7 +61,7 @@ bucket.onObjectCreated("onNewVideo", new aws.lambda.CallbackFunction<aws.s3.Buck
                 },
             });
 
-            console.log(`Running thumbnailer task.`);
+            console.log("Running thumbnailer task.");
         }
     },
 }), { filterSuffix: ".mp4" });

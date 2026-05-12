@@ -14,7 +14,7 @@ import * as utils from "./utils";
 export function requireRdsInstanceType(
     name: string,
     instanceTypes: aws.rds.InstanceType | Iterable<aws.rds.InstanceType>,
-    enforcementLevel: EnforcementLevel = "advisory"
+    enforcementLevel: EnforcementLevel = "advisory",
 ): ResourceValidationPolicy {
     const types = utils.toStringSet(instanceTypes);
 
@@ -31,20 +31,20 @@ export function requireRdsInstanceType(
                         !types.has(instance.instanceClass)
                     ) {
                         reportViolation(
-                            "RDS Instance should use the approved instance types."
+                            "RDS Instance should use the approved instance types.",
                         );
                     }
-                }
+                },
             ),
             validateResourceOfType(
                 aws.rds.ClusterInstance,
                 (ci, args, reportViolation) => {
                     if (!types.has(ci.instanceClass)) {
                         reportViolation(
-                            "ClusterInstance should use the approved instance types."
+                            "ClusterInstance should use the approved instance types.",
                         );
                     }
-                }
+                },
             ),
         ],
     };
@@ -52,7 +52,7 @@ export function requireRdsInstanceType(
 
 export function requireRdsVolumesGp2(
     name: string,
-    enforcementLevel: EnforcementLevel
+    enforcementLevel: EnforcementLevel,
 ): ResourceValidationPolicy {
     return {
         name: name,
@@ -67,10 +67,10 @@ export function requireRdsVolumesGp2(
                         instance.storageType != "gp2"
                     ) {
                         reportViolation(
-                            "RDS Instance should use gp2 storage type"
+                            "RDS Instance should use gp2 storage type",
                         );
                     }
-                }
+                },
             ),
         ],
     };
@@ -81,7 +81,7 @@ export function requireRdsLicenseModel(
     licenseModel: Iterable<
         "license-included" | "bring-your-own-license" | "general-public-license"
     >,
-    enforcementLevel: EnforcementLevel
+    enforcementLevel: EnforcementLevel,
 ): ResourceValidationPolicy {
     const types = utils.toStringSet(licenseModel);
     return {
@@ -98,12 +98,12 @@ export function requireRdsLicenseModel(
                             !types.has(instance.licenseModel))
                     ) {
                         reportViolation(
-                            `RDS license type should be ${licenseModel}`
+                            `RDS license type should be ${licenseModel}`,
                         );
                     }
-                }
+                },
             ),
         ],
     };
 }
-//Volume Size -- future
+// Volume Size -- future

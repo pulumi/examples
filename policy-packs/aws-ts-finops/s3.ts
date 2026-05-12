@@ -10,10 +10,10 @@ import {
     validateResourceOfType,
 } from "@pulumi/policy";
 
-//Bucket Lifecycle exists
+// Bucket Lifecycle exists
 export function requireBucketLifecycleRules(
     name: string,
-    enforcementLevel: EnforcementLevel
+    enforcementLevel: EnforcementLevel,
 ): ResourceValidationPolicy {
     return {
         name: name,
@@ -27,9 +27,9 @@ export function requireBucketLifecycleRules(
                     (!bucket.lifecycleRules !== undefined &&
                         bucket.lifecycleRules.length == 0)
                 ) {
-                    reportViolation(`S3 Bucket must have lifecycle rules`);
+                    reportViolation("S3 Bucket must have lifecycle rules");
                 }
-            }
+            },
         ),
     };
 }
@@ -37,7 +37,7 @@ export function requireBucketLifecycleRules(
 export function requireSpecificBucketExpirationDays(
     name: string,
     numDays: number,
-    enforcementLevel: EnforcementLevel
+    enforcementLevel: EnforcementLevel,
 ): ResourceValidationPolicy {
     return {
         name: name,
@@ -54,12 +54,12 @@ export function requireSpecificBucketExpirationDays(
                                 lr.expiration <= numDays)
                         ) {
                             reportViolation(
-                                `S3 Bucket lifecycle expiration show be set to less than ${numDays.toString()}`
+                                `S3 Bucket lifecycle expiration show be set to less than ${numDays.toString()}`,
                             );
                         }
                     });
                 }
-            }
+            },
         ),
     };
 }

@@ -21,7 +21,7 @@ app.post("/voting/:id", async (request, response) => {
     const { id } = request.params;
     console.log("Casting vote for " + id);
     await pool.query("UPDATE voting_app.choice SET vote_count = vote_count + 1 WHERE choice_id = $1", [
-      id
+      id,
     ]);
     response.json("Vote successfully cast");
   } catch (error) {

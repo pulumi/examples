@@ -9,9 +9,9 @@ const dotNetApplicationEntryPoint = "app::app.Functions::GetAsync";
 // The stage name to use for the API Gateway URL
 const stageName = "api";
 
-///////////////////
+// /////////////////
 // DynamoDB Table
-///////////////////
+// /////////////////
 
 // A DynamoDB table with a single primary key
 const counterTable = new aws.dynamodb.Table("counterTable", {
@@ -23,9 +23,9 @@ const counterTable = new aws.dynamodb.Table("counterTable", {
     writeCapacity: 1,
 });
 
-///////////////////
+// /////////////////
 // Lambda Function
-///////////////////
+// /////////////////
 
 // Give our Lambda access to the Dynamo DB table, CloudWatch Logs and Metrics.
 const role = new aws.iam.Role("mylambda-role", {
@@ -77,9 +77,9 @@ if (provisionedConcurrentExecutions) {
     });
 }
 
-///////////////////
+// /////////////////
 // APIGateway RestAPI
-///////////////////
+// /////////////////
 
 // Create the Swagger spec for a proxy which forwards all HTTP requests through to the Lambda function.
 function swaggerSpec(lambdaArn: string): string {

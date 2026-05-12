@@ -15,7 +15,7 @@ export function requireInstanceTenancy(
     name: string,
     tenancy: "DEDICATED" | "HOST" | "DEFAULT",
     imageIds?: string | Iterable<string>,
-    hostIds?: string | Iterable<string>
+    hostIds?: string | Iterable<string>,
 ): ResourceValidationPolicy {
     const images = utils.toStringSet(imageIds);
     const hosts = utils.toStringSet(hostIds);
@@ -23,9 +23,9 @@ export function requireInstanceTenancy(
     return {
         name: name,
         description: `Instances with AMIs ${utils.setToString(
-            images
+            images,
         )} or host IDs ${utils.setToString(
-            hosts
+            hosts,
         )} should use tenancy '${tenancy}'`,
         enforcementLevel: "mandatory",
         validateResource: [
@@ -39,7 +39,7 @@ export function requireInstanceTenancy(
                     ) {
                         if (instance.tenancy !== tenancy) {
                             reportViolation(
-                                `EC2 Instance with host ID '${instance.hostId}' not using tenancy '${tenancy}'.`
+                                `EC2 Instance with host ID '${instance.hostId}' not using tenancy '${tenancy}'.`,
                             );
                         }
                     } else if (
@@ -49,11 +49,11 @@ export function requireInstanceTenancy(
                     ) {
                         if (instance.tenancy !== tenancy) {
                             reportViolation(
-                                `EC2 Instance with AMI '${instance.ami}' not using tenancy '${tenancy}'.`
+                                `EC2 Instance with AMI '${instance.ami}' not using tenancy '${tenancy}'.`,
                             );
                         }
                     }
-                }
+                },
             ),
             validateResourceOfType(
                 aws.ec2.LaunchConfiguration,
@@ -61,11 +61,11 @@ export function requireInstanceTenancy(
                     if (images !== undefined && images.has(lc.imageId)) {
                         if (lc.placementTenancy !== tenancy) {
                             reportViolation(
-                                `EC2 LaunchConfiguration with image ID '${lc.imageId}' not using tenancy '${tenancy}'.`
+                                `EC2 LaunchConfiguration with image ID '${lc.imageId}' not using tenancy '${tenancy}'.`,
                             );
                         }
                     }
-                }
+                },
             ),
         ],
     };
@@ -73,7 +73,7 @@ export function requireInstanceTenancy(
 
 export function requireSpotInstance(
     name: string,
-    enforcementLevel: EnforcementLevel
+    enforcementLevel: EnforcementLevel,
 ): StackValidationPolicy {
     return {
         name: name,
@@ -83,7 +83,7 @@ export function requireSpotInstance(
             for (const resource of stack.resources) {
                 if (resource.type == "aws:ec2/instance:Instance") {
                     reportViolation(
-                        `Instance: , ${resource.name}, must be spot`
+                        `Instance: , ${resource.name}, must be spot`,
                     );
                 } else if (
                     resource.type == "aws:ec2/launchTemplate:LaunchTemplate"
@@ -92,7 +92,7 @@ export function requireSpotInstance(
                         !resource.props.hasOwnProperty("instanceMarketOptions")
                     ) {
                         reportViolation(
-                            `Launch template, ${resource.name}, must have instanceMarketOptions:marketType set to spot`
+                            `Launch template, ${resource.name}, must have instanceMarketOptions:marketType set to spot`,
                         );
                     }
                 } else if (
@@ -101,7 +101,7 @@ export function requireSpotInstance(
                 ) {
                     if (!resource.props.hasOwnProperty("spotPrice")) {
                         reportViolation(
-                            `Launch Configuration, ${resource.name}, must have a spot price`
+                            `Launch Configuration, ${resource.name}, must have a spot price`,
                         );
                     }
                 }
@@ -113,7 +113,7 @@ export function requireSpotInstance(
 export function requireInstanceType(
     name: string,
     instanceTypes: aws.ec2.InstanceType | Iterable<aws.ec2.InstanceType>,
-    enforcementLevel: EnforcementLevel = "advisory"
+    enforcementLevel: EnforcementLevel = "advisory",
 ): ResourceValidationPolicy {
     const types = utils.toStringSet(instanceTypes);
 
@@ -130,37 +130,37 @@ export function requireInstanceType(
                         !types.has(instance.instanceType)
                     ) {
                         reportViolation(
-                            "EC2 Instance should use the approved instance types."
+                            "EC2 Instance should use the approved instance types.",
                         );
                     }
-                }
+                },
             ),
             validateResourceOfType(
                 aws.ec2.LaunchConfiguration,
                 (lc, args, reportViolation) => {
                     if (!types.has(lc.instanceType)) {
                         reportViolation(
-                            "EC2 LaunchConfiguration should use the approved instance types."
+                            "EC2 LaunchConfiguration should use the approved instance types.",
                         );
                     }
-                }
+                },
             ),
             validateResourceOfType(
                 aws.ec2.LaunchTemplate,
                 (lt, args, reportViolation) => {
                     if (!lt.instanceType || !types.has(lt.instanceType)) {
                         reportViolation(
-                            "EC2 LaunchTemplate should use the approved instance types."
+                            "EC2 LaunchTemplate should use the approved instance types.",
                         );
                     }
-                }
+                },
             ),
         ],
     };
 }
 
 export function requireEbsVolumesOnEc2Instances(
-    name: string
+    name: string,
 ): ResourceValidationPolicy {
     // TODO: Check if EBS volumes are marked for deletion.
     return {
@@ -175,17 +175,17 @@ export function requireEbsVolumesOnEc2Instances(
                     instance.ebsBlockDevices.length === 0
                 ) {
                     reportViolation(
-                        "EC2 Instance should have EBS volumes attached."
+                        "EC2 Instance should have EBS volumes attached.",
                     );
                 }
-            }
+            },
         ),
     };
 }
 
 export function requireEbsVolumeTypeGP3(
     name: string,
-    enforcementLevel: EnforcementLevel
+    enforcementLevel: EnforcementLevel,
 ): ResourceValidationPolicy {
     return {
         name: name,
@@ -197,7 +197,7 @@ export function requireEbsVolumeTypeGP3(
                 if (!volume.type == undefined || volume.type !== "gp3") {
                     reportViolation("EBS volumes should be gp3");
                 }
-            }
+            },
         ),
     };
 }

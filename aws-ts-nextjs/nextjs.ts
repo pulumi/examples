@@ -71,13 +71,13 @@ export class NextJsSite extends pulumi.ComponentResource {
         }
 
         const cloudfrontFunction = new aws.cloudfront.Function(`${name}-cloudfront-function`, {
-            code: `function handler(event) { var request = event.request; request.headers["x-forwarded-host"] = request.headers.host; return request; }`,
+            code: "function handler(event) { var request = event.request; request.headers[\"x-forwarded-host\"] = request.headers.host; return request; }",
             runtime: "cloudfront-js-1.0",
             publish: true,
         }, { parent: this });
 
         const cachePolicy = new aws.cloudfront.CachePolicy(`${name}-cachepolicy`, {
-            comment: `Pulumi Cloud server reponse cache policy`,
+            comment: "Pulumi Cloud server reponse cache policy",
             defaultTtl: 0,
             maxTtl: 31536000,
             minTtl: 0,
