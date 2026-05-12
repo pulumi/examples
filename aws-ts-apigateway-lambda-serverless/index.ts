@@ -13,7 +13,7 @@ import handler from "./handler";
 // Create Lambda functions for our API
 const handlerFunction = new aws.lambda.CallbackFunction("get-handler", {
   callback: handler,
-  runtime: aws.lambda.Runtime.NodeJS18dX,
+  runtime: aws.lambda.Runtime.NodeJS22dX,
 });
 
 const postHandlerFunction = new aws.lambda.CallbackFunction("post-handler", {
@@ -25,7 +25,7 @@ const postHandlerFunction = new aws.lambda.CallbackFunction("post-handler", {
       body: JSON.stringify({ message: "POST successful" }),
     };
   },
-  runtime: aws.lambda.Runtime.NodeJS18dX,
+  runtime: aws.lambda.Runtime.NodeJS22dX,
 });
 
 const deleteHandlerFunction = new aws.lambda.CallbackFunction("delete-handler", {
@@ -36,7 +36,7 @@ const deleteHandlerFunction = new aws.lambda.CallbackFunction("delete-handler", 
       body: JSON.stringify({ message: "DELETE successful" }),
     };
   },
-  runtime: aws.lambda.Runtime.NodeJS18dX,
+  runtime: aws.lambda.Runtime.NodeJS22dX,
 });
 
 // Create an API endpoint.
