@@ -7,7 +7,7 @@
 ## Validation
 <!-- Commands you ran and their output. Copy-paste, don't paraphrase. -->
 - [ ] Python formatting: `make check_python_formatting` (if Python files changed)
-- [ ] TypeScript lint: `tslint -c tslint.json <files>` (if TS files changed)
+- [ ] TypeScript lint: `npx eslint <files>` (if TS files changed)
 - [ ] Integration test: `make test_example.TestAcc<Name>` (if example code changed)
 - [ ] PR preview: `make pr_preview` (for bulk changes)
 

@@ -62,14 +62,12 @@ const serviceAccount = new gcp.serviceaccount.Account("service-account", {
   project: gcpProjectName,
 });
 
-// tslint:disable-next-line:no-unused-expression
 new gcp.projects.IAMMember("service-account", {
   member: pulumi.interpolate`serviceAccount:${serviceAccount.email}`,
   role: "roles/admin",
   project: gcpProjectName,
 });
 
-// tslint:disable-next-line:no-unused-expression
 new gcp.serviceaccount.IAMBinding("service-account", {
   serviceAccountId: serviceAccount.id,
   role: "roles/iam.workloadIdentityUser",

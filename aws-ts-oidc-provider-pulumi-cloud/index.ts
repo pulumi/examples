@@ -50,7 +50,6 @@ const role = new aws.iam.Role("pulumi-cloud-admin", {
     assumeRolePolicy: policyDocument.json,
 });
 
-// tslint:disable-next-line:no-unused-expression
 new aws.iam.RolePolicyAttachment("policy", {
     policyArn: "arn:aws:iam::aws:policy/AdministratorAccess",
     role: role.name,
@@ -71,7 +70,6 @@ values:
     AWS_SESSION_TOKEN: \${aws.login.sessionToken}
 `;
 
-// tslint:disable-next-line:no-unused-expression
 new pulumiservice.Environment("aws-esc-oidc-env", {
     organization: pulumiOrg,
     project: escProject,

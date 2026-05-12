@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "@pulumi/docker-build": "^0.0.15",
+    "@stylistic/eslint-plugin": "^5.0.0",
+    "@types/glob": "^8.1.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-header": "^3.1.1",
+    "glob": "^11.0.1",
+    "mime": "^4.0.0",
+    "typescript-eslint": "^8.0.0"
+  }
+}

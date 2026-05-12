@@ -40,9 +40,11 @@ jobs:
           aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install ESLint
+        run: npm ci
+
       - name: Lint
-        run: |
-          tslint -c tslint.json **/*.ts
+        run: npx eslint .
 
   unit-ts:
     name: TypeScript unit tests

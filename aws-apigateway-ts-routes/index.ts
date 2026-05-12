@@ -125,7 +125,6 @@ const usagePlan = new aws.apigateway.UsagePlan("usage-plan", {
     // throttleSettings: {...},
 });
 // Associate the key to the plan
-// tslint:disable-next-line:no-unused-expression
 new aws.apigateway.UsagePlanKey("usage-plan-key", {
     keyId: apiKey.id,
     keyType: "API_KEY",

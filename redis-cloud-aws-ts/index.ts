@@ -86,7 +86,6 @@ const peering = new rediscloud.SubscriptionPeering("redis-peering", {
   vpcCidr: vpc.vpc.cidrBlock,
 });
 
-/* tslint:disable:no-unused-expression */
 new aws.ec2.VpcPeeringConnectionAccepter("aws-peering-accepter", {
   vpcPeeringConnectionId: peering.awsPeeringId,
   autoAccept: true,
