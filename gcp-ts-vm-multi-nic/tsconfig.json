@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "outDir": "bin",
+        "sourceMap": true,
+        "target": "ES2022",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "moduleDetection": "force",
+        "types": ["node"],
+        "strict": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "skipLibCheck": true
+    },
+    "include": [
+        "index.ts",
+        "components/**/*.ts"
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "outDir": "bin",
+        "sourceMap": true,
+        "target": "ES2022",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "types": ["node"],
+        "strict": true,
+        "skipLibCheck": true
+    },
+    "files": [
+        "index.ts"
+    ]
+}
