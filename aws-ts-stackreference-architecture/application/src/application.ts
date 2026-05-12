@@ -1,3 +1,4 @@
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import { ComponentResource, ComponentResourceOptions, Input, Output } from "@pulumi/pulumi";

@@ -1,4 +1,4 @@
-// Copyright 2026, Pulumi Corporation. All rights reserved.
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 
 import * as azure_native from "@pulumi/azure-native";
 import * as pulumi from "@pulumi/pulumi";

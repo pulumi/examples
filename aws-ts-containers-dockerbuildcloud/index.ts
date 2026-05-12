@@ -1,4 +1,4 @@
-// Copyright 2024, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 
 // Pulumi program to build with DBC and push a Docker image
 // to AWS ECR and deploys it in AWS Fargate with an ALB.

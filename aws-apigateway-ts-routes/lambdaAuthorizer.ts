@@ -1,4 +1,4 @@
-// Copyright 2016-2021, Pulumi Corporation.
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
 import { APIGatewayAuthorizerEvent, APIGatewayAuthorizerResult } from "aws-lambda";

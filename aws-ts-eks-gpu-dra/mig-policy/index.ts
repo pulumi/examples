@@ -1,3 +1,4 @@
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import * as policy from "@pulumi/policy";
 
 // Define which MIG profiles are allowed (small profiles only)

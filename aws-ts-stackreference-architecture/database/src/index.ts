@@ -1,3 +1,4 @@
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import { Config, getStack, StackReference } from "@pulumi/pulumi";
 import {RdsInstance} from "./database.js";
 import * as aws from "@pulumi/aws";

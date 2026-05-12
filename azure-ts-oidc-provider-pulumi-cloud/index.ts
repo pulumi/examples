@@ -1,4 +1,4 @@
-// Copyright 2023, Pulumi Corporation.
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import * as authorization from "@pulumi/azure-native/authorization";
 import * as resources from "@pulumi/azure-native/resources";
 import * as azuread from "@pulumi/azuread";
