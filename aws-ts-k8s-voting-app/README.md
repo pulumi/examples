@@ -21,7 +21,6 @@ The example shows how easy it is to deploy a containerized application to Amazon
 
 ## Deploying and running the program
 
-
 1. Create a new stack:
 
     ```bash
@@ -33,7 +32,7 @@ The example shows how easy it is to deploy a containerized application to Amazon
     ```bash
     $ pulumi config set aws:region us-west-2
     $ pulumi config set sqlAdminName <NAME>
-    $ pulumi config set sqlsqlAdminPassword <PASSWORD> --secret
+    $ pulumi config set sqlAdminPassword <PASSWORD> --secret
     $ pulumi config set sqlUserName <NAME>
     $ pulumi config set sqlUserPassword <PASSWORD> --secret
     ```
