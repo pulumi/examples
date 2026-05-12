@@ -1,0 +1,5 @@
+name: ts-raw-api-providers
+runtime: nodejs
+description: |
+  Two ways to consume raw APIs from Pulumi when no first-class provider exists:
+  a Dynamic Provider (full lifecycle) and @pulumi/command (fire-and-forget shells).

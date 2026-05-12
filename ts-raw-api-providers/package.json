@@ -1,0 +1,17 @@
+{
+    "name": "ts-raw-api-providers",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "typecheck": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "@types/node": "22.13.14",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "@pulumi/command": "1.2.1",
+        "@pulumi/pulumi": "3.237.0"
+    }
+}
