@@ -1,0 +1,14 @@
+name: gcp-ts-vm-multi-nic
+runtime: nodejs
+description: A GCP VM with a configurable number of NICs, each attached to its own VPC network.
+environment:
+  - cloud-creds/gcp-dev-sandbox
+config:
+  nicCount:
+    type: integer
+    description: Number of NICs to attach to the VM (each on its own VPC). Max depends on machine type.
+    default: 3
+  machineType:
+    type: string
+    description: GCE machine type. Must support nicCount NICs (e.g. n2-standard-4 supports up to 4).
+    default: n2-standard-4
