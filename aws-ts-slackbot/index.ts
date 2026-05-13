@@ -79,7 +79,7 @@ const handler = new aws.lambda.CallbackFunction("handler", {
             }
 
             const event = <any>ev;
-            if (!event.isBase64Encoded || event.body == null) {
+            if (!event.isBase64Encoded || event.body === null) {
                 console.log("Unexpected content received");
                 console.log(JSON.stringify(event));
             } else {

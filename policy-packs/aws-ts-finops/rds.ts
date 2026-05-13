@@ -64,7 +64,7 @@ export function requireRdsVolumesGp2(
                 (instance, args, reportViolation) => {
                     if (
                         instance.storageType !== undefined &&
-                        instance.storageType != "gp2"
+                        instance.storageType !== "gp2"
                     ) {
                         reportViolation(
                             "RDS Instance should use gp2 storage type",
@@ -93,7 +93,7 @@ export function requireRdsLicenseModel(
                 aws.rds.Instance,
                 (instance, args, reportViolation) => {
                     if (
-                        instance.licenseModel == undefined ||
+                        instance.licenseModel === undefined ||
                         (instance.licenseModel !== undefined &&
                             !types.has(instance.licenseModel))
                     ) {

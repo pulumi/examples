@@ -36,7 +36,9 @@ new policy.PolicyPack("mig-policy", {
                     const selectors = request.exactly?.selectors || [];
                     for (const selector of selectors) {
                         const expression = selector.cel?.expression;
-                        if (!expression) continue;
+                        if (!expression) {
+                            continue;
+                        }
 
                         // Check for blocked MIG profiles in the CEL expression
                         for (const blockedProfile of blockedMigProfiles) {

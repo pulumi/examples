@@ -62,7 +62,7 @@ const handler = eventRule.onEvent("on-timer-event", async() => {
                     hashtags: s.entities.hashtags,
                     followers: s.user.followers_count,
                     isVerified: s.user.verified,
-                    isRetweet: s.retweeted_status != null,
+                    isRetweet: s.retweeted_status !== null && s.retweeted_status !== undefined,
                     url: `https://twitter.com/${user}/status/${s.id_str}`,
                 });
             });
