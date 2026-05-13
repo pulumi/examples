@@ -126,7 +126,7 @@ const webServer = new aws.ec2.Instance("webServer", {
 });
 
 // Export the VM IP in case we want to SSH.
-export let vmIP = webServer.publicIp;
+export const vmIP = webServer.publicIp;
 
 // Export the URL for our newly created Rails application.
-export let websiteURL = pulumi.interpolate `http://${webServer.publicDns}/notes`;
+export const websiteURL = pulumi.interpolate `http://${webServer.publicDns}/notes`;

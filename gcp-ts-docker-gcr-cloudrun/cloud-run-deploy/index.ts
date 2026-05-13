@@ -28,14 +28,14 @@ const registryImage = pulumi.output(
 
 
 // Using the value from the registryImage to pull the image if it's new, pullTriggers looks for a new sha.
-var dockerImage = registryImage.apply(r => new docker.RemoteImage(`${imageName}-docker-image`, {
+const dockerImage = registryImage.apply(r => new docker.RemoteImage(`${imageName}-docker-image`, {
     name: r.name!,
     pullTriggers: [registryImage.sha256Digest!],
     keepLocally: true,
 }, {provider: gcrDockerProvider}));
 
 // String used to force the update using the new image.
-var truncatedSha = registryImage.sha256Digest.apply(d => imageName + "-" + d.substr(8,20));
+const truncatedSha = registryImage.sha256Digest.apply(d => imageName + "-" + d.substr(8,20));
 
 // Deploy to Cloud Run if there is a difference in the sha, denoted above.
 const rubyService = new gcp.cloudrun.Service("ruby", {

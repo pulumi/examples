@@ -5,9 +5,9 @@ import * as k8s from "@pulumi/kubernetes";
 
 import * as cluster from "./cluster";
 
-export let clusterName = cluster.k8sCluster.name;
+export const clusterName = cluster.k8sCluster.name;
 
-export let kubeconfig = pulumi.secret(cluster.kubeconfig);
+export const kubeconfig = pulumi.secret(cluster.kubeconfig);
 
 const apache = new k8s.helm.v3.Chart(
     "apache-chart",
@@ -21,6 +21,6 @@ const apache = new k8s.helm.v3.Chart(
     { provider: cluster.k8sProvider },
 );
 
-export let apacheServiceIP = cluster.kubeconfig.apply(kubeconfig => apache
+export const apacheServiceIP = cluster.kubeconfig.apply(kubeconfig => apache
     .getResourceProperty("v1/Service", "default", "apache-chart", "status")
     .apply(status => status.loadBalancer.ingress[0].ip));

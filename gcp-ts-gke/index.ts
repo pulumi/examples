@@ -19,4 +19,4 @@ const canary = new k8s.apps.v1.Deployment("canary", {
 }, { provider: k8sProvider });
 
 // Export the Kubeconfig so that clients can easily access our cluster.
-export let kubeConfig = k8sConfig;
+export const kubeConfig = k8sConfig;

@@ -52,4 +52,4 @@ const frontend = new awsx.ecs.FargateService("voting-app-frontend", {
 });
 
 // Export a variable that will be displayed during 'pulumi up'
-export let frontendURL = pulumi.interpolate`http://${frontendLB.loadBalancer.dnsName}:${frontendLB.defaultTargetGroup.port}`;
+export const frontendURL = pulumi.interpolate`http://${frontendLB.loadBalancer.dnsName}:${frontendLB.defaultTargetGroup.port}`;

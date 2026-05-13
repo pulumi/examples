@@ -136,4 +136,4 @@ const invokePermission = new aws.lambda.Permission("api-lambda-permission", {
 });
 
 // Export the https endpoint of the running Rest API
-export let endpoint = pulumi.interpolate `${deployment.invokeUrl}${stageName}`;
+export const endpoint = pulumi.interpolate `${deployment.invokeUrl}${stageName}`;

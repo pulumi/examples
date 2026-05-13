@@ -62,9 +62,9 @@ export default tseslint.config(
             "curly": "off",
             "no-eval": "error",
             "no-debugger": "error",
+            "no-var": "error",
+            "prefer-const": "error",
             // TODO(#2710): Re-enable after the modern JavaScript follow-up cleanup.
-            "no-var": "off",
-            "prefer-const": "off",
             "eqeqeq": "off",
             "no-caller": "error",
             "no-new-wrappers": "error",

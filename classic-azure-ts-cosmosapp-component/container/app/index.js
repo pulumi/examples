@@ -32,6 +32,6 @@ app.get("/api/ping", (req, res) => {
   res.send("Ack");
 });
 
-var listener = app.listen(process.env.PORT || 80, function() {
+const listener = app.listen(process.env.PORT || 80, function() {
  console.log("listening on port " + listener.address().port);
 });

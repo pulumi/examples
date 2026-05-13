@@ -10,7 +10,7 @@ connection.once("open", function() {
   console.log("Connection opened to database!");
 });
 
-let Choice = require("./model");
+const Choice = require("./model");
 
 app.get("/voting", async (request, response) => {
   console.log("Get all request");
