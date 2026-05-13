@@ -1,4 +1,4 @@
-// Copyright 2025, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 
 import * as gcp from "@pulumi/gcp";
 import * as pulumi from "@pulumi/pulumi";

@@ -18,23 +18,34 @@ export default tseslint.config(
             "**/venv/**",
         ],
     },
+    // Copyright header — scoped to .ts only (matches pre-migration TSLint scope).
+    // Canonical form: // Copyright 2016-YYYY, Pulumi Corporation.  All rights reserved.
+    // The end year is a regex so the canonical form evolves automatically.
+    {
+        files: ["**/*.ts"],
+        plugins: {
+            "header": header,
+        },
+        rules: {
+            "header/header": ["error", "line", [
+                {
+                    "pattern": "^ Copyright 2016-\\d{4}, Pulumi Corporation\\.  All rights reserved\\.$",
+                    "template": " Copyright 2016-2026, Pulumi Corporation.  All rights reserved.",
+                },
+            ]],
+        },
+    },
     // Main config for TS/JS files
     {
         files: ["**/*.ts", "**/*.js"],
         plugins: {
             "@typescript-eslint": tseslint.plugin,
             "@stylistic": stylistic,
-            "header": header,
         },
         languageOptions: {
             parser: tseslint.parser,
         },
         rules: {
-            // Copyright header — matches existing line-comment format:
-            //   // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
-            // TODO(#2708): Re-enable after the copyright header follow-up cleanup.
-            "header/header": "off",
-
             // Formatting (via @stylistic — these were in TSLint core)
             // Note: no indent size rule — TSLint only enforced spaces-not-tabs
             "@stylistic/quotes": ["error", "double", { "avoidEscape": true }],

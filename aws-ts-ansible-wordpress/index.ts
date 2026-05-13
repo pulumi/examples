@@ -1,4 +1,4 @@
-// Copyright 2022, Pulumi Corporation.
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
 import * as command from "@pulumi/command";

@@ -1,4 +1,4 @@
-// Copyright 2024, Pulumi Corporation.  All rights reserved.
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 
 // Import required libraries
 import * as aws from "@pulumi/aws"; // Required for ECS

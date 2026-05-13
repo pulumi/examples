@@ -1,3 +1,4 @@
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import * as path from "path";
 import * as s3folder from "s3folder";
 import * as websiteDeploy from "website-deploy";
