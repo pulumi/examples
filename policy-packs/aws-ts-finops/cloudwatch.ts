@@ -23,7 +23,7 @@ export function requireCloudWatchLogRetention(
             aws.cloudwatch.LogGroup,
             (logGroup, args, reportViolation) => {
                 if (
-                    logGroup.retentionInDays == undefined ||
+                    logGroup.retentionInDays === undefined ||
                     (!logGroup.retentionInDays !== undefined &&
                         logGroup.retentionInDays <= numDays)
                 ) {

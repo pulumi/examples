@@ -23,9 +23,9 @@ export function requireBucketLifecycleRules(
             aws.s3.Bucket,
             (bucket, args, reportViolation) => {
                 if (
-                    bucket.lifecycleRules == undefined ||
+                    bucket.lifecycleRules === undefined ||
                     (!bucket.lifecycleRules !== undefined &&
-                        bucket.lifecycleRules.length == 0)
+                        bucket.lifecycleRules.length === 0)
                 ) {
                     reportViolation("S3 Bucket must have lifecycle rules");
                 }
@@ -49,7 +49,7 @@ export function requireSpecificBucketExpirationDays(
                 if (bucket.lifecycleRules !== undefined) {
                     bucket.lifecycleRules.forEach(function (lr) {
                         if (
-                            lr.expiration == undefined ||
+                            lr.expiration === undefined ||
                             (!lr.expiration !== undefined &&
                                 lr.expiration <= numDays)
                         ) {

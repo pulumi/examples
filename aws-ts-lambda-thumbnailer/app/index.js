@@ -4,7 +4,7 @@ const { execSync } = require("child_process");
 function run(command) {
     console.log(command);
     const result = execSync(command, {stdio: "inherit"});
-    if (result != null) {
+    if (result !== null) {
         console.log(result.toString());
     }
 }

@@ -58,14 +58,12 @@ export default tseslint.config(
             "@stylistic/type-annotation-spacing": "error",
 
             // ESLint core rules (1:1 TSLint mappings)
-            // TODO(#2712): Re-enable after the equality and control-flow follow-up cleanup.
-            "curly": "off",
+            "curly": "error",
             "no-eval": "error",
             "no-debugger": "error",
             "no-var": "error",
             "prefer-const": "error",
-            // TODO(#2710): Re-enable after the modern JavaScript follow-up cleanup.
-            "eqeqeq": "off",
+            "eqeqeq": "error",
             "no-caller": "error",
             "no-new-wrappers": "error",
             "guard-for-in": "error",
@@ -79,7 +77,7 @@ export default tseslint.config(
 
             // TypeScript-specific rules
             "@typescript-eslint/no-redeclare": "error",
-            "@typescript-eslint/no-unused-expressions": "off",
+            "@typescript-eslint/no-unused-expressions": "error",
             "@typescript-eslint/no-namespace": "error",
             "@typescript-eslint/member-ordering": "off",
         },

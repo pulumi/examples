@@ -34,6 +34,10 @@ function walk(dir: string, callback: (path: string) => void) {
   for (const f of fs.readdirSync(dir)) {
     const filePath = path.join(dir, f);
     const isDirectory = fs.statSync(filePath).isDirectory();
-    isDirectory ? walk(filePath, callback) : callback(filePath);
+    if (isDirectory) {
+      walk(filePath, callback);
+    } else {
+      callback(filePath);
+    }
   }
 }

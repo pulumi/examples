@@ -22,13 +22,13 @@ export function requireSingleNatGateway(
         validateStack: (stack, reportViolation) => {
             let counter = 0;
             for (const resource of stack.resources) {
-                if (resource.type != "aws:ec2/natGateway:NatGateway") {
+                if (resource.type !== "aws:ec2/natGateway:NatGateway") {
                     return;
                 } else {
                     counter = counter + 1;
                 }
             }
-            if (counter != 0) {
+            if (counter !== 0) {
                 reportViolation("Stack can only have one Nat Gateway");
             }
         },

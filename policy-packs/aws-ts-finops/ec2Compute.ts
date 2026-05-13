@@ -81,12 +81,12 @@ export function requireSpotInstance(
         enforcementLevel: enforcementLevel,
         validateStack: (stack, reportViolation) => {
             for (const resource of stack.resources) {
-                if (resource.type == "aws:ec2/instance:Instance") {
+                if (resource.type === "aws:ec2/instance:Instance") {
                     reportViolation(
                         `Instance: , ${resource.name}, must be spot`,
                     );
                 } else if (
-                    resource.type == "aws:ec2/launchTemplate:LaunchTemplate"
+                    resource.type === "aws:ec2/launchTemplate:LaunchTemplate"
                 ) {
                     if (
                         !resource.props.hasOwnProperty("instanceMarketOptions")
@@ -96,7 +96,7 @@ export function requireSpotInstance(
                         );
                     }
                 } else if (
-                    resource.type ==
+                    resource.type ===
                     "aws:ec2/launchConfiguration:LaunchConfiguration"
                 ) {
                     if (!resource.props.hasOwnProperty("spotPrice")) {
@@ -194,7 +194,7 @@ export function requireEbsVolumeTypeGP3(
         validateResource: validateResourceOfType(
             aws.ebs.Volume,
             (volume, args, reportViolation) => {
-                if (!volume.type == undefined || volume.type !== "gp3") {
+                if (volume.type === undefined || volume.type !== "gp3") {
                     reportViolation("EBS volumes should be gp3");
                 }
             },

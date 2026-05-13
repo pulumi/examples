@@ -9,7 +9,9 @@ const redisKey = "hits";
 
 app.get("/", (req, res) => {
     redisClient.get(redisKey, async (err, redisData) => {
-        if(err) throw err;
+        if (err) {
+            throw err;
+        }
 
         if(redisData) {
             console.log(redisData);

@@ -71,7 +71,7 @@ const requiredRdsBurstTypes: aws.rds.InstanceType[] = [
 
 const instanceTypesWithSavingsPlans: aws.ec2.InstanceType[] = ["m6a.large"];
 
-if (stack == "dev") {
+if (stack === "dev") {
     policyPackArgs.policies.push(
         ...[
             // This is cheapest option sharing the physical hardware
@@ -114,7 +114,7 @@ if (stack == "dev") {
             vpc.requireSingleNatGateway("single-nat-gateway", "mandatory"),
         ],
     );
-} else if (stack == "uat") {
+} else if (stack === "uat") {
     policyPackArgs.policies.push(
         ...[
             // This is cheapest option sharing the physical hardware
@@ -147,7 +147,7 @@ if (stack == "dev") {
             ),
         ],
     );
-} else if (stack == "production") {
+} else if (stack === "production") {
     policyPackArgs.policies.push(
         ...[
             ec2Compute.requireInstanceType(
