@@ -1,9 +1,9 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import { CosmosClient } from "@azure/cosmos";
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
 import { CosmosApp, GlobalContext, RegionalContext } from "./cosmosApp";
+import { CosmosClient } from "@azure/cosmos";
 
 // Read a list of target locations from the config file:
 // Expecting a comma-separated list, e.g., "westus,eastus,westeurope"

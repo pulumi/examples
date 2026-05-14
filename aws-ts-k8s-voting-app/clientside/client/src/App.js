@@ -1,5 +1,5 @@
-import React, { Fragment } from "react";
 import "./App.css";
+import React, { Fragment } from "react";
 
 // components
 

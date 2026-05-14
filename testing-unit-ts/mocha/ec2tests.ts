@@ -1,7 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import "mocha";
+import * as pulumi from "@pulumi/pulumi";
 
 pulumi.runtime.setMocks({
     newResource: function (args: pulumi.runtime.MockResourceArgs): { id: string, state: any; } {

@@ -3,9 +3,8 @@
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
-
-import { readFileSync } from "fs";
 import { CosmosApp, GlobalContext, RegionalContext } from "./cosmosApp";
+import { readFileSync } from "fs";
 
 // Read a list of target locations from the config file:
 // Expecting a comma-separated list, e.g., "westus,eastus,westeurope"

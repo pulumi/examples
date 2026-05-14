@@ -1,15 +1,15 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import { ARN } from "@pulumi/aws";
-import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
-import { BucketArgs } from "@pulumi/aws/s3";
-import { input } from "@pulumi/aws/types";
 import * as pulumi from "@pulumi/pulumi";
-import { getS3Location } from "../utils";
+import { HourlyPartitionRegistrar, PartitionRegistrarArgs } from "./partitionRegistrar";
 import { InputStream, InputStreamArgs } from "./inputStream";
 import { LambdaCronJob, LambdaCronJobArgs } from "./lambdaCron";
-import { HourlyPartitionRegistrar, PartitionRegistrarArgs } from "./partitionRegistrar";
+import { ARN } from "@pulumi/aws";
+import { BucketArgs } from "@pulumi/aws/s3";
+import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
+import { getS3Location } from "../utils";
+import { input } from "@pulumi/aws/types";
 
 export class ServerlessDataWarehouse extends pulumi.ComponentResource {
 

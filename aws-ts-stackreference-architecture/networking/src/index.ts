@@ -1,6 +1,6 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
-import { Config, getStack } from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
+import { Config, getStack } from "@pulumi/pulumi";
 import {Vpc} from "./vpc.js";
 
 const config = new Config();

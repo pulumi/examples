@@ -1,6 +1,6 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
-import * as pulumi from "@pulumi/pulumi";
 import * as gcp from "@pulumi/gcp";
+import * as pulumi from "@pulumi/pulumi";
 
 // Import config
 const config = new pulumi.Config();

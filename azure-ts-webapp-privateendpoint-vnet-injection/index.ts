@@ -1,9 +1,9 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as network from "@pulumi/azure-native/network";
+import * as pulumi from "@pulumi/pulumi";
 import * as resources from "@pulumi/azure-native/resources";
 import * as web from "@pulumi/azure-native/web";
-import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
 

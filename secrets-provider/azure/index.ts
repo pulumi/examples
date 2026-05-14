@@ -1,6 +1,6 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
-import * as pulumi from "@pulumi/pulumi";
 import * as azure from "@pulumi/azure";
+import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
 

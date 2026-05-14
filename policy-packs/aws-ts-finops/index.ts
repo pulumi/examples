@@ -1,17 +1,17 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import {
-    PolicyPack,
-    validateResourceOfType,
-    PolicyPackArgs,
-} from "@pulumi/policy";
-import * as ec2Compute from "./ec2Compute";
 import * as cloudWatch from "./cloudwatch";
+import * as ec2Compute from "./ec2Compute";
+import * as pulumi from "@pulumi/pulumi";
 import * as rds from "./rds";
 import * as s3 from "./s3";
 import * as vpc from "./vpc";
-import * as pulumi from "@pulumi/pulumi";
+import {
+    PolicyPack,
+    PolicyPackArgs,
+    validateResourceOfType,
+} from "@pulumi/policy";
 const requiredRegion = "us-west-2";
 const stack = pulumi.getStack();
 

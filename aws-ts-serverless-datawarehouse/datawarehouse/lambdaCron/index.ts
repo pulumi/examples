@@ -1,10 +1,10 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import { ARN } from "@pulumi/aws";
-import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
-import { CallbackFunction } from "@pulumi/aws/lambda";
 import * as pulumi from "@pulumi/pulumi";
+import { ARN } from "@pulumi/aws";
+import { CallbackFunction } from "@pulumi/aws/lambda";
+import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
 import { getS3Location } from "../../utils";
 
 export class LambdaCronJob extends pulumi.ComponentResource {

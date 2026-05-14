@@ -1,8 +1,8 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 
 import * as gcp from "@pulumi/gcp";
-import * as pulumi from "@pulumi/pulumi";
 import * as pcloud from "@pulumi/pulumiservice";
+import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 
 const config = new pulumi.Config();

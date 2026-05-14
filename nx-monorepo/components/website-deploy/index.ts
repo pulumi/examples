@@ -1,9 +1,9 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import * as aws from "@pulumi/aws";
-import * as pulumi from "@pulumi/pulumi";
 import * as fs from "fs";
-import mime from "mime";
 import * as path from "path";
+import * as pulumi from "@pulumi/pulumi";
+import mime from "mime";
 
 export class WebsiteDeploy extends pulumi.ComponentResource {
 

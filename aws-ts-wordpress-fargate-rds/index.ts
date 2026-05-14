@@ -4,11 +4,11 @@
 // - DB Backend: MySQL RDS
 // - FrontEnd: WordPress in Fargate
 
-import * as pulumi from "@pulumi/pulumi";
-import * as random from "@pulumi/random";
 import * as backend from "./backend";
 import * as frontend from "./frontend";
 import * as network from "./network";
+import * as pulumi from "@pulumi/pulumi";
+import * as random from "@pulumi/random";
 
 // Get config data
 const config = new pulumi.Config();

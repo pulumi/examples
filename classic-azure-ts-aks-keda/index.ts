@@ -1,8 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
-import { AksCluster } from "./cluster";
 import { KedaService, KedaStorageQueueHandler } from "./keda";
+import { AksCluster } from "./cluster";
 
 // Define the resource group to contain all resources
 const resourceGroup = new azure.core.ResourceGroup("keda-pulumi");

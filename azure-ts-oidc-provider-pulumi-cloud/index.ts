@@ -1,12 +1,11 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import * as authorization from "@pulumi/azure-native/authorization";
-import * as resources from "@pulumi/azure-native/resources";
 import * as azuread from "@pulumi/azuread";
 import * as pulumi from "@pulumi/pulumi";
 import * as pulumiservice from "@pulumi/pulumiservice";
-
-import { randomInt } from "crypto";
+import * as resources from "@pulumi/azure-native/resources";
 import * as yaml from "yaml";
+import { randomInt } from "crypto";
 
 // Generate a random number
 const randomNumber = randomInt(1000, 9999);

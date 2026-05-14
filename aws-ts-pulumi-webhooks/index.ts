@@ -1,11 +1,9 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as awsx from "@pulumi/awsx";
+import * as crypto from "crypto";
 import * as pulumi from "@pulumi/pulumi";
 import { IncomingWebhook, IncomingWebhookSendArguments } from "@slack/webhook";
-
-import * as crypto from "crypto";
-
 import { formatSlackMessage } from "./util";
 
 const config = new pulumi.Config();

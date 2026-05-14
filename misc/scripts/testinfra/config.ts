@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Config } from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
+import { Config } from "@pulumi/pulumi";
 
 const config = new Config();
 

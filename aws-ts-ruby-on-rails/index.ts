@@ -1,9 +1,9 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
+import * as config from "./config";
 import * as pulumi from "@pulumi/pulumi";
 import { createUserData, renderConfigFile } from "pcloudinit";
-import * as config from "./config";
 
 const webSg = new aws.ec2.SecurityGroup("webServerSecurityGroup", {
     description: "Enable HTTP and SSH access",

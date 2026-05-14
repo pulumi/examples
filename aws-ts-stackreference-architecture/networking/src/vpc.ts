@@ -34,27 +34,6 @@ export class Vpc extends ComponentResource {
     private name: string;
     private baseTags: aws.Tags;
 
-    /**
-     * Returns the IDs of the private subnets in this VPC.
-     */
-    public privateSubnetIds(): Output<string>[] {
-        return this.privateSubnets.map(x => x.id);
-    }
-
-    /**
-     * Returns the IDs of the public subnets in this VPC.
-     */
-    public publicSubnetIds(): Output<string>[] {
-        return this.publicSubnets.map(x => x.id);
-    }
-
-    /**
-     * Returns the ID of this VPC.
-     */
-    public vpcId(): Output<string> {
-        return this.vpc.id;
-    }
-
     constructor(name: string, args: VpcArgs, opts?: ComponentResourceOptions) {
         super("vpc", name, {}, opts);
 
@@ -335,6 +314,27 @@ export class Vpc extends ComponentResource {
                 });
         });
     }
+
+    /**
+     * Returns the IDs of the private subnets in this VPC.
+     */
+    public privateSubnetIds(): Output<string>[] {
+        return this.privateSubnets.map(x => x.id);
+    }
+
+    /**
+     * Returns the IDs of the public subnets in this VPC.
+     */
+    public publicSubnetIds(): Output<string>[] {
+        return this.publicSubnets.map(x => x.id);
+    }
+
+    /**
+     * Returns the ID of this VPC.
+     */
+    public vpcId(): Output<string> {
+        return this.vpc.id;
+    }
 }
 
 interface PeerSecurityGroupArgs {
@@ -400,22 +400,6 @@ class SubnetDistributor {
     }
 
     /**
-     * Returns an array of the CIDR blocks for the private subnets.
-     * @returns {string[]}
-     */
-    public privateSubnets(): string[] {
-        return this._privateSubnets;
-    }
-
-    /**
-     * Returns an array of the CIDR blocks for the public subnets.
-     * @returns {string[]}
-     */
-    public publicSubnets(): string[] {
-        return this._publicSubnets;
-    }
-
-    /**
      * Constructs a CIDR address based on a block, number of new bits, and network number
      * @param ipRange
      * @param newBits
@@ -466,6 +450,22 @@ class SubnetDistributor {
         n |= n >> 16;
 
         return n + 1;
+    }
+
+    /**
+     * Returns an array of the CIDR blocks for the private subnets.
+     * @returns {string[]}
+     */
+    public privateSubnets(): string[] {
+        return this._privateSubnets;
+    }
+
+    /**
+     * Returns an array of the CIDR blocks for the public subnets.
+     * @returns {string[]}
+     */
+    public publicSubnets(): string[] {
+        return this._publicSubnets;
     }
 }
 

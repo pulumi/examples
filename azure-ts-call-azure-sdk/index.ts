@@ -2,9 +2,8 @@
 
 import * as authorization from "@pulumi/azure-native/authorization";
 import * as containerregistry from "@pulumi/azure-native/containerregistry";
-import * as resources from "@pulumi/azure-native/resources";
 import * as pulumi from "@pulumi/pulumi";
-
+import * as resources from "@pulumi/azure-native/resources";
 import { AuthorizationManagementClient } from "@azure/arm-authorization";
 import { TokenCredentials } from "@azure/ms-rest-js";
 

@@ -2,11 +2,11 @@
 
 import * as aws from "@pulumi/aws";
 import {
+    EnforcementLevel,
     ReportViolation,
     ResourceValidationArgs,
     ResourceValidationPolicy,
     StackValidationPolicy,
-    EnforcementLevel,
     validateResourceOfType,
 } from "@pulumi/policy";
 

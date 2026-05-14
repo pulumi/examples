@@ -1,8 +1,8 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
-import { Config, getStack, StackReference } from "@pulumi/pulumi";
-import {RdsInstance} from "./database.js";
 import * as aws from "@pulumi/aws";
 import * as random from "@pulumi/random";
+import { Config, StackReference, getStack } from "@pulumi/pulumi";
+import {RdsInstance} from "./database.js";
 
 const config = new Config();
 

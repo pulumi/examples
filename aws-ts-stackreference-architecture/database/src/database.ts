@@ -61,18 +61,6 @@ export class RdsInstance extends ComponentResource {
     private name: string;
     private baseTags: aws.Tags;
 
-    public instanceEndpoint(): Output<string> {
-        return this.db.endpoint;
-    }
-
-    public instancePort(): Output<string> {
-        return this.db.port.apply(x => String(x));
-    }
-
-    public instanceAddress(): Output<string> {
-        return this.db.address;
-    }
-
     constructor(name: string, args: RdsArgs, opts?: ComponentResourceOptions) {
         super("db", name, {}, opts);
 
@@ -138,5 +126,17 @@ export class RdsInstance extends ComponentResource {
                 Name: `${args.description} DB Instance`,
             },
         }, { parent: this });
+    }
+
+    public instanceEndpoint(): Output<string> {
+        return this.db.endpoint;
+    }
+
+    public instancePort(): Output<string> {
+        return this.db.port.apply(x => String(x));
+    }
+
+    public instanceAddress(): Output<string> {
+        return this.db.address;
     }
 }

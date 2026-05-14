@@ -1,15 +1,15 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
+import * as utils from "./utils";
 import {
+    EnforcementLevel,
     ReportViolation,
     ResourceValidationArgs,
     ResourceValidationPolicy,
     StackValidationPolicy,
-    EnforcementLevel,
     validateResourceOfType,
 } from "@pulumi/policy";
-import * as utils from "./utils";
 
 export function requireInstanceTenancy(
     name: string,

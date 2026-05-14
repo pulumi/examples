@@ -1,7 +1,7 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
-import * as pulumi from "@pulumi/pulumi";
 import * as compute from "@pulumi/azure-native/compute";
 import * as network from "@pulumi/azure-native/network";
+import * as pulumi from "@pulumi/pulumi";
 import * as resources from "@pulumi/azure-native/resources";
 import * as tls from "@pulumi/tls";
 

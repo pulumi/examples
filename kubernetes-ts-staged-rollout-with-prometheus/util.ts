@@ -1,10 +1,9 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
+import * as http from "http";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-
 import { spawn } from "child_process";
-import * as http from "http";
 
 export interface PromPortForwardOpts {
     localPort: number;

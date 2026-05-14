@@ -1,7 +1,7 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
+import * as pulumi from "@pulumi/pulumi";
 
 // Import config
 const config = new pulumi.Config();

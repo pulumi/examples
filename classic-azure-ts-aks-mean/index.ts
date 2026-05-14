@@ -1,8 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as azure from "@pulumi/azure";
-import * as k8s from "@pulumi/kubernetes";
 import * as config from "./config";
+import * as k8s from "@pulumi/kubernetes";
 import * as mongoHelpers from "./mongoHelpers";
 
 // Create an AKS cluster.

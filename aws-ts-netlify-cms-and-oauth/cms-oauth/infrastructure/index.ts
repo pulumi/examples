@@ -1,10 +1,10 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
+import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
-import { config } from "process";
 import * as random from "@pulumi/random";
-import * as aws from "@pulumi/aws";
+import { config } from "process";
 
 // Read stack inputs for Github key and Github secret and the domain for oauth provider
 const pulumiConfig = new pulumi.Config();

@@ -1,9 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import * as pulumi from "@pulumi/pulumi";
-
 import * as fs from "fs";
+import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
 const bigIpAdminPassword = config.require("f5BigIpAdminPassword");

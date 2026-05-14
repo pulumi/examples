@@ -1,4 +1,4 @@
-import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager"; // ES Modules import
+import { GetSecretValueCommand, SecretsManagerClient } from "@aws-sdk/client-secrets-manager"; // ES Modules import
 const client = new SecretsManagerClient();
 
 const getSecretForLambda = async (secretId) => {

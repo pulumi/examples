@@ -1,9 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
+import * as authorization from "@pulumi/azure-native/authorization";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
-
-import * as authorization from "@pulumi/azure-native/authorization";
 import * as resources from "@pulumi/azure-native/resources";
 import * as storage from "@pulumi/azure-native/storage";
 import * as synapse from "@pulumi/azure-native/synapse";

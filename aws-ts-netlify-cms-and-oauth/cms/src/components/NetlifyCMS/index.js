@@ -1,5 +1,5 @@
-import React from "react";
 import CMS from "netlify-cms-app";
+import React from "react";
 
 const NetlifyCMS = () => {
   React.useEffect(() => {

@@ -1,9 +1,9 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
+import * as eksdistro from "./eksdistro";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-import * as eksdistro from "./eksdistro";
 
 const store = new aws.s3.Bucket("kops-state-store");
 

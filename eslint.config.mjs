@@ -71,15 +71,14 @@ export default tseslint.config(
             "default-case": "error",
             "no-fallthrough": "error",
             "no-empty": "error",
-            // TODO(#2713): Re-enable after the ordering follow-up cleanup.
-            "sort-imports": "off",
+            "sort-imports": "error",
             "no-console": ["error", { allow: ["log", "warn", "error"] }],
 
             // TypeScript-specific rules
             "@typescript-eslint/no-redeclare": "error",
             "@typescript-eslint/no-unused-expressions": "error",
             "@typescript-eslint/no-namespace": "error",
-            "@typescript-eslint/member-ordering": "off",
+            "@typescript-eslint/member-ordering": "error",
         },
     },
 );

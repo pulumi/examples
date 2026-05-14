@@ -1,8 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
+import "mocha";
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
-import "mocha";
 
 let cosmosdbAccountLocation: string;
 
@@ -28,6 +28,7 @@ pulumi.runtime.setMocks({
 });
 
 // It's important to import the program _after_ the mocks are defined.
+// eslint-disable-next-line sort-imports
 import * as components from "./cosmosApp";
 
 describe("Cosmos App component", function() {

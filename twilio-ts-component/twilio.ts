@@ -1,9 +1,9 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
+import * as pulumi from "@pulumi/pulumi";
 import * as serverless from "@pulumi/aws-serverless";
 import { APIArgs } from "@pulumi/aws-serverless/api";
 import { Callback } from "@pulumi/aws-serverless/function";
-import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config("twilio");
 const accountSid = config.require("accountSid");

@@ -1,9 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as athena from "athena-client";
-import { resolve } from "path";
-
 import { PulumiRunner } from "../testing/integration";
+import { resolve } from "path";
 
 jest.setTimeout(360000);
 

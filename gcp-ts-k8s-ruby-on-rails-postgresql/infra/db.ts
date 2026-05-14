@@ -1,7 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as gcp from "@pulumi/gcp";
 import * as config from "./config";
+import * as gcp from "@pulumi/gcp";
 
 // Provision a database for our Rails app.
 export const instance = new gcp.sql.DatabaseInstance("web-db", {

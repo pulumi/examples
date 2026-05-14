@@ -1,7 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import { LocalProgramArgs, LocalWorkspace } from "@pulumi/pulumi/x/automation";
 import * as upath from "upath";
+import { LocalProgramArgs, LocalWorkspace } from "@pulumi/pulumi/x/automation";
 
 const process = require("process");
 

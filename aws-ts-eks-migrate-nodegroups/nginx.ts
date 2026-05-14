@@ -1,10 +1,10 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as eks from "@pulumi/eks";
-import * as k8s from "@pulumi/kubernetes";
 import * as input from "@pulumi/kubernetes/types/input";
-import * as pulumi from "@pulumi/pulumi";
+import * as k8s from "@pulumi/kubernetes";
 import * as nginxIngCntlr from "./nginx-ing-cntlr";
+import * as pulumi from "@pulumi/pulumi";
 
 // Creates the NGINX Ingress Controller.
 interface NginxArgs {

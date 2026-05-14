@@ -1,9 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
-import * as pulumi from "@pulumi/pulumi";
-
-import * as k8s from "@pulumi/kubernetes";
-
 import * as cluster from "./cluster";
+import * as k8s from "@pulumi/kubernetes";
+import * as pulumi from "@pulumi/pulumi";
 
 export const clusterName = cluster.k8sCluster.name;
 

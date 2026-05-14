@@ -1,9 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
-
 import * as compute from "@pulumi/azure-native/compute";
 import * as network from "@pulumi/azure-native/network";
+import * as pulumi from "@pulumi/pulumi";
 import * as resources from "@pulumi/azure-native/resources";
 
 // Get the desired username and password for our VM.

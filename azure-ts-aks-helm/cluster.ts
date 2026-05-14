@@ -1,12 +1,11 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as containerservice from "@pulumi/azure-native/containerservice";
-import * as resources from "@pulumi/azure-native/resources";
 import * as azuread from "@pulumi/azuread";
+import * as config from "./config";
+import * as containerservice from "@pulumi/azure-native/containerservice";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-
-import * as config from "./config";
+import * as resources from "@pulumi/azure-native/resources";
 
 const resourceGroup = new resources.ResourceGroup("rg");
 

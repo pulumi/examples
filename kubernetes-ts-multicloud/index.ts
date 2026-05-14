@@ -13,13 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as k8s from "@pulumi/kubernetes";
-import * as pulumi from "@pulumi/pulumi";
 import * as aks from "./aks";
 import * as app from "./app";
 import * as eks from "./eks";
 import * as gke from "./gke";
+import * as k8s from "@pulumi/kubernetes";
 import * as local from "./local";
+import * as pulumi from "@pulumi/pulumi";
 
 // Create Kubernetes clusters.
 // Note: Comment out lines for any cluster you don't want to deploy.

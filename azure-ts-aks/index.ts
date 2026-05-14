@@ -1,11 +1,10 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 import * as azuread from "@pulumi/azuread";
+import * as containerservice from "@pulumi/azure-native/containerservice";
 import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
-import * as tls from "@pulumi/tls";
-
-import * as containerservice from "@pulumi/azure-native/containerservice";
 import * as resources from "@pulumi/azure-native/resources";
+import * as tls from "@pulumi/tls";
 
 // Create an Azure Resource Group
 const resourceGroup = new resources.ResourceGroup("azure-go-aks");

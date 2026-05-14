@@ -1,8 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import { ec2 } from "@pulumi/aws";
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
+import { ec2 } from "@pulumi/aws";
 
 // Interface for VPC args
 export interface VpcArgs {

@@ -1,15 +1,13 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as aws from "@pulumi/aws";
 import * as apig from "@pulumi/aws-apigateway";
-import * as pulumi from "@pulumi/pulumi";
-
-import * as qs from "qs";
-import * as superagent from "superagent";
-
+import * as aws from "@pulumi/aws";
 import * as dynamoClient from "@aws-sdk/client-dynamodb";
-import * as sns from "@aws-sdk/client-sns";
 import * as dynamoLib from "@aws-sdk/lib-dynamodb";
+import * as pulumi from "@pulumi/pulumi";
+import * as qs from "qs";
+import * as sns from "@aws-sdk/client-sns";
+import * as superagent from "superagent";
 
 // A simple slack bot that, when requested, will monitor for @mentions of your name and post them to
 // the channel you contacted the bot from.

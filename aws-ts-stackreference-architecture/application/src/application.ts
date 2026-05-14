@@ -51,13 +51,6 @@ export class Application extends ComponentResource {
     cluster: aws.ecs.Cluster;
     fargateService: awsx.ecs.FargateService;
 
-    /**
-     * Returns the DNS Name of the ALB.
-     */
-    public albAddress(): Output<string> {
-        return this.applicationLoadBalancer.loadBalancer.dnsName;
-    }
-
     constructor(name: string, args: ApplicationArgs, opts?: ComponentResourceOptions) {
         super("application", name, {}, opts);
 
@@ -159,5 +152,12 @@ export class Application extends ComponentResource {
         }, { parent: this.cluster });
 
         this.registerOutputs({});
+    }
+
+    /**
+     * Returns the DNS Name of the ALB.
+     */
+    public albAddress(): Output<string> {
+        return this.applicationLoadBalancer.loadBalancer.dnsName;
     }
 }
