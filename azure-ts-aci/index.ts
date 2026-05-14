@@ -1,8 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
-
 import * as containerinstance from "@pulumi/azure-native/containerinstance";
+import * as pulumi from "@pulumi/pulumi";
 import * as resources from "@pulumi/azure-native/resources";
 
 const resourceGroup = new resources.ResourceGroup("aci-ts-rg");

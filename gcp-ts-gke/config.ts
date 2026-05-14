@@ -1,8 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as gcp from "@pulumi/gcp";
-import { Config } from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
+import { Config } from "@pulumi/pulumi";
 
 const config = new Config();
 

@@ -1,7 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import * as k8sjs from "./k8sjs";
+import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
 

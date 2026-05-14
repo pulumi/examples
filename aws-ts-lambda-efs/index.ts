@@ -1,13 +1,13 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as aws from "@pulumi/aws";
 import * as apigateway from "@pulumi/aws-apigateway";
+import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
+import * as cp from "child_process";
+import * as fs from "fs";
 import * as pulumi from "@pulumi/pulumi";
 import * as time from "@pulumiverse/time";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import * as cp from "child_process";
-import * as fs from "fs";
 
 export = async () => {
 

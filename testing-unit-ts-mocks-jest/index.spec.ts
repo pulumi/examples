@@ -1,7 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
 import "jest";
+import * as pulumi from "@pulumi/pulumi";
 
 function promiseOf<T>(output: pulumi.Output<T>): Promise<T> {
     return new Promise(resolve => output.apply(resolve));

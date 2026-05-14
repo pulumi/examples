@@ -1,8 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import { CosmosClient } from "@azure/cosmos";
 import * as azure from "@pulumi/azure";
 import * as pulumi from "@pulumi/pulumi";
+import { CosmosClient } from "@azure/cosmos";
 
 const config = new pulumi.Config();
 // Read a list of target locations from the config file:

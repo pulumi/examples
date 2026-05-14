@@ -1,8 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
+import * as fs from "fs";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-import * as fs from "fs";
 
 // Minikube does not implement services of type `LoadBalancer`; require the user to specify if we're
 // running on minikube, and if so, create only services of type ClusterIP.

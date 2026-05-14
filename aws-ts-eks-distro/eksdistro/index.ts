@@ -1,9 +1,9 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
-import * as pulumi from "@pulumi/pulumi";
 import * as cp from "child_process";
-import * as path from "path";
 import * as fs from "fs";
 import * as mustache from "mustache";
+import * as path from "path";
+import * as pulumi from "@pulumi/pulumi";
 import * as tmp from "tmp";
 
 interface ClusterProviderArgs {

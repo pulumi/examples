@@ -1,8 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as pulumi from "@pulumi/pulumi";
-import * as gcp from "@pulumi/gcp";
 import * as docker from "@pulumi/docker";
+import * as gcp from "@pulumi/gcp";
+import * as pulumi from "@pulumi/pulumi";
 
 const location = gcp.config.region || "us-central1";
 

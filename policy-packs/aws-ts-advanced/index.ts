@@ -1,8 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import { PolicyPack } from "@pulumi/policy";
-
 import * as compute from "./compute";
+import { PolicyPack } from "@pulumi/policy";
 
 const policies = new PolicyPack("awsSecRules", {
     policies: [

@@ -1,11 +1,11 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as insights from "@pulumi/azure-native/insights";
+import * as pulumi from "@pulumi/pulumi";
 import * as resource from "@pulumi/azure-native/resources";
 import * as sql from "@pulumi/azure-native/sql";
 import * as storage from "@pulumi/azure-native/storage";
 import * as web from "@pulumi/azure-native/web";
-import * as pulumi from "@pulumi/pulumi";
 
 const resourceGroup = new resource.ResourceGroup("rg");
 

@@ -1,6 +1,6 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import * as awsx from "@pulumi/awsx";
-import { Config, getStack, StackReference } from "@pulumi/pulumi";
+import { Config, StackReference, getStack } from "@pulumi/pulumi";
 import {Application} from "./application.js";
 
 const config = new Config();

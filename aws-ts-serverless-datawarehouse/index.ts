@@ -1,14 +1,12 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import * as pulumi from "@pulumi/pulumi";
-import { S3 } from "aws-sdk";
-
-import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
 import * as moment from "moment-timezone";
-
+import * as pulumi from "@pulumi/pulumi";
 import { BatchInputTableArgs, ServerlessDataWarehouse, StreamingInputTableArgs, TableArgs } from "./datawarehouse";
 import { EventGenerator } from "./testing/eventGenerator";
+import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
+import { S3 } from "aws-sdk";
 
 // app specific config
 const config = new pulumi.Config();

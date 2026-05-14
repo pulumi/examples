@@ -1,9 +1,9 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
 import * as pulumi from "@pulumi/pulumi";
 import { LambdaCronJob, LambdaCronJobArgs } from "../../datawarehouse/lambdaCron";
+import { EventRuleEvent } from "@pulumi/aws/cloudwatch";
 
 export class EventGenerator extends pulumi.ComponentResource {
     constructor(name: string, args: EventGeneratorArgs, opts?: pulumi.CustomResourceOptions) {

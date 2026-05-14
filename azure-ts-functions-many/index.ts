@@ -1,9 +1,9 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
+import * as pulumi from "@pulumi/pulumi";
 import * as resources from "@pulumi/azure-native/resources";
 import * as storage from "@pulumi/azure-native/storage";
 import * as web from "@pulumi/azure-native/web";
-import * as pulumi from "@pulumi/pulumi";
 
 // Create a resource group for Windows App Service Plan
 const resourceGroup = new resources.ResourceGroup("windowsrg");

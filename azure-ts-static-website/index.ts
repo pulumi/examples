@@ -1,9 +1,9 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as cdn from "@pulumi/azure-native/cdn";
+import * as pulumi from "@pulumi/pulumi";
 import * as resources from "@pulumi/azure-native/resources";
 import * as storage from "@pulumi/azure-native/storage";
-import * as pulumi from "@pulumi/pulumi";
 
 const resourceGroup = new resources.ResourceGroup("resourceGroup");
 

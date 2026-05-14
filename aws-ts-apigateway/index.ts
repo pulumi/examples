@@ -1,10 +1,9 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
+import * as apigateway from "@pulumi/aws-apigateway";
+import * as aws from "@pulumi/aws";
 import * as dynamoClient from "@aws-sdk/client-dynamodb";
 import * as dynamoLib from "@aws-sdk/lib-dynamodb";
-
-import * as aws from "@pulumi/aws";
-import * as apigateway from "@pulumi/aws-apigateway";
 
 // Create a mapping from 'route' to a count
 const counterTable = new aws.dynamodb.Table("counterTable", {

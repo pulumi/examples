@@ -1,12 +1,11 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import * as pulumi from "@pulumi/pulumi";
-
 import * as fs from "fs";
-import mime from "mime";
 import * as path from "path";
+import * as pulumi from "@pulumi/pulumi";
 import { configureACL } from "./acl.js";
+import mime from "mime";
 
 // Load the Pulumi program configuration. These act as the "parameters" to the Pulumi program,
 // so that different Pulumi Stacks can be brought up using the same code.

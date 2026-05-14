@@ -1,12 +1,11 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as aws from "@pulumi/aws";
 import * as apigateway from "@pulumi/aws-apigateway";
-import * as pulumi from "@pulumi/pulumi";
-
+import * as aws from "@pulumi/aws";
 import * as crypto from "crypto";
-import * as jwt from "jsonwebtoken";
 import * as jwksClient from "jwks-rsa";
+import * as jwt from "jsonwebtoken";
+import * as pulumi from "@pulumi/pulumi";
 
 interface APIGatewayProxyEvent {
     headers: { [key: string]: string | undefined };

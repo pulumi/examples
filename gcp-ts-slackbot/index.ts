@@ -1,13 +1,11 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as gcp from "@pulumi/gcp";
-import * as pulumi from "@pulumi/pulumi";
-
-import * as gfirestore from "@google-cloud/firestore";
-import * as gpubsub from "@google-cloud/pubsub";
-
 import * as bodyParser from "body-parser";
 import * as express from "express";
+import * as gcp from "@pulumi/gcp";
+import * as gfirestore from "@google-cloud/firestore";
+import * as gpubsub from "@google-cloud/pubsub";
+import * as pulumi from "@pulumi/pulumi";
 import * as qs from "qs";
 import * as superagent from "superagent";
 

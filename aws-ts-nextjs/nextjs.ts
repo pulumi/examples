@@ -1,14 +1,13 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 
 import * as aws from "@pulumi/aws";
-import * as pulumi from "@pulumi/pulumi";
-
-import { execSync } from "child_process";
 import * as crypto from "crypto";
 import * as fs from "fs";
 import * as glob from "glob";
-import mime from "mime";
 import * as path from "path";
+import * as pulumi from "@pulumi/pulumi";
+import { execSync } from "child_process";
+import mime from "mime";
 
 export interface NexJsSiteArgs {
     path?: string;

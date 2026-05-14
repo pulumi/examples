@@ -1,8 +1,8 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
+import * as pulumi from "@pulumi/pulumi";
 import * as resources from "@pulumi/azure-native/resources";
 import * as storage from "@pulumi/azure-native/storage";
-import * as pulumi from "@pulumi/pulumi";
 
 export function getConnectionString(resourceGroupName: pulumi.Input<string>, accountName: pulumi.Input<string>): pulumi.Output<string> {
     // Retrieve the primary storage account key.

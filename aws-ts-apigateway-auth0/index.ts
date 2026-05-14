@@ -14,9 +14,9 @@
 // limitations under the License.
 import * as apigateway from "@pulumi/aws-apigateway";
 import * as awsx from "@pulumi/awsx";
-import * as pulumi from "@pulumi/pulumi";
-import * as jwt from "jsonwebtoken";
 import * as jwksClient from "jwks-rsa";
+import * as jwt from "jsonwebtoken";
+import * as pulumi from "@pulumi/pulumi";
 import * as util from "util";
 
 const config = new pulumi.Config();

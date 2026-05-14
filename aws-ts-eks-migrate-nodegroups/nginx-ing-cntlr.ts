@@ -1,7 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as k8s from "@pulumi/kubernetes";
 import * as input from "@pulumi/kubernetes/types/input";
+import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
 import * as rbac from "./nginx-ing-cntlr-rbac";
 

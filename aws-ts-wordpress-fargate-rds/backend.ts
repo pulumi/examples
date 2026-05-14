@@ -1,7 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import { rds } from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
+import { rds } from "@pulumi/aws";
 
 // Interface for backend args
 export interface DbArgs {

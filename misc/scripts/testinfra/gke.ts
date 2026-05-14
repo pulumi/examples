@@ -13,10 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import * as config from "./config";
 import * as gcp from "@pulumi/gcp";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-import * as config from "./config";
 
 export class GkeCluster extends pulumi.ComponentResource {
     public cluster: gcp.container.Cluster;

@@ -4,8 +4,8 @@ import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import * as postgresql from "@pulumi/postgresql";
 import * as pulumi from "@pulumi/pulumi";
-import { table } from "console";
 import { Schema } from "./PostgreSqlDynamicProvider";
+import { table } from "console";
 
 const config = new pulumi.Config();
 const sqlAdminName = config.require("sql-admin-name");

@@ -2,9 +2,9 @@
 
 import * as azure from "@pulumi/azure";
 import * as azuread from "@pulumi/azuread";
+import * as config from "./config";
 import * as k8s from "@pulumi/kubernetes";
 import * as pulumi from "@pulumi/pulumi";
-import * as config from "./config";
 
 // Create the AD service principal for the K8s cluster.
 const adApp = new azuread.Application("aks", {displayName: "aks"});

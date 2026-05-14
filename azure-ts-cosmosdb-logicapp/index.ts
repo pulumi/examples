@@ -3,10 +3,10 @@
 import * as authorization from "@pulumi/azure-native/authorization";
 import * as documentdb from "@pulumi/azure-native/documentdb";
 import * as logic from "@pulumi/azure-native/logic";
+import * as pulumi from "@pulumi/pulumi";
 import * as resources from "@pulumi/azure-native/resources";
 import * as storage from "@pulumi/azure-native/storage";
 import * as web from "@pulumi/azure-native/web";
-import * as pulumi from "@pulumi/pulumi";
 
 // Create an Azure Resource Group
 const resourceGroup = new resources.ResourceGroup("logicappdemo-rg");

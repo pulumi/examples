@@ -1,11 +1,12 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as awsx from "@pulumi/awsx"; import * as eks from "@pulumi/eks";
-import * as k8s from "@pulumi/kubernetes";
-import * as pulumi from "@pulumi/pulumi";
+import * as awsx from "@pulumi/awsx";
 import * as echoserver from "./echoserver";
+import * as eks from "@pulumi/eks";
 import * as iam from "./iam";
+import * as k8s from "@pulumi/kubernetes";
 import * as nginx from "./nginx";
+import * as pulumi from "@pulumi/pulumi";
 import * as utils from "./utils";
 
 const projectName = pulumi.getProject();

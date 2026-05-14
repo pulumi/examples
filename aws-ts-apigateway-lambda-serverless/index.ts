@@ -1,7 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as aws from "@pulumi/aws";
 import * as apigateway from "@pulumi/aws-apigateway";
+import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import handler from "./handler";

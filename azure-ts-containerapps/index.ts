@@ -1,11 +1,10 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as docker from "@pulumi/docker";
-import * as pulumi from "@pulumi/pulumi";
-
 import * as app from "@pulumi/azure-native/app";
 import * as containerregistry from "@pulumi/azure-native/containerregistry";
+import * as docker from "@pulumi/docker";
 import * as operationalinsights from "@pulumi/azure-native/operationalinsights";
+import * as pulumi from "@pulumi/pulumi";
 import * as resources from "@pulumi/azure-native/resources";
 
 const resourceGroup = new resources.ResourceGroup("rg");
