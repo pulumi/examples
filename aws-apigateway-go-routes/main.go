@@ -2,7 +2,7 @@
 package main
 
 import (
-	apigateway "github.com/pulumi/pulumi-aws-apigateway/sdk/v2/go/apigateway"
+	apigateway "github.com/pulumi/pulumi-aws-apigateway/sdk/v3/go/apigateway"
 	awsapigateway "github.com/pulumi/pulumi-aws/sdk/v7/go/aws/apigateway"
 	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/cognito"
 	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/route53"
