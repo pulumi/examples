@@ -17,7 +17,7 @@ jobs:
     steps:
     - name: Fetch secrets from ESC
       id: esc-secrets
-      uses: pulumi/esc-action@v1
+      uses: pulumi/esc-action@197ccaa42ab49560ce838a3010eb8345ce086896 # v1
     - name: Checkout Repo
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
     - name: Run Build
