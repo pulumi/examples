@@ -8,7 +8,7 @@
     "dependencies": {
         "@pulumi/aws": "7.23.0",
         "@pulumi/awsx": "^2.0.2",
-        "@pulumi/docker-build": "^0.0.15",
+        "@pulumi/docker-build": "^0.0.17",
         "@pulumi/pulumi": "^3.113.0"
     },
     "scripts": {
