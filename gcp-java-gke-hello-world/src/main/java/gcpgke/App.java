@@ -55,6 +55,7 @@ public class App {
         final var cluster = new Cluster(name,
                 ClusterArgs.builder().initialNodeCount(1)
                         .removeDefaultNodePool(true)
+                        .datapathProvider("ADVANCED_DATAPATH")
                         .minMasterVersion(masterVersion)
                         .build()
         );

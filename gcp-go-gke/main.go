@@ -22,6 +22,7 @@ func main() {
 			InitialNodeCount: pulumi.Int(2),
 			MinMasterVersion: pulumi.String(masterVersion),
 			NodeVersion:      pulumi.String(masterVersion),
+			DatapathProvider: pulumi.String("ADVANCED_DATAPATH"),
 			NodeConfig: &container.ClusterNodeConfigArgs{
 				MachineType: pulumi.String("n1-standard-1"),
 				OauthScopes: pulumi.StringArray{

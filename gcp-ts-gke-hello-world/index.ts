@@ -17,6 +17,7 @@ const cluster = new gcp.container.Cluster(name, {
     // node pool and immediately delete it.
     initialNodeCount: 1,
     removeDefaultNodePool: true,
+    datapathProvider: "ADVANCED_DATAPATH",
 
     minMasterVersion: masterVersion,
 });
