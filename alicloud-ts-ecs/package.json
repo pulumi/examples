@@ -5,7 +5,7 @@
         "typescript": "^5.0.0"
     },
     "dependencies": {
-        "@pulumi/alicloud": "3.100.0",
+        "@pulumi/alicloud": "3.103.0",
         "@pulumi/pulumi": "3.228.0"
     }
 }
