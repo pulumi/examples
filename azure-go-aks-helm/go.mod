@@ -1,15 +1,15 @@
 module azure-go-aks-helm
 
-go 1.25.6
+go 1.25.8
 
 require (
 	github.com/pulumi/pulumi-azure-native-sdk/containerservice/v3 v3.16.0
 	github.com/pulumi/pulumi-azure-native-sdk/resources/v3 v3.16.0
-	github.com/pulumi/pulumi-azuread/sdk/v6 v6.9.0
+	github.com/pulumi/pulumi-azuread/sdk/v6 v6.9.1
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.28.0
 	github.com/pulumi/pulumi-random/sdk/v4 v4.19.2
 	github.com/pulumi/pulumi-tls/sdk/v5 v5.3.1
-	github.com/pulumi/pulumi/sdk/v3 v3.227.0
+	github.com/pulumi/pulumi/sdk/v3 v3.242.0
 )
 
 require github.com/stretchr/objx v0.5.2 // indirect
@@ -76,12 +76,12 @@ require (
 	github.com/opentracing/basictracer-go v1.1.0 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/pgavlin/fx v0.1.6 // indirect
-	github.com/pgavlin/fx/v2 v2.0.10 // indirect
+	github.com/pgavlin/fx/v2 v2.0.12 // indirect
 	github.com/pjbgf/sha1cd v0.6.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pkg/term v1.1.0 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
-	github.com/pulumi/esc v0.23.0 // indirect
+	github.com/pulumi/esc v0.24.0 // indirect
 	github.com/pulumi/pulumi-azure-native-sdk/v3 v3.16.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
@@ -120,7 +120,7 @@ require (
 	golang.org/x/tools v0.44.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260226221140-a57be14db171 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260226221140-a57be14db171 // indirect
-	google.golang.org/grpc v1.79.3 // indirect
+	google.golang.org/grpc v1.80.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
