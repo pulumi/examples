@@ -17,7 +17,10 @@ let infra () =
             AccountArgs
                (ResourceGroupName = io resourceGroup.Name,
                 AccountReplicationType = input "LRS",
-                AccountTier = input "Standard"))
+                AccountTier = input "Standard",
+                // Upgraded from GPv1 ("Storage") to GPv2 ("StorageV2") to comply with the
+                // Azure Storage retirement of legacy GPv1 accounts (October 13, 2026).
+                AccountKind = input "StorageV2"))
 
     let appServicePlan = 
         ServicePlan("asp", 
