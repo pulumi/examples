@@ -5,7 +5,7 @@
         "typescript": "^5.0.0"
     },
     "dependencies": {
-        "@pulumi/f5bigip": "3.21.0",
+        "@pulumi/f5bigip": "3.22.0",
         "@pulumi/pulumi": "3.228.0"
     }
 }
