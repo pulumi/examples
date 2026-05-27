@@ -14,7 +14,7 @@
         "typescript": "^5.0.0"
     },
     "dependencies": {
-        "@pulumi/gcp": "9.24.0",
+        "@pulumi/gcp": "9.25.0",
         "@pulumi/pulumi": "3.237.0"
     }
 }
