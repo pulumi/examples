@@ -225,3 +225,11 @@ if (isMinikube) {
 } else {
     frontendIp = frontendService.status.loadBalancer.ingress[0].ip;
 }
+
+
+//  Add pulumi vars
+export const grafanaUrl = "http://localhost:32000";
+
+export const grafanaUser = "admin";
+
+export const grafanaPassword = "admin123";
