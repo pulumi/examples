@@ -43,8 +43,6 @@ const prometheus = new k8s.helm.v3.Chart("prometheus", {
 // REDIS LEADER.
 //
 
-PROVIDER_DOCKER_VERSION_EXIT_1
-
 const redisLeaderLabels = { app: "redis-leader" };
 const redisLeaderDeployment = new k8s.apps.v1.Deployment("redis-leader", {
     spec: {
