@@ -141,11 +141,20 @@ const redisReplicaService = new k8s.core.v1.Service("redis-replica", {
 
 const frontendLabels = { app: "frontend" };
 const frontendDeployment = new k8s.apps.v1.Deployment("frontend", {
-    spec: {
-        selector: { matchLabels: frontendLabels },
-        replicas: 3,
-        template: {
-            metadata: { labels: frontendLabels },
+           spec: {
+                selector: { matchLabels: frontendLabels },
+                replicas: 3,
+                template: {
+                    metadata: {
+
+                       labels: frontendLabels,
+
+                       annotations: {
+                           "prometheus.io/scrape": "true",
+                           "prometheus.io/port": "80",
+                           "prometheus.io/path": "/metrics",
+                      },
+                      },
             spec: {
                 containers: [
                     {
