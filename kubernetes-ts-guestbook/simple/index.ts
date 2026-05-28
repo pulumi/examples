@@ -8,9 +8,42 @@ import * as pulumi from "@pulumi/pulumi";
 const config = new pulumi.Config();
 const isMinikube = config.getBoolean("isMinikube");
 
+const monitoringNs = new k8s.core.v1.Namespace("monitoring", {
+    metadata: {
+        name: "monitoring",
+    },
+});
+
+
+const prometheus = new k8s.helm.v3.Chart("prometheus", {
+
+    chart: "kube-prometheus-stack",
+
+    fetchOpts: {
+        repo: "https://prometheus-community.github.io/helm-charts",
+    },
+
+    namespace: monitoringNs.metadata.name,
+
+    values: {
+        grafana: {
+            enabled: false,
+        },
+
+        prometheus: {
+            prometheusSpec: {
+                serviceMonitorSelectorNilUsesHelmValues: false,
+            },
+        },
+    },
+});
+
+
 //
 // REDIS LEADER.
 //
+
+PROVIDER_DOCKER_VERSION_EXIT_1
 
 const redisLeaderLabels = { app: "redis-leader" };
 const redisLeaderDeployment = new k8s.apps.v1.Deployment("redis-leader", {
