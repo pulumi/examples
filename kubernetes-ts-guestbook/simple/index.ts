@@ -14,6 +14,7 @@ const monitoringNs = new k8s.core.v1.Namespace("monitoring", {
     },
 });
 
+// Prometheus initialization
 
 const prometheus = new k8s.helm.v3.Chart("prometheus", {
 
@@ -34,6 +35,30 @@ const prometheus = new k8s.helm.v3.Chart("prometheus", {
             prometheusSpec: {
                 serviceMonitorSelectorNilUsesHelmValues: false,
             },
+        },
+    },
+});
+
+// Grafana implementation
+
+const grafana = new k8s.helm.v3.Chart("grafana", {
+
+    chart: "grafana",
+
+    fetchOpts: {
+        repo: "https://grafana.github.io/helm-charts",
+    },
+
+    namespace: monitoringNs.metadata.name,
+
+    values: {
+
+        adminUser: "admin",
+        adminPassword: "admin123",
+
+        service: {
+            type: "NodePort",
+            nodePort: 32000,
         },
     },
 });
