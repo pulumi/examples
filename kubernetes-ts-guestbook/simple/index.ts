@@ -12,6 +12,13 @@ const isMinikube = config.getBoolean("isMinikube");
 // REDIS LEADER.
 //
 
+// Initializing the Namespace
+const monitoringNs = new k8s.core.v1.Namespace("monitoring", {
+    metadata: {
+        name: "monitoring",
+    },
+});
+
 const redisLeaderLabels = { app: "redis-leader" };
 const redisLeaderDeployment = new k8s.apps.v1.Deployment("redis-leader", {
     spec: {
