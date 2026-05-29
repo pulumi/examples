@@ -44,6 +44,30 @@ const prometheus = new k8s.helm.v3.Chart("prometheus", {
     },
 });
 
+// grafana initializaation
+
+const grafana = new k8s.helm.v3.Chart("grafana", {
+
+    chart: "grafana",
+
+    fetchOpts: {
+        repo: "https://grafana.github.io/helm-charts",
+    },
+
+    namespace: monitoringNs.metadata.name,
+
+    values: {
+
+        adminUser: "admin",
+        adminPassword: "admin123",
+
+        service: {
+            type: "NodePort",
+            nodePort: 32000,
+        },
+    },
+});
+
 
 const redisLeaderLabels = { app: "redis-leader" };
 const redisLeaderDeployment = new k8s.apps.v1.Deployment("redis-leader", {
