@@ -19,6 +19,32 @@ const monitoringNs = new k8s.core.v1.Namespace("monitoring", {
     },
 });
 
+// / initialize prometheus
+
+const prometheus = new k8s.helm.v3.Chart("prometheus", {
+
+    chart: "kube-prometheus-stack",
+
+    fetchOpts: {
+        repo: "https://prometheus-community.github.io/helm-charts",
+    },
+
+    namespace: monitoringNs.metadata.name,
+
+    values: {
+        grafana: {
+            enabled: false,
+        },
+
+        prometheus: {
+            prometheusSpec: {
+                serviceMonitorSelectorNilUsesHelmValues: false,
+            },
+        },
+    },
+});
+
+
 const redisLeaderLabels = { app: "redis-leader" };
 const redisLeaderDeployment = new k8s.apps.v1.Deployment("redis-leader", {
     spec: {
