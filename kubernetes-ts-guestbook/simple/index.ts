@@ -68,6 +68,41 @@ const grafana = new k8s.helm.v3.Chart("grafana", {
     },
 });
 
+// Add Grafana service  monitor
+
+const serviceMonitor = new k8s.apiextensions.CustomResource("guestbook-monitor", {
+
+    apiVersion: "monitoring.coreos.com/v1",
+
+    kind: "ServiceMonitor",
+
+    metadata: {
+        name: "guestbook-monitor",
+        namespace: "monitoring",
+    },
+
+    spec: {
+
+        selector: {
+            matchLabels: {
+                app: "frontend",
+            },
+        },
+
+        namespaceSelector: {
+            any: true,
+        },
+
+        endpoints: [
+            {
+                port: "http",
+                path: "/metrics",
+                interval: "15s",
+            },
+        ],
+    },
+});
+
 
 const redisLeaderLabels = { app: "redis-leader" };
 const redisLeaderDeployment = new k8s.apps.v1.Deployment("redis-leader", {
