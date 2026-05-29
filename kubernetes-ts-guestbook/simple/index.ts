@@ -59,7 +59,7 @@ const grafana = new k8s.helm.v3.Chart("grafana", {
     values: {
 
         adminUser: "admin",
-        adminPassword: "admin123",
+        adminPassword: "admin",
 
         service: {
             type: "NodePort",
