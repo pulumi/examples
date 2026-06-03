@@ -10,11 +10,11 @@ config:
       pulumi:template: python
   model:
     type: string
-    default: unsloth/gemma-4-26B-A4B-it-GGUF
+    default: unsloth/gemma-4-12b-it-GGUF
     description: Hugging Face model repository for cluster-mode downloads
   modelFile:
     type: string
-    default: gemma-4-26B-A4B-it-MXFP4_MOE.gguf
+    default: gemma-4-12b-it-Q8_0.gguf
     description: GGUF filename to download from the model repo in cluster mode
   runtimeMode:
     type: string
@@ -30,7 +30,7 @@ config:
     description: Number of GPUs to allocate
   contextSize:
     type: integer
-    default: 8192
+    default: 131072
     description: Context window size in tokens
   fitTarget:
     type: integer
@@ -44,6 +44,10 @@ config:
     type: boolean
     default: true
     description: Enable Jinja template processing for chat templates
+  reasoning:
+    type: string
+    default: off
+    description: llama.cpp reasoning mode ("on", "off", or "auto")
   parallel:
     type: integer
     default: 1
@@ -62,11 +66,11 @@ config:
     description: Hostname Kubernetes pods use to reach the host-native LLM server
   hostLlmPort:
     type: integer
-    default: 8080
+    default: 18080
     description: Host-native LLM server port
   llmBaseUrl:
     type: string
-    default: http://llm-server:8080/v1
+    default: http://llm-server:18080/v1
     description: OpenAI-compatible LLM base URL for Open WebUI
   webuiPort:
     type: integer

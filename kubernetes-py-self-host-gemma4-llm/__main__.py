@@ -14,15 +14,19 @@ hostname = config.get("hostname") or "llm-server"
 enable_tailscale = config.get_bool("enableTailscale")
 if enable_tailscale is None:
     enable_tailscale = False
-model = config.get("model") or "unsloth/gemma-4-26B-A4B-it-GGUF"
-model_file = config.get("modelFile") or "gemma-4-26B-A4B-it-MXFP4_MOE.gguf"
-context_size = config.get_int("contextSize") or 8192
+model = config.get("model") or "unsloth/gemma-4-12b-it-GGUF"
+model_file = config.get("modelFile") or "gemma-4-12b-it-Q8_0.gguf"
+context_size = config.get_int("contextSize") or 131072
 fit_target = config.get_int("fitTarget") or 2048
 parallel = config.get_int("parallel") or 1
 threads = config.get_int("threads") or 5
 host_llm_hostname = config.get("hostLlmHostname") or "host.k3d.internal"
-host_llm_port = config.get_int("hostLlmPort") or 8080
-llm_base_url = config.get("llmBaseUrl") or "http://llm-server:8080/v1"
+host_llm_port = config.get_int("hostLlmPort") or 18080
+default_llm_base_url = (
+    "http://llm-server:18080/v1" if runtime_mode == "host" else "http://llm-server:8080/v1"
+)
+llm_base_url = config.get("llmBaseUrl") or default_llm_base_url
+reasoning = config.get("reasoning") or "off"
 jinja = config.get_bool("jinja")
 if jinja is None:
     jinja = True
@@ -69,6 +73,7 @@ else:
         parallel=parallel,
         threads=threads,
         jinja=jinja,
+        server_args={"reasoning": reasoning},
         mmproj=config.get("mmproj"),
         opts=ns_opts,
     )

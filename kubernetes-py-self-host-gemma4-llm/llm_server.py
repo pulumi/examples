@@ -28,7 +28,7 @@ class LlmServer(pulumi.ComponentResource):
         gpu_count=1,
         node_port=None,
         namespace="default",
-        context_size=8192,
+        context_size=131072,
         fit_target=2048,
         parallel=1,
         mmproj=None,

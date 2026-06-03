@@ -5,7 +5,7 @@
 
 This example deploys Open WebUI to Kubernetes, connects it to a local llama.cpp server running Gemma 4, and can expose the web UI through Tailscale. It is designed for a Mac or workstation where host-native inference is faster and simpler than running the model inside the Kubernetes cluster.
 
-The default model is `unsloth/gemma-4-26B-A4B-it-GGUF` with `gemma-4-26B-A4B-it-MXFP4_MOE.gguf`. The default runtime uses the host machine for inference and k3d for Open WebUI. Tailscale exposure is opt-in so you can preview and deploy the local path before configuring Tailscale credentials.
+The default model is `unsloth/gemma-4-12b-it-GGUF` with `gemma-4-12b-it-Q8_0.gguf`. The default runtime uses the host machine for inference and k3d for Open WebUI. Tailscale exposure is opt-in so you can preview and deploy the local path before configuring Tailscale credentials.
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ k3d cluster create pulumi-gemma4 \
 
 ### Step 2: Start llama.cpp on the host
 
-Run the OpenAI-compatible llama.cpp server on the host. The example defaults expect port `8080`. If you have not installed `llama.cpp` yet, install it first:
+Run the OpenAI-compatible llama.cpp server on the host. The example defaults expect port `18080` because `8080` is commonly used by other local services. If you have not installed `llama.cpp` yet, install it first:
 
 ```sh
 brew install llama.cpp
@@ -41,17 +41,20 @@ Then start the server:
 
 ```sh
 llama-server \
-  --hf-repo unsloth/gemma-4-26B-A4B-it-GGUF \
-  --hf-file gemma-4-26B-A4B-it-MXFP4_MOE.gguf \
+  --hf-repo unsloth/gemma-4-12b-it-GGUF \
+  --hf-file gemma-4-12b-it-Q8_0.gguf \
   --host 127.0.0.1 \
-  --port 8080 \
-  --ctx-size 8192
+  --port 18080 \
+  --ctx-size 131072 \
+  --parallel 1 \
+  --jinja \
+  --reasoning off
 ```
 
 Check that the server is available:
 
 ```sh
-curl http://127.0.0.1:8080/v1/models
+curl http://127.0.0.1:18080/v1/models
 ```
 
 ### Step 3: Install Python dependencies
@@ -82,7 +85,7 @@ If your llama.cpp server uses a different host or port, update the host runtime 
 
 ```sh
 pulumi config set hostLlmHostname host.k3d.internal
-pulumi config set hostLlmPort 8080
+pulumi config set hostLlmPort 18080
 ```
 
 ### Step 5: Deploy Open WebUI
@@ -99,6 +102,7 @@ The default `runtimeMode` is `host`, which keeps model inference on the host. Li
 
 ```sh
 pulumi config set runtimeMode cluster
+pulumi config set llmBaseUrl http://llm-server:8080/v1
 pulumi config set gpuVendor nvidia
 pulumi config set gpuCount 1
 pulumi up
