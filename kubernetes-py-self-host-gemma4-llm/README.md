@@ -31,18 +31,38 @@ k3d cluster create pulumi-gemma4 \
 
 ### Step 2: Start llama.cpp on the host
 
-Run the OpenAI-compatible llama.cpp server on the host. The example defaults expect port `18080` because `8080` is commonly used by other local services. If you have not installed `llama.cpp` yet, install it first:
+Run the OpenAI-compatible llama.cpp server on the host. The example defaults expect port `18080` because `8080` is commonly used by other local services. Build `llama.cpp` from source so the server can load the Gemma 4 12B multimodal projector:
 
 ```sh
-brew install llama.cpp
+brew install cmake git
+
+llm_home="$HOME/pulumi-gemma4-llm"
+mkdir -p "$llm_home/models" "$llm_home/logs"
+
+if [ ! -d "$llm_home/llama.cpp/.git" ]; then
+  git clone --depth 1 https://github.com/ggml-org/llama.cpp.git "$llm_home/llama.cpp"
+fi
+
+cmake -S "$llm_home/llama.cpp" \
+  -B "$llm_home/llama.cpp/build" \
+  -DGGML_METAL=ON \
+  -DGGML_BLAS=ON \
+  -DCMAKE_BUILD_TYPE=Release
+
+cmake --build "$llm_home/llama.cpp/build" --target llama-server -j 10
+
+curl -L --fail \
+  --output "$llm_home/models/mmproj-F16.gguf" \
+  https://huggingface.co/unsloth/gemma-4-12b-it-GGUF/resolve/main/mmproj-F16.gguf
 ```
 
 Then start the server:
 
 ```sh
-llama-server \
+"$HOME/pulumi-gemma4-llm/llama.cpp/build/bin/llama-server" \
   --hf-repo unsloth/gemma-4-12b-it-GGUF \
   --hf-file gemma-4-12b-it-Q8_0.gguf \
+  --mmproj "$HOME/pulumi-gemma4-llm/models/mmproj-F16.gguf" \
   --host 127.0.0.1 \
   --port 18080 \
   --ctx-size 131072 \
@@ -57,7 +77,7 @@ Check that the server is available:
 curl http://127.0.0.1:18080/v1/models
 ```
 
-Gemma 4 12B is a multimodal model, but this example serves the Unsloth GGUF through `llama.cpp` as a text endpoint. Open WebUI may gray out image, audio, or video upload options because image input needs a matching `--mmproj` file, and Gemma 4 audio input is not yet supported by `llama.cpp`.
+With `--mmproj`, `/v1/models` should report `capabilities: ["completion","multimodal"]`. In local validation, Open WebUI accepted an uploaded image and Gemma 4 described it correctly. A small WAV file also worked through the OpenAI-compatible `input_audio` request shape, though `llama.cpp` logs still mark audio input as experimental.
 
 To keep `llama.cpp` running after reboot, put the startup script and logs under your home directory and register a `launchd` agent:
 
@@ -71,9 +91,10 @@ set -euo pipefail
 
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
-exec llama-server \
+exec "$HOME/pulumi-gemma4-llm/llama.cpp/build/bin/llama-server" \
   --hf-repo unsloth/gemma-4-12b-it-GGUF \
   --hf-file gemma-4-12b-it-Q8_0.gguf \
+  --mmproj "$HOME/pulumi-gemma4-llm/models/mmproj-F16.gguf" \
   --host 127.0.0.1 \
   --port 18080 \
   --ctx-size 131072 \
