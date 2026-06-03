@@ -76,3 +76,7 @@ config:
     type: string
     default: llm-server
     description: Tailscale hostname
+  enableTailscale:
+    type: boolean
+    default: false
+    description: Create Tailscale resources and expose Open WebUI on your tailnet

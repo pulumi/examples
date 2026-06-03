@@ -3,16 +3,16 @@
 
 # Self-Host Gemma 4 with Open WebUI and Tailscale
 
-This example deploys Open WebUI to Kubernetes, connects it to a local llama.cpp server running Gemma 4, and exposes the web UI through Tailscale. It is designed for a Mac or workstation where host-native inference is faster and simpler than running the model inside the Kubernetes cluster.
+This example deploys Open WebUI to Kubernetes, connects it to a local llama.cpp server running Gemma 4, and can expose the web UI through Tailscale. It is designed for a Mac or workstation where host-native inference is faster and simpler than running the model inside the Kubernetes cluster.
 
-The default model is `unsloth/gemma-4-26B-A4B-it-GGUF` with `gemma-4-26B-A4B-it-MXFP4_MOE.gguf`. The default runtime uses the host machine for inference and k3d for the Open WebUI and Tailscale resources.
+The default model is `unsloth/gemma-4-26B-A4B-it-GGUF` with `gemma-4-26B-A4B-it-MXFP4_MOE.gguf`. The default runtime uses the host machine for inference and k3d for Open WebUI. Tailscale exposure is opt-in so you can preview and deploy the local path before configuring Tailscale credentials.
 
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/).
 1. [Install Python 3.9 or later](https://www.pulumi.com/docs/iac/languages-sdks/python/).
 1. Install `kubectl`, [k3d](https://k3d.io/), and [llama.cpp](https://github.com/ggml-org/llama.cpp).
-1. Sign in to [Tailscale](https://tailscale.com/) and create OAuth client credentials that can create auth keys.
+1. To expose Open WebUI through Tailscale, sign in to [Tailscale](https://tailscale.com/) and create OAuth client credentials that can create auth keys.
 1. Make sure your machine has enough memory for the selected GGUF model.
 
 ## Deploy the App
@@ -64,9 +64,10 @@ Create a stack:
 pulumi stack init dev
 ```
 
-Set Tailscale provider credentials. Use either an API key or OAuth credentials supported by the Pulumi Tailscale provider:
+Tailscale exposure is optional. To enable it, set `enableTailscale` and provider credentials. Use either an API key or OAuth credentials supported by the Pulumi Tailscale provider:
 
 ```sh
+pulumi config set enableTailscale true
 pulumi config set tailscale:oauthClientId <client-id>
 pulumi config set tailscale:oauthClientSecret <client-secret> --secret
 ```
@@ -78,13 +79,13 @@ pulumi config set hostLlmHostname host.k3d.internal
 pulumi config set hostLlmPort 8080
 ```
 
-### Step 5: Deploy Open WebUI and Tailscale
+### Step 5: Deploy Open WebUI
 
 ```sh
 pulumi up
 ```
 
-Pulumi exports the Open WebUI NodePort URL, the internal LLM base URL, and the Tailscale URL for the web UI.
+Pulumi exports the Open WebUI NodePort URL and the internal LLM base URL. When `enableTailscale` is true, it also exports the Tailscale URL for the web UI.
 
 ## Cluster Runtime
 
@@ -118,4 +119,4 @@ Stop the local `llama-server` process when you are done.
 
 ## Summary
 
-You now have Open WebUI running in Kubernetes, Gemma 4 running through host-native llama.cpp, and secure remote access through Tailscale. This keeps inference local while still managing the web UI, service wiring, and access layer with Pulumi.
+You now have Open WebUI running in Kubernetes and Gemma 4 running through host-native llama.cpp. When `enableTailscale` is true, Pulumi also manages secure remote access through Tailscale.

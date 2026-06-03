@@ -11,6 +11,9 @@ webui_port = config.get_int("webuiPort") or 30000
 llm_port = config.get_int("llmPort") or 8080
 llm_node_port = config.get_int("llmNodePort") or 30080
 hostname = config.get("hostname") or "llm-server"
+enable_tailscale = config.get_bool("enableTailscale")
+if enable_tailscale is None:
+    enable_tailscale = False
 model = config.get("model") or "unsloth/gemma-4-26B-A4B-it-GGUF"
 model_file = config.get("modelFile") or "gemma-4-26B-A4B-it-MXFP4_MOE.gguf"
 context_size = config.get_int("contextSize") or 8192
@@ -69,46 +72,6 @@ else:
         mmproj=config.get("mmproj"),
         opts=ns_opts,
     )
-
-# --- Tailscale RBAC (must be created before the Tailscale deployment that
-#     references service_account_name="tailscale") ---
-
-ts_sa = k8s.core.v1.ServiceAccount(
-    "tailscale",
-    metadata=k8s.meta.v1.ObjectMetaArgs(name="tailscale", namespace=NAMESPACE),
-    opts=ns_opts,
-)
-
-ts_role = k8s.rbac.v1.Role(
-    "tailscale",
-    metadata=k8s.meta.v1.ObjectMetaArgs(name="tailscale", namespace=NAMESPACE),
-    rules=[
-        k8s.rbac.v1.PolicyRuleArgs(
-            api_groups=[""],
-            resources=["secrets"],
-            verbs=["create", "get", "update", "patch"],
-        ),
-    ],
-    opts=ns_opts,
-)
-
-ts_role_binding = k8s.rbac.v1.RoleBinding(
-    "tailscale",
-    metadata=k8s.meta.v1.ObjectMetaArgs(name="tailscale", namespace=NAMESPACE),
-    subjects=[
-        k8s.rbac.v1.SubjectArgs(
-            kind="ServiceAccount",
-            name="tailscale",
-            namespace=NAMESPACE,
-        ),
-    ],
-    role_ref=k8s.rbac.v1.RoleRefArgs(
-        api_group="rbac.authorization.k8s.io",
-        kind="Role",
-        name="tailscale",
-    ),
-    opts=ns_opts,
-)
 
 # --- Open WebUI ---
 
@@ -189,139 +152,188 @@ webui_service = k8s.core.v1.Service(
     opts=ns_opts,
 )
 
-# --- Tailscale ---
+if enable_tailscale:
+    # --- Tailscale RBAC (must be created before the Tailscale deployment that
+    #     references service_account_name="tailscale") ---
 
-ts_acl = tailscale.Acl(
-    "tailnet-acl",
-    acl=pulumi.Output.json_dumps(
-        {
-            "tagOwners": {
-                "tag:llm-server": ["autogroup:admin"],
-            },
-            "acls": [
-                {
-                    "action": "accept",
-                    "src": ["autogroup:member"],
-                    "dst": ["*:*"],
+    ts_sa = k8s.core.v1.ServiceAccount(
+        "tailscale",
+        metadata=k8s.meta.v1.ObjectMetaArgs(name="tailscale", namespace=NAMESPACE),
+        opts=ns_opts,
+    )
+
+    ts_role = k8s.rbac.v1.Role(
+        "tailscale",
+        metadata=k8s.meta.v1.ObjectMetaArgs(name="tailscale", namespace=NAMESPACE),
+        rules=[
+            k8s.rbac.v1.PolicyRuleArgs(
+                api_groups=[""],
+                resources=["secrets"],
+                verbs=["create", "get", "update", "patch"],
+            ),
+        ],
+        opts=ns_opts,
+    )
+
+    ts_role_binding = k8s.rbac.v1.RoleBinding(
+        "tailscale",
+        metadata=k8s.meta.v1.ObjectMetaArgs(name="tailscale", namespace=NAMESPACE),
+        subjects=[
+            k8s.rbac.v1.SubjectArgs(
+                kind="ServiceAccount",
+                name="tailscale",
+                namespace=NAMESPACE,
+            ),
+        ],
+        role_ref=k8s.rbac.v1.RoleRefArgs(
+            api_group="rbac.authorization.k8s.io",
+            kind="Role",
+            name="tailscale",
+        ),
+        opts=ns_opts,
+    )
+
+    # --- Tailscale ---
+
+    ts_acl = tailscale.Acl(
+        "tailnet-acl",
+        acl=pulumi.Output.json_dumps(
+            {
+                "tagOwners": {
+                    "tag:llm-server": ["autogroup:admin"],
                 },
-            ],
-        }
-    ),
-    # The Tailscale ACL is a global singleton per tailnet — it can't be truly
-    # created or deleted, only updated. import_ adopts the existing ACL into
-    # state on first `pulumi up`, and retain_on_delete prevents `pulumi destroy`
-    # from trying to delete it (which would fail or leave the tailnet broken).
-    # Without these, destroy+up cycles fail with a "precondition failed" 412 error.
-    opts=pulumi.ResourceOptions(
-        import_="acl",
-        retain_on_delete=True,
-    ),
-)
-
-ts_key = tailscale.TailnetKey(
-    "llm-server-key",
-    reusable=True,
-    ephemeral=True,
-    preauthorized=True,
-    tags=["tag:llm-server"],
-    description="Pulumi-managed key for LLM server",
-    opts=pulumi.ResourceOptions(depends_on=[ts_acl]),
-)
-
-ts_secret = k8s.core.v1.Secret(
-    "tailscale-auth",
-    metadata=k8s.meta.v1.ObjectMetaArgs(name="tailscale-auth", namespace=NAMESPACE),
-    string_data={
-        "TS_AUTHKEY": ts_key.key,
-    },
-    opts=ns_opts,
-)
-
-ts_labels = {"app": "tailscale"}
-
-ts_deployment = k8s.apps.v1.Deployment(
-    "tailscale",
-    metadata=k8s.meta.v1.ObjectMetaArgs(name="tailscale", namespace=NAMESPACE, labels=ts_labels),
-    spec=k8s.apps.v1.DeploymentSpecArgs(
-        replicas=1,
-        selector=k8s.meta.v1.LabelSelectorArgs(match_labels=ts_labels),
-        template=k8s.core.v1.PodTemplateSpecArgs(
-            metadata=k8s.meta.v1.ObjectMetaArgs(labels=ts_labels),
-            spec=k8s.core.v1.PodSpecArgs(
-                service_account_name="tailscale",
-                init_containers=[
-                    k8s.core.v1.ContainerArgs(
-                        name="sysctler",
-                        image="busybox",
-                        command=["/bin/sh", "-c"],
-                        args=["sysctl -w net.ipv4.ip_forward=1 net.ipv6.conf.all.forwarding=1"],
-                        security_context=k8s.core.v1.SecurityContextArgs(
-                            privileged=True,
-                        ),
-                    ),
+                "acls": [
+                    {
+                        "action": "accept",
+                        "src": ["autogroup:member"],
+                        "dst": ["*:*"],
+                    },
                 ],
-                containers=[
-                    k8s.core.v1.ContainerArgs(
-                        name="tailscale",
-                        image="ghcr.io/tailscale/tailscale:latest",
-                        env=[
-                            k8s.core.v1.EnvVarArgs(
-                                name="TS_AUTHKEY",
-                                value_from=k8s.core.v1.EnvVarSourceArgs(
-                                    secret_key_ref=k8s.core.v1.SecretKeySelectorArgs(
-                                        name="tailscale-auth",
-                                        key="TS_AUTHKEY",
+            }
+        ),
+        # The Tailscale ACL is a global singleton per tailnet — it can't be truly
+        # created or deleted, only updated. import_ adopts the existing ACL into
+        # state on first `pulumi up`, and retain_on_delete prevents `pulumi destroy`
+        # from trying to delete it (which would fail or leave the tailnet broken).
+        # Without these, destroy+up cycles fail with a "precondition failed" 412 error.
+        opts=pulumi.ResourceOptions(
+            import_="acl",
+            retain_on_delete=True,
+        ),
+    )
+
+    ts_key = tailscale.TailnetKey(
+        "llm-server-key",
+        reusable=True,
+        ephemeral=True,
+        preauthorized=True,
+        tags=["tag:llm-server"],
+        description="Pulumi-managed key for LLM server",
+        opts=pulumi.ResourceOptions(depends_on=[ts_acl]),
+    )
+
+    ts_secret = k8s.core.v1.Secret(
+        "tailscale-auth",
+        metadata=k8s.meta.v1.ObjectMetaArgs(name="tailscale-auth", namespace=NAMESPACE),
+        string_data={
+            "TS_AUTHKEY": ts_key.key,
+        },
+        opts=ns_opts,
+    )
+
+    ts_labels = {"app": "tailscale"}
+
+    ts_deployment = k8s.apps.v1.Deployment(
+        "tailscale",
+        metadata=k8s.meta.v1.ObjectMetaArgs(
+            name="tailscale", namespace=NAMESPACE, labels=ts_labels
+        ),
+        spec=k8s.apps.v1.DeploymentSpecArgs(
+            replicas=1,
+            selector=k8s.meta.v1.LabelSelectorArgs(match_labels=ts_labels),
+            template=k8s.core.v1.PodTemplateSpecArgs(
+                metadata=k8s.meta.v1.ObjectMetaArgs(labels=ts_labels),
+                spec=k8s.core.v1.PodSpecArgs(
+                    service_account_name="tailscale",
+                    init_containers=[
+                        k8s.core.v1.ContainerArgs(
+                            name="sysctler",
+                            image="busybox",
+                            command=["/bin/sh", "-c"],
+                            args=["sysctl -w net.ipv4.ip_forward=1 net.ipv6.conf.all.forwarding=1"],
+                            security_context=k8s.core.v1.SecurityContextArgs(
+                                privileged=True,
+                            ),
+                        ),
+                    ],
+                    containers=[
+                        k8s.core.v1.ContainerArgs(
+                            name="tailscale",
+                            image="ghcr.io/tailscale/tailscale:latest",
+                            env=[
+                                k8s.core.v1.EnvVarArgs(
+                                    name="TS_AUTHKEY",
+                                    value_from=k8s.core.v1.EnvVarSourceArgs(
+                                        secret_key_ref=k8s.core.v1.SecretKeySelectorArgs(
+                                            name="tailscale-auth",
+                                            key="TS_AUTHKEY",
+                                        ),
                                     ),
                                 ),
+                                k8s.core.v1.EnvVarArgs(name="TS_HOSTNAME", value=hostname),
+                                k8s.core.v1.EnvVarArgs(
+                                    name="TS_STATE_DIR", value="/var/lib/tailscale"
+                                ),
+                                k8s.core.v1.EnvVarArgs(name="TS_USERSPACE", value="false"),
+                                k8s.core.v1.EnvVarArgs(
+                                    name="TS_DEST_IP",
+                                    value=webui_service.spec.cluster_ip,
+                                ),
+                                k8s.core.v1.EnvVarArgs(
+                                    name="TS_KUBE_SECRET", value="tailscale-state"
+                                ),
+                            ],
+                            volume_mounts=[
+                                k8s.core.v1.VolumeMountArgs(
+                                    name="tailscale-state",
+                                    mount_path="/var/lib/tailscale",
+                                ),
+                                k8s.core.v1.VolumeMountArgs(
+                                    name="dev-tun",
+                                    mount_path="/dev/net/tun",
+                                ),
+                            ],
+                            security_context=k8s.core.v1.SecurityContextArgs(
+                                privileged=True,
                             ),
-                            k8s.core.v1.EnvVarArgs(name="TS_HOSTNAME", value=hostname),
-                            k8s.core.v1.EnvVarArgs(name="TS_STATE_DIR", value="/var/lib/tailscale"),
-                            k8s.core.v1.EnvVarArgs(name="TS_USERSPACE", value="false"),
-                            k8s.core.v1.EnvVarArgs(
-                                name="TS_DEST_IP",
-                                value=webui_service.spec.cluster_ip,
-                            ),
-                            k8s.core.v1.EnvVarArgs(name="TS_KUBE_SECRET", value="tailscale-state"),
-                        ],
-                        volume_mounts=[
-                            k8s.core.v1.VolumeMountArgs(
-                                name="tailscale-state",
-                                mount_path="/var/lib/tailscale",
-                            ),
-                            k8s.core.v1.VolumeMountArgs(
-                                name="dev-tun",
-                                mount_path="/dev/net/tun",
-                            ),
-                        ],
-                        security_context=k8s.core.v1.SecurityContextArgs(
-                            privileged=True,
                         ),
-                    ),
-                ],
-                volumes=[
-                    k8s.core.v1.VolumeArgs(
-                        name="tailscale-state",
-                        empty_dir=k8s.core.v1.EmptyDirVolumeSourceArgs(),
-                    ),
-                    k8s.core.v1.VolumeArgs(
-                        name="dev-tun",
-                        host_path=k8s.core.v1.HostPathVolumeSourceArgs(
-                            path="/dev/net/tun",
-                            type="CharDevice",
+                    ],
+                    volumes=[
+                        k8s.core.v1.VolumeArgs(
+                            name="tailscale-state",
+                            empty_dir=k8s.core.v1.EmptyDirVolumeSourceArgs(),
                         ),
-                    ),
-                ],
+                        k8s.core.v1.VolumeArgs(
+                            name="dev-tun",
+                            host_path=k8s.core.v1.HostPathVolumeSourceArgs(
+                                path="/dev/net/tun",
+                                type="CharDevice",
+                            ),
+                        ),
+                    ],
+                ),
             ),
         ),
-    ),
-    # Needs the secret (for TS_AUTHKEY), SA and RBAC (for kube secret access)
-    opts=pulumi.ResourceOptions(depends_on=[ns, ts_secret, ts_sa, ts_role_binding]),
-)
+        # Needs the secret (for TS_AUTHKEY), SA and RBAC (for kube secret access)
+        opts=pulumi.ResourceOptions(depends_on=[ns, ts_secret, ts_sa, ts_role_binding]),
+    )
 
 # --- Outputs ---
 
 pulumi.export("local_webui_url", f"http://localhost:{webui_port}")
-pulumi.export("tailscale_webui_url", f"http://{hostname}:{webui_port}")
+pulumi.export("tailscale_enabled", enable_tailscale)
+if enable_tailscale:
+    pulumi.export("tailscale_webui_url", f"http://{hostname}:{webui_port}")
 pulumi.export("runtime_mode", runtime_mode)
 pulumi.export("llm_base_url", llm_base_url)
 pulumi.export("model", model)
