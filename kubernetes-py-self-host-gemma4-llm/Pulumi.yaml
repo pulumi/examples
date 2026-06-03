@@ -1,0 +1,78 @@
+name: kubernetes-py-self-host-gemma4-llm
+description: Self-hosted llama-server (llama.cpp) with Open WebUI and Tailscale
+runtime:
+  name: python
+  options:
+    toolchain: pip
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: python
+  model:
+    type: string
+    default: unsloth/gemma-4-26B-A4B-it-GGUF
+    description: Hugging Face model repository for cluster-mode downloads
+  modelFile:
+    type: string
+    default: gemma-4-26B-A4B-it-MXFP4_MOE.gguf
+    description: GGUF filename to download from the model repo in cluster mode
+  runtimeMode:
+    type: string
+    default: host
+    description: Runtime mode for inference ("host" or "cluster")
+  gpuVendor:
+    type: string
+    default: nvidia
+    description: GPU vendor ("nvidia" or "amd")
+  gpuCount:
+    type: integer
+    default: 1
+    description: Number of GPUs to allocate
+  contextSize:
+    type: integer
+    default: 8192
+    description: Context window size in tokens
+  fitTarget:
+    type: integer
+    default: 2048
+    description: VRAM fit target in MB for llama.cpp layer placement
+  threads:
+    type: integer
+    default: 5
+    description: Number of CPU threads for inference
+  jinja:
+    type: boolean
+    default: true
+    description: Enable Jinja template processing for chat templates
+  parallel:
+    type: integer
+    default: 1
+    description: Number of parallel request slots
+  llmPort:
+    type: integer
+    default: 8080
+    description: LLM service port in cluster mode
+  llmNodePort:
+    type: integer
+    default: 30080
+    description: NodePort for external LLM access
+  hostLlmHostname:
+    type: string
+    default: host.k3d.internal
+    description: Hostname Kubernetes pods use to reach the host-native LLM server
+  hostLlmPort:
+    type: integer
+    default: 8080
+    description: Host-native LLM server port
+  llmBaseUrl:
+    type: string
+    default: http://llm-server:8080/v1
+    description: OpenAI-compatible LLM base URL for Open WebUI
+  webuiPort:
+    type: integer
+    default: 30000
+    description: Open WebUI NodePort
+  hostname:
+    type: string
+    default: llm-server
+    description: Tailscale hostname
