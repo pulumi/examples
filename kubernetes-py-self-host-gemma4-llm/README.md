@@ -11,7 +11,7 @@ The default model is `unsloth/gemma-4-26B-A4B-it-GGUF` with `gemma-4-26B-A4B-it-
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/).
 1. [Install Python 3.9 or later](https://www.pulumi.com/docs/iac/languages-sdks/python/).
-1. Install `kubectl`, [k3d](https://k3d.io/), and [llama.cpp](https://github.com/ggml-org/llama.cpp).
+1. Install `kubectl`, [k3d](https://k3d.io/), and [llama.cpp](https://github.com/ggml-org/llama.cpp). On macOS with Homebrew, install `llama.cpp` with `brew install llama.cpp`.
 1. To expose Open WebUI through Tailscale, sign in to [Tailscale](https://tailscale.com/) and create OAuth client credentials that can create auth keys.
 1. Make sure your machine has enough memory for the selected GGUF model.
 
@@ -31,7 +31,13 @@ k3d cluster create pulumi-gemma4 \
 
 ### Step 2: Start llama.cpp on the host
 
-Run the OpenAI-compatible llama.cpp server on the host. The example defaults expect port `8080`:
+Run the OpenAI-compatible llama.cpp server on the host. The example defaults expect port `8080`. If you have not installed `llama.cpp` yet, install it first:
+
+```sh
+brew install llama.cpp
+```
+
+Then start the server:
 
 ```sh
 llama-server \
