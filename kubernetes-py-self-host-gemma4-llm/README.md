@@ -57,6 +57,76 @@ Check that the server is available:
 curl http://127.0.0.1:18080/v1/models
 ```
 
+Gemma 4 12B is a multimodal model, but this example serves the Unsloth GGUF through `llama.cpp` as a text endpoint. Open WebUI may gray out image, audio, or video upload options because image input needs a matching `--mmproj` file, and Gemma 4 audio input is not yet supported by `llama.cpp`.
+
+To keep `llama.cpp` running after reboot, put the startup script and logs under your home directory and register a `launchd` agent:
+
+```sh
+llm_home="$HOME/pulumi-gemma4-llm"
+mkdir -p "$llm_home/logs" "$HOME/Library/LaunchAgents"
+
+cat > "$llm_home/start-llama-server.sh" <<'EOF'
+#!/bin/zsh
+set -euo pipefail
+
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+exec llama-server \
+  --hf-repo unsloth/gemma-4-12b-it-GGUF \
+  --hf-file gemma-4-12b-it-Q8_0.gguf \
+  --host 127.0.0.1 \
+  --port 18080 \
+  --ctx-size 131072 \
+  --parallel 1 \
+  --jinja \
+  --reasoning off
+EOF
+
+chmod +x "$llm_home/start-llama-server.sh"
+
+cat > "$HOME/Library/LaunchAgents/com.pulumi.gemma4.llama-server.plist" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.pulumi.gemma4.llama-server</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>$llm_home/start-llama-server.sh</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>$llm_home</string>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>$llm_home/logs/llama-server.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>$llm_home/logs/llama-server.err.log</string>
+</dict>
+</plist>
+EOF
+
+launchctl bootout gui/$(id -u)/com.pulumi.gemma4.llama-server 2>/dev/null || true
+launchctl bootstrap gui/$(id -u) "$HOME/Library/LaunchAgents/com.pulumi.gemma4.llama-server.plist"
+launchctl kickstart -k gui/$(id -u)/com.pulumi.gemma4.llama-server
+```
+
+Check the service and logs:
+
+```sh
+launchctl print gui/$(id -u)/com.pulumi.gemma4.llama-server
+tail -f "$HOME/pulumi-gemma4-llm/logs/llama-server.err.log"
+```
+
+Unload the service when you no longer want it to run in the background:
+
+```sh
+launchctl bootout gui/$(id -u)/com.pulumi.gemma4.llama-server
+```
+
 ### Step 3: Install Python dependencies
 
 ```sh
