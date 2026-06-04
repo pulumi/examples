@@ -371,6 +371,7 @@ Example   | Description |
 Example   | Description |
 --------- | --------- |
 [Guestbook](kubernetes-py-guestbook) | Build and deploy a simple, multi-tier web application using Kubernetes and Docker.
+[Self-Host Gemma 4](kubernetes-py-self-host-gemma4-llm) | Deploy Open WebUI on Kubernetes with host-native Gemma 4 inference and Tailscale access.
 
 [Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
 
