@@ -2,7 +2,7 @@
     "name": "multi-nic-vm-policies",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/gcp": "9.25.0",
+        "@pulumi/gcp": "9.26.0",
         "@pulumi/policy": "1.21.0",
         "@pulumi/pulumi": "3.237.0"
     },
