@@ -5,7 +5,7 @@
         "typescript": "^5.0.0"
     },
     "dependencies": {
-        "@pulumi/digitalocean": "4.68.0",
+        "@pulumi/digitalocean": "4.69.0",
         "@pulumi/kubernetes": "4.28.0",
         "@pulumi/pulumi": "3.228.0"
     }
