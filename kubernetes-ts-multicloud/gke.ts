@@ -42,6 +42,7 @@ export class GkeCluster extends pulumi.ComponentResource {
             // node pool and immediately delete it.
             initialNodeCount: 1,
             removeDefaultNodePool: true,
+            datapathProvider: "ADVANCED_DATAPATH",
             deletionProtection: false,
 
             minMasterVersion: engineVersion,
