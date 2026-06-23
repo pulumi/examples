@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@pulumi/docker-build": "0.0.18",
+    "@pulumi/docker-build": "0.0.19",
     "@stylistic/eslint-plugin": "^5.0.0",
     "@types/glob": "^8.1.0",
     "eslint": "^9.0.0",
