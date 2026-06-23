@@ -92,6 +92,21 @@ runs:
       with:
         dotnet-version: ${{inputs.dotnet-version}}
 
+    # The integration suite runs `dotnet add package` from many test processes in
+    # parallel (misc/test uses `go test -parallel 40`). On a cold runner the first
+    # dotnet invocation triggers NuGet's MigrationRunner, which creates a global
+    # `NuGet-Migrations` named mutex backed by /tmp/.dotnet/shm. Running those
+    # concurrently races on the shm session directory and fails intermittently with
+    # `IOException ... 'NuGet-Migrations' ... errno == EEXIST/ENOENT`. Invoking dotnet
+    # once here, before any parallelism, completes the migration so the parallel runs
+    # find the sentinel and skip the mutex entirely.
+    - name: Warm up the .NET first-run experience
+      run: dotnet nuget locals all --list
+      shell: bash
+      env:
+        DOTNET_NOLOGO: "true"
+        DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+
     - name: Install Node.js
       uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
