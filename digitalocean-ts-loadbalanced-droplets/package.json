@@ -2,7 +2,7 @@
     "name": "webserver-linode",
     "version": "0.1.0",
     "dependencies": {
-        "@pulumi/digitalocean": "4.74.0",
+        "@pulumi/digitalocean": "4.75.0",
         "@pulumi/pulumi": "3.228.0"
     },
     "devDependencies": {
