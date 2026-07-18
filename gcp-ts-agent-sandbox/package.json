@@ -1,0 +1,12 @@
+{
+    "name": "gcp-ts-agent-sandbox",
+    "devDependencies": {
+        "@types/node": "22.13.14"
+    },
+    "dependencies": {
+        "@pulumi/gcp": "8.23.0",
+        "@pulumi/kubernetes": "4.22.1",
+        "@pulumi/pulumi": "3.158.0",
+        "@pulumi/tailscale": "^0.29.0"
+    }
+}
