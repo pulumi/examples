@@ -1,0 +1,15 @@
+name: gcp-ts-agent-sandbox
+description: Deploy kubernetes-sigs/agent-sandbox on a GKE cluster with a gVisor node pool, per-developer sandboxes, and Tailscale access
+runtime: nodejs
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into (use a throwaway project, not a shared one)
+    gcp:zone:
+      description: The Google Cloud zone (e.g. us-central1-a)
+      default: us-central1-a
+
+# The `developers` list, the two Tailscale OAuth clients, and the Claude Code
+# credentials are also required, but they're a JSON array and secrets rather than
+# simple scalar prompts, so they're set after scaffolding. See the README's
+# "Running the Example" and "Configuration" sections for the exact commands.
