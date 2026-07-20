@@ -123,7 +123,7 @@ $ npm install
 | `nodeMachineType`              | Machine type for the gVisor sandbox pool                           | `e2-standard-4`  |
 | `sandboxNodeCount`             | Nodes in the gVisor sandbox pool                                   | `1`              |
 | `systemNodeCount`              | Nodes in the default (controller/system) pool                     | `1`              |
-| `agentSandboxVersion`          | kubernetes-sigs/agent-sandbox release tag to install              | `v0.5.1`         |
+| `agentSandboxVersion`          | kubernetes-sigs/agent-sandbox release tag to install              | `v0.5.2`         |
 | `masterVersion`                | GKE control-plane version                                          | latest available |
 | `tailscaleOauthClientId/Secret`| Tailscale operator OAuth client (secret)                          | _(required)_     |
 | `tailscaleAclClientId/Secret`  | Tailscale ACL-editing OAuth client (secret)                       | _(required)_     |

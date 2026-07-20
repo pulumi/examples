@@ -18,7 +18,7 @@ export const systemNodeCount = config.getNumber("systemNodeCount") || 1;
 
 // Which release of kubernetes-sigs/agent-sandbox to install.
 // Pin this to a real release tag — see https://github.com/kubernetes-sigs/agent-sandbox/releases
-export const agentSandboxVersion = config.get("agentSandboxVersion") || "v0.5.1";
+export const agentSandboxVersion = config.get("agentSandboxVersion") || "v0.5.2";
 
 // GKE control-plane version. Defaults to the latest available.
 export const masterVersion = config.get("masterVersion") ||
