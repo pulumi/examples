@@ -1,7 +1,10 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-agent-sandbox/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-agent-sandbox/README.md#gh-dark-mode-only)
 
-# Kubernetes Agent Sandbox on GKE
+# Per-Developer Agent Sandboxes on GKE with Pulumi
+
+A section-by-section walkthrough of this example is in the Pulumi blog post
+[Kubernetes Agent Sandbox: what it is and how to deploy it with Pulumi](https://www.pulumi.com/blog/kubernetes-agent-sandbox/).
 
 This example deploys the [kubernetes-sigs/agent-sandbox](https://github.com/kubernetes-sigs/agent-sandbox)
 project onto a [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) cluster and
@@ -19,10 +22,6 @@ gives each developer a kernel-isolated, disposable coding-agent environment. It 
 
 The tailnet ACL and the sandboxes are generated from the **same** `developers` list, so "who may open
 which box" cannot drift from "which boxes exist."
-
-This example accompanies the Pulumi blog post
-[Kubernetes Agent Sandbox: What It Is and How to Deploy It with Pulumi](https://www.pulumi.com/blog/kubernetes-agent-sandbox/),
-which walks through the code section by section.
 
 > **Note:** Agent Sandbox is pre-1.0 (SIG Apps). Pin `agentSandboxVersion` to a real
 > [release tag](https://github.com/kubernetes-sigs/agent-sandbox/releases).
@@ -139,3 +138,9 @@ $ pulumi stack rm dev
 
 `pulumi destroy` also restores Tailscale's default ACL, so the tailnet isn't left governed by the rules
 of a demo that no longer exists.
+
+## Learn More
+
+For the reasoning behind each piece of this program — why a container alone isn't a security boundary,
+what the `Sandbox` CRD actually gives you, and how the gVisor node pool and the tailnet ACL fit together —
+read [Kubernetes Agent Sandbox: what it is and how to deploy it with Pulumi](https://www.pulumi.com/blog/kubernetes-agent-sandbox/).
