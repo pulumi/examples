@@ -1,6 +1,6 @@
 # Integration Testing of Pulumi programs in Go
 
-This integration test treats infrastucture deployed by a Pulumi program as a "black box". If deploys the infrastructure, retrieves an endpoint from stack outputs, sends an HTTP request to the endpoint, validates the response, and tears down the infrastructure again.
+This integration test treats infrastructure deployed by a Pulumi program as a "black box". It deploys the infrastructure, retrieves an endpoint from stack outputs, sends an HTTP request to the endpoint, validates the response, and tears down the infrastructure again.
 
 This test deploys a static website as an AWS S3 bucket and checks that the site is reachable.
 
