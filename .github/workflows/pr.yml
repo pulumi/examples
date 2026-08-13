@@ -16,4 +16,4 @@ jobs:
         message: >
           PR is now waiting for a maintainer to run the acceptance tests.
 
-          **Note for the maintainer:** To run the acceptance tests, please comment */run-example-tests* on the PR
+          **Note for the maintainer:** To run the acceptance tests, please comment */run-tests* on the PR
