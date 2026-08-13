@@ -44,8 +44,13 @@ inputs:
   github-token:
     required: true
 
+  # Must stay >= 22. The integration harness runs `yarn add @pulumi/pulumi@dev` in
+  # every TypeScript example, and @pulumi/pulumi declares `engines.node: ">=22"` as
+  # of 3.249.0. On Node 20 that install aborts with "Found incompatible module",
+  # failing every TS example before a single test runs -- regardless of the version
+  # the example itself pins.
   node-version:
-    default: 20
+    default: 22
 
   python-version:
     default: 3.9
