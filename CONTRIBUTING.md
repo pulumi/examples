@@ -19,7 +19,6 @@ The cloud prefix can be one of:
 - `kubernetes` for [Kubernetes](https://github.com/pulumi/pulumi-kubernetes),
 - `digitalocean` for [DigitalOcean](https://github.com/pulumi/pulumi-digitalocean/)
 - `f5bigip` for [F5's BIG-IP](https://github.com/pulumi/pulumi-f5bigip/)
-- `cloud` for [Pulumi's cross-cloud programming framework](https://github.com/pulumi/pulumi-cloud), which is currently in preview
 - Any [cloud provider](https://www.pulumi.com/registry) with a dedicated Pulumi package
 
 The language prefix can be one of:
