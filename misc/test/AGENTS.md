@@ -17,7 +17,32 @@ Go test suite that deploys and destroys every Pulumi example as an integration t
 2. Add a function named `TestAcc<Cloud><Lang><Name>` (e.g., `TestAccAwsTsMyApp`)
 3. Use the cloud-specific base: `getAWSBase(t)`, `getGoogleBase(t)`, etc.
 4. Set `Dir:` to `path.Join(getCwd(t), "..", "..", "<example-dir>")`
-5. Add `ExtraRuntimeValidation` if the example exposes an HTTP endpoint
+5. Run it with **`helpers.ProgramTest(t, &test)`**, not `integration.ProgramTest`
+6. Add `ExtraRuntimeValidation` if the example exposes an HTTP endpoint
+
+## Always call helpers.ProgramTest
+
+`helpers.ProgramTest` is a thin wrapper that skips the test when the run has been scoped to
+the examples a pull request changed. A test that calls `integration.ProgramTest` directly
+still works, but it opts out of that scoping and will deploy on **every** pull request.
+
+The scope comes from `PULUMI_CHANGED_PATHS`, a whitespace-separated list of directories
+relative to the repo root, set by `.github/workflows/pull-request.yml`. Unset or empty means
+unscoped — every test runs, which is what the nightly sweep and `make only_test` rely on.
+
+Matching is on path branches, not example names, so the subprojects of a multi-project
+example are independent: a change under `kubernetes-go-guestbook/simple` does not deploy
+`kubernetes-go-guestbook/components`, while a change to a file directly under
+`kubernetes-go-guestbook/` covers both. See `helpers/changed.go` and its tests.
+
+`performance_test.go` is intentionally exempt — it's tagged `Performance`, is not in either
+CI matrix, and its benchmarks aren't example directories.
+
+Check what a branch would run with `make changed_examples` from the repo root, or directly:
+
+```
+PULUMI_CHANGED_PATHS="aws-ts-s3-folder" go test -tags all -run TestAccAwsTs -v
+```
 
 ## Build tags
 Every `*_test.go` file (except `examples_test.go`) requires a build tag:
@@ -28,6 +53,7 @@ Without the tag, the test won't run under `make specific_test_set`.
 
 ## Commands
 - Build check: `go build -tags all ./...`
+- Helper unit tests: `go test ./helpers/...`
 - Run one test: `go test -test.v -run "^TestAccAwsTsS3Folder$" -tags all`
 - Run all for one cloud+lang: from repo root, `make specific_test_set TestSet=AwsTs`
 

@@ -29,7 +29,7 @@ func TestAccAwsGoAssumeRole(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsGoEks(t *testing.T) {
@@ -45,7 +45,7 @@ func TestAccAwsGoEks(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsGoFargate(t *testing.T) {
@@ -54,7 +54,7 @@ func TestAccAwsGoFargate(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-go-fargate"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsGoS3FolderComponent(t *testing.T) {
@@ -70,7 +70,7 @@ func TestAccAwsGoS3FolderComponent(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsGoWebserver(t *testing.T) {
@@ -86,7 +86,7 @@ func TestAccAwsGoWebserver(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsCsAssumeRole(t *testing.T) {
@@ -99,7 +99,7 @@ func TestAccAwsCsAssumeRole(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsApiGatewayPyRoutes(t *testing.T) {
@@ -115,7 +115,7 @@ func TestAccAwsApiGatewayPyRoutes(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsApiGatewayTsRoutes(t *testing.T) {
@@ -131,7 +131,7 @@ func TestAccAwsApiGatewayTsRoutes(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsPyAppSync(t *testing.T) {
@@ -140,7 +140,7 @@ func TestAccAwsPyAppSync(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-py-appsync"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsGoAppSync(t *testing.T) {
@@ -169,7 +169,7 @@ func TestAccAwsGoAppSync(t *testing.T) {
 			// 	})
 			// },
 		})
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsPyAssumeRole(t *testing.T) {
@@ -182,7 +182,7 @@ func TestAccAwsPyAssumeRole(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsPyResources(t *testing.T) {
@@ -191,7 +191,7 @@ func TestAccAwsPyResources(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-py-resources"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsGoResources(t *testing.T) {
@@ -200,7 +200,7 @@ func TestAccAwsGoResources(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-go-resources"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsPyStepFunctions(t *testing.T) {
@@ -209,7 +209,7 @@ func TestAccAwsPyStepFunctions(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-py-stepfunctions"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsPyWebserver(t *testing.T) {
@@ -223,7 +223,7 @@ func TestAccAwsPyWebserver(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsAirflow(t *testing.T) {
@@ -237,7 +237,7 @@ func TestAccAwsTsAirflow(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsApiGateway(t *testing.T) {
@@ -253,7 +253,7 @@ func TestAccAwsTsApiGateway(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsAppSync(t *testing.T) {
@@ -262,7 +262,7 @@ func TestAccAwsTsAppSync(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-appsync"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsAssumeRole(t *testing.T) {
@@ -275,7 +275,7 @@ func TestAccAwsTsAssumeRole(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsContainers(t *testing.T) {
@@ -291,7 +291,7 @@ func TestAccAwsTsContainers(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsEc2Provisioners(t *testing.T) {
@@ -340,7 +340,7 @@ func checkAccAwsEc2Provisioners(t *testing.T, dir string) {
 				assert.NotEmpty(t, catConfigStdout)
 			},
 		})
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsEks(t *testing.T) {
@@ -349,7 +349,7 @@ func TestAccAwsTsEks(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-eks"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsNextjs(t *testing.T) {
@@ -358,7 +358,7 @@ func TestAccAwsTsNextjs(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-nextjs"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsPernVotingApp(t *testing.T) {
@@ -399,7 +399,7 @@ func TestAccAwsTsEksHelloWorld(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsHelloFargate(t *testing.T) {
@@ -415,7 +415,7 @@ func TestAccAwsTsHelloFargate(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsPulumiWebhooks(t *testing.T) {
@@ -429,7 +429,7 @@ func TestAccAwsTsPulumiWebhooks(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsPulumiMiniflux(t *testing.T) {
@@ -446,7 +446,7 @@ func TestAccAwsTsPulumiMiniflux(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsResources(t *testing.T) {
@@ -455,7 +455,7 @@ func TestAccAwsTsResources(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-resources"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsS3LambdaCopyZip(t *testing.T) {
@@ -464,7 +464,7 @@ func TestAccAwsTsS3LambdaCopyZip(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-s3-lambda-copyzip"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsSlackbot(t *testing.T) {
@@ -477,7 +477,7 @@ func TestAccAwsTsSlackbot(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsStepFunctions(t *testing.T) {
@@ -486,7 +486,7 @@ func TestAccAwsTsStepFunctions(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-stepfunctions"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsThumbnailer(t *testing.T) {
@@ -495,7 +495,7 @@ func TestAccAwsTsThumbnailer(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-thumbnailer"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsLambdaThumbnailer(t *testing.T) {
@@ -504,7 +504,7 @@ func TestAccAwsTsLambdaThumbnailer(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-lambda-thumbnailer"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsTwitterAthena(t *testing.T) {
@@ -520,7 +520,7 @@ func TestAccAwsTsTwitterAthena(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccAwsTsLambdaEfs(t *testing.T) {
@@ -530,5 +530,5 @@ func TestAccAwsTsLambdaEfs(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-lambda-efs"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }

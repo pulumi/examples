@@ -38,6 +38,12 @@ bench_example.%:
 pr_preview:
 	bash scripts/pr-preview-changed.sh
 
+.PHONY: changed_examples
+# Show which examples this branch changed and which test sets CI will run for them.
+# This is the same selection .github/workflows/pull-request.yml makes.
+changed_examples:
+	bash scripts/changed-examples.sh
+
 .PHONY: lint lint_ts format setup_python clean
 
 # Run all linting checks

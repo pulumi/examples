@@ -6,24 +6,40 @@ env:
   ESC_ACTION_ENVIRONMENT: imports/github-secrets
   ESC_ACTION_EXPORT_ENVIRONMENT_VARIABLES: false
   PULUMI_ENABLE_JOURNALING: "true"
-
-# The full sweep across every example, so that examples no pull request has touched don't
-# silently rot. Pull requests are handled by pull-request.yml, which runs the same
-# integration tests scoped to just the examples the PR changed.
-#
-# This is also the path for fork pull requests, which can't read ESC/OIDC secrets: a
-# maintainer comments on the PR, command-dispatch.yml turns that into the repository_dispatch
-# below, and the whole suite runs.
-name: Test examples (full sweep)
+name: Pull request
 on:
-  schedule:
-    - cron: 0 9 * * *
-  repository_dispatch:
-    types:
-      - run-tests-command
-  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - master
+
+# Deliberately no `concurrency: cancel-in-progress`. Cancelling a job mid-`pulumi up`
+# orphans real cloud resources with no `pulumi destroy` to clean them up.
 
 jobs:
+  # Works out which examples this PR touched, and which integration test sets need to run as
+  # a result. Everything the PR did not touch is left to the nightly sweep in
+  # test-examples.yml. Needs no secrets, so it finishes in seconds.
+  changes:
+    name: Detect changed examples
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      changed-paths: ${{ steps.changed.outputs.changed-paths }}
+      test-sets: ${{ steps.changed.outputs.test-sets }}
+      run-kubernetes: ${{ steps.changed.outputs.run-kubernetes }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          # The script diffs against the PR base, which needs more than a shallow checkout.
+          fetch-depth: 0
+
+      - name: Detect changed examples
+        id: changed
+        run: bash scripts/changed-examples.sh
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+
   lint-ts:
     name: TypeScript lint checks
     runs-on: ubuntu-latest
@@ -156,6 +172,15 @@ jobs:
         working-directory: testing-unit-go
         run: go test
 
+      # Guards the PR-scoping mechanism itself: the path-matching helper that decides which
+      # examples run, plus a build of the full suite so a bad test edit fails here rather
+      # than inside a provider job minutes later.
+      - name: Test harness unit tests
+        working-directory: misc/test
+        run: |
+          go build -tags all ./...
+          go test ./helpers/...
+
   unit-dotnet:
     name: .NET unit tests
     runs-on: ubuntu-latest
@@ -191,8 +216,10 @@ jobs:
           - testing-unit-fs-mocks
 
   providers:
-    name: ${{ matrix.clouds }}${{ matrix.languages }} integration tests
+    name: ${{ matrix.test-set }} integration tests
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.test-sets != '[]'
     permissions:
       id-token: write
       contents: read
@@ -221,8 +248,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run tests
-        run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
+        run: make specific_test_set TestSet=${{ matrix.test-set }}
         env:
+          # Narrows the run from every test in this set to just the examples the PR touched.
+          # `make specific_test_set` filters by an unanchored `TestAcc<Set>` prefix, so
+          # without this a one-example change would still deploy the whole set.
+          PULUMI_CHANGED_PATHS: ${{ needs.changes.outputs.changed-paths }}
           AWS_ACCESS_KEY_ID: ${{ steps.setup.outputs.aws-access-key-id }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.setup.outputs.aws-secret-access-key }}
           AWS_SESSION_TOKEN: ${{ steps.setup.outputs.aws-session-token }}
@@ -244,22 +275,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - pulumi-ubuntu-8core
-        clouds:
-          - DigitalOcean
-          - Aws
-          - Azure
-          - Gcp
-        languages:
-          - Cs
-          - Ts
-          - Py
-          - Fs
+        test-set: ${{ fromJson(needs.changes.outputs.test-sets) }}
 
   kubernetes:
     name: Kubernetes integration tests
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.run-kubernetes == 'true'
     permissions:
       id-token: write
       contents: read
@@ -309,6 +331,9 @@ jobs:
           make specific_test_set TestSet=Kubernetes
 
         env:
+          # The guestbook examples are split into simple/ and components/ subprojects, so
+          # this also keeps a change to one of them from deploying its sibling.
+          PULUMI_CHANGED_PATHS: ${{ needs.changes.outputs.changed-paths }}
           AWS_ACCESS_KEY_ID: ${{ steps.setup.outputs.aws-access-key-id }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.setup.outputs.aws-secret-access-key }}
           AWS_SESSION_TOKEN: ${{ steps.setup.outputs.aws-session-token }}
@@ -316,3 +341,23 @@ jobs:
           PULUMI_ACCESS_TOKEN: ${{ steps.esc-secrets.outputs.PULUMI_ACCESS_TOKEN_STAGING }}
           PULUMI_API: https://api.pulumi-staging.io
           INFRA_STACK_NAME: ${{ github.sha }}-${{ github.run_number }}
+
+  # A single, stable-named check summarising the integration jobs. The provider matrix is
+  # generated per-PR, so its job names vary from run to run and can't be required directly.
+  integration-tests:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    needs: [changes, providers, kubernetes]
+    if: always()
+    steps:
+      - name: Check results
+        run: |
+          echo "changes:    ${{ needs.changes.result }}"
+          echo "providers:  ${{ needs.providers.result }}"
+          echo "kubernetes: ${{ needs.kubernetes.result }}"
+
+          # `skipped` is the expected result when a PR touches no example of that kind.
+          if ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}; then
+            echo "::error::One or more integration test jobs did not pass."
+            exit 1
+          fi

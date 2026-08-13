@@ -23,7 +23,7 @@ func TestAccDigitalOceanPyK8s(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccDigitalOceanPyLoadbalancedDroplets(t *testing.T) {
@@ -38,7 +38,7 @@ func TestAccDigitalOceanPyLoadbalancedDroplets(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccDigitalOceanTsK8s(t *testing.T) {
@@ -52,7 +52,7 @@ func TestAccDigitalOceanTsK8s(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccDigitalOceanTsLoadbalancedDroplets(t *testing.T) {
@@ -67,7 +67,7 @@ func TestAccDigitalOceanTsLoadbalancedDroplets(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccDigitalOceanCsK8s(t *testing.T) {
@@ -81,7 +81,7 @@ func TestAccDigitalOceanCsK8s(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccDigitalOceanCsLoadbalancedDroplets(t *testing.T) {
@@ -96,5 +96,5 @@ func TestAccDigitalOceanCsLoadbalancedDroplets(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }

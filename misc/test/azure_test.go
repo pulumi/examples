@@ -54,7 +54,7 @@ func runAzure(t *testing.T, def definitions.TestDefinition) {
 				Dir: path.Join(helpers.GetCwd(t), "..", "..", def.Dir),
 			})
 
-		integration.ProgramTest(t, &test)
+		helpers.ProgramTest(t, &test)
 	})
 }
 
