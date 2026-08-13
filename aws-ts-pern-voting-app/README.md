@@ -16,7 +16,7 @@ The example shows how easy it is to deploy containers into production and to con
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 1. [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
-1. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
+1. [Configure Pulumi for TypeScript](https://www.pulumi.com/docs/intro/languages/javascript/)
 1. [Install Docker](https://docs.docker.com/engine/installation/)
 
 ## Deploying and running the program
@@ -32,11 +32,15 @@ The example shows how easy it is to deploy containers into production and to con
 
     ```bash
     $ pulumi config set aws:region us-west-2
-    $ pulumi config set sqlAdminName <NAME>
-    $ pulumi config set sqlsqlAdminPassword <PASSWORD> --secret
-    $ pulumi config set sqlUserName <NAME>
-    $ pulumi config set sqlUserPassword <PASSWORD> --secret
+    $ pulumi config set sql-admin-name <NAME>
+    $ pulumi config set sql-admin-password <PASSWORD> --secret
+    $ pulumi config set sql-user-name <NAME>
+    $ pulumi config set sql-user-password <PASSWORD> --secret
     ```
+
+    The user names must be valid PostgreSQL identifiers, and the passwords must
+    satisfy the RDS master password rules (8-128 printable ASCII characters,
+    excluding `/`, `"`, `@`, and spaces).
 
 1. Restore NPM modules via `npm install` or `yarn install`.
 

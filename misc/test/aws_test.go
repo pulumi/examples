@@ -361,6 +361,30 @@ func TestAccAwsTsNextjs(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestAccAwsTsPernVotingApp(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir: path.Join(getCwd(t), "..", "..", "aws-ts-pern-voting-app"),
+			Config: map[string]string{
+				"voting-app:sql-admin-name": "pulumiadmin",
+				"voting-app:sql-user-name":  "appuser",
+			},
+			Secrets: map[string]string{
+				"voting-app:sql-admin-password": "2Password2",
+				"voting-app:sql-user-password":  "2Password2",
+			},
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := "http://" + stack.Outputs["URL"].(string)
+				helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Voting App")
+				})
+			},
+		})
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestAccAwsTsEksHelloWorld(t *testing.T) {
 	t.Skip("Skip due to frequent failures: `timeout while waiting for state to become 'ACTIVE'`")
 	test := getAWSBase(t).

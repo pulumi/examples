@@ -1,6 +1,5 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
-import * as crypto from "crypto";
 import * as pulumi from "@pulumi/pulumi";
 
 // A class representing the arguments that the dynamic provider needs. Each argument
@@ -10,6 +9,7 @@ export interface SchemaInputs {
     creatorName: pulumi.Input<string>;
     creatorPassword: pulumi.Input<string>;
     serverAddress: pulumi.Input<string>;
+    serverPort: pulumi.Input<number>;
     databaseName: pulumi.Input<string>;
     creationScript: pulumi.Input<string>;
     deletionScript: pulumi.Input<string>;
@@ -21,13 +21,19 @@ export interface SchemaInputs {
 export class SchemaProvider implements pulumi.dynamic.ResourceProvider {
     // The function that is called when a new resource needs to be created
     async create(args: SchemaInputs): Promise<pulumi.dynamic.CreateResult> {
+        // Modules used by a dynamic provider must be required inside the provider functions.
+        // A module captured from the enclosing scope cannot be serialized into the provider.
+        const crypto = require("crypto");
         const { Pool } = require("pg");
         const pool = new Pool({
             user: args.creatorName,
             password: args.creatorPassword,
             host: args.serverAddress,
-            port: 2000,
+            port: args.serverPort,
             database: args.databaseName,
+            // RDS PostgreSQL requires TLS. This example does not verify the RDS
+            // certificate authority; a production app should supply the RDS CA bundle.
+            ssl: { rejectUnauthorized: false },
         });
         const scriptExecuted = await pool.query(args.creationScript);
 
@@ -43,8 +49,9 @@ export class SchemaProvider implements pulumi.dynamic.ResourceProvider {
             user: args.creatorName,
             password: args.creatorPassword,
             host: args.serverAddress,
-            port: 2000,
+            port: args.serverPort,
             database: args.databaseName,
+            ssl: { rejectUnauthorized: false },
         });
         const scriptExecuted = await pool.query(args.deletionScript);
 
@@ -57,12 +64,16 @@ export class SchemaProvider implements pulumi.dynamic.ResourceProvider {
     async diff(id: string, oldArgs: SchemaInputs, newArgs: SchemaInputs): Promise<pulumi.dynamic.DiffResult> {
         const changes: boolean = ((oldArgs.creatorName !== newArgs.creatorName) ||
             (oldArgs.creatorPassword !== newArgs.creatorPassword) || (oldArgs.serverAddress !== newArgs.serverAddress) ||
+            (oldArgs.serverPort !== newArgs.serverPort) ||
             (oldArgs.databaseName !== newArgs.databaseName) || (oldArgs.creationScript !== newArgs.creationScript) ||
             (oldArgs.deletionScript !== newArgs.deletionScript));
 
         const replaces: string[] = [];
         if (oldArgs.serverAddress !== newArgs.serverAddress) {
             replaces.push("serverAddress");
+        }
+        if (oldArgs.serverPort !== newArgs.serverPort) {
+            replaces.push("serverPort");
         }
         if (oldArgs.databaseName !== newArgs.databaseName) {
             replaces.push("databaseName");
@@ -98,6 +109,7 @@ export class Schema extends pulumi.dynamic.Resource {
     public readonly creatorName!: pulumi.Output<string>;
     public readonly creatorPassword!: pulumi.Output<string>;
     public readonly serverAddress!: pulumi.Output<string>;
+    public readonly serverPort!: pulumi.Output<number>;
     public readonly databaseName!: pulumi.Output<string>;
     public readonly creationScript!: pulumi.Output<string>;
     public readonly deletionScript!: pulumi.Output<string>;

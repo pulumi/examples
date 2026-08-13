@@ -1,17 +1,13 @@
-FROM ubuntu:24.04@sha256:72297848456d5d37d1262630108ab308d3e9ec7ed1c3286a32fe09856619a782
+FROM node:22-slim@sha256:d649c27dae7ba0137b3cef5dd75baa422c08dc3d9e3fc0c23dfb172dc3cc6436
 
-WORKDIR /
+WORKDIR /server
 
 EXPOSE 5000
 
-RUN apt update && \
-    apt install -y curl postgresql
+COPY server/package.json /server/package.json
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs
+RUN npm install
 
-ADD server /server
-
-RUN cd server && npm install
+COPY server /server
 
 CMD [ "/server/startServer.sh" ]

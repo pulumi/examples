@@ -5,7 +5,6 @@ import * as awsx from "@pulumi/awsx";
 import * as postgresql from "@pulumi/postgresql";
 import * as pulumi from "@pulumi/pulumi";
 import { Schema } from "./PostgreSqlDynamicProvider";
-import { table } from "console";
 
 const config = new pulumi.Config();
 const sqlAdminName = config.require("sql-admin-name");
@@ -13,6 +12,9 @@ const sqlAdminPassword = config.requireSecret("sql-admin-password");
 const sqlUserName = config.require("sql-user-name");
 const sqlUserPassword = config.requireSecret("sql-user-password");
 const availabilityZone = aws.config.region;
+
+// The port the PostgreSQL RDS instance listens on.
+const rdsPort = 2000;
 
 const appVpc = new aws.ec2.Vpc("app-vpc", {
     cidrBlock: "172.31.0.0/16",
@@ -79,7 +81,7 @@ const postgresqlRdsServer = new aws.rds.Instance("postgresql-rds-server", {
     allocatedStorage: 20,
     skipFinalSnapshot: true,
     publiclyAccessible: true,
-    port: 2000,
+    port: rdsPort,
     dbSubnetGroupName: rdsSubnetGroup.name,
     vpcSecurityGroupIds: [rdsSecurityGroup.id],
 });
@@ -129,6 +131,7 @@ const postgresqlVotesTable = new Schema("postgresql-votes-schema", {
     creatorName: sqlAdminName,
     creatorPassword: sqlAdminPassword,
     serverAddress: postgresqlRdsServer.address,
+    serverPort: rdsPort,
     databaseName: postgresDatabase.name,
     creationScript: creationScript,
     deletionScript: deletionScript,
@@ -137,10 +140,36 @@ const postgresqlVotesTable = new Schema("postgresql-votes-schema", {
 
 const repo = new awsx.ecr.Repository("repo", {});
 
-const loadbalancer = new awsx.lb.ApplicationLoadBalancer("loadbalancer", {});
+// An explicit cluster to run the services in. Without one, the services fall back
+// to an account's "default" cluster, which does not necessarily exist.
+const cluster = new aws.ecs.Cluster("app-cluster", {});
 
-const serverImage = new awsx.ecr.Image("server-side-service", { repositoryUrl: repo.repository.repositoryUrl, context: "./serverside" });
+// The load balancer in front of the Express API. With `networkMode: awsvpc` the
+// target group port must match the container port, so it cannot be left on its
+// default of 80. The health check targets the `/health` route the server exposes,
+// since `/` is not a route the API serves.
+const loadbalancer = new awsx.lb.ApplicationLoadBalancer("loadbalancer", {
+    defaultTargetGroup: {
+        port: 5000,
+        protocol: "HTTP",
+        healthCheck: {
+            path: "/health",
+        },
+    },
+});
+
+// `platform` is set explicitly so that building on an ARM machine (such as an
+// Apple Silicon Mac) still produces an image Fargate can run.
+const serverImage = new awsx.ecr.Image("server-side-service", {
+    repositoryUrl: repo.repository.repositoryUrl,
+    context: "./serverside",
+    platform: "linux/amd64",
+});
 const serversideService = new awsx.ecs.FargateService("server-side-service", {
+    cluster: cluster.arn,
+    // The default VPC has no private subnets, so the tasks need a public IP in
+    // order to pull their image from ECR and reach the RDS instance.
+    assignPublicIp: true,
     taskDefinitionArgs: {
         container: {
                 name: "serversideService",
@@ -151,16 +180,29 @@ const serversideService = new awsx.ecs.FargateService("server-side-service", {
                     { name: "USER_NAME", value: sqlUserName },
                     { name: "USER_PASSWORD", value: sqlUserPassword },
                     { name: "RDS_ADDRESS", value: postgresqlRdsServer.address },
-                    { name: "RDS_PORT", value: String(2000) },
+                    { name: "RDS_PORT", value: String(rdsPort) },
                     { name: "DATABASE_NAME", value: postgresDatabase.name },
                 ],
         },
     },
-});
+}, { dependsOn: [postgresqlVotesTable] });
 
-const clientImage = new awsx.ecr.Image("client-side-service", { repositoryUrl: repo.repository.repositoryUrl, context: "./clientside" });
-const clientLB = new awsx.lb.ApplicationLoadBalancer("client-loadbalancer", {});
+const clientImage = new awsx.ecr.Image("client-side-service", {
+    repositoryUrl: repo.repository.repositoryUrl,
+    context: "./clientside",
+    platform: "linux/amd64",
+});
+// With `networkMode: awsvpc`, the target group port must match the container port,
+// so the target group cannot be left on its default of 80.
+const clientLB = new awsx.lb.ApplicationLoadBalancer("client-loadbalancer", {
+    defaultTargetGroup: {
+        port: 3000,
+        protocol: "HTTP",
+    },
+});
 const clientsideService = new awsx.ecs.FargateService("client-side-service", {
+    cluster: cluster.arn,
+    assignPublicIp: true,
     taskDefinitionArgs: {
         container: {
                 name: "clientsideService",

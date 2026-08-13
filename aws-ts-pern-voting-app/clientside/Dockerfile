@@ -1,21 +1,18 @@
-FROM ubuntu:24.04@sha256:72297848456d5d37d1262630108ab308d3e9ec7ed1c3286a32fe09856619a782
+FROM node:22-slim@sha256:d649c27dae7ba0137b3cef5dd75baa422c08dc3d9e3fc0c23dfb172dc3cc6436
 
-WORKDIR /
+WORKDIR /client
 
 EXPOSE 3000
 
-RUN apt update && \
-    apt install -y curl
+# `serve` hosts the production build produced below.
+RUN npm install --global serve
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs
+COPY client/package.json /client/package.json
 
-ADD client/package.json /client/package.json
+RUN npm install
 
-RUN cd client && npm install
+COPY client /client
 
-ADD client /client
-
-RUN cd client && npm run build
+RUN npm run build
 
 CMD [ "/client/startClient.sh" ]
