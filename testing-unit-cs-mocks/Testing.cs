@@ -52,8 +52,30 @@ namespace UnitTesting
 
         public Task<object> CallAsync(MockCallArgs args)
         {
-            // We don't use this method in this particular test suite.
-            // Default to returning whatever we got as input.
+            var outputs = ImmutableDictionary.CreateBuilder<string, object>();
+
+            // Mock the `ListStorageAccountKeys` invoke used to build the storage account's
+            // connection string. This shows how to mock an `Invoke` (data source) call whose
+            // result contains a list of complex objects: plain `List`/`Dictionary` instances
+            // mirroring the shape of the real result are all that's needed. There's no need to
+            // hand-craft JSON - the mocking infrastructure serializes these the same way it
+            // serializes resource inputs/outputs.
+            if (args.Token == "azure-native:storage:listStorageAccountKeys")
+            {
+                outputs.Add("keys", new List<object>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "creationTime", "2020-01-01T00:00:00Z" },
+                        { "keyName", "key1" },
+                        { "permissions", "Full" },
+                        { "value", "mock-storage-account-key" },
+                    },
+                });
+                return Task.FromResult((object)outputs.ToImmutable());
+            }
+
+            // For any other call, default to returning whatever we got as input.
             return Task.FromResult((object)args.Args);
         }
     }

@@ -48,8 +48,35 @@ public class WebsiteStack : Stack
         
         this.Endpoint = storageAccount.PrimaryEndpoints.Apply(
             primaryEndpoints => primaryEndpoints.Web);
+
+        // Retrieve the primary storage account key, e.g. to build a connection string for
+        // another resource that needs access to this storage account. This is a good example of
+        // an `Invoke` (data source) call whose result contains a nested array of complex objects
+        // - see WebsiteStackTests.cs and Testing.cs for how to mock it in unit tests.
+        this.PrimaryStorageKey = GetPrimaryStorageKey(resourceGroup.Name, storageAccount.Name);
     }
 
     [Output] public Output<string> Endpoint { get; set; }
+
+    [Output] public Output<string> PrimaryStorageKey { get; set; }
+
+    private static Output<string> GetPrimaryStorageKey(Input<string> resourceGroupName, Input<string> accountName)
+    {
+        // Note: `ListStorageAccountKeys.InvokeAsync` is wrapped in `Output.Tuple(...).Apply(...)`
+        // rather than using the `ListStorageAccountKeys.Invoke(...)` Output-returning overload,
+        // since the latter can be unreliable when its arguments (here, `resourceGroupName` and
+        // `accountName`) depend on other resources' outputs.
+        var storageAccountKeys = Output.Tuple(resourceGroupName, accountName).Apply(t =>
+        {
+            var (rgName, saName) = t;
+            return ListStorageAccountKeys.InvokeAsync(new ListStorageAccountKeysArgs
+            {
+                ResourceGroupName = rgName,
+                AccountName = saName,
+            });
+        });
+
+        return storageAccountKeys.Apply(keys => keys.Keys[0].Value);
+    }
 }
 
