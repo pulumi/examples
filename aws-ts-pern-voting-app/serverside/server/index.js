@@ -6,6 +6,11 @@ const pool = require("./db");
 app.use(cors());
 app.use(express.json());
 
+// The load balancer's health check target.
+app.get("/health", (request, response) => {
+  response.json("ok");
+});
+
 app.get("/voting", async (request, response) => {
   console.log("Get all request");
   try {

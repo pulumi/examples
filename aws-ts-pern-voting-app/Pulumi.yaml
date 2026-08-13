@@ -6,6 +6,13 @@ template:
     aws:region:
       description: The AWS region to deploy into
       default: us-west-2
-    redisPassword:
-      description: The Redis password
+    sql-admin-name:
+      description: The administrator user name for the PostgreSQL database
+    sql-admin-password:
+      description: The administrator password for the PostgreSQL database
+      secret: true
+    sql-user-name:
+      description: The application user name for the PostgreSQL database
+    sql-user-password:
+      description: The application user password for the PostgreSQL database
       secret: true

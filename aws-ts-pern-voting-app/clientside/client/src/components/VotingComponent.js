@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
-const fullServerUrl = "http://" + window.SERVER_URL + ":5000/voting";
+// The server is reached through its load balancer, which listens on port 80.
+const fullServerUrl = "http://" + window.SERVER_URL + "/voting";
 
 const ListChoices = () => {
   const [choices, setChoices] = useState([]);
