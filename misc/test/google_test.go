@@ -27,7 +27,7 @@ func TestAccGcpGoFunctions(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccGcpGoFunctionsRaw(t *testing.T) {
@@ -42,7 +42,7 @@ func TestAccGcpGoFunctionsRaw(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccGcpGoGke(t *testing.T) {
@@ -57,7 +57,7 @@ func TestAccGcpGoGke(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccGcpGoInstance(t *testing.T) {
@@ -68,7 +68,7 @@ func TestAccGcpGoInstance(t *testing.T) {
 			Dir: path.Join(getCwd(t), "..", "..", "gcp-go-instance"),
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccGcpGoWebserver(t *testing.T) {
@@ -83,7 +83,7 @@ func TestAccGcpGoWebserver(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccGcpJsWebserver(t *testing.T) {
@@ -98,7 +98,7 @@ func TestAccGcpJsWebserver(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccGcpPyFunctions(t *testing.T) {
@@ -113,7 +113,7 @@ func TestAccGcpPyFunctions(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccGcpPyServerlessRaw(t *testing.T) {
@@ -131,7 +131,7 @@ func TestAccGcpPyServerlessRaw(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccGcpPyInstanceNginx(t *testing.T) {
@@ -148,7 +148,7 @@ func TestAccGcpPyInstanceNginx(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccGcpTsFunctions(t *testing.T) {
@@ -163,7 +163,7 @@ func TestAccGcpTsFunctions(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 func TestAccGcpTsServerlessRaw(t *testing.T) {
@@ -181,7 +181,7 @@ func TestAccGcpTsServerlessRaw(t *testing.T) {
 			},
 		})
 
-	integration.ProgramTest(t, &test)
+	helpers.ProgramTest(t, &test)
 }
 
 // Temporarily skipped. See https://github.com/pulumi/pulumi-gcp/issues/2155 for details.
@@ -197,7 +197,7 @@ func TestAccGcpTsServerlessRaw(t *testing.T) {
 // 			},
 // 		})
 
-// 	integration.ProgramTest(t, &test)
+// 	helpers.ProgramTest(t, &test)
 // }
 
 func getGoogleProject() string {

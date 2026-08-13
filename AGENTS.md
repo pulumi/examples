@@ -13,8 +13,10 @@ Collection of 300+ Pulumi infrastructure-as-code examples spanning AWS, Azure, G
 - `Makefile` — test, format, and validation targets
 - `misc/test/` — Go integration test harness (all examples are tested here)
 - `example-readme-template.md.txt` — canonical README template for new examples
-- `.github/workflows/test-examples.yml` — CI configuration
-- `scripts/pr-preview-changed.sh` — PR-scoped preview validation
+- `.github/workflows/pull-request.yml` — PR CI: runs integration tests for changed examples only
+- `.github/workflows/test-examples.yml` — nightly full sweep across every example
+- `scripts/changed-examples.sh` — decides which examples and test sets a PR needs
+- `scripts/pr-preview-changed.sh` — local-only preview validation (not used by CI)
 
 ## Index of scoped AGENTS.md
 
@@ -35,7 +37,8 @@ Collection of 300+ Pulumi infrastructure-as-code examples spanning AWS, Azure, G
 | Run all integration tests | `make only_test` | ~4h, 40 parallel |
 | Run one test | `make test_example.TestAccAwsPyS3Folder` | |
 | Run cloud+lang set | `make specific_test_set TestSet=AwsTs` | |
-| PR preview (changed only) | `make pr_preview` | |
+| Show what CI will run for a PR | `make changed_examples` | Same selection as `pull-request.yml` |
+| PR preview (changed only) | `make pr_preview` | Local aid only; CI does not use it |
 | Lint TypeScript | `tslint -c tslint.json **/*.ts` | CI gate |
 
 ## Repository Structure
@@ -106,8 +109,25 @@ TypeScript/JSON: 2 spaces | Python/C#: 4 spaces | Go: tabs | YAML: 2 spaces (`.e
 | Any TypeScript file | `tslint -c tslint.json <file>` (check copyright header) |
 | A specific example | `make test_example.TestAcc<TestName>` |
 | `misc/test/*.go` | `cd misc/test && go build -tags all ./...` |
+| `misc/test/helpers/` | `cd misc/test && go test ./helpers/...` |
 | `Makefile` | Verify the changed target runs successfully |
+| `scripts/changed-examples.sh` | `make changed_examples` |
 | `scripts/` | `make pr_preview` (with DRY_LIST=1 for a dry run) |
+
+## How PR CI picks what to run
+
+`pull-request.yml` runs the real integration tests, but only for the examples the PR
+touched. Two things do the narrowing, and both have to stay correct:
+
+1. `scripts/changed-examples.sh` turns the diff into a `<Cloud><Lang>` job matrix, so
+   untouched clouds and languages never start a job.
+2. `PULUMI_CHANGED_PATHS` narrows the run *within* a job. `make specific_test_set` filters
+   on an unanchored `TestAcc<Set>` prefix, which would otherwise deploy every example in
+   the set.
+
+Changes to shared paths (`misc/test/**`, `.github/**`, `scripts/**`, `Makefile`, root
+`package.json`) fall back to the full sweep, since they can affect any example.
+`test-examples.yml` always runs everything, nightly.
 
 ## Escalate immediately if
 - Changing `misc/test/examples_test.go` or test helpers (affects all tests)

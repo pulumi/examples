@@ -96,7 +96,7 @@ func TestAccKubernetesGuestbook(t *testing.T) {
 		example := ex
 		t.Run(example.Dir, func(t *testing.T) {
 			t.Log(example.StackName)
-			integration.ProgramTest(t, &example)
+			helpers.ProgramTest(t, &example)
 		})
 	}
 }
