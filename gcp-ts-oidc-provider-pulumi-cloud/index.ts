@@ -53,8 +53,8 @@ const oidcProvider = new gcp.iam.WorkloadIdentityPoolProvider("identity-pool-pro
 });
 
 const enableIamCredsApi = new gcp.projects.Service("enableIamCredentialsApi", {
-    service: "iamcredentials.googleapis.com",
-    project: gcpProjectName,
+  service: "iamcredentials.googleapis.com",
+  project: gcpProjectName,
 }, { retainOnDelete: true });
 
 const serviceAccount = new gcp.serviceaccount.Account("service-account", {
@@ -95,6 +95,8 @@ values:
   pulumiConfig:
     gcp:project: \${gcp.login.project}
   environmentVariables:
+    # Used by Pulumi Cloud account scans and Terraform:
+    GOOGLE_PROJECT: \${gcp.login.project}
     # The Google Cloud SDK (which is used by the Pulumi provider) requires the project to be set by number:
     GOOGLE_CLOUD_PROJECT: \${gcp.login.project}
     # The gcloud CLI requires the project be set by name, and via a different env var.
