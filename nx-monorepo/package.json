@@ -5,7 +5,7 @@
   "private": true,
   "devDependencies": {
     "@nx/js": "20.6.4",
-    "nx": "20.6.4",
+    "nx": "22.7.2",
     "typescript": "5.8.2"
   },
   "workspaces": [
