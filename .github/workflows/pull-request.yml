@@ -144,8 +144,8 @@ jobs:
       - name: unit tests
         working-directory: testing-unit-py
         run: |
-          pip install -r requirements.txt
-          python -m pytest
+          pulumi install
+          venv/bin/python -m unittest -v
 
   unit-go:
     name: Go unit tests
