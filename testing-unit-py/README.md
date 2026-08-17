@@ -18,16 +18,13 @@ An example of writing mock-based unit tests with both infrastructure definition 
 
 2.  Run the tests:
 
-    ```
-    $ python -m pytest --disable-pytest-warnings # or simply `pytest --disable-pytest-warnings`
-
-    ====================================================================================================== 3 passed, 6 warnings in 0.76s =======================================================================================================
-
-    ```
+   ```bash
+   $ python -m unittest -v
+   ```
 
 ## Further steps
 
 Learn more about testing Pulumi programs:
 
-- [Testing Guide](https://www.pulumi.com/docs/guides/testing/)
-- [Unit Testing Guide](https://www.pulumi.com/docs/guides/testing/unit/)
+- [Testing Guide](https://www.pulumi.com/docs/iac/guides/testing/)
+- [Unit Testing Guide](https://www.pulumi.com/docs/iac/guides/testing/unit/)

@@ -1,8 +1,45 @@
 import pulumi
+from pulumi_aws import ec2
 
-import infra
+group = ec2.SecurityGroup(
+    "web-secgrp",
+    ingress=[
+        # Uncomment to fail a test:
+        # {"protocol": "tcp", "from_port": 22, "to_port": 22, "cidr_blocks": ["0.0.0.0/0"]},
+        {
+            "protocol": "tcp",
+            "from_port": 80,
+            "to_port": 80,
+            "cidr_blocks": ["0.0.0.0/0"],
+        },
+    ],
+)
 
-pulumi.export("group", infra.group)
-pulumi.export("server", infra.server)
-pulumi.export("publicIp", infra.server.public_ip)
-pulumi.export("publicHostName", infra.server.public_dns)
+user_data = '#!/bin/bash echo "Hello, World!" > index.html nohup python -m SimpleHTTPServer 80 &'
+
+ami_id = ec2.get_ami(
+    most_recent=True,
+    owners=["099720109477"],
+    filters=[
+        ec2.GetAmiFilterArgs(
+            name="name",
+            values=["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"],
+        )
+    ],
+).id
+
+server = ec2.Instance(
+    "web-server-www",
+    instance_type="t2.micro",
+    vpc_security_group_ids=[group.id],
+    # Comment out to fail a test:
+    tags={"Name": "webserver"},
+    # Uncomment to fail a test:
+    # user_data=user_data,
+    ami=ami_id,
+)
+
+pulumi.export("group", group)
+pulumi.export("server", server)
+pulumi.export("publicIp", server.public_ip)
+pulumi.export("publicHostName", server.public_dns)
