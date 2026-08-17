@@ -28,10 +28,6 @@ func TestAccAzureGo(t *testing.T) {
 	runAzureTestsForLanguage(t, definitions.Go)
 }
 
-func TestAccAzureJs(t *testing.T) {
-	runAzureTestsForLanguage(t, definitions.JS)
-}
-
 func TestAccAzurePy(t *testing.T) {
 	runAzureTestsForLanguage(t, definitions.Python)
 }

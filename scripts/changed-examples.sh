@@ -10,8 +10,9 @@ set -euo pipefail
 #   test-sets       JSON array of TestSet names for the providers matrix, e.g. ["AwsTs"]
 #   run-kubernetes  "true" if any kubernetes-* example changed
 #
-# The nightly sweep in test-examples.yml does not use this script -- it always runs
-# everything, so untouched examples still get exercised daily.
+# Run with --all-test-sets to print just the full JSON array and exit. The nightly sweep in
+# test-examples.yml builds its matrix that way, so the list of test sets has a single home;
+# the sweep still runs every example, since it sets no PULUMI_CHANGED_PATHS.
 
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root"
@@ -56,15 +57,50 @@ is_shared_path() {
   esac
 }
 
-# The combos the nightly matrix runs. Used when a shared path forces a full sweep.
+# Every integration test set that has at least one TestAcc<Set> runner in misc/test. Used
+# when a shared path forces a full sweep, and by test-examples.yml (via --all-test-sets) to
+# build the nightly matrix, so the list lives in exactly one place.
+#
+# This is a list rather than a cloud x language product on purpose. Most combinations don't
+# exist -- there is no GcpCs, GcpFs or DigitalOceanFs runner -- and `go test --run=TestAccGcpCs`
+# matches nothing, prints "no tests to run" and exits 0. A product would keep starting jobs
+# that report green coverage the repository doesn't have.
+#
+# Kubernetes is absent because it has a single TestAccKubernetesGuestbook runner with no
+# language token, and its own job with a minikube setup rather than a matrix entry.
 all_test_sets() {
-  local cloud lang
-  for cloud in DigitalOcean Aws Azure Gcp; do
-    for lang in Cs Ts Py Fs; do
-      echo "${cloud}${lang}"
-    done
-  done
+  cat <<'SETS'
+AwsCs
+AwsFs
+AwsGo
+AwsPy
+AwsTs
+AzureCs
+AzureFs
+AzureGo
+AzurePy
+AzureTs
+DigitalOceanCs
+DigitalOceanPy
+DigitalOceanTs
+GcpGo
+GcpPy
+GcpTs
+SETS
 }
+
+# Render newline-separated test set names as a JSON array, for `fromJson` in a matrix.
+to_json_array() {
+  sed '/^$/d' \
+    | awk 'BEGIN{printf "["} {printf "%s\"%s\"", (NR>1 ? "," : ""), $0} END{printf "]"}'
+}
+
+# Print the full set list and stop. The nightly sweep needs only this, and asking for it
+# must not require a diff base.
+if [ "${1:-}" = "--all-test-sets" ]; then
+  all_test_sets | sort -u | to_json_array
+  exit 0
+fi
 
 # Determine what to diff against. CI passes the PR base; locally we fall back to the merge
 # base with master. Three-dot semantics matter here: a plain `git diff master` would also
@@ -178,8 +214,7 @@ fi
 
 # Render the test sets as a JSON array for `fromJson` in the matrix.
 if [ -n "$selected_sets" ]; then
-  test_sets_json=$(printf '%s\n' "$selected_sets" | sed '/^$/d' \
-    | awk 'BEGIN{printf "["} {printf "%s\"%s\"", (NR>1 ? "," : ""), $0} END{printf "]"}')
+  test_sets_json=$(printf '%s\n' "$selected_sets" | to_json_array)
 else
   test_sets_json="[]"
 fi

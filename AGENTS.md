@@ -127,7 +127,13 @@ touched. Two things do the narrowing, and both have to stay correct:
 
 Changes to shared paths (`misc/test/**`, `.github/**`, `scripts/**`, `Makefile`, root
 `package.json`) fall back to the full sweep, since they can affect any example.
-`test-examples.yml` always runs everything, nightly.
+`test-examples.yml` always runs every example, nightly.
+
+Both workflows take the list of test sets from the same place: `all_test_sets()` in
+`scripts/changed-examples.sh`. The nightly matrix reads it via
+`bash scripts/changed-examples.sh --all-test-sets`. Add a set there only once a
+`TestAcc<Set>` runner exists — `go test --run=` on a set with no runner matches nothing
+and exits 0, so the job reports green having tested nothing.
 
 ## Escalate immediately if
 - Changing `misc/test/examples_test.go` or test helpers (affects all tests)

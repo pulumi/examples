@@ -190,9 +190,26 @@ jobs:
           - testing-unit-cs-mocks
           - testing-unit-fs-mocks
 
-  providers:
-    name: ${{ matrix.clouds }}${{ matrix.languages }} integration tests
+  test-sets:
+    name: Resolve integration test sets
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      test-sets: ${{ steps.sets.outputs.test-sets }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      # The set list lives in changed-examples.sh so the sweep and the per-PR run can't
+      # drift apart, and so a combination with no TestAcc<Set> runner never gets a job.
+      - name: Resolve test sets
+        id: sets
+        run: echo "test-sets=$(bash scripts/changed-examples.sh --all-test-sets)" >> "$GITHUB_OUTPUT"
+
+  providers:
+    name: ${{ matrix.test-set }} integration tests
+    runs-on: ubuntu-latest
+    needs: test-sets
     permissions:
       id-token: write
       contents: read
@@ -221,7 +238,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run tests
-        run: make specific_test_set TestSet=${{ matrix.clouds }}${{ matrix.languages }}
+        run: make specific_test_set TestSet=${{ matrix.test-set }}
         env:
           AWS_ACCESS_KEY_ID: ${{ steps.setup.outputs.aws-access-key-id }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.setup.outputs.aws-secret-access-key }}
@@ -244,18 +261,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - pulumi-ubuntu-8core
-        clouds:
-          - DigitalOcean
-          - Aws
-          - Azure
-          - Gcp
-        languages:
-          - Cs
-          - Ts
-          - Py
-          - Fs
+        test-set: ${{ fromJson(needs.test-sets.outputs.test-sets) }}
 
   kubernetes:
     name: Kubernetes integration tests
