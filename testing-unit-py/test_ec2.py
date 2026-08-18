@@ -1,3 +1,6 @@
+import runpy
+import unittest
+
 import pulumi
 
 
@@ -21,48 +24,48 @@ class MyMocks(pulumi.runtime.Mocks):
         return {}
 
 
-pulumi.runtime.set_mocks(MyMocks())
+class TestingWithMocks(unittest.IsolatedAsyncioTestCase):
+    def setUp(self):
+        pulumi.runtime.set_mocks(MyMocks())
 
-# Now actually import the code that creates resources, and then test it.
-import infra
+        # Run the program fresh for each test after setting the mocks.
+        program = runpy.run_path("__main__.py")
+        self.group = program["group"]
+        self.server = program["server"]
 
+    @pulumi.runtime.test
+    def test_server_tags(self):
+        def check_tags(args):
+            urn, tags = args
+            self.assertTrue(tags, f"server {urn} must have tags")
+            self.assertIn("Name", tags, f"server {urn} must have a name tag")
 
-# Test if the service has tags and a name tag.
-@pulumi.runtime.test
-def test_server_tags():
-    def check_tags(args):
-        urn, tags = args
-        assert tags, f"server {urn} must have tags"
-        assert "Name" in tags, "server {urn} must have a name tag"
+        return pulumi.Output.all(self.server.urn, self.server.tags).apply(check_tags)
 
-    return pulumi.Output.all(infra.server.urn, infra.server.tags).apply(check_tags)
+    @pulumi.runtime.test
+    def test_server_userdata(self):
+        def check_user_data(args):
+            urn, user_data = args
+            self.assertIsNone(user_data, f"illegal use of user_data on server {urn}")
 
+        return pulumi.Output.all(self.server.urn, self.server.user_data).apply(check_user_data)
 
-# Test if the instance is configured with user_data.
-@pulumi.runtime.test
-def test_server_userdata():
-    def check_user_data(args):
-        urn, user_data = args
-        assert user_data is None, f"illegal use of user_data on server {urn}"
+    @pulumi.runtime.test
+    def test_security_group_rules(self):
+        def check_security_group_rules(args):
+            urn, ingress = args
+            ssh_open = any(
+                rule["from_port"] == 22 and "0.0.0.0/0" in rule["cidr_blocks"] for rule in ingress
+            )
+            self.assertFalse(
+                ssh_open,
+                f"security group {urn} exposes port 22 to the Internet " "(CIDR 0.0.0.0/0)",
+            )
 
-    return pulumi.Output.all(infra.server.urn, infra.server.user_data).apply(check_user_data)
-
-
-# Test if port 22 for ssh is exposed.
-@pulumi.runtime.test
-def test_security_group_rules():
-    def check_security_group_rules(args):
-        urn, ingress = args
-        ssh_open = any(
-            [
-                rule["from_port"] == 22
-                and any([block == "0.0.0.0/0" for block in rule["cidr_blocks"]])
-                for rule in ingress
-            ]
+        return pulumi.Output.all(self.group.urn, self.group.ingress).apply(
+            check_security_group_rules
         )
-        assert (
-            ssh_open is False
-        ), f"security group {urn} exposes port 22 to the Internet (CIDR 0.0.0.0/0)"
 
-    # Return the results of the unit tests.
-    return pulumi.Output.all(infra.group.urn, infra.group.ingress).apply(check_security_group_rules)
+
+if __name__ == "__main__":
+    unittest.main()
