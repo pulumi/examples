@@ -2,8 +2,6 @@
 
 import * as apigateway from "@pulumi/aws-apigateway";
 import * as aws from "@pulumi/aws";
-import * as dynamoClient from "@aws-sdk/client-dynamodb";
-import * as dynamoLib from "@aws-sdk/lib-dynamodb";
 
 // Create a mapping from 'route' to a count
 const counterTable = new aws.dynamodb.Table("counterTable", {
@@ -19,12 +17,14 @@ const counterTable = new aws.dynamodb.Table("counterTable", {
 const getHandler = new aws.lambda.CallbackFunction("GET", {
     policies: [aws.iam.ManagedPolicy.AWSLambdaVPCAccessExecutionRole, aws.iam.ManagedPolicy.LambdaFullAccess],
     callback: async (ev, ctx) => {
+        const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+        const { DynamoDBDocument } = require("@aws-sdk/lib-dynamodb");
         const event = <any>ev;
         const route = event.pathParameters!["route"];
         console.log(`Getting count for '${route}'`);
 
-        const dynoClient = new dynamoClient.DynamoDBClient({});
-        const doc = dynamoLib.DynamoDBDocument.from(dynoClient);
+        const dynoClient = new DynamoDBClient({});
+        const doc = DynamoDBDocument.from(dynoClient);
 
         // get previous value and increment
         // reference outer `counterTable` object

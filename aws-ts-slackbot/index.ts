@@ -2,12 +2,7 @@
 
 import * as apig from "@pulumi/aws-apigateway";
 import * as aws from "@pulumi/aws";
-import * as dynamoClient from "@aws-sdk/client-dynamodb";
-import * as dynamoLib from "@aws-sdk/lib-dynamodb";
 import * as pulumi from "@pulumi/pulumi";
-import * as qs from "qs";
-import * as sns from "@aws-sdk/client-sns";
-import * as superagent from "superagent";
 
 // A simple slack bot that, when requested, will monitor for @mentions of your name and post them to
 // the channel you contacted the bot from.
@@ -137,7 +132,8 @@ async function onEventCallback(request: EventCallbackRequest) {
 
     // Just enqueue the request to our topic and return immediately.  We have a strict time limit from
     // slack and they will resend messages if we don't get back to them ASAP.
-    const client = new sns.SNS();
+    const { SNS } = require("@aws-sdk/client-sns");
+    const client = new SNS();
     await client.publish({
         Message: JSON.stringify(request),
         TopicArn: messageTopic.arn.get(),
@@ -191,8 +187,10 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
     async function processMatch(match: string) {
         const id = match.substring("@<".length, match.length - ">".length);
 
-        const dynoClient = new dynamoClient.DynamoDBClient({});
-        const getResult = await dynamoLib.DynamoDBDocument.from(dynoClient).get({
+        const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+        const { DynamoDBDocument } = require("@aws-sdk/lib-dynamodb");
+        const dynoClient = new DynamoDBClient({});
+        const getResult = await DynamoDBDocument.from(dynoClient).get({
             TableName: subscriptionsTable.name.get(),
             Key: { id: id },
         });
@@ -210,11 +208,15 @@ async function onMessageEventCallback(request: EventCallbackRequest) {
 }
 
 async function sendChannelMessage(channel: string, text: string) {
+    const qs = require("qs");
+    const superagent = require("superagent");
     const message = { token: slackToken, channel, text };
     await superagent.get(`https://slack.com/api/chat.postMessage?${qs.stringify(message)}`);
 }
 
 async function getPermalink(channel: string, timestamp: string) {
+    const qs = require("qs");
+    const superagent = require("superagent");
     const message = { token: slackToken, channel, message_ts: timestamp };
     const result = await superagent.get(`https://slack.com/api/chat.getPermalink?${qs.stringify(message)}`);
     return JSON.parse(result.text).permalink;
@@ -232,8 +234,10 @@ async function onAppMentionEventCallback(request: EventCallbackRequest) {
 
 async function unsubscribeFromMentions(event: Event) {
     // User is unsubscribing.  Remove them from subscription table.
-    const dynoClient = new dynamoClient.DynamoDBClient({});
-    await dynamoLib.DynamoDBDocument.from(dynoClient).delete({
+    const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+    const { DynamoDBDocument } = require("@aws-sdk/lib-dynamodb");
+    const dynoClient = new DynamoDBClient({});
+    await DynamoDBDocument.from(dynoClient).delete({
         TableName: subscriptionsTable.name.get(),
         Key: { id: event.user },
     });
@@ -244,8 +248,10 @@ async function unsubscribeFromMentions(event: Event) {
 
 async function subscribeToMentions(event: Event) {
     // User is subscribing.  Add them from subscription table.
-    const dynoClient = new dynamoClient.DynamoDBClient({});
-    await dynamoLib.DynamoDBDocument.from(dynoClient).put({
+    const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+    const { DynamoDBDocument } = require("@aws-sdk/lib-dynamodb");
+    const dynoClient = new DynamoDBClient({});
+    await DynamoDBDocument.from(dynoClient).put({
         TableName: subscriptionsTable.name.get(),
         Item: { id: event.user, channel: event.channel },
     });
