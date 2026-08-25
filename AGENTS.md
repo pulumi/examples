@@ -56,12 +56,12 @@ Every example directory follows: `<cloud>-<language>-<descriptive-name>`
 | Prefix | Meaning |
 |---|---|
 | `aws`, `azure`, `gcp`, `kubernetes`, `digitalocean` | Cloud provider |
-| `ts`, `js`, `py`, `go`, `cs`, `fs`, `java`, `yaml` | Language |
+| `ts`, `js`, `py`, `go`, `cs`, `fs`, `java`, `yaml`, `hcl` | Language |
 | `classic-azure-*` | Uses the older `pulumi-azure` (not `azure-native`) |
 
 ## Example Structure
 Every example directory must contain:
-- `Pulumi.yaml` — project definition with `runtime:` field (nodejs/python/go/dotnet/yaml)
+- `Pulumi.yaml` — project definition with `runtime:` field (nodejs/python/go/dotnet/yaml/hcl)
 - `README.md` — follows `example-readme-template.md.txt` structure
 - Language-specific entry point (`index.ts`, `__main__.py`, `main.go`, `Program.cs`, `Pulumi.yaml`)
 - Language-specific dependency file (`package.json`, `requirements.txt`, `go.mod`, `*.csproj`)

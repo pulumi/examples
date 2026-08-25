@@ -89,6 +89,23 @@ func TestAccAwsGoWebserver(t *testing.T) {
 	helpers.ProgramTest(t, &test)
 }
 
+func TestAccAwsHclS3Folder(t *testing.T) {
+	test := getAWSBase(t).
+		With(integration.ProgramTestOptions{
+			Dir:            path.Join(getCwd(t), "..", "..", "aws-hcl-s3-folder"),
+			PrepareProject: helpers.HCLPrepareProject,
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				maxWait := 10 * time.Minute
+				endpoint := stack.Outputs["website_url"].(string)
+				helpers.AssertHTTPResultWithRetry(t, endpoint, nil, maxWait, func(body string) bool {
+					return assert.Contains(t, body, "Hello, S3!")
+				})
+			},
+		})
+
+	helpers.ProgramTest(t, &test)
+}
+
 func TestAccAwsCsAssumeRole(t *testing.T) {
 	nanos := time.Now().UnixNano()
 	test := getAWSBase(t).
