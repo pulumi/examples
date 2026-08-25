@@ -1,3 +1,9 @@
+terraform {
+  required_providers {
+    google = "~> 7.0"
+  }
+}
+
 resource "google_compute_network" "network" {
   name                    = "hcl-webserver-network"
   auto_create_subnetworks = true

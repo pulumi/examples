@@ -1,3 +1,9 @@
+terraform {
+  required_providers {
+    aws = "~> 6.0"
+  }
+}
+
 # Create a bucket and expose a website index document.
 resource "aws_s3_bucket" "site_bucket" {
   bucket_prefix = "s3-website-bucket"

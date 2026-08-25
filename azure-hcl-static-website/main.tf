@@ -1,3 +1,10 @@
+terraform {
+  required_providers {
+    azurerm = "~> 5.0"
+    random  = "~> 3.0"
+  }
+}
+
 provider "azurerm" {
   features {}
 }
@@ -46,18 +53,24 @@ locals {
   }
 }
 
+# Enabling the static website creates the $web container implicitly; look it up so the
+# blobs can reference it by ID.
+data "azurerm_storage_container" "web" {
+  name               = "$web"
+  storage_account_id = azurerm_storage_account.storage_account.id
+
+  depends_on = [azurerm_storage_account_static_website.static_website]
+}
+
 # Upload each file in the directory to the storage container backing the static website.
 resource "azurerm_storage_blob" "site_files" {
   for_each = fileset(local.site_dir, "**")
 
-  name                   = each.value
-  storage_account_name   = azurerm_storage_account.storage_account.name
-  storage_container_name = "$web"
-  type                   = "Block"
-  source                 = "${local.site_dir}/${each.value}"
-  content_type           = lookup(local.content_types, try(regex("\\.[^.]+$", each.value), ""), null)
-
-  depends_on = [azurerm_storage_account_static_website.static_website]
+  name                 = each.value
+  storage_container_id = data.azurerm_storage_container.web.id
+  type                 = "Block"
+  source               = "${local.site_dir}/${each.value}"
+  content_type         = lookup(local.content_types, try(regex("\\.[^.]+$", each.value), ""), null)
 }
 
 output "endpoint" {

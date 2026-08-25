@@ -1,3 +1,9 @@
+terraform {
+  required_providers {
+    kubernetes = "~> 2.0"
+  }
+}
+
 provider "kubernetes" {
   config_path = "~/.kube/config"
 }
