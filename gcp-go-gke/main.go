@@ -19,10 +19,13 @@ func main() {
 		masterVersion := engineVersions.LatestMasterVersion
 
 		cluster, err := container.NewCluster(ctx, "demo-cluster", &container.ClusterArgs{
-			InitialNodeCount: pulumi.Int(2),
-			MinMasterVersion: pulumi.String(masterVersion),
-			NodeVersion:      pulumi.String(masterVersion),
-			DatapathProvider: pulumi.String("ADVANCED_DATAPATH"),
+			// The provider defaults deletion protection to true, which leaves the
+			// cluster undeletable (and fails `pulumi destroy`) until it is unset.
+			DeletionProtection: pulumi.Bool(false),
+			InitialNodeCount:   pulumi.Int(2),
+			MinMasterVersion:   pulumi.String(masterVersion),
+			NodeVersion:        pulumi.String(masterVersion),
+			DatapathProvider:   pulumi.String("ADVANCED_DATAPATH"),
 			NodeConfig: &container.ClusterNodeConfigArgs{
 				MachineType: pulumi.String("n1-standard-1"),
 				OauthScopes: pulumi.StringArray{

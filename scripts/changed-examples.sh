@@ -39,6 +39,7 @@ lang_test_set() {
     cs)   echo Cs ;;
     fs)   echo Fs ;;
     go)   echo Go ;;
+    hcl)  echo Hcl ;;
     js)   echo Js ;;
     java) echo Java ;;
     yaml) echo Yaml ;;
@@ -73,17 +74,20 @@ all_test_sets() {
 AwsCs
 AwsFs
 AwsGo
+AwsHcl
 AwsPy
 AwsTs
 AzureCs
 AzureFs
 AzureGo
+AzureHcl
 AzurePy
 AzureTs
 DigitalOceanCs
 DigitalOceanPy
 DigitalOceanTs
 GcpGo
+GcpHcl
 GcpPy
 GcpTs
 SETS

@@ -1,0 +1,3 @@
+name: aws-hcl-s3-folder
+runtime: hcl
+description: A static website hosted on AWS S3, written in HCL

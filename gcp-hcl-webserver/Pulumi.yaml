@@ -1,0 +1,3 @@
+name: gcp-hcl-webserver
+runtime: hcl
+description: A simple web server on a Google Compute Engine instance, written in HCL

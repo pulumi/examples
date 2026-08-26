@@ -8,6 +8,7 @@ const (
 	CS     Tag = "cs"
 	FS     Tag = "fs"
 	Go     Tag = "go"
+	HCL    Tag = "hcl"
 	Java   Tag = "java"
 	JS     Tag = "js"
 	Python Tag = "py"

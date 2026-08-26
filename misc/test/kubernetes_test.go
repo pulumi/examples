@@ -61,6 +61,17 @@ func TestAccKubernetesGuestbook(t *testing.T) {
 			},
 		},
 		integration.ProgramTestOptions{
+			Dir:            path.Join(getCwd(t), "..", "..", "kubernetes-hcl-guestbook"),
+			NoParallel:     true,
+			PrepareProject: helpers.HCLPrepareProject,
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["frontend_ip"].(string)
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Guestbook")
+				})
+			},
+		},
+		integration.ProgramTestOptions{
 			Dir:        path.Join(getCwd(t), "..", "..", "kubernetes-py-guestbook", "simple"),
 			NoParallel: true,
 			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {

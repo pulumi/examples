@@ -86,6 +86,22 @@ func TestAccGcpGoWebserver(t *testing.T) {
 	helpers.ProgramTest(t, &test)
 }
 
+func TestAccGcpHclWebserver(t *testing.T) {
+	test := getGoogleBase(t).
+		With(integration.ProgramTestOptions{
+			Dir:            path.Join(getCwd(t), "..", "..", "gcp-hcl-webserver"),
+			PrepareProject: helpers.HCLPrepareProject,
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				endpoint := stack.Outputs["instance_ip"].(string)
+				helpers.AssertHTTPResult(t, endpoint, nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello, World!")
+				})
+			},
+		})
+
+	helpers.ProgramTest(t, &test)
+}
+
 func TestAccGcpPyFunctions(t *testing.T) {
 	test := getGoogleBase(t).
 		With(integration.ProgramTestOptions{

@@ -1,0 +1,3 @@
+name: azure-hcl-static-website
+runtime: hcl
+description: A static website hosted on Azure Blob Storage, written in HCL

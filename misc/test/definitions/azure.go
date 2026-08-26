@@ -12,6 +12,18 @@ const AzureClassicProvider Tag = "pulumi-azure"
 
 var AzureTests = TestDefinitions{
 	{
+		Tags: []Tag{AzureCloud, HCL},
+		Dir:  "azure-hcl-static-website",
+		Options: integration.ProgramTestOptions{
+			PrepareProject: helpers.HCLPrepareProject,
+			ExtraRuntimeValidation: func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				helpers.AssertHTTPResult(t, stack.Outputs["endpoint"].(string), nil, func(body string) bool {
+					return assert.Contains(t, body, "Hello, Azure!")
+				})
+			},
+		},
+	},
+	{
 		Tags: []Tag{AzureCloud, AzureClassicProvider, CS},
 		Dir:  "classic-azure-cs-webserver",
 		Options: integration.ProgramTestOptions{
