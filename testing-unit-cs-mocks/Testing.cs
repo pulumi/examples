@@ -54,12 +54,7 @@ namespace UnitTesting
         {
             var outputs = ImmutableDictionary.CreateBuilder<string, object>();
 
-            // Mock the `ListStorageAccountKeys` invoke used to build the storage account's
-            // connection string. This shows how to mock an `Invoke` (data source) call whose
-            // result contains a list of complex objects: plain `List`/`Dictionary` instances
-            // mirroring the shape of the real result are all that's needed. There's no need to
-            // hand-craft JSON - the mocking infrastructure serializes these the same way it
-            // serializes resource inputs/outputs.
+            // Example of mocking a Pulumi function (also known as an "Invoke"):
             if (args.Token == "azure-native:storage:listStorageAccountKeys")
             {
                 outputs.Add("keys", new List<object>
