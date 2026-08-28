@@ -1,4 +1,4 @@
-"""An AWS fargate with crosswalk vpc"""
+"""An AWS Fargate service with AWSx VPC"""
 
 import pulumi
 from pulumi import (
@@ -21,22 +21,22 @@ config = Config()
 mystackpath = config.require("mystackpath")
 
 # setting the StackReference
-mycrosswalkvpc = StackReference(mystackpath)
+myawsxvpc = StackReference(mystackpath)
 
 # Get all network values from previously created vpc #
-pulumi_vpc_name = mycrosswalkvpc.require_output("pulumi_vpc_name")
-pulumi_vpc_cidr = mycrosswalkvpc.require_output("pulumi_vpc_cidr")
-pulumi_vpc_id = mycrosswalkvpc.require_output("pulumi_vpc_id")
-pulumi_private_subnets = mycrosswalkvpc.require_output("pulumi_vpc_private_subnet_ids")
-pulumi_public_subnets = mycrosswalkvpc.require_output("pulumi_vpc_public_subnet_ids")
-pulumi_az_amount = mycrosswalkvpc.require_output("pulumi_vpc_az_zones")
+pulumi_vpc_name = myawsxvpc.require_output("pulumi_vpc_name")
+pulumi_vpc_cidr = myawsxvpc.require_output("pulumi_vpc_cidr")
+pulumi_vpc_id = myawsxvpc.require_output("pulumi_vpc_id")
+pulumi_private_subnets = myawsxvpc.require_output("pulumi_vpc_private_subnet_ids")
+pulumi_public_subnets = myawsxvpc.require_output("pulumi_vpc_public_subnet_ids")
+pulumi_az_amount = myawsxvpc.require_output("pulumi_vpc_az_zones")
 env_stack = get_stack()
 env_project = get_project()
 
 # common tags
 my_tags = {
     "application": "fargate",
-    "crosswalk-vpc": "yes",
+    "awsx-vpc": "yes",
     "demo": "yes",
     "costcenter": "1234",
     "env": "dev",

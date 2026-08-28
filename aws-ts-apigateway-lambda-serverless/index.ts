@@ -7,7 +7,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import handler from "./handler";
 
 /**
- * api-gateway https://www.pulumi.com/docs/guides/crosswalk/aws/api-gateway/
+ * api-gateway https://www.pulumi.com/docs/iac/guides/clouds/aws/api-gateway/
  */
 
 // Create Lambda functions for our API

@@ -1,6 +1,6 @@
-name: fargate-with-crosswalk-vpc
+name: fargate-with-awsx-vpc
 runtime:
   name: python
   options:
     virtualenv: venv
-description: Fargate with crosswalk vpc
+description: Fargate with AWSx VPC

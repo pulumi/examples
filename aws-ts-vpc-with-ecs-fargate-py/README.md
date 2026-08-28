@@ -9,7 +9,7 @@ Code in whatever language you want, you can use things across go, python, typesc
 
 ### How is the vpc built?
 
-The [vpc](https://www.pulumi.com/docs/guides/crosswalk/aws/vpc/) is built using pulumi [crosswalk](https://www.pulumi.com/docs/guides/crosswalk/aws/) in `typescript`.
+The [vpc](https://www.pulumi.com/docs/iac/guides/clouds/aws/vpc/) is built using the Pulumi [AWSx](https://www.pulumi.com/docs/iac/guides/clouds/aws/) package in `typescript`.
 
 ### How is the ecs cluster built?
 The ecs cluster is built in `python`.
@@ -26,7 +26,7 @@ We are going to use the [Pulumi Cloud backend](https://www.pulumi.com/docs/intro
 
 Clone [the examples repo](https://github.com/pulumi/examples/tree/master/aws-ts-vpc-with-ecs-fargate-py) and `cd` into it.
 
-1. `cd vpc-crosswalk-ts` directory for usage information.
+1. `cd vpc-awsx-ts` directory for usage information.
 2. `cd ecs-fargate-python` directory for usage information.
 
 The ecs fargate example is identical to original one https://github.com/pulumi/examples/tree/master/aws-py-fargate

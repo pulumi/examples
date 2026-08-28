@@ -1,11 +1,11 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/vpc-crosswalk-ts/README.md#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/vpc-crosswalk-ts/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/vpc-awsx-ts/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/vpc-awsx-ts/README.md#gh-dark-mode-only)
 
-# Pulumi:  A VPC on AWS built in Typescript.
+# Pulumi:  A VPC on AWS built in TypeScript.
 
 ### What Is This?
 
-This example uses [Pulumi CrossWalk for AWS](https://www.pulumi.com/docs/guides/crosswalk/aws/#pulumi-crosswalk-for-aws) for deploying your own vpc using crosswalk [VPC](https://www.pulumi.com/docs/guides/crosswalk/aws/vpc/).  The VPC is built in `typescript`
+This example uses the Pulumi [AWSx](https://www.pulumi.com/docs/iac/guides/clouds/aws/) package for deploying your own VPC using the AWSx [VPC](https://www.pulumi.com/docs/iac/guides/clouds/aws/vpc/) component.  The VPC is written in TypeScript.
 
 ### Why would you do this?
 An example showing that you can easily integrate infrastructure from another Pulumi application written in a different language than the one you are used to.
@@ -68,10 +68,10 @@ An example showing that you can easily integrate infrastructure from another Pul
 ```
 Previewing update (vpc-fargate-dev)
 
-View Live: https://app.pulumi.com/shaht/crosswalk-vpc/vpc-fargate-dev/previews/0da8c31d-5cb4-4fee-9a3d-69d9d5d21511
+View Live: https://app.pulumi.com/shaht/awsx-vpc/vpc-fargate-dev/previews/0da8c31d-5cb4-4fee-9a3d-69d9d5d21511
 
      Type                              Name                           Plan
- +   pulumi:pulumi:Stack               crosswalk-vpc-vpc-fargate-dev  create...
+ +   pulumi:pulumi:Stack               awsx-vpc-vpc-fargate-dev       create...
  +   └─ awsx:x:ec2:Vpc                 vpc-fargate-dev                create
  +      ├─ awsx:x:ec2:Subnet           vpc-fargate-dev-public-2       create
  +      │  ├─ aws:ec2:RouteTable       vpc-fargate-dev-public-2       create
@@ -91,7 +91,7 @@ View Live: https://app.pulumi.com/shaht/crosswalk-vpc/vpc-fargate-dev/previews/0
  +      │  ├─ aws:ec2:RouteTable             vpc-fargate-dev-private-1        create
  +      │  ├─ aws:ec2:RouteTable             vpc-fargate-dev-private-1        create
  +      │  └─ aws:ec2:Route                  vpc-fargate-dev-private-2-nat-2  create
- +   pulumi:pulumi:Stack                     crosswalk-vpc-vpc-fargate-dev    create
+ +   pulumi:pulumi:Stack                     awsx-vpc-vpc-fargate-dev         create
  +      │  └─ aws:ec2:Route                  vpc-fargate-dev-private-1-nat-1  create
  +      ├─ awsx:x:ec2:NatGateway             vpc-fargate-dev-0                create
  +      │  ├─ aws:ec2:Eip                    vpc-fargate-dev-0                create
@@ -126,7 +126,7 @@ Do you want to perform this update?  [Use arrows to move, enter to select, type 
 ```
 
 You need to select `yes` to continue.  The url will look similar to the url below and you will need to replace the `shaht` with your own org, `team-qa`:
-   https://app.pulumi.com/`shaht`/crosswalk-vpc/vpc-fargate-dev/
+   https://app.pulumi.com/`shaht`/awsx-vpc/vpc-fargate-dev/
 
 8. The stack outputs will be used as [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) for ECS fargate (resides in ecs-fargate-python folder)
 
@@ -135,7 +135,7 @@ You need to select `yes` to continue.  The url will look similar to the url belo
    ```
    Current stack outputs (8):
       OUTPUT                              VALUE
-      pulumi_vpc_aws_tags                 {"Name":"vpc-fargate-dev","availability_zones_used":"3","cidr_block":"10.0.0.0/24","cost_center":"1234","crosswalk":"yes","demo":"true","number_of_nat_gateways":"3","pulumi:Configs":"Pulumi.vpc-fargate-dev.yaml","pulumi:Project":"crosswalk-vpc","pulumi:Stack":"vpc-fargate-dev"}
+      pulumi_vpc_aws_tags                 {"Name":"vpc-fargate-dev","availability_zones_used":"3","cidr_block":"10.0.0.0/24","cost_center":"1234","awsx":"yes","demo":"true","number_of_nat_gateways":"3","pulumi:Configs":"Pulumi.vpc-fargate-dev.yaml","pulumi:Project":"awsx-vpc","pulumi:Stack":"vpc-fargate-dev"}
       pulumi_vpc_az_zones                 3
       pulumi_vpc_cidr                     10.0.0.0/24
       pulumi_vpc_id                       vpc-0e1a5b4a8277fb720
@@ -153,15 +153,15 @@ You need to select `yes` to continue.  The url will look similar to the url belo
    ```
    ...
    ...
-   More information at: https://app.pulumi.com/shaht/crosswalk-vpc/vpc-fargate-dev
+   More information at: https://app.pulumi.com/shaht/awsx-vpc/vpc-fargate-dev
    ```
    Here is what we need from above to launch things in here.
    ```
-      shaht/crosswalk-vpc/vpc-fargate-dev
+      shaht/awsx-vpc/vpc-fargate-dev
    ```
    Note, yours will be something along the lines of:
    ```
-      teamqa/crosswalk-vpc/vpc-fargate-dev
+      teamqa/awsx-vpc/vpc-fargate-dev
 
 
 10. Cleanup.  Destroy the vpc only if all there are no other resources running in it such as ecs fargate.
