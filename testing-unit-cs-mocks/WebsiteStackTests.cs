@@ -69,5 +69,17 @@ namespace UnitTesting
 			var endpoint = await stack.Endpoint.GetValueAsync();
 			endpoint.Should().Be("https://wwwprodsa.web.core.windows.net");
 		}
+
+		[Test]
+		public async Task StackExportsPrimaryStorageKey()
+		{
+			// Demonstrates asserting on a value derived from a mocked `Invoke` (data source)
+			// call - see Mocks.CallAsync in Testing.cs for how `ListStorageAccountKeys` is mocked.
+			var resources = await TestAsync();
+			var stack = resources.OfType<WebsiteStack>().First();
+
+			var primaryStorageKey = await stack.PrimaryStorageKey.GetValueAsync();
+			primaryStorageKey.Should().Be("mock-storage-account-key");
+		}
 	}
 }
