@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-gcp/sdk/v8/go/gcp/container"
+	"github.com/pulumi/pulumi-gcp/sdk/v9/go/gcp/container"
 	"github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes"
 	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/apps/v1"
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/core/v1"
