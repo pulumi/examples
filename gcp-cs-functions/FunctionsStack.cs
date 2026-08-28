@@ -22,7 +22,7 @@ class FunctionsStack : Stack
         var function = new Function("python-func", new FunctionArgs
         {
             SourceArchiveBucket = bucket.Name,
-            Runtime = "python37",
+            Runtime = "python312",
             SourceArchiveObject = bucketObject.Name,
             EntryPoint = "handler",
             TriggerHttp = true,

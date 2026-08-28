@@ -46,7 +46,7 @@ const bucketObjectGo = new gcp.storage.BucketObject("go-zip", {
 
 const functionGo = new gcp.cloudfunctions.Function("go-func", {
   sourceArchiveBucket: bucket.name,
-  runtime: "go123",
+  runtime: "go126",
   sourceArchiveObject: bucketObjectGo.name,
   entryPoint: "Handler",
   triggerHttp: true,
