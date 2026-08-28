@@ -13,7 +13,7 @@ const baseTags = {
   "Name": `${vpc_name}`,
   "availability_zones_used": `${zone_number}`,
   "cidr_block": `${vpc_cidr}`,
-  "crosswalk": "yes",
+  "awsx": "yes",
   "demo": "true",
   "pulumi:Project": pulumi.getProject(),
   "pulumi:Stack": pulumi.getStack(),

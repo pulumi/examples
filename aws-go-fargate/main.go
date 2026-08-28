@@ -37,7 +37,7 @@ func getRepoCreds(ctx *pulumi.Context, rid pulumi.StringInput) pulumi.Output {
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		// Create a new VPC and subnets using AWS Crosswalk
+		// Create a new VPC and subnets using AWSx
 		vpcCidrBlock := "10.0.0.0/16"
 		vpc, err := awsx.NewVpc(ctx, "vpc", &awsx.VpcArgs{
 			EnableDnsHostnames: pulumi.Bool(true),

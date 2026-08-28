@@ -7,16 +7,16 @@
 
 This example demonstrates the ability to deploy resources in Pulumi using one language (TypeScript) and then reference those resources from another Pulumi application using a different language (Python).
 
-[`vpc-crosswalk-ts`](./vpc-crosswalk-ts) deploys an AWS VPC using TypeScript
+[`vpc-awsx-ts`](../vpc-awsx-ts) deploys an AWS VPC using TypeScript
 
-[`ecs-fargate-python`](./ecs-fargate-python) deploys an AWS ECS Cluster using Python that references the VPC from `vpc-crosswalk-ts`
+[`ecs-fargate-python`](../ecs-fargate-python) deploys an AWS ECS Cluster using Python that references the VPC from `vpc-awsx-ts`
 
 It provisions a full [Amazon Elastic Container Service (ECS) "Fargate"](https://aws.amazon.com/ecs) cluster and
 related infrastructure, running a load-balanced NGINX web server accessible over the Internet on port 80.
 This example is inspired by [Docker's Getting Started Tutorial](https://docs.docker.com/get-started/).
 
 ### Why would you do this?
-An example showing that you can easily infrastructure written in a different language than the one you are used to.  The vpc outputs from vpc-crosswalk-ts folder are used as inputs via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies)
+An example showing that you can easily infrastructure written in a different language than the one you are used to.  The vpc outputs from vpc-awsx-ts folder are used as inputs via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies)
 
 ## Prerequisites
 
@@ -77,11 +77,11 @@ Task                    Enabled
 
    Note: The key is `mystackpath`.  The value for it will be your `stackreference` from the vpc:
 
-   e.g.:  `team-qa/crosswalk-vpc/vpc-fargate-dev`
+   e.g.:  `team-qa/awsx-vpc/vpc-fargate-dev`
 
    ```
    $ pulumi config set aws:region us-east-2 # must match vpc region
-   $ pulumi config set config set mystackpath team-qa/crosswalk-vpc/vpc-fargate
+   $ pulumi config set config set mystackpath team-qa/awsx-vpc/vpc-fargate
    ```
 
 1. View the current config settings
@@ -93,7 +93,7 @@ Task                    Enabled
    ```
    KEY                     VALUE
    aws:region           us-east-2
-   mystackpath          team-qa/crosswalk-vpc/vpc-fargate
+   mystackpath          team-qa/awsx-vpc/vpc-fargate
    ```
 
 1. Launch
@@ -108,11 +108,11 @@ Task                    Enabled
 
    console view that matches above code as an example:
 
-   https://app.pulumi.com/`team-qa`/fargate-with-crosswalk-vpc/ecs-fargate-dev/
+   https://app.pulumi.com/`team-qa`/fargate-with-awsx-vpc/ecs-fargate-dev/
 
    console view with YOUR ORG NAME:
 
-   https://app.pulumi.com/`team-prod`/fargate-with-crosswalk-vpc/ecs-fargate-dev/
+   https://app.pulumi.com/`team-prod`/fargate-with-awsx-vpc/ecs-fargate-dev/
 
 1. View the outputs
 
@@ -123,7 +123,7 @@ Task                    Enabled
    ```
    Current stack outputs (2):
    OUTPUT             VALUE
-   ECS Cluster Tags   {"Name":"pulumi-fargate-ecs-cluster","application":"fargate","costcenter":"1234","crosswalk-vpc":"yes","demo":"yes","env":"dev","pulumi:Config":"Pulumi.ecs-fargate-dev.yaml","pulumi:project":"fargate-with-crosswalk-vpc","pulumi:stack":"ecs-fargate-dev","vpc_cidr":"10.0.0.0/24","vpc_name":"vpc-fargate-dev"}
+   ECS Cluster Tags   {"Name":"pulumi-fargate-ecs-cluster","application":"fargate","costcenter":"1234","awsx-vpc":"yes","demo":"yes","env":"dev","pulumi:Config":"Pulumi.ecs-fargate-dev.yaml","pulumi:project":"fargate-with-awsx-vpc","pulumi:stack":"ecs-fargate-dev","vpc_cidr":"10.0.0.0/24","vpc_name":"vpc-fargate-dev"}
 
    Load Balancer URL  pulumi-fargate-alb-7467631-1452059497.us-east-2.elb.amazonaws.com
    ```
