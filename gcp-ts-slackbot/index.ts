@@ -1,7 +1,7 @@
 // Copyright 2016-2025, Pulumi Corporation.  All rights reserved.
 
 import * as bodyParser from "body-parser";
-import * as express from "express";
+import express = require("express");
 import * as gcp from "@pulumi/gcp";
 import * as gfirestore from "@google-cloud/firestore";
 import * as gpubsub from "@google-cloud/pubsub";

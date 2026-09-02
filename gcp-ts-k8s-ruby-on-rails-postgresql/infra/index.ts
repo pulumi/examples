@@ -10,7 +10,7 @@ import * as pulumi from "@pulumi/pulumi";
 // Get the GCR repository for our app container, and build and publish the app image.
 const appImage = new docker.Image("rails-app", {
     imageName: `${config.dockerUsername}/${pulumi.getProject()}_${pulumi.getStack()}`,
-    build: "../app",
+    build: { context: "../app" },
     registry: {
         server: "docker.io",
         username: config.dockerUsername,

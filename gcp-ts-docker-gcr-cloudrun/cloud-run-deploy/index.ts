@@ -58,5 +58,5 @@ const iamRuby = new gcp.cloudrun.IamMember("ruby-everyone", {
     member: "allUsers",
 });
 
-export const rubyUrl = rubyService.status.url;
+export const rubyUrl = rubyService.statuses.apply(statuses => statuses[0].url);
 
