@@ -1,0 +1,11 @@
+name: aws-ts-ai-app-infrastructure
+runtime: nodejs
+description: A serverless AI inference endpoint on AWS - a Lambda Function URL that invokes an Amazon Bedrock foundation model, scoped to least privilege.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    modelId:
+      description: The Amazon Bedrock foundation model ID to invoke
+      default: anthropic.claude-haiku-4-5-20251001-v1:0

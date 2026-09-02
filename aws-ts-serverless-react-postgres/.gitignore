@@ -1,0 +1,10 @@
+node_modules/
+dist/
+bin/
+*.tsbuildinfo
+.pulumi/
+Pulumi.*.yaml
+!Pulumi.yaml
+*.log
+.env
+.env.local

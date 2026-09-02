@@ -1,0 +1,11 @@
+name: aws-ts-landing-zone
+runtime: nodejs
+description: A single-account AWS landing zone - a two-AZ VPC, KMS key, VPC flow logs, deployer and read-only IAM roles, and an encrypted CloudTrail audit trail that downstream Pulumi projects build on.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    cidrBlock:
+      description: CIDR block for the landing-zone VPC
+      default: 10.0.0.0/16
