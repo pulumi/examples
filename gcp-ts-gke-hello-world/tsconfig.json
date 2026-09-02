@@ -14,8 +14,6 @@
         "strictNullChecks": true
     },
     "files": [
-        "index.ts",
-        "config.ts",
-        "cluster.ts"
+        "index.ts"
     ]
 }

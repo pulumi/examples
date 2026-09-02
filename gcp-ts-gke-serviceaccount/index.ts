@@ -9,20 +9,21 @@ const name = config.get("name") ||
     "gke-serviceaccount-example";
 export const masterVersion = config.get("masterVersion") ||
     gcp.container.getEngineVersions().then(it => it.latestMasterVersion);
-const machineType = "n1-standard-1" || config.get("machineType");
+const machineType = config.get("machineType") || "n1-standard-1";
 
 // Create a service account
-const serviceAccount = new gcp.serviceAccount.Account("serviceAccount", {
+const serviceAccount = new gcp.serviceaccount.Account("serviceAccount", {
     accountId: name,
     displayName: "A service account for a GKE application",
 });
 
 const serviceAccountIAM = new gcp.projects.IAMBinding("serviceAccount-pub", {
+    project: gcp.config.project!,
     role: "roles/pubsub.subscriber",
     members: [pulumi.interpolate`serviceAccount:${serviceAccount.email}`],
 }, {parent: serviceAccount});
 
-const serviceAccountKey = new gcp.serviceAccount.Key("serviceAccount-key", {
+const serviceAccountKey = new gcp.serviceaccount.Key("serviceAccount-key", {
     serviceAccountId: serviceAccount.name,
     publicKeyType: "TYPE_X509_PEM_FILE",
 }, {parent: serviceAccount, additionalSecretOutputs: ["privateKey"]});
@@ -120,7 +121,7 @@ const gcpCredentials = new k8s.core.v1.Secret("gcp-credentials", {
     },
     type: "Opaque",
     stringData: {
-        "gcp-credentials.json": serviceAccountKey.privateKey.apply((x) => Buffer.from(x, "base64").toString("utf8")),
+        "gcp-credentials.json": serviceAccountKey.privateKey.apply((x: string) => Buffer.from(x, "base64").toString("utf8")),
     },
 }, {provider: clusterProvider, parent: ns});
 
