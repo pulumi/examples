@@ -1,3 +1,4 @@
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import * as pulumi from "@pulumi/pulumi";
 import { AiApp } from "./components/ai-app";
 

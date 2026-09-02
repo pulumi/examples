@@ -1,7 +1,7 @@
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
+import * as aws from "@pulumi/aws";
 import * as fs from "fs";
 import * as path from "path";
-
-import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
 export interface EdgeArgs {

@@ -1,3 +1,4 @@
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import { Pool } from "pg";
 
 let cachedPool: Pool | undefined;

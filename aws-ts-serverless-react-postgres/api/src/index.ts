@@ -1,4 +1,5 @@
-import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
+import { GetSecretValueCommand, SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
 import { handle } from "./handler";
 
 const secretsClient = new SecretsManagerClient({});
