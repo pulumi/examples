@@ -1,13 +1,12 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-landing-zone/README.md#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-landing-zone/README.md#gh-dark-mode-only)
-
 # AWS Landing Zone
 
 The foundational, shared resources a single AWS account needs before any workload lands on top of it. Deploy this once per account, then have every downstream Pulumi project consume its outputs (via a [StackReference](https://www.pulumi.com/docs/concepts/stack/#stackreferences)) instead of re-creating the same plumbing.
 
+> **Note:** This is an illustrative example of how you _might_ model a landing zone in Pulumi, not a production-ready one. A real landing zone would typically add guardrails this example leaves out for brevity — Service Control Policies, AWS Config rules, GuardDuty/Security Hub, cross-account centralized logging, and IAM roles scoped to specific tasks rather than the broad `PowerUserAccess`/`ReadOnlyAccess` used here.
+
 The `LandingZone` component provisions:
 
-- A **VPC** across two availability zones, with public and private subnets, an internet gateway, and per-AZ NAT gateways.
+- A **VPC** across three availability zones, with public and private subnets, an internet gateway, and per-AZ NAT gateways (built with the [`awsx.ec2.Vpc`](https://www.pulumi.com/registry/packages/awsx/api-docs/ec2/vpc/) component).
 - A **KMS customer-managed key** (with rotation) and a key policy that lets CloudWatch Logs and CloudTrail use it.
 - **VPC flow logs** delivered to an encrypted CloudWatch log group.
 - **Deployer** (`PowerUserAccess`) and **read-only** (`ReadOnlyAccess`) IAM roles that a trusted principal can assume.
@@ -68,8 +67,8 @@ The companion example [`aws-ts-serverless-react-postgres`](../aws-ts-serverless-
         dataEncryptionKeyArn    arn:aws:kms:us-west-2:***
         deployerRoleArn         arn:aws:iam::***:role/platform-deployer
         networkId               vpc-***
-        privateSubnetIds        ["subnet-***","subnet-***"]
-        publicSubnetIds         ["subnet-***","subnet-***"]
+        privateSubnetIds        ["subnet-***","subnet-***","subnet-***"]
+        publicSubnetIds         ["subnet-***","subnet-***","subnet-***"]
         readOnlyRoleArn         arn:aws:iam::***:role/platform-readonly
         secretsStore            platform/
     ```

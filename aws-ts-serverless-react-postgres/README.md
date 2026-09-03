@@ -1,6 +1,3 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-serverless-react-postgres/README.md#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-serverless-react-postgres/README.md#gh-dark-mode-only)
-
 # Serverless React + Postgres
 
 A full-stack serverless web app on AWS: a React single-page app served from S3 through CloudFront, a Lambda API behind the *same* CloudFront origin (so the browser never sees CORS), and a private [Aurora Serverless v2](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.html) PostgreSQL database that only the function can reach.

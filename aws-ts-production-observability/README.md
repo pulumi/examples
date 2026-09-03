@@ -1,6 +1,3 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-production-observability/README.md#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-production-observability/README.md#gh-dark-mode-only)
-
 # Production Observability for a Lambda Service
 
 Wiring up monitoring after the fact is tedious and easy to get wrong. This example provisions a baseline observability stack for an AWS Lambda service so a new service is watched from its first deploy.

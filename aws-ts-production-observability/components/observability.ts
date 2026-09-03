@@ -12,12 +12,12 @@ export interface ObservabilityArgs {
 }
 
 /**
- * Observability wires up a baseline set of production monitoring resources for a
- * Lambda-based service: a log group, an SNS topic with an email subscription,
+ * ObservableLambda wires up a baseline set of production monitoring resources for
+ * a Lambda-based service: a log group, an SNS topic with an email subscription,
  * error and latency alarms, and a CloudWatch dashboard. A small sample function
  * (with AWS X-Ray tracing enabled) stands in for the workload you want to watch.
  */
-export class Observability extends pulumi.ComponentResource {
+export class ObservableLambda extends pulumi.ComponentResource {
     public readonly dashboardId: pulumi.Output<string>;
     public readonly notificationTarget: pulumi.Output<string>;
     public readonly traceHook: pulumi.Output<string>;

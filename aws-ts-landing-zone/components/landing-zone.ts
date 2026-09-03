@@ -1,12 +1,13 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import * as aws from "@pulumi/aws";
+import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
 
 export interface LandingZoneArgs {
     /** VPC CIDR block. Defaults to 10.0.0.0/16. */
     cidrBlock?: string;
-    /** Availability zones to spread subnets across. Defaults to the first two available. */
-    availabilityZones?: pulumi.Input<string[]>;
+    /** Number of availability zones to spread the VPC across. Defaults to 3. */
+    numberOfAvailabilityZones?: number;
     /** Principal allowed to assume the deployer and read-only roles. Defaults to the account root. */
     trustedPrincipalArn?: pulumi.Input<string>;
     /** Retention (in days) for audit logs and the flow-log group. Defaults to 90. */
@@ -17,10 +18,13 @@ export interface LandingZoneArgs {
 
 /**
  * LandingZone provisions the foundational, shared resources a single AWS account
- * needs before workloads land on top of it: a two-AZ VPC with public and private
- * subnets, a KMS key, VPC flow logs, deployer and read-only IAM roles, and an
- * encrypted CloudTrail audit trail. Downstream Pulumi projects consume its
+ * needs before workloads land on top of it: a three-AZ VPC with public and
+ * private subnets, a KMS key, VPC flow logs, deployer and read-only IAM roles,
+ * and an encrypted CloudTrail audit trail. Downstream Pulumi projects consume its
  * outputs (via a StackReference) rather than re-creating this plumbing.
+ *
+ * This is an illustrative starting point, not a production-ready landing zone;
+ * see the README for the guardrails a real one would add.
  */
 export class LandingZone {
     public readonly networkId: pulumi.Output<string>;
@@ -38,78 +42,17 @@ export class LandingZone {
         const cidrBlock = args.cidrBlock ?? "10.0.0.0/16";
         const retentionDays = args.auditRetentionDays ?? 90;
 
-        const azs = pulumi.output(
-            args.availabilityZones ??
-                aws.getAvailabilityZones({ state: "available" }).then((z) => z.names.slice(0, 2)),
-        );
-
         // --- Network -------------------------------------------------------
 
-        const vpc = new aws.ec2.Vpc(`${name}-vpc`, {
+        // awsx.ec2.Vpc builds the whole network topology from one component:
+        // public and private subnets across each AZ, an internet gateway, one NAT
+        // gateway per AZ, and the associated route tables. Spreading across three
+        // AZs gives the workloads that land here room to run highly available.
+        const vpc = new awsx.ec2.Vpc(`${name}-vpc`, {
             cidrBlock,
-            enableDnsHostnames: true,
-            enableDnsSupport: true,
+            numberOfAvailabilityZones: args.numberOfAvailabilityZones ?? 3,
+            natGateways: { strategy: "OnePerAz" },
             tags,
-        });
-
-        const igw = new aws.ec2.InternetGateway(`${name}-igw`, {
-            vpcId: vpc.id,
-            tags,
-        });
-
-        const publicSubnets: aws.ec2.Subnet[] = [];
-        const privateSubnets: aws.ec2.Subnet[] = [];
-        const natGateways: aws.ec2.NatGateway[] = [];
-
-        for (let i = 0; i < 2; i++) {
-            const az = azs.apply((names) => names[i]);
-            const publicSubnet = new aws.ec2.Subnet(`${name}-public-${i}`, {
-                vpcId: vpc.id,
-                availabilityZone: az,
-                cidrBlock: pulumi.interpolate`10.0.${i * 16}.0/20`,
-                mapPublicIpOnLaunch: true,
-                tags: { ...tags, tier: "public" },
-            });
-            publicSubnets.push(publicSubnet);
-
-            const eip = new aws.ec2.Eip(`${name}-nat-eip-${i}`, { domain: "vpc", tags });
-            const nat = new aws.ec2.NatGateway(`${name}-nat-${i}`, {
-                allocationId: eip.id,
-                subnetId: publicSubnet.id,
-                tags,
-            }, { dependsOn: [igw] });
-            natGateways.push(nat);
-
-            const privateSubnet = new aws.ec2.Subnet(`${name}-private-${i}`, {
-                vpcId: vpc.id,
-                availabilityZone: az,
-                cidrBlock: pulumi.interpolate`10.0.${i * 16 + 128}.0/20`,
-                tags: { ...tags, tier: "private" },
-            });
-            privateSubnets.push(privateSubnet);
-        }
-
-        const publicRt = new aws.ec2.RouteTable(`${name}-public-rt`, {
-            vpcId: vpc.id,
-            routes: [{ cidrBlock: "0.0.0.0/0", gatewayId: igw.id }],
-            tags,
-        });
-        publicSubnets.forEach((subnet, i) =>
-            new aws.ec2.RouteTableAssociation(`${name}-public-rta-${i}`, {
-                subnetId: subnet.id,
-                routeTableId: publicRt.id,
-            }),
-        );
-        privateSubnets.forEach((subnet, i) => {
-            const rt = new aws.ec2.RouteTable(`${name}-private-rt-${i}`, {
-                vpcId: vpc.id,
-                routes: [{ cidrBlock: "0.0.0.0/0", natGatewayId: natGateways[i].id }],
-                tags,
-            });
-            new aws.ec2.RouteTableAssociation(`${name}-private-rta-${i}`, {
-                subnetId: subnet.id,
-                routeTableId: rt.id,
-            });
         });
 
         // --- Encryption ----------------------------------------------------
@@ -204,7 +147,7 @@ export class LandingZone {
             }),
         });
         new aws.ec2.FlowLog(`${name}-flow-log`, {
-            vpcId: vpc.id,
+            vpcId: vpc.vpcId,
             iamRoleArn: flowLogsRole.arn,
             logDestination: flowLogsGroup.arn,
             trafficType: "ALL",
@@ -318,9 +261,9 @@ export class LandingZone {
 
         // --- Outputs -------------------------------------------------------
 
-        this.networkId = vpc.id;
-        this.publicSubnetIds = pulumi.output(publicSubnets.map((s) => s.id));
-        this.privateSubnetIds = pulumi.output(privateSubnets.map((s) => s.id));
+        this.networkId = vpc.vpcId;
+        this.publicSubnetIds = vpc.publicSubnetIds;
+        this.privateSubnetIds = vpc.privateSubnetIds;
         this.dataEncryptionKeyArn = key.arn;
         this.dataEncryptionKeyAlias = keyAlias.name;
         this.secretsStore = pulumi.interpolate`${name}/`;

@@ -1,6 +1,6 @@
 // Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
 import * as pulumi from "@pulumi/pulumi";
-import { Observability } from "./components/observability";
+import { ObservableLambda } from "./components/observability";
 
 const config = new pulumi.Config();
 
@@ -8,7 +8,7 @@ const config = new pulumi.Config();
 // subscription email AWS sends after the first deploy.
 const notificationEmail = config.require("notificationEmail");
 
-const observability = new Observability("observability", {
+const observableLambda = new ObservableLambda("observability", {
     notificationEmail,
     namePrefix: `${pulumi.getStack()}-production-observability`,
     tags: {
@@ -17,6 +17,6 @@ const observability = new Observability("observability", {
     },
 });
 
-export const dashboardId = observability.dashboardId;
-export const notificationTarget = observability.notificationTarget;
-export const traceHook = observability.traceHook;
+export const dashboardId = observableLambda.dashboardId;
+export const notificationTarget = observableLambda.notificationTarget;
+export const traceHook = observableLambda.traceHook;

@@ -1,6 +1,3 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-ai-app-infrastructure/README.md#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-ai-app-infrastructure/README.md#gh-dark-mode-only)
-
 # Serverless AI Inference Endpoint with Amazon Bedrock
 
 A minimal, production-shaped starting point for a generative-AI feature: an HTTP endpoint that takes a prompt, calls an [Amazon Bedrock](https://aws.amazon.com/bedrock/) foundation model, and returns the generated text.
