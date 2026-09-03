@@ -1,0 +1,15 @@
+{
+  "name": "aws-ts-landing-zone",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.ts",
+  "dependencies": {
+    "@pulumi/pulumi": "^3.162.0",
+    "@pulumi/aws": "^7.31.0",
+    "@pulumi/awsx": "^3.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "typescript": "^5.6.3"
+  }
+}

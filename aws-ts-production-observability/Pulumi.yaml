@@ -1,0 +1,10 @@
+name: aws-ts-production-observability
+runtime: nodejs
+description: Baseline production observability for a Lambda service on AWS - log retention, SNS alerting, error and latency alarms, a CloudWatch dashboard, and X-Ray tracing.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    notificationEmail:
+      description: Email address to subscribe to CloudWatch alarm notifications

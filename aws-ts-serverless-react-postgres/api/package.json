@@ -1,0 +1,19 @@
+{
+  "name": "aws-ts-serverless-react-postgres-api",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/handler.js",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist/handler.js --external:pg-native --external:@aws-sdk/*"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.693.0",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "@types/pg": "^8.11.10",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.3"
+  }
+}

@@ -109,6 +109,7 @@ The script assumes you have credentials for various providers configured. Exampl
 
 Example   | Description |
 --------- | --------- |
+[AI App Infrastructure](aws-ts-ai-app-infrastructure) | Deploy a serverless AI inference endpoint backed by an Amazon Bedrock foundation model.
 [API Gateway](aws-ts-apigateway) | Deploy a simple REST API that counts the number of times a route has been hit.
 [API Gateway HTTP API with routes](aws-ts-apigatewayv2-http-api) | Deploy a HTTP API that invokes a Lambda.
 [API Gateway HTTP API quickstart](aws-ts-apigatewayv2-http-api-quickcreate) | Deploy a very simple HTTP API that invokes a Lambda.
@@ -123,7 +124,9 @@ Example   | Description |
 [EKS - Migrate Node Groups](aws-ts-eks-migrate-nodegroups) | Create an EKS cluster and node group to use for workload migration with zero downtime.
 [Fargate](aws-ts-hello-fargate) | Build, deploy, and run a Dockerized app using ECS, ECR, and Fargate.
 [Lambda Thumbnailer](aws-ts-lambda-thumbnailer) | Create a video thumbnail extractor using serverless functions.
+[Landing Zone](aws-ts-landing-zone) | Provision a single-account landing zone - VPC, KMS key, VPC flow logs, deployer and read-only IAM roles, and an encrypted CloudTrail audit trail - that downstream stacks reference.
 [Miniflux](aws-ts-pulumi-miniflux) | Stand up an RSS Service using Fargate and RDS.
+[Production Observability](aws-ts-production-observability) | Add a baseline observability stack for a Lambda service - log retention, SNS alerting, error and latency alarms, a CloudWatch dashboard, and X-Ray tracing.
 [Pulumi Webhooks](aws-ts-pulumi-webhooks) | Create a Pulumi `cloud.HttpEndpoint` that receives webhook events delivered by Pulumi Cloud, then echos the event to Slack.
 [RDS and Airflow](aws-ts-airflow) | Deploy a RDS Postgres instance and containerized Airflow.
 [Resources](aws-ts-resources) | Create various resources, including `cloudwatch.Dashboard`, `cloudwatch.EventRule`, `cloudwatch.LogGroup`, and `sqs.Queue`.
@@ -132,6 +135,7 @@ Example   | Description |
 [S3 Lambda](aws-ts-s3-lambda-copyzip) | Set up two AWS S3 Buckets and a single Lambda that listens to one and, upon each new object arriving in it, zips it up and copies it to the second bucket.
 [Serverless Application](aws-ts-serverless-raw) | Deploy a complete serverless C# application using raw resources from `@pulumi/aws`.
 [Serverless Datawarehouse](aws-ts-serverless-datawarehouse) | Deploy a serverless data warehouse.
+[Serverless React + Postgres](aws-ts-serverless-react-postgres) | Deploy a React SPA on CloudFront with a same-origin Lambda API and a private Aurora Serverless v2 (PostgreSQL) database, layered on the landing-zone example.
 [Slackbot](aws-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
 [Stack Reference](aws-ts-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
 [Static Website](aws-ts-static-website) | Serve a static website using S3, CloudFront, Route53, and Certificate Manager.

@@ -1,0 +1,10 @@
+name: aws-ts-serverless-react-postgres
+runtime: nodejs
+description: A React SPA served through CloudFront, a Lambda API behind the same origin, and a private Aurora Serverless v2 (PostgreSQL) database - deployed on top of the aws-ts-landing-zone example.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    landingZoneStack:
+      description: Fully-qualified name of the landing-zone stack to reference, e.g. myorg/aws-ts-landing-zone/dev

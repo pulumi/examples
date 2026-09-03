@@ -1,0 +1,14 @@
+{
+  "name": "aws-ts-ai-app-infrastructure",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.ts",
+  "dependencies": {
+    "@pulumi/pulumi": "^3.162.0",
+    "@pulumi/aws": "^7.31.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "typescript": "^5.6.3"
+  }
+}
