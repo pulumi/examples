@@ -37,7 +37,7 @@ After cloning this repo, from this working directory, run these commands:
     $ pulumi up
     ```
 
-    > Note: Due to a propagation delay in Azure AD, the Service Principal created for the cluster may not be available the moment the cluster is provisioned. If you get a "Service Principal not found" error, simply run `pulumi up` again and it should complete successfully.
+    > Note: Due to a propagation delay in Azure AD, the Service Principal created for the cluster may not be available the moment the cluster is provisioned. If you get a "Service Principal not found" error, run `pulumi up` again and it should complete successfully.
 
 1. After 3-4 minutes, your cluster will be ready, and the kubeconfig YAML you'll use to connect to the cluster will be available as an output. You can save this kubeconfig to a file like so:
 

@@ -5,7 +5,7 @@
 
 This example deploys an Google Cloud Platform (GCP) [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) cluster, and deploys a Kubernetes Namespace and Deployment of NGINX
 
-It does this by configuring a Pulumi [Kubernetes provider](https://www.pulumi.com/registry/packages/kubernetes/) for the new cluster and creating Kubernetes resources against it in the same program — the provider abstraction lets you manage Kubernetes objects independently of the underlying cloud. For a walkthrough, watch [TGIK8s: Pulumi with Joe Beda](https://www.youtube.com/watch?v=ILMK65YVSKw).
+It does this by configuring a Pulumi [Kubernetes provider](https://www.pulumi.com/registry/packages/kubernetes/) for the new cluster and creating Kubernetes resources against it in the same program — the provider abstraction lets you manage Kubernetes objects independently of the underlying cloud. 
 
 ## Deploying the App
 
