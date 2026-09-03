@@ -18,7 +18,13 @@ async function loadDatabaseUrl(): Promise<string> {
     if (!response.SecretString) {
         throw new Error("Secrets Manager returned an empty SecretString");
     }
-    cachedSecret = response.SecretString;
+    // The secret is stored as JSON (see components/database.ts); pull the
+    // connection URL out of the DATABASE_URL field.
+    const parsed = JSON.parse(response.SecretString) as { DATABASE_URL?: string };
+    if (!parsed.DATABASE_URL) {
+        throw new Error("Secret does not contain a DATABASE_URL field");
+    }
+    cachedSecret = parsed.DATABASE_URL;
     return cachedSecret;
 }
 

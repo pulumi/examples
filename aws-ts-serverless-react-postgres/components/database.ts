@@ -74,7 +74,11 @@ export class Database extends pulumi.ComponentResource {
             password.result,
             cluster.endpoint,
         ]).apply(([pw, host]) =>
-            `postgresql://${masterUsername}:${encodeURIComponent(pw)}@${host}:5432/${databaseName}?sslmode=require`,
+            // `no-verify` keeps the connection encrypted but skips CA verification.
+            // Aurora presents an AWS RDS CA cert that isn't in Node's default trust
+            // store; modern `pg` treats `sslmode=require` as `verify-full`, which
+            // would otherwise fail with "unable to get local issuer certificate".
+            `postgresql://${masterUsername}:${encodeURIComponent(pw)}@${host}:5432/${databaseName}?sslmode=no-verify`,
         );
 
         const secretName = pulumi.interpolate`${args.secretsStore}/${args.namePrefix}/database-url`;

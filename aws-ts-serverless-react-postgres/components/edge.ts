@@ -83,6 +83,19 @@ export class Edge extends pulumi.ComponentResource {
             description: "PostgreSQL to DB",
         }, parent);
 
+        // The function reads its database URL from Secrets Manager before it ever
+        // opens a Postgres connection, so it needs HTTPS egress to reach the AWS
+        // APIs (via the landing zone's NAT gateways). Without this rule the
+        // Secrets Manager call hangs and the function times out.
+        new aws.vpc.SecurityGroupEgressRule(`${name}-fn-egress-https`, {
+            securityGroupId: lambdaSecurityGroup.id,
+            ipProtocol: "tcp",
+            fromPort: 443,
+            toPort: 443,
+            cidrIpv4: "0.0.0.0/0",
+            description: "HTTPS to AWS APIs (Secrets Manager)",
+        }, parent);
+
         new aws.vpc.SecurityGroupIngressRule(`${name}-db-ingress-fn`, {
             securityGroupId: args.databaseSecurityGroupId,
             ipProtocol: "tcp",

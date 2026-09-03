@@ -6,7 +6,7 @@ import { Edge } from "./components/edge";
 
 const config = new pulumi.Config();
 const landingZoneStackName = config.require("landingZoneStack");
-const dbEngineVersion = config.get("dbEngineVersion") ?? "16.4";
+const dbEngineVersion = config.get("dbEngineVersion") ?? "16.8";
 const functionMemoryMB = config.getNumber("functionMemoryMB") ?? 512;
 const websiteDistPath = config.get("websiteDistPath") ?? "./website/dist";
 const apiHandlerPath = config.get("apiHandlerPath") ?? "./api/dist";
