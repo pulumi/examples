@@ -1,0 +1,8 @@
+name: aws-ts-s3-folder-component
+runtime: nodejs
+description: A static website hosted on AWS S3, using a reusable component
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2

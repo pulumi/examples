@@ -109,6 +109,15 @@ After cloning this repo, `cd` into it and run these commands:
     <b>Visits:</b> <i>cannot connect to Redis, counter disabled</i>
     ```
 
+5. To view the container's runtime logs, use the [`pulumi logs`](https://www.pulumi.com/docs/cli/commands/pulumi_logs/) command. The single `pulumi up` above built your `Dockerfile`, pushed the image to ECR, and rolled it out to Fargate for you — so all that's left is to watch it serve traffic:
+
+    ```bash
+    $ pulumi logs --follow
+    Collecting logs for stack dev since 2021-03-26T10:49:57.000-07:00.
+
+     2021-03-26T11:45:02.624-07:00[nginx-185c47c] 172.31.38.69 - - [26/Mar/2021:18:45:02 +0000] "GET / HTTP/1.1" 200 205 "-" "curl/7.64.1" "-"
+    ```
+
 6. Once you are done, you can destroy all of the resources, and the stack:
 
     ```bash
