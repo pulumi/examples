@@ -5,6 +5,8 @@
 
 This example deploys an EKS Kubernetes cluster with an EBS-backed StorageClass, and deploys a Kubernetes Namespace and Deployment of NGINX into the cluster.
 
+It does this by configuring a Pulumi [Kubernetes provider](https://www.pulumi.com/registry/packages/kubernetes/) for the new cluster and creating Kubernetes resources against it in the same program — the provider abstraction lets you manage Kubernetes objects independently of the underlying cloud. For a walkthrough, watch [TGIK8s: Pulumi with Joe Beda](https://www.youtube.com/watch?v=ILMK65YVSKw).
+
 ## Deploying the App
 
 To deploy your infrastructure, follow the below steps.
