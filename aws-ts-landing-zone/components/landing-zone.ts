@@ -26,7 +26,7 @@ export interface LandingZoneArgs {
  * This is an illustrative starting point, not a production-ready landing zone;
  * see the README for the guardrails a real one would add.
  */
-export class LandingZone {
+export class LandingZone extends pulumi.ComponentResource {
     public readonly networkId: pulumi.Output<string>;
     public readonly publicSubnetIds: pulumi.Output<string[]>;
     public readonly privateSubnetIds: pulumi.Output<string[]>;
@@ -37,7 +37,9 @@ export class LandingZone {
     public readonly readOnlyRoleArn: pulumi.Output<string>;
     public readonly auditBucket: pulumi.Output<string>;
 
-    constructor(name: string, args: LandingZoneArgs = {}) {
+    constructor(name: string, args: LandingZoneArgs = {}, opts?: pulumi.ComponentResourceOptions) {
+        super("examples:landingZone:Aws", name, {}, opts);
+        const parent = { parent: this };
         const tags = { ...args.tags, "landing-zone": name };
         const cidrBlock = args.cidrBlock ?? "10.0.0.0/16";
         const retentionDays = args.auditRetentionDays ?? 90;
@@ -53,7 +55,7 @@ export class LandingZone {
             numberOfAvailabilityZones: args.numberOfAvailabilityZones ?? 3,
             natGateways: { strategy: "OnePerAz" },
             tags,
-        });
+        }, parent);
 
         // --- Encryption ----------------------------------------------------
 
@@ -106,11 +108,11 @@ export class LandingZone {
             enableKeyRotation: true,
             policy: keyPolicy,
             tags,
-        });
+        }, parent);
         const keyAlias = new aws.kms.Alias(`${name}-key-alias`, {
             name: `alias/${name}-landing-zone`,
             targetKeyId: key.keyId,
-        });
+        }, parent);
 
         // --- VPC flow logs -------------------------------------------------
 
@@ -118,7 +120,7 @@ export class LandingZone {
             retentionInDays: retentionDays,
             kmsKeyId: key.arn,
             tags,
-        });
+        }, parent);
         const flowLogsRole = new aws.iam.Role(`${name}-flow-logs-role`, {
             assumeRolePolicy: JSON.stringify({
                 Version: "2012-10-17",
@@ -129,7 +131,7 @@ export class LandingZone {
                 }],
             }),
             tags,
-        });
+        }, parent);
         new aws.iam.RolePolicy(`${name}-flow-logs-policy`, {
             role: flowLogsRole.id,
             policy: JSON.stringify({
@@ -145,14 +147,14 @@ export class LandingZone {
                     Resource: "*",
                 }],
             }),
-        });
+        }, parent);
         new aws.ec2.FlowLog(`${name}-flow-log`, {
             vpcId: vpc.vpcId,
             iamRoleArn: flowLogsRole.arn,
             logDestination: flowLogsGroup.arn,
             trafficType: "ALL",
             tags,
-        });
+        }, parent);
 
         // --- Workload identities -------------------------------------------
 
@@ -174,29 +176,29 @@ export class LandingZone {
             assumeRolePolicy,
             description: "Workload deployer for projects rooted at this landing zone.",
             tags,
-        });
+        }, parent);
         new aws.iam.RolePolicyAttachment(`${name}-deployer-attach`, {
             role: deployerRole.name,
             policyArn: "arn:aws:iam::aws:policy/PowerUserAccess",
-        });
+        }, parent);
 
         const readOnlyRole = new aws.iam.Role(`${name}-readonly`, {
             name: `${name}-readonly`,
             assumeRolePolicy,
             description: "Read-only observability role for projects rooted at this landing zone.",
             tags,
-        });
+        }, parent);
         new aws.iam.RolePolicyAttachment(`${name}-readonly-attach`, {
             role: readOnlyRole.name,
             policyArn: "arn:aws:iam::aws:policy/ReadOnlyAccess",
-        });
+        }, parent);
 
         // --- Audit logging (CloudTrail) ------------------------------------
 
         const auditBucket = new aws.s3.BucketV2(`${name}-audit`, {
             forceDestroy: true,
             tags,
-        });
+        }, parent);
         new aws.s3.BucketServerSideEncryptionConfigurationV2(`${name}-audit-sse`, {
             bucket: auditBucket.id,
             rules: [{
@@ -205,7 +207,7 @@ export class LandingZone {
                     kmsMasterKeyId: key.arn,
                 },
             }],
-        });
+        }, parent);
         new aws.s3.BucketLifecycleConfigurationV2(`${name}-audit-lifecycle`, {
             bucket: auditBucket.id,
             rules: [{
@@ -213,7 +215,7 @@ export class LandingZone {
                 status: "Enabled",
                 expiration: { days: retentionDays },
             }],
-        });
+        }, parent);
 
         // CloudTrail validates on creation that it can write to the bucket, so the
         // bucket policy granting the CloudTrail service principal access must exist
@@ -247,7 +249,7 @@ export class LandingZone {
                     },
                 ],
             })),
-        });
+        }, parent);
 
         new aws.cloudtrail.Trail(`${name}-trail`, {
             name: `${name}-trail`,
@@ -257,7 +259,7 @@ export class LandingZone {
             enableLogFileValidation: true,
             kmsKeyId: key.arn,
             tags,
-        }, { dependsOn: [auditBucketPolicy] });
+        }, { parent: this, dependsOn: [auditBucketPolicy] });
 
         // --- Outputs -------------------------------------------------------
 
@@ -270,5 +272,17 @@ export class LandingZone {
         this.deployerRoleArn = deployerRole.arn;
         this.readOnlyRoleArn = readOnlyRole.arn;
         this.auditBucket = auditBucket.bucket;
+
+        this.registerOutputs({
+            networkId: this.networkId,
+            publicSubnetIds: this.publicSubnetIds,
+            privateSubnetIds: this.privateSubnetIds,
+            dataEncryptionKeyArn: this.dataEncryptionKeyArn,
+            dataEncryptionKeyAlias: this.dataEncryptionKeyAlias,
+            secretsStore: this.secretsStore,
+            deployerRoleArn: this.deployerRoleArn,
+            readOnlyRoleArn: this.readOnlyRoleArn,
+            auditBucket: this.auditBucket,
+        });
     }
 }
