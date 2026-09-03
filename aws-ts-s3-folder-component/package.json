@@ -1,0 +1,14 @@
+{
+    "name": "aws-ts-s3-folder-component",
+    "type": "module",
+    "devDependencies": {
+        "@types/node": "22.13.14",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "@pulumi/aws": "7.23.0",
+        "@pulumi/pulumi": "3.228.0",
+        "mime": "^4.0.0"
+    }
+}

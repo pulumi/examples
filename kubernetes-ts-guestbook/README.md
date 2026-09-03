@@ -11,6 +11,8 @@ Docker, and consists of three components:
 * Multiple replicated Redis instances to serve reads
 * Multiple web frontend instances
 
+Unlike the original, which is defined in YAML and applied with `kubectl`, this version is authored in TypeScript and deployed with the Pulumi CLI.
+
 There is an [interactive Tutorial available](https://www.pulumi.com/docs/tutorials/kubernetes/guestbook/) for
 this example. If this is your first time using Pulumi for Kubernetes, we recommend starting there.
 

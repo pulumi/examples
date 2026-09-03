@@ -3,9 +3,9 @@
 
 # Video Thumbnailer Using AWS Fargate
 
-A video thumbnail extractor using serverless functions and containers.
+A video thumbnail extractor using serverless functions and containers. It combines the two into a single distributed application, using AWS Lambda functions as event triggers and a container running on AWS Fargate for the longer-running work: when a new video is uploaded to S3, a Lambda launches a Fargate task that extracts a thumbnail with FFmpeg and writes it back to S3.
 
-Loosely derived from the example at https://serverless.com/blog/serverless-application-for-long-running-process-fargate-lambda/.
+Loosely derived from the example at https://serverless.com/blog/serverless-application-for-long-running-process-fargate-lambda/. A video walkthrough of this example is available [on YouTube](https://www.youtube.com/watch?v=Bofmh1qnNSE).
 
 ![When a new video is uploaded, extract a thumbnail](thumbnailer-diagram.png)
 

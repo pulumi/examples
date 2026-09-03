@@ -5,6 +5,8 @@
 
 Starting point for building the Pulumi web server sample in Google Cloud.
 
+This example deploys a Google Compute Engine virtual machine — together with a network and firewall rule that allows SSH and HTTP access — and runs a simple HTTP server on it that responds with `Hello, World!`.
+
 ## Running the App
 
 1.  Create a new stack:

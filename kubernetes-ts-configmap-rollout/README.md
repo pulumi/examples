@@ -96,7 +96,10 @@ server {
 ```
 
 Running `preview` now shows that this change will cause us to replace the `ConfigMap` with a new one
-containing the new data, and subsequently trigger a rollout in the `Deployment`.
+containing the new data, and subsequently trigger a rollout in the `Deployment`. This is a meaningful
+difference from plain `kubectl`, which by default will *not* trigger a rollout of the containers that
+reference a `ConfigMap` when its data changes — instead the kubelet silently syncs the new data to the
+containers after its TTL expires. Pulumi plans an explicit, safe rollout:
 
 > NOTE: This rollout is safe! Pulumi executes this plan with the following steps:
 >
