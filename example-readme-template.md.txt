@@ -3,14 +3,14 @@ Use this template as a quick starting point when writing a README for your Pulum
 
 Use GitHub's "Preview Changes" functionality to make sure everything is formatted correctly in Markdown.
 
-Readers should be able to follow your example from beginning to end. Please be sure to list all prerequisites, and test your guide from start to finish. Cut and paste commands from the README into your terminal to make sure there aren't typos or inaccuracies. If you find yourself executing a command that isn't in the README, make sure to add it so the readers end up with a complete tutorial. See [EC2 Linux WebServer Instance](https://www.pulumi.com/docs/tutorials/aws/ec2-webserver/) for an example of a tutorial following this template. Note that the featured tutorial is multi-language whereas the exampleas in this repo are cloud and language-specific (except for the ones with the `cloud` prefix).
+Readers should be able to follow your example from beginning to end. Please be sure to list all prerequisites, and test your guide from start to finish. Cut and paste commands from the README into your terminal to make sure there aren't typos or inaccuracies. If you find yourself executing a command that isn't in the README, make sure to add it so the readers end up with a complete tutorial. See [EC2 Linux WebServer Instance](https://www.pulumi.com/docs/tutorials/aws/ec2-webserver/) for an example of a tutorial following this template. Note that the featured tutorial is multi-language whereas the examples in this repo are cloud and language-specific (except for the ones with the `cloud` prefix).
 -->
 
 
 # [App Description] using [Service or Tool]
 
 <!-- Use Title Case for all Titles -->
-<!-- Most of the examples are transformed into tutorials on https://www.pulumi.com/docs/tutorials/ and are sorted by cloud and language. There is no need to include the cloud provider name or the language in the title.
+<!-- Most of the examples are transformed into tutorials on https://www.pulumi.com/docs/tutorials/ and are sorted by cloud and language. There is no need to include the cloud provider name or the language in the title. -->
 
 <!-- Our examples have a specific structure. Learn more at CONTRIBUTING.md -->
 
@@ -90,4 +90,3 @@ In this tutorial, you [configured/set up/built/deployed] [something]. Now you ca
 - [Create a load-balanced, hosted NGINX container service](https://www.pulumi.com/docs/tutorials/aws/ecs-fargate/)
 - [Create an EC2-based WebServer and associated infrastructure](https://www.pulumi.com/docs/tutorials/aws/ec2-webserver/)
 -->
-
