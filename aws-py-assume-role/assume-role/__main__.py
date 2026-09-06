@@ -24,7 +24,7 @@ else:
         region=aws_config.require("region"),
         assume_roles=[
             {
-                "role_arn": role_to_assume_arn,
+                "roleArn": role_to_assume_arn,
                 # session name can contain only the following special characters =,.@-
                 # if any other special character is used, an error stating that the role
                 # cannot be assumed will be returned
