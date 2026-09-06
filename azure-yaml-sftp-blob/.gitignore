@@ -1,0 +1,107 @@
+# Pulumi
+.pulumi/
+Pulumi.*.yaml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Backup files
+*.backup
+*.bak
+
+# Temporary files
+*.tmp
+*.temp
+
+# Secrets and sensitive data
+secrets/
+*.pem
+*.key
+id_rsa
+id_rsa.pub
+*.p12
+*.pfx
+
+# Generated files
+generated/
+dist/
+build/
+
+# Language-specific (for converted versions)
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+
+# Go
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+vendor/
+go.sum
+
+# C#
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+packages/
+.vs/
+
+# Java
+target/
+.m2/
+*.jar
+*.war
+*.ear
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Azure CLI
+.azure/
+
+# Test results
+test-results/
+coverage/
+*.cover
+.coverage
+.pytest_cache
+
+# Documentation build
+docs/_build/
