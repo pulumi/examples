@@ -1,43 +1,43 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-resources/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-resources/README.md#gh-dark-mode-only)
 
-# AWS Resources (in Go)
+# AWS resources (in Go)
 
-A Pulumi program that demonstrates creating various AWS resources in Golang
+A Pulumi program that demonstrates creating various AWS resources in Go.
 
-## Deploying the App
+## Prerequisites
 
-To deploy your infrastructure, follow the below steps.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
 
-### Prerequisites
+## Deploying the example
 
-1. [Install Go](https://golang.org/doc/install)
-2. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-3. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
-
-### Steps
-
-After cloning this repo, from this working directory, run these commands:
-
-1. Next, create a new Pulumi stack, which is an isolated deployment target for this example:
+1.  Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init
+    pulumi stack init dev
     ```
 
-2. Set the required configuration variables for this program:
+1.  Set the AWS region to deploy into:
 
     ```bash
-    $ pulumi config set aws:region us-west-2
+    pulumi config set aws:region us-west-2
     ```
 
-3. Run `pulumi up` to preview and deploy changes:
+1.  Install dependencies:
 
     ```bash
-    $ pulumi up
-    Previewing update (dev):
-    ...
+    go mod download
+    ```
 
+1.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Updating (dev):
     ...
     Resources:
@@ -45,8 +45,11 @@ After cloning this repo, from this working directory, run these commands:
     Duration: 44s
     ```
 
-## Clean up
+## Cleaning up
 
-1. Run `pulumi destroy` to tear down all resources.
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
 
-2. To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi console.
+```bash
+pulumi destroy
+pulumi stack rm
+```

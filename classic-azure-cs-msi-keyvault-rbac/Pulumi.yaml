@@ -1,3 +1,10 @@
 name: azure-cs-msi-keyvault-rbac
 description: Example of managing the secrets and permissions via services and features like KeyVault, AD Managed Identity, AD RBAC
 runtime: dotnet
+template:
+  config:
+    azure:location:
+      description: The Azure location to deploy into
+      default: westus
+    azure:subscriptionId:
+      description: The Azure subscription to deploy into

@@ -11,7 +11,7 @@ To make sure that you build a function that works
 # Based on the following guide from MS
 [Create a Python function in Azure from the command line](https://docs.microsoft.com/en-us/azure/azure-functions/create-first-function-cli-python?tabs=azure-cli%2Cbash%2Cbrowser)
 
-## Installation Prereq
+## Installation prereq
 
 [Install the Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Ccsharp%2Cbash#install-the-azure-functions-core-tools)
 
@@ -24,7 +24,7 @@ brew install azure-functions-core-tools@3
 brew link --overwrite azure-functions-core-tools@3
 ```
     
-# Create a Function Project
+# Create a function project
 [Create a local Functions project](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Ccsharp%2Cbash#create-a-local-functions-project)
 
 1. Create this in subdirectory of where your pulumi project is.  For Example.
@@ -156,7 +156,7 @@ brew link --overwrite azure-functions-core-tools@3
    ```
 
 
-## Deploy your code to Azure via azure cli
+## Deploy your code to Azure via Azure CLI
 
 1. You need the function name.  The name doesn't exist yet
    because you haven't created it.
@@ -185,7 +185,7 @@ brew link --overwrite azure-functions-core-tools@3
 
    <img src="images/python_function_uploaded_to_azure_function_via_cli.png" alt = Add HelloWithPython Code>
    
-## Clean Up
+## Clean up
 1. Azure does not allow you edit/delete python functions via the console.  
    Destroy the stack:  `pulumi destroy -y` 
 

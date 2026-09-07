@@ -1,3 +1,11 @@
 name: aws-ts-organizations
 runtime: nodejs
 description: A TypeScript app to manage member accounts in AWS Organizations
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    devAccountEmailContact:
+      description: The email contact for the dev AWS account this app creates
+      secret: true

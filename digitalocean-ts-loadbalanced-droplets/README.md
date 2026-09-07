@@ -1,68 +1,76 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/digitalocean-ts-loadbalanced-droplets/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/digitalocean-ts-loadbalanced-droplets/README.md#gh-dark-mode-only)
 
-# Pulumi DigitalOcean Droplets
+# Load-balanced droplets on DigitalOcean
 
-Starting point for building a Pulumi sample architecture on DigitalOcean.
+Starting point for building a Pulumi sample architecture on DigitalOcean. This example provisions a set of load-balanced droplets behind a DigitalOcean load balancer, in TypeScript.
 
-## Running the App
+## Prerequisites
 
-1.  Create a new stack:
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure DigitalOcean credentials](https://www.pulumi.com/docs/intro/cloud-providers/digitalocean/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
+## Deploying the example
+
+1.  Create a new stack, which is an isolated deployment target for this example:
+
+    ```bash
+    pulumi stack init dev
     ```
-    $ pulumi stack init digitalocean-ts-loadbalanced-droplets
+
+1.  Set your DigitalOcean personal access token:
+
+    ```bash
+    pulumi config set --secret digitalocean:token YOURDIGITALOCEANTOKEN
     ```
 
-1.  Configure the project:
+1.  Install dependencies:
 
-    ```
-    $ pulumi config set --secret digitalocean:token YOURDIGITALOCEANTOKEN
-    ```
-
-1.  Restore NPM dependencies:
-
-    ```
-    $ npm install
+    ```bash
+    npm install
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
+    ```bash
+    pulumi up
     ```
-    $ pulumi up
-    Previewing update (digitalocean-ts-loadbalanced-droplets):
-    ...
 
-Updating (digitalocean-ts-loadbalanced-droplets):
+    ```
+    Updating (dev):
 
-     Type                                Name                                                                         Status
- +   pulumi:pulumi:Stack                 digitalocean-ts-loadbalanced-droplets-digitalocean-ts-loadbalanced-droplets  created
- +   ├─ digitalocean:index:Tag           demo-app                                                                     created
- +   ├─ digitalocean:index:Tag           web-2                                                                        created
- +   ├─ digitalocean:index:Tag           web-0                                                                        created
- +   ├─ digitalocean:index:Tag           web-1                                                                        created
- +   ├─ digitalocean:index:LoadBalancer  public                                                                       created
- +   ├─ digitalocean:index:Droplet       web-0                                                                        created
- +   ├─ digitalocean:index:Droplet       web-2                                                                        created
- +   └─ digitalocean:index:Droplet       web-1                                                                        created
+         Type                                Name                                   Status
+     +   pulumi:pulumi:Stack                 digitalocean-ts-loadbalanced-droplets  created
+     +   ├─ digitalocean:index:Tag           demo-app                               created
+     +   ├─ digitalocean:index:Tag           web-2                                  created
+     +   ├─ digitalocean:index:Tag           web-0                                  created
+     +   ├─ digitalocean:index:Tag           web-1                                  created
+     +   ├─ digitalocean:index:LoadBalancer  public                                 created
+     +   ├─ digitalocean:index:Droplet       web-0                                  created
+     +   ├─ digitalocean:index:Droplet       web-2                                  created
+     +   └─ digitalocean:index:Droplet       web-1                                  created
 
-Outputs:
-    endpoint: "138.197.62.183"
+    Outputs:
+        endpoint: "138.197.62.183"
 
-Resources:
-    + 9 created
+    Resources:
+        + 9 created
 
-Duration: 3m2s
+    Duration: 3m2s
     ```
 
 1.  Curl the HTTP server:
 
-    ```
+    ```bash
     curl "$(pulumi stack output endpoint)"
     ```
 
-1. Cleanup
+## Cleaning up
 
-    ```
-    $ pulumi destroy
-    $ pulumi stack rm
-    ```
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-aks-cosmos-helm/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-aks-cosmos-helm/README.md#gh-dark-mode-only)
 
-# A Helm chart deployed to AKS that stores TODOs in an Azure Cosmos DB MongoDB API
+# AKS Helm chart with Azure Cosmos DB
 
 Stands up an Azure Kubernetes Service (AKS) cluster and a MongoDB-flavored instance of
 Azure Cosmos DB. On top of the AKS cluster, we also deploy a Helm Chart with a simple
@@ -10,49 +10,34 @@ with our managed Cosmos DB instance.
 
 ## Prerequisites
 
-- Install [Pulumi](https://www.pulumi.com/docs/get-started/install/).
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
 
-- Install [.NET 5](https://dotnet.microsoft.com/download)
+## Deploying the example
 
-- We will be deploying to Azure, so you will need an Azure account. If
-  you do not have an account, [sign up for free here](https://azure.microsoft.com/en-us/free/).
-
-- Setup and authenticate the [native Azure provider for Pulumi](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/).
-
-
-## Running the Example
-
-In this example we will provision a Kubernetes cluster running a
-public Apache web server, verify we can access it, and clean up when
-done.
-
-1.  Get the code:
+1.  Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ git clone git@github.com:pulumi/examples.git
-    $ cd examples/azure-cs-aks-cosmos-helm
+    pulumi stack init dev
     ```
 
-2.  Create a new stack, which is an isolated deployment target for this example:
+1.  Set the Azure region location to use:
 
     ```bash
-    $ pulumi stack init
+    pulumi config set azure-native:location westus2
     ```
 
-3.  Set the required configuration variables for this program:
+1.  Deploy everything with the `pulumi up` command. This provisions all the Azure
+    resources necessary, including an Active Directory service principal, AKS cluster,
+    Cosmos DB instance, and then deploys the Helm Chart, all in a single gesture (takes
+    5-10 min):
 
     ```bash
-    $ pulumi config set azure-native:location westus2
+    pulumi up
     ```
 
-4.  Deploy everything with the `pulumi up` command. This provisions
-    all the Azure resources necessary, including an Active Directory
-    service principal, AKS cluster, and then deploys the Apache Helm
-    Chart, all in a single gesture (takes 5-10 min):
-
-    ```bash
-    $ pulumi up
-
+    ```
          Type                                                          Name                          Status      Info
     +   pulumi:pulumi:Stack                                           azure-cs-aks-cosmos-helm-dev  created     1 warning
     +   ├─ kubernetes:helm.sh/v3:Chart                                node                          created
@@ -76,11 +61,14 @@ done.
         Endpoint: "http://20.73.205.163"
     ```
 
-5.  Now your database, your cluster, and application are ready. An output
-    variable will be printed to provide the application endpoint.
+1.  Now your database, your cluster, and application are ready. An output variable is
+    printed to provide the application endpoint:
 
     ```bash
-    $ curl $(pulumi stack output Endpoint)
+    curl $(pulumi stack output Endpoint)
+    ```
+
+    ```
     <!doctype html>
 
     <!-- ASSIGN OUR ANGULAR MODULE -->
@@ -94,11 +82,12 @@ done.
     ...
     ```
 
-6.  Once you are done, you can destroy all of the resources, and the
-    stack:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
-    $ rm kubeconfig.yaml
-    ```
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+rm kubeconfig.yaml
+```

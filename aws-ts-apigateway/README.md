@@ -5,7 +5,13 @@
 
 A simple REST API that counts the number of times a route has been hit. For a detailed walkthrough of this example, see the article [Create a Serverless REST API](https://www.pulumi.com/docs/tutorials/aws/rest-api/).
 
-## Deploying and running the program
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 Note: some values in this example will be different from run to run.  These values are indicated
 with `***`.
@@ -13,21 +19,28 @@ with `***`.
 1.  Create a new stack:
 
     ```bash
-    $ pulumi stack init count-api-testing
+    pulumi stack init count-api-testing
     ```
 
-1.  Set the AWS region:
+1.  Set the AWS region to deploy into:
+
+    ```bash
+    pulumi config set aws:region us-east-2
+    ```
+
+1.  Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+1.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi config set aws:region us-east-2
-    ```
-
-1.  Restore NPM modules via `npm install` or `yarn install`.
-
-1.  Run `pulumi up` to preview and deploy changes:
-
-    ```
-    $ pulumi up
     Previewing update of stack 'count-api-testing'
     ...
 
@@ -57,22 +70,25 @@ with `***`.
 1.  View the endpoint URL and curl a few routes:
 
     ```bash
-    $ pulumi stack output
+    pulumi stack output
+    curl $(pulumi stack output endpoint)/hello
+    curl $(pulumi stack output endpoint)/hello
+    curl $(pulumi stack output endpoint)/woohoo
+    ```
+
+    ```
     Current stack outputs (1):
         OUTPUT            VALUE
         endpoint          https://***.us-east-2.amazonaws.com/stage/
 
-    $ curl $(pulumi stack output endpoint)/hello
     {"route":"hello","count":1}
-    $ curl $(pulumi stack output endpoint)/hello
     {"route":"hello","count":2}
-    $ curl $(pulumi stack output endpoint)/woohoo
     {"route":"woohoo","count":1}
     ```
 
 1.  To view the runtime logs of the Lambda function, use the `pulumi logs` command. To get a log stream, use `pulumi logs --follow`.
 
-## Clean up
+## Cleaning up
 
 1.  Run `pulumi destroy` to tear down all resources.
 

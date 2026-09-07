@@ -1,3 +1,10 @@
 name: gcp-hcl-webserver
 runtime: hcl
 description: A simple web server on a Google Compute Engine instance, written in HCL
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:zone:
+      description: The Google Cloud zone to deploy into
+      default: us-central1-a

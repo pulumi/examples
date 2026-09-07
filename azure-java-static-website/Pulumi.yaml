@@ -1,3 +1,8 @@
 name: azure-java-static-website
 description: Deploys a static website with Pulumi on Azure from Java definitions
 runtime: java
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus

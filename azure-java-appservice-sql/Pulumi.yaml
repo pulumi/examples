@@ -1,3 +1,11 @@
 name: azure-java-appservice-sql
 description: Creates Azure App Service with SQL Database and Application Insights
 runtime: java
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus
+    azure-java-appservice-sql:sqlPassword:
+      description: SQL Server password (complex enough to satisfy Azure policy)
+      secret: true

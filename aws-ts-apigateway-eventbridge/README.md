@@ -7,11 +7,11 @@ This example demonstrates an API Gateway V1 integration with EventBridge and Lam
 
 ## Prerequisites
 
-1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/).
-1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/).
-1. Configure your [AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/).
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-### Deploying the App
+## Deploying the example
 
 1. Clone this repo, change to this directory, then create a new [stack](https://www.pulumi.com/docs/intro/concepts/stack/) for the project:
 
@@ -25,10 +25,15 @@ This example demonstrates an API Gateway V1 integration with EventBridge and Lam
     pulumi config set aws:region us-west-2
     ```
 
-1. Install Node dependencies and run Pulumi:
+1. Install dependencies:
 
     ```bash
     npm install
+    ```
+
+1. Deploy the stack:
+
+    ```bash
     pulumi up
     ```
 
@@ -74,9 +79,11 @@ This example demonstrates an API Gateway V1 integration with EventBridge and Lam
     }
     ```
 
-1. When you're ready, destroy your stack and remove it:
+## Cleaning up
 
-    ```bash
-    pulumi destroy --yes
-    pulumi stack rm --yes
-    ```
+When you're ready, destroy your stack and remove it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

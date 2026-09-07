@@ -5,3 +5,8 @@ runtime:
   options:
     toolchain: poetry
     typechecker: pyright
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1

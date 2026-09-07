@@ -1,7 +1,7 @@
-# Azure App Service Running Docker Containers on Linux
-
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-appservice-docker/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-appservice-docker/README.md#gh-dark-mode-only)
+
+# Azure App Service running Docker containers on Linux
 
 Starting point for building web application hosted in Azure App Service from Docker images.
 
@@ -10,7 +10,13 @@ The example shows two scenarios:
 - Deploying an existing image from Docker Hub
 - Deploying a new custom registry in Azure Container Registry, building a custom Docker image, and running the image from the custom registry
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
+
+## Deploying the example
 
 1. Create a new stack:
 
@@ -33,7 +39,10 @@ The example shows two scenarios:
 1. Run `pulumi up` to preview and deploy changes:
 
     ```bash
-    $ pulumi up
+    pulumi up
+    ```
+
+    ```
     Previewing changes:
     ...
 
@@ -48,13 +57,24 @@ The example shows two scenarios:
 1. Check the deployed endpoints:
 
     ```bash
+    pulumi stack output GetStartedEndpoint
+    curl "$(pulumi stack output GetStartedEndpoint)"
+    ```
 
-    $ pulumi stack output GetStartedEndpoint
+    ```
     http://get-started-15da13.azurewebsites.net
-    $ curl "$(pulumi stack output GetStartedEndpoint)"
     <html>
     <body>
     <h1>Your custom docker image is running in Azure App Service!</h1>
     </body>
     </html>
     ```
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

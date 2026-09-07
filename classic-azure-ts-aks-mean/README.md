@@ -1,39 +1,30 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-aks-mean/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-aks-mean/README.md#gh-dark-mode-only)
 
-# Azure Kubernetes Service (AKS) App Using CosmosDB
+# Azure Kubernetes Service (AKS) app using Cosmos DB
 
 Stands up an [Azure Kubernetes Service][aks] (AKS) cluster and a MongoDB-flavored instance of
 [CosmosDB][cosmos]. On top of the AKS cluster, we also deploy a [Helm][helm] Chart with a simple
 Node.js TODO app ([`bitnami/node`][bitnami-node]), swapping out the usual in-cluster MongoDB instance
 with our managed CosmosDB instance.
 
-## Prerequisites
-
-Ensure you have downloaded and installed the [Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
-
-We will be deploying to Azure, so you will need an Azure account. If you don't have an account,
-sign up for a [free Azure account](https://azure.microsoft.com/en-us/free/). Follow the instructions to
-[connect Pulumi to your Azure account](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/).
-
 This example deploys a Helm Chart from [Bitnami's Helm chart repository](https://github.com/bitnami/charts).
 
-Install dependencies:
+## Prerequisites
 
-```sh
-npm install
-```
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-## Running the App
+## Deploying the example
 
 1. Create a new stack:
 
-    ```console
-    $ pulumi stack init
-    Enter a stack name: azure-mean
+    ```bash
+    pulumi stack init
     ```
 
-1. Set the required configuration variables for this program:
+1. Set the required configuration variables for this program, and log into Azure:
 
     ```bash
     pulumi config set azure:environment public
@@ -44,10 +35,19 @@ npm install
     az login
     ```
 
+1. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
 1. Perform the deployment:
 
-    ```console
-    $ pulumi up
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Updating stack 'azure-mean'
     Performing changes:
 
@@ -80,10 +80,22 @@ npm install
     in this case `40.76.25.71`. It is exported with a stack output variable, `frontendAddress`. We
     can use `curl` and `grep` to retrieve the `<title>` of the site the proxy points at.
 
-    ```console
-    $ curl -sL $(pulumi stack output frontendAddress) | grep "<title>"
+    ```bash
+    curl -sL $(pulumi stack output frontendAddress) | grep "<title>"
+    ```
+
+    ```
         <title>Node/Angular Todo App</title>>
     ```
+
+## Cleaning up
+
+Once you are done, destroy all of the resources and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```
 
 ## Next steps
 

@@ -1,3 +1,10 @@
 name: gcp-go-instance
 runtime: go
 description: A GCP Go Pulumi to create an instance
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:zone:
+      description: The Google Cloud zone to deploy into
+      default: us-central1-a

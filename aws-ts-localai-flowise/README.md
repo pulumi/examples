@@ -1,51 +1,62 @@
-# Example Code to deploy LocalAI, Flowise, and Pulumi on AWS EKS
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-localai-flowise/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-localai-flowise/README.md#gh-dark-mode-only)
+
+# Deploy LocalAI and Flowise on AWS EKS
+
+This example deploys LocalAI and Flowise on an Amazon EKS cluster using Pulumi in TypeScript.
 
 ## Prerequisites
 
-- [Pulumi CLI](https://www.pulumi.com/docs/install/)
-- [Node.js](https://nodejs.org/en/download/)
-- [AWS Account](https://aws.amazon.com)
-
-## How to deploy?
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
 > If you run Pulumi for the first time, you will be asked to log in. Follow the instructions on the screen to
 > login. You may need to create an account first, don't worry it is free.
 
-### Step 1 - Clone the repository
+## Deploying the example
 
-```shell
-git clone https://github.com/pulumi/examples.git
-cd examples/aws-ts-localai-flowise
-```
+1.  Create a new stack:
 
-### Step 2 - Install the dependencies
+    ```bash
+    pulumi stack init dev
+    ```
 
-```shell
-pulumi install
-```
+1.  Set the AWS region to deploy into:
 
-### Step 3 - Login to AWS
+    ```bash
+    pulumi config set aws:region eu-central-1
+    ```
 
-```shell
-aws configure
-```
+1.  Install dependencies:
 
-### Step 4 - Deploy the infrastructure
+    ```bash
+    npm install
+    ```
 
-```shell
-pulumi up
-```
+1.  Deploy the infrastructure:
 
-### Step 5 - Port forward the Flowise UI
+    ```bash
+    pulumi up
+    ```
 
-To retrieve the kubeconfig file, you can use the following command:
+1.  Port forward the Flowise UI. First, retrieve the kubeconfig file:
 
-```shell
-pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
-```
+    ```bash
+    pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
+    ```
 
-As the program does not deploy a LoadBalancer, you need to port forward the UI to your local machine:
+    As the program does not deploy a LoadBalancer, you need to port forward the UI to your local machine:
 
-```shell
-kubectl port-forward svc/flowise-ui 3000:3000
+    ```bash
+    kubectl port-forward svc/flowise-ui 3000:3000
+    ```
+
+## Cleaning up
+
+Once you're finished, destroy the resources and remove the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
 ```

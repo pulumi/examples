@@ -5,54 +5,71 @@
 
 Starting point for building web application hosted in Azure Container Apps.
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1.  Restore NPM dependencies:
+1.  Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
-    ```
-    $ npm install
+    ```bash
+    az login
     ```
 
-1. Set the Azure region location to use:
+1.  Set the Azure region to deploy into:
 
+    ```bash
+    pulumi config set azure-native:location westus2
     ```
-    $ pulumi config set azure-native:location westus2
+
+1.  Install dependencies:
+
+    ```bash
+    npm install
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
+    ```bash
+    pulumi up
     ```
-    $ pulumi up
-    Previewing changes:
-    ...
 
-    Performing changes:
+    ```
+    Updating (dev):
     ...
     Resources:
         + 7 created
-
     Duration: 4m18s
     ```
 
 1.  Check the deployed endpoint:
 
+    ```bash
+    curl "$(pulumi stack output url)"
     ```
-    $ curl "$(pulumi stack output url)"
+
+    ```
     <html>
     <body>
     <h1>Your custom docker image is running in Azure Container Apps!</h1>
     </body>
     </html>
     ```
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

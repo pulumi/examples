@@ -1,80 +1,81 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/linode-js-webserver/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/linode-js-webserver/README.md#gh-dark-mode-only)
 
-# Web Server on Linode
+# Web server on Linode
 
-Starting point for building a Pulumi sample webserver on Linode.
+Starting point for building a Pulumi sample web server on Linode.
 
-## Running the App
+## Prerequisites
 
-1.  Create a new stack:
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Linode credentials](https://www.pulumi.com/registry/packages/linode/installation-configuration/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-    ```
-    $ pulumi stack init webserver-linode-testing
-    ```
+## Deploying the example
 
-1.  Configure the project:
+1. Create a new stack:
 
-    ```
-    $ pulumi config set --secret linode:token YOURLINODETOKEN
-    ```
+   ```bash
+   pulumi stack init webserver-linode-testing
+   ```
 
-1.  Restore NPM dependencies:
+1. Set your Linode API token:
 
-    ```
-    $ npm install
-    ```
+   ```bash
+   pulumi config set --secret linode:token YOURLINODETOKEN
+   ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Install dependencies:
 
-    ```
-    $ pulumi up
-    Previewing update (webserver-linode-testing):
-    ...
+   ```bash
+   npm install
+   ```
 
-    Updating (webserver-linode-testing):
+1. Run `pulumi up` to preview and deploy changes:
 
-        Type                         Name                                        Status
-    +   pulumi:pulumi:Stack          webserver-linode-webserver-linode-testing   created
-    +   ├─ linode:index:StackScript  simple-server                               created
-    +   └─ linode:index:Instance     instance                                    created
+   ```bash
+   pulumi up
+   ```
 
-    Outputs:
-        instanceIP   : "69.164.221.90"
-        instanceLabel: "linode13879908"
+   ```
+   Updating (webserver-linode-testing):
 
-    Resources:
-        + 3 created
+       Type                         Name                                        Status
+   +   pulumi:pulumi:Stack          webserver-linode-webserver-linode-testing   created
+   +   ├─ linode:index:StackScript  simple-server                               created
+   +   └─ linode:index:Instance     instance                                    created
 
-    Duration: 55s
-    ```
+   Outputs:
+       instanceIP   : "69.164.221.90"
+       instanceLabel: "linode13879908"
 
-1.  Curl the HTTP server:
+   Resources:
+       + 3 created
 
-    ```
-    $ curl $(pulumi stack output instanceIP)
-    Hello, World!
-    ```
+   Duration: 55s
+   ```
 
-1.  SSH into the server:
+1. Curl the HTTP server:
 
-    ```
-    $ linode-cli ssh root@$(pulumi stack output instanceLabel)
-    Warning: Permanently added '69.164.221.90' (ECDSA) to the list of known hosts.
-    Linux li136-90 4.9.0-9-amd64 #1 SMP Debian 4.9.168-1 (2019-04-12) x86_64
+   ```bash
+   curl $(pulumi stack output instanceIP)
+   ```
 
-    The programs included with the Debian GNU/Linux system are free software;
-    the exact distribution terms for each program are described in the
-    individual files in /usr/share/doc/*/copyright.
+   ```
+   Hello, World!
+   ```
 
-    Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-    permitted by applicable law.
-    root@li136-90:~#
-    ```
+1. SSH into the server:
 
-1. Cleanup
+   ```bash
+   linode-cli ssh root@$(pulumi stack output instanceLabel)
+   ```
 
-    ```
-    $ pulumi destroy
-    $ pulumi stack rm
-    ```
+## Cleaning up
+
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

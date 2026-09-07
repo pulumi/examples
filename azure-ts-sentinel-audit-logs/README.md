@@ -1,4 +1,7 @@
-# Pulumi Cloud Audit Logs Connector for Microsoft Sentinel
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-sentinel-audit-logs/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-sentinel-audit-logs/README.md#gh-dark-mode-only)
+
+# Pulumi Cloud audit logs connector for Microsoft Sentinel
 
 A Pulumi program that deploys a [Codeless Connector (CCF)](https://learn.microsoft.com/en-us/azure/sentinel/create-codeless-connector) to continuously export [Pulumi Cloud audit log events](https://www.pulumi.com/docs/pulumi-cloud/audit-logs/) into Microsoft Sentinel.
 
@@ -9,7 +12,7 @@ Three pre-built analytic rules are also deployed (can be disabled via `enableAna
 - **Stack Deleted** — alerts when a Pulumi stack is destroyed
 - **Organization Membership Change** — tracks members added, removed, or role-changed
 
-## How It Works
+## How it works
 
 The program creates the following Azure resources:
 
@@ -39,6 +42,12 @@ The poller authenticates to the Pulumi Cloud API using an access token and handl
 
 ## Prerequisites
 
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+This example also requires:
+
 - A Pulumi Cloud organization with a **Business Critical** subscription (audit logs require this tier)
 - A [Pulumi access token](https://app.pulumi.com/account/tokens) with audit log read permissions — we recommend an **org-scoped service token** (survives employee offboarding, can be scoped to minimum permissions)
 - An Azure resource group with a Log Analytics workspace and Microsoft Sentinel enabled. If you don't have these:
@@ -48,13 +57,13 @@ The poller authenticates to the Pulumi Cloud API using an access token and handl
   az sentinel onboarding-state create -g <resource-group> -w <workspace-name> -n default --customer-managed-key false
   ```
 
-## Setup
+## Deploying the example
 
 For full setup instructions, see the [Azure Sentinel audit log export documentation](https://www.pulumi.com/docs/administration/security-compliance/audit-logs/azure-sentinel/).
 
 In Pulumi Cloud, go to **Settings** > **Audit Log Export** and click **"Connect to Azure Sentinel"** to be guided through the setup process.
 
-### Option 1: Pulumi Cloud Deployment Wizard (Recommended)
+### Option 1: Pulumi Cloud deployment wizard (recommended)
 
 The easiest path — no CLI install needed.
 
@@ -139,14 +148,14 @@ pulumi up
 
 This replaces the data connector (delete + create). The poller reconnects in seconds with no data loss.
 
-### Tearing down
+## Cleaning up
 
 ```bash
 pulumi destroy
 pulumi stack rm <stack-name>
 ```
 
-## Configuration Reference
+## Configuration reference
 
 | Config key | Description | Required | Default |
 |------------|-------------|----------|---------|
@@ -157,7 +166,7 @@ pulumi stack rm <stack-name>
 | `enableAnalyticRules` | Deploy pre-built Sentinel analytic rules | No | `true` |
 | `azure-native:location` | Azure region | No | `eastus` |
 
-## Sample Queries
+## Sample queries
 
 ### Excessive authentication failures
 
@@ -182,7 +191,7 @@ PulumiAuditLogs_CL
 | where Event_s in ("member-added", "member-removed", "member-role-changed")
 ```
 
-## Known Limitations
+## Known limitations
 
 - **No historical backfill**: The connector ingests events forward from deployment time only, consistent with the existing S3 audit log export. Historical events can be exported via CSV or the audit log REST API.
 - **Org name changes**: If the Pulumi org is renamed, the poller's hardcoded `orgName` becomes invalid. Update the config and run `pulumi up`.

@@ -1,59 +1,73 @@
-# AWS Go LangServe Example
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-langserve/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-langserve/README.md#gh-dark-mode-only)
 
-This example demonstrates how to use deploy a simple app using Pulumi in Go.
+# AWS Go LangServe example
+
+This example demonstrates how to deploy a simple LangServe app to AWS using Pulumi in Go.
 
 ## Prerequisites
 
-To run this example, you'll need the following tools installed on your machine:
-
-1. [Install Go](https://golang.org/doc/install)
-2. [Install Pulumi](https://www.pulumi.com/docs/install/)
-3. [Configure AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
 4. [Install Docker](https://docs.docker.com/get-docker/)
 5. [Install the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 6. [Install the LangChain CLI](https://python.langchain.com/docs/langserve#installation)
 
-## Deploying to AWS using Pulumi
+## Deploying the example
 
-Set the region with the following command:
+1. Create a new stack, which is an isolated deployment target for this example:
 
-```bash
-pulumi config set aws:region <region>
-```
+    ```bash
+    pulumi stack init dev
+    ```
 
-Run the following command to deploy your LangServe app to AWS:
+1. Set the AWS region to deploy into:
 
-```bash
-git clone https://github.com/pulumi/examples.git
-cd examples/aws-go-langserve
-pulumi stack init <your-stack-name>
-pulumi config set open-api-key --secret # Enter your OpenAI API key
-pulumi up
-```
+    ```bash
+    pulumi config set aws:region us-west-2
+    ```
 
-This last command will show you a preview of the resources that will be created. After reviewing the changes, you will be prompted to continue. Once confirmed, Pulumi will deploy your LangServe app to AWS.
+1. Set your OpenAI API key:
 
-The whole deployoment process will take a couple of minutes. Once it's done, you will see the URL of your LangServe app in the output.
+    ```bash
+    pulumi config set open-api-key --secret # Enter your OpenAI API key
+    ```
 
-```bash
-Outputs:
-    url: "http://<dns>.elb.amazonaws.com"
+1. Install dependencies:
 
-Resources:
-    + 27 created
-```
+    ```bash
+    go mod download
+    ```
 
-You can now access the LangServe playground by adding `/openai/playground` to the URL you got from the output.
+1. Deploy the stack:
 
-> [!NOTE]  
-> It may take a few minutes for the load balancer to be ready to accept requests. If you see a 503 error, wait a few minutes and try again.
+    ```bash
+    pulumi up
+    ```
 
-## Clean up
+    This will show you a preview of the resources that will be created. After reviewing the changes, you will be prompted to continue. Once confirmed, Pulumi will deploy your LangServe app to AWS.
 
-To clean up the resources created by this example, run the following command:
+    The whole deployment process will take a couple of minutes. Once it's done, you will see the URL of your LangServe app in the output.
+
+    ```
+    Outputs:
+        url: "http://<dns>.elb.amazonaws.com"
+
+    Resources:
+        + 27 created
+    ```
+
+    You can now access the LangServe playground by adding `/openai/playground` to the URL you got from the output.
+
+    > [!NOTE]
+    > It may take a few minutes for the load balancer to be ready to accept requests. If you see a 503 error, wait a few minutes and try again.
+
+## Cleaning up
+
+Once you're finished experimenting, tear down your stack's resources by destroying and removing it:
 
 ```bash
 pulumi destroy
+pulumi stack rm
 ```
-
-You will be prompted to confirm the deletion of the resources. Once confirmed, Pulumi will delete all the resources created by this example.

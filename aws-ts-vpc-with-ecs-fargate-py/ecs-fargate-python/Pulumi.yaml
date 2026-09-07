@@ -4,3 +4,10 @@ runtime:
   options:
     virtualenv: venv
 description: Fargate with AWSx VPC
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into (must match the VPC region)
+      default: us-east-2
+    mystackpath:
+      description: The fully-qualified stack name of the VPC stack to reference (org/project/stack)

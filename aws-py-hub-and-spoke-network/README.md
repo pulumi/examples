@@ -1,11 +1,11 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-hub-and-spoke-network/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-hub-and-spoke-network/README.md#gh-dark-mode-only)
 
-# Hub-and-Spoke Network with Centralized Egress and Traffic Inspection use AWS Transit Gateway and AWS Firewall
+# Hub-and-spoke network with centralized egress and traffic inspection using AWS Transit Gateway and AWS Firewall
 
-This example creates a hub and spoke network in AWS with centralized egress and (optional) traffic inspection using AWS VPC, AWS Transit Gateway, and AWS Firewall for traffic inspection. The code creates 2 spoke networks, but additional networks can be added quickly added by modifying the code (see "Additional Options" below).
+This example creates a hub and spoke network in AWS with centralized egress and (optional) traffic inspection using AWS VPC, AWS Transit Gateway, and AWS Firewall for traffic inspection. The code creates 2 spoke networks, but additional networks can be added quickly by modifying the code (see "Additional options" below).
 
-## About the Architecture
+## About the architecture
 
 A hub-and-spoke network is a common architecture for creating a network topology that provides isolation and security for your workloads. The hub-and-spoke architecture you'll be creating on AWS has three main components: an inspection VPC, AWS Transit Gateway, and a series of spoke VPCs.
 
@@ -18,47 +18,44 @@ A hub-and-spoke network is a common architecture for creating a network topology
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/registry/packages/aws/installation-configuration/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
-## Deploy The App
+## Deploying the example
 
-### Step 1: Initialize the Project
-
-For Pulumi examples, we typically start by creating a directory and changing into it. Then, we create a new Pulumi project from a template. For example, `aws-python`.
-
-1. Install packages:
-
-    ```bash
-    python3 -m venv venv
-    venv/bin/pip install -r requirements.txt
-    ```
-
-2. Create a new Pulumi stack:
+1. Create a new Pulumi stack:
 
     ```bash
     pulumi stack init
     ```
 
-3. Configure the AWS region to deploy into:
+1. Configure the AWS region to deploy into:
 
     ```bash
     pulumi config set aws:region us-east-2
     ```
 
-4. Deploy the Pulumi stack:
+1. Install dependencies:
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+1. Deploy the stack:
 
     ```bash
     pulumi up
     ```
 
-### Step 2: Test the Network
+### Testing the network
 
 1. Take note of the `nat-gateway-eip` output from the stack. This is the Elastic IP address of the NAT gateway in the inspection VPC.
 1. Log into the AWS Console in the region in which you deployed the project.
 1. Navigate to the EC2 service home page.
 1. Select one of the spoke workload instances and under "Actions", click "Connect".
-1. Under the Session Manager section, click "Connect". This will create an terminal session to the instance.
+1. Under the Session Manager section, click "Connect". This will create a terminal session to the instance.
 1. Run the following command. The resulting output should be identical to the `nat-gateway-eip` output from the stack. This means that your EC2 instance is able to reach the internet through the NAT gateway in the inspection VPC.
 
     ```bash
@@ -67,7 +64,7 @@ For Pulumi examples, we typically start by creating a directory and changing int
 
 You can comment out the `SpokeWorkload` components after testing as it is not required for the network to function.
 
-### Additional Options
+### Additional options
 
 There are several modifications to the code that can be made:
 
@@ -81,7 +78,7 @@ There are several modifications to the code that can be made:
 
 1. To add additional spoke networks, initiate additional instances of the `SpokeVpc` component resource in `__main__.py`. Be sure that each spoke VPC has a CIDR block that does not overlap with any other spoke VPCs.
 
-## Clean Up
+## Cleaning up
 
 Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
 

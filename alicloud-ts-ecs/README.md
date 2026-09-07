@@ -1,55 +1,61 @@
-# Instance Using Alicloud ECS
-
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/alicloud-ts-ecs/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/alicloud-ts-ecs/README.md#gh-dark-mode-only)
 
-This example deploys a simple Alicloud ECS Instance
+# Instance using Alicloud ECS
 
-## Deploying the App
+This example deploys a simple Alicloud ECS instance.
 
-To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 2. [Configure Alicloud Credentials](https://www.pulumi.com/registry/packages/alicloud/installation-configuration/#configuring-credentials)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-### Steps
+## Deploying the example
 
-After cloning this repo, from this working directory, run these commands:
-
-1. Create a new stack, which is an isolated deployment target for this example:
+1.  Create a new stack:
 
     ```bash
     pulumi stack init
     ```
 
-2. Set the required configuration variables for this program:
+1.  Set the Alicloud region to deploy into:
 
     ```bash
     pulumi config set alicloud:region us-east-1
     ```
 
-3. Stand up the VM, which will also boot up your Python web server on port 80:
+1.  Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+1.  Deploy the stack, which will also boot up your Python web server on port 80:
 
     ```bash
     pulumi up
     ```
 
-4. After a couple of minutes, your VM will be ready, and one stack output is printed:
+1.  After a couple of minutes, your VM will be ready, and one stack output is printed:
 
     ```bash
-    $ pulumi stack output
+    pulumi stack output
+    ```
+
+    ```
     Current stack outputs (1):
     OUTPUT    VALUE
     publicIp  47.90.136.113
     ```
 
-5. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your VM.
+From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your VM.
 
-6. Afterward, destroy your stack and remove it:
+## Cleaning up
 
-    ```bash
-    pulumi destroy --yes
-    pulumi stack rm --yes
-    ```
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

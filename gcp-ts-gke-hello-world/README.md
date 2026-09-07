@@ -1,30 +1,26 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-gke-hello-world/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-gke-hello-world/README.md#gh-dark-mode-only)
 
-# Google Kubernetes Engine (GKE) Cluster
+# Google Kubernetes Engine (GKE) cluster
 
-This example deploys an Google Cloud Platform (GCP) [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) cluster, and deploys a Kubernetes Namespace and Deployment of NGINX
+This example deploys an Google Cloud Platform (GCP) [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) cluster, and deploys a Kubernetes Namespace and Deployment of NGINX.
 
-It does this by configuring a Pulumi [Kubernetes provider](https://www.pulumi.com/registry/packages/kubernetes/) for the new cluster and creating Kubernetes resources against it in the same program — the provider abstraction lets you manage Kubernetes objects independently of the underlying cloud. 
+It does this by configuring a Pulumi [Kubernetes provider](https://www.pulumi.com/registry/packages/kubernetes/) for the new cluster and creating Kubernetes resources against it in the same program — the provider abstraction lets you manage Kubernetes objects independently of the underlying cloud.
 
-## Deploying the App
-
-To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Install Node.js](https://nodejs.org/en/download/)
-1. Install a package manager for Node.js, such as [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/en/docs/install).
+1. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 1. [Install Google Cloud SDK (`gcloud`)](https://cloud.google.com/sdk/docs/downloads-interactive)
 1. Configure GCP Auth
 
     * Login using `gcloud`
 
         ```bash
-        $ gcloud auth login
-        $ gcloud config set project <YOUR_GCP_PROJECT_HERE>
-        $ gcloud auth application-default login
+        gcloud auth login
+        gcloud config set project <YOUR_GCP_PROJECT_HERE>
+        gcloud auth application-default login
         ```
     > Note: This auth mechanism is meant for inner loop developer
     > workflows. If you want to run this example in an unattended service
@@ -32,33 +28,27 @@ To deploy your infrastructure, follow the below steps.
     > configure your service account](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/). The
     > service account must have the role `Kubernetes Engine Admin` / `container.admin`.
 
-### Steps
+## Deploying the example
 
 After cloning this repo, from this working directory, run these commands:
 
 1. Install the required Node.js packages:
 
-    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
-
     ```bash
-    $ npm install
+    npm install
     ```
 
 1. Create a new Pulumi stack, which is an isolated deployment target for this example:
 
-    This will initialize the Pulumi program in TypeScript.
-
     ```bash
-    $ pulumi stack init
+    pulumi stack init
     ```
 
 1. Set the required GCP configuration variables:
 
-    This sets configuration options and default values for our cluster.
-
     ```bash
-    $ pulumi config set gcp:project <YOUR_GCP_PROJECT_HERE>
-    $ pulumi config set gcp:zone us-west1-a     // any valid GCP Zone here
+    pulumi config set gcp:project <YOUR_GCP_PROJECT_HERE>
+    pulumi config set gcp:zone us-west1-a     # any valid GCP Zone here
     ```
 
 1. Stand up the GKE cluster:
@@ -77,42 +67,45 @@ After cloning this repo, from this working directory, run these commands:
     new GKE cluster takes between 3-5 minutes.
 
     ```bash
-    $ pulumi update
-	Previewing update (gke-demo):
+    pulumi update
+    ```
 
-		Type                            Name                             Plan
-	+   pulumi:pulumi:Stack             gcp-ts-gke-hello-world-gke-demo  create
-	+   ├─ gcp:container:Cluster        helloworld                       create
-	+   ├─ pulumi:providers:kubernetes  helloworld                       create
-	+   ├─ kubernetes:core:Namespace    helloworld                       create
-	+   ├─ kubernetes:apps:Deployment   helloworld                       create
-	+   └─ kubernetes:core:Service      helloworld                       create
+    ```
+    Previewing update (gke-demo):
 
-	Resources:
-		+ 6 to create
+        Type                            Name                             Plan
+    +   pulumi:pulumi:Stack             gcp-ts-gke-hello-world-gke-demo  create
+    +   ├─ gcp:container:Cluster        helloworld                       create
+    +   ├─ pulumi:providers:kubernetes  helloworld                       create
+    +   ├─ kubernetes:core:Namespace    helloworld                       create
+    +   ├─ kubernetes:apps:Deployment   helloworld                       create
+    +   └─ kubernetes:core:Service      helloworld                       create
 
-	Updating (gke-demo):
+    Resources:
+        + 6 to create
 
-		Type                            Name                             Status
-	+   pulumi:pulumi:Stack             gcp-ts-gke-hello-world-gke-demo  created
-	+   ├─ gcp:container:Cluster        helloworld                       created
-	+   ├─ pulumi:providers:kubernetes  helloworld                       created
-	+   ├─ kubernetes:core:Namespace    helloworld                       created
-	+   ├─ kubernetes:apps:Deployment   helloworld                       created
-	+   └─ kubernetes:core:Service      helloworld                       created
+    Updating (gke-demo):
 
-	Outputs:
-		clusterName    : "helloworld-e1557dc"
-		deploymentName : "helloworld-tlsr4sg5"
-		kubeconfig     : "<KUBECONFIG_CONTENTS>"
-		namespaceName  : "helloworld-pz4u5kyq"
-		serviceName    : "helloworld-l61b5dby"
-		servicePublicIP: "35.236.26.151"
+        Type                            Name                             Status
+    +   pulumi:pulumi:Stack             gcp-ts-gke-hello-world-gke-demo  created
+    +   ├─ gcp:container:Cluster        helloworld                       created
+    +   ├─ pulumi:providers:kubernetes  helloworld                       created
+    +   ├─ kubernetes:core:Namespace    helloworld                       created
+    +   ├─ kubernetes:apps:Deployment   helloworld                       created
+    +   └─ kubernetes:core:Service      helloworld                       created
 
-	Resources:
-		+ 6 created
+    Outputs:
+        clusterName    : "helloworld-e1557dc"
+        deploymentName : "helloworld-tlsr4sg5"
+        kubeconfig     : "<KUBECONFIG_CONTENTS>"
+        namespaceName  : "helloworld-pz4u5kyq"
+        serviceName    : "helloworld-l61b5dby"
+        servicePublicIP: "35.236.26.151"
 
-	Duration: 3m51s
+    Resources:
+        + 6 created
+
+    Duration: 3m51s
     ```
 
 1. After 3-5 minutes, your cluster will be ready, and the kubeconfig JSON you'll use to connect to the cluster will
@@ -126,16 +119,16 @@ After cloning this repo, from this working directory, run these commands:
     in-place, and which require replacement, and computes
     the minimally disruptive change to achieve the desired state.
 
-	> **Note:** Pulumi auto-generates a suffix for all objects.
+    > **Note:** Pulumi auto-generates a suffix for all objects.
     > See the [Pulumi Programming Model](https://www.pulumi.com/docs/intro/concepts/resources/#autonaming) for more info.
     >
     > ```
     > clusterName    : "helloworld-2a6de9a"
-	> deploymentName : "helloworld-tlsr4sg5"
+    > deploymentName : "helloworld-tlsr4sg5"
     > kubeconfig     : "<KUBECONFIG_CONTENTS>"
-	> namespaceName  : "helloworld-pz4u5kyq"
-	> serviceName    : "helloworld-l61b5dby"
-	> servicePublicIP: "35.236.26.151"
+    > namespaceName  : "helloworld-pz4u5kyq"
+    > serviceName    : "helloworld-l61b5dby"
+    > servicePublicIP: "35.236.26.151"
     > ```
 
     If you visit the FQDN listed in `servicePublicIP` you should land on the
@@ -149,29 +142,29 @@ After cloning this repo, from this working directory, run these commands:
     stack output in the CLI, as Pulumi facilitates exporting these objects for us.
 
     ```bash
-    $ pulumi stack output kubeconfig --show-secrets > kubeconfig
-    $ export KUBECONFIG=$PWD/kubeconfig
-    $ export KUBERNETES_VERSION=1.11.6 && sudo curl -s -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/amd64/kubectl && sudo chmod +x /usr/local/bin/kubectl
+    pulumi stack output kubeconfig --show-secrets > kubeconfig
+    export KUBECONFIG=$PWD/kubeconfig
+    export KUBERNETES_VERSION=1.11.6 && sudo curl -s -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/amd64/kubectl && sudo chmod +x /usr/local/bin/kubectl
 
-    $ kubectl version
-    $ kubectl cluster-info
-    $ kubectl get nodes
+    kubectl version
+    kubectl cluster-info
+    kubectl get nodes
     ```
 
     We can also use the stack output to query the cluster for our newly created Deployment:
 
     ```bash
-    $ kubectl get deployment $(pulumi stack output deploymentName) --namespace=$(pulumi stack output namespaceName)
-    $ kubectl get service $(pulumi stack output serviceName) --namespace=$(pulumi stack output namespaceName)
+    kubectl get deployment $(pulumi stack output deploymentName) --namespace=$(pulumi stack output namespaceName)
+    kubectl get service $(pulumi stack output serviceName) --namespace=$(pulumi stack output namespaceName)
     ```
 
     We can also create another NGINX Deployment into the `default` namespace using
     `kubectl` natively:
 
     ```bash
-    $ kubectl create deployment my-nginx --image=nginx
-    $ kubectl get pods
-    $ kubectl delete deployment my-nginx
+    kubectl create deployment my-nginx --image=nginx
+    kubectl get pods
+    kubectl delete deployment my-nginx
     ```
 
     Of course, by doing so, resources are outside of Pulumi's purview, but this simply
@@ -179,9 +172,9 @@ After cloning this repo, from this working directory, run these commands:
 
 1. Experimentation
 
-    From here on, feel free to experiment. Simply making edits and running `pulumi up` afterwords, will incrementally update your stack.
+    From here on, feel free to experiment. Simply making edits and running `pulumi up` afterwards, will incrementally update your stack.
 
-    ### Running Off-the-Shelf Guestbook YAML
+    ### Running off-the-shelf guestbook YAML
 
     For example, if you wish to pull existing Kubernetes YAML manifests into
     Pulumi to aid in your transition, append the following code block to the existing
@@ -228,9 +221,11 @@ After cloning this repo, from this working directory, run these commands:
         guestbook.getResourceProperty("v1/Service", "frontend", "status").apply(s => s.loadBalancer.ingress[0].ip);
     ```
 
-1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
-    ```
+Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+
+```bash
+pulumi destroy --yes
+pulumi stack rm --yes
+```

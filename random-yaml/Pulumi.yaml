@@ -1,5 +1,7 @@
 name: random
 runtime: yaml
+template:
+  description: Generate secure random passwords to use in deployments
 resources:
   randomPassword:
     type: random:RandomPassword

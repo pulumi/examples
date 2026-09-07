@@ -1,46 +1,51 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-cosmosdb-logicapp/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-cosmosdb-logicapp/README.md#gh-dark-mode-only)
 
-# Azure Cosmos DB, an API Connection, and a Logic App
+# Azure Cosmos DB, an API connection, and a Logic App
 
 With the native Azure provider we can directly use the Azure resource manager API to define API connections and linking it to a logic app. The resulting experience is much faster in comparison to performing the same operation through ARM templates.
 
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure Pulumi for Azure](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
-1. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
-## Running the App
+## Deploying the example
 
 1. Create a new stack:
 
-    ```sh
-    $ pulumi stack init dev
+    ```bash
+    pulumi stack init dev
     ```
 
-1. Create a Python virtualenv, activate it, and install dependencies:
-
-   This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
-    $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
+    az login
     ```
 
-1. Set the required configuration variables for this program, and log into Azure:
+1. Set the Azure region to deploy into:
 
     ```bash
-    $ pulumi config set azure-native:location westeurope
-    $ az login
+    pulumi config set azure-native:location westeurope
     ```
 
-1. Perform the deployment:
+1. Install dependencies:
 
-    ```sh
-    $ pulumi up
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
 
+1. Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
          Type                                                        Name                         Status
      +   pulumi:pulumi:Stack                                         azure-cosmosdb-logicapp-dev  created
      +   ├─ azure-native:resources:ResourceGroup                     logicappdemo-rg              created
@@ -57,17 +62,19 @@ With the native Azure provider we can directly use the Azure resource manager AP
     Duration: 3m16s
     ```
 
-1. At this point, you have a Cosmos DB collection and a Logic App listening to HTTP requests. You can trigger the Logic App with a `curl` command:
+1. At this point, you have a Cosmos DB collection and a Logic App listening to HTTP requests. Trigger the Logic App with a `curl` command:
 
-    ```
-    $ curl -X POST "$(pulumi stack output endpoint)" -d '"Hello World"' -H 'Content-Type: application/json'
+    ```bash
+    curl -X POST "$(pulumi stack output endpoint)" -d '"Hello World"' -H 'Content-Type: application/json'
     ```
 
     The POST body will be saved into a new document in the Cosmos DB collection.
 
-1. Once you are done, you can destroy all of the resources, and the stack:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
-    ```
+Once you are finished, you can destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

@@ -1,3 +1,11 @@
 name: azure-ts-aks
 runtime: nodejs
 description: A minimal Azure AKS TypeScript Pulumi program
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus
+    managedClusterName:
+      description: The name of the managed AKS cluster
+      default: azure-aks

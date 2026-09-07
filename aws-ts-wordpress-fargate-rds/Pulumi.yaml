@@ -1,3 +1,20 @@
 name: aws-ts-wordpress-fargate-rds
 description: Deploys Wordpress in ECS Fargate with RDS backend.
 runtime: nodejs
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    serviceName:
+      description: A prefix used to name resources created by the program
+      default: wp-fargate-rds
+    dbName:
+      description: The name of the MySQL database created in RDS
+      default: wordpress
+    dbUser:
+      description: The user with access to the MySQL database
+      default: admin
+    dbPassword:
+      description: The password for the database user
+      secret: true

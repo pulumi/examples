@@ -1,3 +1,8 @@
 name: azure-hcl-static-website
 runtime: hcl
 description: A static website hosted on Azure Blob Storage, written in HCL
+template:
+  config:
+    azure-hcl-static-website:location:
+      description: The Azure location to deploy into
+      default: westus

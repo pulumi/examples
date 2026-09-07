@@ -4,3 +4,8 @@ runtime:
   options:
     virtualenv: venv
 description: A minimal Azure Native Function in Python with Pulumi program
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus

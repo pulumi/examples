@@ -10,30 +10,39 @@ and [Spring Native - Cloud Function Netty example](https://github.com/spring-pro
 
 Azure Functions custom handlers are used to run the GraalVM binary.
 
-## Running the App in Azure
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Java](https://www.pulumi.com/docs/intro/languages/java/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
-    $ pulumi stack init dev
+    ```bash
+    pulumi stack init dev
     ```
 
 1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
-    ```
-    $ az login
-    ```
-
-1. Set the Azure region location:
-
-    ```
-    $ pulumi config set azure-native:location westus
+    ```bash
+    az login
     ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1.  Set the Azure region location:
+
+    ```bash
+    pulumi config set azure-native:location westus
+    ```
+
+1.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi up
     Previewing changes:
     ...
 
@@ -46,18 +55,30 @@ Azure Functions custom handlers are used to run the GraalVM binary.
 
 1.  Check the deployed website endpoint:
 
+    ```bash
+    pulumi stack output endpoint
+    curl "$(pulumi stack output endpoint)"
     ```
-    $ pulumi stack output endpoint
+
+    ```
     https://<identifier>.web.core.windows.net/api/hello
-    $ curl "$(pulumi stack output endpoint)"
     {"message":"Hello from Spring, Pulumi!"}
     ```
 
-## Running the App locally
+## Running the app locally
 
-1. Run Spring Boot application and send a request:
+Run the Spring Boot application and send a request:
 
-    ```
-    gradle bootRun
-    curl localhost:8080
-    ```
+```bash
+gradle bootRun
+curl localhost:8080
+```
+
+## Cleaning up
+
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

@@ -14,3 +14,5 @@ template:
       description: A project name used for naming/tagging resources
     owner:
       description: An owner name used for tagging resources
+    subnet_cidr_blocks:
+      description: A list of subnetwork CIDR blocks for the program to use

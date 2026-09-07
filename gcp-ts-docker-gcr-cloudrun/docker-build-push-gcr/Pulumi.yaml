@@ -1,3 +1,9 @@
 name: gcr-build-image
 runtime: nodejs
 description: A minimal Google Cloud TypeScript Pulumi program
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:region:
+      description: The Google Cloud region

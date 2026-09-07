@@ -3,32 +3,47 @@
 
 # Azure Container Apps
 
-Starting point for building web application hosted in Azure Container Apps.
+Starting point for building a web application hosted in Azure Container Apps.
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1. Set the Azure region location to use:
+1.  Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
+    ```bash
+    az login
     ```
-    $ pulumi config set azure-native:location canadacentral
+
+1.  Set the Azure region location to use:
+
+    ```bash
+    pulumi config set azure-native:location canadacentral
+    ```
+
+1.  Install dependencies:
+
+    ```bash
+    go mod download
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
+    ```bash
+    pulumi up
     ```
-    $ pulumi up
+
+    ```
     Previewing changes:
     ...
 
@@ -40,13 +55,25 @@ Starting point for building web application hosted in Azure Container Apps.
     Duration: 4m18s
     ```
 
-1. Check the deployed endpoint:
+1.  Check the deployed endpoint:
+
+    ```bash
+    curl "$(pulumi stack output url)"
+    ```
 
     ```
-    $ curl "$(pulumi stack output url)"
     <html>
     <body>
     <h1>Your custom docker image is running in Azure Container Apps!</h1>
     </body>
     </html>
     ```
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

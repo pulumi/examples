@@ -1,3 +1,17 @@
 name: awsx-vpc
 runtime: nodejs
 description: A well architected VPC built with AWSx
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2
+    vpc_name:
+      description: The name to give the VPC
+      default: vpc-fargate-dev
+    vpc_cidr:
+      description: The CIDR block for the VPC
+      default: 10.0.0.0/24
+    zone_number:
+      description: The number of availability zones to span
+      default: 3

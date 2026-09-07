@@ -1,3 +1,27 @@
 name: pulumi-ansible-wordpress-ts
 runtime: nodejs
 description: Deploy an EC2 Wordpress server using Pulumi and Ansible.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
+    publicKeyPath:
+      description: Path to the public key used for SSH access to the EC2 instance
+    privateKeyPath:
+      description: Path to the private key used for SSH access to the EC2 instance
+    dbInstanceSize:
+      description: The RDS instance size to use
+      default: db.t3.small
+    dbName:
+      description: The name of the Wordpress database in RDS
+      default: wordpressdb
+    dbUsername:
+      description: The name of the Wordpress database user
+      default: admin
+    dbPassword:
+      description: The password for the Wordpress database
+      secret: true
+    ec2InstanceSize:
+      description: The EC2 instance size to provision
+      default: t3.small

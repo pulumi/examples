@@ -2,6 +2,20 @@ name: yaml-math-and-objects
 description: A Pulumi YAML program that demonstrates how to do math and manipulate objects in YAML.
 runtime: yaml
 
+template:
+  config:
+    length:
+      description: The length of the string to generate
+      default: 16
+    useLowerCase:
+      description: Whether the generated string should include lowercase characters
+      default: true
+    configKeepersArray:
+      description: An array of "key:value" strings used to build the keepers map
+      default:
+        - "configKey1:configValue1"
+        - "configKey2:configValue2"
+
 ## Stack Config
 config:
   # The length of the string to generate.

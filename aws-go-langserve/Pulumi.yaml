@@ -1,3 +1,21 @@
 name: aws-go-langserve
 runtime: go
 description: A minimal Langserve AWS Go Pulumi program
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    open-api-key:
+      description: Your OpenAI API key
+      secret: true
+    vpc-cidr:
+      description: The CIDR block for the VPC
+    subnet-1-cidr:
+      description: The CIDR block for the first subnet
+    subnet-2-cidr:
+      description: The CIDR block for the second subnet
+    container-context:
+      description: The Docker build context for the LangServe app
+    container-file:
+      description: The path to the Dockerfile for the LangServe app

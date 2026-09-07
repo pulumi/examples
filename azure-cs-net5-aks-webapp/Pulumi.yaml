@@ -1,3 +1,8 @@
 name: azure-dotnet5
 runtime: dotnet
 description: An example of deploying web apps to App Service and AKS with C# 9 and .NET 5
+template:
+  config:
+    azure-native:location:
+      description: The Azure region to deploy into
+      default: westus2

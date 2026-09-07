@@ -5,48 +5,40 @@
 
 Starting point for building web application hosted in Azure App Service.
 
-Provisions Azure SQL Database and Azure Application Insights to be used in combination
-with App Service.
+Provisions Azure SQL Database and Azure Application Insights to be used in combination with App Service.
 
-## Deploying the App
-
-To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
 
-### Steps
-
-1.  Install required plugins:
-
-    ```bash
-    $ pulumi plugin install resource azure-native 1.56.0
-    $ pulumi plugin install resource random 4.3.1
-    ```
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1.  Configure the location to deploy the resources to:
+1.  Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
+
+    ```bash
+    az login
+    ```
+
+1.  Set the Azure region to deploy into:
+
+    ```bash
+    pulumi config set azure-native:location centralus
+    ```
+
+1.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi config set azure-native:location centralus
-    ```
-
-1.  Run `pulumi up` to preview and deploy changes:
-
-    ```
-    $ pulumi up
     Previewing changes:
     ...
 
@@ -54,15 +46,16 @@ To deploy your infrastructure, follow the below steps.
     ...
     info: 11 changes performed:
         + 11 resources created
-    Update duration: 1m14.59910109s
+    Update duration: 1m14s
     ```
 
 1.  Check the deployed website endpoint:
 
+    ```bash
+    curl "$(pulumi stack output endpoint)"
     ```
-    $ pulumi stack output Endpoint
-    https://azpulumi-as0ef47193.azurewebsites.net
-    $ curl "$(pulumi stack output endpoint)"
+
+    ```
     <html>
 
     <head>
@@ -80,11 +73,13 @@ To deploy your infrastructure, follow the below steps.
     </html>
     ```
 
-6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
+1.  From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
-7. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
-    ```
+Once you're finished experimenting, tear down your stack's resources by destroying and removing it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

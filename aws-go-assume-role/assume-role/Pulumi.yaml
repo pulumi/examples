@@ -1,3 +1,10 @@
 name: aws-go-assume-role
 runtime: go
 description: Demonstrate use of AWS AssumeRole Functionality
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
+    roleToAssumeARN:
+      description: The ARN of the IAM role to assume

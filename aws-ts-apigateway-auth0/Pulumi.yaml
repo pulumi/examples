@@ -1,3 +1,17 @@
 name: lambda-authorizer
 runtime: nodejs
 description: A sample AWS API Gateway example that uses Custom Authorizers
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2
+    jwksUri:
+      description: The Auth0 JWKS URI
+      secret: true
+    audience:
+      description: The Auth0 API audience
+      secret: true
+    issuer:
+      description: The Auth0 token issuer
+      secret: true

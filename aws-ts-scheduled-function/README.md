@@ -1,36 +1,46 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-scheduled-function/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-scheduled-function/README.md#gh-dark-mode-only)
 
-# Scheduled Function on AWS
+# Scheduled function on AWS
 
 A simple function in AWS that executes based on a schedule using CloudWatch.
 
 In this example, an S3 Bucket will be created. A function will run every Friday at 11:00pm UTC
 that will delete all of the objects it contains.
 
-## Deploying and running the program
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
 1.  Set the AWS region:
 
-    ```
-    $ pulumi config set aws:region us-east-1
+    ```bash
+    pulumi config set aws:region us-east-1
     ```
 
-1.  Restore NPM modules via `npm install` or `yarn install`.
+1.  Install dependencies:
+
+    ```bash
+    npm install
+    ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
+    ```bash
+    pulumi up
     ```
-    $ pulumi up
-    Previewing update of stack 'dev'
-    ...
 
+    ```
     Updating (dev):
 
         Type                                          Name                           Status
@@ -53,8 +63,11 @@ that will delete all of the objects it contains.
     Duration: 16s
     ```
 
-## Clean up
+## Cleaning up
 
-1.  Run `pulumi destroy` to tear down all resources.
+Once you're done, destroy the resources and remove the stack:
 
-1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi console.
+```bash
+pulumi destroy
+pulumi stack rm
+```

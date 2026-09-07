@@ -1,50 +1,56 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/libvirt-py-vm/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/libvirt-py-vm/README.md#gh-dark-mode-only)
 
-# Using the Pulumi Libvirt Provider to Deploy a VM on a KVM Server
+# Using the Pulumi libvirt provider to deploy a VM on a KVM server
 
 Deploys a KVM server in Azure and then deploys a small Linux VM on that KVM server.
-It uses the Pulumi Libvirt provider (https://www.pulumi.com/registry/packages/libvirt/) and nested virtualization that is supported by certain Azure instance types to accomplish this.
+It uses the [Pulumi libvirt provider](https://www.pulumi.com/registry/packages/libvirt/) and nested virtualization that is supported by certain Azure instance types to accomplish this.
 
-## Running the App
+## Prerequisites
 
-1. The libvirt provider uses the libvirt module. Therefore, libvirt needs to be installed on the machine from which you are running pulumi.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
+4. Install libvirt. The libvirt provider uses the libvirt module, so libvirt must be installed on the machine from which you run Pulumi.
    - Mac: `brew install libvirt`
-   - Windows: See: https://libvirt.org/windows.html
-   - Others: https://libvirt.org/downloads.html
+   - Windows: See https://libvirt.org/windows.html
+   - Others: See https://libvirt.org/downloads.html
+
+## Deploying the example
 
 1. Create a new stack:
 
-   ```
-   $ pulumi stack init dev
-   ```
-
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-   ```
-   $ az login
+   ```bash
+   pulumi stack init dev
    ```
 
-1. Create a Python virtualenv, activate it, and install dependencies:
-
-   This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
    ```bash
-   $ python3 -m venv venv
-   $ source venv/bin/activate
-   $ pip3 install -r requirements.txt
+   az login
+   ```
+
+1. Install dependencies:
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
    ```
 
 1. Set the Azure region location to use:
 
-   ```
-   $ pulumi config set azure-native:location westus
+   ```bash
+   pulumi config set azure-native:location westus
    ```
 
 1. Run `pulumi up` to preview and deploy changes:
 
+   ```bash
+   pulumi up
    ```
-   $ pulumi up
+
+   ```
    Previewing changes:
    ...
 
@@ -55,10 +61,19 @@ It uses the Pulumi Libvirt provider (https://www.pulumi.com/registry/packages/li
    Duration: 3m36s
    ```
 
-1. Check the VM on the KVM host:
-   The stack generates an output that provides a string you can execute to run `virsh` remotely on the KVM host.
-   It will look something like
+1. Check the VM on the KVM host. The stack generates an output that provides a string you can execute to run `virsh` remotely on the KVM host. It looks something like:
+
    ```
    echo virsh list | ssh -i libvirt-ex-dev-kvm_server.priv kvmuser@1.2.3.4
    ```
+
    Additionally, you can ssh to the KVM host and use virsh locally to explore more details.
+
+## Cleaning up
+
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

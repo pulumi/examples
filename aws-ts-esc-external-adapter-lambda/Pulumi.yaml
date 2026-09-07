@@ -1,3 +1,8 @@
 name: aws-ts-esc-external-adapter-lambda
 runtime: nodejs
 description: External secrets adapter for Pulumi ESC using AWS Lambda with JWT authentication
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2

@@ -1,3 +1,12 @@
 name: pulumi-gcloud-kms
 runtime: nodejs
 description: Minimal config to check gcloud encryption support
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    bucketName:
+      description: The name of the storage bucket to create
+    secretValue:
+      description: The secret value to store in the bucket
+      secret: true

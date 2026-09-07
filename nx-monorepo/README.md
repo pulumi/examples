@@ -1,4 +1,4 @@
-# Nx Monorepo
+# Nx monorepo
 
 This example shows how to use Nx to organize a monorepo and track dependencies between the packages in the monorepo.
 
@@ -17,7 +17,7 @@ To deploy the latest version of the website, we need to respect the following de
 - `s3folder` and `website-deploy` need to be compiled before we can build `infra`.
 - `infra` needs to be compiled before we can deploy.
 
-These dependecies can be defined using Nx, for example in [infra/package.json](./infra/package.json) we declare that the `deploy` target for the infra package needs its dependencies to be built, and the HTML to generated:
+These dependencies can be defined using Nx, for example in [infra/package.json](./infra/package.json) we declare that the `deploy` target for the infra package needs its dependencies to be built, and the HTML to generated:
 
 ```
     ...
@@ -37,22 +37,21 @@ Nx can visualize the dependencies for us using `npx nx deploy infra --graph`
 
 ![Dependency Graph](./dependency-graph.png)
 
-## Deploying
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-### Steps
+## Deploying the example
 
-Since Nx manages the interdependencies, all we have to do is to install our node dependencies
+Since Nx manages the interdependencies, all we have to do is install our node dependencies:
 
 ```bash
 npm install
 ```
 
-and then run nx:
+Then run nx:
 
 ```bash
 npx nx deploy infra
@@ -128,9 +127,11 @@ Duration: 10s
 ———————————————————————————————————————————————————————————————————————————
 ```
 
-To destroy the stack, we run:
+## Cleaning up
 
-```
+To destroy the stack, run:
+
+```bash
 npx nx destroy infra
 ```
 

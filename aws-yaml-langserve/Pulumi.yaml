@@ -15,6 +15,29 @@
 name: aws-yaml-langserve
 runtime: yaml
 description: A minimal Langserve AWS YAML Pulumi program
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    open-api-key:
+      description: Your OpenAI API key
+      secret: true
+    container-context:
+      description: The Docker build context for the LangServe app
+      default: .
+    container-file:
+      description: The path to the Dockerfile for the LangServe app
+      default: ./Dockerfile
+    vpc-cidr:
+      description: The CIDR block for the VPC
+      default: 10.0.0.0/16
+    subnet-1-cidr:
+      description: The CIDR block for the first subnet
+      default: 10.0.0.0/24
+    subnet-2-cidr:
+      description: The CIDR block for the second subnet
+      default: 10.0.1.0/24
 config:
   container-context:
     type: string

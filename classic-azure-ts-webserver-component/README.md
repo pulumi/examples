@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-webserver-component/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-webserver-component/README.md#gh-dark-mode-only)
 
-# Web Server Component Using Azure Virtual Machine
+# Web server component using Azure Virtual Machine
 
 This example provisions a configurable number of Linux web servers in an Azure Virtual Machine, and returns the
 resulting public IP addresses. This example uses a reusable [Pulumi component](
@@ -10,11 +10,11 @@ defining a `WebServer` class, we can hide many details (see [here](./webserver.t
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en/download/)
-- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
-- [Connect Pulumi with your Azure account](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) (if your `az` CLI is configured, no further changes are required)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-## Running the App
+## Deploying the example
 
 1. Create a new stack:
 
@@ -22,9 +22,16 @@ defining a `WebServer` class, we can hide many details (see [here](./webserver.t
     pulumi stack init dev
     ```
 
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
+
+    ```bash
+    az login
+    ```
+
 1. Configure the deployment. The username and password here will be used to configure the Virtual Machine. The
     password must adhere to the [Azure restrictions on VM passwords](
     https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq#what-are-the-password-requirements-when-creating-a-vm).
+    Note that `--secret` ensures your password is encrypted safely.
 
     ```bash
     pulumi config set azure:location westus  # any valid Azure region will do
@@ -34,24 +41,19 @@ defining a `WebServer` class, we can hide many details (see [here](./webserver.t
     pulumi config set count 5                # optional -- will default to 2 if left out
     ```
 
-    Note that `--secret` ensures your password is encrypted safely.
-
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```bash
-    az login
-    ```
-
-1. Restore NPM dependencies:
+1. Install dependencies:
 
     ```bash
     npm install
     ```
 
-1. Run `pulumi up` to preview and deploy changes:
+1. Deploy the stack:
 
-    ```console
-    $ pulumi up
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing changes:
     ...
 
@@ -64,7 +66,19 @@ defining a `WebServer` class, we can hide many details (see [here](./webserver.t
 
 1. Check the resulting IP addresses:
 
-    ```console
-    $ pulumi stack output ipAddresses
+    ```bash
+    pulumi stack output ipAddresses
+    ```
+
+    ```
     [ 40.112.181.239, ..., 40.112.181.240 ]
     ```
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

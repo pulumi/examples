@@ -4,3 +4,25 @@ runtime:
   options:
     virtualenv: venv
 description: Azure Native Python Pulumi example featuring Helm chart deployment to AKS
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus2
+    k8sVersion:
+      description: The Kubernetes version to use for the AKS cluster
+      default: 1.26.3
+    adminUserName:
+      description: The admin username for the cluster nodes
+      default: testuser
+    nodeCount:
+      description: The number of nodes in the cluster
+      default: 2
+    nodeSize:
+      description: The VM size to use for the cluster nodes
+      default: Standard_D2_v2
+    password:
+      description: The password for the cluster (a random one is generated if unset)
+      secret: true
+    sshPublicKey:
+      description: The SSH public key for the cluster (a key pair is generated if unset)

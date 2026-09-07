@@ -1,57 +1,69 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/crd2pulumi-crontabs/kubernetes-ts-crontabs/index.ts#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/crd2pulumi-crontabs/kubernetes-ts-crontabs/index.ts#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/crd2pulumi-crontabs/kubernetes-ts-crontabs#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/crd2pulumi-crontabs/kubernetes-ts-crontabs#gh-dark-mode-only)
 
 # Generating CronTab CustomResources with `crd2pulumi`
 
-This example generates a strongly-typed CronTab CustomResource from the Kubernetes CRD specified in `crontabs.yaml` in TypeScript and Go. Afterwards, we'll use this generated code with Pulumi to deploy the CRD and create an instance. For more documentation on `crd2pulumi`, check out the [project's GitHub page](https://github.com/pulumi/pulumi-kubernetes/tree/master/provider/cmd/crd2pulumi).
+This example generates a strongly-typed CronTab CustomResource from the Kubernetes CRD specified in `crontab.yaml` in TypeScript and Go. Afterwards, we'll use this generated code with Pulumi to deploy the CRD and create an instance. For more documentation on `crd2pulumi`, check out the [project's GitHub page](https://github.com/pulumi/pulumi-kubernetes/tree/master/provider/cmd/crd2pulumi).
+
+This directory contains two standalone Pulumi projects that demonstrate the same workflow:
+
+- [kubernetes-ts-crontabs/](./kubernetes-ts-crontabs) — the TypeScript variant.
+- [kubernetes-go-crontabs/](./kubernetes-go-crontabs) — the Go variant.
+
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/) (for the TypeScript variant) or [Install Go](https://www.pulumi.com/docs/intro/languages/go/) (for the Go variant)
 
 ## Setting up crd2pulumi
 
-We'll set up `crd2pulumi` by downloading the latest binary. If you're interested in building `crd2pulumi` itself, you can find instructions in the project [README](https://github.com/pulumi/pulumi-kubernetes/tree/master/provider/cmd/crd2pulumi).
+Set up `crd2pulumi` by downloading the latest binary. If you're interested in building `crd2pulumi` itself, you can find instructions in the project [README](https://github.com/pulumi/pulumi-kubernetes/tree/master/provider/cmd/crd2pulumi).
 
 You can find the download links for the [latest binaries on GitHub](https://github.com/pulumi/pulumi-kubernetes/releases/tag/crd2pulumi/v1.0.0). For this example we're using `darwin-amd64`, so if you're using a different OS, make sure to use the correct download link.
 
 ```bash
-$ wget https://github.com/pulumi/pulumi-kubernetes/releases/download/crd2pulumi%2Fv1.0.0/crd2pulumi-darwin-amd64.tar.gz
-$ tar -xvf crd2pulumi-darwin-amd64.tar.gz
-$ mv ./releases/crd2pulumi-darwin-amd64/crd2pulumi ./crd2pulumi
+wget https://github.com/pulumi/pulumi-kubernetes/releases/download/crd2pulumi%2Fv1.0.0/crd2pulumi-darwin-amd64.tar.gz
+tar -xvf crd2pulumi-darwin-amd64.tar.gz
+mv ./releases/crd2pulumi-darwin-amd64/crd2pulumi ./crd2pulumi
 ```
 
-## Running the App (TypeScript)
-
-Follow the steps in [Pulumi Installation and Setup](https://www.pulumi.com/docs/get-started/install/) and [Configuring Pulumi
-Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/) to get setup with Pulumi and Kubernetes.
+## Deploying with TypeScript
 
 Install dependencies:
 
 ```bash
-$ cd kubernetes-ts-crontabs
-$ npm install
+cd kubernetes-ts-crontabs
+npm install
 ```
 
 Create a new stack:
 
 ```bash
-$ pulumi stack init dev
+pulumi stack init dev
 ```
 
 At first, the provided `index.ts` program shouldn't run, since we haven't actually generated the `./crontabs` code yet.
 
-> `crontabs.yaml` is a k8s CRD that specifies a CronTab CustomResource. It's also used as an example in the [Kubernetes Documentation](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/).
+> `crontab.yaml` is a k8s CRD that specifies a CronTab CustomResource. It's also used as an example in the [Kubernetes Documentation](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/).
 
 Generate the strongly-typed CronTab resource in the current directory:
 
 ```bash
-$ ../crd2pulumi nodejs ../crontabs.yaml .
+../crd2pulumi nodejs ../crontab.yaml .
 ```
 
 This should generate a `./crontabs` folder, where we can import the useful classes `v1.CronTab` and `NewCronTabDefinition`.
+
 > This saves us a lot of time, since we can create the CRD in a single line and get typed arguments in the CustomResource. If you're curious, the comments contain the code that we would've written without `crd2pulumi`.
 
 Perform the deployment:
 
 ```bash
-$ pulumi up
+pulumi up
+```
+
+```
 Previewing update (dev):
  	Type                                                     	Name               	Plan
  	pulumi:pulumi:Stack                                      	examples-dev
@@ -74,11 +86,10 @@ Resources:
 Duration: 17s
 ```
 
-It looks like both the CronTab definition and instance were both created! Finally, let's verify that they were created
-by manually viewing the raw YAML data:
+It looks like both the CronTab definition and instance were both created! Finally, let's verify that they were created by manually viewing the raw YAML data:
 
 ```bash
-$ kubectl get ct -o yaml
+kubectl get ct -o yaml
 ```
 
 ```yaml
@@ -106,10 +117,13 @@ metadata:
   selfLink: ""
 ```
 
-Let's destroy the CRD and CustomResource object so we can re-create them in Go.
+Destroy the CRD and CustomResource object so we can re-create them in Go:
 
 ```bash
-$ pulumi destroy
+pulumi destroy
+```
+
+```
 Previewing destroy (dev):
      Type                                                         Name                        Plan
  -   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  delete
@@ -141,19 +155,19 @@ The resources in the stack have been deleted, but the history and configuration 
 If you want to remove the stack completely, run 'pulumi stack rm dev'.
 ```
 
-## Running the App (Go)
+## Deploying with Go
 
 First, if you haven't already, [install Go](https://golang.org/doc/install). Then create a new stack:
 
 ```bash
-$ cd kubernetes-go-crontabs
-$ pulumi stack init dev
+cd kubernetes-go-crontabs
+pulumi stack init dev
 ```
 
 Like before, `main.go` shouldn't compile since we haven't generated the `crontabs` module yet. Let's do that:
 
 ```bash
-$ ../crd2pulumi go ../crontabs.yaml .
+../crd2pulumi go ../crontab.yaml .
 ```
 
 This creates a `crontabs/v1` module in the current directory, which contains the useful constructor `NewCronTab()`.
@@ -163,7 +177,10 @@ This creates a `crontabs/v1` module in the current directory, which contains the
 Perform the deployment:
 
 ```bash
-$ pulumi up --yes
+pulumi up --yes
+```
+
+```
 Previewing update (dev):
      Type                                                         Name                        Plan
  +   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  create
@@ -188,10 +205,18 @@ Resources:
 Duration: 10s
 ```
 
-Like before, you can run `kubectl get ct -o yaml` to verify that the CronTab object was actually created. Before we leave, let's remove everything we have created:
+Like before, you can run `kubectl get ct -o yaml` to verify that the CronTab object was actually created.
+
+## Cleaning up
+
+Once you are done, remove everything you have created:
 
 ```bash
-$ pulumi destroy --yes
+pulumi destroy --yes
+pulumi stack rm --yes
+```
+
+```
 Previewing destroy (dev):
      Type                                                         Name                        Plan
  -   pulumi:pulumi:Stack                                          kubernetes-go-crontabs-dev  delete

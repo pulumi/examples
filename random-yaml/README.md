@@ -5,48 +5,61 @@
 
 The [Random package](https://www.pulumi.com/registry/packages/random/api-docs/) provides resources with outputs that are random IDs, passwords, or other data.
 
-## Deploying and running the program
+## Prerequisites
 
-1.  Create a new stack:
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 
-    ```bash
-    $ pulumi stack init dev
-    ```
+## Deploying the example
 
-1.  Install required plugins:
+1. Create a new stack:
 
-    ```bash
-    $ pulumi plugin install resource random 4.3.1
-    ```
+   ```bash
+   pulumi stack init dev
+   ```
 
-1.  Run `pulumi up` to preview and deploy changes.  After the preview is shown you will be
-    prompted if you want to continue or not.
+1. Install required plugins:
 
-    ```bash
-    $ pulumi up
-    Previewing update (dev)
-    ...
+   ```bash
+   pulumi plugin install resource random 4.3.1
+   ```
 
-    Updating (dev)
+1. Run `pulumi up` to preview and deploy changes. After the preview is shown you will be prompted if you want to continue or not.
 
-    View Live: https://app.pulumi.com/.../random/dev/updates/1
+   ```bash
+   pulumi up
+   ```
 
-         Type                            Name            Status
-     +   pulumi:pulumi:Stack             random-dev      created
-     +   └─ random:index:RandomPassword  randomPassword  created
+   ```
+   Updating (dev)
 
-    Outputs:
-    password: "[secret]"
+        Type                            Name            Status
+    +   pulumi:pulumi:Stack             random-dev      created
+    +   └─ random:index:RandomPassword  randomPassword  created
 
-    Resources:
-    + 2 created
-    ```
+   Outputs:
+   password: "[secret]"
 
-1.  To see the resources that were created, run `pulumi stack output`:
+   Resources:
+   + 2 created
+   ```
 
-    ```bash
-    $ pulumi stack output --show-secrets
-    Current stack outputs (1):
-        OUTPUT      VALUE
-        password    ...
-    ```
+1. To see the resources that were created, run `pulumi stack output`:
+
+   ```bash
+   pulumi stack output --show-secrets
+   ```
+
+   ```
+   Current stack outputs (1):
+       OUTPUT      VALUE
+       password    ...
+   ```
+
+## Cleaning up
+
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

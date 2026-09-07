@@ -5,7 +5,13 @@
 
 An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 1. Create a new stack:
 
@@ -13,19 +19,13 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
     pulumi stack init dev
     ```
 
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
     az login
     ```
 
-1. Restore NPM dependencies:
-
-    ```bash
-    npm install
-    ```
-
-1. Configure target Azure environment:
+1. Configure the target Azure environment:
 
     ```bash
     pulumi config set azure:location <location>
@@ -34,10 +34,19 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
     pulumi config set password --secret <value>
     ```
 
-1. Run `pulumi up` to preview and deploy changes:
+1. Install dependencies:
 
-    ```console
-    $ pulumi up
+    ```bash
+    npm install
+    ```
+
+1. Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing changes:
     ...
 
@@ -50,10 +59,21 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
 
 1. Check the deployed Spark endpoint:
 
-    ```console
-    $ pulumi stack output endpoint
-    https://myspark1234abcd.azurehdinsight.net/
-
-    # For instance, Jupyter notebooks are available at https://myspark1234abcd.azurehdinsight.net/jupyter/
-    # Follow https://docs.microsoft.com/en-us/azure/hdinsight/spark/apache-spark-load-data-run-query to test it out
+    ```bash
+    pulumi stack output endpoint
     ```
+
+    ```
+    https://myspark1234abcd.azurehdinsight.net/
+    ```
+
+    For instance, Jupyter notebooks are available at `https://myspark1234abcd.azurehdinsight.net/jupyter/`. Follow the [Apache Spark load data and run queries guide](https://docs.microsoft.com/en-us/azure/hdinsight/spark/apache-spark-load-data-run-query) to test it out.
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

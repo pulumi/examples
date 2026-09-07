@@ -1,17 +1,15 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-integration-py/README.md#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-integration-py/README.md#gh-dark-mode-only)
+# Integration testing of Pulumi programs in Python
 
-# Integration Testing of Pulumi programs in Python
-
-This integration test is using Pulumi [Automation API](https://www.pulumi.com/blog/automation-api/) and [Python Unittest](https://docs.python.org/3/library/unittest.html)  to simulate integration test in Pulumi without native python integration library.
+This integration test uses the Pulumi [Automation API](https://www.pulumi.com/blog/automation-api/) and [Python unittest](https://docs.python.org/3/library/unittest.html) to simulate an integration test in Pulumi without a native Python integration library.
 
 | UnitTest | Integration Test |Target|
 |--|--|--|
 | YES | YES|Input|
 | No | YES|Output|
 
-## Test Case
-To create a s3 bucket and upload a file
+## Test case
+
+To create an S3 bucket and upload a file:
 
  1. Create the stack with a bucket
  3. Verify S3 bucket name and region in Output
@@ -20,27 +18,43 @@ To create a s3 bucket and upload a file
  6. Deleting that file
  7. Delete the stack with the bucket
 
+## Prerequisites
 
-## Precondition
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
-You need to create the credential file yourself. By default, its location is at ~/.aws/credentials. Your access key needs the correct permissions for S3 bucket and object creation/deletion.
+You need to create the credentials file yourself. By default, its location is at `~/.aws/credentials`. Your access key needs the correct permissions for S3 bucket and object creation/deletion.
+
 ```
 [default]
 aws_access_key_id = YOUR_ACCESS_KEY
 aws_secret_access_key = YOUR_SECRET_KEY
 ```
 
-##  Running the tests
-```
-pip install -r requirements.txt
-python -m unittest test_s3_it.py
-```
+## Running the tests
 
-## Test Life Cycle
+1. Create a Python virtualenv, activate it, and install dependencies:
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+2. Run the tests:
+
+   ```bash
+   python -m unittest test_s3_it.py
+   ```
+
+## Test life cycle
+
  - Create a stack and export the desired outputs.
  - Validate any output values you defined in advance.
  - In the end, don't forget to destroy the stack.
-```
+
+```python
 from pulumi import automation as auto
 
 class TestS3(unittest.TestCase):
@@ -65,9 +79,10 @@ class TestS3(unittest.TestCase):
         ...
 
 ```
-## Further steps
 
-Learn more about testing Pulumi programs and Automation API:
+## Learn more
+
+Learn more about testing Pulumi programs and the Automation API:
 
  - [Automation API](https://www.pulumi.com/blog/automation-api/)
- - [Pulumi Test](https://www.pulumi.com/docs/guides/testing/)
+ - [Testing Guide](https://www.pulumi.com/docs/iac/guides/testing/)

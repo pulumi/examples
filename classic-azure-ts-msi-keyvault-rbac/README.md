@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-msi-keyvault-rbac/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-ts-msi-keyvault-rbac/README.md#gh-dark-mode-only)
 
-# Managing Secrets and Secure Access in Azure Applications
+# Managing secrets and secure access in Azure applications
 
 [Managed identities](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/) for Azure resources provides Azure services with an automatically managed identity in Azure Active Directory (Azure AD).
 
@@ -10,12 +10,18 @@ This example demonstrates using a managed identity with Azure App Service to acc
 The application consists of several parts:
 
 - An ASP.NET Application which reads data from a SQL Database and from a file in Blob Storage
-- App Service which host the application. The application binaries are placed in Blob Storage, with Blob Url placed as a secret in Azure Key Vault
+- App Service which hosts the application. The application binaries are placed in Blob Storage, with the Blob URL placed as a secret in Azure Key Vault
 - App Service has a Managed Identity enabled
-- The identify is granted access to the SQL Server, Blob Storage, and Key Vault
+- The identity is granted access to the SQL Server, Blob Storage, and Key Vault
 - No secret information is placed in App Service configuration: all access rights are derived from Active Directory
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 1. Create a new stack:
 
@@ -23,16 +29,10 @@ The application consists of several parts:
     pulumi stack init dev
     ```
 
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
     az login
-    ```
-
-1. Restore NPM dependencies:
-
-    ```bash
-    npm install
     ```
 
 1. Build and publish the ASP.NET Core project:
@@ -41,17 +41,26 @@ The application consists of several parts:
     dotnet publish webapp
     ```
 
-1. Configure target Azure environment:
+1. Configure the target Azure environment:
 
     ```bash
     pulumi config set azure:location <location>
     pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
-1. Run `pulumi up` to preview and deploy changes:
+1. Install dependencies:
 
-    ```console
-    $ pulumi up
+    ```bash
+    npm install
+    ```
+
+1. Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing changes:
     ...
 
@@ -64,9 +73,21 @@ The application consists of several parts:
 
 1. Check the deployed website endpoint:
 
-    ```console
-    $ pulumi stack output endpoint
+    ```bash
+    pulumi stack output endpoint
+    curl "$(pulumi stack output endpoint)"
+    ```
+
+    ```
     https://app129968b8.azurewebsites.net/
-    $ curl "$(pulumi stack output endpoint)"
     Hello 311378b3-16b7-4889-a8d7-2eb77478beba@50f73f6a-e8e3-46b6-969c-bf026712a650! Here is your...
     ```
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

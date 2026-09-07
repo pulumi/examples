@@ -1,3 +1,8 @@
 name: azure-cs-aci
 runtime: dotnet
 description: Creates Azure Container Instance with a public IP
+template:
+  config:
+    azure-native:location:
+      description: The Azure region to deploy into
+      default: westus

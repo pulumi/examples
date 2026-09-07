@@ -1,40 +1,54 @@
-[![Deploy](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new)
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-lambda-secrets/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-lambda-secrets/README.md#gh-dark-mode-only)
 
-# Lambd secrets
+# Lambda secrets
 
-Storing stack secrets securely and accessing them in a Lambda Function
+Storing stack secrets securely and accessing them in a Lambda Function.
 
 You can find a post describing the code on the [Pulumi blog](https://pulumi.com/blog/safe-lambda-secrets/).
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
+    ```bash
     pulumi stack init dev
     ```
 
 1.  Configure Pulumi to use an AWS region of your choice, for example:
 
-    ```
+    ```bash
     pulumi config set aws:region us-west-2
     ```
 
-1.  Restore NPM modules via `npm install` or `yarn install`.
+1.  Install dependencies:
 
-1. Add values to your stack config, both secret and plaintext:
+    ```bash
+    npm install
+    ```
 
-```bash
-pulumi config set --path 'lambdawithsecrets.envvars["envvar1"]' envvar1value
-pulumi config set --path 'lambdawithsecrets.envvars["envvar2"]' envvar2value
-pulumi config set --path 'lambdawithsecrets.secrets["secret1"]' secretvalue1 --secret
-pulumi config set --path 'lambdawithsecrets.secrets["secret2"]' secretvalue2 --secret
-```
+1.  Add values to your stack config, both secret and plaintext:
 
-1.  Preview and deploy the app via `pulumi up`. 
+    ```bash
+    pulumi config set --path 'lambdawithsecrets.envvars["envvar1"]' envvar1value
+    pulumi config set --path 'lambdawithsecrets.envvars["envvar2"]' envvar2value
+    pulumi config set --path 'lambdawithsecrets.secrets["secret1"]' secretvalue1 --secret
+    pulumi config set --path 'lambdawithsecrets.secrets["secret2"]' secretvalue2 --secret
+    ```
+
+1.  Preview and deploy the app via `pulumi up`:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi up
     Previewing update (dev)
 
     View Live: https://app.pulumi.com/acmecorp/lambda-secrets/dev/previews/209f07fb-190d-4596-af9f-d2d72e9c5cc9
@@ -85,7 +99,7 @@ pulumi config set --path 'lambdawithsecrets.secrets["secret2"]' secretvalue2 --s
 
 1.  Invoke the Lambda Function:
 
-    ```
+    ```bash
     aws lambda invoke --function-name $(pulumi stack output lambdaName) /dev/stdout
     ```
 
@@ -97,6 +111,11 @@ pulumi config set --path 'lambdawithsecrets.secrets["secret2"]' secretvalue2 --s
 
 1. You can view the environment variables containing the plaintext values and the secret ARNs in the details of the Lambda Function in the AWS Console.
 
-## Clean up
+## Cleaning up
 
-To clean up the resources, you will need to run `pulumi destroy` and answer the confirmation question at the prompt.
+Once you're finished, destroy the resources and remove the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

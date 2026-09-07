@@ -1,6 +1,11 @@
 name: aws-eks
 runtime: yaml
 description: An EKS cluster
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2
 variables:
   vpcId:
     fn::invoke:

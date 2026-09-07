@@ -1,3 +1,10 @@
 name: gcp-go-functions
 description: "A minimal Go Pulumi program using Google Cloud Functions."
 runtime: go
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:region:
+      description: The Google Cloud region to deploy into
+      default: us-central1

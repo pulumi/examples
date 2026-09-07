@@ -68,6 +68,20 @@ Every example directory must contain:
 
 Optional: `www/` (static content), `images/` (screenshots/recordings)
 
+### README conventions
+Every example is one of three types, and the README structure follows the type:
+
+| Type | What it is | Button | `template:` | Sections |
+|---|---|:---:|:---:|---|
+| **A — Deployable** | Single Pulumi project run with `pulumi up` (most examples) | Yes | Yes | Prerequisites → Deploying the example → Cleaning up → Summary |
+| **B — Non-deployable** | `testing-*`, `policy-packs/*` — run via a test/lint command | No | No | Prerequisites (optional) → Running the tests / Using this policy pack → Learn more |
+| **C — Multi-project index** | Directory of sub-projects or variants | On the deployable sub-project | On sub-projects | Intro + linked sub-project list |
+
+- **Headings are sentence case** (Pulumi brand rule): capitalize only the first word and proper nouns / product names (AWS, Amazon S3, Azure App Service, Cosmos DB, Kubernetes, Pulumi, API Gateway, etc.); no trailing punctuation. Action-section headings use the `-ing` gerund form (`Deploying the example`, `Cleaning up`); step text uses imperative verbs.
+- **Type A `Pulumi.yaml` must include a `template:` block** declaring the config the program reads: the cloud region/location plus any key read via `config.require/get` (mark secrets `secret: true`, no default). This backs the deploy button.
+- **Prerequisites list and the install step match the `runtime:`**: nodejs→`npm install`; python+virtualenv→`python3 -m venv venv` + `source venv/bin/activate` + `pip install -r requirements.txt`; python+poetry→`poetry install`; go→`go mod download`; dotnet/java→omit the install step (build happens on `pulumi up`); yaml/hcl→omit the language prereq line and install step.
+- Full spec: `CONTRIBUTING.md` and `example-readme-template.md.txt`.
+
 ## Code Conventions
 
 ### TypeScript copyright header (required)

@@ -1,3 +1,8 @@
 name: azure-go-static-website
 runtime: go
 description: An example of a static website hosted on Azure Blob Storage + Azure CDN.
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus

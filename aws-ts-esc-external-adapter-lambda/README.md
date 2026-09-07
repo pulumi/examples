@@ -1,4 +1,4 @@
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-esc-external-adapter-lambda/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-esc-external-adapter-lambda/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-esc-external-adapter-lambda/README.md#gh-dark-mode-only)
 
 # External secrets adapter for Pulumi ESC on AWS Lambda
@@ -8,13 +8,13 @@ This example validates JWT authentication and request integrity, making it easy 
 
 For complete documentation on ESC Connect, see the [external provider documentation](https://www.pulumi.com/docs/esc/integrations/dynamic-secrets/external/).
 
-## Deploying the adapter
+## Prerequisites
 
-1. Install dependencies:
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-   ```bash
-   npm install
-   ```
+## Deploying the example
 
 1. Create a new Pulumi stack:
 
@@ -28,7 +28,13 @@ For complete documentation on ESC Connect, see the [external provider documentat
    pulumi config set aws:region us-west-2
    ```
 
-1. Deploy:
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+1. Deploy the stack:
 
    ```bash
    pulumi up
@@ -89,7 +95,7 @@ The `ESCRequestValidator` class in `index.ts` handles request integrity validati
    if (claims.org !== "YOUR-PULUMI-ORG") {
        return { statusCode: 401 };
    }
-   
+
    // Fetch from your secret source
    const secret = await fetchFromYourSecretStore(requestBody.secretName);
 
@@ -117,11 +123,13 @@ aws logs tail /aws/lambda/$(pulumi stack output functionName) --follow
 
 The handler logs JWT claims to CloudWatch for debugging.
 
-## Clean up
+## Cleaning up
+
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring further charges:
 
 ```bash
 pulumi destroy
-pulumi stack rm dev
+pulumi stack rm
 ```
 
 ## Additional resources

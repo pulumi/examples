@@ -1,3 +1,8 @@
 name: kubernetes-go-configmap-rollout
 runtime: go
 description: A minimal Kubernetes Go Pulumi program
+template:
+  config:
+    isMinikube:
+      description: Whether you are deploying to minikube
+      default: false

@@ -1,3 +1,5 @@
 name: kubernetes-go-helm-wordpress
 runtime: go
 description: A minimal Go Pulumi program
+template:
+  description: A minimal installation of the WordPress Helm chart

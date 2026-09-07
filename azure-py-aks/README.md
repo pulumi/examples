@@ -1,61 +1,65 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-aks/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-aks/README.md#gh-dark-mode-only)
 
-# Azure Kubernetes Service (AKS) Cluster using the native Azure Provider
+# Azure Kubernetes Service (AKS) cluster using the native Azure provider
 
 This example deploys an AKS cluster, creates an Azure Active AD application, creates a Service Principal and sets credentials to manage access to the cluster.
 
-## Deploying the App
-
-To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Install Python 3.6 or higher](https://www.python.org/downloads/)
-3. [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
-### Steps
+## Deploying the example
 
-After cloning this repo, from this working directory, run these commands:
-
-1. Create a new stack, which is an isolated deployment target for this example:
+1.  Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init
+    pulumi stack init
     ```
 
-1. Set the Azure region location to use:
-
-    ```
-    $ pulumi config set azure-native:location westus2
-    ```
-
-1. Initiate pulumi to stand up the cluster
+1.  Set the Azure region location to use:
 
     ```bash
-    $ pulumi up
+    pulumi config set azure-native:location westus2
+    ```
+
+1.  Install dependencies:
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+1.  Deploy the stack:
+
+    ```bash
+    pulumi up
     ```
 
     > Note: Due to a propagation delay in Azure AD, the Service Principal created for the cluster may not be available the moment the cluster is provisioned. If you get a "Service Principal not found" error, run `pulumi up` again and it should complete successfully.
 
-1. After 3-4 minutes, your cluster will be ready, and the kubeconfig YAML you'll use to connect to the cluster will be available as an output. You can save this kubeconfig to a file like so:
+1.  After 3-4 minutes, your cluster will be ready, and the kubeconfig YAML you'll use to connect to the cluster will be available as an output. You can save this kubeconfig to a file like so:
 
     ```bash
-    $ pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
+    pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
     ```
 
     Once you have this file in hand, you can interact with your new cluster as usual via `kubectl`:
 
     ```bash
-    $ KUBECONFIG=./kubeconfig.yaml kubectl get nodes
+    KUBECONFIG=./kubeconfig.yaml kubectl get nodes
     ```
 
-1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
+1.  From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
-1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
-    ```
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

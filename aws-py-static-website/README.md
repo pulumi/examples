@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-static-website/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-static-website/README.md#gh-dark-mode-only)
 
-# Secure Static Website Using Amazon S3, CloudFront, Route53, and Certificate Manager
+# Secure static website using Amazon S3, CloudFront, Route53, and Certificate Manager
 
 This example serves a static website using Python and AWS.
 
@@ -12,38 +12,53 @@ This sample uses the following AWS products:
 - [Amazon Route53](https://aws.amazon.com/route53/) is used to set up the DNS for the website.
 - [Amazon Certificate Manager](https://aws.amazon.com/certificate-manager/) is used for securing things via HTTPS.
 
-## Getting Started
-
-Configure the Pulumi program. There are several configuration settings that need to be
-set:
+This program requires several configuration settings:
 
 - `targetDomain` - The domain to serve the website at (e.g. www.example.com). It is assumed that
   the parent domain (example.com) is a Route53 Hosted Zone in the AWS account you are running the
   Pulumi program in.
-- `pathToWebsiteContents` - Directory of the website's contents. e.g. the `./www` folder.
+- `pathToWebsiteContents` - Directory of the website's contents, e.g. the `./www` folder.
+- `certificateArn` - (Optional) ACM certificate ARN for the target domain; must be in the us-east-1 region. If omitted, a certificate will be created.
 
-## Deploying and running the program
+Note: some values in this example will be different from run to run. These values are indicated with `***`.
 
-Note: some values in this example will be different from run to run.  These values are indicated
-with `***`.
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
+
+## Deploying the example
 
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init website-testing
+    pulumi stack init website-testing
     ```
 
-1. Set the AWS region:
+1. Set the AWS region and the website configuration:
 
     ```bash
-    $ pulumi config set aws:region us-west-2
+    pulumi config set aws:region us-west-2
+    pulumi config set targetDomain www.example.com
+    pulumi config set pathToWebsiteContents ./www
     ```
 
-1. Run `pulumi up` to preview and deploy changes.  After the preview is shown you will be
-    prompted if you want to continue or not.
+1. Install dependencies:
 
     ```bash
-    $ pulumi up
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+1. Run `pulumi up` to preview and deploy changes. After the preview is shown you will be prompted whether to continue or not:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing update (example):
         Type                              Name                                      Plan
     +   pulumi:pulumi:Stack               static-website-example                    create
@@ -62,7 +77,10 @@ with `***`.
 1. To see the resources that were created, run `pulumi stack output`:
 
     ```bash
-    $ pulumi stack output
+    pulumi stack output
+    ```
+
+    ```
     Current stack outputs (4):
         OUTPUT                           VALUE
         cloudfront_domain                ***.cloudfront.net
@@ -71,21 +89,31 @@ with `***`.
         target_domain_endpoint           https://***/
     ```
 
-1. To see that the S3 objects exist, you can either use the AWS Console or the AWS CLI:
+1. To see that the S3 objects exist, use either the AWS Console or the AWS CLI:
 
     ```bash
-    $ aws s3 ls $(pulumi stack output content_bucket_url)
+    aws s3 ls $(pulumi stack output content_bucket_url)
+    ```
+
+    ```
     2020-02-21 16:58:48        262 404.html
     2020-02-21 16:58:48        394 index.html
     ```
 
-1. Open a browser to the target domain endpoint from above to see your beautiful static website. (Since we don't wait for the CloudFront distribution to completely sync, you may have to wait a few minutes)
+1. Open a browser to the target domain endpoint from above to see your beautiful static website. (Since we don't wait for the CloudFront distribution to completely sync, you may have to wait a few minutes.)
 
-1. To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+## Cleaning up
+
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```
 
 ## Troubleshooting
 
-### Scary HTTPS Warning
+### Scary HTTPS warning
 
 When you create an S3 bucket and CloudFront distribution shortly after one another, you'll see
 what looks to be HTTPS configuration issues. This has to do with the replication delay between
@@ -112,7 +140,7 @@ and AWS. (This can happen when inspecting the CloudFront distribution in the AWS
 
 You can fix this by running `pulumi refresh` to pickup the newer ETag values.
 
-## Deployment Speed
+## Deployment speed
 
 This example creates an `aws.S3.BucketObject` for every file served from the website. When deploying
 large websites, that can lead to very long updates as every individual file is checked for any
@@ -133,9 +161,9 @@ aws s3 sync ./www/ s3://example-bucket/
 
 This repo includes `Pulumi.preview.yaml` with safe preview defaults so you can run `pulumi preview` without a real domain. During preview, some values are stubbed and DNS lookups may be skipped. Before running `pulumi up`, set real config values:
 
-```
+```bash
 pulumi config set aws-py-static-website:targetDomain <your-domain>
 pulumi config set aws:region us-west-2
 ```
 
-If you don’t manage the domain in Route53, remove or skip creating DNS records.
+If you don't manage the domain in Route53, remove or skip creating DNS records.

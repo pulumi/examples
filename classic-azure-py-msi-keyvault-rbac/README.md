@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-msi-keyvault-rbac/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-msi-keyvault-rbac/README.md#gh-dark-mode-only)
 
-# Managing Secrets and Secure Access in Azure Applications
+# Managing secrets and secure access in Azure applications
 
 [Managed identities](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/) for Azure resources provides Azure services with an automatically managed identity in Azure Active Directory (Azure AD).
 
@@ -15,7 +15,14 @@ The application consists of several parts:
 - The identify is granted access to the SQL Server, Blob Storage, and Key Vault
 - No secret information is placed in App Service configuration: all access rights are derived from Active Directory
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
+4. [Install .NET](https://dotnet.microsoft.com/download) (to build and publish the ASP.NET Core web app)
+
+## Deploying the example
 
 1. Create a new stack:
 
@@ -23,10 +30,25 @@ The application consists of several parts:
     pulumi stack init dev
     ```
 
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
     az login
+    ```
+
+1. Set an appropriate Azure location and subscription:
+
+    ```bash
+    pulumi config set azure:location westus
+    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
+    ```
+
+1. Install dependencies:
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
     ```
 
 1. Build and publish the ASP.NET Core project:
@@ -35,17 +57,13 @@ The application consists of several parts:
     dotnet publish webapp
     ```
 
-1. Set an appropriate Azure location and subscription like:
-
-    ```bash
-    pulumi config set azure:location westus
-    pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
-    ```
-
 1. Run `pulumi up` to preview and deploy changes:
 
-    ```console
-    $ pulumi up
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing changes:
     ...
 
@@ -58,9 +76,21 @@ The application consists of several parts:
 
 1. Check the deployed website endpoint:
 
-    ```console
-    $ pulumi stack output endpoint
+    ```bash
+    pulumi stack output endpoint
+    curl "$(pulumi stack output endpoint)"
+    ```
+
+    ```
     https://app129968b8.azurewebsites.net/
-    $ curl "$(pulumi stack output endpoint)"
     Hello 311378b3-16b7-4889-a8d7-2eb77478beba@50f73f6a-e8e3-46b6-969c-bf026712a650! Here is your...
     ```
+
+## Cleaning up
+
+Once you are done, destroy the stack and remove it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

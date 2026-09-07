@@ -1,9 +1,7 @@
-# AWS Python Voting App
-
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-voting-app/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-voting-app/README.md#gh-dark-mode-only)
 
-## Voting app Using Redis and Flask
+# Voting app using Redis and Flask
 
 A simple voting app that uses Redis for a data store and a Python Flask app for the frontend. The example has been ported from <https://github.com/Azure-Samples/azure-voting-app-redis>.
 
@@ -17,11 +15,11 @@ The example shows how easy it is to deploy containers into production and to con
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
-1. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 1. [Install Docker](https://docs.docker.com/engine/installation/)
 
-## Deploying and running the program
+## Deploying the example
 
 1. Create a new stack:
 
@@ -36,9 +34,21 @@ The example shows how easy it is to deploy containers into production and to con
     pulumi config set redis-password <PASSWORD> --secret
     ```
 
-1. Run `pulumi up -y` to deploy changes:
+1. Install dependencies:
 
     ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+1. Run `pulumi up` to deploy changes:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Updating (aws-py-voting-app):
         Type                                  Name                            Status      Info
     +   pulumi:pulumi:Stack                   webserver-py-aws-py-voting-app  created
@@ -80,15 +90,22 @@ The example shows how easy it is to deploy containers into production and to con
 1. View the DNS address of the instance via `stack output`:
 
     ```bash
-    $ pulumi stack output
+    pulumi stack output
+    ```
+
+    ```
     Current stack outputs (1):
         OUTPUT   VALUE
         app-url  flask-balancer-3987b84-b596c9ee2027f152.elb.us-west-2.amazonaws.com
-
     ```
 
-1. Verify that the EC2 instance exists, by connecting to it in a browser window.
+1. Verify that the app is running by connecting to it in a browser window.
 
-## Clean up
+## Cleaning up
 
-To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

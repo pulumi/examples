@@ -1,3 +1,14 @@
 name: redis-cloud-aws-ts
 runtime: nodejs
 description: A minimal TypeScript Pulumi program
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
+    cardType:
+      description: The card type for your Redis Cloud payment method (e.g. Visa)
+    lastFourNumbers:
+      description: The last four digits of your Redis Cloud payment card
+    preferredAz:
+      description: The preferred availability zone, if not using us-east-1

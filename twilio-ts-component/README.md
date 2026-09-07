@@ -1,37 +1,51 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/twilio-ts-component/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/twilio-ts-component/README.md#gh-dark-mode-only)
 
-# Twilio SMS Handler
+# Twilio SMS handler
 
-A sample for interacting with Twilio SMS. This sample includes a custom Component Resource that abstracts the tedium of interacting with API Gateway and parsing incoming messages from Twilo. This sample requires you to have a Twilio number which can handle SMS.
+A sample for interacting with Twilio SMS. This sample includes a custom Component Resource that abstracts the tedium of interacting with API Gateway and parsing incoming messages from Twilio. This sample requires you to have a Twilio number which can handle SMS.
 
-## Deploying and running the program
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 1. Create a new stack:
 
-    ```
-    $ pulumi stack init twilio-test
-    ```
-
-1. Set the AWS region:
-
-    ```
-    $ pulumi config set aws:region us-west-2
+    ```bash
+    pulumi stack init twilio-test
     ```
 
-1. Configure Twilio settings
+2. Set the AWS region:
 
-    ```
-    $ pulumi config set twilio:accountSid <your account sid from https://www.twilio.com/console>
-    $ pulumi config set --secret twilio:authToken <your auth token from https://www.twilio.com/console>
-    $ pulumi config set phoneNumberSid <the phone number sid from https://www.twilio.com/console/phone-numbers/>
+    ```bash
+    pulumi config set aws:region us-west-2
     ```
 
-1. Restore NPM modules via `npm install`.
+3. Configure Twilio settings:
 
-1. Preview and run the deployment via `pulumi up`.
+    ```bash
+    pulumi config set twilio:accountSid <your account sid from https://www.twilio.com/console>
+    pulumi config set --secret twilio:authToken <your auth token from https://www.twilio.com/console>
+    pulumi config set phoneNumberSid <the phone number sid from https://www.twilio.com/console/phone-numbers/>
     ```
-    $ pulumi up
+
+4. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+5. Preview and deploy with `pulumi up`:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing update of stack 'url-shortener-dev'
     ...
 
@@ -59,21 +73,21 @@ A sample for interacting with Twilio SMS. This sample includes a custom Componen
     Update duration: 27.155440706s
     ```
 
-1. Send an SMS message to the phone number you have registered with Twilio, or make a request by hand with cURL (you may wish to pass additional data with your request, see https://www.twilio.com/docs/sms/twiml#request-parameters for the complete set of data that Twilio sends).
+6. Send an SMS message to the phone number you have registered with Twilio, or make a request by hand with cURL (you may wish to pass additional data with your request, see https://www.twilio.com/docs/sms/twiml#request-parameters for the complete set of data that Twilio sends):
 
+    ```bash
+    curl -X POST -d "From=+12065555555" -d "Body=Hello!" $(pulumi stack output smsUrl)
     ```
-    $ curl -X POST -d "From=+12065555555" -d "Body=Hello!" $(pulumi stack output smsUrl)
-    ```
 
-## Clean up
+## Cleaning up
 
-To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt. Then remove the stack with `pulumi stack rm`.
 
 ## About the code
 
 This example builds and uses a custom `pulumi.CustomResource` to make it easy to spin up a SMS handler on Twilio. It could be extended to support Voice as well, by adding an additional handler to `twilio.IncomingPhoneNumberArgs`.
 
-The custom resource itself is in [`twilio.ts`](./twilio.ts) and handles the work to use `@pulumi/aws-serverless` to create a REST endpoint with `serverless.apigateway.API`. The handler registered with API Gateway does some of the teadious work of decoding the incoming event data and the delegates to the actual handler provided to the custom resource.
+The custom resource itself is in [`twilio.ts`](./twilio.ts) and handles the work to use `@pulumi/aws-serverless` to create a REST endpoint with `serverless.apigateway.API`. The handler registered with API Gateway does some of the tedious work of decoding the incoming event data and then delegates to the actual handler provided to the custom resource.
 
 In addition, at deployment time, the custom resource uses the Twilio SDK to update the SMS Handler for the provided phone number, instead of forcing you to register it by hand in the Twilio console.
 

@@ -16,62 +16,64 @@ The application consists of several parts:
 - An Azure WebApp that shows that the secret is changing and still accessible
 - An EventGrid subscription to receive SecretNearExpiry events from KeyVault and, in turn, call the Azure Function
 
-## IMPORTANT: For example purposes, new secrets are continually generated. Make sure to change the validityPeriod or destory the stack when you are done.
+> **IMPORTANT**: For example purposes, new secrets are continually generated. Make sure to change the validityPeriod or destroy the stack when you are done.
 
-## Deploying the App
-
-To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Install .NET Core 3.1+](https://dotnet.microsoft.com/download)
+2. [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
 
-### Steps
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
-    $ pulumi stack init dev
+    ```bash
+    pulumi stack init dev
     ```
 
 1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
-    ```
-    $ az login
+    ```bash
+    az login
     ```
 
 1.  Build and publish the ASP.NET Core project:
 
-    ```
-    $ dotnet publish webapp
+    ```bash
+    dotnet publish webapp
     ```
 
-1. Set the Azure region location to use:
+1.  Set the Azure region location to use:
 
-    ```
-    $ pulumi config set azure-native:location westus2
+    ```bash
+    pulumi config set azure-native:location westus2
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
-    ```
-    $ pulumi up
+    ```bash
+    pulumi up
     ```
 
 1.  Check the deployed website endpoint:
 
+    ```bash
+    pulumi stack output WebAppEndpoint
+    Start-Process "$(pulumi stack output WebAppEndpoint)"
     ```
-    $ pulumi stack output WebAppEndpoint
+
+    ```
     https://app129968b8.azurewebsites.net/
-    $ Start-Process "$(pulumi stack output WebAppEndpoint)"
     ```
 
 1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
-1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
-    ```
+Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

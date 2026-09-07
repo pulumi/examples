@@ -1,6 +1,11 @@
 name: azure-yaml-aks-managed-identity
 runtime: yaml
 description: A minimal Azure Native Pulumi YAML program
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus2
 outputs:
   # Export the primary key of the Storage Account
   kubeconfig: 

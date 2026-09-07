@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-arm-template/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-arm-template/README.md#gh-dark-mode-only)
 
-# Azure Resource Manager (ARM) Template
+# Azure Resource Manager (ARM) template
 
 This example simply deploys an existing Azure Resource Manager (ARM) template using Pulumi. This accepts
 any existing valid ARM template, enabling easy migration from existing JSON templates and towards infrastructure
@@ -13,22 +13,19 @@ https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/overview
 
 ## Prerequisites
 
-Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
-We will be deploying to Azure, so you will need an Azure account. If you don't have an account,
-[sign up for free here](https://azure.microsoft.com/en-us/free/). [Follow the instructions
-here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect Pulumi to your Azure account.
-
-## Running the App
+## Deploying the example
 
 1. Create a new stack:
 
-    ```console
-    $ pulumi stack init
-    Enter a stack name: azure-arm-dev
+    ```bash
+    pulumi stack init
     ```
 
-2. Set the required configuration variables for this program, and log into Azure:
+1. Set the required configuration variables for this program, and log into Azure:
 
     ```bash
     pulumi config set azure:environment public
@@ -37,10 +34,21 @@ here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect
     az login
     ```
 
-3. Perform the deployment:
+1. Install dependencies:
 
-    ```console
-    $ pulumi up
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+1. Perform the deployment:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Updating stack 'azure-arm-dev'
     Performing changes:
 
@@ -60,14 +68,16 @@ here](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/) to connect
 
     Notice here that the `storageAccountName` allocated by the ARM template deployment is exported.
 
-4. Tidy up and delete all resources allocated by your deployment:
+## Cleaning up
 
-    ```bash
-    pulumi destroy -y --skip-preview
-    pulumi stack rm -y
-    ```
+Once you are done, destroy all of the resources and the stack:
 
-## Next Steps
+```bash
+pulumi destroy
+pulumi stack rm
+```
+
+## Next steps
 
 For more Azure examples, please [check out the Azure Getting Started Guide](
 https://www.pulumi.com/docs/intro/cloud-providers/azure/).

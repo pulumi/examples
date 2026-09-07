@@ -9,7 +9,13 @@ An example Pulumi program that deploys an instance of Azure API Management with 
 - Operation and operation policy with URL rewrite and caching rules
 - A product, a user, and a subscription to enable access to the API
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 1. Create a new stack:
 
@@ -17,29 +23,32 @@ An example Pulumi program that deploys an instance of Azure API Management with 
     pulumi stack init dev
     ```
 
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
     az login
     ```
 
-1. Restore NPM dependencies:
-
-    ```bash
-    npm install
-    ```
-
-1. Configure Azure environment:
+1. Configure the Azure environment:
 
     ```bash
     pulumi config set azure:location <location>
     pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
-1. Run `pulumi up` to preview and deploy changes:
+1. Install dependencies:
 
-    ```console
-    $ pulumi up
+    ```bash
+    npm install
+    ```
+
+1. Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing update (dev):
     ...
 
@@ -52,18 +61,31 @@ An example Pulumi program that deploys an instance of Azure API Management with 
 
 1. Check the deployed function endpoint:
 
-    ```console
-    $ pulumi stack output endpoint
+    ```bash
+    pulumi stack output endpoint
+    curl --header "Ocp-Apim-Subscription-Key: $(pulumi stack output key)" $(pulumi stack output endpoint)
+    ```
+
+    ```
     https://greeting-service12345678.azure-api.net/hello/Pulumi
-    $ curl --header "Ocp-Apim-Subscription-Key: $(pulumi stack output key)" $(pulumi stack output endpoint)
     {"time":"2019-06-17T15:16:08.227Z","greeting":"Hello Pulumi!"}
-    ...
     ```
 
-1. Verify that API caches the response for 30 seconds - the same time should be returned for subsequent queries:
+1. Verify that the API caches the response for 30 seconds -- the same time should be returned for subsequent queries:
 
-    ```console
-    $ curl --header "Ocp-Apim-Subscription-Key: $(pulumi stack output key)" $(pulumi stack output endpoint)
-    {"time":"2019-06-17T15:16:08.227Z","greeting":"Hello Pulumi!"}
-    ...
+    ```bash
+    curl --header "Ocp-Apim-Subscription-Key: $(pulumi stack output key)" $(pulumi stack output endpoint)
     ```
+
+    ```
+    {"time":"2019-06-17T15:16:08.227Z","greeting":"Hello Pulumi!"}
+    ```
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

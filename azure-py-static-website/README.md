@@ -1,51 +1,55 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-static-website/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-py-static-website/README.md#gh-dark-mode-only)
 
-# Static Website Using Azure Blob Storage and CDN
+# Static website using Azure Blob Storage and CDN
+
 Based on https://github.com/zemien/static-website-ARM-template
 
-
-This example configures [Static website hosting in Azure Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
+This example configures [static website hosting in Azure Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
 
 In addition to the Storage itself, a CDN is configured to serve files from the Blob container origin. This may be useful if you need to serve files via HTTPS from a custom domain (not shown in the example).
 
-## Running the App
+## Prerequisites
 
-1.  Create a new stack:
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
-    ```
-    $ pulumi stack init dev
-    ```
+## Deploying the example
 
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
-    ```
-
-1. Create a Python virtualenv, activate it, and install dependencies:
-
-   This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
+1. Create a new stack:
 
     ```bash
-    $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip3 install -r requirements.txt
+    pulumi stack init dev
     ```
 
-1.  Set the Azure region location to use:
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
+
+    ```bash
+    az login
+    ```
+
+1. Set the Azure region to deploy into:
+
+    ```bash
+    pulumi config set azure-native:location westus
+    ```
+
+1. Install dependencies:
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+1. Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi config set azure-native:location westus
-    ```
-
-1.  Run `pulumi up` to preview and deploy changes:
-
-    ```
-    $ pulumi up
-    Previewing changes:
-    ...
-
     Performing changes:
     ...
     Resources:
@@ -53,15 +57,27 @@ In addition to the Storage itself, a CDN is configured to serve files from the B
     Duration: 2m52s
     ```
 
-1.  Check the deployed website endpoint:
+1. Check the deployed website endpoint:
+
+    ```bash
+    pulumi stack output staticEndpoint
+    curl "$(pulumi stack output staticEndpoint)"
+    ```
 
     ```
-    $ pulumi stack output staticEndpoint
     https://websitesbc90978a1.z20.web.core.windows.net/
-    $ curl "$(pulumi stack output staticEndpoint)"
     <html>
         <body>
             <h1>This file is served from Blob Storage (courtesy of Pulumi!)</h1>
         </body>
     </html>
     ```
+
+## Cleaning up
+
+Once you are finished, you can destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

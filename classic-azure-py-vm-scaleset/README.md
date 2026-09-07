@@ -1,17 +1,17 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-vm-scaleset/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-py-vm-scaleset/README.md#gh-dark-mode-only)
 
-# Azure VM Scale Sets
+# Azure VM scale sets
 
-This example provisions a Scale Set of Linux web servers with nginx deployed, configured the auto-scaling based on CPU load, puts a Load Balancer in front of them, and gives it a public IP address.
+This example provisions a Scale Set of Linux web servers with nginx deployed, configures auto-scaling based on CPU load, puts a Load Balancer in front of them, and gives it a public IP address.
 
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure Pulumi for Azure](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
-1. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
-## Running the App
+## Deploying the example
 
 1. Create a new stack:
 
@@ -19,7 +19,13 @@ This example provisions a Scale Set of Linux web servers with nginx deployed, co
     pulumi stack init dev
     ```
 
-1. Configure the app deployment.
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
+
+    ```bash
+    az login
+    ```
+
+1. Configure the app deployment:
 
     ```bash
     pulumi config set azure:location westus    # any valid Azure region will do
@@ -27,24 +33,28 @@ This example provisions a Scale Set of Linux web servers with nginx deployed, co
     ```
 
     Optionally, configure the username and password for the admin user. Otherwise, they will be auto-generated.
+    Note that `--secret` ensures your password is encrypted safely.
 
     ```bash
     pulumi config set adminUser webmaster
     pulumi config set adminPassword <your-password> --secret
     ```
 
-    Note that `--secret` ensures your password is encrypted safely.
-
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Install dependencies:
 
     ```bash
-    az login
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
     ```
 
 1. Run `pulumi up` to preview and deploy changes:
 
-    ```console
-    $ pulumi up
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing update:
     ...
 
@@ -57,9 +67,21 @@ This example provisions a Scale Set of Linux web servers with nginx deployed, co
 
 1. Check the domain name of the PIP:
 
-    ```console
-    $ pulumi stack output publicAddress
+    ```bash
+    pulumi stack output publicAddress
+    curl http://$(pulumi stack output publicAddress)
+    ```
+
+    ```
     dsuv3vqbgi.westeurope.cloudapp.azure.com
-    $ curl http://$(pulumi stack output publicAddress)
     #nginx welcome screen HTML is returned
     ```
+
+## Cleaning up
+
+Once you are done, destroy the stack and remove it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

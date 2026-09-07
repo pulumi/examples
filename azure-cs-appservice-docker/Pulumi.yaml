@@ -1,3 +1,8 @@
 name: azure-cs-appservice-docker
 runtime: dotnet
 description: Creates Azure App Service and Deploys Docker images to it
+template:
+  config:
+    azure-native:location:
+      description: The Azure region to deploy into
+      default: westus2

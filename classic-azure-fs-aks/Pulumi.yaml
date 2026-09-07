@@ -1,3 +1,10 @@
 name: azure-fs-aks
 runtime: dotnet
 description: Creates an Azure Kubernetes Service (AKS) cluster using F#
+template:
+  config:
+    azure:location:
+      description: The Azure location to use
+      default: westus
+    azure:subscriptionId:
+      description: The Azure Subscription to deploy into

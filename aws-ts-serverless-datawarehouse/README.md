@@ -1,47 +1,66 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-serverless-datawarehouse/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-serverless-datawarehouse/README.md#gh-dark-mode-only)
 
-# Serverless Datawarehouse
+# Serverless datawarehouse
 
 A sample project that deploys a serverless data warehouse. This highly scalable data warehouse is pay as you go, scales read and write workload independently, and uses fully managed services.
 
 ![Serverless Data Warehouse Architecture](architecture.png)
 
-## Deploy and run the program
-1. Create a new stack
-```sh
-pulumi stack init dev
-```
+## Prerequisites
 
-2. Install dependencies
-```sh
-npm install
-```
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-3. Deploy
+## Deploying the example
 
-```sh
-pulumi up
-```
+1.  Create a new stack:
 
-4. Open Athena in the AWS Console, and perform some queries:
+    ```bash
+    pulumi stack init dev
+    ```
 
-```sql
-select * from analytics_dw.clicks;
-```
+1.  Set the AWS region:
 
-5. Clean up the stack
-```
+    ```bash
+    pulumi config set aws:region us-west-2
+    ```
+
+1.  Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+1.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+1.  Open Athena in the AWS Console, and perform some queries:
+
+    ```sql
+    select * from analytics_dw.clicks;
+    ```
+
+## Cleaning up
+
+Once you're done, destroy the resources and remove the stack:
+
+```bash
 pulumi destroy
+pulumi stack rm
 ```
 
 ## Testing
 
-### Unit Tests
+### Unit tests
 ```sh
 npm run test:unit
 ```
-### Integration Tests
+### Integration tests
 There is an integration test that deploys a fresh stack, ingests sample data, and verifies that the data can be queried on the other end through Athena.
 
 Because `ServerlessDataWarehouse` statically names Glue Databases, the integration test will fail with a `409 conflict` if you already have a dev stack running.
@@ -74,12 +93,12 @@ export dwBucket = dataWarehouse.dataWarehouseBucket;
 ```
 
 
-### Members:
+### Members
 - `dataWarehouseBucket: aws.s3.bucket`: Bucket to store table data.
 - `queryResultsBucket: aws.s3.Bucket`: Bucket used by Athena for query output.
 - `database: aws.glue.CatalogDatabase`: Glue Database to hold all tables created through method calls.
 
-### Methods:
+### Methods
 #### `withTable: function`
 
 Creats a glue table owned by creates a Glue Table owned by `this.database` configured to read data from `${this.dataWarehouseBucket}/${name}`

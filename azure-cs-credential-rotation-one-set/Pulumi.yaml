@@ -1,3 +1,20 @@
 name: azure-cs-cred-rotation-one-set
 description: Example of rotating secrets with one set of credentials
 runtime: dotnet
+template:
+  config:
+    azure-native:location:
+      description: The Azure region to deploy into
+      default: westus2
+    sqlAdminLogin:
+      description: The administrator login for the SQL server
+      default: sqlAdmin
+    secretName:
+      description: The name of the secret stored in Key Vault
+      default: sqlPassword
+    functionAppRepoURL:
+      description: The Git repository URL for the Azure Function app
+      default: https://github.com/Azure-Samples/KeyVault-Rotation-SQLPassword-Csharp.git
+    webAppRepoURL:
+      description: The Git repository URL for the web app
+      default: https://github.com/Azure-Samples/KeyVault-Rotation-SQLPassword-Csharp-WebApp.git

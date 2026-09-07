@@ -5,7 +5,13 @@
 
 An example Pulumi program that deploys an Azure Stream Analytics job to transform data in an Event Hub.
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 1. Create a new stack:
 
@@ -13,16 +19,10 @@ An example Pulumi program that deploys an Azure Stream Analytics job to transfor
     pulumi stack init dev
     ```
 
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
     az login
-    ```
-
-1. Restore NPM dependencies:
-
-    ```bash
-    npm install
     ```
 
 1. Configure the Azure location and subscription to deploy the example to:
@@ -32,10 +32,19 @@ An example Pulumi program that deploys an Azure Stream Analytics job to transfor
     pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
-1. Run `pulumi up` to preview and deploy changes:
+1. Install dependencies:
 
-    ```console
-    $ pulumi up
+    ```bash
+    npm install
+    ```
+
+1. Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing update (dev):
     ...
 
@@ -56,7 +65,6 @@ An example Pulumi program that deploys an Azure Stream Analytics job to transfor
 
     // Output:
     [{"Make":"Kia","Sales":3};{"Make":"Honda","Sales":1}]
-
     ```
 
     You can send a message with a `curl` command:
@@ -66,3 +74,12 @@ An example Pulumi program that deploys an Azure Stream Analytics job to transfor
     ```
 
 1. [Start the Stream Analytics job](https://docs.microsoft.com/en-us/azure/stream-analytics/start-job). The job will start emitting messages to the output Event Hub once per minute. The Azure Function `analytics-output` will start printing those events into the console (you'd have to open the function console in the Azure portal to see them).
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

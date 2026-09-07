@@ -1,3 +1,8 @@
 name: azure-go-call-azure-sdk
 runtime: go
 description: An example of integrating an Azure SDK call to a Pulumi program.
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: WestUS

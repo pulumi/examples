@@ -5,30 +5,47 @@
 
 Starting point for building web application hosted in Azure Container Instances.
 
-## Running the App
+## Prerequisites
 
-1. Create a new stack:
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
-    ```bash
-    $ pulumi stack init dev
-    ```
+## Deploying the example
 
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```bash
-    $ az login
-    ```
-
-1. Set the Azure region location to use:
-
-    ```
-    $ pulumi config set azure-native:location westus2
-    ```
-
-1. Run `pulumi up` to preview and deploy changes:
+1.  Create a new stack:
 
     ```bash
-    $ pulumi up
+    pulumi stack init dev
+    ```
+
+1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+
+    ```bash
+    az login
+    ```
+
+1.  Set the Azure region location to use:
+
+    ```bash
+    pulumi config set azure-native:location westus2
+    ```
+
+1.  Install dependencies:
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+1.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing changes:
     ...
 
@@ -40,15 +57,27 @@ Starting point for building web application hosted in Azure Container Instances.
     Duration: 1m18s
     ```
 
-1. Check the deployed endpoint:
+1.  Check the deployed endpoint:
+
+    ```bash
+    pulumi stack output containerIPv4Address
+    curl "$(pulumi stack output containerIPv4Address)"
+    ```
 
     ```
-    $ pulumi stack output containerIPv4Address
     13.83.66.37
-    $ curl "$(pulumi stack output containerIPv4Address)"
     <html>
     <head>
         <title>Welcome to Azure Container Instances!</title>
     </head>
     ...
     ```
+
+## Cleaning up
+
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

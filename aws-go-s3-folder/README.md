@@ -1,33 +1,44 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-s3-folder/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-s3-folder/README.md#gh-dark-mode-only)
 
-# Host a Static Website on Amazon S3
+# Host a static website on Amazon S3
 
 A static website that uses [S3's website support](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html).
 For a detailed walkthrough of this example, see the tutorial [Static Website on AWS S3](https://www.pulumi.com/docs/tutorials/aws/s3-website/).
 
-## Deploying and running the program
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
     ```bash
-    $ pulumi stack init website-testing
+    pulumi stack init website-testing
     ```
 
-1.  Set the AWS region:
-
-    ```
-    $ pulumi config set aws:region us-west-2
-    ```
-
-1.  Run `pulumi up` to preview and deploy changes.
+1.  Set the AWS region to deploy into:
 
     ```bash
-    $ pulumi up
-    Previewing stack 'website-testing'
-    Previewing changes:
-    ...
+    pulumi config set aws:region us-west-2
+    ```
 
+1.  Install dependencies:
+
+    ```bash
+    go mod download
+    ```
+
+1.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Performing changes:
 
     #: Resource Type        Name                              Status     Extra Inf
@@ -45,7 +56,10 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
 1.  To see the resources that were created, run `pulumi stack`:
 
     ```bash
-    $ pulumi stack
+    pulumi stack
+    ```
+
+    ```
     Current stack is go-website-testing:
         Managed by https://api.pulumi.com
         Owner: swgillespie
@@ -63,4 +77,11 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
         aws:s3/bucketObject:BucketObject                 www/favicon.png
     ```
 
-1.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+## Cleaning up
+
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

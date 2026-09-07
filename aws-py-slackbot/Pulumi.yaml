@@ -4,3 +4,15 @@ runtime:
   options:
     virtualenv: venv
 description: A slack chatbot app
+template:
+  description: A Slackbot that posts @mention notifications, built with API Gateway, Lambda, and SNS
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2
+    mentionbot:slackToken:
+      description: The Slack bot OAuth token
+      secret: true
+    mentionbot:verificationToken:
+      description: The Slack app verification token
+      secret: true

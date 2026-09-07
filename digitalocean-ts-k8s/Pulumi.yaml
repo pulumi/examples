@@ -1,3 +1,16 @@
 name: digitalocean-ts-k8s
 runtime: nodejs
 description: Provision a DigitalOcean Kubernetes cluster and deploy to it
+template:
+  config:
+    digitalocean:token:
+      description: The DigitalOcean personal access token to use for provisioning
+      secret: true
+    nodeCount:
+      description: The number of nodes in the Kubernetes cluster
+      default: 2
+    appReplicaCount:
+      description: The number of application replicas to deploy
+      default: 5
+    domainName:
+      description: An optional custom domain name for the application

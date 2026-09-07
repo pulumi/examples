@@ -1,3 +1,15 @@
 name: cloud-run-deploy
 runtime: nodejs
 description: A minimal Google Cloud TypeScript Pulumi program
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:region:
+      description: The Google Cloud region
+      default: us-central1
+    docker-config-file:
+      description: Path to your Docker config.json used to authenticate to GCR
+    image-name:
+      description: The name of the image to pull from GCR
+      default: ruby-app

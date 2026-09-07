@@ -6,6 +6,8 @@ template:
     aws:region:
       description: The AWS region to deploy into
       default: us-west-2
-    redisPassword:
-      description: The Redis password
+    sql-user-name:
+      description: The username for the application database user
+    sql-user-password:
+      description: The password for the application database user
       secret: true

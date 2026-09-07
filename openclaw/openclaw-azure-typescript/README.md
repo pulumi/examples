@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/openclaw/openclaw-azure-typescript/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/openclaw/openclaw-azure-typescript/README.md#gh-dark-mode-only)
+
 # OpenClaw on Azure (Pulumi TypeScript)
 
 Deploy [OpenClaw](https://docs.openclaw.ai/) on an Azure Virtual Machine with Tailscale for secure HTTPS access. This Pulumi program provisions all required Azure infrastructure, installs OpenClaw via cloud-init, and configures Tailscale Serve as a secure reverse proxy.
@@ -12,43 +15,53 @@ Deploy [OpenClaw](https://docs.openclaw.ai/) on an Azure Virtual Machine with Ta
 
 ## Prerequisites
 
-1. **Pulumi CLI** installed ([install guide](https://www.pulumi.com/docs/install/))
-2. **Azure CLI** authenticated (`az login`)
-3. **Tailscale account** with [HTTPS enabled](https://tailscale.com/kb/1153/enabling-https) in the admin console
-4. **Tailscale auth key** -- generate a reusable key in the [Tailscale admin](https://login.tailscale.com/admin/settings/keys)
-5. **Anthropic API key** from [console.anthropic.com](https://console.anthropic.com/)
-6. **Node.js 18+** and npm
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+4. A **Tailscale account** with [HTTPS enabled](https://tailscale.com/kb/1153/enabling-https) in the admin console
+5. A **Tailscale auth key** -- generate a reusable key in the [Tailscale admin](https://login.tailscale.com/admin/settings/keys)
+6. An **Anthropic API key** from [console.anthropic.com](https://console.anthropic.com/)
 
-## Quick Start
+## Deploying the example
 
-```bash
-# Clone and enter the project directory
-cd openclaw-azure-typescript
+1. Install dependencies:
 
-# Install dependencies
-npm install
+   ```bash
+   npm install
+   ```
 
-# Create a Pulumi stack
-pulumi stack init dev
+1. Create a new stack:
 
-# Copy the example config and edit it with your secrets
-cp Pulumi.dev.yaml.example Pulumi.dev.yaml
-# Edit Pulumi.dev.yaml -- fill in anthropicApiKey, tailscaleAuthKey, tailnetDnsName
+   ```bash
+   pulumi stack init dev
+   ```
 
-# Alternatively, set secrets via the CLI:
-pulumi config set --secret anthropicApiKey sk-ant-...
-pulumi config set --secret tailscaleAuthKey tskey-auth-...
-pulumi config set tailnetDnsName tailXXXXX.ts.net
+1. Set the required configuration. Copy the example config and edit it with your secrets:
 
-# Deploy
-pulumi up
-```
+   ```bash
+   cp Pulumi.dev.yaml.example Pulumi.dev.yaml
+   # Edit Pulumi.dev.yaml -- fill in anthropicApiKey, tailscaleAuthKey, tailnetDnsName
+   ```
 
-After deployment completes, the Tailscale URL with authentication token is printed as an output:
+   Alternatively, set the secrets via the CLI:
 
-```bash
-pulumi stack output tailscaleUrlWithToken --show-secrets
-```
+   ```bash
+   pulumi config set --secret anthropicApiKey sk-ant-...
+   pulumi config set --secret tailscaleAuthKey tskey-auth-...
+   pulumi config set tailnetDnsName tailXXXXX.ts.net
+   ```
+
+1. Deploy the stack:
+
+   ```bash
+   pulumi up
+   ```
+
+1. After deployment completes, the Tailscale URL with authentication token is printed as an output:
+
+   ```bash
+   pulumi stack output tailscaleUrlWithToken --show-secrets
+   ```
 
 ## Configuration
 
@@ -116,14 +129,14 @@ User access:  Tailscale HTTPS ──► Tailscale Serve ──► Gateway (local
 SSH fallback: SSH (port 22) ──► Public IP ──► VM
 ```
 
-### Network Topology
+### Network topology
 
 - The OpenClaw gateway binds to `127.0.0.1` (localhost only)
 - Tailscale Serve acts as an HTTPS reverse proxy from the Tailscale network to localhost
 - The NSG only allows SSH (port 22) inbound -- no gateway ports are exposed to the internet
 - All outbound traffic is allowed (required for Docker pulls, npm installs, Tailscale, and API calls)
 
-## Cost Estimates
+## Cost estimates
 
 | VM Size | vCPU | RAM | Monthly Cost |
 |---------|------|-----|--------------|
@@ -135,7 +148,7 @@ SSH fallback: SSH (port 22) ──► Public IP ──► VM
 
 **Do not use** B1s or A-series VMs -- they have insufficient memory for OpenClaw.
 
-### Cross-Provider Comparison
+### Cross-provider comparison
 
 | Provider | VM Type | vCPU | RAM | Monthly Cost |
 |----------|---------|------|-----|--------------|
@@ -143,7 +156,7 @@ SSH fallback: SSH (port 22) ──► Public IP ──► VM
 | **AWS** | t3.medium | 2 | 4 GB | ~$33 |
 | **Hetzner** | cax21 | 4 | 8 GB | ~$7 |
 
-## Accessing Your Instance
+## Accessing your instance
 
 ### Web UI (Tailscale)
 
@@ -155,7 +168,7 @@ pulumi stack output tailscaleUrlWithToken --show-secrets
 
 Open this URL in your browser (you must be connected to the same Tailscale network).
 
-### SSH Access
+### SSH access
 
 1. Save the private key:
    ```bash
@@ -213,7 +226,7 @@ tailscale status
 sudo journalctl -u tailscaled -f
 ```
 
-### Common Issues
+### Common issues
 
 | Issue | Solution |
 |-------|----------|
@@ -236,21 +249,16 @@ sudo journalctl -u tailscaled -f
 | `tailscaleUrlWithToken` | Full URL with token for browser access (secret) |
 | `sshCommand` | SSH command template |
 
-## Cleanup
+## Cleaning up
 
-Remove all deployed resources:
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
 
 ```bash
 pulumi destroy
-```
-
-To also remove the stack:
-
-```bash
 pulumi stack rm dev
 ```
 
-## Additional Resources
+## Additional resources
 
 - [OpenClaw Documentation](https://docs.openclaw.ai/)
 - [Pulumi Azure Native Provider](https://www.pulumi.com/registry/packages/azure-native/)

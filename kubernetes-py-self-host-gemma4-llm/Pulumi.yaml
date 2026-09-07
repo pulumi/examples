@@ -84,3 +84,35 @@ config:
     type: boolean
     default: false
     description: Create Tailscale resources and expose Open WebUI on your tailnet
+template:
+  config:
+    model:
+      description: Hugging Face model repository for cluster-mode downloads
+      default: unsloth/gemma-4-12b-it-GGUF
+    modelFile:
+      description: GGUF filename to download from the model repo in cluster mode
+      default: gemma-4-12b-it-Q8_0.gguf
+    runtimeMode:
+      description: Runtime mode for inference ("host" or "cluster")
+      default: host
+    gpuVendor:
+      description: GPU vendor ("nvidia" or "amd")
+      default: nvidia
+    gpuCount:
+      description: Number of GPUs to allocate
+      default: 1
+    llmBaseUrl:
+      description: OpenAI-compatible LLM base URL for Open WebUI
+      default: http://llm-server:18080/v1
+    hostLlmHostname:
+      description: Hostname Kubernetes pods use to reach the host-native LLM server
+      default: host.k3d.internal
+    hostLlmPort:
+      description: Host-native LLM server port
+      default: 18080
+    webuiPort:
+      description: Open WebUI NodePort
+      default: 30000
+    enableTailscale:
+      description: Create Tailscale resources and expose Open WebUI on your tailnet
+      default: false

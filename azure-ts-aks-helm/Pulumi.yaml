@@ -2,3 +2,25 @@ name: azure-ts-aks-helm
 runtime: nodejs
 description: Azure Native TypeScript Pulumi example featuring Helm chart deployment
   to AKS
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus
+    k8sVersion:
+      description: The version of Kubernetes to run on the AKS cluster
+      default: 1.26.3
+    adminUserName:
+      description: The admin username for the cluster nodes
+      default: testuser
+    password:
+      description: The admin password for the cluster nodes (a random password is generated if unset)
+      secret: true
+    sshPublicKey:
+      description: The SSH public key for the cluster nodes (a key pair is generated if unset)
+    nodeCount:
+      description: The number of nodes in the cluster
+      default: 2
+    nodeSize:
+      description: The VM size for the cluster nodes
+      default: Standard_D2_v2

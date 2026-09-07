@@ -1,6 +1,6 @@
-# StackReference Example
+# StackReference example
 
-This example creates a "team" EC2 Instance with tags set from _upstream_ "company" and "department" 
+This example creates a "team" EC2 Instance with tags set from _upstream_ "company" and "department"
 stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#stackreferences).
 
 ```
@@ -11,40 +11,46 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#st
  */
 ```
 
-## Getting Started
+This directory contains three Pulumi projects that must be deployed in order:
 
-1. Change directory to `company` and install dependencies.
+- [company/](./company) — exports the company name.
+- [department/](./department) — exports the department name.
+- [team/](./team) — creates an EC2 instance tagged with values read from the company and department stacks.
+
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
+
+1. Change to the `company` directory and install dependencies:
 
     ```bash
-    $ cd company
-    $ npm install
+    cd company
+    npm install
     ```
 
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
 1. Set the required configuration variables:
 
     ```bash
-    $ pulumi config set companyName 'ACME Widget Company'
+    pulumi config set companyName 'ACME Widget Company'
     ```
 
-1. Deploy everything with the `pulumi up` command. 
+1. Deploy the stack with `pulumi up`:
 
     ```bash
-    $ pulumi up
-    Previewing update (dev):
+    pulumi up
+    ```
 
-        Type                 Name                               Plan
-    +   pulumi:pulumi:Stack  aws-ts-stackreference-company-dev  create
-
-    Resources:
-        + 1 to create
-
-    Do you want to perform this update? yes
+    ```
     Updating (dev):
 
         Type                 Name                               Status
@@ -57,42 +63,34 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#st
         + 1 created
 
     Duration: 1s
-
-    Permalink: https://app.pulumi.com/clstokes/aws-ts-stackreference-company/dev/updates/1
     ```
 
-1. Change directory to `department` and install dependencies.
+1. Change to the `department` directory and install dependencies:
 
     ```bash
-    $ cd ../department
-    $ npm install
-    ````
+    cd ../department
+    npm install
+    ```
 
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
 1. Set the required configuration variables:
 
     ```bash
-    $ pulumi config set departmentName 'E-Commerce'
+    pulumi config set departmentName 'E-Commerce'
     ```
 
-1. Deploy everything with the `pulumi up` command. 
+1. Deploy the stack with `pulumi up`:
 
     ```bash
-    $ pulumi up
-    Previewing update (dev):
+    pulumi up
+    ```
 
-        Type                 Name                                  Plan
-    +   pulumi:pulumi:Stack  aws-ts-stackreference-department-dev  create
-
-    Resources:
-        + 1 to create
-
-    Do you want to perform this update? yes
+    ```
     Updating (dev):
 
         Type                 Name                                  Status
@@ -105,48 +103,37 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#st
         + 1 created
 
     Duration: 1s
-
-    Permalink: https://app.pulumi.com/clstokes/aws-ts-stackreference-department/dev/updates/1
     ```
 
-1. Change directory to `team` and install dependencies.
+1. Change to the `team` directory and install dependencies:
 
     ```bash
-    $ cd ../team
-    $ npm install
-    ````
+    cd ../team
+    npm install
+    ```
 
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
 1. Set the required configuration variables, replacing `YOUR_ORG` with the name of your Pulumi organization:
 
     ```bash
-    $ pulumi config set companyStack YOUR_ORG/aws-ts-stackreference-company/dev
-    $ pulumi config set departmentStack YOUR_ORG/aws-ts-stackreference-department/dev
-    $ pulumi config set teamName 'Frontend Dev'
-    $ pulumi config set aws:region us-west-2 # any valid AWS zone works
+    pulumi config set companyStack YOUR_ORG/aws-ts-stackreference-company/dev
+    pulumi config set departmentStack YOUR_ORG/aws-ts-stackreference-department/dev
+    pulumi config set teamName 'Frontend Dev'
+    pulumi config set aws:region us-west-2 # any valid AWS region works
     ```
 
-1. Deploy everything with the `pulumi up` command. 
+1. Deploy the stack with `pulumi up`:
 
     ```bash
-    $ envchain aws pulumi up
-    Previewing update (dev):
+    pulumi up
+    ```
 
-        Type                             Name                                           Plan
-    +   pulumi:pulumi:Stack              aws-ts-stackreference-team-dev                 create
-    >-  ├─ pulumi:pulumi:StackReference  clstokes/aws-ts-stackreference-department/dev  read
-    >-  ├─ pulumi:pulumi:StackReference  clstokes/aws-ts-stackreference-company/dev     read
-    +   └─ aws:ec2:Instance              tagged                                         create
-
-    Resources:
-        + 2 to create
-
-    Do you want to perform this update? yes
+    ```
     Updating (dev):
 
         Type                             Name                                           Status
@@ -168,17 +155,14 @@ stacks via [StackReference](https://www.pulumi.com/docs/intro/concepts/stack/#st
         + 2 created
 
     Duration: 28s
-
-    Permalink: https://app.pulumi.com/clstokes/aws-ts-stackreference-team/dev/updates/1
     ```
 
+## Cleaning up
 
-## Clean Up
+Once you are done, destroy the resources and remove the stack. Repeat this in each of the
+`company`, `department`, and `team` directories that you ran `pulumi up` within:
 
-1. Once you are done, destroy all of the resources and the stack. Repeat this in each 
-of the `company`, `department`, and `team` directories from above that you ran `pulumi up` within.
-
-    ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
-    ```
+```bash
+pulumi destroy
+pulumi stack rm
+```

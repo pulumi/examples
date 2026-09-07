@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-cs-msi-keyvault-rbac/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/classic-azure-cs-msi-keyvault-rbac/README.md#gh-dark-mode-only)
 
-# Managing Secrets and Secure Access in Azure Applications
+# Managing secrets and secure access in Azure applications
 
 [Managed identities](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/) for Azure resources provides Azure services with an automatically managed identity in Azure Active Directory (Azure AD).
 
@@ -15,16 +15,13 @@ The application consists of several parts:
 - The identify is granted access to the SQL Server, Blob Storage, and Key Vault
 - No secret information is placed in App Service configuration: all access rights are derived from Active Directory
 
-## Deploying the App
-
-To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Install .NET Core 3.0+](https://dotnet.microsoft.com/download)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
 
-### Steps
+## Deploying the example
 
 1. Create a new stack:
 
@@ -32,7 +29,7 @@ To deploy your infrastructure, follow the below steps.
     pulumi stack init dev
     ```
 
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
     az login
@@ -44,17 +41,20 @@ To deploy your infrastructure, follow the below steps.
     dotnet publish webapp
     ```
 
-1. Set an appropriate Azure location like:
+1. Set the location to deploy the resources to and the Azure subscription:
 
     ```bash
     pulumi config set azure:location westus
     pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
-1. Run `pulumi up` to preview and deploy changes:
+1. Deploy the stack:
 
-    ```console
-    $ pulumi up
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing changes:
     ...
 
@@ -67,18 +67,21 @@ To deploy your infrastructure, follow the below steps.
 
 1. Check the deployed website endpoint:
 
-    ```console
-    $ pulumi stack output Endpoint
-    https://app129968b8.azurewebsites.net/
-    $ curl "$(pulumi stack output Endpoint)"
+    ```bash
+    curl "$(pulumi stack output Endpoint)"
+    ```
+
+    ```
     Hello 311378b3-16b7-4889-a8d7-2eb77478beba@50f73f6a-e8e3-46b6-969c-bf026712a650! Here is your...
     ```
 
 1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
-1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+## Cleaning up
 
-    ```bash
-    pulumi destroy --yes
-    pulumi stack rm --yes
-    ```
+Once you're finished experimenting, tear down your stack's resources by destroying and removing it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

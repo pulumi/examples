@@ -4,3 +4,5 @@ runtime:
   options:
     virtualenv: venv
 description: A minimal Stack Readme Python program
+template:
+  description: A minimal Python Pulumi program demonstrating Stack READMEs

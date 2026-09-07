@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-agent-sandbox/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-agent-sandbox/README.md#gh-dark-mode-only)
 
-# Per-Developer Agent Sandboxes on GKE with Pulumi
+# Per-developer agent sandboxes on GKE with Pulumi
 
 A section-by-section walkthrough of this example is in the Pulumi blog post
 [Kubernetes Agent Sandbox: what it is and how to deploy it with Pulumi](https://www.pulumi.com/blog/kubernetes-agent-sandbox/).
@@ -28,17 +28,17 @@ which box" cannot drift from "which boxes exist."
 
 ## Prerequisites
 
-1. [Install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
-2. A Google Cloud account with the `gcloud` CLI on your path (part of the
-   [GCP SDK](https://cloud.google.com/sdk/)), and Pulumi
-   [connected to GCP](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/). Use a throwaway
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/).
+2. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/) with the
+   `gcloud` CLI on your path (part of the [GCP SDK](https://cloud.google.com/sdk/)). Use a throwaway
    project — these sandboxes are meant to be wrecked.
-3. The [`gke-gcloud-auth-plugin`](https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/).
+4. The [`gke-gcloud-auth-plugin`](https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke)
    installed, so the generated kubeconfig can authenticate to the cluster.
-4. A [Tailscale](https://tailscale.com/) tailnet with **two** OAuth clients: one for the operator
+5. A [Tailscale](https://tailscale.com/) tailnet with **two** OAuth clients: one for the operator
    (scopes: `devices:core`, `auth_keys`), and one scoped to editing the ACL (scope: `policy_file`).
    See [Tailscale OAuth clients](https://tailscale.com/kb/1215/oauth-clients).
-5. A Claude Code OAuth credential blob to run inside the sandboxes (`~/.claude/.credentials.json` and
+6. A Claude Code OAuth credential blob to run inside the sandboxes (`~/.claude/.credentials.json` and
    `~/.claude.json` from a machine where you've logged into Claude Code).
 
 > **Warning — this example takes over your tailnet ACL.** It manages the tailnet's access-control
@@ -47,69 +47,69 @@ which box" cannot drift from "which boxes exist."
 > Run it against a tailnet you're willing to have rewritten (a personal or test tailnet), not one whose
 > ACL you rely on. See the `overwriteExistingContent` / `resetAclOnDestroy` settings in `tailscale.ts`.
 
-## Running the Example
+## Deploying the example
 
-Clone the repo, `cd gcp-ts-agent-sandbox`, and install dependencies:
-
-```bash
-$ npm install
-```
-
-1. Create a new stack:
+1. Install dependencies:
 
     ```bash
-    $ pulumi stack init dev
+    npm install
     ```
 
-2. Set the GCP project and zone:
+2. Create a new stack:
 
     ```bash
-    $ pulumi config set gcp:project [your-gcp-project]
-    $ pulumi config set gcp:zone us-central1-a
+    pulumi stack init dev
     ```
 
-3. Set the developer list — one sandbox is created per entry:
+3. Set the GCP project and zone:
 
     ```bash
-    $ pulumi config set --path 'developers[0].name' ada
-    $ pulumi config set --path 'developers[0].email' ada@example.com
+    pulumi config set gcp:project [your-gcp-project]
+    pulumi config set gcp:zone us-central1-a
     ```
 
-4. Set the Tailscale OAuth clients (both clients, as secrets):
+4. Set the developer list — one sandbox is created per entry:
 
     ```bash
-    $ pulumi config set --secret tailscaleOauthClientId    [operator-client-id]
-    $ pulumi config set --secret tailscaleOauthClientSecret [operator-client-secret]
-    $ pulumi config set --secret tailscaleAclClientId       [acl-client-id]
-    $ pulumi config set --secret tailscaleAclClientSecret   [acl-client-secret]
+    pulumi config set --path 'developers[0].name' ada
+    pulumi config set --path 'developers[0].email' ada@example.com
     ```
 
-5. Set the Claude Code credentials (as secrets):
+5. Set the Tailscale OAuth clients (both clients, as secrets):
 
     ```bash
-    $ pulumi config set --secret claudeCredentials "$(cat ~/.claude/.credentials.json)"
-    $ pulumi config set --secret claudeJson        "$(cat ~/.claude.json)"
+    pulumi config set --secret tailscaleOauthClientId    [operator-client-id]
+    pulumi config set --secret tailscaleOauthClientSecret [operator-client-secret]
+    pulumi config set --secret tailscaleAclClientId       [acl-client-id]
+    pulumi config set --secret tailscaleAclClientSecret   [acl-client-secret]
     ```
 
-6. Deploy everything with `pulumi up`. This provisions the cluster, the gVisor pool, the Agent Sandbox
+6. Set the Claude Code credentials (as secrets):
+
+    ```bash
+    pulumi config set --secret claudeCredentials "$(cat ~/.claude/.credentials.json)"
+    pulumi config set --secret claudeJson        "$(cat ~/.claude.json)"
+    ```
+
+7. Deploy everything with `pulumi up`. This provisions the cluster, the gVisor pool, the Agent Sandbox
    controller, the Tailscale operator, and one sandbox per developer, in a single gesture:
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
 
-7. Once it's up, the tailnet URL for each sandbox is a stack output. Open it in a browser (as the
+8. Once it's up, the tailnet URL for each sandbox is a stack output. Open it in a browser (as the
    Tailscale-authenticated owner) to land in a VS Code IDE with Claude Code installed:
 
     ```bash
-    $ pulumi stack output sandboxUrls
+    pulumi stack output sandboxUrls
     ```
 
    To talk to the cluster with `kubectl`:
 
     ```bash
-    $ pulumi stack output kubeConfig --show-secrets > kc.yaml
-    $ KUBECONFIG=kc.yaml kubectl get sandboxes
+    pulumi stack output kubeConfig --show-secrets > kc.yaml
+    KUBECONFIG=kc.yaml kubectl get sandboxes
     ```
 
 ## Configuration
@@ -129,17 +129,17 @@ $ npm install
 | `claudeCredentials`            | Claude Code OAuth blob mounted into each sandbox (secret)          | _(required)_     |
 | `claudeJson`                   | Claude Code `.claude.json` onboarding stub (secret)               | _(required)_     |
 
-## Cleaning Up
+## Cleaning up
 
 ```bash
-$ pulumi destroy
-$ pulumi stack rm dev
+pulumi destroy
+pulumi stack rm dev
 ```
 
 `pulumi destroy` also restores Tailscale's default ACL, so the tailnet isn't left governed by the rules
 of a demo that no longer exists.
 
-## Learn More
+## Learn more
 
 For the reasoning behind each piece of this program — why a container alone isn't a security boundary,
 what the `Sandbox` CRD actually gives you, and how the gVisor node pool and the tailnet ACL fit together —

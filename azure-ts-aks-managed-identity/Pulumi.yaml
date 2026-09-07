@@ -1,3 +1,8 @@
 name: azure-yaml-aks-managed-identity
 runtime: nodejs
 description: A minimal Azure Native Pulumi Typescript program
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy resources into
+      default: westus2

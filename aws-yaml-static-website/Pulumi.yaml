@@ -1,6 +1,14 @@
 name: aws-native-static-website
 runtime: yaml
 description: A static website hosted on AWS S3
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    aws-native:region:
+      description: The AWS region for the AWS Native provider
+      default: us-west-2
 resources:
   site-bucket:
     type: aws-native:s3:Bucket

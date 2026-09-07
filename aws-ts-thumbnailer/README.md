@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-thumbnailer/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-thumbnailer/README.md#gh-dark-mode-only)
 
-# Video Thumbnailer Using AWS Fargate
+# Video thumbnailer using AWS Fargate
 
 A video thumbnail extractor using serverless functions and containers. It combines the two into a single distributed application, using AWS Lambda functions as event triggers and a container running on AWS Fargate for the longer-running work: when a new video is uploaded to S3, a Lambda launches a Fargate task that extracts a thumbnail with FFmpeg and writes it back to S3.
 
@@ -11,31 +11,40 @@ Loosely derived from the example at https://serverless.com/blog/serverless-appli
 
 ## Prerequisites
 
-To run this example, make sure [Docker](https://docs.docker.com/engine/installation/) is installed and running.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+4. [Install Docker](https://docs.docker.com/engine/installation/)
 
-## Running the App
+## Deploying the example
 
-Note: some values in this example will be different from run to run.  These values are indicated
-with `***`.
+Note: some values in this example will be different from run to run. These values are indicated with `***`.
 
 1.  Create a new stack:
 
-    ```
+    ```bash
     pulumi stack init thumbnailer-testing
     ```
 
 1.  Configure Pulumi to use an AWS region where Fargate is supported, which is currently only available in `us-east-1`, `us-east-2`, `us-west-2`, and `eu-west-1`:
 
-    ```
+    ```bash
     pulumi config set aws:region us-west-2
     ```
 
-1.  Restore NPM modules via `npm install` or `yarn install`.
+1.  Install dependencies:
 
-1.  Preview and deploy the app via `pulumi up`. The preview will take some time, as it builds a Docker container. A total of 32 resources are created.
+    ```bash
+    npm install
+    ```
+
+1.  Preview and deploy the app. The preview will take some time, as it builds a Docker container. A total of 32 resources are created.
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi up
     Previewing update of stack 'thumbnailer-testing'
     Previewing changes:
 
@@ -63,8 +72,11 @@ with `***`.
 
 1.  View the stack outputs:
 
+    ```bash
+    pulumi stack output
     ```
-    $ pulumi stack output
+
+    ```
     Current stack outputs (1):
         OUTPUT                                           VALUE
         bucketName                                       ***
@@ -72,15 +84,21 @@ with `***`.
 
 1.  Upload a video, embedding the timestamp in the filename:
 
+    ```bash
+    aws s3 cp ./sample/cat.mp4 s3://$(pulumi stack output bucketName)/cat_00-01.mp4
     ```
-    $ aws s3 cp ./sample/cat.mp4 s3://$(pulumi stack output bucketName)/cat_00-01.mp4
+
+    ```
     upload: sample/cat.mp4 to s3://***/cat_00-01.mp4
     ```
 
 1.  View the logs from both the Lambda function and the ECS task:
 
+    ```bash
+    pulumi logs -f
     ```
-    $ pulumi logs -f
+
+    ```
     Collecting logs for stack thumbnailer-testing since ***
 
     2018-05-25T12:57:26.326-07:00[                    onNewVideo] *** New video: file cat_00-01.mp4 was uploaded at 2018-05-25T19:57:25.507Z.
@@ -91,21 +109,29 @@ with `***`.
     2018-05-25T12:58:40.306-07:00[               ffmpegThumbTask] Copying cat.jpg to S3 at bucket-5ea6b28/cat.jpg ...
     2018-05-25T12:58:43.034-07:00[               ffmpegThumbTask] Completed 86.6 KiB/86.6 KiB (619.7 KiB/s) with 1 filupload: ./cat.jpg to s3://bucket-5ea6b28/cat.jpg
     2018-05-25T12:58:43.758-07:00[                onNewThumbnail] *** New thumbnail: file cat.jpg was saved at 2018-05-25T19:58:43.028Z.
-        ```
+    ```
 
 1.  Download the key frame:
 
+    ```bash
+    aws s3 cp s3://$(pulumi stack output bucketName)/cat.jpg .
     ```
-    $ aws s3 cp s3://$(pulumi stack output bucketName)/cat.jpg .
+
+    ```
     download: s3://***/cat.jpg to ./cat.jpg
     ```
 
-## Clean up
+## Cleaning up
 
-To clean up the resources, you will first need to clear the contents of the bucket.
+To clean up the resources, you will first need to clear the contents of the bucket:
 
 ```bash
 aws s3 rm s3://$(pulumi stack output bucketName) --recursive
 ```
 
-Then, run `pulumi destroy` and answer the confirmation question at the prompt.
+Then, destroy your stack and remove it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

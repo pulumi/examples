@@ -1,110 +1,118 @@
-# Pulumi Vault Encryption
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/secrets-provider/vault/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/secrets-provider/vault/README.md#gh-dark-mode-only)
+
+# Pulumi Vault encryption
 
 Pulumi allows you to encrypt any secrets stored in the backend.
 
-This example shows how this might be done for Hashicorp Vault. It creates an S3 bucket with a single file that has a "secret" value.
+This example shows how this might be done for HashiCorp Vault. It creates an S3 bucket with a single file that has a "secret" value.
 
-# Getting Started
+## Prerequisites
 
-To use this example, perform the following steps. This examples assumes you have a working vault server with the [transit secret backend](https://www.vaultproject.io/docs/secrets/transit) enabled.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+4. A working Vault server with the [transit secret backend](https://www.vaultproject.io/docs/secrets/transit) enabled. Set the `VAULT_SERVER_URL` environment variable to the address of your Vault server:
 
-You should ensure you have an environment variable, `VAULT_SERVER_URL` set to the address of your vault server:
+   ```bash
+   export VAULT_SERVER_URL="https://vault.service.consul:8201"
+   ```
 
-```bash
-export VAULT_SERVER_URL="https://vault.service.consul:8201
-```
+   You should also have a [Vault token](https://www.vaultproject.io/docs/concepts/tokens) with a [policy](https://www.vaultproject.io/docs/concepts/policies) that is adequately scoped to allow access to the transit backend. Set the `VAULT_SERVER_TOKEN` environment variable:
 
-You should also have a [Vault token](https://www.vaultproject.io/docs/concepts/tokens) with a [policy](https://www.vaultproject.io/docs/concepts/policies) that is adequately scoped to allow access to the transit backend.
+   ```bash
+   export VAULT_SERVER_TOKEN=<token>
+   ```
 
-Once you do, set the `VAULT_SERVER_TOKEN` environment variable:
+## Deploying the example
 
-```bash
-export VAULT_SERVER_TOKEN=<token>
-```
+1. Create a key in the transit backend. Assuming it's been enabled at `/transit`, create the key like so:
 
-## Create a Key
+   ```bash
+   vault write -f transit/keys/my-stack
+   ```
 
-We first need to create a key in the transit backend. Assuming it's been enabled at `/transit` we can create the key like so:
+1. Initialize your stack with Pulumi, ensuring you set the `--secrets-provider` flag:
 
-```bash
+   ```bash
+   pulumi stack init $PULUMI_ORG_NAME/$PULUMI_STACK_NAME --secrets-provider="hashivault://my-stack"
+   ```
 
-vault write -f transit/keys/my-stack
-```
+1. Install dependencies:
 
-## Initialize your stack
+   ```bash
+   npm install
+   ```
 
-Initialize your stack with Pulumi and ensure you set the `--secrets-provider` flag:
+1. Verify your stack settings. If everything has worked as expected, you should be able to verify in your stack settings that the secrets provider is set:
 
-```bash
-# Using your alias
-pulumi stack init $PULUMI_ORG_NAME/$PULUMI_STACK_NAME --secrets-provider="hashivault://my-stack"
+   ```bash
+   cat Pulumi.$PULUMI_STACK_NAME.yaml
+   ```
 
-```
+   ```
+   secretsprovider: hashivault://my-stack
+   encryptedkey: dmF1bHQ6djE6TlhML000T2ZCcWVTSjRmeFhiOVpLeWNmUjErK1k0Wnh6QVhTQm56TXBvZ0dyL2RCQUdEcUFBTHdDUHNIMW8yQkxrVVJNdlNDeDdtbUd2WG0=
+   ```
 
-## Verify your stack settings
+1. Set your configuration settings:
 
-If everything has worked as expected, you should be able to verify in your stack settings that the secretsprovider is set:
+   ```bash
+   pulumi config set aws:region us-west-2
+   # Set the bucketname & the secret contents
+   pulumi config set bucketName pulumi-lbriggs
+   pulumi config set --secret secretValue "correct-horse-battery-stable"
+   ```
 
-```bash
-cat Pulumi.$PULUMI_STACK_NAME.yaml
-secretsprovider: hashivault://my-stack
-encryptedkey: dmF1bHQ6djE6TlhML000T2ZCcWVTSjRmeFhiOVpLeWNmUjErK1k0Wnh6QVhTQm56TXBvZ0dyL2RCQUdEcUFBTHdDUHNIMW8yQkxrVVJNdlNDeDdtbUd2WG0=
-```
+1. Create the stack:
 
-## Set your configuration settings
+   ```bash
+   # This will create the stack without prompting, be aware!
+   pulumi up --yes
+   ```
 
-```bash
-pulumi config set aws:region us-west-2
-# Set the bucketname & the secret contents
-pulumi config set bucketName pulumi-lbriggs
-pulumi config set --secret secretValue "correct-horse-battery-stable"
-```
+   ```
+   Updating (vault-kms):
+        Type                    Name                        Status
+    +   pulumi:pulumi:Stack     pulumi-vault-kms-vault-kms  created
+    +   ├─ aws:s3:Bucket        bucket                      created
+    +   └─ aws:s3:BucketObject  secret                      created
 
-## Create the stack
+   Outputs:
+       bucketId: "pulumi-lbriggs"
+       secretId: "[secret]"
 
-```bash
-# This will create the stack without prompting, be aware!
-pulumi up --yes
-Previewing update (vault-kms):
-     Type                    Name                    Plan
- +   pulumi:pulumi:Stack     pulumi-vault-kms-vault-kms  create
- +   ├─ aws:s3:Bucket      bucket                  create
- +   └─ aws:s3:BucketObject  secret                  create
+   Resources:
+       + 3 created
 
-Resources:
-    + 3 to create
+   Duration: 8s
+   ```
 
-Updating (aws-kms):
-     Type                    Name                    Status
- +   pulumi:pulumi:Stack     pulumi-vault-kms-vault-kms  created
- +   ├─ aws:s3:Bucket      bucket                  created
- +   └─ aws:s3:BucketObject  secret                  created
+   You'll notice the secret value is also omitted from the output!
 
-Outputs:
-    bucketId: "pulumi-lbriggs"
-    secretId: "[secret]"
-
-Resources:
-    + 3 created
-
-Duration: 8s
-
-Permalink: <redacted>
-```
-
-You'll notice the secret value is also omitted from the output!
-
-## Verify the encryption
+## Verifying the encryption
 
 A quick way to verify if the encryption is using the Vault key is to remove your `VAULT_SERVER_TOKEN` environment variable setting:
 
 ```bash
-unset
+unset VAULT_SERVER_TOKEN
 pulumi up --yes
+```
+
+```
 error: getting secrets manager: secrets (code=Unknown): Error making API request.
 
 URL: PUT http://vault.service.consul:8200/v1/transit/decrypt/my-stack
 Code: 400. Errors:
 
 * missing client token
+```
+
+## Cleaning up
+
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
 ```

@@ -1,31 +1,43 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-secrets-manager/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-secrets-manager/README.md#gh-dark-mode-only)
 
-# Setup AWS Secrets manager
+# Set up AWS Secrets Manager
 
-A simple program that creates an AWS secret and a version under AWS Secrets Manager
+A simple program that creates an AWS secret and a version under AWS Secrets Manager.
 
-## Deploying and running the program
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
-1.  Set the AWS region:
+1.  Set the AWS region to deploy into:
+
+    ```bash
+    pulumi config set aws:region us-east-1
+    ```
+
+1.  Install dependencies:
+
+    ```bash
+    go mod download
+    ```
+
+1.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi config set aws:region us-east-1
-    ```
-
-1.  Run `pulumi up` to preview and deploy changes:
-
-    ```
-    $ pulumi up
-    Previewing update (dev)
-    ...
-
     Updating (dev)
 
     View Live: https://app.pulumi.com/acmecorp/aws-go-secrets-manager/dev/updates/1
@@ -44,8 +56,11 @@ A simple program that creates an AWS secret and a version under AWS Secrets Mana
     Duration: 11s
     ```
 
-## Clean up
+## Cleaning up
 
-1.  Run `pulumi destroy` to tear down all resources.
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
 
-1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi console.
+```bash
+pulumi destroy
+pulumi stack rm
+```

@@ -4,3 +4,18 @@ runtime:
   options:
     virtualenv: venv
 description: An example demonstrating Pulumi Dynamic Providers
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    sql-admin-name:
+      description: The MySQL admin account username
+    sql-admin-password:
+      description: The MySQL admin account password
+      secret: true
+    sql-user-name:
+      description: The MySQL standard account username
+    sql-user-password:
+      description: The MySQL standard account password
+      secret: true

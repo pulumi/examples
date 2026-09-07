@@ -7,53 +7,60 @@ This example creates an AWS API Gateway proxy integration with EventBridge and L
 
 ## Prerequisites
 
-1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/).
-1. [Install Python](https://www.pulumi.com/docs/intro/languages/python/).
-1. Configure your [AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/).
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
-### Deploying the App
+## Deploying the example
 
-1. Clone this repo, change to this directory, then create a new [stack](https://www.pulumi.com/docs/intro/concepts/stack/) for the project:
+1.  Create a new stack:
 
     ```bash
-    pulumi stack init
+    pulumi stack init dev
     ```
 
-1. Specify an AWS region to deploy into:
+1.  Set the AWS region to deploy into:
 
     ```bash
     pulumi config set aws:region us-west-2
     ```
 
-1. Install Python dependencies and run Pulumi:
+1.  Install dependencies:
 
     ```bash
     python3 -m venv venv
     source venv/bin/activate
     pip install -r requirements.txt
+    ```
 
+1.  Deploy the stack:
+
+    ```bash
     pulumi up
     ```
 
-1. In a few moments, the API Gateway instance service will be up and running and its public URL emitted as a Pulumi [stack output](https://www.pulumi.com/docs/intro/concepts/stack/#outputs).
+1.  In a few moments, the API Gateway instance will be up and running and its public URL emitted as a Pulumi [stack output](https://www.pulumi.com/docs/intro/concepts/stack/#outputs):
 
-    ```bash
-    ...
+    ```
     Outputs:
         url: "https://andchh8hg8.execute-api.us-west-2.amazonaws.com/dev"
     ```
 
-1. Verify the deployment with `curl` and `pulumi logs`:
+1.  Verify the deployment with `curl` and `pulumi logs`:
 
     ```bash
     curl --data '{"some-key": "some-value"}' --header "Content-Type: application/json" "$(pulumi stack output url)/uploads"
+    ```
 
+    ```
     {"Entries":[{"EventId":"cdc44763-6976-286c-9378-7cce674dff81"}],"FailedEntryCount":0}
     ```
 
     ```bash
     pulumi logs --follow
+    ```
 
+    ```
     Collecting logs for stack dev since 2022-01-06T16:18:48.000-08:00.
     ...
 
@@ -63,9 +70,11 @@ This example creates an AWS API Gateway proxy integration with EventBridge and L
     }
     ```
 
-1. When you're ready, destroy your stack and remove it:
+## Cleaning up
 
-    ```bash
-    pulumi destroy --yes
-    pulumi stack rm --yes
-    ```
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

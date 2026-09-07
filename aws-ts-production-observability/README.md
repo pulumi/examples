@@ -1,4 +1,7 @@
-# Production Observability for a Lambda Service
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-production-observability/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-production-observability/README.md#gh-dark-mode-only)
+
+# Production observability for a Lambda service
 
 Wiring up monitoring after the fact is tedious and easy to get wrong. This example provisions a baseline observability stack for an AWS Lambda service so a new service is watched from its first deploy.
 
@@ -18,7 +21,7 @@ Swap the sample function for your real workload (or point the alarms and dashboa
 1. [Configure your AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-## Deploying and running the program
+## Deploying the example
 
 1.  Create a new stack:
 
@@ -39,7 +42,7 @@ Swap the sample function for your real workload (or point the alarms and dashboa
     npm install
     ```
 
-1.  Run `pulumi up` to preview and deploy:
+1.  Deploy the stack:
 
     ```bash
     pulumi up
@@ -63,7 +66,7 @@ Swap the sample function for your real workload (or point the alarms and dashboa
 
     Open the dashboard in the [CloudWatch console](https://console.aws.amazon.com/cloudwatch/home#dashboards:) to see the widgets.
 
-## Clean up
+## Cleaning up
 
 To tear down the resources, run:
 

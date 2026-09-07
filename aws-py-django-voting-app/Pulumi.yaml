@@ -9,3 +9,21 @@ template:
     aws:region:
       description: The AWS region to deploy into
       default: us-west-2
+    sql-admin-name:
+      description: The MySQL admin account username
+    sql-admin-password:
+      description: The MySQL admin account password
+      secret: true
+    sql-user-name:
+      description: The MySQL standard account username
+    sql-user-password:
+      description: The MySQL standard account password
+      secret: true
+    django-admin-name:
+      description: The Django admin account username
+    django-admin-password:
+      description: The Django admin account password
+      secret: true
+    django-secret-key:
+      description: A random 50-character string used as Django's secret key
+      secret: true

@@ -3,7 +3,7 @@
 
 # Routes in API Gateway
 
-This example create an API Gateway which responds to requests using different sources:
+This example creates an API Gateway which responds to requests using different sources:
 
 1. Static files from a directory
 2. Lambda Function
@@ -17,43 +17,39 @@ When you're finished, you'll be familiar with how to configure routes in API Gat
 2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
 
-## Deploy the App
+## Deploying the example
 
-### Step 1: Create a directory and cd into it
-
-For Pulumi examples, we typically start by creating a directory and changing into it. Then, we create a new Pulumi project from a template. For example, `azure-javascript`.
-
-1. Install prerequisites:
-
-    ```bash
-    go install
-    ```
-
-2. Make Lambda handlers:
-
-    ```bash
-    make
-    ```
-
-3. Create a new Pulumi stack:
+1.  Create a new stack:
 
     ```bash
     pulumi stack init
     ```
 
-4. Configure the AWS region to deploy into:
+1.  Set the AWS region to deploy into:
 
     ```bash
     pulumi config set aws:region us-east-2
     ```
 
-5. Deploy the Pulumi stack:
+1.  Install dependencies:
+
+    ```bash
+    go mod download
+    ```
+
+1.  Build the Lambda handlers:
+
+    ```bash
+    make
+    ```
+
+1.  Deploy the stack:
 
     ```bash
     pulumi up
     ```
 
-### Step 2: Test your API
+### Test your API
 
 Use the example CURL commands to test the API responses.
 
@@ -132,7 +128,7 @@ Fetch and review the logs from the Lambda executions:
 pulumi logs
 ```
 
-### Set Up Custom DNS
+### Set up a custom domain
 
 Before you can set up a custom domain you must [register a domain name with Route 53](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar.html).
 
@@ -165,7 +161,7 @@ Test your API is now available on your custom domain:
 curl -w '\n' "$(pulumi stack output customUrl)static"
 ```
 
-## Clean Up
+## Cleaning up
 
 Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
 

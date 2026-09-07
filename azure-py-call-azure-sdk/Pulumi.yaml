@@ -4,3 +4,8 @@ runtime:
   options:
     virtualenv: venv
 description: An example of integrating an Azure SDK call to a Pulumi program.
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: WestUS

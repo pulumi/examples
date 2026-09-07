@@ -1,57 +1,49 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-appsync/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-appsync/README.md#gh-dark-mode-only)
 
-# GraphQL Endpoint in AWS AppSync (in Go)
+# GraphQL endpoint in AWS AppSync (in Go)
 
 This example shows how to setup a basic GraphQL endpoint in AWS AppSync. The endpoint contains one query and one mutation that get and put items to a Dynamo DB table.
 
-## Deploying the App
+## Prerequisites
 
-To deploy your infrastructure, follow the below steps.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
 
-### Prerequisites
+## Deploying the example
 
-1. [Install Go](https://golang.org/doc/install)
-2. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-3. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
-
-### Steps
-
-After cloning this repo, from this working directory, run these commands:
-
-1. Create a new Pulumi stack, which is an isolated deployment target for this example:
+1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
-2. Set the required configuration variables for this program (AWS Region):
+1. Set the AWS region to deploy into:
 
     ```bash
-    $ pulumi config set aws:region us-west-2
+    pulumi config set aws:region us-west-2
     ```
 
-3. Run `pulumi up` up to preview and deploy changes:
-    ```bash
-    $ pulumi up
-    Previewing update (dev):
-    ...
+1. Install dependencies:
 
-    Updating (dev):
-    ...
-    Resources:
-        + 10 created
-    Duration: 20s
+    ```bash
+    go mod download
     ```
 
-4. Check the deployed GraphQL endpoint:
+1. Deploy the stack:
 
     ```bash
-    $ pulumi stack output endpoint
-    https://***.appsync-api.us-west-2.amazonaws.com/graphql
-    $ pulumi stack output key
-    ***sensitivekey***
-    $ curl -XPOST -H "Content-Type:application/graphql" -H "x-api-key:$(pulumi stack output key)" -d '{ "query": "mutation AddTenant { addTenant(id: \"123\", name: \"FirstCorp\") { id name } }" }' "$(pulumi stack output endpoint)"
+    pulumi up
+    ```
+
+1. Check the deployed GraphQL endpoint:
+
+    ```bash
+    curl -XPOST -H "Content-Type:application/graphql" -H "x-api-key:$(pulumi stack output key)" -d '{ "query": "mutation AddTenant { addTenant(id: \"123\", name: \"FirstCorp\") { id name } }" }' "$(pulumi stack output endpoint)"
+    ```
+
+    ```
     {
         "data": {
             "addTenant": {
@@ -62,8 +54,11 @@ After cloning this repo, from this working directory, run these commands:
     }
     ```
 
-## Clean up
+## Cleaning up
 
-1. Run `pulumi destroy` to tear down all resources.
+Once you're finished experimenting, tear down your stack's resources by destroying and removing it:
 
-2. To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi console.
+```bash
+pulumi destroy
+pulumi stack rm
+```

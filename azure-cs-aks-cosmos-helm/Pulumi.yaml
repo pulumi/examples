@@ -1,3 +1,8 @@
 name: azure-cs-aks-cosmos-helm
 runtime: dotnet
 description: A Helm chart deployed to AKS that stores TODOs in an Azure Cosmos DB MongoDB API
+template:
+  config:
+    azure-native:location:
+      description: The Azure region to deploy into
+      default: westus2

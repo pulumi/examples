@@ -4,3 +4,10 @@ runtime:
   options:
     virtualenv: venv
 description: Creates Azure Synapse workspace with SQL and Spark pools
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus
+    userObjectId:
+      description: The Azure AD object ID of the user to grant workspace access to

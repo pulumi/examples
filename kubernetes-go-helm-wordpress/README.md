@@ -1,117 +1,81 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-go-helm-wordpress/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-go-helm-wordpress/README.md#gh-dark-mode-only)
 
-# Wordpress Helm Chart
+# WordPress Helm chart
 
-Uses the Helm API of `pulumi-kubernetes` to deploy `v9.6.0` of the Wordpress Helm Chart to a
-Kubernetes cluster. Pulumi will expand the Helm Chart and submit the expanded YAML to the cluster.
+Uses the Helm API of `pulumi-kubernetes` to deploy `v9.6.0` of the WordPress Helm chart to a
+Kubernetes cluster. Pulumi will expand the Helm chart and submit the expanded YAML to the cluster.
 
-## Running the App
+## Prerequisites
 
-If you haven't already, follow the steps in [Pulumi Installation and
-Setup](https://www.pulumi.com/docs/get-started/install/) and [Configuring Pulumi
-Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/) to get set up with
-Pulumi and Kubernetes.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
 
-Now, install dependencies:
+## Deploying the example
 
-```sh
-go mod download
-```
+1.  Create a new stack:
 
-Create a new stack:
+    ```bash
+    pulumi stack init wordpress-dev
+    ```
 
-```sh
-$ pulumi stack init
-Enter a stack name: wordpress-dev
-```
+1.  Install dependencies:
 
-Preview the deployment of the application and the perform the deployment:
+    ```bash
+    go mod download
+    ```
 
-```sh
-pulumi up
-Previewing update (wordpress-dev)
+1.  Deploy the stack:
 
-View Live: https://app.pulumi.com/...
+    ```bash
+    pulumi up
+    ```
 
-     Type                                            Name                                        Plan
- +   pulumi:pulumi:Stack                             kubernetes-go-helm-wordpress-wordpress-dev  create
- +   └─ kubernetes:helm.sh/v2:Chart                  wpdev                                       create
- +      ├─ kubernetes:core/v1:PersistentVolumeClaim  wpdev-wordpress                             create
- +      ├─ kubernetes:core/v1:Secret                 wpdev-wordpress                             create
- +      ├─ kubernetes:core/v1:Service                wpdev-wordpress                             create
- +      ├─ kubernetes:core/v1:ConfigMap              default/wpdev-mariadb                       create
- +      ├─ kubernetes:core/v1:Secret                 default/wpdev-mariadb                       create
- +      ├─ kubernetes:core/v1:Pod                    wpdev-credentials-test                      create
- +      ├─ kubernetes:core/v1:Service                default/wpdev-mariadb                       create
- +      ├─ kubernetes:apps/v1:Deployment             wpdev-wordpress                             create
- +      └─ kubernetes:apps/v1:StatefulSet            default/wpdev-mariadb                       create
+    ```
+    Updating (wordpress-dev)
 
-Resources:
-    + 11 to create
+    View Live: https://app.pulumi.com/.../updates/7
 
-Do you want to perform this update? yes
-Updating (wordpress-dev)
+         Type                                         Name                                        Status
+     +   pulumi:pulumi:Stack                          kubernetes-go-helm-wordpress-wordpress-dev  created
+     +   └─ kubernetes:helm.sh:Chart                  wpdev                                       created
+     +      ├─ kubernetes:core:Secret                 default/wpdev-mariadb                       created
+     +      ├─ kubernetes:core:Secret                 wpdev-wordpress                             created
+     +      ├─ kubernetes:core:PersistentVolumeClaim  wpdev-wordpress                             created
+     +      ├─ kubernetes:core:Service                wpdev-wordpress                             created
+     +      ├─ kubernetes:core:ConfigMap              default/wpdev-mariadb                       created
+     +      ├─ kubernetes:core:Service                default/wpdev-mariadb                       created
+     +      ├─ kubernetes:apps:StatefulSet            default/wpdev-mariadb                       created
+     +      └─ kubernetes:apps:Deployment             wpdev-wordpress                             created
 
-View Live: https://app.pulumi.com/.../updates/7
+    Outputs:
+        frontendIp: "35.193.210.254"
 
-     Type                                         Name                                        Status
- +   pulumi:pulumi:Stack                          kubernetes-go-helm-wordpress-wordpress-dev  created
- +   └─ kubernetes:helm.sh:Chart                  wpdev                                       created
- +      ├─ kubernetes:core:Secret                 default/wpdev-mariadb                       created
- +      ├─ kubernetes:core:Secret                 wpdev-wordpress                             created
- +      ├─ kubernetes:core:PersistentVolumeClaim  wpdev-wordpress                             created
- +      ├─ kubernetes:core:Service                wpdev-wordpress                             created
- +      ├─ kubernetes:core:ConfigMap              default/wpdev-mariadb                       created
- +      ├─ kubernetes:core:Service                default/wpdev-mariadb                       created
- +      ├─ kubernetes:apps:StatefulSet            default/wpdev-mariadb                       created
- +      └─ kubernetes:apps:Deployment             wpdev-wordpress                             created
+    Resources:
+        + 10 created
 
-Outputs:
-    frontendIp: "35.193.210.254"
+    Duration: 53s
+    ```
 
-Resources:
-    + 10 created
+1.  WordPress was allocated a public IP, in this case `35.193.210.254`, exported as the stack output
+    `frontendIp`. Use `curl` and `grep` to retrieve the `<title>` of the site:
 
-Duration: 53s
-```
+    ```bash
+    curl -sL $(pulumi stack output frontendIp):80 | grep "<title>"
+    ```
 
-We can see here in the `---outputs:---` section that Wordpress was allocated a public IP, in this
-case `35.193.210.254`. It is exported with a stack output variable, `frontendIp`. We can use `curl`
-and `grep` to retrieve the `<title>` of the site the proxy points at.
+    ```
+    <title>User&#039;s Blog! &#8211; Just another WordPress site</title>
+    ```
 
-```sh
-$ curl -sL $(pulumi stack output frontendIp):80 | grep "<title>"
-<title>User&#039;s Blog! &#8211; Just another WordPress site</title>
-```
+    You can also navigate to the site in a web browser.
 
-You can also navigate to the site in a web browser.
+## Cleaning up
 
-When you're done, you can remove these resources with `pulumi destroy`:
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
 
-```sh
-pulumi destroy --skip-preview
-Destroying (wordpress-dev)
-
-View Live: https://app.pulumi.com/example/.../updates/8
-
-     Type                                         Name                                        Status
- -   pulumi:pulumi:Stack                          kubernetes-go-helm-wordpress-wordpress-dev  deleted
- -   └─ kubernetes:helm.sh:Chart                  wpdev                                       deleted
- -      ├─ kubernetes:core:Secret                 wpdev-wordpress                             deleted
- -      ├─ kubernetes:core:Secret                 default/wpdev-mariadb                       deleted
- -      ├─ kubernetes:core:ConfigMap              default/wpdev-mariadb                       deleted
- -      ├─ kubernetes:core:Service                default/wpdev-mariadb                       deleted
- -      ├─ kubernetes:core:PersistentVolumeClaim  wpdev-wordpress                             deleted
- -      ├─ kubernetes:core:Service                wpdev-wordpress                             deleted
- -      ├─ kubernetes:apps:StatefulSet            default/wpdev-mariadb                       deleted
- -      └─ kubernetes:apps:Deployment             wpdev-wordpress                             deleted
-
-Outputs:
-  - frontendIp: "35.193.210.254"
-
-Resources:
-    - 10 deleted
-
-Duration: 7s
+```bash
+pulumi destroy
+pulumi stack rm
 ```

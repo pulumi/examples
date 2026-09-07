@@ -1,3 +1,5 @@
 name: docker-ts-multi-container-app
 runtime: nodejs
 description: Example typescript app using multiple docker containers
+template:
+  description: Runs a Redis container and an application container locally with Docker

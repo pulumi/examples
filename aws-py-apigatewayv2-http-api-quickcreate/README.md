@@ -1,37 +1,47 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-apigatewayv2-http-api-quickcreate/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-apigatewayv2-http-api-quickcreate/README.md#gh-dark-mode-only)
 
-# AWS API Gateway V2 HTTP API Quickstart
+# AWS API Gateway V2 HTTP API quickstart
 
-Set up a simple HTTP API using AWS API Gateway V2. The API executes a simple Lambda function
-found in `/app/index.js`.
+Set up a simple HTTP API using AWS API Gateway V2. The API executes a simple Lambda function found in `/app/index.js`.
 
 ## Prerequisites
-1.  Install [Pulumi](https://www.pulumi.com/docs/get-started/install/).
-2.  Configure [Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/).
-3.  Install [Python](https://www.pulumi.com/docs/intro/languages/python).
 
-## Deploying and running the program
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
-Note: some values in this example will be different from run to run.  These values are indicated
-with `***`.
+## Deploying the example
+
+Note: some values in this example will be different from run to run. These values are indicated with `***`.
 
 1.  Create a new stack:
 
     ```bash
-    $ pulumi stack init http-api
+    pulumi stack init http-api
     ```
 
-1.  Set the AWS region:
+1.  Set the AWS region to deploy into:
 
+    ```bash
+    pulumi config set aws:region us-east-2
     ```
-    $ pulumi config set aws:region us-east-2
+
+1.  Install dependencies:
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
+    ```bash
+    pulumi up
     ```
-    $ pulumi up
+
+    ```
     Previewing update (http-api)
     ...
 
@@ -53,29 +63,32 @@ with `***`.
 
     Duration: 22s
     ```
-    Note: this command will create a virtual environment and restore dependencies automatically as
-    described in [Pulumi docs](https://www.pulumi.com/docs/intro/languages/python/#virtual-environments).
 
 1.  View the endpoint URL and curl a few routes:
 
     ```bash
-    $ pulumi stack output
+    pulumi stack output
+    ```
+
+    ```
     Current stack outputs (1):
         OUTPUT            VALUE
         endpoint          https://***.execute-api.us-east-2.amazonaws.com
+    ```
 
-    $ curl $(pulumi stack output endpoint)
+    ```bash
+    curl $(pulumi stack output endpoint)
+    ```
+
+    ```
     Hello, Pulumi!
     ```
 
 1.  To view the runtime logs of the Lambda function, use the `pulumi logs` command. To get a log stream, use `pulumi logs --follow`.
 
-1.  At this point, you have a running HTTP API. Feel free to modify your program, and run `pulumi up`
-to redeploy changes. The Pulumi CLI automatically detects what has changed and makes the minimal
-edits necessary to accomplish these changes. This could be altering the function used by the Lambda,
-or anything else you'd like!
+1.  At this point, you have a running HTTP API. Feel free to modify your program, and run `pulumi up` to redeploy changes. The Pulumi CLI automatically detects what has changed and makes the minimal edits necessary to accomplish these changes. This could be altering the function used by the Lambda, or anything else you'd like!
 
-## Clean up
+## Cleaning up
 
 1.  Run `pulumi destroy` to tear down all resources.
 

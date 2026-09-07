@@ -1,3 +1,10 @@
 name: aws-ts-lambda-secrets
 description: A minimal AWS TypeScript Pulumi program
 runtime: nodejs
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    lambdawithsecrets:
+      description: An object with `envvars` and `secrets` maps to expose to the Lambda function
