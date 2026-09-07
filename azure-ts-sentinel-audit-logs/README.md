@@ -39,7 +39,7 @@ The poller authenticates to the Pulumi Cloud API using an access token and handl
 
 ## Prerequisites
 
-- A Pulumi Cloud organization with a **Business Critical** subscription (audit logs require this tier)
+- A Pulumi Cloud organization on the **Pro** or **Enterprise** edition. Automated audit-log export starts with Pro.
 - A [Pulumi access token](https://app.pulumi.com/account/tokens) with audit log read permissions — we recommend an **org-scoped service token** (survives employee offboarding, can be scoped to minimum permissions)
 - An Azure resource group with a Log Analytics workspace and Microsoft Sentinel enabled. If you don't have these:
   ```bash

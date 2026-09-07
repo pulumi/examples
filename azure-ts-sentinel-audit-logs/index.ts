@@ -192,7 +192,7 @@ const connectorDefinition = new azure_native.securityinsights.CustomizableConnec
                 description: [
                     "A Pulumi Cloud [personal access token](https://www.pulumi.com/docs/pulumi-cloud/access-management/access-tokens/)",
                     "with permissions to read audit logs is required.",
-                    "The organization must have a Pulumi Enterprise or Business Critical subscription with audit logs enabled.",
+                    "The organization must use the Pulumi Cloud Pro or Enterprise edition. Automated audit-log export starts with Pro.",
                 ].join(" "),
             }],
         },
