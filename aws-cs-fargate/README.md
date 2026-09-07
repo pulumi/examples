@@ -21,9 +21,9 @@ infrastructure. [`./Infra/Program.cs`](./Infra/Program.cs) defines the project's
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
-4. [Install Docker](https://docs.docker.com/install/)
+4. [Install Docker](https://docs.docker.com/get-docker/)
 
 ## Deploying the example
 

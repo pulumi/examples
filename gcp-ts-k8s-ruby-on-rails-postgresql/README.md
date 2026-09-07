@@ -20,7 +20,7 @@ This example assumes that you have GCP's `gcloud` CLI on your path. This is inst
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 2. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
 3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
-4. [Install Docker](https://docs.docker.com/install/)
+4. [Install Docker](https://docs.docker.com/get-docker/)
 
 ## Deploying the example
 

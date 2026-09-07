@@ -17,7 +17,7 @@ The example shows how easy it is to deploy containers into production and to con
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
-1. [Install Docker](https://docs.docker.com/engine/installation/)
+1. [Install Docker](https://docs.docker.com/get-docker/)
 
 ## Deploying the example
 

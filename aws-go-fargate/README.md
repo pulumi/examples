@@ -11,9 +11,9 @@ This example is inspired by [Docker's Getting Started Tutorial](https://docs.doc
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
-4. [Install Docker](https://docs.docker.com/install/)
+4. [Install Docker](https://docs.docker.com/get-docker/)
 
 ## Deploying the example
 

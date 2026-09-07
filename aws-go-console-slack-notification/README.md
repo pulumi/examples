@@ -14,7 +14,7 @@ via [aws-sdk-go](https://github.com/aws/aws-sdk-go) to query for available regio
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
 
 ## Deploying the example

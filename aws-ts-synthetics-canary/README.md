@@ -18,7 +18,7 @@ There are some prebaked canary scripts for doing things like checking an API or 
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
 ## Deploying the example

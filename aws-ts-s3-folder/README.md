@@ -9,7 +9,7 @@ For a detailed walkthrough of this example, see the tutorial [Static Website on 
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure your AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
 ## Deploying the example

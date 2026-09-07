@@ -8,7 +8,7 @@ This example shows how to setup a basic GraphQL endpoint in AWS AppSync. The end
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
 ## Deploying the example

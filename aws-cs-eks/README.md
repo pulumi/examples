@@ -8,7 +8,7 @@ This example creates an AWS EKS Cluster and deploys a sample container applicati
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
 4. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
 5. [Install `kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl/)

@@ -16,7 +16,7 @@ The function code lives in `lambda/` and uses the AWS SDK for JavaScript's Bedro
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure your AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 1. Enable access to the Bedrock model you want to use in the [Bedrock console](https://console.aws.amazon.com/bedrock/home#/modelaccess) (**Model access**), in the same region you deploy to.
 

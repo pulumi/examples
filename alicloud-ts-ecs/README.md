@@ -8,7 +8,7 @@ This example deploys a simple Alicloud ECS instance.
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure Alicloud Credentials](https://www.pulumi.com/registry/packages/alicloud/installation-configuration/#configuring-credentials)
+2. [Configure Alicloud credentials](https://www.pulumi.com/registry/packages/alicloud/installation-configuration/#configuring-credentials)
 3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
 ## Deploying the example

@@ -11,7 +11,7 @@ A Pulumi program that configures AWS OIDC for use with Pulumi ESC. It:
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 4. A [Pulumi Cloud account](https://app.pulumi.com/signup)
 

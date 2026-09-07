@@ -8,7 +8,7 @@ Starting point for building a web application hosted in Azure Container Instance
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
 3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
 
 ## Deploying the example

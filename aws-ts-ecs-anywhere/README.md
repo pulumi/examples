@@ -13,8 +13,8 @@ a set of DigitalOcean droplets behind a load balancer to allow for zero downtime
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
-3. [Configure DigitalOcean Credentials](https://www.pulumi.com/docs/intro/cloud-providers/digitalocean/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
+3. [Configure DigitalOcean credentials](https://www.pulumi.com/docs/intro/cloud-providers/digitalocean/setup/)
 4. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
 ## Deploying the example

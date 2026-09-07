@@ -10,9 +10,9 @@ Navigate to [Running Container Images in AWS Lambda](https://www.pulumi.com/blog
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
-1. [Install Docker](https://docs.docker.com/engine/installation/) and make sure it is running
+1. [Install Docker](https://docs.docker.com/get-docker/) and make sure it is running
 
 ## Deploying the example
 

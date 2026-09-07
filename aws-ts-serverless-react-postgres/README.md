@@ -15,7 +15,7 @@ The app runs on top of the [`aws-ts-landing-zone`](../aws-ts-landing-zone) examp
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure your AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/) 20 or newer
 1. A deployed [`aws-ts-landing-zone`](../aws-ts-landing-zone) stack in the same account and region
 

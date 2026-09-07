@@ -10,7 +10,7 @@ You can find a post describing the code on the [Pulumi blog](https://pulumi.com/
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
 ## Deploying the example

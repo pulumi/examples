@@ -20,7 +20,7 @@ The application consists of several parts:
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
 3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
-4. [Install .NET](https://dotnet.microsoft.com/download) (to build and publish the ASP.NET Core web app)
+4. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/) (to build and publish the ASP.NET Core web app)
 
 ## Deploying the example
 

@@ -10,7 +10,7 @@ by Pulumi Cloud. It then echos the event to Slack.
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
     - [Create an Organization](https://www.pulumi.com/docs/intro/console/organizations/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
 ## Deploying the example

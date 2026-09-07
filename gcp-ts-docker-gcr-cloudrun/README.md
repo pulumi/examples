@@ -17,7 +17,7 @@ This example is split into two Pulumi projects, run in sequence:
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 2. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
 3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
-4. [Install Docker](https://docs.docker.com/install/)
+4. [Install Docker](https://docs.docker.com/get-docker/)
 5. Enable Docker to deploy to Google Container Registry with `gcloud auth configure-docker`
 6. [Set up Docker auth with a JSON key to get the image from GCR](https://cloud.google.com/container-registry/docs/advanced-authentication#json-key)
 

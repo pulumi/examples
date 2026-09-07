@@ -24,7 +24,7 @@ commands to accomplish the desired effect. The result is repeatable automation t
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 4. [Install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 

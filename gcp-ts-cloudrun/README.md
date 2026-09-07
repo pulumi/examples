@@ -10,7 +10,7 @@ An example of deploying a custom Docker image into Google Cloud Run service usin
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 2. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
 3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
-4. [Install Docker](https://docs.docker.com/install/)
+4. [Install Docker](https://docs.docker.com/get-docker/)
 5. Enable Docker to deploy to Google Container Registry with `gcloud auth configure-docker`
 
 ## Deploying the example

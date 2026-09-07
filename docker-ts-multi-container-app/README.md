@@ -9,7 +9,7 @@ This example Pulumi application runs two containers locally, one Redis container
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 2. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
-3. [Install Docker](https://docs.docker.com/engine/installation/) and have it running
+3. [Install Docker](https://docs.docker.com/get-docker/) and have it running
 
 ## Deploying the example
 

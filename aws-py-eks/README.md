@@ -8,7 +8,7 @@ This example deploys an EKS Kubernetes cluster inside an AWS VPC with proper Nod
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 4. *Optional for K8s auth:* [Install `iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
 

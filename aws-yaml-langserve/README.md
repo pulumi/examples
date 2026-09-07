@@ -7,8 +7,8 @@ This example demonstrates how to deploy a simple LangServe app to AWS using Pulu
 
 ## Prerequisites
 
-1. [Install Pulumi](https://www.pulumi.com/docs/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Docker](https://docs.docker.com/get-docker/)
 4. [Install the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 5. [Install the LangChain CLI](https://python.langchain.com/docs/langserve#installation)

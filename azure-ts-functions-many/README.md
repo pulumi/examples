@@ -15,9 +15,9 @@ Please remove the corresponding resources from the program in case you don't nee
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
 3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
-4. [Install the .NET Core SDK](https://dotnet.microsoft.com/download) (for the .NET Function App)
+4. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/) (for the .NET Function App)
 5. [Install Apache Maven](https://maven.apache.org/) (for the Java Function App)
 
 ## Deploying the example

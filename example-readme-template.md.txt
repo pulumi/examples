@@ -46,8 +46,8 @@ It creates:
 <!-- An ordered list of what to install/configure before deploying. -->
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure your cloud credentials](https://www.pulumi.com/docs/intro/cloud-providers/) <!-- link the specific provider setup page -->
-1. [Install the language runtime](https://www.pulumi.com/docs/intro/languages/) <!-- link the specific language page -->
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) <!-- swap for your provider: .../cloud-providers/<aws|azure|gcp|kubernetes|digitalocean>/setup/ -->
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/) <!-- swap for your language: javascript (Node.js) | python | go | dotnet (.NET) | java; omit for yaml/hcl -->
 
 ## Deploying the example
 

@@ -10,7 +10,7 @@ In addition to the server itself, a database is configured.
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure Azure Credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
 3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
 
 ## Deploying the example

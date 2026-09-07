@@ -15,9 +15,9 @@ The example shows how easy it is to deploy a containerized application to Amazon
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
-1. [Install Docker](https://docs.docker.com/engine/installation/)
+1. [Install Docker](https://docs.docker.com/get-docker/)
 
 ## Deploying the example
 

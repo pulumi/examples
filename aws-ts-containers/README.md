@@ -8,9 +8,9 @@ Companion to the tutorial [Provision containers on AWS](https://www.pulumi.com/d
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
-4. [Install Docker](https://docs.docker.com/engine/installation/) and make sure it is running
+4. [Install Docker](https://docs.docker.com/get-docker/) and make sure it is running
 
 ## Deploying the example
 
