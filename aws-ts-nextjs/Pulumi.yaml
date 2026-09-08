@@ -1,2 +1,10 @@
 name: aws-ts-nextjs
 runtime: nodejs
+description: A Next.js site deployed on AWS using OpenNext
+
+template:
+  description: A Next.js site deployed on AWS using OpenNext
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2

@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-fargate/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-fargate/README.md#gh-dark-mode-only)
 
-# Dockerized ASP.NET App on AWS ECS Fargate
+# Dockerized ASP.NET app on AWS ECS Fargate
 
 This example defines a [basic ASP.NET application](./App) and
 [all of the infrastructure required to run it in AWS](./Infra) in C#.
@@ -20,35 +20,31 @@ infrastructure. [`./Infra/Program.cs`](./Infra/Program.cs) defines the project's
 
 ## Prerequisites
 
-* [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-* [Configure Pulumi to Use AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
-* [Install .NET Core 3](https://dotnet.microsoft.com/download)
-* [Install Docker](https://docs.docker.com/install/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
+4. [Install Docker](https://docs.docker.com/get-docker/)
 
-## Running the Example
+## Deploying the example
 
-Clone this repo and `cd` into it.
-
-Next, to deploy the application and its infrastructure, follow these steps:
-
-1. Create a new stack, which is an isolated deployment target for this example:
+1.  Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
-2. Set your desired AWS region:
+1.  Set the AWS region to deploy into:
 
     ```bash
-    $ pulumi config set aws:region us-east-1 # any valid AWS region will work
+    pulumi config set aws:region us-east-1
     ```
 
-3. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
-   includes all of the required AWS resources (clusters, services, and the like). Don't worry if it's more than
-   you expected -- this is one of the benefits of Pulumi, it configures everything so that so you don't need to!
+1.  Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
+    includes all of the required AWS resources (clusters, services, and the like). Don't worry if it's more than
+    you expected -- this is one of the benefits of Pulumi, it configures everything so that so you don't need to!
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
 
     After being prompted and selecting "yes", your deployment will begin. It'll complete in a few minutes:
@@ -79,47 +75,58 @@ Next, to deploy the application and its infrastructure, follow these steps:
     Permalink: https://app.pulumi.com/acmecorp/aws-cs-fargate/dev/updates/1
     ```
 
-   Notice that the automatically assigned load-balancer URL is printed as a stack output.
+    Notice that the automatically assigned load-balancer URL is printed as a stack output.
 
-4. At this point, your app is running -- let's curl it. The CLI makes it easy to grab the URL:
+1.  At this point, your app is running -- let's curl it. The CLI makes it easy to grab the URL:
 
     ```bash
-    $ curl $(pulumi stack output url)
+    curl $(pulumi stack output url)
+    ```
+
+    ```
     Hello World!
     ```
 
-5. Try making some changes and rerunning `pulumi up`.
+1.  Try making some changes and rerunning `pulumi up`.
 
-   If you just change the application code, and deploy the results, for example, only the Docker image
-   will be updated and rolled out. Try changing `"Hello World!"` inside of `App/Startup.cs` to `"Hello Pulumi!"`:
+    If you just change the application code, and deploy the results, for example, only the Docker image
+    will be updated and rolled out. Try changing `"Hello World!"` inside of `App/Startup.cs` to `"Hello Pulumi!"`:
 
-   ```bash
-   $ pulumi up
-   Updating (dev):
-         Type                       Name                Plan        Info
-         pulumi:pulumi:Stack        aws-cs-fargate-dev
-     +-  ├─ aws:ecs:TaskDefinition  app-task            replaced    [diff: ~containerDefinitions]
-     ~   ├─ aws:ecs:Service         app-svc             updated     [diff: ~taskDefinition]
-         └─ docker:image:Image      app-img
+    ```bash
+    pulumi up
+    ```
+
+    ```
+    Updating (dev):
+          Type                       Name                Plan        Info
+          pulumi:pulumi:Stack        aws-cs-fargate-dev
+      +-  ├─ aws:ecs:TaskDefinition  app-task            replaced    [diff: ~containerDefinitions]
+      ~   ├─ aws:ecs:Service         app-svc             updated     [diff: ~taskDefinition]
+          └─ docker:image:Image      app-img
 
     Resources:
         ~ 1 updated
         +-1 replaced
         2 changes. 9 unchanged
-   ```
+    ```
 
-   Notice that `pulumi up` redeploys just the parts of the application/infrastructure that you've edited.
+    Notice that `pulumi up` redeploys just the parts of the application/infrastructure that you've edited.
 
-   Now the endpoint will run the newly updated application code:
+    Now the endpoint will run the newly updated application code:
 
     ```bash
-    $ curl $(pulumi stack output Url)
+    curl $(pulumi stack output Url)
+    ```
+
+    ```
     Hello Pulumi!
     ```
 
-6. Once you are done, you can destroy all of the resources, and the stack:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
-    ```
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

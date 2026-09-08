@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-lambda-thumbnailer/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-lambda-thumbnailer/README.md#gh-dark-mode-only)
 
-# Video Thumbnailer Using AWS Lambda
+# Video thumbnailer using AWS Lambda
 
 A video thumbnail extractor using serverless functions. The video processing function is packaged as a Docker container.
 
@@ -9,28 +9,38 @@ Navigate to [Running Container Images in AWS Lambda](https://www.pulumi.com/blog
 
 ## Prerequisites
 
-To run this example, make sure [Docker](https://docs.docker.com/engine/installation/) is installed and running.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+1. [Install Docker](https://docs.docker.com/get-docker/) and make sure it is running
 
-## Running the App
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
+    ```bash
     pulumi stack init dev
     ```
 
 1.  Configure Pulumi to use an AWS region of your choice, for example:
 
-    ```
+    ```bash
     pulumi config set aws:region us-west-2
     ```
 
-1.  Restore NPM modules via `npm install` or `yarn install`.
+1.  Install dependencies:
+
+    ```bash
+    npm install
+    ```
 
 1.  Preview and deploy the app via `pulumi up`. The preview will take some time, as it builds a Docker container. A total of 16 resources are created.
 
+    ```bash
+    pulumi up
     ```
-    $ pulumi up
+
+    ```
     Previewing update (dev)
 
     ...
@@ -67,8 +77,11 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 1.  View the stack outputs:
 
+    ```bash
+    pulumi stack output
     ```
-    $ pulumi stack output
+
+    ```
     Current stack outputs (1):
         OUTPUT                                           VALUE
         bucketName                                       bucket-7c6b55a
@@ -76,15 +89,21 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 1.  Upload a video, embedding the timestamp in the filename:
 
+    ```bash
+    aws s3 cp ./sample/cat.mp4 s3://$(pulumi stack output bucketName)/cat_00-01.mp4
     ```
-    $ aws s3 cp ./sample/cat.mp4 s3://$(pulumi stack output bucketName)/cat_00-01.mp4
+
+    ```
     upload: sample/cat.mp4 to s3://***/cat_00-01.mp4
     ```
 
 1.  View the logs from both Lambda functions:
 
+    ```bash
+    pulumi logs -f
     ```
-    $ pulumi logs -f
+
+    ```
     Collecting logs for stack dev since 2020-12-02T08:58:43.000+01:00.
 
     2020-12-02T09:58:39.747+01:00[           thumbnailer-dbb2a35] START RequestId: 3ec2886e-e739-4764-be3b-a8e5a48a4986 Version: $LATEST
@@ -106,17 +125,25 @@ To run this example, make sure [Docker](https://docs.docker.com/engine/installat
 
 1.  Download the key frame:
 
+    ```bash
+    aws s3 cp s3://$(pulumi stack output bucketName)/cat.jpg .
     ```
-    $ aws s3 cp s3://$(pulumi stack output bucketName)/cat.jpg .
+
+    ```
     download: s3://***/cat.jpg to ./cat.jpg
     ```
 
-## Clean up
+## Cleaning up
 
-To clean up the resources, you will first need to clear the contents of the bucket.
+To clean up the resources, you will first need to clear the contents of the bucket:
 
 ```bash
 aws s3 rm s3://$(pulumi stack output bucketName) --recursive
 ```
 
-Then, run `pulumi destroy` and answer the confirmation question at the prompt.
+Then destroy the resources and remove the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

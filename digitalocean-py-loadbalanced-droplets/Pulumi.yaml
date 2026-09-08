@@ -4,3 +4,8 @@ runtime:
   options:
     virtualenv: venv
 description: Basic example of load balanced droplets on DigitalOcean in Python
+template:
+  config:
+    digitalocean:token:
+      description: The DigitalOcean personal access token to use for provisioning
+      secret: true

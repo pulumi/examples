@@ -1,3 +1,13 @@
 name: pulumi-azure-keyvault
 runtime: nodejs
 description: Minimal config which shows how Azure encryption support works
+template:
+  config:
+    azure:location:
+      description: The Azure region to deploy into
+      default: westus
+    bucketName:
+      description: The name of the storage account to create
+    secretValue:
+      description: The secret value to store
+      secret: true

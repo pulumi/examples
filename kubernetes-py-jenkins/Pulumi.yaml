@@ -6,6 +6,9 @@ runtime:
     virtualenv: venv
 template:
   config:
+    isMinikube:
+      description: Whether you are deploying to minikube
+      default: false
     username:
       description: Your desired username for the Jenkins instance
     password:

@@ -7,37 +7,40 @@ An example of deploying a custom Docker image into Google Cloud Run service usin
 
 ## Prerequisites
 
-1. [Ensure you have the latest Node.js and NPM](https://nodejs.org/en/download/)
-2. [Install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
-3. [Configure Pulumi to access your GCP account](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
-4. [Install Docker](https://docs.docker.com/install/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+4. [Install Docker](https://docs.docker.com/get-docker/)
 5. Enable Docker to deploy to Google Container Registry with `gcloud auth configure-docker`
 
-## Running the App
+## Deploying the example
 
-1.  Restore NPM dependencies:
+1.  Create a new stack:
 
-    ```
-    $ npm install
-    ```
-
-2.  Create a new stack:
-
-    ```
-    $ pulumi stack init dev
+    ```bash
+    pulumi stack init dev
     ```
 
-3.  Configure your GCP project and region:
+2.  Configure your GCP project and region:
+
+    ```bash
+    pulumi config set gcp:project <projectname>
+    pulumi config set gcp:region <region>
+    ```
+
+3.  Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+4.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi config set gcp:project <projectname>
-    $ pulumi config set gcp:region <region>
-    ```
-
-4.  Run `pulumi up` to preview and deploy changes:
-
-    ```
-    $ pulumi up
     Previewing update (dev):
     ...
 
@@ -63,16 +66,19 @@ An example of deploying a custom Docker image into Google Cloud Run service usin
 
 5.  Check the deployed Cloud Run endpoint:
 
+    ```bash
+    curl "$(pulumi stack output rubyUrl)"
     ```
-    $ curl "$(pulumi stack output rubyUrl)"
+
+    ```
     Hello Pulumi!
     ```
 
-6. Clean up your GCP and Pulumi resources:
+## Cleaning up
 
-    ```
-    $ pulumi destroy
-    ...
-    $ pulumi stack rm dev
-    ...
-    ```
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

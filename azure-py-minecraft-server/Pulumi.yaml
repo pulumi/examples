@@ -6,11 +6,18 @@ runtime:
 description: Basic example of an Azure web server accessible over HTTP
 template:
   config:
-    location:
-      description: The Azure location to deploy to
+    azure-native:location:
+      description: The Azure location to deploy into
       default: westus
-    username:
-      description: The username used to configure the Virtual Machine
-    password:
-      description: The password used to configure the Virtual Machine
+    admin_username:
+      description: The admin username for the virtual machine
+    admin_password:
+      description: The admin password for the virtual machine
       secret: true
+    publicKey:
+      description: The OpenSSH public key to configure on the virtual machine
+    privateKey:
+      description: The OpenSSH private key used to configure the server over SSH
+      secret: true
+    keyName:
+      description: An optional name for the SSH key

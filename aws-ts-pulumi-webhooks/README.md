@@ -1,25 +1,19 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-pulumi-webhooks/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-pulumi-webhooks/README.md#gh-dark-mode-only)
 
-# Pulumi Webhook Handler
+# Pulumi webhook handler
 
 This example creates a Pulumi `cloud.HttpEndpoint` that will receive webhook events delivered
 by Pulumi Cloud. It then echos the event to Slack.
 
 ## Prerequisites
+
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
     - [Create an Organization](https://www.pulumi.com/docs/intro/console/organizations/)
-2. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-## Steps
-
-After cloning this repo, run these commands from the working directory:
-
-1. Install prerequisites:
-
-    ```bash
-    npm install
-    ```
+## Deploying the example
 
 1. Create a new Pulumi stack, which is an isolated deployment target for this example:
 
@@ -57,6 +51,12 @@ After cloning this repo, run these commands from the working directory:
     pulumi config set sharedSecret --secret <your-secret>
     ```
 
+1. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
 1. Execute the Pulumi program:
 
     ```bash
@@ -75,16 +75,18 @@ After cloning this repo, run these commands from the working directory:
 
 1. From there, feel free to experiment. Simply making edits and running `pulumi up` will update your program.
 
-1. Afterwards, destroy your stack and remove it:
+## Cleaning up
 
-	```bash
-	pulumi destroy --yes
-	pulumi stack rm --yes
-	```
+Once you're finished, destroy your stack and remove it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```
 
 ## Troubleshooting
 
-### Message Delivery
+### Message delivery
 
 If you aren't seeing webhook deliveries in Slack, there are several places to look for more information.
 

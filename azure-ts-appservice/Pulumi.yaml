@@ -1,3 +1,11 @@
 name: azure-ts-appservice
 runtime: nodejs
 description: Creates Azure App Service with SQL Database and Application Insights
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy resources into
+      default: westus2
+    sqlPassword:
+      description: The administrator password for the Azure SQL Database
+      secret: true

@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-s3-folder-component/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-s3-folder-component/README.md#gh-dark-mode-only)
 
-# Static Website on Amazon S3 Using a Reusable Component
+# Static website on Amazon S3 using a reusable component
 
 The component version of [aws-ts-s3-folder](../aws-ts-s3-folder/). This example wraps the same S3 static website in a reusable [`ComponentResource`](https://www.pulumi.com/docs/iac/concepts/resources/components/) that you can share with your team or the community.
 
@@ -15,37 +15,40 @@ The program in [`index.ts`](./index.ts) then uses `S3Folder` like any other reso
 
 ## Prerequisites
 
-1. [Install Pulumi](https://www.pulumi.com/docs/install/)
-1. [Configure Pulumi to access your AWS account](https://www.pulumi.com/registry/packages/aws/installation-configuration/)
-1. [Install Node.js](https://nodejs.org/en/download/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-## Deploying and running the program
+## Deploying the example
 
 Note: some values in this example will be different from run to run. These values are indicated with `***`.
 
 1.  Create a new stack:
 
     ```bash
-    $ pulumi stack init website-component-testing
+    pulumi stack init website-component-testing
     ```
 
 1.  Set the AWS region:
 
     ```bash
-    $ pulumi config set aws:region us-west-2
+    pulumi config set aws:region us-west-2
     ```
 
-1.  Restore NPM dependencies:
+1.  Install dependencies:
 
     ```bash
-    $ npm install
+    npm install
     ```
 
 1.  Run `pulumi up` to preview and deploy changes. After the preview is shown you will be
     prompted if you want to continue or not.
 
     ```bash
-    $ pulumi up
+    pulumi up
+    ```
+
+    ```
     Previewing update (website-component-testing)
 
          Type                            Name                                                  Plan
@@ -69,7 +72,10 @@ Note: some values in this example will be different from run to run. These value
 1.  To see the resources that were created, run `pulumi stack output`:
 
     ```bash
-    $ pulumi stack output
+    pulumi stack output
+    ```
+
+    ```
     Current stack outputs (2):
         OUTPUT      VALUE
         bucketName  pulumi-static-site-***
@@ -79,7 +85,10 @@ Note: some values in this example will be different from run to run. These value
 1.  To see that the S3 objects exist, you can either use the AWS Console or the AWS CLI:
 
     ```bash
-    $ aws s3 ls $(pulumi stack output bucketName)
+    aws s3 ls $(pulumi stack output bucketName)
+    ```
+
+    ```
     2024-04-20 22:52:15      13731 favicon.png
     2024-04-20 22:52:15        249 index.html
     ```
@@ -87,13 +96,21 @@ Note: some values in this example will be different from run to run. These value
 1.  Open the site URL in a browser to see both the rendered HTML and the favicon:
 
     ```bash
-    $ pulumi stack output websiteUrl
+    pulumi stack output websiteUrl
+    ```
+
+    ```
     pulumi-static-site-***.s3-website-us-west-2.amazonaws.com
     ```
 
-## Clean up
+## Cleaning up
 
-To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt, then remove the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```
 
 ## Summary
 

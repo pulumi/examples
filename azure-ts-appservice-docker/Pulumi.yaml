@@ -1,3 +1,8 @@
 name: azure-ts-appservice-docker
 runtime: nodejs
 description: Creates Azure App Service and Deploys Docker images to
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy resources into
+      default: westus2

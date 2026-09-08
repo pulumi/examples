@@ -1,13 +1,19 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-apigateway-auth0/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-apigateway-auth0/README.md#gh-dark-mode-only)
 
-# Secure Serverless REST API Using Auth0
+# Secure serverless REST API using Auth0
 
 A simple REST API that is protected by a custom AWS Lambda Authorizer. The Authorizer uses [Auth0](https://auth0.com/) to authorize requests.
 
 This example is similar to Auth0's tutorial: [Secure AWS API Gateway Endpoints Using Custom Authorizers](https://auth0.com/docs/integrations/aws-api-gateway/custom-authorizers), but uses Pulumi to create the Serverless app and Custom Authorizer.
 
-## Set Up Auth0
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Setting up Auth0
 
 You can follow the steps below or alternatively you can follow [Auth0's Part 1: Create an Auth0 API](https://auth0.com/docs/integrations/aws-api-gateway/custom-authorizers/part-1).
 
@@ -23,7 +29,7 @@ You can follow the steps below or alternatively you can follow [Auth0's Part 1: 
 
 1. Under the `Quick Start` tab, the Node.js example will show you the values for `jwksUri`, `audience` and `issuer` you will need in the next section.
 
-## Deploying and Running the Program
+## Deploying the example
 
 1. Create a new stack:
 
@@ -31,15 +37,13 @@ You can follow the steps below or alternatively you can follow [Auth0's Part 1: 
     pulumi stack init auth0-api-testing
     ```
 
-1. Set the AWS region:
+1. Set the AWS region to deploy into:
 
     ```bash
     pulumi config set aws:region us-east-2
     ```
 
-1. Set up the Auth0 configuration values as secrets in Pulumi:
-
-    Run the following commands after replacing `<jwksUri>`, `<audience>` and `<issuer>` with the appropriate values.
+1. Set up the Auth0 configuration values as secrets in Pulumi. Run the following commands after replacing `<jwksUri>`, `<audience>` and `<issuer>` with the appropriate values.
 
     ```bash
     pulumi config set --secret jwksUri <jwksUri>
@@ -47,12 +51,19 @@ You can follow the steps below or alternatively you can follow [Auth0's Part 1: 
     pulumi config set --secret issuer <issuer>
     ```
 
-1. Restore NPM modules via `npm install` or `yarn install`.
+1. Install dependencies:
 
-1. Run `pulumi up` to preview and deploy changes:
+    ```bash
+    npm install
+    ```
 
-```bash
-$ pulumi up
+1. Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+```
 Previewing update (dev):
 
 ...
@@ -84,30 +95,39 @@ Resources:
 Duration: 18s
 ```
 
-## Testing Our API
+## Testing our API
 
 We can now use cURL to test out our new endpoint. If we cURL without a token, we should get a 401 Unauthorized response.
 
 ```bash
-$ curl $(pulumi stack output url)hello
+curl $(pulumi stack output url)hello
+```
+
+```
 {"message":"Unauthorized"}
 ```
 
 We can curl our endpoint with an invalid token and should once again get a 401 Unauthorized response.
 
 ```bash
-$ curl $(pulumi stack output url)hello -H "Authorization: Bearer invalid"
+curl $(pulumi stack output url)hello -H "Authorization: Bearer invalid"
+```
+
+```
 {"message":"Unauthorized"}
 ```
 
 Finally, we expect a 200 response when we obtain a token from Auth0 and use it to call our API. We can get a token by visiting the API Details page for our API and clicking the Test tab. Using the provided access token and the API a 200 response: Hello world!
 
 ```bash
-$ curl $(pulumi stack output url)hello -H "Authorization: Bearer <VALID_TOKEN>"
+curl $(pulumi stack output url)hello -H "Authorization: Bearer <VALID_TOKEN>"
+```
+
+```
 <h1>Hello world!</h1>
 ```
 
-## Clean up
+## Cleaning up
 
 1. Run `pulumi destroy` to tear down all resources.
 

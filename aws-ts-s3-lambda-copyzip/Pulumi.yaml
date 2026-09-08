@@ -1,3 +1,8 @@
 name: slss-tps
 runtime: nodejs
 description: Copy and zip TPS reports, using AWS Lambda, from one S3 Bucket to another.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1

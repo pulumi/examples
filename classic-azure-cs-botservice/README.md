@@ -5,59 +5,56 @@
 
 Starting point for building Azure Bot Service hosted in Azure App Service.
 
-Provisions Azure Bot Service, Azure Bot Channel registration and Azure Application Insights to be used in combination
-with App Service - registering Azure AD Microsoft Application with secret.
+Provisions Azure Bot Service, Azure Bot Channel registration and Azure Application Insights to be used in combination with App Service - registering Azure AD Microsoft Application with secret.
 
-This will deploy the echo bot code within the ~/bot directory - you can tweak the contents or replace the contents with your own bot.  Please ensure you publish the bot first to the ~/bot/publish subfolder - following the instructions for `Publish Bot Steps`.
+This will deploy the echo bot code within the `~/bot` directory - you can tweak the contents or replace the contents with your own bot. Please ensure you publish the bot first to the `~/bot/publish` subfolder, following the instructions in the "Publish the bot" step below.
 
-## Deploying the App
+## Prerequisites
 
-To deploy your infrastructure, follow the below steps.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
 
-### Prerequisites
+## Deploying the example
 
-* [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-* [Install .NET Core 3.0+](https://dotnet.microsoft.com/download)
-
-### Publish Bot Steps
-
-1. Within the **/bot** subfolder, publish the bot to subfolder called publish:
+1. Publish the bot. Within the `bot` subfolder, publish the bot to a subfolder called `publish`:
 
     ```bash
     dotnet publish -o publish
     ```
 
-### Pulumi Steps
-
-1. Within the **azure-cs-botservice** folder, create a new stack:
+1. Within the `classic-azure-cs-botservice` folder, create a new stack:
 
     ```bash
     pulumi stack init dev
     ```
 
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
     az login
     ```
 
-1. Configure the location to deploy the resources to:
+1. Configure the location to deploy the resources to and the Azure subscription:
 
     ```bash
     pulumi config set azure:location "North Europe"
     pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
-1. Configure the Bot Name:
+1. Configure the bot name:
 
     ```bash
     pulumi config set botName PulumiBot1
     ```
 
-1. Run `pulumi up` to preview and deploy changes:
+1. Deploy the stack:
 
-    ```console
-    $ pulumi up
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing changes:
     ...
 
@@ -79,9 +76,11 @@ To deploy your infrastructure, follow the below steps.
         MicrosoftAppPassword: "<secret>"
         ```
 
-1. Once you've finished, you can tear down your stack's resources by destroying and removing it:
+## Cleaning up
 
-    ```bash
-    pulumi destroy -y
-    pulumi stack rm -y
-    ```
+Once you're finished, tear down your stack's resources by destroying and removing it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

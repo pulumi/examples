@@ -1,3 +1,10 @@
 name: gcp-py-functions
 description: "A minimal C# Pulumi program using Google Cloud Functions."
 runtime: dotnet
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:region:
+      description: The Google Cloud region to deploy into
+      default: us-central1

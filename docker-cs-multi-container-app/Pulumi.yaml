@@ -2,3 +2,5 @@ name: docker-cs-multi-container-app
 runtime: dotnet
 description: Example python app using multiple docker containers
 main: Infra
+template:
+  description: Runs a Redis container and an application container locally with Docker

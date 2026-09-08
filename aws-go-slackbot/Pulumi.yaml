@@ -1,3 +1,14 @@
 name: aws-go-slackbot
 runtime: go
 description: Example application for building a slack bot with Pulumi and Go
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2
+    mentionbot:slackToken:
+      description: The Slack bot user OAuth token
+      secret: true
+    mentionbot:verificationToken:
+      description: The Slack app verification token
+      secret: true

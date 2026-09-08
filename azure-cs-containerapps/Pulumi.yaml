@@ -1,4 +1,9 @@
 name: azure-cs-containerapps
 runtime: dotnet
 description: Creates an Azure Container App and deploys a custom Docker image to it
+template:
+  config:
+    azure-native:location:
+      description: The Azure region to deploy into
+      default: westus2
 

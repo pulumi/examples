@@ -4,3 +4,21 @@ runtime:
   options:
     virtualenv: venv
 description: Deploys WordPress in ECS Fargate with RDS backend.
+template:
+  description: A WordPress site running in AWS ECS Fargate with an RDS MySQL backend
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    service_name:
+      description: Prefix used for resources created by the program
+      default: wp-example
+    db_name:
+      description: The name of the MySQL database created in RDS
+      default: lampdb
+    db_user:
+      description: The user created with access to the MySQL database
+      default: admin
+    db_password:
+      description: The password for the database user; a random one is generated if not set
+      secret: true

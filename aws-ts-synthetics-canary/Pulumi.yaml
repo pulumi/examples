@@ -1,3 +1,8 @@
 name: aws-synthetics-canary
 runtime: nodejs
 description: Example to deploy an AWS synthetics canary.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1

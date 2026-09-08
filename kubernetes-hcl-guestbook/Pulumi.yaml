@@ -1,3 +1,5 @@
 name: kubernetes-hcl-guestbook
 runtime: hcl
 description: The Kubernetes guestbook application, written in HCL
+template:
+  description: The Kubernetes Guestbook application, written in HCL

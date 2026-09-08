@@ -1,3 +1,31 @@
 name: openclaw-aws-typescript
 runtime: nodejs
 description: Deploy OpenClaw AI assistant to AWS with VPC, security groups, and EC2 instance using a reusable ComponentResource.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
+    anthropicApiKey:
+      description: Anthropic API key for Claude
+      secret: true
+    tailscaleAuthKey:
+      description: Tailscale auth key (reusable recommended)
+      secret: true
+    tailnetDnsName:
+      description: Your tailnet DNS name (e.g. tailXXXXX.ts.net)
+    instanceType:
+      description: The EC2 instance type
+      default: t3.medium
+    model:
+      description: The LLM model identifier
+      default: anthropic/claude-sonnet-4
+    enableSandbox:
+      description: Enable the Docker sandbox for code execution
+      default: true
+    gatewayPort:
+      description: The OpenClaw gateway port
+      default: 18789
+    browserPort:
+      description: The OpenClaw browser port
+      default: 18791

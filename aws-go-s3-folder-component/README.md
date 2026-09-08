@@ -1,36 +1,46 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-s3-folder-component/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-s3-folder-component/README.md#gh-dark-mode-only)
 
-# Static Website on Amazon S3
+# Static website on Amazon S3
 
 The component version of [aws-go-s3-folder](../aws-go-s3-folder/). For a detailed walkthrough of this example, see [Tutorial: Pulumi Components](https://www.pulumi.com/docs/tutorials/aws/s3-folder-component/).
 
-## Deploying and running the program
-
-Note: some values in this example will be different from run to run.  These values are indicated
+Note: some values in this example will be different from run to run. These values are indicated
 with `***`.
+
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
     ```bash
-    $ pulumi stack init website-component-testing
+    pulumi stack init website-component-testing
     ```
 
-1.  Set the AWS region:
-
-    ```
-    $ pulumi config set aws:region us-west-2
-    ```
-
-1.  Run `pulumi up` to preview and deploy changes.  After showing the preview you will be
-    prompted if you want to continue or not.
+1.  Set the AWS region to deploy into:
 
     ```bash
-    $ pulumi up
-    Previewing stack 'website-component-testing'
-    Previewing changes:
-    ...
+    pulumi config set aws:region us-west-2
+    ```
 
+1.  Install dependencies:
+
+    ```bash
+    go mod download
+    ```
+
+1.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Updating stack 'website-component-testing'
     Performing changes:
 
@@ -57,7 +67,10 @@ with `***`.
 1.  To see the resources that were created, run `pulumi stack output`:
 
     ```bash
-    $ pulumi stack output
+    pulumi stack output
+    ```
+
+    ```
     Current stack outputs (2):
         OUTPUT      VALUE
         bucketName  pulumi-static-site-***
@@ -67,7 +80,10 @@ with `***`.
 1.  To see that the S3 objects exist, you can either use the AWS Console or the AWS CLI:
 
     ```bash
-    $ aws s3 ls $(pulumi stack output bucketName)
+    aws s3 ls $(pulumi stack output bucketName)
+    ```
+
+    ```
     2020-04-20 22:52:15      13731 favicon.png
     2020-04-20 22:52:15        249 index.html
     ```
@@ -75,8 +91,18 @@ with `***`.
 1.  Open the site URL in a browser to see both the rendered HTML and the favicon:
 
     ```bash
-    $ pulumi stack output websiteUrl
+    pulumi stack output websiteUrl
+    ```
+
+    ```
     pulumi-static-site-***.s3-website-us-west-2.amazonaws.com
     ```
 
-1.  To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+## Cleaning up
+
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

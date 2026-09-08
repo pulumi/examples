@@ -1,4 +1,7 @@
-# AWS Landing Zone
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-landing-zone/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-landing-zone/README.md#gh-dark-mode-only)
+
+# AWS landing zone
 
 The foundational, shared resources a single AWS account needs before any workload lands on top of it. Deploy this once per account, then have every downstream Pulumi project consume its outputs (via a [StackReference](https://www.pulumi.com/docs/concepts/stack/#stackreferences)) instead of re-creating the same plumbing.
 
@@ -17,10 +20,10 @@ The companion example [`aws-ts-serverless-react-postgres`](../aws-ts-serverless-
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure your AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-## Deploying and running the program
+## Deploying the example
 
 1.  Create a new stack:
 
@@ -73,7 +76,7 @@ The companion example [`aws-ts-serverless-react-postgres`](../aws-ts-serverless-
         secretsStore            platform/
     ```
 
-## Clean up
+## Cleaning up
 
 To tear down the resources, run:
 

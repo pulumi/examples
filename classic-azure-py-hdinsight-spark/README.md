@@ -5,7 +5,13 @@
 
 An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
+
+## Deploying the example
 
 1. Create a new stack:
 
@@ -13,7 +19,7 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
     pulumi stack init dev
     ```
 
-1. Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
+1. Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
     az login
@@ -26,17 +32,28 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
     pulumi config set azure:subscriptionId <YOUR_SUBSCRIPTION_ID>
     ```
 
-1. Define Spark username and password (make it complex enough to satisfy Azure policy):
+1. Define the Spark username and password (make it complex enough to satisfy Azure policy):
 
     ```bash
     pulumi config set username <value>
     pulumi config set --secret password <value>
     ```
 
+1. Install dependencies:
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
 1. Run `pulumi up` to preview and deploy changes:
 
-    ``` console
-    $ pulumi up
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing changes:
     ...
 
@@ -49,10 +66,22 @@ An example Pulumi component that deploys a Spark cluster on Azure HDInsight.
 
 1. Check the deployed Spark endpoint:
 
-    ```console
-    $ pulumi stack output endpoint
-    https://myspark1234abcd.azurehdinsight.net/
-
-    # For instance, Jupyter notebooks are available at https://myspark1234abcd.azurehdinsight.net/jupyter/
-    # Follow https://docs.microsoft.com/en-us/azure/hdinsight/spark/apache-spark-load-data-run-query to test it out
+    ```bash
+    pulumi stack output endpoint
     ```
+
+    ```
+    https://myspark1234abcd.azurehdinsight.net/
+    ```
+
+    For instance, Jupyter notebooks are available at `https://myspark1234abcd.azurehdinsight.net/jupyter/`.
+    Follow <https://docs.microsoft.com/en-us/azure/hdinsight/spark/apache-spark-load-data-run-query> to test it out.
+
+## Cleaning up
+
+Once you are done, destroy the stack and remove it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

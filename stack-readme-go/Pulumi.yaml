@@ -1,3 +1,5 @@
 name: stack-readme-go
 runtime: go
 description: A minimal Stack Readme Go Example program
+template:
+  description: A minimal Go Pulumi program demonstrating Stack READMEs

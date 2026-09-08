@@ -1,3 +1,6 @@
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-serverless-react-postgres/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-serverless-react-postgres/README.md#gh-dark-mode-only)
+
 # Serverless React + Postgres
 
 A full-stack serverless web app on AWS: a React single-page app served from S3 through CloudFront, a Lambda API behind the *same* CloudFront origin (so the browser never sees CORS), and a private [Aurora Serverless v2](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.html) PostgreSQL database that only the function can reach.
@@ -12,11 +15,11 @@ The app runs on top of the [`aws-ts-landing-zone`](../aws-ts-landing-zone) examp
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure your AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/) 20 or newer
 1. A deployed [`aws-ts-landing-zone`](../aws-ts-landing-zone) stack in the same account and region
 
-## Deploying and running the program
+## Deploying the example
 
 1.  Build the React SPA:
 
@@ -79,7 +82,7 @@ The app runs on top of the [`aws-ts-landing-zone`](../aws-ts-landing-zone) examp
 - `api/` - Node 20 TypeScript handler, bundled to `api/dist/handler.js` with esbuild.
 - `index.ts` - reads the landing-zone outputs, then instantiates the `Database` and `Edge` components.
 
-## Clean up
+## Cleaning up
 
 To tear down the resources, run:
 

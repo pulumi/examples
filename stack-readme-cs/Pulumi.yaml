@@ -1,3 +1,5 @@
 name: stack-readme-cs
 runtime: dotnet
 description: A minimal C# Pulumi program demonstrating Stack Readme's
+template:
+  description: A minimal C# Pulumi program demonstrating Stack READMEs

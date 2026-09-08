@@ -1,6 +1,14 @@
 name: azure-app-service
 runtime: yaml
-description: A static website hosted on AWS S3
+description: A web app running on Azure App Service
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: centralus
+    sqlAdmin:
+      description: The administrator username for the SQL server
+      default: pulumi
 config:
   sqlAdmin:
     type: string

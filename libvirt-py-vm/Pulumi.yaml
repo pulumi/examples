@@ -4,3 +4,11 @@ runtime:
   options:
     virtualenv: venv
 description: Uses libvirt to deploy a KVM VM on an Azure-hosted KVM server.
+template:
+  config:
+    azure-native:location:
+      description: The Azure region to deploy into
+      default: westus
+    basename:
+      description: The base name used when naming resources
+      default: libvirt-ex

@@ -1,3 +1,20 @@
 name: azure-ts-vm-provisioners
 runtime: nodejs
 description: An example of an Azure VM webserver instance with post-provision configuration.
+template:
+  config:
+    azure:location:
+      description: The Azure location to deploy to (e.g., `westus` or `westeurope`)
+      default: westus
+    azure:subscriptionId:
+      description: The Azure Subscription to deploy into
+    username:
+      description: The username used to configure the Virtual Machine
+    password:
+      description: The password used to configure the Virtual Machine
+      secret: true
+    publicKey:
+      description: The OpenSSH public key used to access the Virtual Machine
+    privateKey:
+      description: The OpenSSH private key used for subsequent SCP and SSH steps
+      secret: true

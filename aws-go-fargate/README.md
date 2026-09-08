@@ -10,34 +10,37 @@ This example is inspired by [Docker's Getting Started Tutorial](https://docs.doc
 
 ## Prerequisites
 
-* [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-* [Configure Pulumi to Use AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
-* [Install Go](https://golang.org/doc/install)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
+4. [Install Docker](https://docs.docker.com/get-docker/)
 
-## Running the Example
-
-Clone this repo and `cd` into it.
-
-Next, to deploy the application and its infrastructure, follow these steps:
+## Deploying the example
 
 1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
-2. Set your desired AWS region:
+1. Set the AWS region to deploy into:
 
     ```bash
-    $ pulumi config set aws:region us-east-1 # any valid AWS region will work
+    pulumi config set aws:region us-east-1 # any valid AWS region will work
     ```
 
-5. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
+1. Install dependencies:
+
+    ```bash
+    go mod download
+    ```
+
+1. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
    includes all of the required AWS resources (clusters, services, and the like). Don't worry if it's more than
    you expected -- this is one of the benefits of Pulumi, it configures everything so that so you don't need to!
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
 
     After being prompted and selecting "yes", your deployment will begin. It'll complete in a few minutes:
@@ -70,18 +73,17 @@ Next, to deploy the application and its infrastructure, follow these steps:
 
    Notice that the automatically assigned load-balancer URL is printed as a stack output.
 
-6. At this point, your app is running -- let's curl it. The CLI makes it easy to grab the URL:
+1. At this point, your app is running -- let's curl it. The CLI makes it easy to grab the URL:
 
     ```bash
-    $ curl http://$(pulumi stack output url)
-    42
-    $ curl http://$(pulumi stack output url)
-    19
-    $ curl http://$(pulumi stack output url)
-    88
+    curl http://$(pulumi stack output url)
     ```
 
-7. Try making some changes, rebuilding, and rerunning `pulumi up`. For example, let's scale up to 5 instances:
+    ```
+    42
+    ```
+
+1. Try making some changes, rebuilding, and rerunning `pulumi up`. For example, let's scale up to 5 instances:
 
     ```diff
     -                       DesiredCount:   pulumi.Int(3),
@@ -91,7 +93,7 @@ Next, to deploy the application and its infrastructure, follow these steps:
     Running `pulumi up` will show you the delta and then, after confirming, will deploy just those changes:
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
 
     Notice that `pulumi up` redeploys just the parts of the application/infrastructure that you've edited.
@@ -115,9 +117,11 @@ Next, to deploy the application and its infrastructure, follow these steps:
     Permalink: https://app.pulumi.com/acmecorp/aws-go-fargate/dev/updates/2
     ```
 
-8. Once you are done, you can destroy all of the resources, and the stack:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
-    ```
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

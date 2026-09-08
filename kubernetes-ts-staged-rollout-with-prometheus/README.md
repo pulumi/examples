@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-staged-rollout-with-prometheus/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-staged-rollout-with-prometheus/README.md#gh-dark-mode-only)
 
-# Staged App Rollout Gated by Prometheus Checks
+# Staged app rollout gated by Prometheus checks
 
 Demonstrates how to create a staged rollout (from 3-replica canary -> 10-replica staging), gated by
 checking that the P90 response time reported by Prometheus is less than some amount. We first deploy
@@ -44,22 +44,24 @@ can see `canary-example-app` and `canary-staging-app` created.
 
 ![gatedDeployment](images/gatedDeployment.gif "Deployment gated by Prometheus check")
 
-## Running the App
+## Prerequisites
 
-1. If you haven't already, follow the steps in [Pulumi Installation and Setup][install] and
-   [Configuring Pulumi Kubernetes][configuration] to get setup with Pulumi and Kubernetes.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-1. Now, install dependencies:
+## Deploying the example
 
-   ```sh
+1. Install dependencies:
+
+   ```bash
    npm install
    ```
 
 1. Create a new stack:
 
-   ```sh
-   $ pulumi stack init
-   Enter a stack name: staged-rollout
+   ```bash
+   pulumi stack init staged-rollout
    ```
 
 1. **IMPORTANT NOTE:** The code in `index.ts` is meant to be run out-of-cluster (_e.g._, on your
@@ -67,10 +69,15 @@ can see `canary-example-app` and `canary-staging-app` created.
    service is forwarded to your local machine, which allows this program to poll for metrics. **If
    you are running Pulumi in-cluster, you can comment out this part of the example.**
 
-1. Perform the deployment:
+1. Deploy the stack:
 
-   ```sh
-   $ pulumi up
+   ```bash
+   pulumi up
+   ```
+
+   The update looks something like this:
+
+   ```
    Updating stack 'staged-rollout'
    Performing changes:
 
@@ -122,7 +129,14 @@ can see `canary-example-app` and `canary-staging-app` created.
    that was computed by the promise is `export`ed, which causes Pulumi to report its value just
    before it terminates.
 
-[install]: https://www.pulumi.com/docs/get-started/install/
-[configuration]: https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/
+## Cleaning up
+
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```
+
 [p8s]: https://prometheus.io/
 [helm]: https://www.helm.sh/

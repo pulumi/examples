@@ -1,25 +1,29 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-twitter-athena/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-twitter-athena/README.md#gh-dark-mode-only)
 
-# Twitter Search in Athena
+# Twitter search in Athena
 
 A sample project that queries Twitter every 2 minutes and stores the results in S3. The project also sets up an Athena table and query. This project demonstrates using `aws.cloudwatch.EventRule` to run a Lambda on an interval.
 
-## Setup
+Before deploying, register a new [Twitter app](https://apps.twitter.com/) so you have the consumer and access keys used below.
 
-Register a new [Twitter app](https://apps.twitter.com/).
+## Prerequisites
 
-## Deploy and run the program
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
+    ```bash
     pulumi stack init twitter-athena
     ```
 
 1.  In Twitter, get the keys for your application. Set configuration values for your Twitter consumer key/secret and application key/secret. Use the `--secret` flag to securely encrypt secret values.
 
-    ```
+    ```bash
     pulumi config set twitterAccessTokenKey <Value for Consumer Key (API Key)>
     pulumi config set --secret twitterAccessTokenSecret <Value for Consumer Secret (API Secret)>
     pulumi config set twitterConsumerKey <Value for Access Token>
@@ -28,24 +32,35 @@ Register a new [Twitter app](https://apps.twitter.com/).
 
 1.  Set a search term to query for:
 
-    ```
+    ```bash
     pulumi config set twitterQuery "Amazon Web Services"
     ```
 
-1.  Set the AWS region:
+1.  Set the AWS region to deploy into:
 
     ```bash
     pulumi config set aws:region us-west-2
     ```
 
-1.  Restore NPM modules via `npm install`.
+1.  Install dependencies:
 
-1.  Preview and run the deployment via `pulumi up`. A total of 16 resources are created.
+    ```bash
+    npm install
+    ```
 
-1.  Run `pulumi stack output` to view output properties (or view the stack on pulumi.com).
+1.  Preview and deploy the app. A total of 16 resources are created.
+
+    ```bash
+    pulumi up
+    ```
+
+1.  View the stack outputs:
+
+    ```bash
+    pulumi stack output
+    ```
 
     ```
-    $ pulumi stack output
     Please choose a stack: aws-serverless-js-twitter-dev
     Current stack outputs (4):
         OUTPUT                                           VALUE
@@ -61,6 +76,11 @@ Register a new [Twitter app](https://apps.twitter.com/).
 
     ![Athena console](athena-screenshot.png)
 
-## Clean up
+## Cleaning up
 
-To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+To clean up resources, destroy your stack and remove it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

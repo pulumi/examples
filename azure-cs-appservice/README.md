@@ -8,45 +8,45 @@ Starting point for building web application hosted in Azure App Service.
 Provisions Azure SQL Database and Azure Application Insights to be used in combination
 with App Service.
 
-## Deploying the App
-
-To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Install .NET Core 3.0+](https://dotnet.microsoft.com/download)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
 
-### Steps
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
-    $ pulumi stack init dev
+    ```bash
+    pulumi stack init dev
     ```
 
 1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
-    ```
-    $ az login
+    ```bash
+    az login
     ```
 
 1.  Configure the location to deploy the resources to:
 
-    ```
-    $ pulumi config set azure-native:location centralus
+    ```bash
+    pulumi config set azure-native:location centralus
     ```
 
-1. Define SQL Server password (make it complex enough to satisfy Azure policy):
+1.  Define the SQL Server password (make it complex enough to satisfy Azure policy):
 
-    ```
+    ```bash
     pulumi config set --secret sqlPassword <value>
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
+    ```bash
+    pulumi up
     ```
-    $ pulumi up
+
+    ```
     Previewing changes:
     ...
 
@@ -59,10 +59,13 @@ To deploy your infrastructure, follow the below steps.
 
 1.  Check the deployed website endpoint:
 
+    ```bash
+    pulumi stack output Endpoint
+    curl "$(pulumi stack output Endpoint)"
     ```
-    $ pulumi stack output Endpoint
+
+    ```
     https://azpulumi-as0ef47193.azurewebsites.net
-    $ curl "$(pulumi stack output Endpoint)"
     <html>
         <body>
             <h1>Greetings from Azure App Service (courtesy of Pulumi)!</h1>
@@ -70,11 +73,13 @@ To deploy your infrastructure, follow the below steps.
     </html>
     ```
 
-6. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
+1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your stack.
 
-7. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
-    ```
+Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

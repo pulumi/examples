@@ -1,28 +1,24 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-gke-serviceaccount/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-gke-serviceaccount/README.md#gh-dark-mode-only)
 
-# Google Kubernetes Engine (GKE) Cluster with Service Account
+# Google Kubernetes Engine (GKE) cluster with service account
 
-This example deploys an Google Cloud Platform (GCP) [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) cluster, and deploys an example application that consumes a PubSub topic. The cluster has a secret which contains [Google Cloud Service Account Credentials](https://cloud.google.com/iam/docs/service-accounts)
+This example deploys an Google Cloud Platform (GCP) [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) cluster, and deploys an example application that consumes a PubSub topic. The cluster has a secret which contains [Google Cloud Service Account Credentials](https://cloud.google.com/iam/docs/service-accounts).
 
-## Deploying the App
-
-To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Install Node.js](https://nodejs.org/en/download/)
-1. Install a package manager for Node.js, such as [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/en/docs/install).
+1. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 1. [Install Google Cloud SDK (`gcloud`)](https://cloud.google.com/sdk/docs/downloads-interactive)
 1. Configure GCP Auth
 
     * Login using `gcloud`
 
         ```bash
-        $ gcloud auth login
-        $ gcloud config set project <YOUR_GCP_PROJECT_HERE>
-        $ gcloud auth application-default login
+        gcloud auth login
+        gcloud config set project <YOUR_GCP_PROJECT_HERE>
+        gcloud auth application-default login
         ```
     > Note: This auth mechanism is meant for inner loop developer
     > workflows. If you want to run this example in an unattended service
@@ -30,40 +26,34 @@ To deploy your infrastructure, follow the below steps.
     > configure your service account](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/). The
     > service account must have the role `Kubernetes Engine Admin` / `container.admin`.
 
-### Steps
+## Deploying the example
 
 After cloning this repo, from this working directory, run these commands:
 
 1. Install the required Node.js packages:
 
-    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
-
     ```bash
-    $ npm install
+    npm install
     ```
 
 1. Create a new Pulumi stack, which is an isolated deployment target for this example:
 
-    This will initialize the Pulumi program in TypeScript.
-
     ```bash
-    $ pulumi stack init
+    pulumi stack init
     ```
 
 1. Set the required GCP configuration variables:
 
-    This sets configuration options and default values for our cluster.
-
     ```bash
-    $ pulumi config set gcp:project <YOUR_GCP_PROJECT_HERE>
-    $ pulumi config set gcp:zone us-west1-a     // any valid GCP Zone here
+    pulumi config set gcp:project <YOUR_GCP_PROJECT_HERE>
+    pulumi config set gcp:zone us-west1-a     # any valid GCP Zone here
     ```
 
 1. Set some optional configuration variables (note, these values are optional and have defaults set):
 
     ```bash
-    $ pulumi config set name <NAME>
-    $ pulumi config set machineType n1-standard-1
+    pulumi config set name <NAME>
+    pulumi config set machineType n1-standard-1
     ```
 
 1. Stand up the GKE cluster:
@@ -82,7 +72,7 @@ After cloning this repo, from this working directory, run these commands:
     new GKE cluster takes between 3-5 minutes.
 
     ```bash
-
+    pulumi update
     ```
 
 1. After 3-5 minutes, your cluster will be ready, and the kubeconfig YAML you'll use to connect to the cluster will
@@ -95,11 +85,11 @@ After cloning this repo, from this working directory, run these commands:
     stack output in the CLI, as Pulumi facilitates exporting these objects for us.
 
     ```bash
-    $ pulumi stack output kubeconfig --show-secrets > kubeconfig
-    $ export KUBECONFIG=$PWD/kubeconfig
-    $ kubectl version
-    $ kubectl cluster-info
-    $ kubectl get nodes
+    pulumi stack output kubeconfig --show-secrets > kubeconfig
+    export KUBECONFIG=$PWD/kubeconfig
+    kubectl version
+    kubectl cluster-info
+    kubectl get nodes
     ```
 
 1. Verify the pubsub example is working
@@ -107,13 +97,18 @@ After cloning this repo, from this working directory, run these commands:
     The pubsub deployment should be running, you can check it by examining the logs:
 
     ```bash
-    k logs -n pubsub -l appClass=pubsub
+    kubectl logs -n pubsub -l appClass=pubsub
+    ```
+
+    ```
     Pulling messages from Pub/Sub subscription...
     ```
 
-1. Once you've finished, tear down your stack's resources by destroying and removing it:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
-    ```
+Once you've finished, tear down your stack's resources by destroying and removing it:
+
+```bash
+pulumi destroy --yes
+pulumi stack rm --yes
+```

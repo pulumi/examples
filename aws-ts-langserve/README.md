@@ -1,59 +1,71 @@
-# AWS TypeScript LangServe Example
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-langserve/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-langserve/README.md#gh-dark-mode-only)
 
-This example demonstrates how to use deploy a simple app using Pulumi in TypeScript.
+# AWS TypeScript LangServe example
+
+This example demonstrates how to deploy a simple LangServe app using Pulumi in TypeScript.
 
 ## Prerequisites
 
-To run this example, you'll need the following tools installed on your machine:
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+1. [Install Docker](https://docs.docker.com/get-docker/)
+1. [Install the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+1. [Install the LangChain CLI](https://python.langchain.com/docs/langserve#installation)
 
-1. [Install Node.js](https://nodejs.org/en/download/)
-2. [Install Pulumi](https://www.pulumi.com/docs/install/)
-3. [Configure AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
-4. [Install Docker](https://docs.docker.com/get-docker/)
-5. [Install the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-6. [Install the LangChain CLI](https://python.langchain.com/docs/langserve#installation)
+## Deploying the example
 
-## Deploying to AWS using Pulumi
+1.  Create a new stack:
 
-Set the region with the following command:
+    ```bash
+    pulumi stack init dev
+    ```
 
-```bash
-pulumi config set aws:region <region>
-```
+1.  Set the AWS region to deploy into:
 
-Run the following command to deploy your LangServe app to AWS:
+    ```bash
+    pulumi config set aws:region us-west-2
+    ```
 
-```bash
-git clone https://github.com/pulumi/examples.git
-cd examples/aws-ts-langserve
-pulumi stack init <your-stack-name>
-pulumi config set open-api-key --secret # Enter your OpenAI API key
-pulumi up
-```
+1.  Set your OpenAI API key:
 
-This last command will show you a preview of the resources that will be created. After reviewing the changes, you will be prompted to continue. Once confirmed, Pulumi will deploy your LangServe app to AWS.
+    ```bash
+    pulumi config set open-api-key --secret # Enter your OpenAI API key
+    ```
 
-The whole deployoment process will take a couple of minutes. Once it's done, you will see the URL of your LangServe app in the output.
+1.  Install dependencies:
 
-```bash
-Outputs:
-    url: "http://<dns>.elb.amazonaws.com"
+    ```bash
+    npm install
+    ```
 
-Resources:
-    + 27 created
-```
+1.  Deploy the stack. This will show you a preview of the resources that will be created. After reviewing the changes, you will be prompted to continue.
 
-You can now access the LangServe playground by adding `/openai/playground` to the URL you got from the output.
+    ```bash
+    pulumi up
+    ```
 
-> [!NOTE]  
-> It may take a few minutes for the load balancer to be ready to accept requests. If you see a 503 error, wait a few minutes and try again.
+    The whole deployment process will take a couple of minutes. Once it's done, you will see the URL of your LangServe app in the output.
 
-## Clean up
+    ```
+    Outputs:
+        url: "http://<dns>.elb.amazonaws.com"
 
-To clean up the resources created by this example, run the following command:
+    Resources:
+        + 27 created
+    ```
+
+    You can now access the LangServe playground by adding `/openai/playground` to the URL you got from the output.
+
+    > [!NOTE]
+    > It may take a few minutes for the load balancer to be ready to accept requests. If you see a 503 error, wait a few minutes and try again.
+
+## Cleaning up
+
+To clean up the resources created by this example, run:
 
 ```bash
 pulumi destroy
+pulumi stack rm
 ```
-
-You will be prompted to confirm the deletion of the resources. Once confirmed, Pulumi will delete all the resources created by this example.

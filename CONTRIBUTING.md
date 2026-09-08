@@ -51,21 +51,54 @@ We are big fans of DigitalOcean's [technical writing guidelines](https://www.dig
 
 ### README structure
 
-Each example should include a README to give the readers a good walkthrough. It should comprise of the following sections:
+Each example should include a README that walks the reader through the example. The
+structure depends on which of three types the example is:
 
-- Title
-- ["Deploy with Pulumi" button](https://www.pulumi.com/docs/intro/console/extensions/pulumi-button/) (Optional)
-- Overview paragraph
-- Prerequisites
-- Deploy the App
-   - Step 1: Doing the First Thing
-   - Step 2: Doing the Next Thing
-   …
-   - Step n: Doing the Last Thing
-- Clean Up
-- Summary
-- Next Steps (Optional)
+- **Type A — Deployable**: a single Pulumi project the reader stands up with
+  `pulumi up`. This is the large majority of examples. Its `Pulumi.yaml` **must**
+  include a `template:` block declaring the config the program reads (with a
+  `description` and sensible `default`), which is what makes it a real,
+  one-click-deployable template.
+- **Type B — Non-deployable**: illustrates a technique rather than a live stack —
+  unit tests (`testing-unit-*`), integration harnesses (`testing-integration*`),
+  and policy packs (`policy-packs/*`). These are run via a test or lint command,
+  not `pulumi up`.
+- **Type C — Multi-project / index**: a directory of sub-projects or variants. The
+  top-level README orients the reader and links to each sub-project, which carries
+  its own Type A/B README.
 
-See our [example README template](example-readme-template.md.txt) for detailed explanations on each section.
+**Type A** READMEs comprise these sections, in this order:
+
+- ["Deploy with Pulumi" button](https://www.pulumi.com/docs/intro/console/extensions/pulumi-button/)
+- Title (sentence case)
+- Overview paragraph (optionally followed by an "It creates:" resource list)
+- `## Prerequisites`
+- `## Deploying the example`
+- `## Cleaning up`
+- `## Summary` (optional)
+- `## Next steps` (optional)
+
+Action-section headings use the "-ing" gerund form (`## Deploying the example`,
+`## Cleaning up`, `## Running the tests`); step text within them uses imperative verbs
+("Deploy the stack", "Remove the resources"). `## Prerequisites`, `## Summary`, and
+`## Next steps` keep their noun form.
+
+All headings, including the H1 title, use **sentence case** per the [Pulumi brand
+writing-style guidelines](https://www.pulumi.com/brand/) — capitalize only the first
+word and proper nouns / product names (AWS, Amazon S3, Kubernetes, Pulumi, API Gateway,
+NGINX, TypeScript, and the like). Don't end headings with punctuation.
+
+**Type B** READMEs omit the deploy button and the deploy/clean-up flow. Use a title,
+an overview paragraph, an optional `## Prerequisites`, an action section named for the
+real workflow (`## Running the tests`, `## Using this policy pack`), and a
+`## Learn more` links section.
+
+**Type C** READMEs keep the title and overview, then list each sub-project with a
+one-line description and a link. Any deploy button points at the specific deployable
+sub-project.
+
+Use these exact section headings so examples stay consistent. See our
+[example README template](example-readme-template.md.txt) for detailed explanations of
+each section.
 
 > The contribution guidelines have been authored in September 2019 and are subject to further refinements and tweaks. Examples prior to September 2019 do not necessarily conform to these guidelines.

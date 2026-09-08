@@ -1,60 +1,65 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-nginx/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-nginx/README.md#gh-dark-mode-only)
 
-# Stateless Application Using a Deployment
+# Stateless application using a deployment
 
 A version of the [Kubernetes Stateless Application Deployment](
 https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/) example that uses Pulumi.
-This example deploys a replicated Nginx server to a Kubernetes cluster, using TypeScript and no YAML.
+This example deploys a replicated NGINX server to a Kubernetes cluster, using TypeScript and no YAML.
 
 There is an [interactive Tutorial available](https://www.pulumi.com/docs/tutorials/kubernetes/stateless-app/) for
 this example. If this is your first time using Pulumi for Kubernetes, we recommend starting there.
 
-## Pre-Requisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Configure Kubernetes for Pulumi](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
+2. [Configure Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-## Running the App
+## Deploying the example
 
-After cloning this repo, `cd` into this directory and install dependencies:
+1.  Create a new stack:
 
-```sh
-npm install
-```
+    ```bash
+    pulumi stack init dev
+    ```
 
-Afterwards, create a new stack, a logical deployment target that we'll deploy into:
+1.  Install dependencies:
 
-```sh
-$ pulumi stack init
-Enter a stack name: k8s-nginx-dev
-```
+    ```bash
+    npm install
+    ```
 
-Now to perform the deployment, simply run `pulumi up`. It will first show you a preview of what will take place.
-After confirming, the deployment will take place in approximately 20 seconds:
+1.  Deploy the stack:
 
-```sh
-$ pulumi up
-Updating stack 'k8s-nginx-dev'
-Performing changes:
+    ```bash
+    pulumi up
+    ```
 
-     Type                           Name                     Status      Info
- +   pulumi:pulumi:Stack            k8s-nginx-k8s-nginx-dev  created
- +   └─ kubernetes:apps:Deployment  nginx                    created
+    ```
+    Updating stack 'k8s-nginx-dev'
+    Performing changes:
 
-info: 2 changes performed:
-    + 2 resources created
-Update duration: 18.291517072s
-```
+         Type                           Name                     Status      Info
+     +   pulumi:pulumi:Stack            k8s-nginx-k8s-nginx-dev  created
+     +   └─ kubernetes:apps:Deployment  nginx                    created
 
-This deployment is now running, and you can run commands like `kubectl get pods` to see the application's resources.
+    info: 2 changes performed:
+        + 2 resources created
+    Update duration: 18.291517072s
+    ```
 
-The stack's replica count is configurable. By default, it will scale up to three instances, but we can easily change
+    This deployment is now running, and you can run commands like `kubectl get pods` to see the application's resources.
+
+The stack's replica count is configurable. By default, it will scale up to two instances, but you can easily change
 that to five, by running the `pulumi config` command followed by another `pulumi up`:
 
-```sh
-$ pulumi config set replicas 5
-$ pulumi up
+```bash
+pulumi config set replicas 5
+pulumi up
+```
+
+```
 Updating stack 'k8s-nginx-dev'
 Performing changes:
 
@@ -68,9 +73,11 @@ info: 1 change performed:
 Update duration: 4.324849549s
 ```
 
-After we're done, we can tear down all resources, including removing our stack, with a couple commands:
+## Cleaning up
 
-```sh
-$ pulumi destroy --yes
-$ pulumi stack rm --yes
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
 ```

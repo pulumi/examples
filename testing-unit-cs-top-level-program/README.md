@@ -1,4 +1,4 @@
-# C# Unit Testing with Top-Level Statements
+# C# unit testing with top-level statements
 
 In this example project, we examine how to unit test C# Pulumi programs that are using top-level statements with dotnet SDK v6. These programs look like this
 
@@ -69,4 +69,25 @@ public async Task StackExportsWebsiteUrl()
     }
 }
 ```
-The rest of the unit testing constructs such as `Mocks` are covered in the blog post: [Unit Testing Cloud Deployments with .NET](https://www.pulumi.com/blog/unit-testing-cloud-deployments-with-dotnet/)
+
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
+
+## Running the tests
+
+Run the tests:
+
+```bash
+dotnet test
+```
+
+## Learn more
+
+The rest of the unit testing constructs such as `Mocks` are covered in the blog post [Unit Testing Cloud Deployments with .NET](https://www.pulumi.com/blog/unit-testing-cloud-deployments-with-dotnet/).
+
+Learn more about testing Pulumi programs:
+
+- [Testing Guide](https://www.pulumi.com/docs/iac/guides/testing/)
+- [Unit Testing Guide](https://www.pulumi.com/docs/iac/guides/testing/unit/)

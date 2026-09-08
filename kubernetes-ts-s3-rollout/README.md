@@ -1,76 +1,87 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-s3-rollout/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-s3-rollout/README.md#gh-dark-mode-only)
 
-# App Rollout via Data Change in Amazon S3
+# App rollout via data change in Amazon S3
 
 This example is similar in principle to the [`ConfigMap`-based rollout example][rollout], except a
 rollout is triggered any time the data in S3 changes.
 
-Like the `ConfigMap`-based example, this one uses nginx to reverse-proxy traffic to
-`pulumi.github.io`. The nginx configuration is contained in the file `default.conf` in this
+Like the `ConfigMap`-based example, this one uses NGINX to reverse-proxy traffic to
+`pulumi.github.io`. The NGINX configuration is contained in the file `default.conf` in this
 directory; this program reads that file and puts it into an S3 bucket. Hence, changing data in that
-file will cause register as a change in the S3 bucket's data, which will trigger a rollout of the
-nginx `Deployment`.
+file will register as a change in the S3 bucket's data, which will trigger a rollout of the
+NGINX `Deployment`.
 
-## Running the App
+## Prerequisites
 
-Follow the steps in [Pulumi Installation and Setup](https://www.pulumi.com/docs/get-started/install/) and
-[Configuring Pulumi Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/) to
-get setup with Pulumi and Kubernetes.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Configure Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
+4. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-Install dependencies:
+## Deploying the example
 
-```sh
-npm install
-```
+1.  Create a new stack:
 
-Create a new stack:
+    ```bash
+    pulumi stack init dev
+    ```
 
-```sh
-$ pulumi stack init
-Enter a stack name: s3-kube
-```
+1.  Set the AWS region to deploy into:
 
-Perform the deployment:
+    ```bash
+    pulumi config set aws:region us-west-2
+    ```
 
-```sh
-$ pulumi up
-Updating stack 's3-kube'
-Performing changes:
+1.  Install dependencies:
 
-     Type                           Name                  Status      Info
- +   pulumi:pulumi:Stack            data-from-s3-s3-kube  created
- +   ├─ aws:s3:Bucket               nginx-configs         created
- +   ├─ aws:s3:BucketPolicy         bucketPolicy          created
- +   ├─ aws:s3:BucketObject         default.conf          created
- +   ├─ kubernetes:apps:Deployment  nginx                 created
- +   └─ kubernetes:core:Service     nginx                 created
+    ```bash
+    npm install
+    ```
 
-    ---outputs:---
-    defaultConfUrl: "nginx-configs-4b9ea08.s3.amazonaws.com/default.conf"
-    frontendIp    : "35.224.120.207"
+1.  Deploy the stack:
 
-info: 6 changes performed:
-    + 6 resources created
-Update duration: 1m21.870672089s
+    ```bash
+    pulumi up
+    ```
 
-Permalink: https://app.pulumi.com/hausdorff/s3-kube/updates/1
-```
+    ```
+    Updating stack 's3-kube'
+    Performing changes:
 
-We can see here in the `---outputs:---` section that our proxy was allocated a public IP, in this
-case `35.224.120.207"`. It is exported with a stack output variable, `frontendIp`. We can use `curl`
-and `grep` to retrieve the `<title>` of the site the proxy points at.
+         Type                           Name                  Status      Info
+     +   pulumi:pulumi:Stack            data-from-s3-s3-kube  created
+     +   ├─ aws:s3:Bucket               nginx-configs         created
+     +   ├─ aws:s3:BucketPolicy         bucketPolicy          created
+     +   ├─ aws:s3:BucketObject         default.conf          created
+     +   ├─ kubernetes:apps:Deployment  nginx                 created
+     +   └─ kubernetes:core:Service     nginx                 created
 
-```sh
-$ curl -sL $(pulumi stack output frontendIp):80 | grep -C 1 "<title>"
+        ---outputs:---
+        defaultConfUrl: "nginx-configs-4b9ea08.s3.amazonaws.com/default.conf"
+        frontendIp    : "35.224.120.207"
 
+    info: 6 changes performed:
+        + 6 resources created
+    Update duration: 1m21.870672089s
+    ```
+
+1.  We can see here in the `---outputs:---` section that our proxy was allocated a public IP, in this
+    case `35.224.120.207`. It is exported with a stack output variable, `frontendIp`. Use `curl`
+    and `grep` to retrieve the `<title>` of the site the proxy points at:
+
+    ```bash
+    curl -sL $(pulumi stack output frontendIp):80 | grep -C 1 "<title>"
+    ```
+
+    ```
     <title>Pulumi. Serverless // Containers // Infrastructure // Cloud // DevOps</title>
+    ```
 
-```
+### Trigger a rollout by changing the data
 
 Now, open `default.conf` and change `.node.server` and `.server.location.proxy_set_header` to point
-at `google.com`. If you're on macOS you can run `sed -i bak "s/pulumi.github.io/google.com/g"
-default.conf`
+at `google.com`. If you're on macOS you can run `sed -i bak "s/pulumi.github.io/google.com/g" default.conf`
 
 The result should look like this:
 
@@ -104,7 +115,7 @@ containing the new data, and subsequently trigger a rollout in the `Deployment`.
 >    that contain this new data.
 > 1. Only once that succeeds, delete the old S3 bucket.
 
-```sh
+```
 Previewing update of stack 's3-kube'
      Type                           Name                                     Status        Info
  *   pulumi:pulumi:Stack            configmap-rollout-configmap-rollout-dev  no change
@@ -125,9 +136,21 @@ Now, if we `curl` the IP address once more, we see that it points at google.com!
 > to run `kubectl port-forward svc/frontend 8080:80` to forward the cluster port to the local
 > machine and access the service via `localhost:8080`.
 
-```sh
-$ curl -sL $(pulumi stack output frontendIp) | grep -o "<title>Google</title>"
+```bash
+curl -sL $(pulumi stack output frontendIp) | grep -o "<title>Google</title>"
+```
+
+```
 <title>Google</title>
+```
+
+## Cleaning up
+
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
 ```
 
 [rollout]: https://github.com/pulumi/examples/tree/master/kubernetes-ts-configmap-rollout

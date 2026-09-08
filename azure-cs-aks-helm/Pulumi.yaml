@@ -1,3 +1,25 @@
 name: azure-cs-aks-helm
 runtime: dotnet
 description: Azure Native C# Pulumi example featuring Helm chart deployment to AKS
+template:
+  config:
+    azure-native:location:
+      description: The Azure region to deploy into
+      default: westus2
+    k8sVersion:
+      description: The Kubernetes version to use for the AKS cluster
+      default: "1.26.3"
+    nodeCount:
+      description: The number of nodes in the AKS cluster
+      default: 2
+    nodeSize:
+      description: The VM size to use for the AKS cluster nodes
+      default: Standard_D2_v2
+    adminUserName:
+      description: The admin username for the cluster nodes
+      default: testuser
+    password:
+      description: The admin password for the cluster nodes
+      secret: true
+    sshPublicKey:
+      description: The SSH public key for the cluster nodes

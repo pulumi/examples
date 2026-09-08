@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-serverless-raw/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-serverless-raw/README.md#gh-dark-mode-only)
 
-# Serverless TypeScript App
+# Serverless TypeScript app
 
 This example deploys a complete serverless TypeScript application using raw `aws.apigateway.RestAPI`, `aws.lambda.Function` and
 `aws.dynamodb.Table` resources from `@pulumi/aws`. It demonstrates how to program AWS resources directly to build serverless applications.
@@ -12,17 +12,28 @@ in a Pulumi application, even if your Pulumi code is written in a different lang
 The Lambda function is a C# application using .NET Core 3.1 (a similar approach works for any other language supported by
 AWS Lambda).
 
-## Deploying and running the Pulumi App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+4. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/) (to build the Lambda's C# application)
+
+## Deploying the example
 
 1.  Create a new stack:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
-1.  Restore NPM modules via `npm install` or `yarn install`.
+1.  Install dependencies:
 
-1.  Build the C# application.
+    ```bash
+    npm install
+    ```
+
+1.  Build the C# application:
 
     ```bash
     dotnet publish app
@@ -31,19 +42,22 @@ AWS Lambda).
 1.  Set the AWS region:
 
     ```bash
-    $ pulumi config set aws:region us-east-2
+    pulumi config set aws:region us-east-2
     ```
 
 1.  Optionally, set AWS Lambda provisioned concurrency:
 
     ```bash
-    $ pulumi config set provisionedConcurrency 1
+    pulumi config set provisionedConcurrency 1
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
+    ```bash
+    pulumi up
     ```
-    $ pulumi up
+
+    ```
     Previewing update (dev):
     ...
 
@@ -56,15 +70,21 @@ AWS Lambda).
 
 1.  Check the deployed GraphQL endpoint:
 
+    ```bash
+    curl $(pulumi stack output endpoint)/hello
     ```
-    $ curl $(pulumi stack output endpoint)/hello
+
+    ```
     {"Path":"/hello","Count":0}
     ```
 
-1.  See the logs
+1.  See the logs:
+
+    ```bash
+    pulumi logs -f
+    ```
 
     ```
-    $ pulumi logs -f
     2018-03-21T18:24:52.670-07:00[    mylambda-d719650] START RequestId: d1e95652-2d6f-11e8-93f6-2921c8ae65e7 Version: $LATEST
     2018-03-21T18:24:56.171-07:00[    mylambda-d719650] Getting count for '/hello'
     2018-03-21T18:25:01.327-07:00[    mylambda-d719650] Got count 0 for '/hello'
@@ -72,8 +92,11 @@ AWS Lambda).
     2018-03-21T18:25:02.267-07:00[    mylambda-d719650] REPORT RequestId: d1e95652-2d6f-11e8-93f6-2921c8ae65e7   Duration: 9540.93 ms    Billed Duration: 9600 ms        Memory Size: 128 MB     Max Memory Used: 37 MB
     ```
 
-## Clean up
+## Cleaning up
 
-1.  Run `pulumi destroy` to tear down all resources.
+Once you're done, destroy the resources and remove the stack:
 
-1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi console.
+```bash
+pulumi destroy
+pulumi stack rm
+```

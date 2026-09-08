@@ -1,3 +1,25 @@
 name: azure-go-aks-helm
 runtime: go
 description: Azure Native Go Pulumi example featuring Helm chart deployment to AKS
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus2
+    k8sVersion:
+      description: The Kubernetes version to use for the AKS cluster
+      default: 1.26.3
+    password:
+      description: The cluster admin password (a random one is generated if not set)
+      secret: true
+    adminUserName:
+      description: The admin username for the cluster nodes
+      default: testuser
+    sshPublicKey:
+      description: The SSH public key for the cluster nodes (a key pair is generated if not set)
+    nodeCount:
+      description: The number of nodes in the cluster
+      default: 2
+    nodeSize:
+      description: The VM size to use for the cluster nodes
+      default: Standard_D2_v2

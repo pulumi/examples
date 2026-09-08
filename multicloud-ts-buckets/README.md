@@ -1,69 +1,73 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/multicloud-ts-buckets/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/multicloud-ts-buckets/README.md#gh-dark-mode-only)
 
-# AWS and GCP Resources
+# AWS and GCP resources
 
 This example uses a single Pulumi program to provision resources in both AWS and GCP. It was
 prepared by starting with the `aws-typescript` template, and then installing the `@pulumi/gcp`
 package from NPM.
 
-## Getting Started
+## Prerequisites
 
-Install prerequisites with:
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
+4. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-```shell
-$ npm install
-```
+## Deploying the example
 
-Create a new stack:
+1. Install dependencies:
 
-```shell
-$ pulumi stack init multicloud-aws-gcp
-```
+   ```bash
+   npm install
+   ```
 
-Configure the Pulumi program with the AWS region in which to deploy, and the GCP project ID:
+1. Create a new stack:
 
-```shell
-$ pulumi config set aws:region us-east-1
-$ pulumi config set gcp:project my-project-id
-```
+   ```bash
+   pulumi stack init multicloud-aws-gcp
+   ```
 
-Run the program with `pulumi up`, with ambient AWS and GCP credentials available. The preview shows
-resources will be created in both clouds. Confirm the update, and resources are created in each
-cloud. The outputs show the name of the AWS and GCP buckets respectively.
+1. Configure the Pulumi program with the AWS region in which to deploy, and the GCP project ID:
 
-```shell
-$ pulumi up
-Previewing update (multicloud-ts-buckets-dev):
+   ```bash
+   pulumi config set aws:region us-east-1
+   pulumi config set gcp:project my-project-id
+   ```
 
-     Type                   Name                                             Plan
- +   pulumi:pulumi:Stack    multicloud-ts-buckets-multicloud-ts-buckets-dev  create
- +   ├─ gcp:storage:Bucket  my-bucket                                        create
- +   └─ aws:s3:Bucket     my-bucket                                        create
+1. Run the program with `pulumi up`, with ambient AWS and GCP credentials available. The preview shows
+   resources will be created in both clouds. Confirm the update, and resources are created in each
+   cloud. The outputs show the name of the AWS and GCP buckets respectively.
 
-Resources:
-    3 changes
-    + 3 to create
+   ```bash
+   pulumi up
+   ```
 
-Do you want to perform this update? yes
-Updating (multicloud-ts-buckets-dev):
+   ```
+   Updating (multicloud-ts-buckets-dev):
 
-     Type                   Name                                             Status
- +   pulumi:pulumi:Stack    multicloud-ts-buckets-multicloud-ts-buckets-dev  created
- +   ├─ gcp:storage:Bucket  my-bucket                                        created
- +   └─ aws:s3:Bucket     my-bucket                                        created
+        Type                   Name                                             Status
+    +   pulumi:pulumi:Stack    multicloud-ts-buckets-multicloud-ts-buckets-dev  created
+    +   ├─ gcp:storage:Bucket  my-bucket                                        created
+    +   └─ aws:s3:Bucket       my-bucket                                        created
 
-Outputs:
-    bucketNames: [
-        [0]: "my-bucket-c819937"
-        [1]: "my-bucket-f722eb9"
-    ]
+   Outputs:
+       bucketNames: [
+           [0]: "my-bucket-c819937"
+           [1]: "my-bucket-f722eb9"
+       ]
 
-Resources:
-    3 changes
-    + 3 created
+   Resources:
+       + 3 created
 
-Duration: 21.713128552s
+   Duration: 21.713128552s
+   ```
 
-Permalink: https://app.pulumi.com/jen20/multicloud-ts-buckets-dev
+## Cleaning up
+
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
 ```

@@ -4,3 +4,8 @@ runtime:
   options:
     virtualenv: venv
 description: Quickstart example of using AWS API Gateway v2 HTTP API
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2

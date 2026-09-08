@@ -1,3 +1,15 @@
 name: aws-ts-ec2-provisioners
 runtime: nodejs
 description: An example of an EC2 webserver instance with post-provision configuration.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    keyName:
+      description: The name of an existing AWS EC2 key pair to use for the instance (optional)
+    publicKey:
+      description: The SSH public key to configure on the instance
+    privateKey:
+      description: The SSH private key used for the post-provisioning SSH and SCP steps
+      secret: true

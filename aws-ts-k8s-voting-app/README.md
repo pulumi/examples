@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-k8s-voting-app/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-k8s-voting-app/README.md#gh-dark-mode-only)
 
-# Kubernetes Voting App
+# Kubernetes voting app
 
 A simple voting app that uses Kubernetes.
 
@@ -15,33 +15,41 @@ The example shows how easy it is to deploy a containerized application to Amazon
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
-1. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
-1. [Install Docker](https://docs.docker.com/engine/installation/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+1. [Install Docker](https://docs.docker.com/get-docker/)
 
-## Deploying and running the program
-
+## Deploying the example
 
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init aws-ts-k8s-voting-app
+    pulumi stack init dev
     ```
 
-1. Set the AWS region and the usernames and passwords for a set of accounts the project uses:
+1. Set the AWS region and the usernames and passwords for the admin and application database users:
 
     ```bash
-    $ pulumi config set aws:region us-west-2
-    $ pulumi config set sqlAdminName <NAME>
-    $ pulumi config set sqlsqlAdminPassword <PASSWORD> --secret
-    $ pulumi config set sqlUserName <NAME>
-    $ pulumi config set sqlUserPassword <PASSWORD> --secret
+    pulumi config set aws:region us-west-2
+    pulumi config set sql-admin-name <NAME>
+    pulumi config set sql-admin-password <PASSWORD> --secret
+    pulumi config set sql-user-name <NAME>
+    pulumi config set sql-user-password <PASSWORD> --secret
     ```
 
-1. Restore NPM modules via `npm install` or `yarn install`.
+1. Install dependencies:
 
-1. Run `pulumi up -y` to deploy changes:
     ```bash
+    npm install
+    ```
+
+1. Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Updating (aws-ts-k8s-voting-app):
         Type                                   Name                                          Status
     +   pulumi:pulumi:Stack                    voting-app-aws-ts-k8s-voting-app              created
@@ -101,6 +109,11 @@ The example shows how easy it is to deploy a containerized application to Amazon
 
 1.  Verify that the ECS instance exists by connecting to it on port 3000 in a browser window.
 
-## Clean up
+## Cleaning up
 
-To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+Once you're finished, destroy the resources and remove the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

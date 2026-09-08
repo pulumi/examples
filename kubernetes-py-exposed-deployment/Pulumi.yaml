@@ -4,3 +4,8 @@ runtime:
   options:
     virtualenv: venv
 description: A minimal Python Pulumi program
+template:
+  config:
+    is_minikube:
+      description: Whether you are deploying to minikube
+      default: "true"

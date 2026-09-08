@@ -1,6 +1,11 @@
 name: azure-static-website
 runtime: yaml
-description: A static website hosted on AWS S3
+description: A static website hosted on Azure Blob Storage
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus
 resources:
   staticsitegroup:
     type: azure-native:resources:ResourceGroup

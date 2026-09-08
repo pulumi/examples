@@ -10,46 +10,50 @@ This example will create OIDC configuration between Pulumi Cloud and Azure, spec
 
 Last update: September 2025
 
-## 📋 Pre-requisites
+## Prerequisites
 
-- [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-- [Configure Pulumi to Use Azure](https://www.pulumi.com/docs/clouds/azure/get-started/begin/)
-- [Pulumi Cloud account](https://app.pulumi.com/signup)
-- [npm](https://www.npmjs.com/get-npm)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+4. A [Pulumi Cloud account](https://app.pulumi.com/signup)
 
-## 👩‍🏫 Get started
+## Deploying the example
 
-This Pulumi example is written as a template. It is meant to be copied via `pulumi new`
+This Pulumi example is written as a template. It is meant to be copied via `pulumi new`.
 
-```bash
-# login to your Pulumi Cloud if you haven't already
-pulumi login
+1.  Log in to your Pulumi Cloud account if you haven't already:
 
-# pick a name for your output directory (--dir is optional. will use current directory if omitted)
-my_dir=my-azure-oidc
-pulumi new https://github.com/pulumi/examples/azure-ts-oidc-provider-pulumi-cloud --dir ${my_dir}
-cd ${my_dir}
-```
+    ```bash
+    pulumi login
+    ```
 
-Once copied to your machine, feel free to edit as needed.
+1.  Copy the template to a new directory (`--dir` is optional; the current directory is used if omitted):
 
-## 🎬 How to run
+    ```bash
+    my_dir=my-azure-oidc
+    pulumi new https://github.com/pulumi/examples/azure-ts-oidc-provider-pulumi-cloud --dir ${my_dir}
+    cd ${my_dir}
+    ```
 
-This template will pick up the thumbprint from the URL that you set in the stack configuration. By default it will use the OIDC IDP URL for Pulumi Cloud.
+    Once copied to your machine, feel free to edit as needed.
 
-To deploy your infrastructure, run:
+1.  Install dependencies:
 
-```bash
-$ pulumi up
-# select 'yes' to confirm the expected changes
-# 🎉 Ta-Da!
-```
+    ```bash
+    npm install
+    ```
 
-## 🧹 Clean up
+1.  Deploy your infrastructure. This template will pick up the thumbprint from the URL that you set in the stack configuration. By default it will use the OIDC IDP URL for Pulumi Cloud.
+
+    ```bash
+    pulumi up
+    ```
+
+## Cleaning up
 
 To clean up your infrastructure, run:
 
 ```bash
-$ pulumi destroy
-# select 'yes' to confirm the expected changes
+pulumi destroy
+pulumi stack rm
 ```

@@ -1,4 +1,7 @@
-# Serverless AI Inference Endpoint with Amazon Bedrock
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-ai-app-infrastructure/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-ai-app-infrastructure/README.md#gh-dark-mode-only)
+
+# Serverless AI inference endpoint with Amazon Bedrock
 
 A minimal, production-shaped starting point for a generative-AI feature: an HTTP endpoint that takes a prompt, calls an [Amazon Bedrock](https://aws.amazon.com/bedrock/) foundation model, and returns the generated text.
 
@@ -13,11 +16,11 @@ The function code lives in `lambda/` and uses the AWS SDK for JavaScript's Bedro
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure your AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
 1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 1. Enable access to the Bedrock model you want to use in the [Bedrock console](https://console.aws.amazon.com/bedrock/home#/modelaccess) (**Model access**), in the same region you deploy to.
 
-## Deploying and running the program
+## Deploying the example
 
 1.  Create a new stack:
 
@@ -57,7 +60,7 @@ The function code lives in `lambda/` and uses the AWS SDK for JavaScript's Bedro
     {"text":"Infrastructure as code lets you define and manage cloud resources with the same version control, review, and automation practices you use for application code."}
     ```
 
-## Clean up
+## Cleaning up
 
 To tear down the resources, run:
 

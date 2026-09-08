@@ -1,3 +1,8 @@
 name: digitalocean-ts-loadbalanced-droplets
 runtime: nodejs
 description: Basic example of load balanced droplets on DigitalOcean
+template:
+  config:
+    digitalocean:token:
+      description: The DigitalOcean personal access token to use for provisioning
+      secret: true

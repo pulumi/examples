@@ -1,3 +1,12 @@
 name: gcp-cs-gke
 runtime: dotnet
 description: A GCP C# Pulumi program with Kubernetes
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:zone:
+      description: The Google Cloud zone to deploy into
+      default: us-west1-a
+    masterVersion:
+      description: The Kubernetes master version to use for the cluster

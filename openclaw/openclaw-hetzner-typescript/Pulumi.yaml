@@ -1,3 +1,34 @@
 name: openclaw-hetzner-typescript
 runtime: nodejs
 description: Deploy OpenClaw AI assistant to Hetzner Cloud with firewall and server using a reusable ComponentResource.
+template:
+  config:
+    hcloud:token:
+      description: The Hetzner Cloud API token
+      secret: true
+    anthropicApiKey:
+      description: Anthropic API key for Claude
+      secret: true
+    tailscaleAuthKey:
+      description: Tailscale auth key (reusable recommended)
+      secret: true
+    tailnetDnsName:
+      description: Your tailnet DNS name (e.g. tailXXXXX.ts.net)
+    serverType:
+      description: The Hetzner Cloud server type
+      default: cax21
+    location:
+      description: The Hetzner Cloud location to deploy into
+      default: fsn1
+    model:
+      description: The LLM model identifier
+      default: anthropic/claude-sonnet-4
+    enableSandbox:
+      description: Enable the Docker sandbox for code execution
+      default: true
+    gatewayPort:
+      description: The OpenClaw gateway port
+      default: 18789
+    browserPort:
+      description: The OpenClaw browser port
+      default: 18791

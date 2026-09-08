@@ -1,3 +1,8 @@
 name: azure-cs-sqlserver
 runtime: dotnet
 description: An example of a SQLServer on Azure PaaS
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus

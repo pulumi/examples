@@ -1,3 +1,10 @@
 name: azure-cs-vm-scaleset
 description: "Basic C# example of an Azure VM Scale Sets accessible over balanced HTTP endpoint."
 runtime: dotnet
+template:
+  config:
+    azure:location:
+      description: The Azure location to deploy into
+      default: westus
+    azure:subscriptionId:
+      description: The Azure subscription to deploy into

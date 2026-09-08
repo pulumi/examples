@@ -1,55 +1,42 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-eks-hello-world/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-eks-hello-world/README.md#gh-dark-mode-only)
 
-# Amazon EKS Cluster: Hello World!
+# Amazon EKS cluster: Hello world
 
 This example deploys an EKS Kubernetes cluster with an EBS-backed StorageClass, and deploys a Kubernetes Namespace and Deployment of NGINX into the cluster.
 
 It does this by configuring a Pulumi [Kubernetes provider](https://www.pulumi.com/registry/packages/kubernetes/) for the new cluster and creating Kubernetes resources against it in the same program — the provider abstraction lets you manage Kubernetes objects independently of the underlying cloud. For a walkthrough, watch [TGIK8s: Pulumi with Joe Beda](https://www.youtube.com/watch?v=ILMK65YVSKw).
 
-## Deploying the App
-
-To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Install Node.js](https://nodejs.org/en/download/)
-1. Install a package manager for Node.js, such as [npm](https://www.npmjs.com/get-npm) or [Yarn](https://yarnpkg.com/en/docs/install).
-1. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 1. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
 
-### Steps
+## Deploying the example
 
 After cloning this repo, from this working directory, run these commands:
 
 1. Install the required Node.js packages:
 
-    This installs the dependent packages [needed](https://www.pulumi.com/docs/intro/concepts/how-pulumi-works/) for our Pulumi program.
-
     ```bash
-    $ npm install
+    npm install
     ```
 
 1. Create a new stack, which is an isolated deployment target for this example:
 
-    This will initialize the Pulumi program in TypeScript.
-
     ```bash
-    $ pulumi stack init
+    pulumi stack init
     ```
 
-1. Set the required AWS configuration variables:
-
-    This sets configuration options and default values for our cluster.
+1. Set the AWS region to deploy into:
 
     ```bash
-    $ pulumi config set aws:region us-west-2
+    pulumi config set aws:region us-west-2
     ```
 
-1. Stand up the EKS cluster:
-
-    To preview and deploy changes, run `pulumi update` and select "yes."
+1. Stand up the EKS cluster. To preview and deploy changes, run `pulumi update` and select "yes."
 
     The `update` sub-command shows a preview of the resources that will be created
     and prompts on whether to proceed with the deployment. Note that the stack
@@ -63,7 +50,10 @@ After cloning this repo, from this working directory, run these commands:
     new EKS cluster takes between 10-15 minutes.
 
     ```bash
-    $ pulumi update
+    pulumi update
+    ```
+
+    ```
     Previewing update (eks-demo):
 
         Type                                          Name                              	Plan
@@ -220,7 +210,7 @@ After cloning this repo, from this working directory, run these commands:
     in place, and which require replacement, and computes
     the minimally disruptive change to achieve the desired state.
 
-	> **Note:** Pulumi auto-generates a suffix for all objects.
+    > **Note:** Pulumi auto-generates a suffix for all objects.
     > See the [Pulumi Programming Model](https://www.pulumi.com/docs/intro/concepts/resources/#autonaming) for more info.
     >
     > ```
@@ -235,43 +225,41 @@ After cloning this repo, from this working directory, run these commands:
     NGINX welcome page. Note that it may take a minute or so for the
     LoadBalancer to become active on AWS.
 
-1. Access the Kubernetes Cluster using `kubectl`
+1. Access the Kubernetes cluster using `kubectl`.
 
     To access your new Kubernetes cluster using `kubectl`, we need to set up the
     `kubeconfig` file and download `kubectl`. We can leverage the Pulumi
     stack output in the CLI, as Pulumi facilitates exporting these objects for us.
 
     ```bash
-    $ pulumi stack output kubeconfig --show-secrets > kubeconfig
-    $ export KUBECONFIG=$PWD/kubeconfig
-    $ export KUBERNETES_VERSION=1.11.5 && sudo curl -s -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/amd64/kubectl && sudo chmod +x /usr/local/bin/kubectl
+    pulumi stack output kubeconfig --show-secrets > kubeconfig
+    export KUBECONFIG=$PWD/kubeconfig
+    export KUBERNETES_VERSION=1.11.5 && sudo curl -s -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/amd64/kubectl && sudo chmod +x /usr/local/bin/kubectl
 
-    $ kubectl version
-    $ kubectl cluster-info
-    $ kubectl get nodes
+    kubectl version
+    kubectl cluster-info
+    kubectl get nodes
     ```
 
     We can also use the stack output to query the cluster for our newly created Deployment:
 
     ```bash
-    $ kubectl get deployment $(pulumi stack output deploymentName) --namespace=$(pulumi stack output namespaceName)
-    $ kubectl get service $(pulumi stack output serviceName) --namespace=$(pulumi stack output namespaceName)
+    kubectl get deployment $(pulumi stack output deploymentName) --namespace=$(pulumi stack output namespaceName)
+    kubectl get service $(pulumi stack output serviceName) --namespace=$(pulumi stack output namespaceName)
     ```
 
     We can also create another NGINX Deployment into the `default` namespace using
     `kubectl` natively:
 
     ```bash
-    $ kubectl create deployment my-nginx --image=nginx
-    $ kubectl get pods
-    $ kubectl delete deployment my-nginx
+    kubectl create deployment my-nginx --image=nginx
+    kubectl get pods
+    kubectl delete deployment my-nginx
     ```
 
     By deploying the NGINX image in this way, it is outside of Pulumi's control. But this is simply to show that we can control our cluster via the CLI as well.
 
-1. Experimentation
-
-    From here on, feel free to experiment. Make edits and run `pulumi up` afterwards to incrementally update your stack.
+1. From here on, feel free to experiment. Make edits and run `pulumi up` afterwards to incrementally update your stack.
 
     ### Running Off-the-Shelf Guestbook YAML
 
@@ -320,9 +308,11 @@ After cloning this repo, from this working directory, run these commands:
         guestbook.getResourceProperty("v1/Service", "frontend", "status").apply(s => s.loadBalancer.ingress[0].ip);
     ```
 
-1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
-    ```
+Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

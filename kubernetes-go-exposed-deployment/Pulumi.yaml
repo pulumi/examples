@@ -1,3 +1,8 @@
 name: kubernetes-go-exposed-deployment
 runtime: go
 description: A minimal Go Pulumi program
+template:
+  config:
+    isMinikube:
+      description: Whether you are deploying to minikube
+      default: false

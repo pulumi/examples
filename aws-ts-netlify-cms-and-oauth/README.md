@@ -1,14 +1,10 @@
-# About the CMS and OAuth
-Netlify CMS web apps and all the templates they have given on [Netlify CMS website](https://www.netlify.com/integrations/templates/) deployed on Netlify and lies inside the target repositories user would like to make change. However, in some case, we do not want the implementation detail of the CMS to locate in the target repositories and we want to deploy it on AWS instead of Netlify. This example shows how to do this.
+# Netlify CMS and OAuth on AWS
 
-Both folder has README.md inside them here are some general thoughts:
+Netlify CMS web apps and all the templates provided on the [Netlify CMS website](https://www.netlify.com/integrations/templates/) are deployed on Netlify and live inside the target repositories a user would like to make changes to. However, in some cases we do not want the implementation details of the CMS to live in the target repositories, and we want to deploy it on AWS instead of Netlify. This example shows how to do this.
 
-## ./cms
-- It contains implementation that made the CMS app a stand-alone React App that is not located inside the target repositories. Now it is able to make edits to another target repository that is under the same account. Moreover, the infrastructure deployes the cms app as a static website onto the AWS S3 and use AWS CloudFront to connect to the CDN and Certificate Manger to provide certificate.
+This directory contains two standalone Pulumi projects, each with its own README:
 
-## ./cms-oauth
-Because we are deploying the CMS onto the AWS rather than Netlify, we could not use Netlify's Identity Service to retrieve Github tokens to access. Therefore we have build the External OAuth Client. We made some changes to the existing Golang OAuth Client example to make it work. Also, we deployed it on AWS by specify a Fargate Service and generated its domain and certificate as well.
+- [cms/](./cms) — a stand-alone React CMS app deployed as a static website on AWS S3, fronted by CloudFront and Certificate Manager. It can make edits to another target repository under the same account.
+- [cms-oauth/](./cms-oauth) — an external OAuth client (adapted from a Go OAuth client example) deployed as an AWS Fargate service with its own domain and certificate, replacing Netlify's Identity Service for retrieving GitHub tokens.
 
-## How two part fit together
-Both cms and cms-oauth are deployed onto the AWS and have their own domains. In cms configuration yaml file cms/public/config.yml, we specify their domain in the site_domain (cms domain) and base_url (cms-oauth domain) for Neltify CMS to reference.
-See "Development Details" section of cms/README.md
+Both `cms` and `cms-oauth` are deployed onto AWS and have their own domains. In the CMS configuration file `cms/public/config.yml`, you specify their domains in `site_domain` (the cms domain) and `base_url` (the cms-oauth domain) for Netlify CMS to reference. See the "Development Details" section of [cms/README.md](./cms/README.md).

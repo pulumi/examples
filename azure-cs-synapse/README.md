@@ -1,34 +1,43 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-synapse/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-cs-synapse/README.md#gh-dark-mode-only)
 
-# Azure Synapse Workspace and Pools
+# Azure Synapse workspace and pools
 
 Starting point for enterprise analytics solutions based on Azure Synapse.
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1. Set the Azure region location to use:
-
-    ```
-    $ pulumi config set azure-native:location westus2
-    ```
-
-1. Run `pulumi up` to preview and deploy changes:
+1.  Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
     ```bash
-    $ pulumi up
+    az login
+    ```
+
+1.  Set the Azure region location to use:
+
+    ```bash
+    pulumi config set azure-native:location westus2
+    ```
+
+1.  Run `pulumi up` to preview and deploy changes:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Previewing changes:
     ...
 
@@ -40,4 +49,13 @@ Starting point for enterprise analytics solutions based on Azure Synapse.
     Duration: 10m53s
     ```
 
-1. Navigate to https://web.azuresynapse.net and sign in to your new workspace.
+1.  Navigate to https://web.azuresynapse.net and sign in to your new workspace.
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

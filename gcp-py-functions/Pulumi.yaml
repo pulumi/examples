@@ -4,3 +4,28 @@ runtime:
   options:
     virtualenv: venv
 description: A minimal Python Pulumi program using Google Cloud Functions.
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:region:
+      description: The Google Cloud region to deploy into
+      default: us-central1
+    destination:
+      description: The target destination to compute directions to
+    travelOffset:
+      description: An optional travel time offset, in minutes
+    googleMapsApiKey:
+      description: A Google Maps API key used to estimate travel time
+      secret: true
+    twillioAccessToken:
+      description: A Twilio access token used to send SMS messages
+      secret: true
+    twillioAccountSid:
+      description: A Twilio account SID used to send SMS messages
+      secret: true
+    fromPhoneNumber:
+      description: The phone number to send SMS messages from
+    toPhoneNumber:
+      description: The phone number to send SMS messages to
+      secret: true

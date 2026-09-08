@@ -1,39 +1,54 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-go-appservice-docker/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-go-appservice-docker/README.md#gh-dark-mode-only)
 
-# Azure App Service Running Docker Containers on Linux
+# Azure App Service running Docker containers on Linux
 
-Starting point for building web application hosted in Azure App Service from Docker images.
+Starting point for building a web application hosted in Azure App Service from Docker images.
 
 The example shows two scenarios:
 
 - Deploying an existing image from Docker Hub
 - Deploying a new custom registry in Azure Container Registry, building a custom Docker image, and running the image from the custom registry
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1. Set the Azure region location to use:
+1.  Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
+    ```bash
+    az login
     ```
-    $ pulumi config set azure-native:location westus2
+
+1.  Set the Azure region location to use:
+
+    ```bash
+    pulumi config set azure-native:location westus2
+    ```
+
+1.  Install dependencies:
+
+    ```bash
+    go mod download
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
+    ```bash
+    pulumi up
     ```
-    $ pulumi up
+
+    ```
     Previewing changes:
     ...
 
@@ -45,12 +60,15 @@ The example shows two scenarios:
     Duration: 56s
     ```
 
-1.  Check the deployed website endpoint:
+1.  Check the deployed website endpoints:
+
+    ```bash
+    pulumi stack output helloEndpoint
+    curl "$(pulumi stack output helloEndpoint)"
+    ```
 
     ```
-    $ pulumi stack output helloEndpoint
     https://helloappecc2f992.azurewebsites.net
-    $ curl "$(pulumi stack output helloEndpoint)"
     <!DOCTYPE html>
     <html>
     <head>
@@ -74,15 +92,27 @@ The example shows two scenarios:
     <p><em>Thank you for using nginx.</em></p>
     </body>
     </html>
+    ```
 
+    ```bash
+    pulumi stack output getStartedEndpoint
+    curl "$(pulumi stack output getStartedEndpoint)"
+    ```
 
-
-    $ pulumi stack output getStartedEndpoint
+    ```
     http://get-started-15da13.azurewebsites.net
-    $ curl "$(pulumi stack output getStartedEndpoint)"
     <html>
     <body>
     <h1>Your custom docker image is running in Azure App Service!</h1>
     </body>
     </html>
     ```
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

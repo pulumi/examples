@@ -4,3 +4,23 @@ runtime:
   options:
     packagemanager: yarn
 description: a Pulumi program that creates ECR repositories with pull-through cache rules for Docker Hub and Google Container Registry.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    dockerHubUsername:
+      description: Your Docker Hub username (optional; enables the Docker Hub cache rule)
+    dockerHubAccessToken:
+      description: A Docker Hub access token
+      secret: true
+    gitHubUsername:
+      description: Your GitHub username (optional; enables the GitHub Container Registry cache rule)
+    gitHubAccessToken:
+      description: A GitHub personal access token with the read:packages scope
+      secret: true
+    gitLabUsername:
+      description: Your GitLab username (optional; enables the GitLab Container Registry cache rule)
+    gitLabAccessToken:
+      description: A GitLab personal access token with the read_registry scope
+      secret: true

@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-static-website/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-static-website/README.md#gh-dark-mode-only)
 
-# Secure Static Website Using Amazon S3, CloudFront, Route53, and Certificate Manager
+# Secure static website using Amazon S3, CloudFront, Route53, and Certificate Manager
 
 This example serves a static website using TypeScript and AWS.
 
@@ -12,25 +12,64 @@ This sample uses the following AWS products:
 - [Amazon Route53](https://aws.amazon.com/route53/) is used to set up the DNS for the website.
 - [Amazon Certificate Manager](https://aws.amazon.com/certificate-manager/) is used for securing things via HTTPS.
 
-## Getting Started
+## Prerequisites
 
-Install prerequisites with:
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
+
+1.  Create a new stack:
+
+    ```bash
+    pulumi stack init dev
+    ```
+
+1.  Set the AWS region:
+
+    ```bash
+    pulumi config set aws:region us-east-1
+    ```
+
+1.  Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+1.  Set the required configuration for the program:
+
+    - `certificateArn` - ACM certificate to serve content from. ACM certificate creation needs to be
+      done manually. Also, any certificate used to secure a CloudFront distribution must be created
+      in the `us-east-1` region.
+    - `targetDomain` - The domain to serve the website at (e.g. www.example.com). It is assumed that
+      the parent domain (example.com) is a Route53 Hosted Zone in the AWS account you are running the
+      Pulumi program in.
+    - `pathToWebsiteContents` - Directory of the website's contents. e.g. the `./www` folder.
+    - `includeWWW` - If true this will create an additional alias record for the www subdomain to your cloudfront distribution.
+
+    ```bash
+    pulumi config set targetDomain www.example.com
+    pulumi config set pathToWebsiteContents ./www
+    ```
+
+1.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+## Cleaning up
+
+Once you're done, destroy the resources and remove the stack:
 
 ```bash
-npm install
+pulumi destroy
+pulumi stack rm
 ```
 
-Configure the Pulumi program using ```pulumi config set KEY VALUE```. There are several configuration settings that need to be
-set:
-
-- `certificateArn` - ACM certificate to serve content from. ACM certificate creation needs to be
-  done manually. Also, any certificate used to secure a CloudFront distribution must be created
-  in the `us-east-1` region.
-- `targetDomain` - The domain to serve the website at (e.g. www.example.com). It is assumed that
-  the parent domain (example.com) is a Route53 Hosted Zone in the AWS account you are running the
-  Pulumi program in.
-- `pathToWebsiteContents` - Directory of the website's contents. e.g. the `./www` folder.
-- `includeWWW` - If true this will create an additional alias record for the www subdomain to your cloudfront distribution.
+> **Note:** The contents of the S3 bucket are not automatically deleted. If `pulumi destroy` fails because the bucket is not empty, remove its contents in the AWS Console or with the AWS CLI, then try again.
 
 ## How it works
 
@@ -82,7 +121,7 @@ return new aws.route53.Record(
 
 ## Troubleshooting
 
-### Scary HTTPS Warning
+### Scary HTTPS warning
 
 When you create an S3 bucket and CloudFront distribution shortly after one another, you'll see
 what looks to be HTTPS configuration issues. This has to do with the replication delay between
@@ -108,7 +147,7 @@ and AWS. (This can happen when inspecting the CloudFront distribution in the AWS
 
 You can fix this by running `pulumi refresh` to pickup the newer ETag values.
 
-## Deployment Speed
+## Deployment speed
 
 This example creates a `aws.S3.BucketObject` for every file served from the website. When deploying
 large websites, that can lead to very long updates as every individual file is checked for any
@@ -125,12 +164,12 @@ using the AWS CLI.
 aws s3 sync ./www/ s3://example-bucket/
 ```
 
-##  Access Denied while creating S3 bucket
+## Access denied while creating S3 bucket
 
 This error can occur when a bucket with the same name as targetDomain already exists. Remove all items from the pre-existing bucket
 and delete the bucket to continue.
 
-## Fail to delete S3 bucket while running pulumi destroy, this bucket is not empty.
+## Fail to delete S3 bucket while running pulumi destroy, this bucket is not empty
 
 The contents of the S3 bucket are not automatically deleted. You can manually delete these contents in the AWS Console or with
 the AWS CLI.

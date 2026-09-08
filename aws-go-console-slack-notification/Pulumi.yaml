@@ -1,3 +1,19 @@
 name: aws-go-console-slack-notification
 runtime: go
 description: Deploy necessary resources to notify Slack when an operation is performed via the AWS Console.
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
+    slackWebhookURL:
+      description: The Slack incoming webhook URL to send notifications to
+      secret: true
+    slackMessageUsername:
+      description: The username to display on Slack notifications
+    slackMessageText:
+      description: The text to display on Slack notifications
+    trailObjectExpirationInDays:
+      description: Number of days to retain CloudTrail objects
+    resourceNamePrefix:
+      description: An optional prefix for created resource names

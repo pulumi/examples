@@ -1,3 +1,8 @@
 name: webserver-linode
 runtime: nodejs
 description: Basic example of an Linode web server accessible over HTTP
+template:
+  config:
+    linode:token:
+      description: The Linode API token used to provision resources
+      secret: true

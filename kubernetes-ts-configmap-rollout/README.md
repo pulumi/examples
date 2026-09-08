@@ -1,75 +1,80 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-configmap-rollout/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-ts-configmap-rollout/README.md#gh-dark-mode-only)
 
-# App Rollout via ConfigMap Data Change
+# App rollout via ConfigMap data change
 
-Uses nginx to reverse-proxy traffic to `pulumi.github.io`. The nginx configuration is contained in
+Uses NGINX to reverse-proxy traffic to `pulumi.github.io`. The NGINX configuration is contained in
 the file `default.conf` in this directory; this program reads that file and puts it in a
-`ConfigMap`. Hence, changing data in that file will cause register as a change in the `ConfigMap`'s
-data, which will trigger a rollout of the nginx `Deployment`.
+`ConfigMap`. Hence, changing data in that file will register as a change in the `ConfigMap`'s
+data, which will trigger a rollout of the NGINX `Deployment`.
 
 ![configmapRollout](images/rollout.gif "ConfigMap-induced Rollout")
 
-## Running the App
+## Prerequisites
 
-Follow the steps in [Pulumi Installation and Setup](https://www.pulumi.com/docs/get-started/install/) and
-[Configuring Pulumi Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/) to
-get setup with Pulumi and Kubernetes.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-Install dependencies:
+## Deploying the example
 
-```sh
-npm install
-```
+1.  Create a new stack:
 
-Create a new stack:
+    ```bash
+    pulumi stack init dev
+    ```
 
-```sh
-$ pulumi stack init
-Enter a stack name: configmap-rollout-dev
-```
+1.  This example will attempt to expose the `nginx` deployment to the Internet with a `Service` of
+    type `LoadBalancer`. Since minikube does not support `LoadBalancer`, the application already knows
+    to use type `ClusterIP` instead; all you need to do is tell it whether you're deploying to minikube:
 
-This example will attempt to expose the `nginx` deployment to the Internet with
-a `Service` of type `LoadBalancer`. Since minikube does not support
-`LoadBalancer`, the application already knows to use type `ClusterIP` instead;
-all you need to do is to tell it whether you're deploying to minikube:
+    ```bash
+    pulumi config set isMinikube <value>
+    ```
 
-```sh
-pulumi config set isMinikube <value>
-```
+1.  Install dependencies:
 
-Perform the deployment:
+    ```bash
+    npm install
+    ```
 
-```sh
-$ pulumi up
-Updating stack 'configmap-rollout-dev'
-Performing changes:
+1.  Deploy the stack:
 
-     Type                           Name                                     Status      Info
- +   pulumi:pulumi:Stack            configmap-rollout-configmap-rollout-dev  created
- +   ├─ kubernetes:core:ConfigMap   nginx                                    created
- +   ├─ kubernetes:apps:Deployment  nginx                                    created
- +   └─ kubernetes:core:Service     nginx                                    created
+    ```bash
+    pulumi up
+    ```
 
----outputs:---
-frontendIp: "35.193.210.254"
+    ```
+    Updating stack 'configmap-rollout-dev'
+    Performing changes:
 
-info: 4 changes performed:
-    + 4 resources created
-Update duration: 49.612528861s
+         Type                           Name                                     Status      Info
+     +   pulumi:pulumi:Stack            configmap-rollout-configmap-rollout-dev  created
+     +   ├─ kubernetes:core:ConfigMap   nginx                                    created
+     +   ├─ kubernetes:apps:Deployment  nginx                                    created
+     +   └─ kubernetes:core:Service     nginx                                    created
 
-Permalink: https://app.pulumi.com/hausdorff/configmap-rollout-dev/updates/1
-```
+    ---outputs:---
+    frontendIp: "35.193.210.254"
 
-We can see here in the `---outputs:---` section that our proxy was allocated a public IP, in this
-case `35.193.210.254`. It is exported with a stack output variable, `frontendIp`. We can use `curl`
-and `grep` to retrieve the `<title>` of the site the proxy points at.
+    info: 4 changes performed:
+        + 4 resources created
+    Update duration: 49.612528861s
+    ```
 
-```sh
-$ curl -sL $(pulumi stack output frontendIp):80 | grep -C 1 "<title>"
+1.  We can see here in the `---outputs:---` section that our proxy was allocated a public IP, in this
+    case `35.193.210.254`. It is exported with a stack output variable, `frontendIp`. Use `curl`
+    and `grep` to retrieve the `<title>` of the site the proxy points at:
 
+    ```bash
+    curl -sL $(pulumi stack output frontendIp):80 | grep -C 1 "<title>"
+    ```
+
+    ```
     <title>Pulumi. Serverless // Containers // Infrastructure // Cloud // DevOps</title>
-```
+    ```
+
+### Trigger a rollout by changing the config
 
 Now, open `default.conf` and change `.node.server` and `.server.location.proxy_set_header` to point
 at `google.com`. If you're on macOS you can run `sed -i bak "s/pulumi.github.io/google.com/g" default.conf`
@@ -109,7 +114,7 @@ containers after its TTL expires. Pulumi plans an explicit, safe rollout:
 >    that contain this new data.
 > 1. Only once that succeeds, delete the old `ConfigMap`.
 
-```sh
+```
 Previewing update of stack 'configmap-rollout-dev'
      Type                           Name                                     Status        Info
  *   pulumi:pulumi:Stack            configmap-rollout-configmap-rollout-dev  no change
@@ -124,7 +129,7 @@ info: 2 changes previewed:
 
 Running `pulumi up` should similarly look something like this:
 
-```sh
+```
 Updating stack 'configmap-rollout-dev'
      Type                           Name                                     Status       Info
  *   pulumi:pulumi:Stack            configmap-rollout-configmap-rollout-dev  done
@@ -139,8 +144,6 @@ info: 2 changes performed:
     +-1 resource replaced
       2 resources unchanged
 Update duration: 5.679919856s
-
-Permalink: https://app.pulumi.com/hausdorff/configmap-rollout-dev/updates/13
 ```
 
 Now, if we `curl` the IP address once more, we see that it points at google.com!
@@ -149,7 +152,19 @@ Now, if we `curl` the IP address once more, we see that it points at google.com!
 > to run `kubectl port-forward svc/frontend 8080:80` to forward the cluster port to the local
 > machine and access the service via `localhost:8080`.
 
-```sh
-$ curl -sL $(pulumi stack output frontendIp) | grep -o "<title>Google</title>"
+```bash
+curl -sL $(pulumi stack output frontendIp) | grep -o "<title>Google</title>"
+```
+
+```
 <title>Google</title>
+```
+
+## Cleaning up
+
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
 ```

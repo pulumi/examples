@@ -1,3 +1,10 @@
 name: aws-cs-assume-role
 runtime: dotnet
 description: Demonstrate use of AWS AssumeRole Functionality in C#
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
+    roleToAssumeARN:
+      description: The ARN of the IAM role to assume

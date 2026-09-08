@@ -3,51 +3,58 @@
 
 # Google Cloud Functions in Go deployed with Go
 
-This example deploys a Google Cloud Function implemented in Go. Pulumi program is also implemented in Go.
+This example deploys a Google Cloud Function implemented in Go. The Pulumi program is also implemented in Go.
 
-## Deploying the App
-
-To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure Pulumi for GCP](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
-    - [Set up a Service Account](https://www.pulumi.com/docs/intro/cloud-providers/gcp/service-account/)
+2. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/) and [set up a service account](https://www.pulumi.com/docs/intro/cloud-providers/gcp/service-account/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
 
-### Steps
+## Deploying the example
 
-1.  Create a new stack:
+1.  Create a new stack, which is an isolated deployment target for this example:
 
+    ```bash
+    pulumi stack init dev
     ```
-    $ pulumi stack init dev
-    ```
 
-1. Set the GCP project and region:
+1.  Set the GCP project and region:
 
     ```bash
     pulumi config set gcp:project <gcp-project>
     pulumi config set gcp:region <gcp-region>
     ```
 
-1. Execute the Pulumi program to deploy our function:
+1.  Install dependencies:
+
+    ```bash
+    go mod download
+    ```
+
+1.  Execute the Pulumi program to deploy your function:
 
     ```bash
     pulumi up
     ```
 
-1. Test our function by curl-ing the trigger URL.
+1.  Test your function by curl-ing the trigger URL:
 
     ```bash
     curl $(pulumi stack output function)
-    # "Hello World!"
     ```
 
-1. From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your function.
-
-1. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
-
-    ```bash
-    pulumi destroy --yes
-    pulumi stack rm --yes
     ```
+    "Hello World!"
+    ```
+
+1.  From there, feel free to experiment. Simply making edits and running `pulumi up` will incrementally update your function.
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

@@ -5,50 +5,41 @@
 
 This example deploys a Next.js site on AWS using [OpenNext](https://open-next.js.org/).
 
-## Deploying the App
-
-To deploy your app, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Install Node.js](https://nodejs.org/en/download/)
-3. [Configure AWS Credentials](https://www.pulumi.com/registry/packages/aws/installation-configuration/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-### Steps
+## Deploying the example
 
-After cloning this repo, from this working directory, run these commands:
-
-1. Install the required Node.js packages:
+1.  Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ npm install
+    pulumi stack init
     ```
 
-2. Create a new stack, which is an isolated deployment target for this example:
+1.  Set the AWS region to deploy into:
 
     ```bash
-    $ pulumi stack init
+    pulumi config set aws:region us-west-2
     ```
 
-3. Set the required configuration variables for this program:
+1.  Install dependencies:
 
     ```bash
-    $ pulumi config set aws:region us-west-2
+    npm install
     ```
 
-   You can select any AWS region you would like to use.
-
-4. Deploy your application to it's own dedicated serving infrastructure in AWS.
+1.  Deploy the stack:
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
 
-5. Most of the infrastructure will deploy within about 30s, but the CloudFront CDN can take 4-5 minutes.  After this is complete, a CloudFront URL where your application is served will be shown.
+    Most of the infrastructure will deploy within about 30s, but the CloudFront CDN can take 4-5 minutes. After this is complete, a CloudFront URL where your application is served will be shown.
 
-
-    ```bash
+    ```
     Outputs:
         url: "https://d119mwdwutz4hu.cloudfront.net"
 
@@ -58,15 +49,17 @@ After cloning this repo, from this working directory, run these commands:
     Duration: 4m14s
     ```
 
-6. You can open that URL in your browser to see your Next.js demo app.
+1.  Open that URL in your browser to see your Next.js demo app.
 
     ![Screenshot of demo app](screenshot.png)
 
-7. Make changes to the Next.js app in the `demoapp` folder, or bring your own Next.js app and point the Pulumi component at it instead.
+1.  Make changes to the Next.js app in the `demoapp` folder, or bring your own Next.js app and point the Pulumi component at it instead.
 
-8. Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy --yes
-    $ pulumi stack rm --yes
-    ```
+Once you've finished experimenting, tear down your stack's resources by destroying and removing it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

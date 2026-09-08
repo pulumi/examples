@@ -1,93 +1,103 @@
 <!--
-Use this template as a quick starting point when writing a README for your Pulumi example. To start, copy this file to your example folder and rename it to `README.md`. Once you've reviewed the template, delete the comments and begin writing your accompanying README for your example Pulumi application.
+Use this template as a starting point when writing a README for a Pulumi example.
+Copy this file into your example folder, rename it to `README.md`, then replace the
+guidance comments with your own content. Preview in GitHub's Markdown view to check
+formatting.
 
-Use GitHub's "Preview Changes" functionality to make sure everything is formatted correctly in Markdown.
+Pick the section set that matches your example type (see CONTRIBUTING.md):
 
-Readers should be able to follow your example from beginning to end. Please be sure to list all prerequisites, and test your guide from start to finish. Cut and paste commands from the README into your terminal to make sure there aren't typos or inaccuracies. If you find yourself executing a command that isn't in the README, make sure to add it so the readers end up with a complete tutorial. See [EC2 Linux WebServer Instance](https://www.pulumi.com/docs/tutorials/aws/ec2-webserver/) for an example of a tutorial following this template. Note that the featured tutorial is multi-language whereas the exampleas in this repo are cloud and language-specific (except for the ones with the `cloud` prefix).
+- Type A — Deployable: a single Pulumi project the reader stands up with `pulumi up`.
+  Use ALL the sections below. Your Pulumi.yaml MUST include a `template:` block.
+- Type B — Non-deployable: unit tests, policy packs, integration-test harnesses.
+  Drop the deploy button and the Prerequisites/Deploy/Clean up/Summary flow. Instead
+  use a single action section named for the real workflow ("Running the tests",
+  "Using this policy pack") followed by a "Learn more" links section.
+- Type C — Multi-project/index: a directory of sub-projects. Keep the title and intro,
+  then list each sub-project with a one-line description and a link; let each
+  sub-project carry its own Type A/B README.
+
+Test your walkthrough end to end: paste each command into a terminal so there are no
+typos or missing steps. If you run a command that isn't in the README, add it.
 -->
 
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/<example-dir>/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/<example-dir>/README.md#gh-dark-mode-only)
 
-# [App Description] using [Service or Tool]
+<!-- Type A only. Replace <example-dir> with your folder name. Omit the button for Type B. -->
 
-<!-- Use Title Case for all Titles -->
-<!-- Most of the examples are transformed into tutorials on https://www.pulumi.com/docs/tutorials/ and are sorted by cloud and language. There is no need to include the cloud provider name or the language in the title.
+# App description using a service or tool
 
-<!-- Our examples have a specific structure. Learn more at CONTRIBUTING.md -->
+<!-- Use sentence case for the title and all headings: capitalize only the first word
+and proper nouns / product names (AWS, Amazon S3, Kubernetes, Pulumi, API Gateway,
+etc.), and don't end headings with punctuation. Examples become tutorials on
+https://www.pulumi.com/docs/, sorted by cloud and language, so there's no need to put
+the cloud provider or language in the title unless it's needed to disambiguate. -->
 
-Introductory paragraph about the example that explains what problem it solves and why the reader should care. If possible, include use cases.
+One or two sentences on what this example builds and why a reader would care. If it
+helps, follow with a short bulleted list of the key resources it creates:
 
-In this tutorial, we will [configure/set up/build/deploy] [some thing]...
+It creates:
 
-When you're finished, you'll be able to...
+- A **thing** that does X.
+- A **second thing** wired to the first.
 
 ## Prerequisites
 
-<!-- The Prerequisites section includes an ordered list of required installation and configuration steps before the reader can deploy the Pulumi example. -->
+<!-- An ordered list of what to install/configure before deploying. -->
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. Configure [cloud] <!-- We have setup pages for our popular cloud providers at https://www.pulumi.com/docs/intro/cloud-providers/<cloud-provider>/setup/ -->
-1. Install [language runtime] <!-- We have setup pages for our supported language runtimes at https://www.pulumi.com/docs/intro/languages/<language>/ -->
-1. (Optional) List any other accounts needed, such as Twitter, Slack, or other services.
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) <!-- swap for your provider: .../cloud-providers/<aws|azure|gcp|kubernetes|digitalocean>/setup/ -->
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/) <!-- swap for your language: javascript (Node.js) | python | go | dotnet (.NET) | java; omit for yaml/hcl -->
 
-<!-- Example:
-1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure your AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
-1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
--->
+## Deploying the example
 
-## Deploy the App
+<!-- A single ordered list: init the stack, set config, install deps, deploy, verify.
+Headings use the "-ing" form; step text uses imperative verbs. -->
 
-### Step 1: Create a directory and cd into it
+1.  Create a new stack:
 
-For Pulumi examples, we typically start by creating a directory and changing into it. Then, we create a new Pulumi project from a template. For example, `azure-javascript`.
+    ```bash
+    pulumi stack init dev
+    ```
 
-First....
+1.  Set the required configuration:
 
-Next...
+    ```bash
+    pulumi config set aws:region us-west-2
+    ```
 
-Finally...
+1.  Install dependencies:
 
-![Alt text for screen readers](/path/to/img.png)
+    ```bash
+    npm install
+    ```
 
-<!--
-If showing a command, explain the command first by talking about what it does. Then show the command and its output. If the output is too long, you can clip it with `...` and only show the relevant parts. If your README includes images, make sure to include an alt text.
+1.  Deploy the stack:
 
-Now transition to the next step by telling the reader what's next. If you're adding to a file, make sure to clearly explain that.
--->
+    ```bash
+    pulumi up
+    ```
 
+1.  Verify the result using the stack outputs:
 
-### Step 2: Sentence case
-Another introduction
+    ```bash
+    pulumi stack output
+    ```
 
-Your content
+## Cleaning up
 
-Transition to the next step.
+To remove the resources and the stack:
 
-### Step 3
-
-Another introduction
-
-Your content
-
-Transition to the next step.
-
-## Clean Up
-
-<!--We generally ask the reader to run `pulumi destroy` and tear down the resources to avoid incurring any costs. -->
-
+```bash
+pulumi destroy
+pulumi stack rm
+```
 
 ## Summary
 
-In this tutorial, you [configured/set up/built/deployed] [something]. Now you can....
+<!-- Optional but encouraged. A short recap of what the reader deployed and where to
+take it next. -->
 
-<!-- Give a quick recap of what the readers have learned and optionally provide places for further exploration. -->
+## Next steps
 
-## Next Steps
-
-<!-- Optionally include an unordered list of relevant Pulumi tutorials. -->
-
-<!-- Example:
-- [Create a load-balanced, hosted NGINX container service](https://www.pulumi.com/docs/tutorials/aws/ecs-fargate/)
-- [Create an EC2-based WebServer and associated infrastructure](https://www.pulumi.com/docs/tutorials/aws/ec2-webserver/)
--->
-
+<!-- Optional. An unordered list of related Pulumi tutorials or docs. -->

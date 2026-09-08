@@ -1,3 +1,8 @@
 name: azure-ts-call-azure-sdk
 runtime: nodejs
 description: An example of integrating an Azure SDK call to a Pulumi program.
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy resources into
+      default: westus2

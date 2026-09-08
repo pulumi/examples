@@ -15,3 +15,27 @@ config:
   availabilityZones:
   - eu-central-1a
   - eu-central-1b
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: eu-central-1
+    minClusterSize:
+      description: The minimum number of nodes in the EKS cluster
+      default: 3
+    maxClusterSize:
+      description: The maximum number of nodes in the EKS cluster
+      default: 6
+    desiredClusterSize:
+      description: The desired number of nodes in the EKS cluster
+      default: 3
+    eksNodeInstanceType:
+      description: The EC2 instance type for the EKS nodes
+      default: t3.medium
+    vpcNetworkCidr:
+      description: The CIDR block for the VPC
+      default: 10.0.0.0/16
+    publicSubnetCIDRs:
+      description: The CIDR blocks for the public subnets
+    availabilityZones:
+      description: The availability zones to deploy into

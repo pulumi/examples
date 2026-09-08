@@ -4,3 +4,31 @@ runtime:
   options:
     typescript: true
 description: Deploy OpenClaw AI assistant on Azure with Tailscale security
+template:
+  config:
+    anthropicApiKey:
+      description: Anthropic API key for Claude
+      secret: true
+    tailscaleAuthKey:
+      description: Tailscale auth key (reusable recommended)
+      secret: true
+    tailnetDnsName:
+      description: Your tailnet DNS name (e.g. tailXXXXX.ts.net)
+    vmSize:
+      description: The Azure VM size
+      default: Standard_B2s
+    location:
+      description: The Azure region to deploy into
+      default: eastus
+    model:
+      description: The LLM model identifier
+      default: anthropic/claude-sonnet-4
+    enableSandbox:
+      description: Enable the Docker sandbox for code execution
+      default: true
+    gatewayPort:
+      description: The OpenClaw gateway port
+      default: 18789
+    browserPort:
+      description: The OpenClaw browser port
+      default: 18791

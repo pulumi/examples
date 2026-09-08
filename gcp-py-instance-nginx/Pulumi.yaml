@@ -4,3 +4,13 @@ runtime:
   options:
     virtualenv: venv
 description: Deploy a Nginx Server in a GCP instance
+template:
+  config:
+    gcp:project:
+      description: The Google Cloud project to deploy into
+    gcp:region:
+      description: The Google Cloud region to deploy into
+      default: asia-east1
+    gcp:zone:
+      description: The Google Cloud zone to deploy into
+      default: asia-east1-a

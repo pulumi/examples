@@ -1,3 +1,11 @@
 name: azure-cs-synapse
 runtime: dotnet
 description: Creates Azure Synapse workspace with SQL and Spark pools
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus2
+    location:
+      description: The Azure location for the resource group
+      default: WestUS

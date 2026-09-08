@@ -1,136 +1,73 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/ecs-fargate-python/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-vpc-with-ecs-fargate-py/ecs-fargate-python/README.md#gh-dark-mode-only)
 
-# NGINX on AWS ECS Fargate using Python with a vpc built in Typescript
-
-### What Is This?
+# NGINX on AWS ECS Fargate using Python with a VPC built in TypeScript
 
 This example demonstrates the ability to deploy resources in Pulumi using one language (TypeScript) and then reference those resources from another Pulumi application using a different language (Python).
 
-[`vpc-awsx-ts`](../vpc-awsx-ts) deploys an AWS VPC using TypeScript
+- [`vpc-awsx-ts`](../vpc-awsx-ts) deploys an AWS VPC using TypeScript.
+- [`ecs-fargate-python`](../ecs-fargate-python) deploys an AWS ECS cluster using Python that references the VPC from `vpc-awsx-ts`.
 
-[`ecs-fargate-python`](../ecs-fargate-python) deploys an AWS ECS Cluster using Python that references the VPC from `vpc-awsx-ts`
+It provisions a full [Amazon Elastic Container Service (ECS) "Fargate"](https://aws.amazon.com/ecs) cluster and related infrastructure, running a load-balanced NGINX web server accessible over the Internet on port 80. This example is inspired by [Docker's Getting Started Tutorial](https://docs.docker.com/get-started/). The VPC outputs from the `vpc-awsx-ts` folder are used as inputs via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies).
 
-It provisions a full [Amazon Elastic Container Service (ECS) "Fargate"](https://aws.amazon.com/ecs) cluster and
-related infrastructure, running a load-balanced NGINX web server accessible over the Internet on port 80.
-This example is inspired by [Docker's Getting Started Tutorial](https://docs.docker.com/get-started/).
-
-### Why would you do this?
-An example showing that you can easily infrastructure written in a different language than the one you are used to.  The vpc outputs from vpc-awsx-ts folder are used as inputs via [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies)
+> **Mandatory AWS prerequisite: enable the new ECS resource ARN and ID formats.**
+> This is necessary so that tags work properly in ECS. See [Tagging your Amazon ECS resources](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html). Per AWS: "You must opt in to the new Amazon Resource Name (ARN) and resource identifier (ID) formats." This has to be done per region. In the AWS Console, go to Elastic Container Service → Account Settings and enable the new formats for Container Instance, Service, and Task.
 
 ## Prerequisites
 
-* [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-* [Configure Pulumi to Use AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
 
+## Deploying the example
 
-### Mandatory AWS Pre-REQ: AWS Console Fix for Tags:
+First deploy the [vpc-awsx-ts](../vpc-awsx-ts) project so that its stack outputs are available to reference here.
 
-This is necessary so that the tags work properly in ecs
-[Tagging your Amazon ECS resources](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html)
+1. Create a new stack:
 
-As per AWS:  `You must opt in to the new Amazon Resource Name (ARN) and resource identifier (ID) formats.`
-
-This has to be done per region until AWS enables it as default across the board(April 1, 2021).
-
-AWS Console -> Elastic Container Service ->  Account Settings ->
-
-BEFORE
-```
-Resource                My IAM user or role account settings
-Container Instance      Undefined
-Service                 Undefined
-Task                    Undefined
-```
-
-AFTER
-```
-Resource                My IAM user or role account settings
-Container Instance      Enabled
-Service                 Enabled
-Task                    Enabled
-```
-
-## Running the Example
-
-1. Initialize a new stack called: `ecs-fargate-dev` via [pulumi stack init](https://www.pulumi.com/docs/reference/cli/pulumi_stack_init/).
-
-   ```
-   $ pulumi stack init ecs-fargate-dev
+   ```bash
+   pulumi stack init ecs-fargate-dev
    ```
 
-1. View the current config settings. This will be empty.
+1. Install dependencies:
 
-   ```
-   $ pulumi config
-   ```
-
-   ```
-   KEY                     VALUE
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
    ```
 
-1. Populate the config.
+1. Set the configuration for the program. The `mystackpath` value is the fully-qualified stack name (`org/project/stack`) of your VPC stack — for example `team-qa/awsx-vpc/vpc-fargate-dev`. This format only applies to the Pulumi Cloud backend (not self-hosted):
 
-   Here are aws [endpoints](https://docs.aws.amazon.com/general/latest/gr/rande.html)
-
-   The [StackReference](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#inter-stack-dependencies) constructor takes as input a string of the form `org/project/stack`, and lets you access the outputs of that stack.  This format is ONLY for the SaaS based backend of pulumi(not for self-hosted).
-
-   Note: The key is `mystackpath`.  The value for it will be your `stackreference` from the vpc:
-
-   e.g.:  `team-qa/awsx-vpc/vpc-fargate-dev`
-
-   ```
-   $ pulumi config set aws:region us-east-2 # must match vpc region
-   $ pulumi config set config set mystackpath team-qa/awsx-vpc/vpc-fargate
+   ```bash
+   pulumi config set aws:region us-east-2
+   pulumi config set mystackpath team-qa/awsx-vpc/vpc-fargate-dev
    ```
 
-1. View the current config settings
+1. Deploy the stack:
 
-   ```
-   $ pulumi config
-   ```
-
-   ```
-   KEY                     VALUE
-   aws:region           us-east-2
-   mystackpath          team-qa/awsx-vpc/vpc-fargate
+   ```bash
+   pulumi up
    ```
 
-1. Launch
+1. View the outputs:
 
-   ```
-   $ pulumi up
-   ```
-
-   select `y` to continue
-
-1. Open the `View Live` link to view the deployment details in the Pulumi console.  Note, you will have a url that shows up that will look similar to the url below.  The `team-qa` value will be replaced with your own org, for example if your org name is: `team-prod`:
-
-   console view that matches above code as an example:
-
-   https://app.pulumi.com/`team-qa`/fargate-with-awsx-vpc/ecs-fargate-dev/
-
-   console view with YOUR ORG NAME:
-
-   https://app.pulumi.com/`team-prod`/fargate-with-awsx-vpc/ecs-fargate-dev/
-
-1. View the outputs
-
-   ```
-   $ pulumi stack output
+   ```bash
+   pulumi stack output
    ```
 
    ```
    Current stack outputs (2):
    OUTPUT             VALUE
-   ECS Cluster Tags   {"Name":"pulumi-fargate-ecs-cluster","application":"fargate","costcenter":"1234","awsx-vpc":"yes","demo":"yes","env":"dev","pulumi:Config":"Pulumi.ecs-fargate-dev.yaml","pulumi:project":"fargate-with-awsx-vpc","pulumi:stack":"ecs-fargate-dev","vpc_cidr":"10.0.0.0/24","vpc_name":"vpc-fargate-dev"}
-
+   ECS Cluster Tags   {"Name":"pulumi-fargate-ecs-cluster",...}
    Load Balancer URL  pulumi-fargate-alb-7467631-1452059497.us-east-2.elb.amazonaws.com
    ```
 
-1. Cleanup.
+## Cleaning up
 
-   ```
-   $ pulumi destroy -y
-   $ pulumi rm ecs-fargate-dev
-   ```
+Destroy your stack and remove it:
+
+```bash
+pulumi destroy
+pulumi stack rm ecs-fargate-dev
+```

@@ -1,3 +1,8 @@
 name: azure-ts-containerapps
 runtime: nodejs
 description: Creates an Azure Container App and deploys a custom Docker image to it
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy resources into
+      default: westus2

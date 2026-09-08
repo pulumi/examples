@@ -1,82 +1,85 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-go-webserver/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-go-webserver/README.md#gh-dark-mode-only)
 
-# Web Server Using Compute Engine
+# Web server using Compute Engine
 
 Starting point for building the Pulumi web server sample in Google Cloud.
 
 This example deploys a Google Compute Engine virtual machine — together with a network and firewall rule that allows SSH and HTTP access — and runs a simple HTTP server on it that responds with `Hello, World!`.
 
-## Running the App
+## Prerequisites
 
-1.  Create a new stack:
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
 
-    ```
-    $ pulumi stack init webserver-gcp-testing
-    ```
+## Deploying the example
 
-1.  Configure the project:
+1. Create a new stack:
 
-    ```
-    $ pulumi config set gcp:project YOURGOOGLECLOUDPROJECT
-    $ pulumi config set gcp:zone us-central1-a
-    ```
-
-1.  Restore NPM dependencies:
-
-    ```
-    $ npm install
+    ```bash
+    pulumi stack init dev
     ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1. Configure the project:
+
+    ```bash
+    pulumi config set gcp:project YOURGOOGLECLOUDPROJECT
+    pulumi config set gcp:zone us-central1-a
+    ```
+
+1. Install dependencies:
+
+    ```bash
+    go mod download
+    ```
+
+1. Run `pulumi up` to preview and deploy changes:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi up
-    Previewing changes:
-    ...
+    Updating (dev):
 
-    Performing changes:
-
-        Type                     Name                                 Status      Info
-    +   pulumi:pulumi:Stack      webserver-gcp-webserver-gcp-testing  created
+        Type                     Name                                 Status
+    +   pulumi:pulumi:Stack      webserver-gcp-dev                    created
     +   ├─ gcp:compute:Network   network                              created
     +   ├─ gcp:compute:Firewall  firewall                             created
     +   └─ gcp:compute:Instance  instance                             created
 
-    ---outputs:---
-    instanceIP  : "35.185.200.158"
-    instanceName: "instance-af7e53b"
+    Outputs:
+        instanceIP  : "35.185.200.158"
+        instanceName: "instance-af7e53b"
 
-    info: 4 changes performed:
-        + 4 resources created
-    Update duration: 1m23s
+    Resources:
+        + 4 created
+
+    Duration: 1m23s
     ```
 
-1.  Curl the HTTP server:
+1. Curl the HTTP server:
+
+    ```bash
+    curl $(pulumi stack output instanceIP)
+    ```
 
     ```
-    $ curl $(pulumi stack output instanceIP)
     Hello, World!
     ```
 
-1.  SSH into the server:
+1. SSH into the server:
 
-    ```
-    $ gcloud compute ssh $(pulumi stack output instanceName)
-    Warning: Permanently added 'compute.4281826686797606751' (ECDSA) to the list of known hosts.
-
-    The programs included with the Debian GNU/Linux system are free software;
-    the exact distribution terms for each program are described in the
-    individual files in /usr/share/doc/*/copyright.
-
-    Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-    permitted by applicable law.
-    albert@instance-af7e53b:~$
+    ```bash
+    gcloud compute ssh $(pulumi stack output instanceName)
     ```
 
-1. Cleanup
+## Cleaning up
 
-    ```
-    $ pulumi destroy
-    $ pulumi stack rm
-    ```
+Once you're finished experimenting, destroy your stack and remove it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-slackbot/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-slackbot/README.md#gh-dark-mode-only)
 
-# Slackbot for Posting Slack Mention Notifications
+# Slackbot for posting Slack mention notifications
 
 A simple Slackbot (called '@mentionbot') that sends a message to specific channel to notifiy you any time you're @mentioned anywhere.  Very helpful if you want a time-ordered list of @mentions to go through at a later point.
 
@@ -16,7 +16,13 @@ The example contains a few useful patterns that show how to build a good Slackbo
 
 First, we'll setup the Pulumi App.  Then, we'll go create and configure a Slack App and Bot to interact with our Pulumi App.
 
-## Deploying and running the Pulumi App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 Note: some values in this example will be different from run to run.  These values are indicated
 with `***`.
@@ -24,22 +30,29 @@ with `***`.
 1.  Create a new stack:
 
     ```bash
-    $ pulumi stack init mentionbot
+    pulumi stack init mentionbot
     ```
 
 1.  Set the GCP region and project:
 
-    ```
-    $ pulumi config set gcp:region us-central1
-    $ pulumi config set gcp:project <your project>
+    ```bash
+    pulumi config set gcp:region us-central1
+    pulumi config set gcp:project <your project>
     ```
 
-1.  Restore NPM modules via `npm install` or `yarn install`.
+1.  Install dependencies:
+
+    ```bash
+    npm install
+    ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
+    ```bash
+    pulumi up
     ```
-    $ pulumi up
+
+    ```
     Previewing update (mentionbot):
     ...
 
@@ -66,8 +79,6 @@ with `***`.
 
     Permalink: https://app.pulumi.com/***/mentionbot/updates/1
     ```
-
-
 
 ## Creating a new Slackbot
 
@@ -128,10 +139,10 @@ Now, we're almost done.  The only thing left to do is supply your Pulumi App wit
 
 Supply these both like so:
 
-    ```
-    $ pulumi config set --secret mentionbot:slackToken xoxb-...
-    $ pulumi config set --secret mentionbot:verificationToken d...
-    ```
+```bash
+pulumi config set --secret mentionbot:slackToken xoxb-...
+pulumi config set --secret mentionbot:verificationToken d...
+```
 
 Next, install the Slack App into your workspace:
 
@@ -141,7 +152,7 @@ Next, install the Slack App into your workspace:
 
 And we're done!
 
-## Interacting with the Slack Bot
+## Interacting with the Slack bot
 
 From Slack you can now create your own private channel:
 
@@ -167,7 +178,7 @@ And you're set!  From now on when someone mentions you, you'll get a little mess
 <img src=https://user-images.githubusercontent.com/4564579/55648631-b0d4f200-5795-11e9-886a-8ce0f932e9f1.png>
 </p>
 
-## Clean up
+## Cleaning up
 
 1.  Run `pulumi destroy` to tear down all resources.
 

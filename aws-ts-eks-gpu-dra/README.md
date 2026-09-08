@@ -1,4 +1,7 @@
-# EKS GPU Dynamic Resource Allocation (DRA) Demo
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-eks-gpu-dra/README.md#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-eks-gpu-dra/README.md#gh-dark-mode-only)
+
+# EKS GPU dynamic resource allocation (DRA) demo
 
 A Pulumi program that provisions an Amazon EKS 1.34 cluster with NVIDIA GPU support using Dynamic Resource Allocation (DRA) and Multi-Instance GPU (MIG) technology.
 
@@ -13,16 +16,9 @@ This project demonstrates:
 1. Fashion-MNIST workloads demonstrating concurrent GPU sharing
 1. Prometheus + Grafana monitoring with DCGM dashboards
 
-## Prerequisites
-
-1. Pulumi CLI (>= v3): https://www.pulumi.com/docs/get-started/install/
-1. Node.js (>= 14): https://nodejs.org/
-1. AWS credentials configured with permissions to create EKS clusters
-1. Pulumi ESC environment configured for authentication (pulumi-idp/auth)
-
 ## Architecture
 
-### Cluster Configuration
+### Cluster configuration
 
 1. **System Node Group**: m6i.large instances for system workloads
 1. **GPU Node Group**: p4d.24xlarge instances (8× A100 40GB GPUs) with MIG enabled
@@ -32,7 +28,7 @@ This project demonstrates:
    - 1× 3g.20gb slice
    - Per GPU (total 8 GPUs)
 
-### Fashion-MNIST Workloads
+### Fashion-MNIST workloads
 
 Three concurrent workloads demonstrate MIG GPU sharing:
 
@@ -42,9 +38,14 @@ Three concurrent workloads demonstrate MIG GPU sharing:
 
 All workloads run simultaneously on the same physical GPU using different MIG slices.
 
-## Getting Started
+## Prerequisites
 
-### Deploy Infrastructure
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) with permissions to create EKS clusters
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+4. A Pulumi ESC environment configured for authentication (`pulumi-idp/auth`)
+
+## Deploying the example
 
 1. Install dependencies:
 
@@ -59,9 +60,9 @@ All workloads run simultaneously on the same physical GPU using different MIG sl
    pulumi up
    ```
 
-1. Wait for GPU nodes to provision and MIG Manager to configure GPUs
+1. Wait for GPU nodes to provision and MIG Manager to configure GPUs.
 
-### Verify MIG Configuration
+### Verify MIG configuration
 
 1. Check GPU node status:
 
@@ -75,7 +76,7 @@ All workloads run simultaneously on the same physical GPU using different MIG sl
    pulumi env run pulumi-idp/auth -- kubectl get node <gpu-node-name> -o yaml | grep mig
    ```
 
-### Monitor Fashion-MNIST Workloads
+### Monitor Fashion-MNIST workloads
 
 1. Check pod status:
 
@@ -107,21 +108,21 @@ All workloads run simultaneously on the same physical GPU using different MIG sl
    pulumi env run pulumi-idp/auth -- kubectl exec mig-large-training-pod -n mig-test -- nvidia-smi
    ```
 
-### Access Grafana Dashboard
+### Access the Grafana dashboard
 
-1. Get Grafana LoadBalancer URL:
+1. Get the Grafana LoadBalancer URL:
 
    ```bash
    pulumi env run pulumi-idp/auth -- kubectl get svc -n monitoring kube-prometheus-stack-grafana
    ```
 
-1. Access Grafana at the LoadBalancer URL
+1. Access Grafana at the LoadBalancer URL:
    - Username: `admin`
    - Password: `gpu-monitoring-demo`
 
-1. Navigate to the "NVIDIA DCGM MIG" dashboard to view GPU metrics
+1. Navigate to the "NVIDIA DCGM MIG" dashboard to view GPU metrics.
 
-### Expected Results
+### Expected results
 
 1. All three pods should reach Running state
 1. Training pods should show increasing accuracy over epochs
@@ -130,7 +131,7 @@ All workloads run simultaneously on the same physical GPU using different MIG sl
 1. All workloads should be sharing the same physical GPU
 1. No OOM errors or pod evictions
 
-## Project Layout
+## Project layout
 
 1. `index.ts` — Main Pulumi program
 1. `mig-policy/` — Pulumi Policy Pack for MIG profile enforcement
@@ -145,9 +146,9 @@ All workloads run simultaneously on the same physical GPU using different MIG sl
 | `clusterName` | Name for the EKS cluster         | `gpu-dra-cluster`  |
 | `aws:region`  | AWS region to deploy resources   | Set in stack config|
 
-## Cleanup
+## Cleaning up
 
-To destroy all resources:
+To destroy all resources, run:
 
 ```bash
 pulumi destroy
@@ -158,25 +159,25 @@ pulumi stack rm
 
 ## Troubleshooting
 
-### Pods Stuck in Pending
+### Pods stuck in Pending
 
 1. Check GPU node status and MIG configuration
 1. Verify DRA driver is running: `kubectl get pods -n nvidia-dra-driver`
 1. Check GPU Operator status: `kubectl get pods -n gpu-operator`
 
-### MIG Configuration Not Applied
+### MIG configuration not applied
 
 1. Check MIG Manager logs: `kubectl logs -n gpu-operator -l app=nvidia-mig-manager`
 1. Verify node labels: `kubectl get nodes -l nvidia.com/mig.config=all-balanced`
 1. May require node reboot (MIG Manager sets `WITH_REBOOT=true`)
 
-### Fashion-MNIST Downloads Failing
+### Fashion-MNIST downloads failing
 
-1. Pods require internet access to download Fashion-MNIST dataset
+1. Pods require internet access to download the Fashion-MNIST dataset
 1. Verify NAT Gateway is configured for private subnets
 1. Check pod logs for download errors
 
-## Additional Resources
+## Additional resources
 
 1. [NVIDIA MIG User Guide](https://docs.nvidia.com/datacenter/tesla/mig-user-guide/)
 1. [Kubernetes Dynamic Resource Allocation](https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/)

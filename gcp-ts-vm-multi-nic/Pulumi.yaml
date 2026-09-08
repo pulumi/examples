@@ -12,3 +12,14 @@ config:
     type: string
     description: GCE machine type. Must support nicCount NICs (e.g. n2-standard-4 supports up to 4).
     default: n2-standard-4
+template:
+  config:
+    gcp:region:
+      description: The Google Cloud region to deploy into
+      default: us-central1
+    nicCount:
+      description: Number of NICs to attach to the VM (each on its own VPC). Max depends on machine type.
+      default: 3
+    machineType:
+      description: GCE machine type. Must support nicCount NICs (e.g. n2-standard-4 supports up to 4).
+      default: n2-standard-4

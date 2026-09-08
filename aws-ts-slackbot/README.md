@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-slackbot/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-slackbot/README.md#gh-dark-mode-only)
 
-# Create a Slackbot for Posting Mention Notifications
+# Create a Slackbot for posting mention notifications
 
 This is an example of a simple Slackbot (called '@mentionbot') that posts a notification to a specific channel any time you're @mentioned anywhere, whether in various channels or via direct message. This bot is useful for when you need a time-ordered list of @mentions to go through at a later point.
 
@@ -16,33 +16,39 @@ This Slackbot example contains a few useful patterns, showing you how to create 
 
 First, we'll set up the Pulumi App.  Then, we'll go create and configure a Slack App and Bot to interact with our Pulumi App.
 
-## Deploy the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 > **Note:** Some values in this example will be different from run to run.  These values are indicated
 with `***`.
 
-### Step 1: Create a new stack
+1.  Create a new stack:
 
-```bash
-$ pulumi stack init mentionbot
+    ```bash
+    pulumi stack init mentionbot
+    ```
+
+1.  Set the AWS region:
+
+    ```bash
+    pulumi config set aws:region us-east-2
+    ```
+
+1.  Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+1.  Run `pulumi up` to preview and deploy your AWS resources:
+
 ```
-
-### Step 2: Set the AWS region
-
-```
-$ pulumi config set aws:region us-east-2
-```
-
-### Step 3: Restore NPM modules
-
-Run `npm install` or `yarn install` to restore your NPM modules.
-
-### Step 4: Preview and deploy your app
-
-Run `pulumi up` to preview and deploy your AWS resources.
-
-```
-$ pulumi up
+pulumi up
 Previewing update (mentionbot):
 ...
 
@@ -79,7 +85,7 @@ Previewing update (mentionbot):
     Permalink: https://app.pulumi.com/***/mentionbot/updates/1
 ```
 
-### Step 5: Create a new Slackbot
+### Creating a new Slackbot
 
 To create a new Slackbot, first go to https://api.slack.com/apps and create an account if necessary.  Next, click on 'Create New App' here:
 
@@ -138,9 +144,9 @@ Now, we're almost done.  The only thing left to do is supply your Pulumi App wit
 
 Supply these both like so:
 
-```
-$ pulumi config set --secret mentionbot:slackToken xoxb-...
-$ pulumi config set --secret mentionbot:verificationToken d...
+```bash
+pulumi config set --secret mentionbot:slackToken xoxb-...
+pulumi config set --secret mentionbot:verificationToken d...
 ```
 
 Next, install the Slack App into your workspace:
@@ -151,7 +157,7 @@ Next, install the Slack App into your workspace:
 
 And we're done!
 
-### Step 6: Interact with the Slackbot
+### Interacting with the Slackbot
 
 From Slack you can now create your own private channel:
 
@@ -177,8 +183,11 @@ And you're set!  From now on when someone from your team mentions you, you'll ge
 <img src=https://user-images.githubusercontent.com/4564579/55648631-b0d4f200-5795-11e9-886a-8ce0f932e9f1.png>
 </p>
 
-## Clean up
+## Cleaning up
 
-1.  Run `pulumi destroy` to tear down all resources.
+Once you're done, destroy the resources and remove the stack:
 
-1.  To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi console.
+```bash
+pulumi destroy
+pulumi stack rm
+```

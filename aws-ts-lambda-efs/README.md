@@ -9,32 +9,36 @@ This example shows how to use Amazon EFS with AWS Lambda in Pulumi. See the [Usi
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en/download/)
-- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
-- [Connect Pulumi with your AWS account](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-## Running the Example
-
-After cloning this repo, `cd` into it and run these commands:
+## Deploying the example
 
 1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
-2. Set your desired AWS region:
+1. Set your desired AWS region:
 
     ```bash
-    $ pulumi config set aws:region us-east-1 # any valid AWS region will work
+    pulumi config set aws:region us-east-1 # any valid AWS region will work
     ```
 
-3. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
+1. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+1. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
    includes all of the required AWS resources (clusters, services, and the like). Don't worry if it's more than
    you expected -- this is one of the benefits of Pulumi, it configures everything so that so you don't need to!
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
 
     After being prompted and selecting "yes", your deployment will begin. It'll complete in a few minutes:
@@ -127,17 +131,22 @@ After cloning this repo, `cd` into it and run these commands:
     Duration: 5m52s
     ```
 
-4. At this point, your app is running! The URL was published so it's easy to interact with:
+1. At this point, your app is running! The URL was published so it's easy to interact with:
 
     ```bash
-    $ curl -X POST -d '<h1>Hello world</h1>' $(pulumi stack output url)files/index.html
-    $ curl -X GET $(pulumi stack output url)files/index.html
+    curl -X POST -d '<h1>Hello world</h1>' $(pulumi stack output url)files/index.html
+    curl -X GET $(pulumi stack output url)files/index.html
+    ```
+
+    ```
     <h1>Hello world</h1>
     ```
 
-5. Once you are done, you can destroy all of the resources, and the stack:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
-    ```
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

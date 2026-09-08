@@ -1,3 +1,17 @@
 name: azure-ts-webapp-privateendpoint-vnet-injection
 runtime: nodejs
 description: Deploy two App Services - Front web app with VNet injection and Back web app with a Private Endpoint.
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus2
+    virtualNetworkCIDR:
+      description: CIDR range for the VNet
+      default: 10.200.0.0/16
+    backendCIDR:
+      description: Subnet CIDR range for the backend
+      default: 10.200.1.0/24
+    frontendCIDR:
+      description: Subnet CIDR range for the frontend
+      default: 10.200.2.0/24

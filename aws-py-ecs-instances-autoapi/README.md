@@ -1,40 +1,35 @@
-# AWS ECS with Container Instances and Delete Orchestration
+# AWS ECS with container instances and delete orchestration
 
 This example demonstrates three use-cases:
 
-- AWS ECS using Container Instances (Python): A Python Pulumi program that stands up a custom AWS ECS cluster that uses instances instead of fargate for the infrastructure.
-- Automation API Orchestration: Destroying this stack without any sort of orchestration will fail due to this issue in the underlying provider: https://github.com/hashicorp/terraform-provider-aws/issues/4852. So, Automation API to the rescue. By orchestrating sizing of the autoscaling group to 0 before the destroy, the destroy is able to complete as expected.
-- Automation API cross-language support: Although the automation logic is written in TypeScript, the ECS cluster stack is written in Python.
+- **AWS ECS using Container Instances (Python):** A Python Pulumi program that stands up a custom AWS ECS cluster that uses instances instead of Fargate for the infrastructure.
+- **Automation API orchestration:** Destroying this stack without any sort of orchestration will fail due to this issue in the underlying provider: https://github.com/hashicorp/terraform-provider-aws/issues/4852. So, Automation API to the rescue. By orchestrating sizing of the autoscaling group to 0 before the destroy, the destroy is able to complete as expected.
+- **Automation API cross-language support:** Although the automation logic is written in TypeScript, the ECS cluster stack is written in Python.
 
-## Project Structure
+This directory contains two Pulumi projects:
 
-### `/py-ecs-instance`:
+- [py-ecs-instance/](./py-ecs-instance) — a Python Pulumi program that deploys an ECS cluster using "container instances" instead of Fargate, along with an nginx "hello world" test container and related load balancer and networking. You can change into this directory and run `pulumi up` to deploy the stack just as you would with any Pulumi project.
+- [automation/](./automation) — the Automation API code (`index.ts`) that handles deploying and, more importantly, orchestrating the deletion of the stack to avoid a dependency constraint.
 
-This is a Pulumi project/stack python program that deploys the following:
+## Prerequisites
 
-- ECS Cluster using "container instances" instead of Fargate.
-- An nginx "hello world" test container and related load balancer and networking.
-  One can change to this directory and run `pulumi up` and deploy the stack just as would be done with any Pulumi project ...
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
+4. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+5. The AWS CLI, with appropriate credentials
 
-But wait, there's more ...
+## Running the example
 
-### `/automation`
+The recommended workflow is to run the Automation API program, which orchestrates both the deployment and the deletion of the ECS cluster stack. Change into the `automation` directory and use `yarn` to run the Automation API code:
 
-This directory contains the automation api code (`index.ts`) that handles deploying and, more importantly, orchestrating the deletion of the stack to avoid a dependency constraint.
+```bash
+cd automation
+yarn install
+yarn start
+```
 
-## How to Use
-
-To run this example you'll need a few pre-reqs:
-
-1. A Pulumi CLI installation ([v2.15.6](https://www.pulumi.com/docs/get-started/install/versions/) or later)
-2. Python 3.6+
-3. The AWS CLI, with appropriate credentials.
-
-To run our automation program we just `cd` to the `automation` directory and use `yarn` to run the automation api code.
-
-```shell
-$ yarn install
-$ yarn start
+```
 yarn run v1.19.1
 $ ./node_modules/ts-node/dist/bin.js index.ts
 successfully initialized stack
@@ -56,10 +51,15 @@ update summary:
 website url: http://load-balancer-xxxxxxxxx.us-east-1.elb.amazonaws.com
 ```
 
-To destroy the stack, we run the automation program with an additional `destroy` argument:
+## Cleaning up
 
-```shell
-$ yarn start destroy
+To destroy the stack, run the Automation API program with an additional `destroy` argument:
+
+```bash
+yarn start destroy
+```
+
+```
 yarn run v1.19.1
 $ ./node_modules/ts-node/dist/bin.js index.ts destroy
 successfully initialized stack

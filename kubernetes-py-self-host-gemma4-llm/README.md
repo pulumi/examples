@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-py-self-host-gemma4-llm/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-py-self-host-gemma4-llm/README.md#gh-dark-mode-only)
 
-# Self-Host Gemma 4 with Open WebUI and Tailscale
+# Self-host Gemma 4 with Open WebUI and Tailscale
 
 This example deploys Open WebUI to Kubernetes, connects it to a local llama.cpp server running Gemma 4, and can expose the web UI through Tailscale. It is designed for a Mac or workstation where host-native inference is faster and simpler than running the model inside the Kubernetes cluster.
 
@@ -10,12 +10,12 @@ The default model is `unsloth/gemma-4-12b-it-GGUF` with `gemma-4-12b-it-Q8_0.ggu
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/).
-1. [Install Python 3.9 or later](https://www.pulumi.com/docs/iac/languages-sdks/python/).
+1. [Install Python](https://www.pulumi.com/docs/intro/languages/python/) (3.9 or later).
 1. Install `kubectl`, [k3d](https://k3d.io/), and [llama.cpp](https://github.com/ggml-org/llama.cpp). On macOS with Homebrew, install `llama.cpp` with `brew install llama.cpp`.
 1. To expose Open WebUI through Tailscale, sign in to [Tailscale](https://tailscale.com/) and create OAuth client credentials that can create auth keys.
 1. Make sure your machine has enough memory for the selected GGUF model.
 
-## Deploy the App
+## Deploying the example
 
 ### Step 1: Start a local Kubernetes cluster
 
@@ -187,7 +187,7 @@ pulumi up
 
 Pulumi exports the Open WebUI NodePort URL and the internal LLM base URL. When `enableTailscale` is true, it also exports the Tailscale URL for the web UI.
 
-## Cluster Runtime
+## Cluster runtime
 
 The default `runtimeMode` is `host`, which keeps model inference on the host. Linux GPU hosts can run llama.cpp inside Kubernetes instead:
 
@@ -201,7 +201,7 @@ pulumi up
 
 Cluster mode downloads the configured GGUF into a persistent volume and runs `llama.cpp` with CUDA or ROCm images.
 
-## Clean Up
+## Cleaning up
 
 Destroy the Pulumi stack:
 

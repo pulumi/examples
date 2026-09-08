@@ -1,3 +1,26 @@
 name: aws-csharp-langserve
 runtime: dotnet
 description: A minimal Langserve AWS C# Pulumi program
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1
+    open-api-key:
+      description: Your OpenAI API key
+      secret: true
+    vpc-cidr:
+      description: The CIDR block for the VPC
+      default: 10.0.0.0/16
+    subnet-1-cidr:
+      description: The CIDR block for the first subnet
+      default: 10.0.0.0/24
+    subnet-2-cidr:
+      description: The CIDR block for the second subnet
+      default: 10.0.1.0/24
+    container-context:
+      description: The Docker build context for the LangServe app
+      default: .
+    container-file:
+      description: The path to the Dockerfile for the LangServe app
+      default: ./Dockerfile

@@ -7,42 +7,56 @@ Companion to the tutorial [Provision containers on AWS](https://www.pulumi.com/d
 
 ## Prerequisites
 
-To run this example, make sure [Docker](https://docs.docker.com/engine/installation/) is installed and running.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+4. [Install Docker](https://docs.docker.com/get-docker/) and make sure it is running
 
-## Running the App
+## Deploying the example
 
-Note: some values in this example will be different from run to run.  These values are indicated
-with `***`.
+Note: some values in this example will be different from run to run. These values are indicated with `***`.
 
 1.  Create a new stack:
 
-    ```
-    $ pulumi stack init containers-dev
+    ```bash
+    pulumi stack init containers-dev
     ```
 
 1.  Configure Pulumi to use an AWS region that supports Fargate (you can view a list of supported regions in the [AWS documentation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate-Regions.html)):
 
-    ```
-    $ pulumi config set aws:region us-west-2
+    ```bash
+    pulumi config set aws:region us-west-2
     ```
 
-1.  Restore NPM modules via `npm install` or `yarn install`.
+1.  Install dependencies:
 
-1.  Preview and deploy the app via `pulumi up`. The preview will take a few minutes, as it builds a Docker container. A total of 19 resources are created.
-
+    ```bash
+    npm install
     ```
-    $ pulumi up
+
+1.  Deploy the stack. The preview will take a few minutes, as it builds a Docker container. A total of 19 resources are created.
+
+    ```bash
+    pulumi up
     ```
 
 1.  View the endpoint URL, and run curl:
 
     ```bash
-    $ pulumi stack output
+    pulumi stack output
+    ```
+
+    ```
     Current stack outputs (1)
         OUTPUT                  VALUE
         hostname                http://***.elb.us-west-2.amazonaws.com
+    ```
 
-    $ curl $(pulumi stack output hostname)
+    ```bash
+    curl $(pulumi stack output hostname)
+    ```
+
+    ```
     <html>
         <head><meta charset="UTF-8">
         <title>Hello, Pulumi!</title></head>
@@ -54,12 +68,20 @@ with `***`.
 
 1.  To view the runtime logs from the container, use the `pulumi logs` command. To get a log stream, use `pulumi logs --follow`.
 
+    ```bash
+    pulumi logs --follow
     ```
-    $ pulumi logs --follow
+
+    ```
     Collecting logs for stack aws-ts-containers-dev since 2018-05-22T14:25:46.000-07:00.
     2018-05-22T15:33:22.057-07:00[                  pulumi-nginx] 172.31.13.248 - - [22/May/2018:22:33:22 +0000] "GET / HTTP/1.1" 200 189 "-" "curl/7.54.0" "-"
     ```
 
-## Clean up
+## Cleaning up
 
-To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring further charges:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

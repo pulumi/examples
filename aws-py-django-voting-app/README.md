@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-django-voting-app/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-django-voting-app/README.md#gh-dark-mode-only)
 
-# Voting app Using Django and MySQL
+# Voting app using Django and MySQL
 
 A simple voting app that uses MySQL for data storage and a Python Django app for the frontend.
 
@@ -15,34 +15,46 @@ The example shows how easy it is to deploy containers into production and to con
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-1. [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
-1. [Configure Pulumi for Python](https://www.pulumi.com/docs/intro/languages/python/)
-1. [Install Docker](https://docs.docker.com/engine/installation/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
+4. [Install Docker](https://docs.docker.com/get-docker/)
 
-## Deploying and running the program
+## Deploying the example
 
 1. Create a new stack:
 
     ```bash
-    $ pulumi stack init aws-py-django-voting-app
+    pulumi stack init aws-py-django-voting-app
     ```
 
 1. Set the AWS region, the usernames and passwords for a set of accounts the project uses, and a random 50-character string to serve as Django's secret key:
 
     ```bash
-    $ pulumi config set aws:region us-west-2
-    $ pulumi config set sql-admin-name <NAME>
-    $ pulumi config set sql-admin-password <PASSWORD> --secret
-    $ pulumi config set sql-user-name <NAME>
-    $ pulumi config set sql-user-password <PASSWORD> --secret
-    $ pulumi config set django-admin-name <NAME>
-    $ pulumi config set django-admin-password <PASSWORD> --secret
-    $ pulumi config set django-secret-key <VALUE> --secret
+    pulumi config set aws:region us-west-2
+    pulumi config set sql-admin-name <NAME>
+    pulumi config set sql-admin-password <PASSWORD> --secret
+    pulumi config set sql-user-name <NAME>
+    pulumi config set sql-user-password <PASSWORD> --secret
+    pulumi config set django-admin-name <NAME>
+    pulumi config set django-admin-password <PASSWORD> --secret
+    pulumi config set django-secret-key <VALUE> --secret
     ```
 
-1. Run `pulumi up -y` to deploy changes:
+1. Install dependencies:
 
     ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+1. Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     Updating (aws-py-django-voting-app):
         Type                                  Name                              Status      Info
     +   pulumi:pulumi:Stack                   voting-app-aws-py-django-voting-app  created
@@ -89,14 +101,17 @@ The example shows how easy it is to deploy containers into production and to con
 1. View the DNS address of the instance via `pulumi stack output`:
 
     ```bash
-    $ pulumi stack output
+    pulumi stack output
+    ```
+
+    ```
     Current stack outputs (1):
         OUTPUT   VALUE
         app-url  django-balancer-2f4f9fe-c6e6893a1972a811.elb.us-west-2.amazonaws.com
     ```
 
-1.  Verify that the ECS instance exists by connecting to it in a browser window.
+1. Verify that the ECS instance exists by connecting to it in a browser window.
 
-## Clean up
+## Cleaning up
 
-To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt. Then run `pulumi stack rm` to remove the stack.

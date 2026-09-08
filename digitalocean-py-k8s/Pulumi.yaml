@@ -4,3 +4,16 @@ runtime:
   options:
     virtualenv: venv
 description: Provision a DigitalOcean Kubernetes cluster and deploy to it in Python
+template:
+  config:
+    digitalocean:token:
+      description: The DigitalOcean personal access token to use
+      secret: true
+    domainName:
+      description: An optional custom domain name for the application
+    nodeCount:
+      description: The number of nodes in the Kubernetes cluster
+      default: 2
+    appReplicaCount:
+      description: The number of application replicas to run
+      default: 5

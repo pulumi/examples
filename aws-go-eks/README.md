@@ -1,25 +1,19 @@
-# AWS Golang EKS Cluster
-
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-eks/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-go-eks/README.md#gh-dark-mode-only)
 
-This example creates an AWS EKS Cluster and deploys a sample container application to it
+# AWS Golang EKS cluster
 
-## Deploying the App
+This example creates an AWS EKS Cluster and deploys a sample container application to it.
 
- To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Install Go](https://golang.org/doc/install)
-3. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
 4. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
 5. [Install `kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
-### Steps
-
-After cloning this repo, run these commands from the working directory:
+## Deploying the example
 
 1. Create a new stack, which is an isolated deployment target for this example:
 
@@ -27,19 +21,25 @@ After cloning this repo, run these commands from the working directory:
     pulumi stack init dev
     ```
 
-2. Set your desired AWS region:
+1. Set the AWS region to deploy into:
 
     ```bash
     pulumi config set aws:region us-east-1 # any valid AWS region will work
     ```
 
-3. Execute the Pulumi program to create our EKS Cluster:
+1. Install dependencies:
+
+    ```bash
+    go mod download
+    ```
+
+1. Deploy the stack:
 
     ```bash
     pulumi up
     ```
 
-4. After 10-15 minutes, your cluster will be ready, and the kubeconfig JSON you'll use to connect to the cluster will
+1. After 10-15 minutes, your cluster will be ready, and the kubeconfig JSON you'll use to connect to the cluster will
    be available as an output. You can save this kubeconfig to a file like so:
 
     ```bash
@@ -52,15 +52,17 @@ After cloning this repo, run these commands from the working directory:
     KUBECONFIG=./kubeconfig.json kubectl get nodes
     ```
 
-5. Ensure that the application is running as expected:
+1. Ensure that the application is running as expected:
 
     ```bash
-   curl $(pulumi stack output url)
-   ```
+    curl $(pulumi stack output url)
+    ```
 
-6. Afterwards, destroy your stack and remove it:
+## Cleaning up
 
- ```bash
- pulumi destroy --yes
- pulumi stack rm --yes
- ```
+Once you're finished experimenting, tear down your stack's resources by destroying and removing it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

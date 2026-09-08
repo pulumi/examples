@@ -7,35 +7,38 @@ An example of deploying an HTTP Google Cloud Function endpoint using TypeScript.
 
 ## Prerequisites
 
-0. [Ensure you have the latest Node.js and NPM](https://nodejs.org/en/download/)
-2. [Install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
-3. [Configure Pulumi to access your GCP account](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-## Running the App
+## Deploying the example
 
-1.  Restore NPM dependencies:
+1.  Create a new stack:
 
-    ```
-    $ npm install
-    ```
-
-2.  Create a new stack:
-
-    ```
-    $ pulumi stack init gcp-fn
+    ```bash
+    pulumi stack init gcp-fn
     ```
 
-3.  Configure your GCP project and region:
+2.  Configure your GCP project and region:
+
+    ```bash
+    pulumi config set gcp:project <projectname>
+    pulumi config set gcp:region <region>
+    ```
+
+3.  Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+4.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi config set gcp:project <projectname>
-    $ pulumi config set gcp:region <region>
-    ```
-
-4.  Run `pulumi up` to preview and deploy changes:
-
-    ```
-    $ pulumi up
     Previewing changes:
     ...
 
@@ -48,18 +51,21 @@ An example of deploying an HTTP Google Cloud Function endpoint using TypeScript.
 
 5.  Check the deployed function endpoint:
 
+    ```bash
+    pulumi stack output url
+    curl "$(pulumi stack output url)"
     ```
-    $ pulumi stack output url
+
+    ```
     https://us-central1-pulumi-development.cloudfunctions.net/greeting-function-7f95447
-    $ curl "$(pulumi stack output url)"
     Greetings from Google Cloud Functions!
     ```
 
-6. Clean up your GCP and Pulumi resources:
+## Cleaning up
 
-    ```
-    $ pulumi destroy
-    ...
-    $ pulumi stack rm
-    ...
-    ```
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

@@ -3,6 +3,12 @@ description: Jenkins deployment on Kubernetes
 runtime: nodejs
 template:
   config:
+    isMinikube:
+      description: Whether you are deploying to minikube
+      default: true
+    enableMetalLB:
+      description: Whether to enable MetalLB (required for LoadBalancer services on minikube)
+      default: false
     username:
       description: Your desired username for the Jenkins instance
     password:

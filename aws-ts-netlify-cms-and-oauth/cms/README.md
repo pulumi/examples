@@ -1,20 +1,23 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-netlify-cms-and-oauth/cms/README.md#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-netlify-cms-and-oauth/cms/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/aws-ts-netlify-cms-and-oauth/cms/infrastructure#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/aws-ts-netlify-cms-and-oauth/cms/infrastructure#gh-dark-mode-only)
 
-## Background Knowledges
+# Netlify CMS on AWS
+
+## Background knowledge
+
 CMS stands for content management system, which facilitate creation and modification of digital content.
 
 [Netlify CMS](https://www.netlifycms.org/docs/intro/) is an [open-source](https://github.com/netlify/netlify-cms) example implements this concept.  It works closely with static site generators and provides user interface for non-technical editors of webisite to edit the website content and submit the change to various types of storaging service including Github.
 
 Backends allows Netlify CMS to communicate with a service that stores content. Backends that Netlify CMS provides includes Git Gateway (Connect with Netlify), Github, GitLab, and Bitbucket.
 
-# About CMS Project
+# About CMS project
 This project is an CMS React App that using Netlify CMS as CMS provider and Github as backend. Orginally it provides a user interface for non-technical employees from Pulumi to edit [Pulumi's website](https://github.com/pulumi/docs) (powered by [Hugo static site generator](https://gohugo.io)).
 It is a good example for how to deploy Netlify CMS as a stand-alone React web application that is reading and make changes to another organization repository and deployed on AWS instead of Netlify.
 Special thanks to the template provided by [@talves](https://github.com/ADARTA/netlify-cms-react-example
 ) for converting the CMS to be a stand-alone React app that is not placed inside the target repository.
 
-## File Path
+## File path
 
 - .github/workflow
   - The implementation of Github Actions workflow
@@ -47,15 +50,15 @@ The infrastructure requires three stack configuration properties: `pathToWebsite
   - This is optional.
   - If you have already had a certificate inside the AWS's Certificate Manager for this CMS app, then put it's arn as the value for this variable
 
-### Assume Role (Optional)
+### Assume role (optional)
 It is recommended that you use an IAM role with more permissions in the _target_ AWS using a token for an IAM user in the _source_ account. To do this, you could refer to the [aws-ts-assume-role example](https://github.com/pulumi/examples/tree/master/aws-ts-assume-role) for more information. The example is available in multiple languages in our [examples repostiory](https://github.com/pulumi/examples).
 
-## Substitution for Netlify Identity Service: OAuth Server
+## Substitution for Netlify Identity service: OAuth server
 Since we are deploying the CMS app on AWS instead of Netlify we need to provide our own server to do the OAuth [authorization code grant flow](https://oauth.net/2/grant-types/authorization-code/). So we also deployed an OAuth Server. Here's the official Netlify documentation on using [external OAuth clients](https://www.netlifycms.org/docs/external-oauth-clients/). In short, the OAuth server fetches the access token from GitHub API to use the CMS. The code for the OAuth Server is inside the `./cms-oauth` folder in the root directory of this example.
 
 After deploying the cms-oauth web app, we should also put the domain of the oauth-server we build in the cms/public/config.yml's base_url configuration
 
-## Code Path
+## Code path
 
 1.  Since the CMS is implemented as a React app, the entry point is in **public/index.html** which includes multiple scripts and the div with id `root` for rendering the CMS component inside it.
 
@@ -65,11 +68,11 @@ After deploying the cms-oauth web app, we should also put the domain of the oaut
 
 1. `CMS.init()` will initialize CMS using **public/config.yml** which is the core of this app, which contains collection, backend settings, and other settings.
 
-## Development Details
+## Development details
 Now Github workflow was implemented. Directly push to master branch would automatically deploy cms.
 Open a new branch and commit to the new branch would only do a pulumi preview until merge, which you could see from the Github Actions. For testing:
 
-### Local Development
+### Local development
 
 1. Specify the `repo`, `site_domain` and `base_url` in the `cms/public/config.yml`'s backend block.
 ![First Step: change cms config](Readme-Screenshots/cms-config-setings.jpg)
@@ -96,11 +99,11 @@ This would build the App and create a build folder under root directory.
 2. Go to infrastructure folder config the Pulumi stack
 
 ```bash
-$ cd infrastructure
-$ pulumi stack init website-cms
-$ pulumi config set aws:region us-east-1
-$ pulumi config set website-cms:pathToWebsiteContents ../build
-$ pulumi config set website-cms:targetDomain https://some-cms-domain.com
+cd infrastructure
+pulumi stack init website-cms
+pulumi config set aws:region us-east-1
+pulumi config set website-cms:pathToWebsiteContents ../build
+pulumi config set website-cms:targetDomain https://some-cms-domain.com
 # the targetDomain have to match what you put for site_domain inside the config file ./cms/public/config.yml
 ```
 - path to website contents would specify the folder generated by `yarn build` and upload that folder to S3
@@ -109,17 +112,17 @@ $ pulumi config set website-cms:targetDomain https://some-cms-domain.com
 
 4. Run pulumi up
 ```bash
-$ pulumi up
+pulumi up
 ```
 
-## CMS UI Introduction
+## CMS UI introduction
 
 > Before you can login into the CMS app, you must complete the steps in the OAuth server to either run it locally or deploy it to the cloud.
 
 1.  Open up a server with working example with
 
     ```bash
-    $ yarn start
+    yarn start
     ```
     it will automatically updated the page with any changes.
 

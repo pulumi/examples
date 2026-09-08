@@ -5,8 +5,6 @@
 
 A simple API demonstrating an integration between AWS API Gateway (REST) and AWS Lambda.
 
-## Deploying and running the program
-
 This example provides API endpoints which are executed by lambda using TypeScript and AWS.
 
 This sample uses the following AWS products:
@@ -17,63 +15,74 @@ This sample uses the following AWS products:
 ## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2.  Create a new stack:
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
+
+1.  Create a new stack:
 
     ```bash
-    $ pulumi stack init aws-ts-apigateway-lambda-serverless
+    pulumi stack init aws-ts-apigateway-lambda-serverless
     ```
 
-3.  Set the AWS region:
+1.  Set the AWS region to deploy into:
 
     ```bash
-    $ pulumi config set aws:region us-east-2
+    pulumi config set aws:region us-east-2
     ```
 
-4.  Install NPM modules via `npm install` or `yarn install`.
+1.  Install dependencies:
 
-## Deploy the App
+    ```bash
+    npm install
+    ```
 
-1.  Run `pulumi up` to preview and deploy changes:
+1.  Deploy the stack:
 
-  ```bash
-  `Updating (aws-ts-apigateway-lambda-serverless)
+    ```bash
+    pulumi up
+    ```
 
-  View Live: https://app.pulumi.com/***/aws-ts-apigateway-lambda-serverless/aws-ts-apigateway-lambda-serverless/updates/1
+    ```
+    Updating (aws-ts-apigateway-lambda-serverless)
 
-      Type                                Name                                                                     Status
-  +   pulumi:pulumi:Stack                 aws-ts-apigateway-lambda-serverless-aws-ts-apigateway-lambda-serverless  created
-  +   └─ aws:apigateway:x:API             hello-world                                                              created
-  +      ├─ aws:iam:Role                  hello-world40ecbb97                                                      created
-  +      ├─ aws:iam:Policy                hello-world2bb21f83-LambdaFullAccess                                     created
-  +      ├─ aws:iam:Role                  hello-world2bb21f83                                                      created
-  +      ├─ aws:iam:Role                  hello-world4fcc7b60                                                      created
-  +      ├─ aws:iam:Policy                hello-world40ecbb97-LambdaFullAccess                                     created
-  +      ├─ aws:iam:Policy                hello-world4fcc7b60-LambdaFullAccess                                     created
-  +      ├─ aws:lambda:Function           hello-world40ecbb97                                                      created
-  +      ├─ aws:lambda:Function           hello-world2bb21f83                                                      created
-  +      ├─ aws:iam:RolePolicyAttachment  hello-world2bb21f83-lambdaFullAccessCopyAttachment                       created
-  +      ├─ aws:iam:RolePolicyAttachment  hello-world40ecbb97-lambdaFullAccessCopyAttachment                       created
-  +      ├─ aws:lambda:Function           hello-world4fcc7b60                                                      created
-  +      ├─ aws:iam:RolePolicyAttachment  hello-world4fcc7b60-lambdaFullAccessCopyAttachment                       created
-  +      ├─ aws:apigateway:RestApi        hello-world                                                              created
-  +      ├─ aws:apigateway:Deployment     hello-world                                                              created
-  +      ├─ aws:lambda:Permission         hello-world-29d762f7                                                     created
-  +      ├─ aws:lambda:Permission         hello-world-86405973                                                     created
-  +      ├─ aws:lambda:Permission         hello-world-d21e9c98                                                     created
-  +      └─ aws:apigateway:Stage          hello-world                                                              created
+    View Live: https://app.pulumi.com/***/aws-ts-apigateway-lambda-serverless/aws-ts-apigateway-lambda-serverless/updates/1
 
-  Outputs:
-      endpointUrl: "https://***.execute-api.us-east-2.amazonaws.com/stage/"
+        Type                                Name                                                                     Status
+    +   pulumi:pulumi:Stack                 aws-ts-apigateway-lambda-serverless-aws-ts-apigateway-lambda-serverless  created
+    +   └─ aws:apigateway:x:API             hello-world                                                              created
+    +      ├─ aws:iam:Role                  hello-world40ecbb97                                                      created
+    +      ├─ aws:iam:Policy                hello-world2bb21f83-LambdaFullAccess                                     created
+    +      ├─ aws:iam:Role                  hello-world2bb21f83                                                      created
+    +      ├─ aws:iam:Role                  hello-world4fcc7b60                                                      created
+    +      ├─ aws:iam:Policy                hello-world40ecbb97-LambdaFullAccess                                     created
+    +      ├─ aws:iam:Policy                hello-world4fcc7b60-LambdaFullAccess                                     created
+    +      ├─ aws:lambda:Function           hello-world40ecbb97                                                      created
+    +      ├─ aws:lambda:Function           hello-world2bb21f83                                                      created
+    +      ├─ aws:iam:RolePolicyAttachment  hello-world2bb21f83-lambdaFullAccessCopyAttachment                       created
+    +      ├─ aws:iam:RolePolicyAttachment  hello-world40ecbb97-lambdaFullAccessCopyAttachment                       created
+    +      ├─ aws:lambda:Function           hello-world4fcc7b60                                                      created
+    +      ├─ aws:iam:RolePolicyAttachment  hello-world4fcc7b60-lambdaFullAccessCopyAttachment                       created
+    +      ├─ aws:apigateway:RestApi        hello-world                                                              created
+    +      ├─ aws:apigateway:Deployment     hello-world                                                              created
+    +      ├─ aws:lambda:Permission         hello-world-29d762f7                                                     created
+    +      ├─ aws:lambda:Permission         hello-world-86405973                                                     created
+    +      ├─ aws:lambda:Permission         hello-world-d21e9c98                                                     created
+    +      └─ aws:apigateway:Stage          hello-world                                                              created
 
-  Resources:
-      + 20 created
+    Outputs:
+        endpointUrl: "https://***.execute-api.us-east-2.amazonaws.com/stage/"
 
-  Duration: 36s`
-  ```
+    Resources:
+        + 20 created
 
-2.  To view the runtime logs of the Lambda function, use the `pulumi logs` command. To get a log stream, use `pulumi logs --follow`.
+    Duration: 36s
+    ```
 
-## Clean Up
+1.  To view the runtime logs of the Lambda function, use the `pulumi logs` command. To get a log stream, use `pulumi logs --follow`.
+
+## Cleaning up
 
 1.  Run `pulumi destroy` to tear down all resources.
 
@@ -83,7 +92,6 @@ This sample uses the following AWS products:
 
 In this tutorial, you built a lambda-backed API on AWS using API Gateway, lambda functions, and Pulumi. This serverless solution is highly scaleable, resilient, and stateless.
 
-
-## Next Steps
+## Next steps
 
 - [Create a frontend to interact with this api](https://www.pulumi.com/docs/tutorials/aws/s3-website/)

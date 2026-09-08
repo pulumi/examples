@@ -1,6 +1,11 @@
 name: azure-container-apps
 runtime: yaml
 description: Azure Container Apps example
+template:
+  config:
+    azure-native:location:
+      description: The Azure location to deploy into
+      default: westus2
 config:
   sqlAdmin:
     type: string

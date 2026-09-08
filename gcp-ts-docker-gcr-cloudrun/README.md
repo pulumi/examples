@@ -1,48 +1,56 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-docker-gcr-cloudrun/README.md#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-ts-docker-gcr-cloudrun/README.md#gh-dark-mode-only)
+[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/gcp-ts-docker-gcr-cloudrun/docker-build-push-gcr#gh-light-mode-only)
+[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/tree/master/gcp-ts-docker-gcr-cloudrun/docker-build-push-gcr#gh-dark-mode-only)
 
-# Docker Build and Push to GCR and Deploy to Google Cloud Run using separate projects
+# Docker build and push to GCR and deploy to Google Cloud Run using separate projects
 
 An example of building a custom Docker image and pushing it into a Google Cloud Container Registry and then in a separate project deploying that image with the Google Cloud Run service using TypeScript.
 
-> Note this is an adaptation of the [gcp-ts-cloudrun example](../gcp-ts-cloudrun)
+> Note this is an adaptation of the [gcp-ts-cloudrun example](../gcp-ts-cloudrun).
+
+This example is split into two Pulumi projects, run in sequence:
+
+- [docker-build-push-gcr/](./docker-build-push-gcr) — builds a custom Docker image and pushes it to Google Container Registry (GCR).
+- [cloud-run-deploy/](./cloud-run-deploy) — deploys that image from GCR to Google Cloud Run.
 
 ## Prerequisites
 
-1. [Ensure you have the latest Node.js and NPM](https://nodejs.org/en/download/)
-2. [Install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
-3. [Configure Pulumi to access your GCP account](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
-4. [Install Docker](https://docs.docker.com/install/)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+4. [Install Docker](https://docs.docker.com/get-docker/)
 5. Enable Docker to deploy to Google Container Registry with `gcloud auth configure-docker`
-6. [Setup Docker auth with a JSON key to get image from GCR](https://cloud.google.com/container-registry/docs/advanced-authentication#json-key)
+6. [Set up Docker auth with a JSON key to get the image from GCR](https://cloud.google.com/container-registry/docs/advanced-authentication#json-key)
 
-## Build and Push Docker Image
+## Building and pushing the Docker image
 
-1.  Navigate to the `docker-build-push-gcr` directory
+1.  Navigate to the `docker-build-push-gcr` directory.
 
-2. Restore NPM dependencies:
+2.  Install dependencies:
 
-    ```
-    $ npm install
+    ```bash
+    npm install
     ```
 
 3.  Create a new stack:
 
-    ```
-    $ pulumi stack init dev
+    ```bash
+    pulumi stack init dev
     ```
 
 4.  Configure your GCP project and region:
 
-    ```
-    $ pulumi config set gcp:project <projectname>
-    $ pulumi config set gcp:region <region>
+    ```bash
+    pulumi config set gcp:project <projectname>
+    pulumi config set gcp:region <region>
     ```
 
-5.  Run `pulumi up` to preview and deploy changes:
+5.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi up
     Previewing update (dev):
     ...
 
@@ -60,36 +68,37 @@ An example of building a custom Docker image and pushing it into a Google Cloud 
     Duration: 16s
     ```
 
+## Deploying to Cloud Run
 
-## Deploy Cloud Run
+1.  Navigate to the `cloud-run-deploy` directory.
 
-1. Navigate to the `cloud-run-deploy` directory
+2.  Install dependencies:
 
-
-2. Restore NPM dependencies:
-
-    ```
-    $ npm install
+    ```bash
+    npm install
     ```
 
 3.  Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-4.  Configure your GCP project, region and docker config file:
-
-    ```
-    $ pulumi config set gcp:project <projectname>
-    $ pulumi config set gcp:region <region>
-    $ pulumi config set docker-config-file <location of ~/.docker/config.json>
+    ```bash
+    pulumi stack init dev
     ```
 
-5.  Run `pulumi up` to preview and deploy changes:
+4.  Configure your GCP project, region, and Docker config file:
+
+    ```bash
+    pulumi config set gcp:project <projectname>
+    pulumi config set gcp:region <region>
+    pulumi config set docker-config-file <location of ~/.docker/config.json>
+    ```
+
+5.  Deploy the stack:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi up
     Previewing update (dev):
         Type                         Name                   Plan
     +   pulumi:pulumi:Stack          cloud-run-deploy-dev   create
@@ -119,18 +128,21 @@ An example of building a custom Docker image and pushing it into a Google Cloud 
     Duration: 23s
     ```
 
-5.  Check the deployed Cloud Run endpoint:
+6.  Check the deployed Cloud Run endpoint:
+
+    ```bash
+    curl "$(pulumi stack output rubyUrl)"
+    ```
 
     ```
-    $ curl "$(pulumi stack output rubyUrl)"
     Hello Pulumi!
     ```
 
-6. Clean up your GCP and Pulumi resources (run in both projects):
+## Cleaning up
 
-    ```
-    $ pulumi destroy
-    ...
-    $ pulumi stack rm dev
-    ...
-    ```
+Once you're finished experimenting, destroy your stacks and remove them to avoid incurring any additional cost. Run these commands in both the `docker-build-push-gcr` and `cloud-run-deploy` directories:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

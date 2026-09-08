@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-hello-fargate/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-ts-hello-fargate/README.md#gh-dark-mode-only)
 
-# Dockerized App Using ECS, ECR, and Fargate
+# Dockerized app using ECS, ECR, and Fargate
 
 This example, inspired by the [Docker Getting Started Tutorial](https://docs.docker.com/get-started/), builds, deploys,
 and runs a simple containerized application to a private container registry, and scales out five load balanced replicas,
@@ -17,32 +17,36 @@ databases, and so on.
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en/download/)
-- [Download and install the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
-- [Connect Pulumi with your AWS account](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (if your AWS CLI is configured, no further changes are required)
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-## Running the Example
-
-After cloning this repo, `cd` into it and run these commands:
+## Deploying the example
 
 1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
-2. Set your desired AWS region:
+1. Set your desired AWS region:
 
     ```bash
-    $ pulumi config set aws:region us-east-1 # any valid AWS region will work
+    pulumi config set aws:region us-east-1 # any valid AWS region will work
     ```
 
-3. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
+1. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+1. Deploy everything with a single `pulumi up` command. This will show you a preview of changes first, which
    includes all of the required AWS resources (clusters, services, and the like). Don't worry if it's more than
    you expected -- this is one of the benefits of Pulumi, it configures everything so that so you don't need to!
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
 
     After being prompted and selecting "yes", your deployment will begin. It'll complete in a few minutes:
@@ -100,27 +104,35 @@ After cloning this repo, `cd` into it and run these commands:
     Permalink: https://app.pulumi.com/acmecorp/aws-ts-hello-fargate/dev/updates/1
     ```
 
-4. At this point, your app is running! The URL was published so it's easy to interact with:
+1. At this point, your app is running! The URL was published so it's easy to interact with:
 
     ```bash
-    $ curl http://$(pulumi stack output url)
+    curl http://$(pulumi stack output url)
+    ```
+
+    ```
     <h3>Hello World!</h3>
     <b>Hostname:</b> ip-172-31-39-18.ec2.internal<br/>
     <b>Visits:</b> <i>cannot connect to Redis, counter disabled</i>
     ```
 
-5. To view the container's runtime logs, use the [`pulumi logs`](https://www.pulumi.com/docs/cli/commands/pulumi_logs/) command. The single `pulumi up` above built your `Dockerfile`, pushed the image to ECR, and rolled it out to Fargate for you — so all that's left is to watch it serve traffic:
+1. To view the container's runtime logs, use the [`pulumi logs`](https://www.pulumi.com/docs/cli/commands/pulumi_logs/) command. The single `pulumi up` above built your `Dockerfile`, pushed the image to ECR, and rolled it out to Fargate for you — so all that's left is to watch it serve traffic:
 
     ```bash
-    $ pulumi logs --follow
+    pulumi logs --follow
+    ```
+
+    ```
     Collecting logs for stack dev since 2021-03-26T10:49:57.000-07:00.
 
      2021-03-26T11:45:02.624-07:00[nginx-185c47c] 172.31.38.69 - - [26/Mar/2021:18:45:02 +0000] "GET / HTTP/1.1" 200 205 "-" "curl/7.64.1" "-"
     ```
 
-6. Once you are done, you can destroy all of the resources, and the stack:
+## Cleaning up
 
-    ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
-    ```
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

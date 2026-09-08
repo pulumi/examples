@@ -1,66 +1,62 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-eks/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-cs-eks/README.md#gh-dark-mode-only)
 
-# AWS C# EKS Cluster
-This example creates an AWS EKS Cluster and deploys a sample container application to it
+# AWS C# EKS cluster
 
-## Deploying the App
+This example creates an AWS EKS Cluster and deploys a sample container application to it.
 
- To deploy your infrastructure, follow the below steps.
-
-### Prerequisites
+## Prerequisites
 
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
-2. [Install DotNet SDK](https://docs.microsoft.com/en-us/dotnet/core/install/sdk?pivots=os-windows)
-3. [Configure AWS Credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+3. [Install .NET](https://www.pulumi.com/docs/intro/languages/dotnet/)
 4. [Install `aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
-4. [Install `kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+5. [Install `kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
-### Steps
+## Deploying the example
 
-After cloning this repo, run these commands from the working directory:
-
-1. Create a new stack, which is an isolated deployment target for this example:
+1.  Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init dev
+    pulumi stack init dev
     ```
 
-2. Set your desired AWS region:
+1.  Set the AWS region to deploy into:
 
     ```bash
-    $ pulumi config set aws:region us-east-1 # any valid AWS region will work
+    pulumi config set aws:region us-east-1
     ```
 
-4. Execute the Pulumi program to create our EKS Cluster:
-
-	```bash
-	pulumi up
-	```
-
-5. After 10-15 minutes, your cluster will be ready, and the kubeconfig JSON you'll use to connect to the cluster will
-   be available as an output. You can save this kubeconfig to a file like so:
+1.  Deploy the stack to create the EKS cluster:
 
     ```bash
-    $ pulumi stack output kubeconfig --show-secrets >kubeconfig.json
+    pulumi up
+    ```
+
+1.  After 10-15 minutes, your cluster will be ready, and the kubeconfig JSON you'll use to connect to the cluster will
+    be available as an output. You can save this kubeconfig to a file like so:
+
+    ```bash
+    pulumi stack output kubeconfig --show-secrets >kubeconfig.json
     ```
 
     Once you have this file in hand, you can interact with your new cluster as usual via `kubectl`:
 
     ```bash
-    $ KUBECONFIG=./kubeconfig.json kubectl get nodes
+    KUBECONFIG=./kubeconfig.json kubectl get nodes
     ```
 
-6. Ensure that the application is running as expected:
+1.  Ensure that the application is running as expected:
 
     ```bash
-   $ curl $(pulumi stack output Url)
-   ```
+    curl $(pulumi stack output Url)
+    ```
 
+## Cleaning up
 
-7. Afterwards, destroy your stack and remove it:
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
 
-	```bash
-	pulumi destroy --yes
-	pulumi stack rm --yes
-	```
+```bash
+pulumi destroy
+pulumi stack rm
+```

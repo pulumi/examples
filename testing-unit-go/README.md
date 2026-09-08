@@ -1,28 +1,23 @@
-[![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-go/README.md#gh-light-mode-only)
-[![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/testing-unit-go/README.md#gh-dark-mode-only)
-
-# Unit Testing Pulumi programs in Go
+# Unit testing Pulumi programs in Go
 
 An example of writing mock-based unit tests with both infrastructure definition and tests written in Go.
 
-## Prerequisites
-
-[Install Go](https://golang.org/doc/install).
-
 ## Running the tests
 
-2.  Run the tests:
+Run the tests:
 
-    ```
-    $ go test
+```bash
+go test
+```
 
-    PASS
-    ok  	testing-unit-go	0.400s
-    ```
+```
+PASS
+ok  	testing-unit-go	0.400s
+```
 
-## Further steps
+## Learn more
 
 Learn more about testing Pulumi programs:
 
-- [Testing Guide](https://www.pulumi.com/docs/guides/testing/)
-- [Unit Testing Guide](https://www.pulumi.com/docs/guides/testing/unit/)
+- [Testing Guide](https://www.pulumi.com/docs/iac/guides/testing/)
+- [Unit Testing Guide](https://www.pulumi.com/docs/iac/guides/testing/unit/)

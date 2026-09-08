@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/redis-cloud-aws-ts/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/redis-cloud-aws-ts/README.md#gh-dark-mode-only)
 
-# Redis Enterprise Cloud AWS Example
+# Redis Enterprise Cloud AWS example
 
 This example contains code that creates a [Redis Enterprise Cloud](https://app.redislabs.com/) cluster and connects it to an AWS VPC via VPC Peering. This stack also includes an EC2 instance with SSM Session Manager that can run Redis commands to verify connectivity to the Redis cluster.
 
@@ -12,10 +12,16 @@ This example contains code that creates a [Redis Enterprise Cloud](https://app.r
 1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
 1. [Configure the Redis Cloud provider](https://www.pulumi.com/registry/packages/rediscloud/installation-configuration/)
 1. Ensure you have a payment method specified in the Redis Enterprise Cloud console.
-1. [Configure the AWS Classic provider](https://www.pulumi.com/registry/packages/aws/installation-configuration/)
-1. [Install NodeJS](https://nodejs.org/en/download)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-## Deploy the app
+## Deploying the example
+
+1. Install dependencies:
+
+    ```bash
+    npm install
+    ```
 
 1. Set configuration values for your Redis Cloud payment information:
 
@@ -37,7 +43,7 @@ This example contains code that creates a [Redis Enterprise Cloud](https://app.r
     pulumi up
     ```
 
-## Test the architecture
+## Testing the architecture
 
 1. In the AWS Console, find the EC2 instance named `pulumi-redis-cloud-tester`, and connect to it via SSM Systems Manager:
 
@@ -54,7 +60,7 @@ This example contains code that creates a [Redis Enterprise Cloud](https://app.r
 
     ![SSM Systems Manager shell with commands like redis connect and INCR](images/shell-commands.png)
 
-## Clean up
+## Cleaning up
 
 1. Run `pulumi destroy` to tear down all resources.
 1. To delete the stack itself, run `pulumi stack rm`. Note that this command deletes all deployment history from the Pulumi Cloud console.

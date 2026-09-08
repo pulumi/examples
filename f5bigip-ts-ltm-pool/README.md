@@ -1,7 +1,6 @@
 # F5 BigIP Local Traffic Manager
 
-This example demonstrates use of the [Pulumi F5 BigIP Provider](https://github.com/pulumi/pulumi-f5bigip)
-to provide load balancing via an F5 BigIP appliance to backend HTTP instances. The example provisions:
+This example demonstrates use of the [Pulumi F5 BigIP provider](https://github.com/pulumi/pulumi-f5bigip) to provide load balancing via an F5 BigIP appliance to backend HTTP instances. The example provisions:
 
 * an LTM Monitor with a Send String value of `GET /`
 * an LTM Pool using the LTM Monitor
@@ -10,52 +9,53 @@ to provide load balancing via an F5 BigIP appliance to backend HTTP instances. T
 
 All of these happen behind a single `pulumi up` command, and are expressed in just a handful of TypeScript.
 
-# Prerequisites
+This directory contains three Pulumi projects that are deployed in sequence:
 
-Ensure you have [downloaded and installed the Pulumi CLI](https://www.pulumi.com/docs/get-started/install/).
+- [f5bigip-ec2-instance/](./f5bigip-ec2-instance) — (optional) provisions an F5 BigIP appliance on AWS.
+- [nginx-ec2-instance/](./nginx-ec2-instance) — (optional) provisions backend NGINX instances on AWS.
+- [f5bigip-pool/](./f5bigip-pool) — provisions the F5 BigIP LTM pool resources.
 
-If you **_already_** have an F5 BigIP appliance available, you only need administrative credentials to it and
-at least one backend HTTP instance to load balance to.
+## Prerequisites
 
-If you **_do not_** already have an F5 BigIP appliance available, you can use the example in [f5bigip-ec2-instance](./f5bigip-ec2-instance) to deploy an F5 BigIP instance on AWS using an F5 BigIP AMI from the AWS Marketplace.
-Note: you must first subscribe to the AWS Marketplace product [here](https://aws.amazon.com/marketplace/pp/B079C44MFH?qid=1546534998240&sr=0-13).
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/) (needed if you deploy the optional AWS resources below)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
 
-If you _do not_ already have backend HTTP instance available, you can use the example in [nginx-ec2-instance](./nginx-ec2-instance) to deploy multiple NGINX instances on AWS and use them as members of the LTM Pool as
-Pool Attachments.
+If you **_already_** have an F5 BigIP appliance available, you only need administrative credentials to it and at least one backend HTTP instance to load balance to.
 
-# Running the Example
+If you **_do not_** already have an F5 BigIP appliance available, you can use the example in [f5bigip-ec2-instance](./f5bigip-ec2-instance) to deploy an F5 BigIP instance on AWS using an F5 BigIP AMI from the AWS Marketplace. Note: you must first subscribe to the AWS Marketplace product [here](https://aws.amazon.com/marketplace/pp/B079C44MFH?qid=1546534998240&sr=0-13).
 
-If you need to deploy an F5 BigIP appliance or backend HTTP instances as described above, first [Configure Pulumi for AWS](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/).
+If you _do not_ already have a backend HTTP instance available, you can use the example in [nginx-ec2-instance](./nginx-ec2-instance) to deploy multiple NGINX instances on AWS and use them as members of the LTM Pool as Pool Attachments.
 
-## (Optional) Provision an F5 BigIP appliance on AWS
+## Deploying the example
 
-1. Change directory to `f5bigip-ec2-instance`.
+### (Optional) Provisioning an F5 BigIP appliance on AWS
+
+1. Change directory to `f5bigip-ec2-instance`, then install dependencies:
 
     ```bash
-    $ cd f5bigip-ec2-instance
-    ````
+    cd f5bigip-ec2-instance
+    npm install
+    ```
 
 1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init f5bigip-ec2-instance-dev
+    pulumi stack init f5bigip-ec2-instance-dev
     ```
 
 1. Set the required configuration variables for this program:
 
     ```bash
-    $ pulumi config set aws:region us-west-2    # any valid AWS zone works
-    $ pulumi config set f5BigIpAdminPassword --secret [your-new-bigip-password-here]
+    pulumi config set aws:region us-west-2
+    pulumi config set f5BigIpAdminPassword --secret [your-new-bigip-password-here]
     ```
 
-1. Deploy everything with the `pulumi up` command. This provisions the necessary AWS resources, primarily a
-VPC Security group and EC2 Instance, in a single gesture:
+1. Deploy everything with the `pulumi up` command. This provisions the necessary AWS resources, primarily a VPC security group and EC2 instance, in a single gesture:
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
-
-   This will show you a preview, ask for confirmation, and then begin provisioning your resources:
 
     ```
     Updating (f5bigip-ec2-instance-dev):
@@ -75,37 +75,34 @@ VPC Security group and EC2 Instance, in a single gesture:
     Duration: 40s
     ```
 
-   After this completes, numerous outputs will show up. `f5Address` and `f5PrivateIp` are values you will use in the
-   `f5bigip-pool` example later on.
+   After this completes, numerous outputs will show up. `f5Address` and `f5PrivateIp` are values you will use in the `f5bigip-pool` example later on.
 
-## (Optional) Provision Backend NGINX Instances
+### (Optional) Provisioning backend NGINX instances
 
-1. Change directory to `nginx-ec2-instance`.
+1. Change directory to `nginx-ec2-instance`, then install dependencies:
 
     ```bash
-    $ cd nginx-ec2-instance
-    ````
+    cd nginx-ec2-instance
+    npm install
+    ```
 
 1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init nginx-ec2-instance-dev
+    pulumi stack init nginx-ec2-instance-dev
     ```
 
 1. Set the required configuration variables for this program:
 
     ```bash
-    $ pulumi config set aws:region us-west-2    # any valid AWS zone works
+    pulumi config set aws:region us-west-2
     ```
 
-1. Deploy everything with the `pulumi up` command. This provisions a VPC security group allowing access to
-NGINX from anywhere and three EC2 Instances running NGINX:
+1. Deploy everything with the `pulumi up` command. This provisions a VPC security group allowing access to NGINX from anywhere and three EC2 instances running NGINX:
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
-
-   This will show you a preview, ask for confirmation, and then begin provisioning your resources:
 
     ```
     Updating (nginx-ec2-instance-dev):
@@ -130,41 +127,38 @@ NGINX from anywhere and three EC2 Instances running NGINX:
     Duration: 44s
     ```
 
-   After this completes, a single output with multiple values will display. `instancePublicIps` are the IP addresses
-   you will use to provide load balancing _to_ in the `f5bigip-pool` example.
+   After this completes, a single output with multiple values will display. `instancePublicIps` are the IP addresses you will use to provide load balancing _to_ in the `f5bigip-pool` example.
 
-## Provision F5 BigIP Application Pool Resources
+### Provisioning F5 BigIP application pool resources
 
-1. Change directory to `f5bigip-pool`.
+1. Change directory to `f5bigip-pool`, then install dependencies:
 
     ```bash
-    $ cd f5bigip-pool
-    ````
+    cd f5bigip-pool
+    npm install
+    ```
 
 1. Create a new stack, which is an isolated deployment target for this example:
 
     ```bash
-    $ pulumi stack init f5bigip-pool-dev
+    pulumi stack init f5bigip-pool-dev
     ```
 
 1. Set the required configuration variables for this program:
 
     ```bash
-    $ pulumi config set f5bigip:address <f5Address>    # the address of your BigIP appliance - i.e. https://10.10.10.200:8443
-    $ pulumi config set f5bigip:username admin
-    $ pulumi config set f5bigip:password <f5Password>    # the 'admin' password of your BigIP appliance
-    $ pulumi config set f5bigip-pool:backendInstances <address1:port,address2:port,...> #    Comma-delimited list of IP addresses with ports to load balance - i.e. '10.0.0.10:80,10.0.0.11:80,10.0.0.12:80'
-    $ pulumi config set f5bigip-pool:f5BigIpPrivateIp <f5PrivateIp>    # the Private IP address of your BigIP appliance
+    pulumi config set f5bigip:address <f5Address>
+    pulumi config set f5bigip:username admin
+    pulumi config set f5bigip:password <f5Password>
+    pulumi config set f5bigip-pool:backendInstances <address1:port,address2:port,...>
+    pulumi config set f5bigip-pool:f5BigIpPrivateIp <f5PrivateIp>
     ```
 
-1. Deploy everything with the `pulumi up` command. This provisions F5 BigIP LTM resources - application monitor,
-application pool, pool attachments, and virtual server:
+1. Deploy everything with the `pulumi up` command. This provisions F5 BigIP LTM resources — application monitor, application pool, pool attachments, and virtual server:
 
     ```bash
-    $ pulumi up
+    pulumi up
     ```
-
-   This will show you a preview, ask for confirmation, and then begin provisioning your resources:
 
     ```
     Updating (f5bigip-pool-dev):
@@ -184,15 +178,11 @@ application pool, pool attachments, and virtual server:
     Duration: 3s
     ```
 
-   After this completes, a single output with multiple values will display. `instancePublicIps` are the IP addresses
-   you will use to provide load balancing _to_ in the `f5bigip-pool` example.
+## Cleaning up
 
-## Clean Up
+Once you are done, you can destroy all of the resources, and the stack. Repeat this in each directory for each of the examples above that you ran `pulumi up` within:
 
-1. Once you are done, you can destroy all of the resources, and the stack. Repeat this in each directory for each
-of the examples from above that you ran `pulumi up` within.
-
-    ```bash
-    $ pulumi destroy
-    $ pulumi stack rm
-    ```
+```bash
+pulumi destroy
+pulumi stack rm
+```

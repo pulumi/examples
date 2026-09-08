@@ -1,3 +1,13 @@
 name: pulumi-aws-kms
 runtime: nodejs
 description: Minimal config which shows how AWS encryption support works
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    bucketName:
+      description: The name of the S3 bucket to create
+    secretValue:
+      description: The secret value to store in the bucket
+      secret: true

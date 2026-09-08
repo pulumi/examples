@@ -1,41 +1,50 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-py-webserver/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/gcp-py-webserver/README.md#gh-dark-mode-only)
 
-# Web Server Using Compute Engine
+# Web server using Compute Engine
 
 Starting point for building the Pulumi web server sample in Google Cloud.
 
 This example deploys a Google Compute Engine virtual machine — together with a network and firewall rule that allows SSH and HTTP access — and runs a simple HTTP server on it that responds with `Hello, World!`.
 
-## Running the App
+## Prerequisites
 
-1.  Create a new stack:
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure GCP credentials](https://www.pulumi.com/docs/intro/cloud-providers/gcp/setup/)
+3. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
+
+## Deploying the example
+
+1. Create a new stack:
+
+    ```bash
+    pulumi stack init dev
+    ```
+
+1. Configure the project:
+
+    ```bash
+    pulumi config set gcp:project YOURGOOGLECLOUDPROJECT
+    pulumi config set gcp:zone us-central1-a
+    ```
+
+1. Install dependencies:
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+1. Run `pulumi up` to preview and deploy changes:
+
+    ```bash
+    pulumi up
+    ```
 
     ```
-    $ pulumi stack init dev
-    ```
-
-1.  Configure the project:
-
-    ```
-    $ pulumi config set gcp:project YOURGOOGLECLOUDPROJECT
-    $ pulumi config set gcp:zone us-central1-a
-    ```
-
-1.  Run `pulumi up` to preview and deploy changes:
-
-    ```
-    $ pulumi up -y
-    Previewing update (dev):
-        Type                     Name                  Plan       Info
-    +   pulumi:pulumi:Stack      gcp-py-webserver-dev  create
-    +   ├─ gcp:compute:Address   address               create
-    +   ├─ gcp:compute:Network   network               create
-    +   ├─ gcp:compute:Firewall  firewall              create
-    +   └─ gcp:compute:Instance  instance              create
-
     Updating (dev):
-        Type                     Name                  Status      Info
+        Type                     Name                  Status
     +   pulumi:pulumi:Stack      gcp-py-webserver-dev  created
     +   ├─ gcp:compute:Address   address               created
     +   ├─ gcp:compute:Network   network               created
@@ -52,31 +61,27 @@ This example deploys a Google Compute Engine virtual machine — together with a
     Duration: 1m51s
     ```
 
-1.  Curl the HTTP server:
+1. Curl the HTTP server:
+
+    ```bash
+    curl $(pulumi stack output instanceIP)
+    ```
 
     ```
-    $ curl $(pulumi stack output instanceIP)
     Hello, World!
     ```
 
-1.  SSH into the server:
+1. SSH into the server:
 
-    ```
-    $ gcloud compute ssh $(pulumi stack output instanceName)
-    Warning: Permanently added 'compute.967481934451185713' (ECDSA) to the list of known hosts.
-
-    The programs included with the Debian GNU/Linux system are free software;
-    the exact distribution terms for each program are described in the
-    individual files in /usr/share/doc/*/copyright.
-
-    Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-    permitted by applicable law.
-    user@instance-8ad9bd8:~$
+    ```bash
+    gcloud compute ssh $(pulumi stack output instanceName)
     ```
 
-1. Cleanup
+## Cleaning up
 
-    ```
-    $ pulumi destroy
-    $ pulumi stack rm
-    ```
+Once you're finished experimenting, destroy your stack and remove it:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

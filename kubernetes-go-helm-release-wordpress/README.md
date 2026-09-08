@@ -1,94 +1,69 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-go-helm-release-wordpress/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/kubernetes-go-helm-release-wordpress/README.md#gh-dark-mode-only)
 
-# Wordpress Helm Chart Deployed Using Helm Release Resource
+# WordPress Helm chart deployed using the Helm Release resource
 
-Uses the Helm Release resource in `pulumi-kubernetes` to deploy `v13.0.6` of the Wordpress Helm Chart to a
+Uses the Helm Release resource in `pulumi-kubernetes` to deploy `v13.0.6` of the WordPress Helm chart to a
 Kubernetes cluster. Pulumi will use native Helm support to deploy the chart on the target Kubernetes cluster.
 
-![wordpress](images/deploy.gif "Wordpress Helm Release deployment")
+![wordpress](images/deploy.gif "WordPress Helm Release deployment")
 
-## Running the App
+## Prerequisites
 
-If you haven't already, follow the steps in [Pulumi Installation and
-Setup](https://www.pulumi.com/docs/get-started/install/) and [Configuring Pulumi
-Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/) to get set up with
-Pulumi and Kubernetes.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Kubernetes](https://www.pulumi.com/docs/intro/cloud-providers/kubernetes/setup/)
+3. [Install Go](https://www.pulumi.com/docs/intro/languages/go/)
 
-Now, install dependencies:
+## Deploying the example
 
-```sh
-go mod download
-```
+1.  Create a new stack:
 
-Create a new stack:
+    ```bash
+    pulumi stack init dev
+    ```
 
-```sh
-$ pulumi stack init
-Enter a stack name: dev
-```
+1.  Install dependencies:
 
-Preview the deployment of the application and the perform the deployment:
+    ```bash
+    go mod download
+    ```
 
-```sh
-pulumi up
-Previewing update (dev)
+1.  Deploy the stack:
 
-View Live: https://app.pulumi.com/.../kubernetes-go-helm-release-wordpress/dev/previews/01ac68a0-bcce-4bc8-a34c-cad12544b839
+    ```bash
+    pulumi up
+    ```
 
-     Type                              Name                                      Plan
- +   pulumi:pulumi:Stack               kubernetes-go-helm-release-wordpress-dev  create
- +   └─ kubernetes:helm.sh/v3:Release  wpdev                                     create
+    ```
+    Updating (dev)
 
-Resources:
-    + 2 to create
+    View Live: https://app.pulumi.com/.../kubernetes-go-helm-release-wordpress/dev/updates/11
 
-Do you want to perform this update? yes
-Updating (dev)
+         Type                              Name                                      Status
+     +   pulumi:pulumi:Stack               kubernetes-go-helm-release-wordpress-dev  created
+     +   ├─ kubernetes:helm.sh/v3:Release  wpdev                                     created
+         └─ kubernetes:core/v1:Service     svc
 
-View Live: https://app.pulumi.com/.../kubernetes-go-helm-release-wordpress/dev/updates/11
+    Outputs:
+        frontendIp        : "10.96.109.99"
+        portForwardCommand: "kubectl port-forward svc/wpdev-ysmr245n-wordpress 8080:80"
 
-     Type                              Name                                      Status
- +   pulumi:pulumi:Stack               kubernetes-go-helm-release-wordpress-dev  created
- +   ├─ kubernetes:helm.sh/v3:Release  wpdev                                     created
-     └─ kubernetes:core/v1:Service     svc
+    Resources:
+        + 2 created
 
-Outputs:
-    frontendIp        : "10.96.109.99"
-    portForwardCommand: "kubectl port-forward svc/wpdev-ysmr245n-wordpress 8080:80"
+    Duration: 1m13s
+    ```
 
-Resources:
-    + 2 created
+1.  WordPress was allocated a cluster IP, in this case `10.96.109.99`, exported as the stack output
+    `frontendIp`. Since this is a cluster IP, you will need to port-forward to the service in order
+    to hit the endpoint at `http://localhost:8080` by running the port-forward command specified in
+    `portForwardCommand`. You can then navigate to the site in a web browser.
 
-Duration: 1m13s
+## Cleaning up
 
-```
+Once you're finished experimenting, you can destroy your stack and remove it to avoid incurring any additional cost:
 
-We can see here in the `---outputs:---` section that Wordpress was allocated a cluster IP, in this
-case `10.96.109.99`. It is exported with a stack output variable, `frontendIp`.  Since this is a Cluster IP,
-you will need to port-forward to the service in order to hit the endpoint at `http://localhost:8080`
-by running the port-forward command specified in `portForwardCommand`.
-
-You can navigate to the site in a web browser.
-
-When you're done, you can remove these resources with `pulumi destroy`:
-
-```sh
-pulumi destroy --skip-preview
-Destroying (dev)
-
-View Live: https://app.pulumi.com/.../kubernetes-go-helm-release-wordpress/dev/updates/12
-
-     Type                              Name                                      Status
- -   pulumi:pulumi:Stack               kubernetes-go-helm-release-wordpress-dev  deleted
- -   └─ kubernetes:helm.sh/v3:Release  wpdev                                     deleted
-
-Outputs:
-  - frontendIp        : "10.96.109.99"
-  - portForwardCommand: "kubectl port-forward svc/wpdev-ysmr245n-wordpress 8080:80"
-
-Resources:
-    - 2 deleted
-
-Duration: 8s
+```bash
+pulumi destroy
+pulumi stack rm
 ```

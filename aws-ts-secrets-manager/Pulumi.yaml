@@ -1,3 +1,8 @@
 name: aws-secrets-manager
 runtime: nodejs
 description: Demo showing how to set up AWS secrets manager
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-1

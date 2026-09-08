@@ -4,3 +4,16 @@ runtime:
   options:
     virtualenv: venv
 description: An Azure example using Python to provision a webserver using ComponentResource
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    azure:subscriptionId:
+      description: The Azure Subscription to deploy into
+    username:
+      description: The username used to configure the Virtual Machine
+      secret: true
+    password:
+      description: The password used to configure the Virtual Machine
+      secret: true

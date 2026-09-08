@@ -4,3 +4,14 @@ runtime:
     name: python
     options:
         virtualenv: venv
+template:
+    config:
+        aws:region:
+            description: The AWS region to deploy into
+            default: us-east-2
+        supernet-cidr:
+            description: The CIDR block that encompasses all VPCs in the network
+            default: 10.0.0.0/8
+        create-firewall:
+            description: Whether to create an AWS Network Firewall for traffic inspection
+            default: false

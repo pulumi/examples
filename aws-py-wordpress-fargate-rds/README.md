@@ -1,7 +1,7 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-wordpress-fargate-rds/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/aws-py-wordpress-fargate-rds/README.md#gh-dark-mode-only)
 
-# WordPress Site in AWS Fargate with RDS DB Backend
+# WordPress site in AWS Fargate with RDS DB backend
 
 This example serves a WordPress site in AWS ECS Fargate using an RDS MySQL Backend.
 
@@ -16,42 +16,53 @@ This sample uses the following AWS products (and related Pulumi providers):
 - [Amazon RDS](https://aws.amazon.com/rds): A managed DB service used to provide the MySQL backend for WordPress.
 - [Amazon ECS Fargate](https://aws.amazon.com/fargate): A container service used to run the WordPress frontend.
 
-## Getting Started
-
-There are no required configuration parameters for this project since the code will use defaults or generate values as needed - see the beginning of `__main__.py` to see the defaults.
-However, you can override these defaults by using `pulumi config` to set the following values (e.g. `pulumi config set service_name my-wp-demo`).
+There are no required configuration parameters for this project since the code will use defaults or generate values as needed — see the beginning of `__main__.py` to see the defaults. However, you can override these defaults by using `pulumi config` to set the following values (e.g. `pulumi config set service_name my-wp-demo`):
 
 - `service_name` - This is used as a prefix for resources created by the Pulumi program.
 - `db_name` - The name of the MySQL DB created in RDS.
 - `db_user` - The user created with access to the MySQL DB.
 - `db_password` - The password for the DB user. Be sure to use `--secret` if creating this config value (e.g. `pulumi config set db_password --secret`).
 
-## Deploying and running the program
-
 Note: some values in this example will be different from run to run.
+
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+1. [Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)
+1. [Install Python](https://www.pulumi.com/docs/intro/languages/python/)
+
+## Deploying the example
 
 1. Create a new stack:
 
-   ```bash
-   $ pulumi stack init lamp-test
-   ```
+    ```bash
+    pulumi stack init lamp-test
+    ```
 
-1. Set the AWS region:
+1. Set the AWS region to deploy into:
 
-   ```bash
-   $ pulumi config set aws:region us-west-2
-   ```
+    ```bash
+    pulumi config set aws:region us-west-2
+    ```
 
-1. Run `pulumi up` to preview and deploy changes. After the preview is shown you will be
-   prompted if you want to continue or not. Note: If you set the `db_password` in the configuration as described above, you will not see the `RandomPassword` resource below.
+1. Install dependencies:
 
-   ```bash
-   $ pulumi up
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+1. Run `pulumi up` to preview and deploy changes. After the preview is shown you will be prompted whether to continue or not. Note: If you set the `db_password` in the configuration as described above, you will not see the `RandomPassword` resource below.
+
+    ```bash
+    pulumi up
+    ```
+
+    ```
     +   pulumi:pulumi:Stack                  lamp-rds-wordpress-testing        create
     +   ├─ custom:resource:VPC               wp-example-net                    create
     +   │  ├─ aws:ec2:Vpc                    wp-example-net-vpc                create
-    +   pulumi:pulumi:Stack                  lamp-rds-wordpress-testing        create.
-    +   pulumi:pulumi:Stack                  lamp-rds-wordpress-testing        create
     +   │  ├─ aws:ec2:Subnet                 wp-example-net-subnet-us-west-2a  create
     +   │  ├─ aws:ec2:Subnet                 wp-example-net-subnet-us-west-2b  create
     +   │  ├─ aws:ec2:SecurityGroup          wp-example-net-rds-sg             create
@@ -70,25 +81,31 @@ Note: some values in this example will be different from run to run.
     +      ├─ aws:lb:LoadBalancer            wp-example-fe-alb                 create
     +      ├─ aws:lb:Listener                wp-example-fe-listener            create
     +      └─ aws:ecs:Service                wp-example-fe-app-svc             create
-
-   ```
+    ```
 
 1. The program outputs the following values:
 
-- `DB Endpoint`: This is the RDS DB endpoint. By default, the DB is deployed to disallow public access. This can be overriden in the resource declaration for the backend.
-- `DB Password`: This is managed as a secret. To see the value, you can use `pulumi stack output --show-secrets`
-- `DB User Name`: The user name for access the DB.
-- `ECS Cluster Name`: The name of the ECS cluster created by the stack.
-- `Web Service URL`: This is a link to the load balancer fronting the WordPress container. Note: It may take a few minutes for AWS to complete deploying the service and so you may see a 503 error initially.
+    - `DB Endpoint`: This is the RDS DB endpoint. By default, the DB is deployed to disallow public access. This can be overriden in the resource declaration for the backend.
+    - `DB Password`: This is managed as a secret. To see the value, you can use `pulumi stack output --show-secrets`.
+    - `DB User Name`: The user name for access the DB.
+    - `ECS Cluster Name`: The name of the ECS cluster created by the stack.
+    - `Web Service URL`: This is a link to the load balancer fronting the WordPress container. Note: It may take a few minutes for AWS to complete deploying the service and so you may see a 503 error initially.
 
-1. To clean up resources, run `pulumi destroy` and answer the confirmation question at the prompt.
+## Cleaning up
+
+Once you're finished experimenting, destroy your stack and remove it to avoid incurring any additional cost:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```
 
 ## Troubleshooting
 
-### 503 Error for the Web Service
+### 503 error for the web service
 
 AWS can take a few minutes to complete deploying the WordPress container and connect the load balancer to the service. So you may see a 503 error for a few minutes right after launching the stack. You can see the status of the service by looking at the cluster in AWS.
 
-## Deployment Speed
+### Deployment speed
 
 Since the stack creates an RDS instance, ECS cluster, load balancer, ECS service, as well as other elements, the stack can take about 4-5 minutes to launch and become ready.

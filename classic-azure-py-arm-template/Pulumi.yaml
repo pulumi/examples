@@ -4,3 +4,13 @@ runtime:
   options:
     virtualenv: venv
 description: An example of deploying an Azure Resource Manager (ARM) template using Pulumi.
+template:
+  config:
+    azure:environment:
+      description: The Azure environment to use (`public`, `usgovernment`, `german`, `china`)
+      default: public
+    azure:location:
+      description: The Azure location to use
+      default: westus2
+    azure:subscriptionId:
+      description: The Azure Subscription to deploy into

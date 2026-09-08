@@ -1,48 +1,54 @@
 [![Deploy this example with Pulumi](https://www.pulumi.com/images/deploy-with-pulumi/dark.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-static-website/README.md#gh-light-mode-only)
 [![Deploy this example with Pulumi](https://get.pulumi.com/new/button-light.svg)](https://app.pulumi.com/new?template=https://github.com/pulumi/examples/blob/master/azure-ts-static-website/README.md#gh-dark-mode-only)
 
-# Static Website Using Azure Blob Storage and CDN
-Based on https://github.com/zemien/static-website-ARM-template
+# Static website using Azure Blob Storage and CDN
 
+Based on https://github.com/zemien/static-website-ARM-template
 
 This example configures [Static website hosting in Azure Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
 
 In addition to the Storage itself, a CDN is configured to serve files from the Blob container origin. This may be useful if you need to serve files via HTTPS from a custom domain (not shown in the example).
 
-## Running the App
+## Prerequisites
+
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/)
+2. [Configure Azure credentials](https://www.pulumi.com/docs/intro/cloud-providers/azure/setup/)
+3. [Install Node.js](https://www.pulumi.com/docs/intro/languages/javascript/)
+
+## Deploying the example
 
 1.  Create a new stack:
 
-    ```
-    $ pulumi stack init dev
-    ```
-
-1.  Login to Azure CLI (you will be prompted to do this during deployment if you forget this step):
-
-    ```
-    $ az login
+    ```bash
+    pulumi stack init dev
     ```
 
-1.  Restore NPM dependencies:
+1.  Log in to the Azure CLI (you will be prompted to do this during deployment if you forget this step):
 
-    ```
-    $ npm install
+    ```bash
+    az login
     ```
 
-1.  Set the Azure region location to use:
+1.  Set the Azure region to deploy into:
 
+    ```bash
+    pulumi config set azure-native:location westus
     ```
-    $ pulumi config set azure-native:location westus
+
+1.  Install dependencies:
+
+    ```bash
+    npm install
     ```
 
 1.  Run `pulumi up` to preview and deploy changes:
 
+    ```bash
+    pulumi up
     ```
-    $ pulumi up
-    Previewing changes:
-    ...
 
-    Performing changes:
+    ```
+    Updating (dev):
     ...
     Resources:
         + 9 created
@@ -51,13 +57,25 @@ In addition to the Storage itself, a CDN is configured to serve files from the B
 
 1.  Check the deployed website endpoint:
 
+    ```bash
+    pulumi stack output staticEndpoint
+    curl "$(pulumi stack output staticEndpoint)"
     ```
-    $ pulumi stack output staticEndpoint
+
+    ```
     https://websitesbc90978a1.z20.web.core.windows.net/
-    $ curl "$(pulumi stack output staticEndpoint)"
     <html>
         <body>
             <h1>This file is served from Blob Storage (courtesy of Pulumi!)</h1>
         </body>
     </html>
     ```
+
+## Cleaning up
+
+Once you are done, you can destroy all of the resources, and the stack:
+
+```bash
+pulumi destroy
+pulumi stack rm
+```

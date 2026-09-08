@@ -4,3 +4,7 @@ runtime:
   options:
     virtualenv: venv
 description: A minimal OpenStack Python Pulumi program
+template:
+  config:
+    openstack:region:
+      description: The OpenStack region to deploy into

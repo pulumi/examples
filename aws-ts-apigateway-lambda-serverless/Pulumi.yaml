@@ -1,3 +1,8 @@
 name: aws-ts-apigateway-lambda-serverless
 runtime: nodejs
 description: Creates a serverless application using API Gateway backed by lambda functions
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-east-2

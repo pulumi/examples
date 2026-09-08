@@ -8,8 +8,8 @@ template:
   config:
     gcp:project:
       description: The Google Cloud project to deploy into
-    gcp:zone:
-      description: The Google Cloud zone
+    gcp:region:
+      description: The Google Cloud region to deploy into
     db-name:
       description: Name and Username of Cloud SQL database
     db-password:

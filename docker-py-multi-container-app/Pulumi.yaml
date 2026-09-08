@@ -4,3 +4,5 @@ runtime:
   options:
     virtualenv: venv
 description: Example python app using multiple docker containers
+template:
+  description: Runs a Redis container and an application container locally with Docker

@@ -4,3 +4,15 @@ runtime:
   options:
     virtualenv: venv
 description: An example of manually configuring an AWS EC2 virtual machine
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    publicKey:
+      description: The OpenSSH public key used by the EC2 instance
+    privateKey:
+      description: The OpenSSH private key used for SCP and SSH provisioning steps
+      secret: true
+    keyName:
+      description: An optional name of an existing EC2 key pair to use
