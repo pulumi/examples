@@ -13,21 +13,6 @@ const db = new cloudflare.D1Database("db", {
     name: "visits-db",
 });
 
-// The Worker's code: records each visit in D1 and returns the running total.
-const script = `export default {
-    async fetch(request, env, ctx) {
-        await env.DB.prepare(
-            "CREATE TABLE IF NOT EXISTS visits (id INTEGER PRIMARY KEY AUTOINCREMENT, visited_at TEXT)"
-        ).run();
-        await env.DB.prepare("INSERT INTO visits (visited_at) VALUES (?1)")
-            .bind(new Date().toISOString())
-            .run();
-        const row = await env.DB.prepare("SELECT COUNT(*) AS count FROM visits").first();
-        return new Response("Hello, world! This page has been visited " + row.count + " times.");
-    },
-};
-`;
-
 // A Cloudflare Worker, exposed on its workers.dev subdomain.
 const worker = new cloudflare.Worker("worker", {
     accountId: accountId,
@@ -37,7 +22,7 @@ const worker = new cloudflare.Worker("worker", {
     },
 });
 
-// A version of the Worker containing the code and its D1 binding.
+// A version of the Worker containing the code (worker.js) and its D1 binding.
 const version = new cloudflare.WorkerVersion("version", {
     accountId: accountId,
     workerId: worker.id,
@@ -51,7 +36,7 @@ const version = new cloudflare.WorkerVersion("version", {
     modules: [{
         name: "worker.js",
         contentType: "application/javascript+module",
-        contentBase64: Buffer.from(script).toString("base64"),
+        contentFile: "worker.js",
     }],
 });
 
