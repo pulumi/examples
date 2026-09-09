@@ -1,5 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+// Copyright 2016-2026, Pulumi Corporation.  All rights reserved.
+
 import * as cloudflare from "@pulumi/cloudflare";
+import * as pulumi from "@pulumi/pulumi";
 
 // Import the program's configuration settings.
 const config = new pulumi.Config();
