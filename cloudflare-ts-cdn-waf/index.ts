@@ -7,6 +7,9 @@ const zoneId = config.require("zoneId");
 const origin = config.require("origin");
 const hostname = config.get("hostname") || "www";
 
+// Look up the zone so we can build the fully-qualified hostname.
+const zone = cloudflare.getZoneOutput({ zoneId: zoneId });
+
 // A proxied DNS record, so traffic flows through Cloudflare's CDN and WAF.
 const record = new cloudflare.DnsRecord("record", {
     zoneId: zoneId,
@@ -49,12 +52,14 @@ const rateLimit = new cloudflare.Ruleset("rate-limit", {
         enabled: true,
         ratelimit: {
             characteristics: ["ip.src", "cf.colo.id"],
-            period: 60,
+            // period and mitigationTimeout must be 10 on the Free plan; higher
+            // values require a paid plan.
+            period: 10,
             requestsPerPeriod: 100,
-            mitigationTimeout: 60,
+            mitigationTimeout: 10,
         },
     }],
 });
 
 // Export the URL served through Cloudflare.
-export const url = pulumi.interpolate`https://${record.name}`;
+export const url = pulumi.interpolate`https://${hostname}.${zone.name}`;
