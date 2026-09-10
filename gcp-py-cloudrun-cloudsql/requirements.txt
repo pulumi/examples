@@ -1,2 +1,2 @@
 pulumi>=3.5.1,<4.0.0
-pulumi-gcp>=9.0.0,<10.0.0
+pulumi-gcp==10.0.0a1
