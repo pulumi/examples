@@ -1,0 +1,7 @@
+name: cloudflare-ts-serverless-d1
+runtime: nodejs
+description: A serverless Cloudflare Worker backed by a D1 SQL database
+template:
+  config:
+    accountId:
+      description: The Cloudflare account ID to deploy into

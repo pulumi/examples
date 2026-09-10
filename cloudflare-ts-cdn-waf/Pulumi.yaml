@@ -1,0 +1,12 @@
+name: cloudflare-ts-cdn-waf
+runtime: nodejs
+description: Put Cloudflare's CDN and WAF in front of an origin server
+template:
+  config:
+    zoneId:
+      description: The Cloudflare zone ID to configure
+    origin:
+      description: The origin hostname to proxy traffic to
+    hostname:
+      description: The hostname to serve through Cloudflare
+      default: www

@@ -1,0 +1,7 @@
+name: cloudflare-ts-dns
+runtime: nodejs
+description: Manage Cloudflare DNS records on a zone
+template:
+  config:
+    zoneId:
+      description: The Cloudflare zone ID to manage records in
