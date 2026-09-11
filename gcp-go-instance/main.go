@@ -10,7 +10,7 @@ func main() {
 		inst, err := compute.NewInstance(ctx, "instance", &compute.InstanceArgs{
 			BootDisk: &compute.InstanceBootDiskArgs{
 				InitializeParams: &compute.InstanceBootDiskInitializeParamsArgs{
-					Image: pulumi.String("debian-cloud/debian-9"),
+					Image: pulumi.String("debian-cloud/debian-13"),
 				},
 			},
 			MachineType: pulumi.String("n1-standard-1"),

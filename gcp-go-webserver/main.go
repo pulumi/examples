@@ -40,7 +40,7 @@ func main() {
 		// (optional) create a simple web server using the startup script for the instance
 		startupScript := `#!/bin/bash
 		echo "Hello, World!" > index.html
-		nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &`
+		nohup python3 -m http.server 80 >/dev/null 2>&1 &`
 
 		computeInstance, err := compute.NewInstance(ctx, "instance",
 			&compute.InstanceArgs{
@@ -48,7 +48,7 @@ func main() {
 				MetadataStartupScript: pulumi.String(startupScript),
 				BootDisk: &compute.InstanceBootDiskArgs{
 					InitializeParams: &compute.InstanceBootDiskInitializeParamsArgs{
-						Image: pulumi.String("debian-cloud/debian-9-stretch-v20181210"),
+						Image: pulumi.String("debian-cloud/debian-13"),
 					},
 				},
 				NetworkInterfaces: compute.InstanceNetworkInterfaceArray{
