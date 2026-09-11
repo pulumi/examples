@@ -27,7 +27,7 @@ resource "google_compute_instance" "instance" {
   metadata_startup_script = <<-EOF
     #!/bin/bash
     echo "Hello, World!" > index.html
-    nohup python3 -m http.server 80 &
+    nohup python3 -m http.server 80 >/dev/null 2>&1 &
   EOF
 
   boot_disk {

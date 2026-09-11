@@ -31,7 +31,7 @@ for (let i = 0; i < count; i++) {
         password,
         bootScript: `#!/bin/bash\n
 echo "Hello, from Server #{i+1}!" > index.html
-nohup python -m SimpleHTTPServer 80 &`,
+nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &`,
         resourceGroupName: resourceGroupName,
         subnetId: network.subnets[0].id,
     });

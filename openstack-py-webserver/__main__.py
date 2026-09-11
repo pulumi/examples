@@ -60,7 +60,7 @@ network_public = openstack.networking.get_network(name="public")
 user_data = """
 #!/bin/bash
 echo "Hello, World!" > index.html
-nohup python3 -m http.server &
+nohup python3 -m http.server >/dev/null 2>&1 &
 """
 
 fedora = openstack.compute.Instance(
