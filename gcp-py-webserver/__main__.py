@@ -22,7 +22,7 @@ compute_firewall = compute.Firewall(
 # A simple bash script that will run when the webserver is initalized
 startup_script = """#!/bin/bash
 echo "Hello, World!" > index.html
-nohup python -m SimpleHTTPServer 80 &"""
+nohup python3 -m http.server 80 &"""
 
 instance_addr = compute.address.Address("address")
 compute_instance = compute.Instance(
@@ -31,7 +31,7 @@ compute_instance = compute.Instance(
     metadata_startup_script=startup_script,
     boot_disk=compute.InstanceBootDiskArgs(
         initialize_params=compute.InstanceBootDiskInitializeParamsArgs(
-            image="debian-cloud/debian-9-stretch-v20181210"
+            image="debian-cloud/debian-13"
         )
     ),
     network_interfaces=[
