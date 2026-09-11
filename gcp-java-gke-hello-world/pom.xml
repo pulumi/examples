@@ -31,7 +31,7 @@
     <dependency>
       <groupId>com.pulumi</groupId>
       <artifactId>gcp</artifactId>
-      <version>[9.0,10.0)</version>
+      <version>10.0.0-alpha.1</version>
     </dependency>
   </dependencies>
 
