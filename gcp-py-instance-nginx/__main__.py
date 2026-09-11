@@ -9,6 +9,7 @@ network = compute.Network("poc")
 firewall = compute.Firewall(
     "poc",
     network=network.self_link,
+    source_ranges=["0.0.0.0/0"],
     allows=[
         compute.FirewallAllowArgs(protocol="tcp", ports=["22"]),
         compute.FirewallAllowArgs(protocol="tcp", ports=["80"]),

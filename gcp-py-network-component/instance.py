@@ -30,6 +30,7 @@ class Server(ComponentResource):
         firewall = compute.Firewall(
             name,
             network=args.subnet.network,
+            source_ranges=["0.0.0.0/0"],
             allows=[
                 compute.FirewallAllowArgs(
                     protocol="tcp",

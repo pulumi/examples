@@ -10,6 +10,7 @@ compute_network = compute.Network(
 compute_firewall = compute.Firewall(
     "firewall",
     network=compute_network.self_link,
+    source_ranges=["0.0.0.0/0"],
     allows=[
         compute.FirewallAllowArgs(
             protocol="tcp",
