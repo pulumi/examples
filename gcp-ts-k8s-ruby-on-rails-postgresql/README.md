@@ -45,7 +45,7 @@ cluster and containerized Ruby on Rails application deployed into it, using a ho
     pulumi config set gcp:project [your-gcp-project-here]
     pulumi config set gcp:zone us-west1-a # any valid GCP zone works
     pulumi config set clusterPassword --secret [your-new-cluster-password-here] # must be at least 16 characters
-    pulumi config set dbUsername [your-new-db-username-here]
+    pulumi config set dbUsername [your-new-db-username-here] # optional, defaults to "rails"
     pulumi config set dbPassword --secret [your-new-db-password-here]
     pulumi config set dockerUsername [your-dockerhub-username-here]
     pulumi config set dockerPassword --secret [your-dockerhub-password-here]

@@ -11,6 +11,9 @@ template:
     clusterPassword:
       description: Your new cluster password
       secret: true
+    dbUsername:
+      description: Your new DB username
+      default: rails
     dbPassword:
       description: Your new DB password
       secret: true
