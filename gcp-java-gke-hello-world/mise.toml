@@ -1,0 +1,7 @@
+# Toolchain for this example. Maven is not bundled with the repo and the
+# pom sets maven.compiler.release=15, so a JDK older than that cannot
+# build it. Pinned here rather than repo-wide because this is the only
+# Maven project in the examples.
+[tools]
+java = "temurin-21"
+maven = "3.9"
