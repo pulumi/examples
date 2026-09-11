@@ -112,7 +112,7 @@ async function handleIncomingHttpRequest(req: express.Request, res: express.Resp
                 break;
         }
     } catch (err) {
-        console.log("Error: " + err.message);
+        console.log("Error: " + (err instanceof Error ? err.message : err));
         // Fall through. Even in the event of an error, we want to return '200' so that slack
         // doesn't just repeat the message, causing the same error.
     }
@@ -149,7 +149,7 @@ messageTopic.onMessagePublished("processTopicMessage", async (data) => {
                 console.log("Unknown event type: " + request.event.type);
         }
     } catch (err) {
-        console.log("Error: " + (err.stack || err.message));
+        console.log("Error: " + (err instanceof Error ? (err.stack || err.message) : err));
     }
 });
 
