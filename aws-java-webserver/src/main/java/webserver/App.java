@@ -48,7 +48,7 @@ public class App {
         final var userData =
                 "#!/bin/bash\n" +
                         "echo \"Hello, World!\" > index.html\n" +
-                        "nohup python -m SimpleHTTPServer 80 &";
+                        "nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &";
 
         final var server = new Instance("web-server-www", InstanceArgs.builder()
                 .tags(Map.of("Name", "web-server-www"))

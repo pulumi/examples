@@ -56,7 +56,7 @@ func main() {
 				Password: pulumi.String(password),
 				BootScript: pulumi.String(fmt.Sprintf(`#!/bin/bash
 echo "Hello, from Server %v!" > index.html
-nohup python -m SimpleHTTPServer 80 &`, i)),
+nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &`, i)),
 				ResourceGroupName: rg.Name,
 				SubnetID:          subnetID,
 			})

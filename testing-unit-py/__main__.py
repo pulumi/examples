@@ -15,7 +15,7 @@ group = ec2.SecurityGroup(
     ],
 )
 
-user_data = '#!/bin/bash echo "Hello, World!" > index.html nohup python -m SimpleHTTPServer 80 &'
+user_data = '#!/bin/bash echo "Hello, World!" > index.html nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &'
 
 ami_id = ec2.get_ami(
     most_recent=True,

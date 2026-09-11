@@ -7,7 +7,7 @@ const debian9 = "linode/debian9";
 // (optional) create a simple web server using a startup script for the instance
 const startupScript = `#!/bin/bash
 echo "Hello, World!" > index.html
-nohup python -m SimpleHTTPServer 80 &`;
+nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &`;
 
 const profile = pulumi.output(linode.getProfile({ async: true }));
 

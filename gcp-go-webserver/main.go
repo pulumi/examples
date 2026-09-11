@@ -40,7 +40,7 @@ func main() {
 		// (optional) create a simple web server using the startup script for the instance
 		startupScript := `#!/bin/bash
 		echo "Hello, World!" > index.html
-		nohup python -m SimpleHTTPServer 80 &`
+		nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &`
 
 		computeInstance, err := compute.NewInstance(ctx, "instance",
 			&compute.InstanceArgs{
