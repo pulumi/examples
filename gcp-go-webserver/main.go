@@ -16,12 +16,20 @@ func main() {
 			return err
 		}
 
+		// Allow SSH and HTTP from anywhere, but only to instances tagged "web".
+		// SourceRanges selects who may connect; TargetTags scopes the rule to the
+		// instances it protects. SourceTags cannot be used here: it selects source
+		// instances by network tag inside the VPC, so it never matches traffic
+		// arriving at an instance's external IP.
 		computeFirewall, err := compute.NewFirewall(ctx, "firewall",
 			&compute.FirewallArgs{
-				SourceTags: pulumi.StringArray{
+				Network: computeNetwork.SelfLink,
+				SourceRanges: pulumi.StringArray{
+					pulumi.String("0.0.0.0/0"),
+				},
+				TargetTags: pulumi.StringArray{
 					pulumi.String("web"),
 				},
-				Network: computeNetwork.SelfLink,
 				Allows: &compute.FirewallAllowArray{
 					&compute.FirewallAllowArgs{
 						Protocol: pulumi.String("tcp"),
@@ -46,6 +54,10 @@ func main() {
 			&compute.InstanceArgs{
 				MachineType:           pulumi.String("f1-micro"),
 				MetadataStartupScript: pulumi.String(startupScript),
+				// Matches the firewall rule's TargetTags.
+				Tags: pulumi.StringArray{
+					pulumi.String("web"),
+				},
 				BootDisk: &compute.InstanceBootDiskArgs{
 					InitializeParams: &compute.InstanceBootDiskInitializeParamsArgs{
 						Image: pulumi.String("debian-cloud/debian-9-stretch-v20181210"),
