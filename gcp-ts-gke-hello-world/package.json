@@ -1,5 +1,8 @@
 {
     "name": "gcp-ts-gke-hello-world",
+    "devDependencies": {
+        "typescript": "^5.0.0"
+    },
     "dependencies": {
         "@pulumi/gcp": "9.35.1",
         "@pulumi/kubernetes": "4.28.0",
