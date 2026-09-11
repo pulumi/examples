@@ -232,6 +232,12 @@ jobs:
         uses: ./.github/actions/setup
         id: setup
         with:
+          # The GCP Python examples depend on pulumi-gcp 10.x, which requires
+          # pulumi >= 3.231.0. No pulumi release in that range publishes a Python 3.9
+          # wheel, so pip cannot resolve their requirements.txt on the setup action's
+          # 3.9 default. Scoped to this leg so the floor is not raised for every other
+          # Python example in the repo.
+          python-version: ${{ matrix.test-set == 'GcpPy' && '3.12' || '3.9' }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
