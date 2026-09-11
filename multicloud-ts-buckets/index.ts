@@ -7,8 +7,9 @@ import * as gcp from "@pulumi/gcp";
 const awsBucket = new aws.s3.Bucket("my-bucket");
 
 // Create a GCP resource (Storage Bucket)
-// Newer @pulumi/gcp requires args; pass an empty object for defaults.
-const gcpBucket = new gcp.storage.Bucket("my-bucket", {});
+const gcpBucket = new gcp.storage.Bucket("my-bucket", {
+    location: "US",
+});
 
 // Export the names of the buckets
 export const bucketNames = [
