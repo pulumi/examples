@@ -237,14 +237,12 @@ update_python_cmd = command.remote.Command(
 # Finally, play the Ansible playbook to finish installing.
 play_ansible_playbook_cmd = command.local.Command(
     "playAnsiblePlaybookCmd",
-    create=wordpress_eip.public_ip.apply(
-        lambda public_ip: f"""\
+    create=wordpress_eip.public_ip.apply(lambda public_ip: f"""\
 ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 -u ec2-user \
 -i '{public_ip},' \
 --private-key {private_key_path} \
-playbook_rendered.yml"""
-    ),
+playbook_rendered.yml"""),
     opts=pulumi.ResourceOptions(
         depends_on=[
             render_playbook_cmd,

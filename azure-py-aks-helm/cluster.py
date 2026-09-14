@@ -2,7 +2,6 @@
 
 """Provisions an AKS cluster."""
 
-
 import base64
 
 from pulumi_azure_native import resources, containerservice
@@ -11,7 +10,6 @@ import pulumi_azuread as azuread
 import pulumi_kubernetes as k8s
 
 import config
-
 
 resource_group = resources.ResourceGroup("rg")
 

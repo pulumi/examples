@@ -4,7 +4,6 @@ import pulumi
 from pulumi_azure_native import resources, containerservice
 import pulumi_azuread as ad
 
-
 config = pulumi.Config()
 password = config.get_secret("password")
 ssh_public_key = config.require("sshPublicKey")

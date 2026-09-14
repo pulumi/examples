@@ -8,7 +8,6 @@ import re
 import os
 import json
 
-
 ap = argparse.ArgumentParser()
 ap.add_argument("--goversion")
 ap.add_argument("--nodeversion")

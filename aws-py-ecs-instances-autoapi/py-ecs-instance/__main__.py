@@ -102,9 +102,7 @@ ecs_instance_ami = aws.ec2.get_ami(
 # User-data so the EC2 container instance will connect to the created cluster.
 cluster_name = "my-fancy-new-ecs-cluster"
 user_data = """#!/bin/bash
-echo ECS_CLUSTER={cluster_nm} >> /etc/ecs/ecs.config""".format(
-    cluster_nm=cluster_name
-)
+echo ECS_CLUSTER={cluster_nm} >> /etc/ecs/ecs.config""".format(cluster_nm=cluster_name)
 
 # create launch configuration
 launch_config = aws.ec2.LaunchConfiguration(
