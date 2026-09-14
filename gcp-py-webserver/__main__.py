@@ -22,7 +22,7 @@ compute_firewall = compute.Firewall(
 # A simple bash script that will run when the webserver is initalized
 startup_script = """#!/bin/bash
 echo "Hello, World!" > index.html
-nohup python3 -m http.server 80 &"""
+nohup python3 -m http.server 80 >/dev/null 2>&1 &"""
 
 instance_addr = compute.address.Address("address")
 compute_instance = compute.Instance(

@@ -110,7 +110,7 @@ class VmScalesetStack : Stack
                 CustomData = System.Convert.ToBase64String(
                     System.Text.Encoding.UTF8.GetBytes(@"#!/bin/bash
 echo ""Hello, World by $HOSTNAME!"" > index.html
-nohup python -m SimpleHTTPServer 80 &")),
+nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &")),
                 DisablePasswordAuthentication = false,
                 Sku = "Standard_DS1_V2",
                 OsDisk = new LinuxVirtualMachineScaleSetOsDiskArgs

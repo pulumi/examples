@@ -27,7 +27,7 @@ group = aws.ec2.SecurityGroup(
 user_data = """
 #!/bin/bash
 echo "Hello, World!" > index.html
-nohup python -m SimpleHTTPServer 80 &
+nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &
 """
 
 server = aws.ec2.Instance(

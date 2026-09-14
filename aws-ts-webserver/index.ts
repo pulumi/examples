@@ -23,7 +23,7 @@ const group = new aws.ec2.SecurityGroup("web-secgrp", {
 const userData =
 `#!/bin/bash
 echo "Hello, World!" > index.html
-nohup python -m SimpleHTTPServer 80 &`;
+nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &`;
 
 const server = new aws.ec2.Instance("web-server-www", {
     tags: { "Name": "web-server-www" },

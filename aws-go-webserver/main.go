@@ -46,7 +46,7 @@ func main() {
 			Ami:                 pulumi.String(ami.Id),
 			UserData: pulumi.String(`#!/bin/bash
 echo "Hello, World!" > index.html
-nohup python -m SimpleHTTPServer 80 &`),
+nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &`),
 		})
 
 		// Export the resulting server's IP address and DNS name.

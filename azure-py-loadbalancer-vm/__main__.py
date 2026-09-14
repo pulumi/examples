@@ -178,7 +178,7 @@ nic = network.NetworkInterface(
 init_script = """#!/bin/bash
 
 echo "Hello, World!" > index.html
-nohup python -m SimpleHTTPServer 80 &"""
+nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &"""
 
 # Create the virtual machine.
 vm = compute.VirtualMachine(

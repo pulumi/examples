@@ -33,7 +33,7 @@ class WebServerStack : Stack
         var userData = @"
 #!/bin/bash
 echo ""Hello, World!"" > index.html
-nohup python -m SimpleHTTPServer 80 &
+nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &
 ";
 
         var server = new Instance("web-server-www", new InstanceArgs

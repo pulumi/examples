@@ -47,7 +47,7 @@ func createInfrastructure(ctx *pulumi.Context) (*infrastructure, error) {
 		return nil, err
 	}
 
-	const userData = `#!/bin/bash echo "Hello, World!" > index.html nohup python -m SimpleHTTPServer 80 &`
+	const userData = `#!/bin/bash echo "Hello, World!" > index.html nohup python -m SimpleHTTPServer 80 >/dev/null 2>&1 &`
 
 	server, err := ec2.NewInstance(ctx, "web-server-www", &ec2.InstanceArgs{
 		InstanceType:        pulumi.String("t2-micro"),
