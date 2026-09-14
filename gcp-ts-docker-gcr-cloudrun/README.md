@@ -55,12 +55,13 @@ This example is split into two Pulumi projects, run in sequence:
     ...
 
     Updating (dev):
-        Type                   Name                 Status
-    +   pulumi:pulumi:Stack    gcr-build-image-dev  created
-    +   └─ docker:image:Image  ruby-app             created
+        Type                         Name                 Status
+    +   pulumi:pulumi:Stack          gcr-build-image-dev  created
+    +   └─ docker-build:index:Image  ruby-app             created
 
     Outputs:
-        digest: "gcr.io/velvety-rock-274215/ruby-app:latest-fee86d3d35fccf2ad4d86bbfcdd489acf7b1e4db0ebb8166378bd1fb0ca9cee6"
+        digest: "sha256:fee86d3d35fccf2ad4d86bbfcdd489acf7b1e4db0ebb8166378bd1fb0ca9cee6"
+        ref   : "gcr.io/velvety-rock-274215/ruby-app:latest@sha256:fee86d3d35fccf2ad4d86bbfcdd489acf7b1e4db0ebb8166378bd1fb0ca9cee6"
 
     Resources:
         + 2 created
