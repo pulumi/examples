@@ -26,13 +26,13 @@ const desiredClusterSize = config.getNumber("desiredClusterSize") || 3;
 const eksNodeInstanceType = config.get("eksNodeInstanceType") || "t3.medium";
 const vpcNetworkCidr = config.get("vpcNetworkCidr") || "10.0.0.0/16";
 
-const publicSubnetCIDRs: pulumi.Input<string>[] = config.requireObject("publicSubnetCIDRs") || [
+const publicSubnetCIDRs: pulumi.Input<string>[] = config.getObject<pulumi.Input<string>[]>("publicSubnetCIDRs") || [
     "10.0.0.0/27",
     "10.0.0.32/27",
 ];
 
 
-const availabilityZones: pulumi.Input<string>[] = config.requireObject("availabilityZones") || [
+const availabilityZones: pulumi.Input<string>[] = config.getObject<pulumi.Input<string>[]>("availabilityZones") || [
     "eu-central-1a",
     "eu-central-1b",
 ];

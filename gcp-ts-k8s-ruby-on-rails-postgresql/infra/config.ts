@@ -10,7 +10,7 @@ export const dockerUsername = config.require("dockerUsername");
 export const dockerPassword = config.require("dockerPassword");
 
 // / PostgreSQL config
-export const dbUsername = config.require("dbUsername") || "rails";
+export const dbUsername = config.get("dbUsername") || "rails";
 export const dbPassword = config.require("dbPassword");
 
 // / Kubernetes config
