@@ -2,7 +2,6 @@
 
 import pulumi
 
-
 pulumi.export("strVar", "foo")
 pulumi.export("arrVar", ["fizz", "buzz"])
 

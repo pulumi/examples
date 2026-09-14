@@ -3,7 +3,6 @@ from pulumi.resource import CustomTimeouts
 import pulumi_azure_native.resources as resources
 import pulumi_azure_native.network as network
 
-
 # Variables that may need to be injected before calling functions:
 # vdc.location = props.location
 # vdc.resource_group_name = props.resource_group_name

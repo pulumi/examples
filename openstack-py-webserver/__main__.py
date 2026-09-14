@@ -3,7 +3,6 @@
 import pulumi
 import pulumi_openstack as openstack
 
-
 fedora_image = openstack.images.Image(
     "fedora",
     name="fedora",

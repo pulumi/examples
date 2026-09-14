@@ -1,6 +1,5 @@
 import subprocess as sp
 
-
 DESIRED_DEPS = {
     "pulumi": "pulumi>=3.5.1,<4.0.0",
     "pulumi-azure": "pulumi-azure>=4.7.0,<5.0.0",

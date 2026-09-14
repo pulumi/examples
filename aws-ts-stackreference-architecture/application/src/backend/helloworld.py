@@ -4,7 +4,6 @@ import random
 import os
 import requests
 
-
 hash = random.getrandbits(128)
 
 app = Flask(__name__)

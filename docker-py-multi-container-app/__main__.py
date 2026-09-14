@@ -3,7 +3,6 @@
 import pulumi
 import pulumi_docker as docker
 
-
 redis_port = 6379
 redis_host = "redisdb"
 

@@ -49,8 +49,7 @@ sfn_role = iam.Role(
                 "Action": "sts:AssumeRole"
             }
         ]
-    }"""
-    % config.region,
+    }""" % config.region,
 )
 
 sfn_role_policy = iam.RolePolicy(

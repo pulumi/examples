@@ -5,7 +5,6 @@ import json
 import pulumi_azure as azure
 from pulumi import export, get_project, get_stack
 
-
 # Create a resource group to deploy all ARM template resources into.
 resource_group = azure.core.ResourceGroup("test")
 

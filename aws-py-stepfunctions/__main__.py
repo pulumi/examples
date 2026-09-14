@@ -15,8 +15,7 @@ hello_world_fn = lambda_.Function(
 state_defn = state_machine = sfn.StateMachine(
     "stateMachine",
     role_arn=iam.sfn_role.arn,
-    definition=hello_world_fn.arn.apply(
-        lambda arn: """{
+    definition=hello_world_fn.arn.apply(lambda arn: """{
         "Comment": "A Hello World example of the Amazon States Language using an AWS Lambda Function",
         "StartAt": "HelloWorld",
         "States": {
@@ -26,9 +25,7 @@ state_defn = state_machine = sfn.StateMachine(
                 "End": true
             }
         }
-    }"""
-        % arn
-    ),
+    }""" % arn),
 )
 
 pulumi.export("state_machine_arn", state_machine.id)

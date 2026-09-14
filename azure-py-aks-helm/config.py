@@ -10,7 +10,6 @@ from pulumi import Config
 from pulumi_random import RandomPassword
 from pulumi_tls import PrivateKey
 
-
 config = Config()
 
 
