@@ -1,6 +1,6 @@
 module github.com/pulumi/examples/aws-go-s3-folder
 
-go 1.25.6
+go 1.26.0
 
 require github.com/pulumi/pulumi/sdk/v3 v3.225.0
 
@@ -102,7 +102,7 @@ require (
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	golang.org/x/crypto v0.55.0 // indirect
+	golang.org/x/crypto v0.56.0 // indirect
 	golang.org/x/net v0.58.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/term v0.45.0 // indirect
