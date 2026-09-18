@@ -1,6 +1,6 @@
 module kubernetes-go-exposed-deployment
 
-go 1.25.0
+go 1.26.0
 
 require (
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.28.0
@@ -84,7 +84,7 @@ require (
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	github.com/zclconf/go-cty v1.13.2 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
-	golang.org/x/crypto v0.55.0 // indirect
+	golang.org/x/crypto v0.56.0 // indirect
 	golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f // indirect
 	golang.org/x/mod v0.38.0 // indirect
 	golang.org/x/net v0.58.0 // indirect
