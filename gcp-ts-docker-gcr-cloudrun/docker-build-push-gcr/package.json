@@ -8,7 +8,7 @@
         "typescript": "^5.0.0"
     },
     "dependencies": {
-        "@pulumi/docker-build": "0.0.21",
+        "@pulumi/docker-build": "0.0.22",
         "@pulumi/gcp": "9.35.1",
         "@pulumi/pulumi": "3.228.0"
     }
