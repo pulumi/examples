@@ -1,0 +1,11 @@
+name: awsx-vpc-state-migration
+runtime: nodejs
+description: Migrate the provider-backed AWSX VPC to plain AWS resources
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
+    availabilityZone:
+      description: An availability zone in the configured AWS region (keep it unchanged between versions)
+      default: us-west-2a

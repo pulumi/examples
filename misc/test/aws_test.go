@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"path"
+	"strings"
 	"testing"
 	"time"
 
@@ -548,4 +549,63 @@ func TestAccAwsTsLambdaEfs(t *testing.T) {
 		})
 
 	helpers.ProgramTest(t, &test)
+}
+
+func TestAccAwsTsAwsxVpcStateMigration(t *testing.T) {
+	root := path.Join(getCwd(t), "..", "..", "aws-ts-awsx-vpc-state-migration")
+	for _, direct := range []bool{false, true} {
+		name := "sequential"
+		if direct {
+			name = "direct"
+		}
+		t.Run(name, func(t *testing.T) {
+			var originalIDs map[string]string
+			validate := func(t *testing.T, stack integration.RuntimeValidationStackInfo) {
+				ids := map[string]string{}
+				for _, r := range stack.Deployment.Resources {
+					if r.Custom && !strings.HasPrefix(string(r.Type), "pulumi:providers:") {
+						// This example has exactly one managed resource of each type.
+						assert.NotEmpty(t, r.ID)
+						ids[string(r.Type)] = string(r.ID)
+					}
+				}
+				assert.Len(t, ids, 6)
+				if originalIDs == nil {
+					originalIDs = ids
+				} else {
+					assert.Equal(t, originalIDs, ids, "migrations must preserve every AWS resource ID")
+				}
+				assert.Equal(t, ids["aws:ec2/vpc:Vpc"], stack.Outputs["vpcId"])
+				assert.Equal(t, ids["aws:ec2/securityGroup:SecurityGroup"], stack.Outputs["databaseSecurityGroupId"])
+				for _, r := range stack.Deployment.Resources {
+					if r.Type == "aws:ec2/securityGroup:SecurityGroup" {
+						assert.Equal(t, ids["aws:ec2/vpc:Vpc"], r.Inputs["vpcId"])
+					}
+				}
+			}
+			edits := []integration.EditDir{}
+			if !direct {
+				edits = append(edits, integration.EditDir{
+					Dir:                    path.Join(root, "v2"),
+					Additive:               true,
+					ExtraRuntimeValidation: validate,
+				})
+			}
+			edits = append(edits,
+				integration.EditDir{Dir: path.Join(root, "v3"), Additive: true, ExtraRuntimeValidation: validate},
+				integration.EditDir{Dir: path.Join(root, "v3"), Additive: true, ExpectNoChanges: true, ExtraRuntimeValidation: validate},
+			)
+			test := getAWSBase(t).With(integration.ProgramTestOptions{
+				Dir:             root,
+				RelativeWorkDir: "v1",
+				Config: map[string]string{
+					"aws:region":       "us-west-2",
+					"availabilityZone": "us-west-2a",
+				},
+				ExtraRuntimeValidation: validate,
+				EditDirs:               edits,
+			})
+			helpers.ProgramTest(t, &test)
+		})
+	}
 }

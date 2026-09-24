@@ -1,0 +1,17 @@
+{
+  "name": "awsx-vpc-state-migration-v2",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsc --outDir bin && node --test bin/migration.spec.js"
+  },
+  "dependencies": {
+    "@pulumi/aws": "7.44.0",
+    "@pulumi/awsx": "3.9.0",
+    "@pulumi/pulumi": "3.264.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
