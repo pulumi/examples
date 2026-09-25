@@ -37,6 +37,7 @@ template = {
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageAccountName')]",
             "apiVersion": "2019-04-01",
+            "kind": "StorageV2",
             "location": "[variables('location')]",
             "sku": {
                 "name": "[parameters('storageAccountType')]",
@@ -47,6 +48,9 @@ template = {
             "apiVersion": "2019-09-01",
             "name": "[variables('publicIPAddressName')]",
             "location": "[variables('location')]",
+            "sku": {
+                "name": "Standard",
+            },
             "properties": {
                 "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
                 "dnsSettings": {
@@ -59,7 +63,7 @@ template = {
         "location": "[resourceGroup().location]",
         "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'storage')]",
         "publicIPAddressName": "[concat('myPublicIp', uniquestring(resourceGroup().id))]",
-        "publicIPAddressType": "Dynamic",
+        "publicIPAddressType": "Static",
         "dnsLabelPrefix": f"{get_project()}-{get_stack()}",
     },
 }
