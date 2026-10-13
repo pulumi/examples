@@ -1,0 +1,511 @@
+name: azure-sftp-blob-storage
+runtime: yaml
+description: Enterprise Azure Blob Storage with SFTP support and advanced security features
+
+configuration:
+  azure-native:location:
+    description: The Azure region to deploy into
+    default: East US 2
+  storageAccountName:
+    description: The name of the storage account (must be globally unique)
+    default: secure${pulumi.stack}
+  userPublicKey:
+    description: SSH public key for SFTP user authentication (required)
+    default: ""
+  keyVaultName:
+    description: Key Vault name for customer-managed keys
+    default: secure-kv-${pulumi.stack}
+  enableCustomerManagedKeys:
+    description: Enable customer-managed encryption keys for enhanced security
+    type: boolean
+    default: true
+
+variables:
+  resourceGroupName: sftp-blob-rg-${pulumi.stack}
+
+resources:
+  # Resource Group
+  resourceGroup:
+    type: azure-native:resources:ResourceGroup
+    properties:
+      resourceGroupName: ${resourceGroupName}
+      location: ${azure-native:location}
+      tags:
+        Environment: ${pulumi.stack}
+        Purpose: Secure-SFTP-Storage
+        ManagedBy: Pulumi
+
+  # Managed Identity for Key Vault access
+  managedIdentity:
+    type: azure-native:managedidentity:UserAssignedIdentity
+    properties:
+      resourceName: ${storageAccountName}-identity
+      resourceGroupName: ${resourceGroup.name}
+      location: ${azure-native:location}
+      tags:
+        Environment: ${pulumi.stack}
+        Purpose: Storage-KeyVault-Access
+
+  # Key Vault Premium for Customer-Managed Keys
+  keyVault:
+    type: azure-native:keyvault:Vault
+    properties:
+      vaultName: ${keyVaultName}
+      resourceGroupName: ${resourceGroup.name}
+      location: ${azure-native:location}
+      properties:
+        sku:
+          name: premium
+          family: A
+        tenantId: ${azure-native:authorization:getClientConfig.tenantId}
+        enabledForDiskEncryption: true
+        enabledForDeployment: true
+        enabledForTemplateDeployment: true
+        enableSoftDelete: true
+        enablePurgeProtection: true
+        softDeleteRetentionInDays: 90
+        networkAcls:
+          defaultAction: Deny
+          bypass: AzureServices
+        publicNetworkAccess: Disabled
+      tags:
+        Environment: ${pulumi.stack}
+        Purpose: Enterprise-Encryption-Keys
+        ManagedBy: Pulumi
+
+  # Storage Encryption Key (HSM-backed)
+  storageEncryptionKey:
+    type: azure-native:keyvault:Key
+    properties:
+      keyName: storage-encryption-key
+      resourceGroupName: ${resourceGroup.name}
+      vaultName: ${keyVault.name}
+      properties:
+        kty: RSA-HSM
+        keySize: 4096
+        keyOps:
+          - encrypt
+          - decrypt
+          - wrapKey
+          - unwrapKey
+        attributes:
+          enabled: true
+          exportable: false
+      tags:
+        Environment: ${pulumi.stack}
+        Purpose: Storage-Encryption
+
+  # Key Vault Access Policy for Managed Identity
+  keyVaultAccessPolicy:
+    type: azure-native:keyvault:VaultAccessPolicy
+    properties:
+      resourceGroupName: ${resourceGroup.name}
+      vaultName: ${keyVault.name}
+      operationKind: add
+      properties:
+        accessPolicies:
+          - objectId: ${managedIdentity.principalId}
+            tenantId: ${azure-native:authorization:getClientConfig.tenantId}
+            permissions:
+              keys:
+                - get
+                - wrapKey
+                - unwrapKey
+                - recover
+    options:
+      dependsOn:
+        - ${managedIdentity}
+        - ${keyVault}
+
+  # Storage Account with enterprise security
+  storageAccount:
+    type: azure-native:storage:StorageAccount
+    properties:
+      accountName: ${storageAccountName}
+      resourceGroupName: ${resourceGroup.name}
+      location: ${azure-native:location}
+      kind: StorageV2
+      sku:
+        name: Standard_ZRS
+      accessTier: Hot
+      allowBlobPublicAccess: false
+      allowSharedKeyAccess: false
+      allowCrossTenantReplication: false
+      allowedCopyScope: AAD
+      isHnsEnabled: true
+      isSftpEnabled: true
+      minimumTlsVersion: TLS1_2
+      supportsHttpsTrafficOnly: true
+      publicNetworkAccess: Disabled
+      defaultToOAuthAuthentication: true
+      sasPolicy:
+        sasExpirationPeriod: 01.12:00:00
+        expirationAction: Log
+      keyPolicy:
+        keyExpirationPeriodInDays: 90
+      encryption:
+        keySource: Microsoft.Keyvault
+        requireInfrastructureEncryption: true
+        identity:
+          userAssignedIdentity: ${managedIdentity.id}
+        keyvaultproperties:
+          keyname: ${storageEncryptionKey.name}
+          keyvaulturi: ${keyVault.properties.vaultUri}
+        services:
+          blob:
+            enabled: true
+            keyType: Account
+          file:
+            enabled: true
+            keyType: Account
+      immutableStorageWithVersioning:
+        enabled: true
+      networkRuleSet:
+        defaultAction: Deny
+        bypass: None
+      tags:
+        Environment: ${pulumi.stack}
+        Purpose: Secure-SFTP-Storage
+        DataClassification: Sensitive
+        ManagedBy: Pulumi
+    options:
+      dependsOn:
+        - ${keyVault}
+        - ${storageEncryptionKey}
+        - ${managedIdentity}
+        - ${keyVaultAccessPolicy}
+
+  # Enterprise Encryption Scope
+  enterpriseEncryptionScope:
+    type: azure-native:storage:EncryptionScope
+    properties:
+      accountName: ${storageAccount.name}
+      resourceGroupName: ${resourceGroup.name}
+      encryptionScopeName: enterprise-secure-scope
+      source: Microsoft.KeyVault
+      state: Enabled
+      requireInfrastructureEncryption: true
+      keyVaultProperties:
+        keyUri: ${storageEncryptionKey.keyUri}
+    options:
+      dependsOn:
+        - ${storageAccount}
+        - ${keyVaultAccessPolicy}
+
+  # Blob Service
+  blobService:
+    type: azure-native:storage:BlobService
+    properties:
+      accountName: ${storageAccount.name}
+      resourceGroupName: ${resourceGroup.name}
+      cors:
+        corsRules: []
+      deleteRetentionPolicy:
+        enabled: true
+        days: 2555
+      containerDeleteRetentionPolicy:
+        enabled: true
+        days: 2555
+      changeFeed:
+        enabled: true
+        retentionInDays: 2555
+      isVersioningEnabled: true
+    options:
+      dependsOn:
+        - ${storageAccount}
+
+  # Secure Storage Containers
+  secureUploadsContainer:
+    type: azure-native:storage:BlobContainer
+    properties:
+      accountName: ${storageAccount.name}
+      resourceGroupName: ${resourceGroup.name}
+      containerName: secure-uploads
+      publicAccess: None
+      defaultEncryptionScope: ${enterpriseEncryptionScope.name}
+      denyEncryptionScopeOverride: true
+      immutableStorageWithVersioning:
+        enabled: true
+      metadata:
+        Purpose: Secure file uploads via SFTP
+        DataClassification: Sensitive
+    options:
+      dependsOn:
+        - ${blobService}
+        - ${enterpriseEncryptionScope}
+
+  secureProcessingContainer:
+    type: azure-native:storage:BlobContainer
+    properties:
+      accountName: ${storageAccount.name}
+      resourceGroupName: ${resourceGroup.name}
+      containerName: secure-processing
+      publicAccess: None
+      defaultEncryptionScope: ${enterpriseEncryptionScope.name}
+      denyEncryptionScopeOverride: true
+      immutableStorageWithVersioning:
+        enabled: true
+      metadata:
+        Purpose: Secure file processing
+        DataClassification: Sensitive
+    options:
+      dependsOn:
+        - ${blobService}
+        - ${enterpriseEncryptionScope}
+
+  secureArchiveContainer:
+    type: azure-native:storage:BlobContainer
+    properties:
+      accountName: ${storageAccount.name}
+      resourceGroupName: ${resourceGroup.name}
+      containerName: secure-archive
+      publicAccess: None
+      defaultEncryptionScope: ${enterpriseEncryptionScope.name}
+      denyEncryptionScopeOverride: true
+      immutableStorageWithVersioning:
+        enabled: true
+      metadata:
+        Purpose: Long-term secure storage
+        DataClassification: Sensitive
+    options:
+      dependsOn:
+        - ${blobService}
+        - ${enterpriseEncryptionScope}
+
+  # SFTP Users
+  sftpSecureAdminUser:
+    type: azure-native:storage:LocalUser
+    properties:
+      accountName: ${storageAccount.name}
+      resourceGroupName: ${resourceGroup.name}
+      username: secure-admin
+      hasSharedKey: false
+      hasSshKey: true
+      hasSshPassword: false
+      homeDirectory: secure-uploads
+      sshAuthorizedKeys:
+        - description: Admin SSH Key
+          key: ${userPublicKey}
+      permissionScopes:
+        - permissions: rcwdl
+          resourceName: secure-uploads
+          service: blob
+        - permissions: rcwdl
+          resourceName: secure-processing
+          service: blob
+        - permissions: rcwl
+          resourceName: secure-archive
+          service: blob
+    options:
+      dependsOn:
+        - ${secureUploadsContainer}
+        - ${secureProcessingContainer}
+        - ${secureArchiveContainer}
+
+  sftpSecureAuditorUser:
+    type: azure-native:storage:LocalUser
+    properties:
+      accountName: ${storageAccount.name}
+      resourceGroupName: ${resourceGroup.name}
+      username: secure-auditor
+      hasSharedKey: false
+      hasSshKey: true
+      hasSshPassword: false
+      homeDirectory: secure-archive
+      sshAuthorizedKeys:
+        - description: Auditor SSH Key
+          key: ${userPublicKey}
+      permissionScopes:
+        - permissions: rl
+          resourceName: secure-archive
+          service: blob
+        - permissions: rl
+          resourceName: secure-processing
+          service: blob
+    options:
+      dependsOn:
+        - ${secureProcessingContainer}
+        - ${secureArchiveContainer}
+
+  # Virtual Network
+  enterpriseVirtualNetwork:
+    type: azure-native:network:VirtualNetwork
+    properties:
+      virtualNetworkName: enterprise-vnet-${pulumi.stack}
+      resourceGroupName: ${resourceGroup.name}
+      location: ${azure-native:location}
+      addressSpace:
+        addressPrefixes:
+          - 10.0.0.0/16
+      subnets:
+        - name: storage-subnet
+          addressPrefix: 10.0.1.0/24
+          serviceEndpoints:
+            - service: Microsoft.Storage
+          privateEndpointNetworkPolicies: Disabled
+        - name: keyvault-subnet
+          addressPrefix: 10.0.2.0/24
+          serviceEndpoints:
+            - service: Microsoft.KeyVault
+          privateEndpointNetworkPolicies: Disabled
+      tags:
+        Environment: ${pulumi.stack}
+        Purpose: Enterprise-Network-Isolation
+
+  # Network Security Group
+  enterpriseNetworkSecurityGroup:
+    type: azure-native:network:NetworkSecurityGroup
+    properties:
+      networkSecurityGroupName: enterprise-nsg-${pulumi.stack}
+      resourceGroupName: ${resourceGroup.name}
+      location: ${azure-native:location}
+      securityRules:
+        - name: AllowSFTPFromManagementNetwork
+          priority: 100
+          direction: Inbound
+          access: Allow
+          protocol: Tcp
+          sourcePortRange: "*"
+          destinationPortRange: "22"
+          sourceAddressPrefix: 10.0.0.0/16
+          destinationAddressPrefix: "*"
+        - name: DenyAllOtherInbound
+          priority: 4096
+          direction: Inbound
+          access: Deny
+          protocol: "*"
+          sourcePortRange: "*"
+          destinationPortRange: "*"
+          sourceAddressPrefix: "*"
+          destinationAddressPrefix: "*"
+      tags:
+        Environment: ${pulumi.stack}
+        Purpose: Enterprise-Network-Security
+
+  # Private Endpoints
+  storagePrivateEndpoint:
+    type: azure-native:network:PrivateEndpoint
+    properties:
+      privateEndpointName: ${storageAccount.name}-pe
+      resourceGroupName: ${resourceGroup.name}
+      location: ${azure-native:location}
+      subnet:
+        id: ${enterpriseVirtualNetwork.subnets[0].id}
+      privateLinkServiceConnections:
+        - name: blob-connection
+          privateLinkServiceId: ${storageAccount.id}
+          groupIds:
+            - blob
+      tags:
+        Environment: ${pulumi.stack}
+        Purpose: Storage-PrivateAccess
+    options:
+      dependsOn:
+        - ${storageAccount}
+        - ${enterpriseVirtualNetwork}
+
+  keyVaultPrivateEndpoint:
+    type: azure-native:network:PrivateEndpoint
+    properties:
+      privateEndpointName: ${keyVault.name}-pe
+      resourceGroupName: ${resourceGroup.name}
+      location: ${azure-native:location}
+      subnet:
+        id: ${enterpriseVirtualNetwork.subnets[1].id}
+      privateLinkServiceConnections:
+        - name: keyvault-connection
+          privateLinkServiceId: ${keyVault.id}
+          groupIds:
+            - vault
+      tags:
+        Environment: ${pulumi.stack}
+        Purpose: KeyVault-PrivateAccess
+    options:
+      dependsOn:
+        - ${keyVault}
+        - ${enterpriseVirtualNetwork}
+
+  # Log Analytics Workspace
+  logAnalyticsWorkspace:
+    type: azure-native:operationalinsights:Workspace
+    properties:
+      workspaceName: ${resourceGroupName}-logs
+      resourceGroupName: ${resourceGroup.name}
+      location: ${azure-native:location}
+      sku:
+        name: PerGB2018
+      retentionInDays: 2555
+      tags:
+        Environment: ${pulumi.stack}
+        Purpose: Security-Monitoring
+        ManagedBy: Pulumi
+
+  # Diagnostic Settings
+  storageDiagnostics:
+    type: azure-native:insights:DiagnosticSetting
+    properties:
+      name: storage-diagnostics
+      resourceUri: ${storageAccount.id}
+      workspaceId: ${logAnalyticsWorkspace.id}
+      logs:
+        - category: StorageRead
+          enabled: true
+        - category: StorageWrite
+          enabled: true
+        - category: StorageDelete
+          enabled: true
+      metrics:
+        - category: Transaction
+          enabled: true
+    options:
+      dependsOn:
+        - ${logAnalyticsWorkspace}
+        - ${storageAccount}
+
+outputs:
+  resourceGroupName: ${resourceGroup.name}
+  storageAccountName: ${storageAccount.name}
+  storageAccountId: ${storageAccount.id}
+  keyVaultName: ${keyVault.name}
+  keyVaultUri: ${keyVault.properties.vaultUri}
+  encryptionKeyId: ${storageEncryptionKey.id}
+  encryptionScopeName: ${enterpriseEncryptionScope.name}
+  sftpEndpoint: ${storageAccount.name}.blob.core.windows.net
+  virtualNetworkId: ${enterpriseVirtualNetwork.id}
+  storagePrivateEndpointId: ${storagePrivateEndpoint.id}
+  keyVaultPrivateEndpointId: ${keyVaultPrivateEndpoint.id}
+  containers:
+    - ${secureUploadsContainer.name}
+    - ${secureProcessingContainer.name}
+    - ${secureArchiveContainer.name}
+  sftpUsers:
+    - ${sftpSecureAdminUser.name}
+    - ${sftpSecureAuditorUser.name}
+  logAnalyticsWorkspaceId: ${logAnalyticsWorkspace.id}
+  securityFeatures:
+    customerManagedKeys: true
+    infrastructureEncryption: true
+    immutableStorage: true
+    privateNetworkOnly: true
+    auditLogging: true
+    extendedRetention: true
+  connectionInstructions: |
+    🔐 ENTERPRISE SECURE SFTP ACCESS 🔐
+
+    Connect via SFTP using:
+    - Endpoint: ${storageAccount.name}.blob.core.windows.net (Private Network Only)
+    - Port: 22
+    - Username: secure-admin or secure-auditor
+    - Authentication: SSH key only (passwords disabled)
+
+    ⚡ Security Features:
+    - Customer-managed encryption keys (HSM-backed)
+    - Infrastructure-level double encryption
+    - Private network access only
+    - Immutable storage protection
+    - Comprehensive audit logging
+
+    Example connection (from private network):
+    sftp secure-admin@${storageAccount.name}.blob.core.windows.net
+
+    📋 For healthcare organizations, see HIPAA_COMPLIANCE.md
