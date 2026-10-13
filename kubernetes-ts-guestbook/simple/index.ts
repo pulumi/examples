@@ -8,6 +8,97 @@ import * as pulumi from "@pulumi/pulumi";
 const config = new pulumi.Config();
 const isMinikube = config.getBoolean("isMinikube");
 
+const monitoringNs = new k8s.core.v1.Namespace("monitoring", {
+    metadata: {
+        name: "monitoring",
+    },
+});
+
+// Prometheus initialization
+
+const prometheus = new k8s.helm.v3.Chart("prometheus", {
+
+    chart: "kube-prometheus-stack",
+
+    fetchOpts: {
+        repo: "https://prometheus-community.github.io/helm-charts",
+    },
+
+    namespace: monitoringNs.metadata.name,
+
+    values: {
+        grafana: {
+            enabled: false,
+        },
+
+        prometheus: {
+            prometheusSpec: {
+                serviceMonitorSelectorNilUsesHelmValues: false,
+            },
+        },
+    },
+});
+
+// Grafana implementation
+
+const grafana = new k8s.helm.v3.Chart("grafana", {
+
+    chart: "grafana",
+
+    fetchOpts: {
+        repo: "https://grafana.github.io/helm-charts",
+    },
+
+    namespace: monitoringNs.metadata.name,
+
+    values: {
+
+        adminUser: "admin",
+        adminPassword: "admin123",
+
+        service: {
+            type: "NodePort",
+            nodePort: 32000,
+        },
+    },
+});
+
+// Grafana Monitor Service
+
+const serviceMonitor = new k8s.apiextensions.CustomResource("guestbook-monitor", {
+
+    apiVersion: "monitoring.coreos.com/v1",
+
+    kind: "ServiceMonitor",
+
+    metadata: {
+        name: "guestbook-monitor",
+        namespace: "monitoring",
+    },
+
+    spec: {
+
+        selector: {
+            matchLabels: {
+                app: "frontend",
+            },
+        },
+
+        namespaceSelector: {
+            any: true,
+        },
+
+        endpoints: [
+            {
+                port: "http",
+                path: "/metrics",
+                interval: "15s",
+            },
+        ],
+    },
+});
+
+
 //
 // REDIS LEADER.
 //
@@ -85,11 +176,20 @@ const redisReplicaService = new k8s.core.v1.Service("redis-replica", {
 
 const frontendLabels = { app: "frontend" };
 const frontendDeployment = new k8s.apps.v1.Deployment("frontend", {
-    spec: {
-        selector: { matchLabels: frontendLabels },
-        replicas: 3,
-        template: {
-            metadata: { labels: frontendLabels },
+           spec: {
+                selector: { matchLabels: frontendLabels },
+                replicas: 3,
+                template: {
+                    metadata: {
+
+                       labels: frontendLabels,
+
+                       annotations: {
+                           "prometheus.io/scrape": "true",
+                           "prometheus.io/port": "80",
+                           "prometheus.io/path": "/metrics",
+                      },
+                      },
             spec: {
                 containers: [
                     {
@@ -125,3 +225,11 @@ if (isMinikube) {
 } else {
     frontendIp = frontendService.status.loadBalancer.ingress[0].ip;
 }
+
+
+//  Add pulumi vars
+export const grafanaUrl = "http://localhost:32000";
+
+export const grafanaUser = "admin";
+
+export const grafanaPassword = "admin123";
