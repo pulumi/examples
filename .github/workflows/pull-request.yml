@@ -242,7 +242,9 @@ jobs:
           aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
 
       - name: Run tests
-        run: make specific_test_set TestSet=${{ matrix.test-set }}
+        # Every AwsGo example compiles the pulumi-aws Go SDK. Several concurrent
+        # compiles get the runner killed, so AwsGo runs two tests at a time.
+        run: make specific_test_set TestSet=${{ matrix.test-set }} PARALLEL=${{ matrix.test-set == 'AwsGo' && 2 || 40 }}
         env:
           # Narrows the run from every test in this set to just the examples the PR touched.
           # `make specific_test_set` filters by an unanchored `TestAcc<Set>` prefix, so
