@@ -43,7 +43,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install ESLint
         run: npm ci
@@ -70,7 +69,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: unit tests
         working-directory: testing-unit-ts/mocha
@@ -123,7 +121,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: unit tests
         working-directory: testing-unit-py
@@ -150,7 +147,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: unit tests
         working-directory: testing-unit-go
@@ -175,7 +171,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: unit tests
         working-directory: ${{ matrix.source-dir }}
@@ -235,7 +230,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run tests
         run: make specific_test_set TestSet=${{ matrix.test-set }}
@@ -283,7 +277,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-role-to-assume: ${{ steps.esc-secrets.outputs.AWS_CI_ROLE_ARN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Minikube
         uses: manusa/actions-setup-minikube@5d9440a1b535e8b4f541eaac559681a9022df29d # v2.13.1
