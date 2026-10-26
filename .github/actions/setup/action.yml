@@ -41,9 +41,6 @@ inputs:
   google-zone:
     default: us-central1-a
 
-  github-token:
-    required: true
-
   # Must stay >= 22. The integration harness runs `yarn add @pulumi/pulumi@dev` in
   # every TypeScript example, and @pulumi/pulumi declares `engines.node: ">=22"` as
   # of 3.249.0. On Node 20 that install aborts with "Found incompatible module",
@@ -60,9 +57,6 @@ inputs:
 
   dotnet-version:
     default: 8
-
-  gotestfmt-version:
-    default: v2.5.0
 
   pulumi-version:
     default: dev
@@ -163,12 +157,6 @@ runs:
     - name: Install testing dependencies
       run: make ensure
       shell: bash
-
-    - name: Install gotestfmt
-      uses: GoTestTools/gotestfmt-action@v2
-      with:
-        version: ${{ inputs.gotestfmt-version }}
-        token: ${{ inputs.github-token }}
 
     - name: Install Pulumi
       uses: pulumi/actions@8582a9e8cc630786854029b4e09281acd6794b58 # v6

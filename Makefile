@@ -1,3 +1,5 @@
+PARALLEL ?= 40
+
 all: ensure only_test
 
 ensure: setup_python
@@ -7,15 +9,15 @@ ensure: setup_python
 	npm install
 
 only_test:
-	bash -c 'set -o pipefail && cd misc/test && go test -json ./... --timeout 4h -v -count=1 -short -parallel 40 --tags=all | gotestfmt'
+	cd misc/test && go test ./... --timeout 4h -v -count=1 -short -parallel $(PARALLEL) --tags=all
 
 specific_test_set:
 	echo "Running $(TestSet) acceptance tests"
-	bash -c 'set -o pipefail && cd misc/test && go test -json . --timeout 4h -v -count=1 -short -parallel 40 --tags=all --run=TestAcc$(TestSet) | gotestfmt'
+	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel $(PARALLEL) --tags=all --run=TestAcc$(TestSet)
 
 specific_tag_set:
 	echo "Running $(TagSet)$(TestSet) acceptance tests"
-	bash -c 'set -o pipefail && cd misc/test && go test -json . --timeout 4h -v -count=1 -short -parallel 40 --tags=$(TagSet) --run=TestAcc$(TagSet)$(TestSet) | gotestfmt'
+	cd misc/test && go test . --timeout 4h -v -count=1 -short -parallel $(PARALLEL) --tags=$(TagSet) --run=TestAcc$(TagSet)$(TestSet)
 
 # Run a test of a single example. Example usage:
 #
