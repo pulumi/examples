@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pulumi" Version="3.*" />
+    <PackageReference Include="Pulumi" Version="3.10*" />
     <PackageReference Include="Pulumi.Azure" Version="6.*" />
     <PackageReference Include="Pulumi.AzureAD" Version="6.*" />
     <PackageReference Include="Pulumi.Random" Version="4.*" />
