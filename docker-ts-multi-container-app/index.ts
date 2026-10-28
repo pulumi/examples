@@ -20,7 +20,7 @@ const redisImage = new docker.RemoteImage("redisImage", {
 
 // Run redis image
 const redisContainer = new docker.Container("redisContainer", {
-    image: redisImage.latest,
+    image: redisImage.imageId,
     ports: [
         { internal: redisPort, external: redisPort},
     ],
