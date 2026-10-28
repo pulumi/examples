@@ -7,7 +7,7 @@
         "typescript": "^5.9.3"
     },
     "dependencies": {
-        "@pulumi/cloudflare": "6.23.1",
+        "@pulumi/cloudflare": "6.23.2",
         "@pulumi/pulumi": "3.228.0"
     }
 }
