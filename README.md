@@ -137,6 +137,7 @@ Example   | Description |
 [Serverless Datawarehouse](aws-ts-serverless-datawarehouse) | Deploy a serverless data warehouse.
 [Serverless React + Postgres](aws-ts-serverless-react-postgres) | Deploy a React SPA on CloudFront with a same-origin Lambda API and a private Aurora Serverless v2 (PostgreSQL) database, layered on the landing-zone example.
 [Slackbot](aws-ts-slackbot) | Create a simple slackbot that posts a notification to a specific channel any time you're @mentioned anywhere.
+[Software factory delivery](aws-ts-software-factory-delivery) | Deploy the agent software factory in stages with a Pulumi Delivery pipeline and an approval gate on the GPU cluster.
 [Stack Reference](aws-ts-stackreference) | Create a "team" EC2 Instance with tags set from upstream stacks.
 [Static Website](aws-ts-static-website) | Serve a static website using S3, CloudFront, Route53, and Certificate Manager.
 [Step Functions](aws-ts-stepfunctions) | Use Step Functions with a Lambda function.

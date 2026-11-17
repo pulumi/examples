@@ -1,0 +1,20 @@
+{
+  "name": "software-factory-delivery",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pulumi/delivery": "file:sdks/delivery-delivery",
+    "@pulumi/pulumi": "^3.140.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.6.0"
+  },
+  "allowScripts": {
+    "file:sdks/delivery-delivery": true
+  }
+}

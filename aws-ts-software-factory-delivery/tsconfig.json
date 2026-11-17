@@ -1,0 +1,1 @@
+{ "compilerOptions": { "target": "ES2022", "module": "CommonJS", "moduleResolution": "Node", "strict": true, "noEmit": true, "skipLibCheck": true, "esModuleInterop": true, "types": ["node"] }, "include": ["*.ts"] }
