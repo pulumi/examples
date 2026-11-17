@@ -29,11 +29,11 @@ RUNTIME_GID = 0
 
 @dataclass
 class ModelSpec:
-    name: str                       # DynamoGraphDeployment name
-    model: str                      # Hugging Face model id
-    replicas: int                   # decode workers (== GPUs used)
+    name: str  # DynamoGraphDeployment name
+    model: str  # Hugging Face model id
+    replicas: int  # decode workers (== GPUs used)
     max_model_len: int = 8192
-    hf_token_secret: Optional[str] = None   # name of a Secret with key "token"
+    hf_token_secret: Optional[str] = None  # name of a Secret with key "token"
     namespace: str = DYNAMO_NAMESPACE
 
     @property
@@ -54,8 +54,12 @@ def graph_deployment_spec(spec: ModelSpec) -> dict:
     ]
     worker_env = plane_env + [{"name": "HF_HOME", "value": HF_CACHE_MOUNT}]
     if spec.hf_token_secret:
-        worker_env.append({"name": "HF_TOKEN", "valueFrom": {
-            "secretKeyRef": {"name": spec.hf_token_secret, "key": "token"}}})
+        worker_env.append(
+            {
+                "name": "HF_TOKEN",
+                "valueFrom": {"secretKeyRef": {"name": spec.hf_token_secret, "key": "token"}},
+            }
+        )
 
     return {
         "backendFramework": "vllm",
@@ -64,72 +68,109 @@ def graph_deployment_spec(spec: ModelSpec) -> dict:
                 "name": "Frontend",
                 "type": "frontend",
                 "replicas": 1,
-                "podTemplate": {"spec": {"containers": [{
-                    "name": "main",
-                    "image": DYNAMO_RUNTIME_IMAGE,
-                    "env": [
-                        {"name": "SERVED_MODEL_NAME", "value": spec.model},
-                        {"name": "DYN_ROUTER_MODE", "value": "kv"},
-                    ] + plane_env,
-                    "resources": {"requests": {"cpu": "500m", "memory": "1Gi"}},
-                }]}},
+                "podTemplate": {
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "main",
+                                "image": DYNAMO_RUNTIME_IMAGE,
+                                "env": [
+                                    {"name": "SERVED_MODEL_NAME", "value": spec.model},
+                                    {"name": "DYN_ROUTER_MODE", "value": "kv"},
+                                ]
+                                + plane_env,
+                                "resources": {"requests": {"cpu": "500m", "memory": "1Gi"}},
+                            }
+                        ]
+                    }
+                },
             },
             {
                 "name": "VllmDecodeWorker",
                 "type": "worker",
                 "replicas": spec.replicas,
                 "sharedMemorySize": "2Gi",
-                "podTemplate": {"spec": {
-                    "tolerations": [{"key": "nvidia.com/gpu", "operator": "Exists", "effect": "NoSchedule"}],
-                    "volumes": [{"name": "hf-cache",
-                                 "hostPath": {"path": HF_CACHE_HOST_PATH, "type": "DirectoryOrCreate"}}],
-                    # Same image as the worker, so it costs no extra pull.
-                    "initContainers": [{
-                        "name": "chown-hf-cache",
-                        "image": DYNAMO_RUNTIME_IMAGE,
-                        "command": ["sh", "-c",
-                                    f"chown {RUNTIME_UID}:{RUNTIME_GID} {HF_CACHE_MOUNT} && chmod 0775 {HF_CACHE_MOUNT}"],
-                        "securityContext": {"runAsUser": 0},
-                        "volumeMounts": [{"name": "hf-cache", "mountPath": HF_CACHE_MOUNT}],
-                    }],
-                    "containers": [{
-                        "name": "main",
-                        "image": DYNAMO_RUNTIME_IMAGE,
-                        "workingDir": "/workspace/examples/backends/vllm",
-                        "command": ["python3", "-m", "dynamo.vllm"],
-                        "args": [
-                            "--model", spec.model,
-                            "--max-model-len", str(spec.max_model_len),
-                            "--kv-events-config",
-                            '{"enable_kv_cache_events":true,"publisher":"zmq","endpoint":"tcp://*:5557"}',
+                "podTemplate": {
+                    "spec": {
+                        "tolerations": [
+                            {"key": "nvidia.com/gpu", "operator": "Exists", "effect": "NoSchedule"}
                         ],
-                        "env": worker_env,
-                        "volumeMounts": [{"name": "hf-cache", "mountPath": HF_CACHE_MOUNT}],
-                        "resources": {
-                            "requests": {"cpu": "2", "memory": "8Gi"},
-                            "limits": {"nvidia.com/gpu": "1", "memory": "16Gi"},   # quantities are strings server-side
-                        },
-                    }],
-                }},
+                        "volumes": [
+                            {
+                                "name": "hf-cache",
+                                "hostPath": {
+                                    "path": HF_CACHE_HOST_PATH,
+                                    "type": "DirectoryOrCreate",
+                                },
+                            }
+                        ],
+                        # Same image as the worker, so it costs no extra pull.
+                        "initContainers": [
+                            {
+                                "name": "chown-hf-cache",
+                                "image": DYNAMO_RUNTIME_IMAGE,
+                                "command": [
+                                    "sh",
+                                    "-c",
+                                    f"chown {RUNTIME_UID}:{RUNTIME_GID} {HF_CACHE_MOUNT} && chmod 0775 {HF_CACHE_MOUNT}",
+                                ],
+                                "securityContext": {"runAsUser": 0},
+                                "volumeMounts": [{"name": "hf-cache", "mountPath": HF_CACHE_MOUNT}],
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "main",
+                                "image": DYNAMO_RUNTIME_IMAGE,
+                                "workingDir": "/workspace/examples/backends/vllm",
+                                "command": ["python3", "-m", "dynamo.vllm"],
+                                "args": [
+                                    "--model",
+                                    spec.model,
+                                    "--max-model-len",
+                                    str(spec.max_model_len),
+                                    "--kv-events-config",
+                                    '{"enable_kv_cache_events":true,"publisher":"zmq","endpoint":"tcp://*:5557"}',
+                                ],
+                                "env": worker_env,
+                                "volumeMounts": [{"name": "hf-cache", "mountPath": HF_CACHE_MOUNT}],
+                                "resources": {
+                                    "requests": {"cpu": "2", "memory": "8Gi"},
+                                    "limits": {
+                                        "nvidia.com/gpu": "1",
+                                        "memory": "16Gi",
+                                    },  # quantities are strings server-side
+                                },
+                            }
+                        ],
+                    }
+                },
             },
         ],
     }
 
 
-def deploy_model(spec: ModelSpec, *, provider: k8s.Provider, depends_on: list,
-                 hf_token: Optional[pulumi.Output[str]] = None) -> k8s.apiextensions.CustomResource:
+def deploy_model(
+    spec: ModelSpec,
+    *,
+    provider: k8s.Provider,
+    depends_on: list,
+    hf_token: Optional[pulumi.Output[str]] = None,
+) -> k8s.apiextensions.CustomResource:
     opts = pulumi.ResourceOptions(provider=provider, depends_on=list(depends_on))
 
     if hf_token is not None:
         assert spec.hf_token_secret, "hf_token given but spec.hf_token_secret is unset"
-        secret = k8s.core.v1.Secret(spec.hf_token_secret,
+        secret = k8s.core.v1.Secret(
+            spec.hf_token_secret,
             metadata={"name": spec.hf_token_secret, "namespace": spec.namespace},
             string_data={"token": hf_token},
             opts=opts,
         )
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(depends_on=[secret]))
 
-    return k8s.apiextensions.CustomResource(spec.name,
+    return k8s.apiextensions.CustomResource(
+        spec.name,
         api_version="nvidia.com/v1beta1",
         kind="DynamoGraphDeployment",
         metadata={"name": spec.name, "namespace": spec.namespace},

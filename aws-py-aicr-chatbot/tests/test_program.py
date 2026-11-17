@@ -1,15 +1,23 @@
 """End-to-end assertions on what the Pulumi program registers (under mocks)."""
 
 import pytest
-from conftest import (FAKE_COMPONENTS, FAKE_IMAGE_REF, FAKE_KUBECONFIG, INFRA, PROJECT, is_secret,
-                      run_program, unsecret)
+from conftest import (
+    FAKE_COMPONENTS,
+    FAKE_IMAGE_REF,
+    FAKE_KUBECONFIG,
+    INFRA,
+    PROJECT,
+    is_secret,
+    run_program,
+    unsecret,
+)
 
 import cluster
 import gpu_stack
 import model
 
-
 # --- cluster layer --------------------------------------------------------
+
 
 def test_node_role_is_owner_tagged_with_the_four_policies(program):
     role = program.one("aws:iam/role:Role", "aicr-chatbot-node-role")
@@ -28,11 +36,15 @@ def test_cluster_uses_ubuntu_ami_on_two_gpu_nodes(program):
     assert ng["instanceType"] == "g6.2xlarge"
     assert ng["amiId"] == "ami-ubuntu-eks"
     assert "gpu" not in ng, "ami_id and gpu are mutually exclusive in pulumi-eks"
-    assert ng["operatingSystem"] == "AL2", "bootstrap.sh-style user data; nodeadm YAML is ignored by Ubuntu"
+    assert (
+        ng["operatingSystem"] == "AL2"
+    ), "bootstrap.sh-style user data; nodeadm YAML is ignored by Ubuntu"
     assert (ng["desiredCapacity"], ng["minSize"], ng["maxSize"]) == (2, 2, 2)
     assert ng["nodeRootVolumeSize"] == 100
     assert ng["nodeAssociatePublicIpAddress"] is True
-    assert ng["autoScalingGroupTags"]["Owner"] == "tester@example.com", "cluster tags do not reach the ASG"
+    assert (
+        ng["autoScalingGroupTags"]["Owner"] == "tester@example.com"
+    ), "cluster tags do not reach the ASG"
 
 
 def test_ami_lookup_targets_canonical_for_the_cluster_version(program):
@@ -53,11 +65,17 @@ def test_subnets_span_the_eks_capable_azs_of_the_default_vpc(program):
 
 # --- AICR stack -----------------------------------------------------------
 
+
 def test_cluster_stack_targets_the_dynamo_inference_recipe(program):
     s = program.one("nvidia-aicr:index:ClusterStack", "nvidia-aicr")
     i = s.inputs
-    assert (i["accelerator"], i["service"], i["intent"], i["platform"], i["os"]) == \
-        ("h100", "eks", "inference", "dynamo", "ubuntu")
+    assert (i["accelerator"], i["service"], i["intent"], i["platform"], i["os"]) == (
+        "h100",
+        "eks",
+        "inference",
+        "dynamo",
+        "ubuntu",
+    )
     assert i["nodes"] == 2
     assert is_secret(i["kubeconfig"]), "kubeconfig must be a secret in state"
     assert unsecret(i["kubeconfig"]) == FAKE_KUBECONFIG
@@ -80,22 +98,31 @@ def test_recipe_gateway_elb_gets_the_owner_tag_via_a_patch(program):
     assert patch.inputs["metadata"]["namespace"] == gpu_stack.GATEWAY_NAMESPACE
     assert patch.inputs["metadata"]["name"] == gpu_stack.GATEWAY_SERVICE
     ann = patch.inputs["metadata"]["annotations"]
-    assert ann["service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags"] == "Owner=tester@example.com"
+    assert (
+        ann["service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags"]
+        == "Owner=tester@example.com"
+    )
 
 
 def test_validation_is_opt_in(program, program_full):
     assert program.of_type("nvidia-aicr:index:ValidationRun") == []
     v = program_full.one("nvidia-aicr:index:ValidationRun", "aicr-validation")
-    assert v.inputs["phases"] == ["deployment", "conformance"], "performance floor is 8xH100-calibrated"
+    assert v.inputs["phases"] == [
+        "deployment",
+        "conformance",
+    ], "performance floor is 8xH100-calibrated"
     assert v.inputs["strict"] is False
     assert v.inputs["requireGpu"] is True
     assert v.inputs["recipeDataVersion"] == "v0.21.1"
-    assert v.inputs["criteria"]["skipComponents"] == ["aws-efa", "nodewright-customizations"], \
-        "validation must target the exact component subset deployed"
+    assert v.inputs["criteria"]["skipComponents"] == [
+        "aws-efa",
+        "nodewright-customizations",
+    ], "validation must target the exact component subset deployed"
     assert v.inputs["triggers"] == [FAKE_COMPONENTS]
 
 
 # --- readiness gate -------------------------------------------------------
+
 
 def test_gate_waits_on_the_cluster_with_the_right_inputs(program):
     g = program.one("command:local:Command", "dynamo-ready")
@@ -117,6 +144,7 @@ def test_pvcs_are_released_on_destroy_before_the_stack_goes(program):
 
 
 # --- model ----------------------------------------------------------------
+
 
 def test_model_is_a_dynamo_graph_deployment_with_one_worker_per_gpu(program):
     dgd = program.one("kubernetes:nvidia.com/v1beta1:DynamoGraphDeployment", "chat-llm")
@@ -153,6 +181,7 @@ def test_hf_token_is_only_wired_when_configured(program, program_full):
 
 # --- chat app -------------------------------------------------------------
 
+
 def test_image_is_built_for_amd64_and_pushed_to_an_owner_tagged_ecr_repo(program):
     repo = program.one("aws:ecr/repository:Repository", "aicr-chatbot-chatbot")
     assert repo.inputs["forceDelete"] is True, "images must not block pulumi destroy"
@@ -160,7 +189,9 @@ def test_image_is_built_for_amd64_and_pushed_to_an_owner_tagged_ecr_repo(program
     image = program.one("docker-build:index:Image", "aicr-chatbot-chatbot")
     assert image.inputs["platforms"] == ["linux/amd64"]
     assert image.inputs["push"] is True
-    assert image.inputs["tags"] == ["123456789012.dkr.ecr.us-east-1.amazonaws.com/aicr-chatbot-chatbot:latest"]
+    assert image.inputs["tags"] == [
+        "123456789012.dkr.ecr.us-east-1.amazonaws.com/aicr-chatbot-chatbot:latest"
+    ]
     assert image.inputs["context"]["location"].rstrip("/").endswith("/app")
     assert unsecret(image.inputs["registries"])[0]["username"] == "AWS"
 
@@ -176,7 +207,9 @@ def test_chatbot_deployment_points_at_the_dynamo_frontend(program):
     assert env["MODEL_NAME"] == "Qwen/Qwen2.5-1.5B-Instruct"
     assert container["readinessProbe"]["httpGet"]["path"] == "/healthz"
     assert container["securityContext"]["runAsNonRoot"] is True
-    assert container["securityContext"]["runAsUser"] == 10001, "runAsNonRoot needs a numeric UID to verify"
+    assert (
+        container["securityContext"]["runAsUser"] == 10001
+    ), "runAsNonRoot needs a numeric UID to verify"
 
 
 def test_dockerfile_user_matches_the_pod_security_context():
@@ -186,7 +219,7 @@ def test_dockerfile_user_matches_the_pod_security_context():
 
 def test_invalid_replica_configuration_is_rejected_up_front():
     with pytest.raises((ValueError, SystemExit)):
-        run_program({f"{PROJECT}:modelReplicas": "3"})     # nodeCount is 2: one GPU per node
+        run_program({f"{PROJECT}:modelReplicas": "3"})  # nodeCount is 2: one GPU per node
     with pytest.raises((ValueError, SystemExit)):
         run_program({f"{PROJECT}:modelReplicas": "0"})
 
@@ -194,7 +227,9 @@ def test_invalid_replica_configuration_is_rejected_up_front():
 def test_gateway_source_ranges_config_overrides_the_default(program):
     custom = run_program({f"{PROJECT}:gatewaySourceRanges": '["203.0.113.0/24"]'})
     s = custom.one("nvidia-aicr:index:ClusterStack")
-    assert s.inputs["componentOverrides"]["agentgateway"]["values"]["allowedSourceRanges"] == ["203.0.113.0/24"]
+    assert s.inputs["componentOverrides"]["agentgateway"]["values"]["allowedSourceRanges"] == [
+        "203.0.113.0/24"
+    ]
 
 
 def test_public_service_is_an_owner_tagged_classic_elb(program):
@@ -202,8 +237,14 @@ def test_public_service_is_an_owner_tagged_classic_elb(program):
     assert s.inputs["spec"]["type"] == "LoadBalancer"
     assert s.inputs["spec"]["ports"] == [{"name": "http", "port": 80, "targetPort": "http"}]
     ann = s.inputs["metadata"]["annotations"]
-    assert ann["service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags"] == "Owner=tester@example.com"
-    assert ann["service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled"] == "true"
+    assert (
+        ann["service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags"]
+        == "Owner=tester@example.com"
+    )
+    assert (
+        ann["service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled"]
+        == "true"
+    )
     assert ann["service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout"] == "120"
     program.one("kubernetes:core/v1:Namespace", "chatbot")
 
@@ -215,6 +256,12 @@ def test_no_gateway_api_routes_are_created(program):
 
 def test_resource_inventory_is_what_the_demo_story_says(program):
     types = {r.typ for r in program.resources}
-    assert {"eks:index:Cluster", "nvidia-aicr:index:ClusterStack", "command:local:Command",
-            "kubernetes:nvidia.com/v1beta1:DynamoGraphDeployment", "docker-build:index:Image",
-            "kubernetes:apps/v1:Deployment", "kubernetes:core/v1:Service"} <= types
+    assert {
+        "eks:index:Cluster",
+        "nvidia-aicr:index:ClusterStack",
+        "command:local:Command",
+        "kubernetes:nvidia.com/v1beta1:DynamoGraphDeployment",
+        "docker-build:index:Image",
+        "kubernetes:apps/v1:Deployment",
+        "kubernetes:core/v1:Service",
+    } <= types

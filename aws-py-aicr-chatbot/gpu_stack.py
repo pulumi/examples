@@ -31,8 +31,11 @@ class GpuStackSpec:
     gateway_source_ranges: list = field(default_factory=lambda: list(RFC1918))
 
 
-def deploy_gpu_stack(name: str, kubeconfig: pulumi.Input[str], spec: GpuStackSpec) -> aicr.ClusterStack:
-    return aicr.ClusterStack(name,
+def deploy_gpu_stack(
+    name: str, kubeconfig: pulumi.Input[str], spec: GpuStackSpec
+) -> aicr.ClusterStack:
+    return aicr.ClusterStack(
+        name,
         kubeconfig=kubeconfig,
         accelerator="h100",
         service="eks",
@@ -57,8 +60,9 @@ GATEWAY_NAMESPACE = "agentgateway-system"
 GATEWAY_SERVICE = "inference-gateway"
 
 
-def tag_gateway_load_balancer(name: str, owner: str, *, provider: k8s.Provider,
-                              depends_on: list) -> k8s.core.v1.ServicePatch:
+def tag_gateway_load_balancer(
+    name: str, owner: str, *, provider: k8s.Provider, depends_on: list
+) -> k8s.core.v1.ServicePatch:
     """Stamp the Owner tag onto the ELB behind the recipe's inference-gateway.
 
     The agentgateway controller creates that Service (and the cloud controller
@@ -66,7 +70,8 @@ def tag_gateway_load_balancer(name: str, owner: str, *, provider: k8s.Provider,
     ELBs hourly and the controller recreates them. A server-side-apply patch
     adds the annotation without taking ownership of the Service.
     """
-    return k8s.core.v1.ServicePatch(name,
+    return k8s.core.v1.ServicePatch(
+        name,
         metadata={
             "name": GATEWAY_SERVICE,
             "namespace": GATEWAY_NAMESPACE,
@@ -78,19 +83,25 @@ def tag_gateway_load_balancer(name: str, owner: str, *, provider: k8s.Provider,
     )
 
 
-def validate_gpu_stack(name: str, stack: aicr.ClusterStack, kubeconfig: pulumi.Input[str],
-                       *, depends_on: list | None = None) -> aicr.ValidationRun:
+def validate_gpu_stack(
+    name: str,
+    stack: aicr.ClusterStack,
+    kubeconfig: pulumi.Input[str],
+    *,
+    depends_on: list | None = None,
+) -> aicr.ValidationRun:
     """Opt-in empirical validation. Expect a MIXED verdict on L4: the recipe is
     H100-tuned and two components are skipped by design. The performance phase
     is excluded because its throughput floor is calibrated on 8x H100.
     Pass the gate in depends_on so the validator starts once GPU nodes exist."""
-    return aicr.ValidationRun(name,
-        criteria=stack.criteria,                    # exactly the recipe (and skips) deployed
-        recipe_data_version=stack.recipe_version,   # assert the same recipe data
+    return aicr.ValidationRun(
+        name,
+        criteria=stack.criteria,  # exactly the recipe (and skips) deployed
+        recipe_data_version=stack.recipe_version,  # assert the same recipe data
         kubeconfig=kubeconfig,
         phases=["deployment", "conformance"],
         strict=False,
         require_gpu=True,
-        triggers=[stack.deployed_components],       # re-validate when the stack changes
+        triggers=[stack.deployed_components],  # re-validate when the stack changes
         opts=pulumi.ResourceOptions(depends_on=[stack, *(depends_on or [])]),
     )

@@ -10,8 +10,10 @@ import sys
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-ANSWER = ("This is a stubbed answer from the local stand-in LLM. Each word arrives as its own "
-          "streamed chunk so the page's rendering can be checked without a GPU.")
+ANSWER = (
+    "This is a stubbed answer from the local stand-in LLM. Each word arrives as its own "
+    "streamed chunk so the page's rendering can be checked without a GPU."
+)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -20,7 +22,9 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/v1/models":
-            body = json.dumps({"object": "list", "data": [{"id": "stub", "object": "model"}]}).encode()
+            body = json.dumps(
+                {"object": "list", "data": [{"id": "stub", "object": "model"}]}
+            ).encode()
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))
@@ -34,15 +38,21 @@ class Handler(BaseHTTPRequestHandler):
             self.send_error(404)
             return
         req = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0)) or 0) or b"{}")
-        last = next((m["content"] for m in reversed(req.get("messages", [])) if m["role"] == "user"), "")
+        last = next(
+            (m["content"] for m in reversed(req.get("messages", [])) if m["role"] == "user"), ""
+        )
         words = (f'You asked: "{last[:60]}". ' + ANSWER).split(" ")
         self.send_response(200)
         self.send_header("Content-Type", "text/event-stream")
         self.send_header("Cache-Control", "no-cache")
         self.end_headers()
         for i, w in enumerate(words):
-            chunk = {"id": "stub", "object": "chat.completion.chunk", "model": req.get("model"),
-                     "choices": [{"index": 0, "delta": {"content": (" " if i else "") + w}}]}
+            chunk = {
+                "id": "stub",
+                "object": "chat.completion.chunk",
+                "model": req.get("model"),
+                "choices": [{"index": 0, "delta": {"content": (" " if i else "") + w}}],
+            }
             self.wfile.write(f"data: {json.dumps(chunk)}\n\n".encode())
             self.wfile.flush()
             time.sleep(0.03)

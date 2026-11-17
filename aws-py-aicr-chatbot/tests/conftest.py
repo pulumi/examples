@@ -64,14 +64,26 @@ class RecordingMocks(pulumi.runtime.Mocks):
         elif t == "docker-build:index:Image":
             outputs["ref"] = FAKE_IMAGE_REF
         elif t == "nvidia-aicr:index:ClusterStack":
-            outputs.update({
-                "recipeName": "h100-eks-ubuntu-inference-dynamo",
-                "recipeVersion": "v0.21.1",
-                "deployedComponents": FAKE_COMPONENTS,
-                "componentCount": len(FAKE_COMPONENTS),
-                "criteria": {k: args.inputs.get(k) for k in
-                             ("accelerator", "service", "intent", "os", "platform", "nodes", "skipComponents")},
-            })
+            outputs.update(
+                {
+                    "recipeName": "h100-eks-ubuntu-inference-dynamo",
+                    "recipeVersion": "v0.21.1",
+                    "deployedComponents": FAKE_COMPONENTS,
+                    "componentCount": len(FAKE_COMPONENTS),
+                    "criteria": {
+                        k: args.inputs.get(k)
+                        for k in (
+                            "accelerator",
+                            "service",
+                            "intent",
+                            "os",
+                            "platform",
+                            "nodes",
+                            "skipComponents",
+                        )
+                    },
+                }
+            )
         elif t == "nvidia-aicr:index:ValidationRun":
             outputs.update({"status": "passed", "readinessMessage": "ok", "phaseResults": []})
         elif t == "kubernetes:core/v1:Service":
@@ -90,8 +102,11 @@ class RecordingMocks(pulumi.runtime.Mocks):
         if token == "aws:ec2/getAmi:getAmi":
             return {"id": "ami-ubuntu-eks", "name": args.args["filters"][0]["values"][0]}
         if token == "aws:ecr/getAuthorizationToken:getAuthorizationToken":
-            return {"proxyEndpoint": "https://123456789012.dkr.ecr.us-east-1.amazonaws.com",
-                    "userName": "AWS", "password": "token"}
+            return {
+                "proxyEndpoint": "https://123456789012.dkr.ecr.us-east-1.amazonaws.com",
+                "userName": "AWS",
+                "password": "token",
+            }
         return {}
 
     # --- helpers for tests -------------------------------------------------
@@ -100,7 +115,9 @@ class RecordingMocks(pulumi.runtime.Mocks):
 
     def one(self, typ: str, name: str | None = None) -> pulumi.runtime.MockResourceArgs:
         matches = [r for r in self.of_type(typ) if name is None or r.name == name]
-        assert len(matches) == 1, f"expected exactly one {typ} {name or ''}, got {[r.name for r in matches]}"
+        assert (
+            len(matches) == 1
+        ), f"expected exactly one {typ} {name or ''}, got {[r.name for r in matches]}"
         return matches[0]
 
 
@@ -112,7 +129,9 @@ BASE_CONFIG = {
 }
 
 
-def run_program(extra_config: dict | None = None, secret_keys: list[str] | None = None) -> RecordingMocks:
+def run_program(
+    extra_config: dict | None = None, secret_keys: list[str] | None = None
+) -> RecordingMocks:
     """Execute __main__.py under mocks and return the recorder once every
     resource registration has completed."""
     mocks = RecordingMocks()
@@ -121,7 +140,8 @@ def run_program(extra_config: dict | None = None, secret_keys: list[str] | None 
     # the mock monitor resolves references from its registry, so pre-register it.
     eks_urn = f"urn:pulumi:test::{PROJECT}::aws:eks/cluster:Cluster::aicr-chatbot-eksCluster"
     monitor.resources[eks_urn] = MockMonitor.ResourceRegistration(
-        eks_urn, FAKE_EKS_CLUSTER_NAME, {"name": FAKE_EKS_CLUSTER_NAME})
+        eks_urn, FAKE_EKS_CLUSTER_NAME, {"name": FAKE_EKS_CLUSTER_NAME}
+    )
     pulumi.runtime.set_mocks(mocks, project=PROJECT, stack="test", preview=False, monitor=monitor)
     pulumi.runtime.set_all_config({**BASE_CONFIG, **(extra_config or {})}, secret_keys=secret_keys)
 
@@ -142,5 +162,7 @@ def program() -> RecordingMocks:
 @pytest.fixture(scope="module")
 def program_full() -> RecordingMocks:
     """Everything switched on: HF token secret and ValidationRun."""
-    return run_program({f"{PROJECT}:hfToken": "hf_secret", f"{PROJECT}:validate": "true"},
-                       secret_keys=[f"{PROJECT}:hfToken"])
+    return run_program(
+        {f"{PROJECT}:hfToken": "hf_secret", f"{PROJECT}:validate": "true"},
+        secret_keys=[f"{PROJECT}:hfToken"],
+    )

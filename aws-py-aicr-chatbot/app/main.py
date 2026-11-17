@@ -96,12 +96,13 @@ def _sse(event: dict) -> bytes:
     return f"data: {json.dumps(event)}\n\n".encode()
 
 
-def trim_history(history: list[dict], turns: int | None = None,
-                 char_budget: int | None = None) -> list[dict]:
+def trim_history(
+    history: list[dict], turns: int | None = None, char_budget: int | None = None
+) -> list[dict]:
     """Keep the latest message plus as many preceding turns as fit both bounds."""
     turns = HISTORY_TURNS if turns is None else turns
     char_budget = PROMPT_CHAR_BUDGET if char_budget is None else char_budget
-    kept = history[-(2 * turns + 1):]
+    kept = history[-(2 * turns + 1) :]
     while len(kept) > 1 and sum(len(m["content"]) for m in kept) > char_budget:
         kept = kept[1:]
     if kept and len(kept[-1]["content"]) > char_budget:
@@ -147,7 +148,9 @@ async def chat(req: ChatRequest):
         started = time.monotonic()
         tokens = 0
         try:
-            async with client().stream("POST", f"{LLM_BASE_URL}/v1/chat/completions", json=payload) as upstream:
+            async with client().stream(
+                "POST", f"{LLM_BASE_URL}/v1/chat/completions", json=payload
+            ) as upstream:
                 if upstream.status_code != 200:
                     detail = (await upstream.aread()).decode(errors="replace")[:500]
                     yield _sse({"error": f"LLM returned HTTP {upstream.status_code}: {detail}"})
@@ -165,7 +168,12 @@ async def chat(req: ChatRequest):
         except Exception as exc:  # malformed upstream stream: report it, don't drop the connection
             yield _sse({"error": f"unexpected response from the LLM: {type(exc).__name__}: {exc}"})
             return
-        yield _sse({"done": True, "tokens": tokens, "seconds": round(time.monotonic() - started, 2)})
+        yield _sse(
+            {"done": True, "tokens": tokens, "seconds": round(time.monotonic() - started, 2)}
+        )
 
-    return StreamingResponse(relay(), media_type="text/event-stream",
-                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+    return StreamingResponse(
+        relay(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )

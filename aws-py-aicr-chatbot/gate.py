@@ -13,15 +13,17 @@ import pulumi_command as command
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def release_volumes_on_destroy(name: str, kubeconfig: pulumi.Input[str], *,
-                               depends_on: list) -> command.local.Command:
+def release_volumes_on_destroy(
+    name: str, kubeconfig: pulumi.Input[str], *, depends_on: list
+) -> command.local.Command:
     """A destroy-time hook: delete every PVC while the EBS CSI driver still runs.
 
     Pulumi deletes dependents first, so a Command that depends on the
     ClusterStack has its `delete` run before the stack's Helm releases are
     uninstalled. See release-pvcs.sh. `create` is a no-op.
     """
-    return command.local.Command(name,
+    return command.local.Command(
+        name,
         create="true",
         delete="bash ./release-pvcs.sh",
         dir=HERE,
@@ -30,9 +32,16 @@ def release_volumes_on_destroy(name: str, kubeconfig: pulumi.Input[str], *,
     )
 
 
-def wait_for_dynamo(name: str, kubeconfig: pulumi.Input[str], *, min_gpu_nodes: int,
-                    depends_on: list, triggers: list) -> command.local.Command:
-    return command.local.Command(name,
+def wait_for_dynamo(
+    name: str,
+    kubeconfig: pulumi.Input[str],
+    *,
+    min_gpu_nodes: int,
+    depends_on: list,
+    triggers: list,
+) -> command.local.Command:
+    return command.local.Command(
+        name,
         create="bash ./wait-for-dynamo.sh",
         dir=HERE,
         environment={

@@ -76,7 +76,9 @@ def run_gate(world, timeout=3, min_gpu_nodes=2):
         "GATE_POLL_SECONDS": "0",
         "MIN_GPU_NODES": str(min_gpu_nodes),
     }
-    return subprocess.run(["bash", str(SCRIPT)], env=env, capture_output=True, text=True, timeout=60)
+    return subprocess.run(
+        ["bash", str(SCRIPT)], env=env, capture_output=True, text=True, timeout=60
+    )
 
 
 def make_ready(state, gpu_nodes=2):
@@ -111,7 +113,9 @@ def test_times_out_naming_the_webhook_when_it_never_answers(world):
     assert r.returncode == 1
     assert "timed out" in r.stderr and "webhook" in r.stderr
     assert "failed calling webhook" in r.stderr, "the last kubectl error is echoed for diagnosis"
-    assert r.stdout.count("gate: ok") == 3, "CRD, operator and endpoint checks passed before the webhook wait"
+    assert (
+        r.stdout.count("gate: ok") == 3
+    ), "CRD, operator and endpoint checks passed before the webhook wait"
 
 
 def test_denial_by_the_webhook_counts_as_answering(world):
@@ -146,7 +150,7 @@ def test_waits_for_webhook_endpoints_before_probing(world):
 
 def test_counts_only_ready_gpu_nodes(world):
     _, state = world
-    make_ready(state, gpu_nodes=1)       # plus one CPU node and one NotReady GPU node from the fake
+    make_ready(state, gpu_nodes=1)  # plus one CPU node and one NotReady GPU node from the fake
     r = run_gate(world, timeout=1, min_gpu_nodes=2)
     assert r.returncode == 1
     assert "2 Ready nodes advertising nvidia.com/gpu" in r.stderr
@@ -160,8 +164,12 @@ def test_polls_until_conditions_appear(world):
     (state / "crd_ok").unlink()
     flipper = bin_dir / "kubectl"
     original = flipper.read_text()
-    flipper.write_text(original.replace('*"crd/dynamographdeployments.nvidia.com"*)',
-                                        '*"crd/dynamographdeployments.nvidia.com"*)\n    touch "$S/crd_ok.seen"; [ -e "$S/crd_ok.seen.2" ] && touch "$S/crd_ok"; touch "$S/crd_ok.seen.2"'))
+    flipper.write_text(
+        original.replace(
+            '*"crd/dynamographdeployments.nvidia.com"*)',
+            '*"crd/dynamographdeployments.nvidia.com"*)\n    touch "$S/crd_ok.seen"; [ -e "$S/crd_ok.seen.2" ] && touch "$S/crd_ok"; touch "$S/crd_ok.seen.2"',
+        )
+    )
     r = run_gate(world, timeout=5)
     assert r.returncode == 0, r.stderr
     calls = (state / "calls").read_text().splitlines()

@@ -66,36 +66,47 @@ def ubuntu_eks_ami_name_pattern(k8s_version: str) -> str:
 
 def create_cluster(spec: ClusterSpec) -> eks.Cluster:
     default_vpc = aws.ec2.get_vpc(default=True)
-    subnets = aws.ec2.get_subnets(filters=[
-        aws.ec2.GetSubnetsFilterArgs(name="vpc-id", values=[default_vpc.id]),
-        aws.ec2.GetSubnetsFilterArgs(name="availability-zone", values=EKS_AZS),
-    ])
+    subnets = aws.ec2.get_subnets(
+        filters=[
+            aws.ec2.GetSubnetsFilterArgs(name="vpc-id", values=[default_vpc.id]),
+            aws.ec2.GetSubnetsFilterArgs(name="availability-zone", values=EKS_AZS),
+        ]
+    )
 
     ubuntu_ami = aws.ec2.get_ami(
         owners=[CANONICAL_OWNER_ID],
         most_recent=True,
-        filters=[aws.ec2.GetAmiFilterArgs(
-            name="name", values=[ubuntu_eks_ami_name_pattern(spec.k8s_version)],
-        )],
+        filters=[
+            aws.ec2.GetAmiFilterArgs(
+                name="name",
+                values=[ubuntu_eks_ami_name_pattern(spec.k8s_version)],
+            )
+        ],
     )
 
     # Our own node role (rather than the one pulumi-eks would create) so the
     # policy set is explicit and testable, and the role carries the Owner tag.
-    node_role = aws.iam.Role(f"{spec.name}-node-role",
-        assume_role_policy=json.dumps({
-            "Version": "2012-10-17",
-            "Statement": [{
-                "Effect": "Allow",
-                "Action": "sts:AssumeRole",
-                "Principal": {"Service": "ec2.amazonaws.com"},
-            }],
-        }),
+    node_role = aws.iam.Role(
+        f"{spec.name}-node-role",
+        assume_role_policy=json.dumps(
+            {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": "sts:AssumeRole",
+                        "Principal": {"Service": "ec2.amazonaws.com"},
+                    }
+                ],
+            }
+        ),
         tags=spec.tags,
     )
     for key, arn in NODE_POLICIES.items():
         aws.iam.RolePolicyAttachment(f"{spec.name}-node-{key}", role=node_role.name, policy_arn=arn)
 
-    return eks.Cluster(spec.name,
+    return eks.Cluster(
+        spec.name,
         version=spec.k8s_version,
         vpc_id=default_vpc.id,
         subnet_ids=subnets.ids,

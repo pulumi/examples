@@ -25,17 +25,28 @@ echo "unexpected: $*" >&2; exit 2
 
 @pytest.fixture
 def world(tmp_path):
-    bin_dir = tmp_path / "bin"; bin_dir.mkdir()
-    k = bin_dir / "kubectl"; k.write_text(FAKE_KUBECTL); k.chmod(k.stat().st_mode | stat.S_IEXEC)
-    state = tmp_path / "state"; state.mkdir()
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    k = bin_dir / "kubectl"
+    k.write_text(FAKE_KUBECTL)
+    k.chmod(k.stat().st_mode | stat.S_IEXEC)
+    state = tmp_path / "state"
+    state.mkdir()
     return bin_dir, state
 
 
 def run(world, timeout=2):
     bin_dir, state = world
-    env = {**os.environ, "PATH": f"{bin_dir}:{os.environ['PATH']}", "FAKE_STATE": str(state),
-           "KUBECONFIG_JSON": json.dumps({"kind": "Config"}), "PVC_TIMEOUT_SECONDS": str(timeout)}
-    return subprocess.run(["bash", str(SCRIPT)], env=env, capture_output=True, text=True, timeout=60)
+    env = {
+        **os.environ,
+        "PATH": f"{bin_dir}:{os.environ['PATH']}",
+        "FAKE_STATE": str(state),
+        "KUBECONFIG_JSON": json.dumps({"kind": "Config"}),
+        "PVC_TIMEOUT_SECONDS": str(timeout),
+    }
+    return subprocess.run(
+        ["bash", str(SCRIPT)], env=env, capture_output=True, text=True, timeout=60
+    )
 
 
 def test_deletes_all_pvcs_and_waits_for_volumes(world):

@@ -25,9 +25,9 @@ NAMESPACE = "chatbot"
 @dataclass
 class ChatbotSpec:
     name: str
-    llm_base_url: str       # in-cluster URL of the OpenAI-compatible endpoint
-    model: str              # served model id, shown in the page header
-    owner: str              # Owner tag value for the ELB and ECR repo
+    llm_base_url: str  # in-cluster URL of the OpenAI-compatible endpoint
+    model: str  # served model id, shown in the page header
+    owner: str  # Owner tag value for the ELB and ECR repo
     replicas: int = 2
     served_by: str = "NVIDIA Dynamo on AWS EKS (Pulumi NVIDIA AICR provider)"
 
@@ -46,69 +46,91 @@ def service_annotations(owner: str) -> dict:
 
 def build_image(name: str, owner: str) -> docker_build.Image:
     """Build app/ for linux/amd64 and push it to an ECR repo created here."""
-    repo = aws.ecr.Repository(name,
-        force_delete=True,                    # images inside must not block `pulumi destroy`
+    repo = aws.ecr.Repository(
+        name,
+        force_delete=True,  # images inside must not block `pulumi destroy`
         image_tag_mutability="MUTABLE",
-        tags={"Owner": owner},                # the reaper sweeps untagged ECR repos too
+        tags={"Owner": owner},  # the reaper sweeps untagged ECR repos too
     )
     auth = aws.ecr.get_authorization_token_output(registry_id=repo.registry_id)
-    return docker_build.Image(name,
+    return docker_build.Image(
+        name,
         tags=[repo.repository_url.apply(lambda url: f"{url}:latest")],
         context=docker_build.BuildContextArgs(location=APP_DIR),
         platforms=[docker_build.Platform.LINUX_AMD64],
         push=True,
-        registries=[docker_build.RegistryArgs(
-            address=auth.proxy_endpoint,
-            username=auth.user_name,
-            password=auth.password,
-        )],
+        registries=[
+            docker_build.RegistryArgs(
+                address=auth.proxy_endpoint,
+                username=auth.user_name,
+                password=auth.password,
+            )
+        ],
     )
 
 
-def deploy_chatbot(spec: ChatbotSpec, image_ref: pulumi.Input[str], *,
-                   provider: k8s.Provider, depends_on: list) -> k8s.core.v1.Service:
+def deploy_chatbot(
+    spec: ChatbotSpec, image_ref: pulumi.Input[str], *, provider: k8s.Provider, depends_on: list
+) -> k8s.core.v1.Service:
     opts = pulumi.ResourceOptions(provider=provider, depends_on=list(depends_on))
     labels = {"app": spec.name}
 
     ns = k8s.core.v1.Namespace(NAMESPACE, metadata={"name": NAMESPACE}, opts=opts)
     child = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(depends_on=[ns]))
 
-    k8s.apps.v1.Deployment(spec.name,
+    k8s.apps.v1.Deployment(
+        spec.name,
         metadata={"name": spec.name, "namespace": NAMESPACE, "labels": labels},
         spec={
             "replicas": spec.replicas,
             "selector": {"matchLabels": labels},
             "template": {
                 "metadata": {"labels": labels},
-                "spec": {"containers": [{
-                    "name": "chatbot",
-                    "image": image_ref,
-                    "ports": [{"containerPort": APP_PORT, "name": "http"}],
-                    "env": [
-                        {"name": "LLM_BASE_URL", "value": spec.llm_base_url},
-                        {"name": "MODEL_NAME", "value": spec.model},
-                        {"name": "SERVED_BY", "value": spec.served_by},
-                    ],
-                    "resources": {
-                        "requests": {"cpu": "100m", "memory": "128Mi"},
-                        "limits": {"memory": "512Mi"},
-                    },
-                    "readinessProbe": {"httpGet": {"path": "/healthz", "port": "http"},
-                                       "periodSeconds": 5},
-                    "livenessProbe": {"httpGet": {"path": "/healthz", "port": "http"},
-                                      "periodSeconds": 20},
-                    # Matches the numeric USER in app/Dockerfile.
-                    "securityContext": {"runAsNonRoot": True, "runAsUser": APP_UID,
-                                        "allowPrivilegeEscalation": False},
-                }]},
+                "spec": {
+                    "containers": [
+                        {
+                            "name": "chatbot",
+                            "image": image_ref,
+                            "ports": [{"containerPort": APP_PORT, "name": "http"}],
+                            "env": [
+                                {"name": "LLM_BASE_URL", "value": spec.llm_base_url},
+                                {"name": "MODEL_NAME", "value": spec.model},
+                                {"name": "SERVED_BY", "value": spec.served_by},
+                            ],
+                            "resources": {
+                                "requests": {"cpu": "100m", "memory": "128Mi"},
+                                "limits": {"memory": "512Mi"},
+                            },
+                            "readinessProbe": {
+                                "httpGet": {"path": "/healthz", "port": "http"},
+                                "periodSeconds": 5,
+                            },
+                            "livenessProbe": {
+                                "httpGet": {"path": "/healthz", "port": "http"},
+                                "periodSeconds": 20,
+                            },
+                            # Matches the numeric USER in app/Dockerfile.
+                            "securityContext": {
+                                "runAsNonRoot": True,
+                                "runAsUser": APP_UID,
+                                "allowPrivilegeEscalation": False,
+                            },
+                        }
+                    ]
+                },
             },
         },
         opts=child,
     )
 
-    return k8s.core.v1.Service(spec.name,
-        metadata={"name": spec.name, "namespace": NAMESPACE, "labels": labels,
-                  "annotations": service_annotations(spec.owner)},
+    return k8s.core.v1.Service(
+        spec.name,
+        metadata={
+            "name": spec.name,
+            "namespace": NAMESPACE,
+            "labels": labels,
+            "annotations": service_annotations(spec.owner),
+        },
         spec={
             "type": "LoadBalancer",
             "selector": labels,
