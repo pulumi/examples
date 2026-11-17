@@ -155,6 +155,7 @@ Example   | Description |
 
 Example   | Description |
 --------- | --------- |
+[AICR chatbot on EKS with NVIDIA Dynamo](aws-py-aicr-chatbot) | Deploy a chatbot on EKS with two GPU nodes, served by NVIDIA Dynamo from one AICR ClusterStack resource.
 [API Gateway HTTP API quickstart](aws-py-apigatewayv2-http-api-quickcreate) | Deploy a very simple HTTP API that invokes a Lambda.
 [API Gateway V2 with EventBridge and Lambda](aws-py-apigatewayv2-eventbridge) | Deploy an HTTP API that uses EventBridge to target a Lambda function.
 [AppSync](aws-py-appsync) | Deploy a basic GraphQL endpoint in AWS AppSync.

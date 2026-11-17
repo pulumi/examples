@@ -1,0 +1,25 @@
+name: aws-py-aicr-chatbot
+description: Chatbot on EKS with two L4 GPU nodes, served by NVIDIA Dynamo through one ClusterStack resource from the Pulumi NVIDIA AICR provider.
+runtime:
+  name: python
+  options:
+    toolchain: pip
+    virtualenv: venv
+template:
+  description: Chatbot on EKS with two L4 GPU nodes, served by NVIDIA Dynamo.
+  config:
+    aws:region:
+      description: The AWS region to deploy into. Use a region with G-series GPU quota.
+      default: us-west-2
+    owner:
+      description: Owner tag applied to every resource. Shared sandbox accounts delete untagged resources, so set this to your name or email.
+      default: you@example.com
+    clusterName:
+      description: The name for the EKS cluster.
+      default: aicr-chatbot
+    instanceType:
+      description: The EC2 instance type for the GPU nodes.
+      default: g6.2xlarge
+    hfToken:
+      description: Optional Hugging Face token, needed only for gated models.
+      secret: true

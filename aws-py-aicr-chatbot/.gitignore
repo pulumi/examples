@@ -1,0 +1,37 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Node
+node_modules/
+
+# Pulumi
+Pulumi.*.yaml.bak
+kubeconfig*
+
+# Env / secrets
+.env
+.env.*
+
+# Logs
+*.log
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
