@@ -127,7 +127,7 @@ def test_validation_is_opt_in(program, program_full):
 def test_gate_waits_on_the_cluster_with_the_right_inputs(program):
     g = program.one("command:local:Command", "dynamo-ready")
     assert g.inputs["create"] == "bash ./wait-for-dynamo.sh"
-    assert g.inputs["dir"].endswith("/infra")
+    assert g.inputs["dir"].rstrip("/") == str(INFRA)
     env = g.inputs["environment"]
     assert is_secret(env), "the environment carries the kubeconfig, so it must be secret in state"
     assert unsecret(env)["KUBECONFIG_JSON"] == FAKE_KUBECONFIG
@@ -213,7 +213,7 @@ def test_chatbot_deployment_points_at_the_dynamo_frontend(program):
 
 
 def test_dockerfile_user_matches_the_pod_security_context():
-    dockerfile = (INFRA.parent / "app" / "Dockerfile").read_text()
+    dockerfile = (INFRA / "app" / "Dockerfile").read_text()
     assert "USER 10001" in dockerfile
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # After `pulumi destroy`: list anything of ours that may have leaked. Read-only.
-#   . ./creds.sh && ./leakcheck.sh [name-prefix=aicr-chatbot]
+#   ./leakcheck.sh [name-prefix=aicr-chatbot]
 set -uo pipefail
 PREFIX=${1:-aicr-chatbot}
 export AWS_REGION=${AWS_REGION:-us-east-1}

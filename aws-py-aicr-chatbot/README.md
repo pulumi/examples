@@ -21,7 +21,6 @@ The program is about $2.20 per hour while the stack is up. Run `pulumi destroy` 
 1. [Install Python](https://www.pulumi.com/docs/intro/languages/python/). Python 3.12 is recommended.
 1. [Install Docker](https://docs.docker.com/get-docker/) with buildx enabled. The chat application image is built locally.
 1. Install `kubectl` and `helm`.
-1. Check out the [NVIDIA AICR provider](https://github.com/pulumi-labs/pulumi-nvidia-aicr) next to this example, at `../pulumi-nvidia-aicr`. This example targets the unreleased `pulumi-labs-nvidia-aicr` 0.4.x line. `requirements.txt` installs its SDK from that path until 0.4.0 is on PyPI.
 
 ## Deploying the example
 
@@ -102,7 +101,7 @@ The program is in `__main__.py`. It is organized in layers that you can read top
 ## Troubleshooting
 
 - **The `owner` tag is required.** The sandbox cleanup process deletes untagged EKS clusters, node groups, IAM roles, ECR repositories, load balancers and security groups after about an hour. The program tags everything it creates. Do not remove the tags.
-- **AWS sessions expire.** Run `. ./creds.sh` before any `pulumi` command, if your profile uses one.
+- **AWS sessions expire.** Log in again, for example with `aws sso login`, before you run `pulumi` commands.
 - **The first `pulumi up` can hit a webhook race** inside the recipe. Re-run `pulumi up`. The gate in `wait-for-dynamo.sh` waits for the Dynamo operator, its CRD and its webhook, and for GPU capacity, before it creates the `DynamoGraphDeployment`.
 - **`InsufficientInstanceCapacity` for `g6.2xlarge`** happens per availability zone. The node group spans five zones and retries. If it keeps failing, set `instanceType` to `g5.2xlarge`.
 - **Helm releases with install hooks fail** if no node has joined yet. Re-run `pulumi up` after the nodes are ready.

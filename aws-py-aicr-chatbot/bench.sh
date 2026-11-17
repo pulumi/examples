@@ -2,7 +2,7 @@
 # Put load on both GPUs: N concurrent chat completions against the Dynamo
 # frontend (port-forwarded), so `nvidia-smi` on both nodes shows utilization
 # and the tokens/s of the pair is visible.
-#   . ./creds.sh && ./bench.sh [concurrency=8] [requests_per_worker=3]
+#   ./bench.sh [concurrency=8] [requests_per_worker=3]
 set -uo pipefail
 cd "$(dirname "$0")"
 

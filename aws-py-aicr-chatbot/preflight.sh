@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Pre-flight checks before `pulumi up`. Read-only; costs nothing.
-# Usage: . ./creds.sh && ./preflight.sh
+# Usage: ./preflight.sh
 set -uo pipefail
 cd "$(dirname "$0")"
 
@@ -16,7 +16,7 @@ warn() { echo "  WARN  $*"; }
 bad()  { echo "  FAIL  $*"; fail=1; }
 
 echo "AWS identity"
-if arn=$(aws sts get-caller-identity --query Arn --output text 2>/dev/null); then ok "$arn"; else bad "no AWS credentials (run: . ./creds.sh)"; fi
+if arn=$(aws sts get-caller-identity --query Arn --output text 2>/dev/null); then ok "$arn"; else bad "no AWS credentials (set AWS_PROFILE or log in with aws sso login)"; fi
 
 echo "G-instance vCPU quota (need $((NODE_COUNT * 8)) for ${NODE_COUNT}x ${INSTANCE_TYPE})"
 quota=$(aws service-quotas get-service-quota --service-code ec2 --quota-code L-DB2E81BA --query Quota.Value --output text 2>/dev/null)
@@ -51,19 +51,6 @@ echo "Local toolchain"
 for tool in pulumi kubectl docker python3; do command -v "$tool" >/dev/null && ok "$tool" || bad "$tool missing"; done
 docker info >/dev/null 2>&1 && ok "docker daemon" || bad "docker daemon not running (image build needs it)"
 docker buildx version >/dev/null 2>&1 && ok "docker buildx" || bad "docker buildx missing"
-
-echo "AICR provider plugin"
-if plugin=$(pulumi plugin ls 2>/dev/null | grep -E '^nvidia-aicr\s+resource\s+0\.0\.1-dev'); then
-    ok "$(echo "$plugin" | awk '{print $1, $3, "installed", $5, $6, $7, $8}')"
-    bin=../pulumi-nvidia-aicr/bin/pulumi-resource-nvidia-aicr
-    if [ -x "$bin" ] && [ "$bin" -nt ~/.pulumi/plugins/resource-nvidia-aicr-v0.0.1-dev/pulumi-resource-nvidia-aicr ]; then
-        warn "provider binary in the checkout is newer than the installed plugin (run ./setup.sh)"
-    fi
-else
-    bad "plugin nvidia-aicr 0.0.1-dev not installed (run ./setup.sh)"
-fi
-
-[ -x venv/bin/python ] && ok "venv present" || bad "venv missing (run ./setup.sh)"
 
 echo
 if [ "$fail" = 0 ]; then echo "preflight: all good"; else echo "preflight: fix the FAIL lines first"; exit 1; fi

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # The demo money shots, in escalating order. Run after `pulumi up`:
-#   . ./creds.sh && ./verify.sh
+#   ./verify.sh
 # Each step is independent; a failing step prints why and the script carries on.
 set -uo pipefail
 cd "$(dirname "$0")"
