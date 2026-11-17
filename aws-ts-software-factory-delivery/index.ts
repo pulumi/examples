@@ -10,7 +10,6 @@
 //
 // Register with:  pulumi up   (in this directory, on stack my-org/software-factory-delivery/main)
 
-import * as fs from "node:fs";
 import * as pulumi from "@pulumi/pulumi";
 import * as delivery from "@pulumi/delivery";
 
@@ -26,6 +25,8 @@ const owner = cfg.require("owner"); // e.g. you@example.com
 const approvers = cfg.getObject<string[]>("approvers") ?? ["my-pulumi-user"];
 /** Factory project the bootstrap and seed jobs talk to. */
 const factoryProject = cfg.get("factoryProject") ?? "agent-factory-demo";
+/** The brief the factory agents work from. Set it per project, not from a file in the repo. */
+const projectBrief = cfg.get("projectBrief") ?? "Build a simple web instant messenger application in Vite and Node.JS that allows a team to send messages to each other in a session using websockets.";
 /** Branch the release is cut from. Point at a test branch to try the pipeline. */
 const branch = cfg.get("branch") ?? "main";
 /** Repository the release is cut from, as `owner/repo`. */
@@ -43,7 +44,7 @@ const ref = (project: string) => `${org}/${project}/${env}`;
 const repo = new delivery.GitHubSource("factory", {
     repository,
     branch,
-    trigger: { paths: ["stacks/**", "apps/**", "delivery/**", "factory-prompt.md"] },
+    trigger: { paths: ["stacks/**", "apps/**", "delivery/**"] },
 });
 
 const pipeline = new delivery.Pipeline("software-factory", {
@@ -122,10 +123,8 @@ const platformStacks = new delivery.Stacks("platform", {
             config: {
                 "platform:llmStack": ref("llm"),
                 "platform:owner": owner,
-                // The brief the agents work from, read out of the repo at
-                // registration so it is reviewed like any other change instead
-                // of being piped in by hand with `pulumi config set`.
-                "platform:projectBrief": fs.readFileSync("../factory-prompt.md", "utf8").trim(),
+                // The brief the agents work from, set in this pipeline's configuration.
+                "platform:projectBrief": projectBrief,
             },
         },
     },

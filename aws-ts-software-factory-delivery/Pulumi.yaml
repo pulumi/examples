@@ -23,3 +23,6 @@ template:
     branch:
       description: The branch to deploy.
       default: main
+    projectBrief:
+      description: The brief the factory agents work from.
+      default: Build a simple web instant messenger application in Vite and Node.JS that allows a team to send messages to each other in a session using websockets.

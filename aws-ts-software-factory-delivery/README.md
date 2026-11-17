@@ -71,7 +71,7 @@ The `approval()` gate on the cluster stage shows an approver a preview of the `l
 
 This example expects a few things from the environment:
 
-- **The source repository.** The jobs run scripts from the factory repository (`scripts/`, `examples/` and `factory-prompt.md`). Use the same repository layout, or change the jobs.
+- **The source repository.** The jobs run scripts from the factory repository (`scripts/` and `examples/`), and the stacks live in its `stacks/` and `apps/` folders. Point `repository` at a repository with the same layout, or change the jobs. The project brief is set with `projectBrief` in the pipeline's configuration, not read from a file.
 - **AWS credentials.** The target stacks read AWS credentials from an [ESC environment](https://www.pulumi.com/docs/esc/) built on `fn::open::aws-login`. Import that environment in each target stack's configuration file. The pipeline's service principal must be allowed to open it.
 - **Secrets.** Secret values such as `hfToken` and `jevApiKey` can't be set through the pipeline configuration. Put them in an ESC environment that the target stack imports.
 - **A reachable cluster.** The bootstrap, verify and seed jobs use `kubectl` against the EKS API endpoint. If the endpoint is private, those jobs can't run on a Pulumi-managed runner.
