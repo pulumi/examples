@@ -1,0 +1,8 @@
+name: azure-cs-delivery-container-apps-image
+description: Creates an Azure Container Registry and pushes the example app image to it
+runtime: dotnet
+template:
+  config:
+    azure-native:location:
+      description: The Azure region to deploy into
+      default: westus2

@@ -1,0 +1,21 @@
+name: azure-cs-delivery-container-apps-pipeline
+runtime: dotnet
+description: Pulumi Delivery pipeline that builds a container image and deploys it to Azure Container Apps
+config:
+  repository:
+    type: string
+    default: pulumi/examples
+  branch:
+    type: string
+    default: main
+  path:
+    type: string
+    default: azure-cs-delivery-container-apps
+template:
+  config:
+    repository:
+      description: The GitHub repository that holds this example, as <owner>/<name>
+    branch:
+      description: The branch whose pushes start a run
+    path:
+      description: This example's directory within the repository
