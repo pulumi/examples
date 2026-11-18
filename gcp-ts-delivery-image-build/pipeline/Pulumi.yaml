@@ -1,0 +1,18 @@
+name: gcp-ts-delivery-image-build-pipeline
+description: Delivery pipeline that builds the example image and verifies it in a beta stage
+runtime: nodejs
+config:
+  # Where Delivery reads this example from. Point these at your own repository.
+  repository:
+    type: string
+    default: pulumi/examples
+  branch:
+    type: string
+    default: main
+  path:
+    type: string
+    default: gcp-ts-delivery-image-build
+  # Artifact Registry location for the image repository.
+  location:
+    type: string
+    default: europe-west2

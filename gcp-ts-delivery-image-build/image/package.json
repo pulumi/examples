@@ -1,0 +1,19 @@
+{
+    "name": "gcp-ts-delivery-image-build-image",
+    "main": "index.ts",
+    "engines": {
+        "node": ">=26"
+    },
+    "scripts": {
+        "typecheck": "tsc --noEmit --strict index.ts"
+    },
+    "dependencies": {
+        "@pulumi/docker-build": "0.0.23",
+        "@pulumi/gcp": "10.2.2",
+        "@pulumi/pulumi": "3.274.1"
+    },
+    "devDependencies": {
+        "@types/node": "26.6.6",
+        "typescript": "^5.0.0"
+    }
+}
