@@ -74,9 +74,11 @@ new gcp.serviceaccount.IAMBinding("service-account", {
   members: [pulumi.interpolate`principalSet://iam.googleapis.com/${identityPool.name}/*`],
 });
 
-// fn::open::gcp-login requires project number instead of project name:
+// fn::open::gcp-login requires the project number instead of the project ID.
+// Its `project` output is that same number, which some Google APIs reject as a
+// default project, so the settings below use the project ID instead:
 const projectNumber = gcp.projects.getProjectOutput({
-  filter: `name:${gcpProjectName}`,
+  filter: `id:${gcpProjectName}`,
 }).projects[0].number
   .apply(projectNumber => +projectNumber); // this casts it from string to a number
 
@@ -93,13 +95,13 @@ values:
           subjectAttributes:
             - currentEnvironment.name
   pulumiConfig:
-    gcp:project: \${gcp.login.project}
+    gcp:project: ${gcpProjectName}
   environmentVariables:
     # Used by Pulumi Cloud account scans and Terraform:
-    GOOGLE_PROJECT: \${gcp.login.project}
-    # The Google Cloud SDK (which is used by the Pulumi provider) requires the project to be set by number:
-    GOOGLE_CLOUD_PROJECT: \${gcp.login.project}
-    # The gcloud CLI requires the project be set by name, and via a different env var.
+    GOOGLE_PROJECT: ${gcpProjectName}
+    # Used by the Google Cloud client libraries:
+    GOOGLE_CLOUD_PROJECT: ${gcpProjectName}
+    # The gcloud CLI reads the project from a different env var.
     # See: https://cloud.google.com/sdk/docs/properties#setting_properties_using_environment_variables
     CLOUDSDK_CORE_PROJECT: ${gcpProjectName}
     GOOGLE_OAUTH_ACCESS_TOKEN: \${gcp.login.accessToken}
