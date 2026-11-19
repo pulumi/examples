@@ -278,6 +278,7 @@ Example   | Description |
 --------- | --------- |
 Cluster.
 [Azure Container Apps](azure-cs-containerapps) | Run a Docker image on Azure Container Apps.
+[Azure Container Apps with Pulumi Delivery](azure-cs-delivery-container-apps) | Build a container image once with a Pulumi Delivery pipeline, push it to Azure Container Registry, and deploy it to Azure Container Apps in a beta stage.
 [Azure Container Instance](azure-cs-aci) | Run Azure Container Instances on Linux.
 [Azure Kubernetes Service](azure-cs-aks) | Create an Azure Kubernetes Service (AKS) Cluster.
 [AKS web app with .NET 5](azure-cs-net5-aks-webapp) | Create an Azure Kubernetes Service (AKS) cluster and deploy a web app to it using .NET 5 and C# 9.
