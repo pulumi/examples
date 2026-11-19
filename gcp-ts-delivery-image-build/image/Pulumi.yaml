@@ -1,0 +1,3 @@
+name: gcp-ts-delivery-image-build-image
+description: Creates an Artifact Registry repository and pushes the example app image to it
+runtime: nodejs

@@ -1,0 +1,3 @@
+name: gcp-ts-delivery-image-build-beta
+description: Verifies that the image the build stage pushed is in Artifact Registry
+runtime: nodejs

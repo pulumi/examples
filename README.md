@@ -302,6 +302,7 @@ Cluster.
 Example   | Description |
 --------- | --------- |
 [Cloud Run](gcp-ts-cloudrun) | Deploy a custom Docker image into Google Cloud Run service.
+[Cloud Run with Pulumi Delivery](gcp-ts-delivery-image-build) | Build a container image once with a Pulumi Delivery pipeline, push it to Artifact Registry, and deploy it to Cloud Run in a beta stage.
 [Functions - Raw](gcp-ts-serverless-raw) | Deploy two Google Cloud Functions implemented in Python and Go.
 [Functions](gcp-ts-functions) | Deploy an HTTP Google Cloud Function endpoint.
 [GKE - Hello World](gcp-ts-gke-hello-world) | Deploy a GKE cluster, then a Kubernetes namespace and nginx deployment into the cluster.
