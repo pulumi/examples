@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# Grants a principal access to a Pulumi ESC environment. The Pulumi CLI has no
+# command for this yet, so this script takes the arguments such a command
+# would and makes the Pulumi Cloud API calls behind it.
+#
+# Usage: pulumi-env-access-grant [<org>/]<project>/<environment> --principal <principal> [--by-name] [--permission <permission>]
+#
+#   --principal   The service principal's login, such as service-principal:<id>,
+#                 or its display name with --by-name.
+#   --by-name     Look the service principal up by its display name.
+#   --permission  read, open (the default), write or admin.
+#
+# Requires pulumi 3.277.0 or later, logged in, and jq.
+set -euo pipefail
+
+usage() {
+    sed -n '6,13s/^# \{0,1\}//p' "$0" >&2
+    exit 2
+}
+die() {
+    echo "pulumi-env-access-grant: $*" >&2
+    exit 1
+}
+
+environment= principal= by_name= permission=open
+while [ $# -gt 0 ]; do
+    case $1 in
+        --principal) [ $# -ge 2 ] || usage; principal=$2; shift 2 ;;
+        --by-name) by_name=1; shift ;;
+        --permission) [ $# -ge 2 ] || usage; permission=$2; shift 2 ;;
+        -h | --help) usage ;;
+        -*) echo "unknown flag: $1" >&2; usage ;;
+        *) [ -z "$environment" ] || usage; environment=$1; shift ;;
+    esac
+done
+[ -n "$environment" ] && [ -n "$principal" ] || usage
+
+command -v jq >/dev/null || die "needs jq, see https://jqlang.org/download/"
+command -v pulumi >/dev/null || die "needs the Pulumi CLI, see https://www.pulumi.com/docs/install/"
+pulumi_version=$(pulumi version)
+IFS=.- read -r major minor _ <<<"${pulumi_version#v}"
+[ "$major" -gt 3 ] 2>/dev/null || { [ "$major" -eq 3 ] && [ "$minor" -ge 277 ]; } 2>/dev/null ||
+    die "needs pulumi 3.277.0 or later, found $pulumi_version"
+pulumi whoami >/dev/null 2>&1 || die "not logged in to Pulumi Cloud, run pulumi login"
+
+case $permission in
+    read) permission_set="Environment Read" ;;
+    open) permission_set="Environment Open" ;;
+    write) permission_set="Environment Write" ;;
+    admin) permission_set="Environment Admin" ;;
+    *) die "unknown permission $permission, expected read, open, write or admin" ;;
+esac
+
+# Without an organization, use the default one, as the pulumi env commands do.
+IFS=/ read -r first second third rest <<<"$environment"
+if [ -n "$third" ] && [ -z "$rest" ]; then
+    org=$first project=$second env=$third
+elif [ -n "$second" ] && [ -z "$third" ]; then
+    org=$(pulumi org get-default) project=$first env=$second
+else
+    die "expected [<org>/]<project>/<environment>, got $environment"
+fi
+
+org_api() {
+    local operation=$1
+    shift
+    pulumi api "$operation" -F orgName="$org" "$@"
+}
+
+login=$principal
+if [ -n "$by_name" ]; then
+    # Delivery cuts generated names longer than 64 characters, so a cut-off
+    # name also matches.
+    logins=$(org_api ListOrganizationMembers -F type=service-principal --all | jq -r --arg name "$principal" '
+        .members[].user
+        | select(.name == $name or ((.name | length) == 64 and (.name as $n | $name | startswith($n))))
+        | .githubLogin')
+    case $(printf '%s' "$logins" | grep -c .) in
+        0) die "no service principal named \"$principal\" in $org" ;;
+        1) login=$logins ;;
+        *) die "more than one service principal named \"$principal\" in $org" ;;
+    esac
+fi
+
+permission_set_id=$(org_api ListRolesByOrgIDAndUXPurpose -F uxPurpose=set |
+    jq -r --arg name "$permission_set" '.roles[] | select(.name == $name) | .id')
+[ -n "$permission_set_id" ] || die "no permission set named \"$permission_set\" in $org"
+
+environment_id=$(org_api GetEnvironmentMetadata_esc_environments -F projectName="$project" -F envName="$env" | jq -r .id)
+
+# The context names the kind of entity the grant is on.
+org_api UpdateEntityAssignment -F id="$environment_id" \
+    -F 'context={"__type":"PermissionExpressionEnvironment"}' \
+    -F userId="$login" -F permissionSetId="$permission_set_id" >/dev/null
+
+echo "Granted $permission_set on $org/$project/$env to $principal"
