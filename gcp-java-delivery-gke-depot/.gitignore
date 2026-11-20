@@ -1,0 +1,4 @@
+# Maven output.
+*/target/
+# Depot CLI installed by image/setup-builder.sh.
+*/.depot/

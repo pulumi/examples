@@ -1,0 +1,8 @@
+name: gcp-java-delivery-gke-depot-image
+description: Creates an Artifact Registry repository and builds the app image on Depot
+runtime: java
+template:
+  config:
+    gcp:region:
+      description: The Google Cloud region to deploy into
+      default: us-central1
