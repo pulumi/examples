@@ -9,39 +9,47 @@ image_ref = pulumi.Config().require("imageRef")
 
 cluster = aws.ecs.Cluster("cluster")
 
-# A public load balancer in the default VPC that forwards port 80 to the
-# app's port 8080.
-lb = awsx.lb.ApplicationLoadBalancer(
-    "lb",
-    default_target_group=awsx.lb.TargetGroupArgs(
-        port=8080,
-        protocol="HTTP",
-        target_type="ip",
-        health_check=aws.lb.TargetGroupHealthCheckArgs(path="/", interval=10, healthy_threshold=2),
-        deregistration_delay=10,
-    ),
+# The app's tasks run in the default VPC's public subnets, next to the load
+# balancer.
+vpc = awsx.ec2.DefaultVpc("vpc")
+
+# A public load balancer in the default VPC, listening on port 80. The service
+# adds a rule to its listener that forwards requests to the app's port 8080.
+lb = awsx.lb.ApplicationLoadBalancer("lb")
+
+task_definition = awsx.ecs.TaskDefinition(
+    "app",
+    containers={
+        "app": awsx.ecs.ContainerDefinitionArgs(
+            image=image_ref,
+            cpu_units=256,
+            memory_mi_b=512,
+            essential=True,
+            port_mappings=[awsx.ecs.AwsvpcPortMappingArgs(container_port=8080)],
+        ),
+    },
 )
 
-service = awsx.ecs.FargateService(
+service = awsx.ecs.Service(
     "app",
-    cluster=cluster.arn,
+    cluster_arn=cluster.arn,
+    task_definition_arn=task_definition.task_definition_arn,
+    vpc_subnet_ids=vpc.public_subnet_ids,
     assign_public_ip=True,
     desired_count=1,
-    task_definition_args=awsx.ecs.FargateServiceTaskDefinitionArgs(
-        container=awsx.ecs.TaskDefinitionContainerDefinitionArgs(
-            name="app",
-            image=image_ref,
-            cpu=256,
-            memory=512,
-            essential=True,
-            port_mappings=[
-                awsx.ecs.TaskDefinitionPortMappingArgs(
-                    container_port=8080,
-                    target_group=lb.default_target_group,
-                )
-            ],
+    load_balancer_attachments={
+        "app": awsx.ecs.ServiceLoadBalancerAttachmentArgs(
+            application=awsx.ecs.ApplicationLoadBalancerAttachmentArgs(
+                container_name="app",
+                container_port=8080,
+                listener_arn=lb.listeners.apply(lambda listeners: listeners[0].arn),
+                priority=10,
+                target_health_check=awsx.ecs.TargetGroupHealthCheckArgs(
+                    path="/", interval_seconds=10, healthy_threshold=2
+                ),
+            ),
         ),
-    ),
+    },
 )
 
 pulumi.export("url", lb.load_balancer.dns_name.apply(lambda dns: f"http://{dns}"))

@@ -37,6 +37,7 @@ Run the commands below in order, in one shell, starting in this example's direct
     pulumi stack init <org>/aws-py-delivery-ecs-beta/beta
     pulumi config env add <project>/<aws-env> --yes
     pulumi config set aws:region us-west-2
+    pulumi config set aws-native:region us-west-2
     cd ..
     ```
 
@@ -87,6 +88,12 @@ Run the commands below in order, in one shell, starting in this example's direct
     ```
 
 1. Start the first run: push a change to a file in this example, for example to the response text in `app/app.py`, or choose **Start a run** on the pipeline in Pulumi Cloud, under **Delivery** in your organization. Registration does not start a run.
+
+    Or from the command line, with your organization in place of `<org>`. It prints the number of the new run:
+
+    ```bash
+    pulumi api DispatchDeliveryRun -F orgName=<org> -F projectName=aws-py-delivery-ecs-pipeline -F stackName=pipeline --body '{}'
+    ```
 
 1. Watch the run in Pulumi Cloud. The `build` stage pushes the image. The `beta` stage deploys it, then the `check-url` job requests the load balancer URL until the app answers and records the URL and status as the job's outputs. The run also records the URL as the `beta-url` artifact of the release. The first run can take several minutes, mostly for the load balancer and the first Fargate task. From now on, every push that changes files in this example starts a new run.
 
