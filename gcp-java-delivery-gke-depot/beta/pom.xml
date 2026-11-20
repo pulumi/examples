@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.pulumi</groupId>
+  <artifactId>gcp-java-delivery-gke-depot-beta</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- The JDK in the Pulumi Delivery runner image. -->
+    <maven.compiler.release>21</maven.compiler.release>
+    <mainClass>beta.App</mainClass>
+    <mainArgs/>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.pulumi</groupId>
+      <artifactId>pulumi</artifactId>
+      <version>1.39.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.pulumi</groupId>
+      <artifactId>gcp</artifactId>
+      <version>10.5.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.pulumi</groupId>
+      <artifactId>kubernetes</artifactId>
+      <version>4.34.3</version>
+    </dependency>
+    <!-- Writes the kubeconfig. The version the Pulumi SDK uses at runtime,
+         so the program adds no jar of its own. -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.7.0</version>
+        <configuration>
+          <mainClass>${mainClass}</mainClass>
+          <commandlineArgs>${mainArgs}</commandlineArgs>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

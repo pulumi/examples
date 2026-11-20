@@ -1,0 +1,3 @@
+# Container image
+
+This project runs in the pipeline's `build` stage. It creates an Artifact Registry repository, registers the Depot buildx builder with [`setup-builder.sh`](setup-builder.sh), then builds [`app/`](../app) on Depot for `linux/amd64` and pushes the image, tagged with the commit the pipeline sets as `commit`. It reads the Depot project ID from the `depotProjectId` config and the Depot token from `DEPOT_TOKEN`, both set by the Depot ESC environment, and pushes with a short-lived access token from the stack's Google Cloud login. It exports `imageRef`, the image reference pinned by digest. See the [example's README](../README.md) to set it up.
