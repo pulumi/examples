@@ -75,17 +75,20 @@ The script assumes you have credentials for various providers configured. Exampl
   - [Go](#go)
   - [C#](#c)
   - [F#](#f)
+  - [Java](#java)
 - [Azure](#azure)
   - [TypeScript](#typescript-1)
   - [Python](#python-1)
   - [Go](#go-1)
   - [C#](#c-1)
   - [F#](#f-1)
+  - [Java](#java-1)
 - [GCP](#gcp)
   - [TypeScript](#typescript-2)
   - [Python](#python-2)
   - [Go](#go-2)
   - [C#](#c-2)
+  - [Java](#java-2)
 - [Kubernetes](#kubernetes)
   - [TypeScript](#typescript-3)
   - [Python](#python-3)
@@ -210,6 +213,18 @@ Example   | Description |
 
 [Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
 
+### Java
+
+[🔝 Back to the list](#all-pulumi-examples)
+
+Example   | Description |
+--------- | --------- |
+[EKS - Minimal](aws-java-eks-minimal) | Deploy a minimal EKS Kubernetes cluster using the Pulumi EKS component.
+[Web Server](aws-java-webserver) | Deploy an EC2 instance running a simple web server accessible over HTTP.
+[Wordpress with Ansible](aws-java-ansible-wordpress) | Deploy an EC2 Wordpress server backed by RDS and configured using Ansible.
+
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## Azure
 
 ### TypeScript
@@ -294,6 +309,18 @@ Cluster.
 
 [Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
 
+### Java
+
+[🔝 Back to the list](#all-pulumi-examples)
+
+Example   | Description |
+--------- | --------- |
+[Azure App Service](azure-java-appservice-sql) | Build a web application hosted in App Service and provision Azure SQL Database and Azure Application Insights.
+[Azure Functions - Spring Boot with GraalVM](azure-java-function-graal-spring) | Deploy a Spring Boot application packaged with GraalVM to Azure Functions.
+[Static Website](azure-java-static-website) | Configure static website hosting in Azure Storage.
+
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
 ## GCP
 
 ### TypeScript
@@ -347,6 +374,16 @@ Example   | Description |
 --------- | --------- |
 [Functions - Raw](gcp-py-serverless-raw) | Deploy a Google Cloud Function implemented in Python.
 [Functions](gcp-go-functions) | Deploy a Go-based Google Cloud Function.
+
+[Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
+
+### Java
+
+[🔝 Back to the list](#all-pulumi-examples)
+
+Example   | Description |
+--------- | --------- |
+[GKE - Hello World](gcp-java-gke-hello-world) | Deploy a GKE cluster, then a Kubernetes namespace and nginx deployment into the cluster.
 
 [Use Pulumi AI](https://www.pulumi.com/ai/?utm_campaign=pulumi-examples-github-repo&utm_source=github.com&utm_medium=pulumi-examples) to build a new example in _any_ language.
 
