@@ -72,7 +72,9 @@ delivery.Job(
     directory=f"{path}/pipeline",
     command="./check-url.sh",
     environment=beta_stacks.outputs.apply(
-        lambda o: {"SERVICE_URL": url} if (url := string_outputs(o, "beta", "url").get("url")) else {}
+        lambda o: (
+            {"SERVICE_URL": url} if (url := string_outputs(o, "beta", "url").get("url")) else {}
+        )
     ),
     # A Job starts with the stage, alongside the stage's stacks. Wait for the
     # beta stack so the service exists before the check runs.
