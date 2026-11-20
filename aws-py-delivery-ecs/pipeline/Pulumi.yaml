@@ -1,0 +1,25 @@
+name: aws-py-delivery-ecs-pipeline
+description: Pulumi Delivery pipeline that builds a container image to ECR and deploys it to ECS Fargate
+runtime:
+  name: python
+  options:
+    toolchain: pip
+    virtualenv: venv
+config:
+  repository:
+    type: string
+    default: pulumi/examples
+  branch:
+    type: string
+    default: main
+  path:
+    type: string
+    default: aws-py-delivery-ecs
+template:
+  config:
+    repository:
+      description: The GitHub repository that holds this example, as <owner>/<name>
+    branch:
+      description: The branch whose pushes start a run
+    path:
+      description: This example's directory within the repository
