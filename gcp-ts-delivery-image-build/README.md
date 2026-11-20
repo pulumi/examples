@@ -107,6 +107,12 @@ Every stack authenticates to Google Cloud through Pulumi ESC with OIDC, so no lo
 
 1. Start the first run: push a change to a file in this example, or choose **Start a run** on the pipeline in Pulumi Cloud, under **Delivery** in your organization. Registration does not start a run.
 
+    Or from the command line, with your organization in place of `<org>`. It prints the number of the new run:
+
+    ```bash
+    pulumi api DispatchDeliveryRun -F orgName=<org> -F projectName=gcp-ts-delivery-image-build-pipeline -F stackName=pipeline --body '{}'
+    ```
+
 1. Watch the run in Pulumi Cloud. The `build` stage pushes the image, and the `beta` stage deploys it to Cloud Run and checks that it answers. The run records the app's URL as the `beta-url` artifact of the release. From now on, every push that changes files in this example starts a new run.
 
 ## Cleaning up

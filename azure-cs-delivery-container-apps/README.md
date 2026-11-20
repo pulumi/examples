@@ -110,6 +110,12 @@ Run the commands below in order, in one shell, starting in this example's direct
 
 1. Start the first run: push a change to a file in this example, or choose **Start a run** on the pipeline in Pulumi Cloud, under **Delivery** in your organization. Registration does not start a run.
 
+    Or from the command line, with your organization in place of `<org>`. It prints the number of the new run:
+
+    ```bash
+    pulumi api DispatchDeliveryRun -F orgName=<org> -F projectName=azure-cs-delivery-container-apps-pipeline -F stackName=pipeline --body '{}'
+    ```
+
 1. Watch the run in Pulumi Cloud. The `build` stage pushes the image. The `beta` stage deploys it, then the `check-url` job requests the app's URL and records it as the job's `checked` output. The run also records the URL as the `beta-url` artifact of the release. From now on, every push that changes files in this example starts a new run.
 
 ## Cleaning up
