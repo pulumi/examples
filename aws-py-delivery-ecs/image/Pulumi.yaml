@@ -1,0 +1,12 @@
+name: aws-py-delivery-ecs-image
+description: Creates an ECR repository and pushes the example app image to it
+runtime:
+  name: python
+  options:
+    toolchain: pip
+    virtualenv: venv
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into
+      default: us-west-2
