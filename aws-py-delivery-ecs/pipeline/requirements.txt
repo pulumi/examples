@@ -1,0 +1,2 @@
+pulumi==3.277.0
+pulumi-delivery==0.2.0
