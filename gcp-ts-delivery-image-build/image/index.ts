@@ -42,7 +42,10 @@ const app = new dockerBuild.Image(imageName, {
     tags: [pulumi.interpolate`${repository.registryUri}/${imageName}:${commit}`],
     push: true,
     registries: [{
-        address: `${location}-docker.pkg.dev`,
+        address: repository.registryUri.apply(uri => {
+            const [host] = uri.split("/");
+            return host;
+        }),
         username: "oauth2accesstoken",
         password: pulumi.secret(clientConfig.accessToken),
     }],
