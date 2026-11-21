@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Pulumi" Version="3.10*" />
     <PackageReference Include="Pulumi.DigitalOcean" Version="4.8*" />
-    <PackageReference Include="Pulumi.Kubernetes" Version="3.*" />
+    <PackageReference Include="Pulumi.Kubernetes" Version="3.1*" />
   </ItemGroup>
 
 </Project>
