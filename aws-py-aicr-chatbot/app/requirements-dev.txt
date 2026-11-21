@@ -1,0 +1,3 @@
+-r requirements.txt
+pytest>=8.0,<9
+respx>=0.21,<1
