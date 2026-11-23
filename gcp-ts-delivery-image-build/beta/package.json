@@ -8,8 +8,8 @@
         "typecheck": "tsc --noEmit --strict index.ts"
     },
     "dependencies": {
-        "@pulumi/gcp": "10.2.2",
-        "@pulumi/pulumi": "3.274.1"
+        "@pulumi/gcp": "10.5.0",
+        "@pulumi/pulumi": "3.277.0"
     },
     "devDependencies": {
         "@types/node": "26.6.6",

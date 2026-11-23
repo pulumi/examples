@@ -105,34 +105,16 @@ Run the commands below in order, in one shell, starting in this example's direct
     Or from the command line:
 
     ```bash
-    ORG=<org>                    # your Pulumi organization
-    ENV_PROJECT=<project>        # the environment you created above
-    ENV_NAME=<environment>
-    PIPELINE="Delivery azure-cs-delivery-container-apps-pipeline pipeline"
-
-    # Every call here is scoped to the organization.
-    org_api() { local op=$1; shift; pulumi api "$op" -F orgName="$ORG" "$@"; }
-    # The access calls name the kind of entity in a context object.
-    type_wrap() { printf '{"__type":"%s"}' "$1"; }
-
-    # The service principal Delivery generated for the pipeline, by name.
-    # Delivery cuts names longer than 64 characters, so a cut-off name also matches.
-    LOGIN=$(org_api ListOrganizationMembers -F type=service-principal \
-      | jq -r --arg name "$PIPELINE" '.members[].user | select(.servicePrincipalKind == "delivery" and (.name == $name or ((.name | length) == 64 and (.name as $n | $name | startswith($n))))) | .githubLogin')
-    [ -n "$LOGIN" ] || { echo "No service principal named: $PIPELINE" >&2; }
-
-    # The built-in permission set that lets a principal open an environment.
-    OPEN_ID=$(org_api ListRolesByOrgIDAndUXPurpose -F uxPurpose=set \
-      | jq -r '.roles[] | select(.name == "Environment Open") | .id')
-
-    # Let the pipeline open the environment.
-    ENV_ID=$(org_api GetEnvironmentMetadata_esc_environments -F projectName=$ENV_PROJECT -F envName=$ENV_NAME \
-      | jq -r .id)
-    [ -n "$LOGIN" ] && org_api UpdateEntityAssignment -F id=$ENV_ID -F "context=$(type_wrap PermissionExpressionEnvironment)" \
-      -F userId=$LOGIN -F permissionSetId=$OPEN_ID
+    ./scripts/pulumi-env-access-grant <project>/<environment> --principal "Delivery azure-cs-delivery-container-apps-pipeline pipeline" --by-name --permission open
     ```
 
 1. Start the first run: push a change to a file in this example, or choose **Start a run** on the pipeline in Pulumi Cloud, under **Delivery** in your organization. Registration does not start a run.
+
+    Or from the command line, with your organization in place of `<org>`. It prints the number of the new run:
+
+    ```bash
+    pulumi api DispatchDeliveryRun -F orgName=<org> -F projectName=azure-cs-delivery-container-apps-pipeline -F stackName=pipeline --body '{}'
+    ```
 
 1. Watch the run in Pulumi Cloud. The `build` stage pushes the image. The `beta` stage deploys it, then the `check-url` job requests the app's URL and records it as the job's `checked` output. The run also records the URL as the `beta-url` artifact of the release. From now on, every push that changes files in this example starts a new run.
 
