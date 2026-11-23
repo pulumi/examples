@@ -1,0 +1,28 @@
+name: software-factory-delivery
+runtime: nodejs
+description: Delivery pipeline for the agent software factory (llm -> platform -> factory|agent|triage).
+# Written by `pulumi package add delivery`. The hosted runner reads this entry
+# to install the SDK for each run, so keep it.
+packages:
+  delivery: delivery@0.0.1-alpha.5
+template:
+  description: Delivery pipeline that deploys the agent software factory in stages.
+  config:
+    org:
+      description: The Pulumi organization that owns the target stacks.
+      default: my-org
+    owner:
+      description: Owner tag applied to every resource in the target stacks.
+      default: you@example.com
+    factoryProject:
+      description: The Factory project that the bootstrap and seed jobs use.
+      default: agent-factory-demo
+    repository:
+      description: The GitHub repository to deploy, as owner/repo.
+      default: your-github-org/software-factory
+    branch:
+      description: The branch to deploy.
+      default: main
+    projectBrief:
+      description: The brief the factory agents work from.
+      default: Build a simple web instant messenger application in Vite and Node.JS that allows a team to send messages to each other in a session using websockets.
