@@ -1,0 +1,10 @@
+pulumi>=3.150.0,<4.0.0
+pulumi-aws>=6.0.0,<7.0.0
+pulumi-eks>=3.0.0,<4.0.0
+pulumi-kubernetes>=4.0.0,<5.0.0
+pulumi-docker-build>=0.0.10,<1.0.0
+pulumi-command>=1.0.0,<2.0.0
+
+# NVIDIA AICR provider SDK. The provider plugin is downloaded from its GitHub
+# releases on first use.
+pulumi-labs-nvidia-aicr>=0.4.0,<0.5.0
