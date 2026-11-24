@@ -13,12 +13,12 @@ The example has three Pulumi projects, all in Python, including the pipeline its
 
 ## Prerequisites
 
-1. [Install Pulumi](https://www.pulumi.com/docs/install/), version 3.277.0 or later, for `pulumi delivery register`.
-1. [Install Python](https://www.pulumi.com/docs/languages-sdks/python/), version 3.10 or later.
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/), version 3.277.0 or later, for `pulumi delivery register`.
+1. [Install Python](https://www.pulumi.com/docs/intro/languages/python/), version 3.10 or later.
 1. A Pulumi Cloud organization with Pulumi Delivery enabled.
 1. A GitHub repository that holds this example, either a fork of [pulumi/examples](https://github.com/pulumi/examples) or a copy of this directory in a repository of your own. Delivery runs every program from a checkout of that repository.
 1. The [Pulumi GitHub App](https://www.pulumi.com/docs/integrations/version-control/github-app/) installed, with access to that repository. In Pulumi Cloud, go to **Settings** > **Version control**, open the GitHub installation, and choose **Configure repository access** to add it on GitHub.
-1. An AWS account, and a [Pulumi ESC environment](https://www.pulumi.com/docs/esc/) that logs in to it with [OIDC](https://www.pulumi.com/docs/esc/integrations/dynamic-login-credentials/aws-login/). The steps below call it `<org>/<project>/<aws-env>`.
+1. An AWS account ([Configure AWS credentials](https://www.pulumi.com/docs/intro/cloud-providers/aws/setup/)), and a [Pulumi ESC environment](https://www.pulumi.com/docs/esc/) that logs in to it with [OIDC](https://www.pulumi.com/docs/esc/integrations/dynamic-login-credentials/aws-login/). The steps below call it `<org>/<project>/<aws-env>`.
 
 ## Setting up the pipeline
 
