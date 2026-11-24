@@ -15,8 +15,8 @@ Depot has no Pulumi provider. The `image` program runs `image/setup-builder.sh` 
 
 ## Prerequisites
 
-1. [Install Pulumi](https://www.pulumi.com/docs/install/), version 3.277.0 or later, for `pulumi delivery register`.
-1. [Install Java](https://www.pulumi.com/docs/languages-sdks/java/), JDK 21 or later, and [Maven](https://maven.apache.org/install.html).
+1. [Install Pulumi](https://www.pulumi.com/docs/get-started/install/), version 3.277.0 or later, for `pulumi delivery register`.
+1. [Install Java](https://www.pulumi.com/docs/intro/languages/java/), JDK 21 or later, and [Maven](https://maven.apache.org/install.html).
 1. A Pulumi Cloud organization with Pulumi Delivery enabled.
 1. A GitHub repository that holds this example, either a fork of [pulumi/examples](https://github.com/pulumi/examples) or a copy of this directory in a repository of your own. Delivery runs every program from a checkout of that repository.
 1. The [Pulumi GitHub App](https://www.pulumi.com/docs/integrations/version-control/github-app/) installed, with access to that repository. In Pulumi Cloud, go to **Settings** > **Version control**, open the GitHub installation, and choose **Configure repository access** to add it on GitHub.
