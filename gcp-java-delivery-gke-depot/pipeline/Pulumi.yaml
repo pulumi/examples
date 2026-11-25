@@ -1,0 +1,21 @@
+name: gcp-java-delivery-gke-depot-pipeline
+description: Pulumi Delivery pipeline that builds the app image on Depot and deploys it to GKE
+runtime: java
+config:
+  repository:
+    type: string
+    default: pulumi/examples
+  branch:
+    type: string
+    default: main
+  path:
+    type: string
+    default: gcp-java-delivery-gke-depot
+template:
+  config:
+    repository:
+      description: The GitHub repository that holds this example, as <owner>/<name>
+    branch:
+      description: The branch whose pushes start a run
+    path:
+      description: This example's directory within the repository

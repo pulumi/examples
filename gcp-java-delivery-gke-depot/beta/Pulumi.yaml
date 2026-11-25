@@ -1,0 +1,8 @@
+name: gcp-java-delivery-gke-depot-beta
+description: Runs the app image on a GKE Autopilot cluster behind a load balancer
+runtime: java
+template:
+  config:
+    gcp:region:
+      description: The Google Cloud region to deploy into
+      default: us-central1
